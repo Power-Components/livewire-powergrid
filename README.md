@@ -136,7 +136,7 @@ If everything was succesfull, you will find your new table component inside the 
 |**--name**| Model name | ```--name=ProductTable``` |
 |**--model**| Full model path | ```--model="App\Models\Product"``` |
 |**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
-|**--template**| Sometimes you can use ready-made templates for creating different types of tables | ```php artisan make:table --template=stubs/table.sub or php artisan make:table --template=stubs/table_with_buttons.sub``` |
+|**--template**| Sometimes you can use ready-made templates for creating different types of tables | ```php artisan powergrid:create --template=stubs/table.sub or php artisan powergrid:create --template=stubs/table_with_buttons.sub``` |
 
 ### 8.  Using your Table Component
 
