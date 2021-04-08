@@ -119,7 +119,7 @@
                                     <td class="{{(isset($column->body_class)? $column->body_class: "px-6 py-4 whitespace-nowrap")}}"
                                         style="{{(isset($column->body_style)? $column->body_style: "")}}"
                                     >
-                                        @if($column->editable === true && $perPage == 0)
+                                        @if($column->editable === true)
                                             <div
                                                 x-on:click="input=true"
                                                 x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ $row->$field }}</span>' }">
