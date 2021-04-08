@@ -281,6 +281,7 @@ _::: wip :::_
 |**hidden**| |hides the column in the table|```->hidden()```|
 |**filterDateBetween**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```Column::add()->filterDateBetween()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```Column::add()->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
+|**editable**| | Allows the column to be editable by clicking it - works when all data is being displayed|```Column::add()->editable()```|
 ---
 
 ## Action Methods
@@ -312,20 +313,20 @@ array = route parameters, for example route resource: `Route::resource('products
 ## Examples
 
 Bootstrap version
-![Laravel Livewire Tables](img/img/bootstrap.png)
+![Laravel Livewire Tables](img/bootstrap.png)
 
 Tailwind version
-![Laravel Livewire Tables](img/img/tailwind.png)
+![Laravel Livewire Tables](img/tailwind.png)
 
 Exported example with selected data
 
-![Laravel Livewire Tables](img/img/export.png)
+![Laravel Livewire Tables](img/export.png)
 
 ## Support
 
-If you need any support, please check our [Issues](https://github.com/power-componentes/livewire-powergrid/issues). You can ask questions or report problems there.
+If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
 
 ## Credits
 
-- [Contributions](https://github.com/power-componentes/livewire-powergrid/pulls)
+- [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
 - [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
