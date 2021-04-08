@@ -1,0 +1,32 @@
+{
+    "name": "power-components/livewire-powergrid",
+    "description": "A Laravel Livewire table component with searching, sorting, checkboxes, pagination and export data.",
+    "homepage": "https://github.com/power-components/livewire-powergrid",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Luan Freitas",
+            "email": "luanfreitasgoncalves@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PowerComponents\\LivewirePowerGrid\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PowerComponents\\LivewirePowerGrid\\Providers\\PowerGridServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.4|^8.0",
+        "livewire/livewire": "^2.4",
+        "shuchkin/simplexlsxgen": "^0.9.25"
+    }
+}

@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Livewire;
+
+use {{ modelName }};
+use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+
+class {{ componentName }} extends PowerGridComponent
+{
+    use ActionButton;
+
+    public function setUp()
+    {
+        $this->showCheckBox()->showPerPage()->showSearchInput();
+    }
+
+    public function dataSource(): array
+    {
+        $model = {{ modelLastName }}::query()->get();
+        return PowerGrid::eloquent($model)
+            ->addColumn('id', function({{ modelLastName }} $model) {
+                return $model->id;
+            })
+            ->addColumn('name', function({{ modelLastName }} $model) {
+                return $model->name;
+            })
+            ->addColumn('created_at', function({{ modelLastName }} $model) {
+                return $model->created_at;
+            })
+            ->addColumn('created_at_format', function({{ modelLastName }} $model) {
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            })
+            ->make();
+    }
+
+    public function columns(): array
+    {
+
+        return [
+            Column::add()
+                ->title('ID')
+                ->field('id')
+                ->searchable()
+                ->sortable(),
+
+            Column::add()
+                ->title('Descrição')
+                ->field('name')
+                ->searchable()
+                ->sortable(),
+
+            Column::add()
+                ->title('Criado em')
+                ->field('created_at')
+                ->hidden(),
+
+            Column::add()
+                ->title('Criado em')
+                ->field('created_at_format')
+                ->makeInputDatePicker('created_at')
+                ->searchable()
+        ];
+    }
+
+    public function actions(): array
+    {
+        return [
+            Button::add('edit')
+                ->caption('Editar')
+                ->class('bg-indigo-500 text-white')
+                ->route('{{ modelKebabCase }}.edit', ['id' => 'id']),
+
+            Button::add('delete')
+                ->caption('Excluir')
+                ->class('bg-red-500 text-white')
+                ->route('{{ modelKebabCase }}.delete', ['id' => 'id'])
+        ];
+    }
+
+    /* public function update(array $data ): bool
+    {
+       try {
+           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
+                $data['field'] => $data['value']
+           ]);
+       } catch (QueryException $exception) {
+           $updated = false;
+       }
+       return $updated;
+    } */
+
+}
