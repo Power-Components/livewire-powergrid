@@ -7,7 +7,6 @@
             }
         }
     @endphp
-    @json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale()))
     @if(!$inline)
         <div class="{!! ($date['class'] != '') ?? '' !!} pt-2 p-2" style="width: 370px;">
             @else
