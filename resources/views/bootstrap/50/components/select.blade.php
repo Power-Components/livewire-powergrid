@@ -1,6 +1,6 @@
 @if(filled($select))
 
-        <div wire:ignore class="@if(!$inline) col-md-6 col-lg-3 @endif {!! (isset($select['class'])? $select['class']: '') !!} pt-2">
+        <div wire:ignore class="@if(!$inline) col-md-6 col-lg-3 @endif {!! ($select['class'] != '') ?? '' !!} pt-2" style="max-width: 370px !important;">
 
                     @if(!$inline)
                         <label for="input_{!! $select['relation_id'] !!}">{{$select['label']}}</label>
@@ -9,7 +9,7 @@
                     <select id="input_{!! $select['relation_id'] !!}"
                             class="livewire_powergrid_select selectpicker_{!! $select['relation_id'] !!}
                                 form-control active
-{{ (isset($class_attr)) ? $class_attr: '' }}"
+{{ (isset($class) != '') ? $class : '' }}"
 
                             wire:model="filters.select.{!! $select['relation_id'] !!}"
                             wire:ignore
@@ -25,7 +25,6 @@
 
                 @push('datatable_scripts')
                     <script>
-
                         $('.selectpicker_{!! $select['relation_id'] !!}').selectpicker();
                         $('select.selectpicker_{!! $select['relation_id'] !!}').on('change', function () {
                             let data = [];

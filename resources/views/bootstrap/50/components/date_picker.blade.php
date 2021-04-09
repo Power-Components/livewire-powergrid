@@ -7,7 +7,7 @@
             }
         }
     @endphp
-        <div class="@if(!$inline) col-md-6 col-lg-3 @endif {!! (isset($date['class'])? $date['class']: '') !!} pt-2">
+        <div class="@if(!$inline) col-md-6 col-lg-3 @endif {!! ($date['class'] != '') ?? '' !!} pt-2" style="max-width: 370px !important;">
 
             @if(!$inline)
                 <label for="input_{!! $date['from_column'] !!}">{!! $date['label'] !!}</label>
@@ -17,7 +17,7 @@
                    wire:model="filters.input_date_picker.{!! $date['from_column'] !!}"
                    wire:ignore
                    class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!! $date['from_column'] !!} form-control active
-                   {{ (isset($class_attr)) ? $class_attr: 'w-full' }}"
+                   {{ (isset($class) != '') ? $class :  '' }}"
                    type="text"
                    placeholder="Selecione o período.."
             >
@@ -25,7 +25,9 @@
         @push('powergrid_scripts')
             <script type="application/javascript">
                 flatpickr(document.getElementsByClassName('range_input_{!! $date['from_column'] !!}'), {
-                        ...@json($defaultDatePikerConfig),
+                        'mode': 'range',
+                        'defaultHour' : 0,
+                        ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
                         @if(isset($customConfig['only_future']))
                         "minDate": "today",
                         @endif

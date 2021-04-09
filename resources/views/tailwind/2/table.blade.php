@@ -43,13 +43,15 @@
                          stroke="currentColor" stroke-linecap="round"
                          stroke-linejoin="round" stroke-width="2"
                          viewBox="0 0 24 24">
-                        <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z"/></svg>
+                        <path
+                            d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z"/></svg>
                 </span>
                 <span class="inset-y-0 right-4 flex items-center pl-2 pr-2 pt-2 hidden loading">
                     <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-6 w-6"></div>
                 </span>
             </div>
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
+            <div
+                class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
 
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -59,27 +61,44 @@
 
                         @foreach($columns as $column)
                             @if($column->hidden === false)
-                                <th @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')"
-                                    @endif
+                                <th
                                     class="@if(isset($column->sortable)) align-middle cursor-pointer hover:text-black hover:text-current @endif
                                         px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     style="@if($column->sortable === true) cursor:pointer; @endif {{(isset($column->header_style)? $column->header_style: "")}}"
                                 >
-                                    @if($column->sortable === true)
-                                        <svg style="display: inline-block;" xmlns="http://www.w3.org/2000/svg"
-                                             width="16"
-                                             height="16" fill="currentColor" class="bi bi-sort-up"
-                                             viewBox="0 0 16 16">
-                                            <path d="{{$icon_sort[$column->field]}}"/>
-                                        </svg>
-                                    @endif
-                                    @if(count($column->filter_date_between))
-                                    <span wire:click.prevent="clearFilter()">
-                                    {{$column->title}}
-                                    </span>
-                                        @else
-                                            {{$column->title}}
+                                    <div class="align-content-between">
+
+                                        @if($column->sortable === true)
+                                            <svg style="display: inline-block;" xmlns="http://www.w3.org/2000/svg"
+                                                 width="16"
+                                                 height="16" fill="currentColor" class="bi bi-sort-up"
+                                                 viewBox="0 0 16 16">
+                                                <path d="{{$icon_sort[$column->field]}}"/>
+                                            </svg>
                                         @endif
+
+                                        <span
+                                            @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')" @endif>
+                                        {{$column->title}}
+                                        </span>
+                                        @if(count($filters))
+                                            @if(\Illuminate\Support\Arr::exists($column->inputs, 'date_picker') || \Illuminate\Support\Arr::exists($column->inputs, 'select'))
+                                                <span
+                                                    title="{{ trans('livewire-powergrid::datatable.labels.clear_filter') }}"
+                                                    wire:click.prevent="clearFilter()"
+                                                    class="float-right text-red-800 cursor-pointer">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                     fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                                  <path
+                                                      d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                  <path
+                                                      d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                </svg>
+                                            </span>
+                                            @endif
+                                        @endif
+                                    </div>
+
                                 </th>
                             @endif
                         @endforeach
@@ -102,10 +121,7 @@
                                         + ((isset($actionBtns)) ? 1: 0)
                                         + (count($columns))
                                     }}">
-                                <span>Nenhum registro encontrado</span>
-                                <span wire:click.prevent="clearFilter()" style="font-weight: bold; cursor: pointer">
-                                        Limpar filtro
-                                </span>
+                                <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
                             </td>
                         </tr>
                     @endif

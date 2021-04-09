@@ -1,10 +1,7 @@
 @if(filled($select))
 
-    @if(!$inline)
-        <div wire:ignore class="{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
-            @else
-                <div class="pr-6">
-                    @endif
+
+        <div wire:ignore class="@if($inline) pr-6 @endif{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
 
                     @if(!$inline)
                         <label for="input_{!! $select['relation_id'] !!}">{{$select['label']}}</label>
@@ -16,7 +13,7 @@
                                     block appearance-none w-full bg-gray-200 border mt-2 mb-2
                                     border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight
                                     focus:outline-none focus:bg-white focus:border-gray-500
-{{ ($select['class'] != '') ?? 'w-9/12' }}"
+{{ (isset($class)) ? $class : 'w-9/12' }}"
                                 wire:model="filters.select.{!! $select['relation_id'] !!}"
                                 wire:ignore
                                 data-live-search="{{ $select['live-search'] }}">

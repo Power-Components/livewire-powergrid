@@ -13,7 +13,8 @@
                                 @if($date['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.date_picker', [
                                         'date' => $date,
-                                        'inline' => true
+                                        'inline' => true,
+                                        'class' => 'w-full'
                                     ])
                                 @endif
                             @endforeach
