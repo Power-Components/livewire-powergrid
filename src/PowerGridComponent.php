@@ -162,8 +162,10 @@ class PowerGridComponent extends Component
             $data = Collection::search($this->model, $this->search, $this->columns());
             $data = $this->advancedFilter($data);
             $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
-            $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count(): $this->perPage);
 
+            if ($data->count()) {
+                $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count(): $this->perPage);
+            }
         }
 
         return $this->renderView($data);
