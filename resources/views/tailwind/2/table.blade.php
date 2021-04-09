@@ -73,7 +73,13 @@
                                             <path d="{{$icon_sort[$column->field]}}"/>
                                         </svg>
                                     @endif
+                                    @if(count($column->filter_date_between))
+                                    <span wire:click.prevent="clearFilter()">
                                     {{$column->title}}
+                                    </span>
+                                        @else
+                                            {{$column->title}}
+                                        @endif
                                 </th>
                             @endif
                         @endforeach

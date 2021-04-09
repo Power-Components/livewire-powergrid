@@ -53,7 +53,15 @@ return [
         'flat_piker' => [
             'js' => 'https://cdn.jsdelivr.net/npm/flatpickr',
             'css' => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-            'translate' => 'https://npmcdn.com/flatpickr/dist/l10n/pt.js'
+            'translate' => 'https://npmcdn.com/flatpickr/dist/l10n/'.\Illuminate\Support\Str::substr(app()->getLocale(), 0, 2).'.js',
+            'locales' => [
+                'pt_BR' => [
+                    'locale' => \Illuminate\Support\Str::substr(app()->getLocale(), 0, 2),
+                    'dateFormat' => 'd/m/Y H:i',
+                    'enableTime' => true,
+                    'time_24hr' => true
+                ]
+            ]
         ]
     ],
 
