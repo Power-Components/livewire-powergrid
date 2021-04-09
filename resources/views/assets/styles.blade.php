@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="{{ config('livewire-powergrid.plugins.flat_piker.css') }}">
+@if(config('livewire-powergrid.theme') === 'bootstrap')
+<link rel="stylesheet"
+      href="{{ config('livewire-powergrid.plugins.bootstrap-select.css') }}"
+      crossorigin="anonymous"/>
+@endif
 <style>
     table {
         width: 100%;

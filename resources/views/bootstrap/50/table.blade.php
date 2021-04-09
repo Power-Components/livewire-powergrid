@@ -94,7 +94,7 @@
 
                 @foreach($data as $row)
 
-                    <tr class="border-b border-gray-200 hover:bg-gray-100 ">
+                    <tr class="border-b border-gray-200 hover:bg-gray-100 " wire:key="{{ $row->id }}">
 
                         @include('livewire-powergrid::bootstrap.50.checkbox-row')
 
@@ -105,18 +105,18 @@
                             @endphp
 
                             @if($column->hidden === false)
-                                <td class="{{(isset($column->body_class)? $column->body_class: "")}}"
+                                <td class="{{ ($column->body_class != '') ?? ""}}"
                                     style="{{(isset($column->body_style)? $column->body_style: "")}}"
                                 >
                                     @if($column->editable === true && $perPage == 0)
                                         <div
                                             class="relative"
                                             x-on:click="input=true"
-                                            x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ $row->$field }}</span>' }">
+                                            x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ')  }}</span>' }">
 
                                             <button
                                                 style="width: 100%;text-align: left;border: 0;padding: 4px;background: none;"
-                                                x-on:click="value = returnValue({!! $row->id !!}, '{!! $row->$field !!}', '{!! $field !!}');"
+                                                x-on:click="value = returnValue({!! $row->id !!}, '{!! \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ') !!}', '{!! $field !!}');"
                                                 x-html="value"
                                             ></button>
                                         </div>

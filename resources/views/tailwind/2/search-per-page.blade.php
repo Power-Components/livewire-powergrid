@@ -1,7 +1,7 @@
 <div class="w-full flex pb-2 pt-2">
 
     @if($perPage_input)
-        <div class="w-4/12 sm:w-1/12 md:w-2/12 lg:2/12 relative">
+        <div class="w-4/12 sm:w-1/12 md:w-2/12 lg:2/12">
             <select wire:model="perPage" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 @foreach($perPageValues as $value)
                     <option value="{{$value}}"> @if($value == 0) Todos @else {{ $value }} @endif</option>

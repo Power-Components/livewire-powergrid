@@ -9,18 +9,6 @@ use Illuminate\Support\Collection;
 
 trait Filter
 {
-    /**
-     * https://flatpickr.js.org
-     */
-    public array $defaultDatePikerConfig = [
-        'mode' => 'range',
-        'defaultHour' => 0,
-        'locale' => 'pt',
-        'dateFormat' => 'd/m/Y H:i',
-        'enableTime' => true,
-        'time_24hr' => true
-    ];
-
     public Collection $make_filters;
 
     public array $filters = [];

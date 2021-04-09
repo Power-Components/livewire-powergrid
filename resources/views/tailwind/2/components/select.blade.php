@@ -1,7 +1,7 @@
 @if(filled($select))
 
     @if(!$inline)
-        <div wire:ignore class="{!! (isset($select['class'])? $select['class']: '') !!} pt-2 p-2">
+        <div wire:ignore class="{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
             @else
                 <div class="pr-6">
                     @endif
@@ -16,10 +16,10 @@
                                     block appearance-none w-full bg-gray-200 border mt-2 mb-2
                                     border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight
                                     focus:outline-none focus:bg-white focus:border-gray-500
-{{ (isset($class_attr)) ? $class_attr: 'w-9/12' }}"
+{{ ($select['class'] != '') ?? 'w-9/12' }}"
                                 wire:model="filters.select.{!! $select['relation_id'] !!}"
                                 wire:ignore
-                                data-live-search="{{ (isset($select['live-search']))? $select['live-search']: false }}">
+                                data-live-search="{{ $select['live-search'] }}">
 
                             <option value="">{{ __('Todos') }}</option>
                             @foreach($select['data_source'] as $relation)

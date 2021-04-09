@@ -7,9 +7,9 @@
             }
         }
     @endphp
-
+    @json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale()))
     @if(!$inline)
-        <div class="{!! (isset($date['class'])? $date['class']: '') !!} pt-2 p-2" style="width: 370px;">
+        <div class="{!! ($date['class'] != '') ?? '' !!} pt-2 p-2" style="width: 370px;">
             @else
                 <div class="pr-6" wire:ignore style="width: 370px;">
             @endif
@@ -26,7 +26,7 @@
                        text-gray-700 py-3 px-4 pr-8 rounded
                        leading-tight focus:outline-none
                        focus:bg-white focus:border-gray-500
-                       {{ (isset($class_attr)) ? $class_attr: 'w-full' }}"
+                       {{ ($date['class'] != '') ?? 'w-full' }}"
                    type="text"
                    placeholder="Selecione o período.."
             >
@@ -34,7 +34,9 @@
         @push('powergrid_scripts')
             <script type="application/javascript">
                 flatpickr(document.getElementsByClassName('range_input_{!! $date['from_column'] !!}'), {
-                        ...@json($defaultDatePikerConfig),
+                        'mode': 'range',
+                        'defaultHour' : 0,
+                        ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
                         @if(isset($customConfig['only_future']))
                         "minDate": "today",
                         @endif

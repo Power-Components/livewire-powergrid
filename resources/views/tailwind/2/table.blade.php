@@ -105,7 +105,7 @@
                     @endif
 
                     @foreach($data as $row)
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr class="border-b border-gray-200 hover:bg-gray-100" wire:key="{{ $row->id }}">
 
                             @include('livewire-powergrid::tailwind.2.checkbox-row')
 
@@ -116,15 +116,14 @@
                                 @endphp
 
                                 @if($column->hidden === false)
-                                    <td class="{{(isset($column->body_class)? $column->body_class: "px-6 py-4 whitespace-nowrap")}}"
+                                    <td class="{{ ($column->body_class != '') ?? "px-6 py-4 whitespace-nowrap" }}"
                                         style="{{(isset($column->body_style)? $column->body_style: "")}}"
                                     >
                                         @if($column->editable === true)
                                             <div
-                                                x-on:click="input=true"
-                                                x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ $row->$field }}</span>' }">
+                                                x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ') }}</span>' }">
                                                 <button
-                                                    x-on:click="value = returnValue({!! $row->id !!}, '{!! $row->$field !!}', '{!! $field !!}');"
+                                                    x-on:click="value = returnValue({!! $row->id !!}, '{!! \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ') !!}', '{!! $field !!}');"
                                                     x-html="value"
                                                 ></button>
                                             </div>
