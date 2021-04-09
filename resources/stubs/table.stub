@@ -44,24 +44,24 @@ class {{ componentName }} extends PowerGridComponent
 
         return [
             Column::add()
-                ->title('ID')
+                ->title(__('ID'))
                 ->field('id')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title('Descrição')
+                ->title(__('Descrição'))
                 ->field('name')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title('Criado em')
+                ->title(__('Criado em'))
                 ->field('created_at')
                 ->hidden(),
 
             Column::add()
-                ->title('Criado em')
+                ->title(__('Criado em'))
                 ->field('created_at_format')
                 ->makeInputDatePicker('created_at')
                 ->searchable()
@@ -72,22 +72,22 @@ class {{ componentName }} extends PowerGridComponent
     {
         return [
             Button::add('edit')
-                ->caption('Editar')
+                ->caption(__('Editar'))
                 ->class('bg-indigo-500 text-white')
                 ->route('{{ modelKebabCase }}.edit', ['id' => 'id']),
 
             Button::add('delete')
-                ->caption('Excluir')
+                ->caption(__('Excluir'))
                 ->class('bg-red-500 text-white')
                 ->route('{{ modelKebabCase }}.delete', ['id' => 'id'])
         ];
     }
 
-    /* public function update(array $data ): bool
+    /* public function update(array ${{ modelLowerCase }} ): bool
     {
        try {
-           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
-                $data['field'] => $data['value']
+           $updated = {{ modelLastName }}::query()->find(${{ modelLowerCase }}['id'])->update([
+                ${{ modelLowerCase }}['field'] => ${{ modelLowerCase }}['value']
            ]);
        } catch (QueryException $exception) {
            $updated = false;

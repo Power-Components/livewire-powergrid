@@ -76,6 +76,7 @@ class PowerGridCommand extends Command
                 $stub = str_replace('{{ modelName }}', $modelName, $stub);
                 $modelLastName = Arr::last($modelNameArr);
                 $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
+                $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
                 $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
             } else {
 
