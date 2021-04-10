@@ -3,11 +3,10 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class PowerGrid
 {
-
     private Collection $model;
     private array $data = [];
     private array $columns = [];
@@ -18,7 +17,7 @@ class PowerGrid
     }
 
     /**
-     * @param Collection $model
+     * @param \Illuminate\Database\Eloquent\Collection $model
      * @return PowerGrid
      */
     public static function eloquent(Collection $model): PowerGrid
@@ -31,9 +30,9 @@ class PowerGrid
      * @param \Closure $closure
      * @return $this
      */
-    public function addColumn(string $field, \Closure $closure): PowerGrid
+    public function addColumn(string $field, \Closure $closure = null): PowerGrid
     {
-        $this->columns[$field] = $closure;
+        $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
         return $this;
     }
 
@@ -42,24 +41,11 @@ class PowerGrid
      */
     public function make(): array
     {
-        $this->model->map(function ($row, $index) {
-            foreach ($this->columns as $field => $closure) {
-                $this->data[$index][$field] = $closure($row);
-            }
-        });
-        return $this->prepareData();
+        return $this->model->map(function ($model) {
+            $attributes = collect($model->getAttributes())
+                        ->filter(fn ($value, $name) => array_key_exists($name, $this->columns));
+            
+            return (object) $attributes->map(fn ($attribute, $name) => $this->columns[$name]($model))->toArray();
+        })->toArray();
     }
-
-    /**
-     * @return array
-     */
-    private function prepareData(): array
-    {
-        $data = [];
-        foreach ($this->data as $obj) {
-            $data[$obj['id']] = (object) $obj;
-        }
-        return $data;
-    }
-
 }
