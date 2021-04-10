@@ -3,6 +3,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
 class PowerGrid
@@ -41,11 +42,12 @@ class PowerGrid
      */
     public function make(): array
     {
-        return $this->model->map(function ($model) {
-            $attributes = collect($model->getAttributes())
-                        ->filter(fn ($value, $name) => array_key_exists($name, $this->columns));
-            
-            return (object) $attributes->map(fn ($attribute, $name) => $this->columns[$name]($model))->toArray();
+        return $this->model->map(function (Model $model) {
+            // We need to generate a set of columns, which are already registered in the object, based on the model.
+            // To do this we iterate through each column and then resolve the closure.
+            return (object) collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
+                return [$columnName => $closure($model)];
+            })->toArray();
         })->toArray();
     }
 }
