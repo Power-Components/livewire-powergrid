@@ -43,7 +43,7 @@ For the instalation guide we will create a `ProductTable` to list  products of a
 To install via composer, run the following command:
 
 ```bash
-  composer require power-components/livewire-powergrid
+  composer require power-components/livewire-powergrid dev-main
 ```
 
 ### 2. Add PowerGridServiceProvider to your Providers list
