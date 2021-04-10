@@ -330,3 +330,13 @@ If you need any support, please check our [Issues](https://github.com/Power-Comp
 
 - [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
 - [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
+
+## Contributors
+
+Created by: [Luan Freitas](https://github.com/luanfreitasdev)
+
+Contributors (in alphabetical order):
+
+- [@Claudio Pereira](https://github.com/cpereiraweb)
+- [@DanSysAnalyst](https://github.com/dansysanalyst)
+- [@Tiago Braga](https://github.com/Tiagofv)
