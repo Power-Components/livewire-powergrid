@@ -8,27 +8,27 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PowerGrid
 {
-    private Collection $model;
-    private array $data = [];
-    private array $columns = [];
+    protected Collection $collection;
 
-    public function __construct(Collection $model)
+    protected array $columns = [];
+
+    public function __construct(Collection $collection)
     {
-        $this->model = $model;
+        $this->collection = $collection;
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Collection $model
-     * @return PowerGrid
+     * @param \Illuminate\Database\Eloquent\Collection $collection
+     * @return \PowerComponents\LivewirePowerGrid\PowerGrid
      */
-    public static function eloquent(Collection $model): PowerGrid
+    public static function eloquent(Collection $collection): PowerGrid
     {
-        return new static($model);
+        return new static($collection);
     }
 
     /**
      * @param string $field
-     * @param \Closure $closure
+     * @param \Closure|null $closure
      * @return $this
      */
     public function addColumn(string $field, \Closure $closure = null): PowerGrid
@@ -42,7 +42,7 @@ class PowerGrid
      */
     public function make(): array
     {
-        return $this->model->map(function (Model $model) {
+        return $this->collection->map(function (Model $model) {
             // We need to generate a set of columns, which are already registered in the object, based on the model.
             // To do this we iterate through each column and then resolve the closure.
             return (object) collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
