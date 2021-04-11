@@ -210,31 +210,20 @@ Example:
                     ->sortable(),
     
                 Column::add()
-                    ->title('Descrição')
+                    ->title('Nome')
                     ->field('name')
                     ->searchable()
                     ->sortable(),
+
     
                 Column::add()
-                    ->title('GrupoID')
-                    ->field('group_id')
-                    ->hidden(),
-    
-                Column::add()
-                    ->title('Grupo')
-                    ->field('group_name')
-                    ->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])
-                    ->searchable()
-                    ->sortable(),
-    
-                Column::add()
-                    ->title('Criado em')
-                    ->field('created_at')
+                    ->title('Preço')
+                    ->field('price_formatted')
                     ->hidden(),
     
                 Column::add()
                     ->title('Criado em')
-                    ->field('created_at_format')
+                    ->field('created_at_formatted')
                     ->makeInputDatePicker('created_at')
                     ->searchable()
             ];
@@ -275,7 +264,18 @@ _::: wip :::_
 |**hidden**| |hides the column in the table|```->hidden()```|
 |**filterDateBetween**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```Column::add()->filterDateBetween()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```Column::add()->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
-|**editOnClick**| | Allows the column to be editable by clicking it |```Column::add()->editOnClick()```|
+|**editOnClick**| | Allows the column to be editable by clicking it (*requires Alpine.js - see bellow*) |```Column::add()->editOnClick()```|
+
+
+**NOTE** In order to use editOnClick, you must include Alpine.js before <body>
+
+```php
+//...
+@powerGridScripts
+@livewireScripts
+
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+```
 ---
 
 ## Action Methods
