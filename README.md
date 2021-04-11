@@ -8,7 +8,7 @@
 
 ## What is Livewire PowerGrid?
 
-Livewire PowerGrid is a component for [Laravel Livewire](https://laravel-livewire.com) used to generate dynamic tables for your Laravel Collections.
+PowerGrid is a component for [Laravel Livewire](https://laravel-livewire.com) used to generate dynamic tables for your Laravel Collections.
 
 Out of the box Livewire PowerGrid component provides many features, such as:
 
@@ -18,6 +18,7 @@ Out of the box Livewire PowerGrid component provides many features, such as:
 - Action checkboxes
 - Action buttons
 - Link on table cell
+- Click to edit
 - Data Export to XLSx/Excel.
 
 The component works with Bootstrap or Tailwind.
@@ -95,10 +96,11 @@ Language files:
 
 ### 5. Change the theme of your choice in config/livewire-powergrid.php
 
-```html
-    */
+For tailwind
+```php
+    //...
     'theme' => 'tailwind'
-    /*
+
 ```
 
 ### 6. Include PowerGrid component
@@ -121,11 +123,12 @@ You can read more about this at the official [Livewire documentation](https://la
 
 To create a Table Component for an entity use the following Artisan command.
 
-Make sure to use "" around your `--model` option.
+(It's advisable to use "" around your `--model` option)
 
 ```bash
     php artisan powergrid:create --name=ProductTable --model="App\Models\Product"
 ```
+
 
 If everything was succesfull, you will find your new table component inside the `app/Http/Livewire` folder.
 
@@ -185,22 +188,13 @@ Example:
         {
             $model = Product::query()->with('group')->get();
             return PowerGrid::eloquent($model)
-                ->addColumn('id', function(Product $model) {
-                    return $model->id;
+                ->addColumn('id')
+                ->addColumn('name')
+                ->addColumn('email')
+                ->addColumn('price_formatted', function(Product $model) {
+                    return  '$ ' . number_format($model->price, 2, ',', '.');
                 })
-                ->addColumn('name', function(Product $model) {
-                    return $model->name;
-                })
-                ->addColumn('group_id', function(Product $model) {
-                    return $model->group_id;
-                })
-                ->addColumn('group_name', function(Product $model) {
-                    return $model->group->name;
-                })
-                ->addColumn('created_at', function(Product $model) {
-                    return $model->created_at;
-                })
-                ->addColumn('created_at_format', function(Product $model) {
+                ->addColumn('created_at_formatted', function(Product $model) {
                     return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
                 })
                 ->make();
@@ -326,10 +320,6 @@ Exported example with selected data
 
 If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
 
-## Credits
-
-- [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
-- [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
 
 ## Contributors
 
@@ -341,4 +331,9 @@ Contributors (in alphabetical order):
 - [@DanSysAnalyst](https://github.com/dansysanalyst)
 - [@Mateus Guimarães](https://github.com/mateusjatenee)
 - [@Tiago Braga](https://github.com/Tiagofv)
+
+## Credits
+
+- [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
+- [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
 
