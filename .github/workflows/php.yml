@@ -21,5 +21,9 @@ jobs:
         run: php artisan vendor:publish --tag=livewire-powergrid-config
         working-directory: ./powergrid
 
-      - name: Execute tests
-        run: ./vendor/bin/phpunit --verbose
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: nathanheffley/laravel-phpunit-action@master
