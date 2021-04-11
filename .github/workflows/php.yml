@@ -22,4 +22,4 @@ jobs:
         working-directory: ./powergrid
 
       - name: Execute tests
-        run: vendor/bin/phpunit --verbose
+        run: ./vendor/bin/phpunit --verbose
