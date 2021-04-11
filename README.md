@@ -339,4 +339,6 @@ Contributors (in alphabetical order):
 
 - [@Claudio Pereira](https://github.com/cpereiraweb)
 - [@DanSysAnalyst](https://github.com/dansysanalyst)
+- [@Mateus Guimarães](https://github.com/mateusjatenee)
 - [@Tiago Braga](https://github.com/Tiagofv)
+
