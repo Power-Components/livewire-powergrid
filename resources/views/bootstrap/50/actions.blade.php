@@ -9,21 +9,22 @@
                     }
                 @endphp
                 <li>
-                    @if(count($action->i) == 0)
-                        <button type="button" id="actionCall"
-                                wire:click="actionCall('{{$action->action}}','{{ json_encode($parameters)}}')"
-                                class="{{$action->class}}">
-                            {{ $action->caption }}
-                        </button>
-                    @endif
-                    @if(count($action->i))
-                        <button type="button" id="actionCall"
-                                wire:click="actionCall('{{$action->action}}','{{ json_encode($parameters) }}')"
-                                class="{{$action->class}}">
-                            <i class="{{$action->i['class']}}"
-                               title="{{$action->i['text']}}"></i> {{($action->i['caption'])? $action->i['text']: ""}}
-                        </button>
-                    @endif
+                    <form action="{{ route($action->route, $parameters) }}" method="post">
+                        @method($action->method)
+                        @csrf
+
+                        @if(count($action->i) == 0)
+                            <button id="actionCall" type="submit" class="{{$action->class}}">
+                                {{ $action->caption }}
+                            </button>
+                        @endif
+                        @if(count($action->i))
+                            <button type="submit" id="actionCall" class="{{$action->class}}">
+                                <i class="{{$action->i['class']}}"
+                                   title="{{$action->i['text']}}"></i> {{($action->i['caption'])? $action->i['text']: ""}}
+                            </button>
+                        @endif
+                    </form>
                 </li>
             @endforeach
         </ul>

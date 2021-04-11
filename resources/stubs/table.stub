@@ -24,15 +24,9 @@ class {{ componentName }} extends PowerGridComponent
     {
         $model = {{ modelLastName }}::query()->get();
         return PowerGrid::eloquent($model)
-            ->addColumn('id', function({{ modelLastName }} $model) {
-                return $model->id;
-            })
-            ->addColumn('name', function({{ modelLastName }} $model) {
-                return $model->name;
-            })
-            ->addColumn('created_at', function({{ modelLastName }} $model) {
-                return $model->created_at;
-            })
+            ->addColumn('id')
+            ->addColumn('name')
+            ->addColumn('created_at')
             ->addColumn('created_at_format', function({{ modelLastName }} $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
@@ -74,20 +68,22 @@ class {{ componentName }} extends PowerGridComponent
             Button::add('edit')
                 ->caption(__('Editar'))
                 ->class('bg-indigo-500 text-white')
-                ->route('{{ modelKebabCase }}.edit', ['id' => 'id']),
+                ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
 
             Button::add('delete')
                 ->caption(__('Excluir'))
                 ->class('bg-red-500 text-white')
-                ->route('{{ modelKebabCase }}.delete', ['id' => 'id'])
+                ->route('{{ modelKebabCase }}.delete', ['{{ modelKebabCase }}' => 'id'])
+                ->method('delete')
         ];
     }
 
-    /* public function update(array ${{ modelLowerCase }} ): bool
+    /*
+    public function update(array $data ): bool
     {
        try {
-           $updated = {{ modelLastName }}::query()->find(${{ modelLowerCase }}['id'])->update([
-                ${{ modelLowerCase }}['field'] => ${{ modelLowerCase }}['value']
+           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
+                $data['field'] => $data['value']
            ]);
        } catch (QueryException $exception) {
            $updated = false;

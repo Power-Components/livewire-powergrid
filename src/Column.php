@@ -130,7 +130,6 @@ class Column
         return $this;
     }
 
-
     /**
      * Add the @datatableFilter directive before the body
      *

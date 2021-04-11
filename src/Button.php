@@ -12,7 +12,7 @@ class Button
     public array $param = [];
     public string $class = '';
     public array $i = [];
-
+    public string $method = 'get';
     /**
      * Button constructor.
      * @param string $action
@@ -78,6 +78,17 @@ class Button
             'text' => $text,
             'caption' => $showCaption
         ];
+        return $this;
+    }
+
+    /**
+     * Button text in view
+     * @param string $method
+     * @return $this
+     */
+    public function method( string $method): Button
+    {
+        $this->method = $method;
         return $this;
     }
 }

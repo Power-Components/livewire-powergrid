@@ -50,11 +50,15 @@
                             >
                                 <div>
                                     @if($column->sortable === true)
-                                        <svg style="margin-top: -3px;" xmlns="http://www.w3.org/2000/svg" width="16"
-                                             height="16" fill="currentColor" class="bi bi-sort-up"
-                                             viewBox="0 0 16 16">
-                                            <path d="{{$icon_sort[$column->field]}}"/>
-                                        </svg>
+                                        <span class="text-base">
+                                                @if ($orderBy !== $column->field)
+                                                {!! $sortIcon !!}
+                                            @elseif ($orderAsc)
+                                                {!! $sortAscIcon !!}
+                                            @else
+                                                {!! $sortDescIcon !!}
+                                            @endif
+                                            </span>
                                     @endif
 
                                     <span @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')"

@@ -1,0 +1,25 @@
+name: power-components-powergrid
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Create a new laravel project
+        run: composer create-project --prefer-dist laravel/laravel powergrid
+
+      - name: Install power-components-powergrid
+        run:   composer require power-components/livewire-powergrid dev-main
+        working-directory: ./powergrid
+
+      - name: Publish config
+        run: php artisan vendor:publish --tag=livewire-powergrid-config
+        working-directory: ./powergrid
+
+    - name: Execute tests
+        run: vendor/bin/phpunit --verbose
