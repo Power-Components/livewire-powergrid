@@ -3,37 +3,37 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 class PowerGrid
 {
+    protected Collection $collection;
 
-    private Collection $model;
-    private array $data = [];
-    private array $columns = [];
+    protected array $columns = [];
 
-    public function __construct(Collection $model)
+    public function __construct(Collection $collection)
     {
-        $this->model = $model;
+        $this->collection = $collection;
     }
 
     /**
-     * @param Collection $model
-     * @return PowerGrid
+     * @param \Illuminate\Database\Eloquent\Collection $collection
+     * @return \PowerComponents\LivewirePowerGrid\PowerGrid
      */
-    public static function eloquent(Collection $model): PowerGrid
+    public static function eloquent(Collection $collection): PowerGrid
     {
-        return new static($model);
+        return new static($collection);
     }
 
     /**
      * @param string $field
-     * @param \Closure $closure
+     * @param \Closure|null $closure
      * @return $this
      */
-    public function addColumn(string $field, \Closure $closure): PowerGrid
+    public function addColumn(string $field, \Closure $closure = null): PowerGrid
     {
-        $this->columns[$field] = $closure;
+        $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
         return $this;
     }
 
@@ -42,24 +42,12 @@ class PowerGrid
      */
     public function make(): array
     {
-        $this->model->map(function ($row, $index) {
-            foreach ($this->columns as $field => $closure) {
-                $this->data[$index][$field] = $closure($row);
-            }
-        });
-        return $this->prepareData();
+        return $this->collection->map(function (Model $model) {
+            // We need to generate a set of columns, which are already registered in the object, based on the model.
+            // To do this we iterate through each column and then resolve the closure.
+            return (object) collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
+                return [$columnName => $closure($model)];
+            })->toArray();
+        })->toArray();
     }
-
-    /**
-     * @return array
-     */
-    private function prepareData(): array
-    {
-        $data = [];
-        foreach ($this->data as $obj) {
-            $data[$obj['id']] = (object) $obj;
-        }
-        return $data;
-    }
-
 }
