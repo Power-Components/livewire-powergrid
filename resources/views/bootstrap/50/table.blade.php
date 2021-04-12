@@ -125,7 +125,7 @@
                                 <td class="{{ ($column->body_class != '') ?? ""}}"
                                     style="{{(isset($column->body_style)? $column->body_style: "")}}"
                                 >
-                                    @if($column->editable === true && $perPage == 0)
+                                    @if($column->editable === true)
                                         <div
                                             class="relative"
                                             x-on:click="input=true"

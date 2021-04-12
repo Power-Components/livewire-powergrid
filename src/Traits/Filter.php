@@ -1,8 +1,6 @@
 <?php
 
-
 namespace PowerComponents\LivewirePowerGrid\Traits;
-
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -47,17 +45,14 @@ trait Filter
 
     }
 
-    private function advancedFilter(Collection $collection ): Collection
+    private function advancedFilter( Collection $collection ): Collection
     {
         foreach ($this->filters as $type => $filter) {
             switch ($type) {
                 case 'date_picker':
                     $date = $filter[key($filter)];
-                    if (filled($date[0]) && filled($date[1])) {
-                        $from = Carbon::parse($date[0]);
-                        $to = Carbon::parse($date[1]);
-
-                        $collection = $collection->whereBetween(key($filter), [$from, $to]);
+                    if (isset($date[0]) && isset($date[1])) {
+                        $collection = $collection->whereBetween(key($filter), [Carbon::parse($date[0]), Carbon::parse($date[1])]);
                     }
                     break;
                 case 'select':
@@ -73,7 +68,7 @@ trait Filter
         return $collection;
     }
 
-    public function inputDatePiker($data)
+    public function inputDatePiker( $data )
     {
         $input = explode('.', $data[0]['values']);
         $this->filters['date_picker'][$input[2]] = $data[0]['selectedDates'];

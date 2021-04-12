@@ -3,8 +3,7 @@
 
 @if(config('livewire-powergrid.theme') === 'bootstrap')
     <!-- POWER GRID COMPONENT SCRIPTS FOR BOOTSTRAP -->
-    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}"
-            crossorigin="anonymous"></script>
+    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
 
 <script>
@@ -22,15 +21,13 @@
     }
 
     function returnValue(id, value, field) {
-        console.log(id, value)
         document.getElementsByClassName('icon_success')[0].style.display = "none";
         document.getElementsByClassName('icon_error')[0].style.display = "none";
-        return '<input value=\'' + value + '\' class=\'appearance-none block w-full bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500\' @keydown.enter=updateEditableInput($event,' + id + ',\'' + field + '\') >';
+        return '<input value="' + value + '" class="appearance-none block w-full bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=updateEditableInput($event,' + id + ',"' + field + '") >';
     }
 
     window.addEventListener('onUpdateInput', event => {
         document.getElementsByClassName('loading')[0].style.display = "none";
-
         if (event.detail.success === true) {
             document.getElementsByClassName('icon_success')[0].style.display = "block";
         } else {
@@ -59,8 +56,7 @@
     }
 
     function returnValue(id, value, field) {
-        console.log(id, value, field)
-        return '<input value=\'' + value + '\' class=\'form-control\' @keydown.enter=updateEditableInput($event,' + id + ',\'' + field + '\') >';
+        return '<input value="' + value + '" class="form-control" @keydown.enter=updateEditableInput($event,' + id + ',"' + field + '") >';
     }
 
     window.addEventListener('onUpdateInput', event => {

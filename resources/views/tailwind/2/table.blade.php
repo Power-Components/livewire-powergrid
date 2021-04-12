@@ -97,9 +97,9 @@
                                     >
                                         @if($column->editable === true)
                                             <div
-                                                x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ') }}</span>' }">
+                                                x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->$field) }}</span>' }">
                                                 <button
-                                                    x-on:click="value = returnValue({!! $row->id !!}, '{!! \Illuminate\Support\Str::of($row->$field)->replace('\'', ' ') !!}', '{!! $field !!}');"
+                                                    x-on:click="value = returnValue({{ $row->id }}, '{{ addslashes($row->$field)  }}', '{{ $field }}');"
                                                     x-html="value"
                                                 ></button>
                                             </div>

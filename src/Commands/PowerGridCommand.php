@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class PowerGridCommand extends Command
 {
     protected $signature = 'powergrid:create
-    {name : name of class component}
+    {name=default : name of class component}
     {--model= : model Class}
     {--publish : publish stubs file}
     {--template= : name of the file that will be used as a template}
@@ -46,6 +46,11 @@ class PowerGridCommand extends Command
             $modelName = $this->option('model');
             $fillable  = $this->option('fillable');
 
+            if ($tableName === 'default') {
+                $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
+                exit;
+            }
+
             if (empty($modelName)) {
                 $example = '\\App\\Models\\'.$tableName;
                 $this->error('Error: Model name is required.<info> E.g. powergrid:create '.$tableName.' --model="'.$example.'"</info>');
@@ -61,7 +66,6 @@ class PowerGridCommand extends Command
                     $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
                     exit;
                 }
-
                 $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
                 exit;
             }
@@ -98,8 +102,8 @@ class PowerGridCommand extends Command
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'_format\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
                             } else {
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
 
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n";
                             }
                         }

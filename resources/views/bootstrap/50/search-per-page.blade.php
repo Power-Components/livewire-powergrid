@@ -20,7 +20,7 @@
                     @if($search_input)
                     <div class="form-group has-search">
                         <span class="fa fa-search form-control-feedback"></span>
-                        <input wire:model.debounce.300ms="search" type="text" class="col-12 col-sm-8 form-control livewire_powergrid_input" placeholder="{{ trans('livewire-powergrid::datatable.labels.placeholders.search') }}">
+                        <input wire:model.debounce.300ms="search" type="text" class="col-12 col-sm-8 form-control livewire_powergrid_input" placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}">
                     </div>
                     @endif
                 </label>

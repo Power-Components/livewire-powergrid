@@ -136,6 +136,7 @@ If everything was succesfull, you will find your new table component inside the 
 |**name**| Model name | ```ProductTable``` |
 |**--model**| Full model path | ```--model="App\Models\Product"``` |
 |**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
+|**--fillable**| Creates the class based on the fillable array of the model class | ```--fillable``` |
 |**--template**| Sometimes you can use ready-made templates for creating different types of tables | ```php artisan powergrid:create --template=stubs/table.sub or php artisan powergrid:create --template=stubs/table_with_buttons.sub``` |
 
 ### 8.  Using your Table Component
@@ -185,15 +186,9 @@ Example:
         {
             $model = Product::query()->with('group')->get();
             return PowerGrid::eloquent($model)
-                ->addColumn('id', function(Product $model) {
-                    return $model->id;
-                })
-                ->addColumn('name', function(Product $model) {
-                    return $model->name;
-                })
-                ->addColumn('group_id', function(Product $model) {
-                    return $model->group_id;
-                })
+                ->addColumn('id')
+                ->addColumn('name')
+                ->addColumn('group_id')
                 ->addColumn('group_name', function(Product $model) {
                     return $model->group->name;
                 })
@@ -254,10 +249,11 @@ Example:
                     ->class('btn btn-primary')
                     ->route('product.edit', ['product_id' => 'id']),
     
-                Button::add('delete')
+                Button::add('destroy')
                     ->caption('Excluir')
                     ->class('btn btn-danger')
-                    ->route('product.delete', ['product_id' => 'id']),
+                    ->route('product.destroy', ['product_id' => 'id'])
+                    ->method('delete'),
             ];
         }
     }
