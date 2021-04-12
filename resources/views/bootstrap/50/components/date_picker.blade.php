@@ -19,7 +19,7 @@
                    class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!! $date['from_column'] !!} form-control active
                    {{ (isset($class) != '') ? $class :  '' }}"
                    type="text"
-                   placeholder="Selecione o período.."
+                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
             >
         </div>
         @push('powergrid_scripts')

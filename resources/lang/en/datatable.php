@@ -11,7 +11,10 @@ return [
         'action' => 'Actions',
         'results_per_page' => 'Registers per page',
         'clear_filter' => 'Clear filter',
-        'no_data' => 'No records found',
-        'search_placeholder' => 'Search ...'
+        'no_data' => 'No records found'
+    ],
+    'placeholders' => [
+        'search' => 'Search ...',
+        'select' => 'Select a period'
     ]
 ];

@@ -5,16 +5,20 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class PowerGridCommand extends Command
 {
-    protected $signature = 'powergrid:create {--name= : name of class component}
+    protected $signature = 'powergrid:create
+    {name : name of class component}
     {--model= : model Class}
     {--publish : publish stubs file}
     {--template= : name of the file that will be used as a template}
-    {--force : Overwrite any existing files}';
+    {--force : Overwrite any existing files}
+    {--fillable : Generate data from fillable}';
 
     protected $description = 'Make a new Laravel Livewire table component.';
 
@@ -37,21 +41,19 @@ class PowerGridCommand extends Command
 
             $this->info('Stubs published successfully.');
         } else {
-            $tableName = $this->option('name');
 
-            if (empty($tableName)) {
-                $this->error('Error: Table name is required.<info> E.g. --name="ResourceTable"</info>');
-                exit;
-            }
-
+            $tableName = $this->argument('name');
             $modelName = $this->option('model');
+            $fillable  = $this->option('fillable');
 
             if (empty($modelName)) {
-                $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
+                $example = '\\App\\Models\\'.$tableName;
+                $this->error('Error: Model name is required.<info> E.g. powergrid:create '.$tableName.' --model="'.$example.'"</info>');
                 exit;
             }
 
             $modelNameArr = explode('\\', $modelName);
+            $modelLastName = Arr::last($modelNameArr);
 
             if (count($modelNameArr) == 1) {
 
@@ -72,12 +74,50 @@ class PowerGridCommand extends Command
                     $stub = File::get(__DIR__ . '/../../resources/stubs/table.stub');
                 }
 
-                $stub = str_replace('{{ componentName }}', $this->option('name'), $stub);
+                if ($fillable) {
+
+                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+
+                    $model = new $modelName();
+                    $fillable = array_merge([$model->getKeyName()], $model->getFillable());
+                    $fillable = array_merge($fillable, ['created_at', 'updated_at']);
+
+                    $dataSource = "";
+                    $columns = "[\n";
+                    foreach ($fillable as $field) {
+                        if (!in_array($field, $model->getHidden())) {
+
+                            $type = Arr::first(Arr::where(DB::select('describe '.$model->getTable()), function ($info) use ($field) {
+                                return ($info->Field === $field) ? $info->Type: '';
+                            }))->Type;
+
+                            if ($type === "timestamp") {
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_format\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
+
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'_format\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
+                            } else {
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
+
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n";
+                            }
+                        }
+                    }
+
+                    $columns .= "        ]\n";
+
+                    $stub = str_replace('{{ dataSource }}', $dataSource, $stub);
+                    $stub = str_replace('{{ columns }}', $columns, $stub);
+
+                }
+
+                $stub = str_replace('{{ componentName }}', $tableName, $stub);
                 $stub = str_replace('{{ modelName }}', $modelName, $stub);
-                $modelLastName = Arr::last($modelNameArr);
                 $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
                 $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
                 $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+
             } else {
 
                 $this->error('Could not create, Model path is missing');

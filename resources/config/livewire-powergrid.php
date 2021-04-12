@@ -53,10 +53,10 @@ return [
         'flat_piker' => [
             'js' => 'https://cdn.jsdelivr.net/npm/flatpickr',
             'css' => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-            'translate' => 'https://npmcdn.com/flatpickr/dist/l10n/'.\Illuminate\Support\Str::substr(app()->getLocale(), 0, 2).'.js',
+            'translate' => (app()->getLocale() != 'en') ? 'https://npmcdn.com/flatpickr/dist/l10n/'.\Illuminate\Support\Str::substr(app()->getLocale(), 0, 2).'.js': '',
             'locales' => [
                 'pt_BR' => [
-                    'locale' => \Illuminate\Support\Str::substr(app()->getLocale(), 0, 2),
+                    'locale' => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
                     'time_24hr' => true
@@ -76,5 +76,16 @@ return [
     |
     */
 
-    'filter' => 'inline'
+    'filter' => 'inline',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cache
+    |--------------------------------------------------------------------------
+    |
+    | When the data is cached, the search is much faster.
+    | It is updated whenever the page is reloaded or a field is changed
+    |
+    */
+    'cached_data' => true
 ];

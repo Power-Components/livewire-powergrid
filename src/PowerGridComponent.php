@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
@@ -106,8 +108,6 @@ class PowerGridComponent extends Component
 
     public function mount()
     {
-        $this->model = new \Illuminate\Support\Collection($this->dataSource());
-
         $this->columns = $this->columns();
 
         $this->paginationTheme = config('livewire-powergrid.theme');
@@ -146,7 +146,7 @@ class PowerGridComponent extends Component
 
     public function render()
     {
-        $this->model = new \Illuminate\Support\Collection($this->dataSource());
+        $this->model = $this->model();
 
         $this->columns = $this->columns();
 
@@ -202,9 +202,21 @@ class PowerGridComponent extends Component
         ]);
     }
 
+    private function model()
+    {
+        $cache = (bool) config('livewire-powergrid.cached_data');
+        if ($cache) {
+            return Cache::rememberForever($this->id, function () {
+                return new \Illuminate\Support\Collection($this->dataSource());
+            });
+        }
+        return new \Illuminate\Support\Collection($this->dataSource());
+    }
+
     public function update(array $data ): bool
     {
         return false;
     }
+
 
 }

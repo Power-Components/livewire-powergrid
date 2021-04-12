@@ -124,7 +124,7 @@ To create a Table Component for an entity use the following Artisan command.
 Make sure to use "" around your `--model` option.
 
 ```bash
-    php artisan powergrid:create --name=ProductTable --model="App\Models\Product"
+    php artisan powergrid:create ProductTable --model="App\Models\Product"
 ```
 
 If everything was succesfull, you will find your new table component inside the `app/Http/Livewire` folder.
@@ -133,7 +133,7 @@ If everything was succesfull, you will find your new table component inside the 
 
 | Option | Description | Example | 
 |----|----|----|
-|**--name**| Model name | ```--name=ProductTable``` |
+|**name**| Model name | ```ProductTable``` |
 |**--model**| Full model path | ```--model="App\Models\Product"``` |
 |**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
 |**--template**| Sometimes you can use ready-made templates for creating different types of tables | ```php artisan powergrid:create --template=stubs/table.sub or php artisan powergrid:create --template=stubs/table_with_buttons.sub``` |

@@ -23,42 +23,13 @@ class {{ componentName }} extends PowerGridComponent
     public function dataSource(): array
     {
         $model = {{ modelLastName }}::query()->get();
-        return PowerGrid::eloquent($model)
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('created_at')
-            ->addColumn('created_at_format', function({{ modelLastName }} $model) {
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            })
+        return PowerGrid::eloquent($model){{ dataSource }}
             ->make();
     }
 
     public function columns(): array
     {
-        return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
-                ->title(__('Descrição'))
-                ->field('name')
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
-                ->title(__('Criado em'))
-                ->field('created_at')
-                ->hidden(),
-
-            Column::add()
-                ->title(__('Criado em'))
-                ->field('created_at_format')
-                ->makeInputDatePicker('created_at')
-                ->searchable()
-        ];
+        return {{ columns }};
     }
 
     /*
@@ -93,5 +64,4 @@ class {{ componentName }} extends PowerGridComponent
        return $updated;
     }
     */
-
 }

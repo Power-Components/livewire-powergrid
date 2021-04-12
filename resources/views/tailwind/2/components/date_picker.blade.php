@@ -27,7 +27,7 @@
                        focus:bg-white focus:border-gray-500
                        {{ (isset($class) != '') ? $class : 'w-full' }}"
                    type="text"
-                   placeholder="Selecione o período.."
+                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
             >
         </div>
         @push('powergrid_scripts')
@@ -50,7 +50,7 @@
                         onClose: function (selectedDates, dateStr, instance) {
                             let data = [];
                             data.push({
-                                selectedDates: dateStr,
+                                selectedDates: selectedDates,
                                 values: instance._input.attributes['data-key'].value
                             })
                             window.livewire.emit('inputDatePiker', data);

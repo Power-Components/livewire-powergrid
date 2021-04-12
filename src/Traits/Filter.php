@@ -47,44 +47,30 @@ trait Filter
 
     }
 
-    public function formatDate( string $format = '' ): string
+    private function advancedFilter(Collection $collection ): Collection
     {
-        if ($this->format_date === '') {
-            return 'Y-m-d H:i:s';
-        }
-        if ($format === '') {
-            return $this->format_date;
-        }
-        $this->format_date = $format;
-        return $format;
-    }
-
-    private function advancedFilter( $data )
-    {
-
         foreach ($this->filters as $type => $filter) {
-            if ($type === 'date_picker') {
-                $date = explode('até', $filter[key($filter)]);
-                if (isset($date[1]) && filled($date[0]) && filled($date[1])) {
+            switch ($type) {
+                case 'date_picker':
+                    $date = $filter[key($filter)];
+                    if (filled($date[0]) && filled($date[1])) {
+                        $from = Carbon::parse($date[0]);
+                        $to = Carbon::parse($date[1]);
 
-                    $from = Carbon::createFromFormat('d/m/Y H:i', trim($date[0]))->format($this->formatDate());
-                    $to = Carbon::createFromFormat('d/m/Y H:i', trim($date[1]))->format($this->formatDate());
-
-                    $key = key($filter);
-                    $data = $data->whereBetween($key, [$from, $to]);
-
-                }
-            }
-            if ($type === 'select') {
-                if (filled($filter[key($filter)])) {
-                    $key = key($filter);
-                    $value = $filter[$key];
-                    $data = $data->where($key, $value);
-                }
+                        $collection = $collection->whereBetween(key($filter), [$from, $to]);
+                    }
+                    break;
+                case 'select':
+                    if (filled($filter[key($filter)])) {
+                        $key = key($filter);
+                        $value = $filter[$key];
+                        $collection = $collection->where($key, $value);
+                    }
+                    break;
             }
         }
 
-        return $data;
+        return $collection;
     }
 
     public function inputDatePiker($data)
