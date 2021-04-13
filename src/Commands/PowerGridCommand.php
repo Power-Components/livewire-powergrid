@@ -95,7 +95,7 @@ class PowerGridCommand extends Command
                                 return ($info->Field === $field) ? $info->Type: '';
                             }))->Type;
 
-                            if ($type === "timestamp") {
+                            if (in_array($type, ['timestamp', 'datetime'])) {
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'_format\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
 
