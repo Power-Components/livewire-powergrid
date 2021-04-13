@@ -104,7 +104,7 @@
                                                 ></button>
                                             </div>
                                         @else
-                                            {{ $row->$field }}
+                                            {!! $row->$field !!}
                                         @endif
                                     </td>
                                 @endif
