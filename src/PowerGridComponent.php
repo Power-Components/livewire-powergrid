@@ -76,7 +76,7 @@ class PowerGridComponent extends Component
      */
     public function setUp()
     {
-        $this->showCheckBox()->showPerPage()->showSearchInput();
+        $this->showPerPage();
     }
 
     /**

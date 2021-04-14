@@ -19,7 +19,9 @@ class {{ componentName }} extends PowerGridComponent
 
     public function setUp()
     {
-        $this->showCheckBox()->showPerPage()->showSearchInput();
+        $this->showCheckBox()
+            ->showPerPage()
+            ->showSearchInput();
     }
 
     public function dataSource(): array
@@ -29,7 +31,7 @@ class {{ componentName }} extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('created_at')
-            ->addColumn('created_at_format', function({{ modelLastName }} $model) {
+            ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             })
             ->make();
@@ -57,7 +59,7 @@ class {{ componentName }} extends PowerGridComponent
 
             Column::add()
                 ->title(__('Criado em'))
-                ->field('created_at_format')
+                ->field('created_at_formatted')
                 ->makeInputDatePicker('created_at')
                 ->searchable()
         ];

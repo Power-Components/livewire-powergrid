@@ -179,7 +179,9 @@ Example:
 
         public function setUp()
         {
-            $this->showCheckBox()->showPerPage()->showSearchInput();
+            $this->showCheckBox()
+                ->showPerPage()
+                ->showSearchInput();
         }
     
         public function dataSource(): array
