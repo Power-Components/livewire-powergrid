@@ -32,6 +32,14 @@
             @endif
         @endif
 
+        <div class="message" style="margin: 10px 0 10px;">
+            @if (session()->has('success'))
+                @include('livewire-powergrid::bootstrap.50.alert.success')
+            @elseif (session()->has('error'))
+                @include('livewire-powergrid::bootstrap.50.alert.success')
+            @endif
+        </div>
+
         <div class="table-responsive col-md-12" style="margin: 10px 0 10px;">
 
             <table id="table"
@@ -46,7 +54,7 @@
                         @if($column->hidden === false)
                             <th
                                 class="{{ ($column->header_class != '') ?? "" }}"
-                                style="@if($column->sortable === true) cursor:pointer; @endif {{(isset($column->header_style)? $column->header_style: "")}}"
+                                style="@if($column->sortable === true)cursor:pointer;@endif {{( $column->header_style != '') ?? '' }} min-width: 50px;"
                             >
                                 <div>
                                     @if($column->sortable === true)
@@ -64,7 +72,7 @@
                                     <span @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')"
                                             @endif>
                                            {{$column->title}}
-                                        </span>
+                                    </span>
 
                                     @if(count($filters))
                                         @if(\Illuminate\Support\Arr::exists($column->inputs, 'date_picker') || \Illuminate\Support\Arr::exists($column->inputs, 'select'))
@@ -126,17 +134,9 @@
                                     style="{{(isset($column->body_style)? $column->body_style: "")}}"
                                 >
                                     @if($column->editable === true)
-                                        <div
-                                            class="relative"
-                                            x-on:click="input=true"
-                                            x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->$field)  }}</span>' }">
-
-                                            <button
-                                                style="width: 100%;text-align: left;border: 0;padding: 4px;background: none;"
-                                                x-on:click="value = returnValue({{ $row->id }}, '{{ addslashes($row->$field) }}', '{{ $field }}');"
-                                                x-html="value"
-                                            ></button>
-                                        </div>
+                                        @include('livewire-powergrid::bootstrap.50.components.editable')
+                                    @elseif($column->toggleable === true)
+                                        @include('livewire-powergrid::bootstrap.50.components.toggleable')
                                     @else
                                         {!! $row->$field !!}
                                     @endif

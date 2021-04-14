@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
@@ -16,10 +15,6 @@ class PowerGridComponent extends Component
 
     use WithPagination, Checkbox, ExportExcel, Filter;
 
-    /**
-     * @var
-     */
-    protected $model;
     /**
      * @var array
      */
@@ -71,7 +66,8 @@ class PowerGridComponent extends Component
 
     protected $listeners = [
         'inputDatePiker' => 'inputDatePiker',
-        'editInput' => 'editInput'
+        'inputChanged' => 'inputChanged',
+        'toggleChanged' => 'inputChanged'
     ];
 
     /**
@@ -146,24 +142,21 @@ class PowerGridComponent extends Component
 
     public function render()
     {
-        $this->model = $this->model();
-
         $this->columns = $this->columns();
+        $data = [];
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
-        $data = [];
+        if (filled($this->collection())) {
 
-        if (filled($this->model)) {
-
-            $data = Collection::search($this->model, $this->search, $this->columns());
+            $data = Collection::search($this->collection(), $this->search, $this->columns());
             $data = $this->advancedFilter($data);
             $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
 
             if ($data->count()) {
-                $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count(): $this->perPage);
+                $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
         }
 
@@ -177,9 +170,8 @@ class PowerGridComponent extends Component
     public function setOrder( $field )
     {
         if ($this->orderBy === $field) {
-            $this->orderAsc = ! $this->orderAsc;
+            $this->orderAsc = !$this->orderAsc;
         }
-
         $this->orderBy = $field;
     }
 
@@ -193,27 +185,30 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    public function editInput( $data )
+    public function inputChanged( $data )
     {
         $update = $this->update($data);
-        $this->dispatchBrowserEvent('onUpdateInput', [
-            'data' => $data,
-            'success' => $update
-        ]);
+        $this->collection();
+        if (!$update) {
+            session()->flash('error', trans('livewire-powergrid::datatable.alert.error'));
+        } else {
+            session()->flash('success', trans('livewire-powergrid::datatable.alert.success'));
+        }
     }
 
-    private function model()
+    private function collection()
     {
         $cache = (bool) config('livewire-powergrid.cached_data');
+        $collection = new \Illuminate\Support\Collection($this->dataSource());
         if ($cache) {
-            return Cache::rememberForever($this->id, function () {
-                return new \Illuminate\Support\Collection($this->dataSource());
+            return Cache::rememberForever($this->id, function () use ( $collection ) {
+                return $collection;
             });
         }
-        return new \Illuminate\Support\Collection($this->dataSource());
+        return $collection;
     }
 
-    public function update(array $data ): bool
+    public function update( array $data ): bool
     {
         return false;
     }

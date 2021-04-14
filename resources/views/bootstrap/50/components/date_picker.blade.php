@@ -42,7 +42,7 @@
                         onClose: function (selectedDates, dateStr, instance) {
                             let data = [];
                             data.push({
-                                selectedDates: dateStr,
+                                selectedDates: selectedDates,
                                 values: instance._input.attributes['data-key'].value
                             })
                             $('.spinner').html('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')

@@ -82,7 +82,7 @@ class Button
     }
 
     /**
-     * Button text in view
+     * Method request support (GET, PUT, PUT and DELETE)
      * @param string $method
      * @return $this
      */

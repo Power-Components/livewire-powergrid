@@ -49,7 +49,7 @@ class Collection
             foreach ($model as $item) {
                 foreach ($columns as $key => $value) {
                     $field = $value->field;
-                    if (isset($value->searchable)) {
+                    if ($value->searchable === true) {
                         if (Str::contains(strtolower($item->$field), strtolower($search))) {
                             if (!in_array(strtolower($item->$field), $data_map->toArray())) {
                                 $data_map->push($item);

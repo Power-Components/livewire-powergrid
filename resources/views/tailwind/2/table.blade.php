@@ -13,6 +13,14 @@
                 @endif
             @endif
 
+            <div class="message pt-1">
+                @if (session()->has('success'))
+                    @include('livewire-powergrid::tailwind.2.alert.success')
+                @elseif (session()->has('error'))
+                    @include('livewire-powergrid::tailwind.2.alert.success')
+                @endif
+            </div>
+
             @include('livewire-powergrid::tailwind.2.loading')
             <div
                 class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
@@ -96,13 +104,9 @@
                                         style="{{ ($column->body_style != '') ?? "" }}"
                                     >
                                         @if($column->editable === true)
-                                            <div
-                                                x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->$field) }}</span>' }">
-                                                <button
-                                                    x-on:click="value = returnValue({{ $row->id }}, '{{ addslashes($row->$field)  }}', '{{ $field }}');"
-                                                    x-html="value"
-                                                ></button>
-                                            </div>
+                                            @include('livewire-powergrid::tailwind.2.components.editable')
+                                        @elseif($column->toggleable === true)
+                                            @include('livewire-powergrid::tailwind.2.components.toggleable')
                                         @else
                                             {!! $row->$field !!}
                                         @endif

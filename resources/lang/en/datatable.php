@@ -16,5 +16,9 @@ return [
     'placeholders' => [
         'search' => 'Search ...',
         'select' => 'Select a period'
+    ],
+    'alert' => [
+        'success' => 'Data updated successfully!',
+        'error' => 'Oops. Failed to update.'
     ]
 ];

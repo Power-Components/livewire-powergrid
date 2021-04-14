@@ -21,6 +21,7 @@ class Column
     public array $inputs = [];
     public string $link = '';
     public bool $editable = false;
+    public bool $toggleable = false;
 
     /**
      * @return static
@@ -150,9 +151,9 @@ class Column
         return $this;
     }
 
-    public function link( string $url ): Column
+    public function toggleable(): Column
     {
-        $this->link = $url;
+        $this->toggleable = true;
         return $this;
     }
 

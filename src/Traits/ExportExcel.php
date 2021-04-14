@@ -10,7 +10,7 @@ trait ExportExcel
 {
     public function exportToExcel(): BinaryFileResponse
     {
-        $data = collect($this->model());
+        $data = $this->collection();
 
         $except = [];
         $title = [];

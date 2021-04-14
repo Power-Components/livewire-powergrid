@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use {{ modelName }};
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Collection;
+use Illuminate\Database\QueryException;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;

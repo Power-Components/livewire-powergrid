@@ -101,10 +101,16 @@ class PowerGridCommand extends Command
 
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'_format\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
+                            } else if ($type === 'tinyint(1)') {
+
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->toggleable(),'."\n";
+
                             } else {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n";
+
                             }
                         }
                     }
