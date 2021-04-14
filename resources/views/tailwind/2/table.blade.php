@@ -17,7 +17,7 @@
                 @if (session()->has('success'))
                     @include('livewire-powergrid::tailwind.2.alert.success')
                 @elseif (session()->has('error'))
-                    @include('livewire-powergrid::tailwind.2.alert.success')
+                    @include('livewire-powergrid::tailwind.2.alert.error')
                 @endif
             </div>
 
