@@ -151,11 +151,6 @@ class Column
         return $this;
     }
 
-    public function toggleable(): Column
-    {
-        $this->toggleable = true;
-        return $this;
-    }
 
     /**
      * @param $data_source
@@ -192,11 +187,28 @@ class Column
         return $this;
     }
 
-    public function editOnClick(): Column
+    /**
+     * Adds Edit on click to a column
+     *
+     * @param bool $isEditable
+     * @return Column
+     */
+    public function editOnClick(bool $isEditable = true): Column
     {
-        $this->editable = true;
+        $this->editable = $isEditable;
         return $this;
     }
 
 
+    /**
+     * Adds Toggle to a column
+     *
+     * @param bool $isToggle
+     * @return Column
+     */
+    public function toggleablek(bool $isTogglable = true): Column
+    {
+        $this->toggleable = $isTogglable;
+        return $this;
+    }
 }

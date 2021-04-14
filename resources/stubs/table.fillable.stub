@@ -75,7 +75,7 @@ class {{ componentName }} extends PowerGridComponent
     public function update(array $data ): bool
     {
        try {
-           $updated = User::query()->find($data['id'])->update([
+           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
            ]);
        } catch (QueryException $exception) {
@@ -83,5 +83,24 @@ class {{ componentName }} extends PowerGridComponent
        }
        return $updated;
     }
+
+    public function updateMessages(string $status, string $field = '_default_message'): string
+    {
+        $updateMessages = [
+            'success'   => [
+                '_default_message' => __('Data has been updated successfully!'),
+                //'custom_field' => __('Custom Field updated successfully!'),
+            ],
+
+            "error" => [
+                '_default_message' => __('Error updating the data.'),
+                //'custom_field' => __('Error updating custom field.'),
+            ]
+
+        ];
+
+        return (isset($updateMessages[$status][$field]) ? $updateMessages[$status][$field] : $updateMessages[$status]['_default_message']);
+    }
+            
     */
 }
