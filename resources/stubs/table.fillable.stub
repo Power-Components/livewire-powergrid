@@ -62,11 +62,6 @@ class {{ componentName }} extends PowerGridComponent
            $updated = User::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
            ]);
-           if ((bool) config('livewire-powergrid.cached_data') === true) {
-                Cache::rememberForever($this->id, function () {
-                    return new Collection($this->dataSource());
-                });
-           }
        } catch (QueryException $exception) {
            $updated = false;
        }
