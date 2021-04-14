@@ -118,12 +118,10 @@ class {{ componentName }} extends PowerGridComponent
                 '_default_message' => __('Data has been updated successfully!'),
                 //'custom_field' => __('Custom Field updated successfully!'),
             ],
-
             "error" => [
                 '_default_message' => __('Error updating the data.'),
                 //'custom_field' => __('Error updating custom field.'),
             ]
-
         ];
 
         return (isset($updateMessages[$status][$field]) ? $updateMessages[$status][$field] : $updateMessages[$status]['_default_message']);

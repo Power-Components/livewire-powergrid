@@ -203,10 +203,10 @@ class Column
     /**
      * Adds Toggle to a column
      *
-     * @param bool $isToggle
+     * @param bool $isTogglable
      * @return Column
      */
-    public function toggleablek(bool $isTogglable = true): Column
+    public function toggleable(bool $isTogglable = true): Column
     {
         $this->toggleable = $isTogglable;
         return $this;

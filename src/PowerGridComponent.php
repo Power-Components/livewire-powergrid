@@ -191,10 +191,8 @@ class PowerGridComponent extends Component
         $this->collection();
 
         if (!$update) {
-            //   session()->flash('error', trans('livewire-powergrid::datatable.alert.error'));
             session()->flash('error', $this->updateMessages('error', $data['field']));
         } else {
-            //   session()->flash('success', trans('livewire-powergrid::datatable.alert.success'));
             session()->flash('success', $this->updateMessages('success', $data['field']));
         }
     }
@@ -204,7 +202,8 @@ class PowerGridComponent extends Component
         $cache = (bool) config('livewire-powergrid.cached_data');
         $collection = new \Illuminate\Support\Collection($this->dataSource());
         if ($cache) {
-            return Cache::rememberForever($this->id, function () use ( $collection ) {
+            \cache()->forget($this->id);
+            return \cache()->rememberForever($this->id, function () use ( $collection ) {
                 return $collection;
             });
         }
@@ -216,9 +215,20 @@ class PowerGridComponent extends Component
         return false;
     }
 
-    public function updateMessages(string $status, string $field): string
+    public function updateMessages(string $status, string $field = '_default_message'): string
     {
-        return '';
+        $updateMessages = [
+            'success'   => [
+                '_default_message' => __('Data has been updated successfully!'),
+                'status' => __('Custom Field updated successfully!'),
+            ],
+            "error" => [
+                '_default_message' => __('Error updating the data.'),
+                //'custom_field' => __('Error updating custom field.'),
+            ]
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 
 
