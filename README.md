@@ -255,7 +255,7 @@ Here we provide a full example:
                     ->caption(__('Delete'))
                     ->class('btn btn-danger')
                     ->route('product.destroy', ['product' => 'id'])
-                    ->method('destroy'),
+                    ->method('delete'),
             ];
         }
     }
@@ -420,7 +420,7 @@ These methods are available on `Button` class.
 |**add**| *String* $action |Action name |```Button::add()```|
 |**caption**| *String* $caption |Label for the button |```->caption('Edit Product')```|
 |**class**| *String* $class_attr |CSS class attribute |```->class('bg-indigo-500 text-white')```|
-|**method**| *String* $method|Method for action (GET/POST/PUT/DESTROY))|```->method('destroy')```|
+|**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
 |**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
 
 Example of usage
@@ -431,7 +431,7 @@ Example of usage
         ->caption(__('Delete'))
         ->class('btn btn-danger')
         ->route('product.destroy', ['product' => 'id'])
-        ->method('destroy'),
+        ->method('delete'),
   //...
 ];
   ```
