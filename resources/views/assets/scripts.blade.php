@@ -30,7 +30,7 @@
     }
 
     function returnValue(id, value, field) {
-        document.getElementsByClassName('alert')[0].style.display = "none";
+        document.getElementsByClassName('message')[0].style.display = "none";
         return '<input value="' + value + '" class="appearance-none block w-full bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
     }
 
