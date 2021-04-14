@@ -9,16 +9,12 @@ return [
     ],
     'labels' => [
         'action' => 'Actions',
-        'results_per_page' => 'Registers per page',
+        'results_per_page' => 'Records per page',
         'clear_filter' => 'Clear filter',
         'no_data' => 'No records found'
     ],
     'placeholders' => [
-        'search' => 'Search ...',
+        'search' => 'Search...',
         'select' => 'Select a period'
     ],
-    'alert' => [
-        'success' => 'Data updated successfully!',
-        'error' => 'Oops. Failed to update.'
-    ]
 ];

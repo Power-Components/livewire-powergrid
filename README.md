@@ -346,7 +346,7 @@ These are the methods available on each column added with `Column` class.
 |----|----|----|----|
 |**add**| |Add a new column |```Column::add()```|
 |**field**| *String* $field | Field name| ```->field('name')```|
-|**title**| *String* $title |Column title for the given field |```add()->title('Client Name')```|
+|**title**| *String* $title |Column title for the given field |```->title('Client Name')```|
 |**searchable**| |Includes the column in the global search | ```->searchable()``` |
 |**sortable**| |Includes column in the sortable list | ```->sortable()``` |
 |**hidden**| |hides the column in the table|```->hidden()```|
@@ -356,8 +356,8 @@ These are the methods available on each column added with `Column` class.
 |**visibleInExport**| |When true it will be invisible in the table and will show the column in the exported file|```->visibleInExport(true)```|
 |**filterDateBetween**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->filterDateBetween()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
-|**editOnClick**| - | Allows the column to be editable by clicking on it (*\*requires Alpine.js*) |```add()->field('name')->editOnClick()```|
-|**toggleable**| - | Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```add()->field('is_active')->toggleable()```|
+|**editOnClick**|*bool* $isEditable| Allows the column to be editable by clicking on it (*\*requires Alpine.js*) |```->field('name')->editOnClick()```|
+|**toggleable**|*bool* $isTogglable| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
 
 
 Example of usage:

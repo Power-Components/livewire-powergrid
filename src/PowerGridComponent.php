@@ -185,14 +185,17 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    public function inputChanged( $data )
+    public function inputChanged($data): void
     {
         $update = $this->update($data);
         $this->collection();
+
         if (!$update) {
-            session()->flash('error', trans('livewire-powergrid::datatable.alert.error'));
+            //   session()->flash('error', trans('livewire-powergrid::datatable.alert.error'));
+            session()->flash('error', $this->updateMessages('error', $data['field']));
         } else {
-            session()->flash('success', trans('livewire-powergrid::datatable.alert.success'));
+            //   session()->flash('success', trans('livewire-powergrid::datatable.alert.success'));
+            session()->flash('success', $this->updateMessages('success', $data['field']));
         }
     }
 
@@ -208,9 +211,14 @@ class PowerGridComponent extends Component
         return $collection;
     }
 
-    public function update( array $data ): bool
+    public function update(array $data): bool
     {
         return false;
+    }
+
+    public function updateMessages(string $status, string $field): string
+    {
+        return '';
     }
 
 
