@@ -17,8 +17,4 @@ return [
         'search' => 'Buscar ...',
         'select' => 'Selecione um período'
     ],
-    'alert' => [
-        'success' => 'Atualizado com sucesso!',
-        'error' => 'Falha ao atualizar.'
-    ]
 ];
