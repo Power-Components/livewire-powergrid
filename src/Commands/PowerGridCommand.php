@@ -97,10 +97,10 @@ class PowerGridCommand extends Command
 
                             if (in_array($type, ['timestamp', 'datetime'])) {
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_format\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->formatted(\'d/m/Y H:i:s\');'."\n".'            })';
 
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_format').'\'))'."\n".'                ->field(\''.$field.'_format\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'_formatted\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
                             } else if ($type === 'tinyint(1)') {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';

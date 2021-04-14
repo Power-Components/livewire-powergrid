@@ -28,6 +28,7 @@
                     <thead class="bg-gray-50">
                     <tr>
                         @include('livewire-powergrid::tailwind.2.checkbox-all')
+
                         @foreach($columns as $column)
                             @if($column->hidden === false)
 
@@ -50,7 +51,7 @@
                                         @endif
                                         <span
                                             @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')" @endif>
-                                        {{$column->title}}
+                                            {{$column->title}}
                                         </span>
                                         @if(count($filters))
                                             @if(\Illuminate\Support\Arr::exists($column->inputs, 'date_picker') || \Illuminate\Support\Arr::exists($column->inputs, 'select'))
@@ -81,7 +82,9 @@
                     </tr>
                     </thead>
                     <tbody class="text-gray-800">
+
                     @include('livewire-powergrid::tailwind.2.inline-filter')
+
                     @if(count($data) === 0)
                         <tr class="border-b border-gray-200 hover:bg-gray-100 ">
                             <td class="text-center p-2" colspan="{{ (($checkbox) ? 1:0)
@@ -92,9 +95,12 @@
                             </td>
                         </tr>
                     @endif
+
                     @foreach($data as $row)
                         <tr class="border-b border-gray-200 hover:bg-gray-100" wire:key="{{ $row->id }}">
+
                             @include('livewire-powergrid::tailwind.2.checkbox-row')
+
                             @foreach($columns as $column)
                                 @php
                                     $field = $column->field;
@@ -113,7 +119,9 @@
                                     </td>
                                 @endif
                             @endforeach
+
                             @include('livewire-powergrid::tailwind.2.actions')
+
                         </tr>
                         <tr class="child_{{ $row->id }} hidden">
                         </tr>
