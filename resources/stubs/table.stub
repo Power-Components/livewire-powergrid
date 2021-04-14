@@ -46,18 +46,18 @@ class {{ componentName }} extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Descrição'))
+                ->title(__('Name'))
                 ->field('name')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Criado em'))
+                ->title(__('Created at'))
                 ->field('created_at')
                 ->hidden(),
 
             Column::add()
-                ->title(__('Criado em'))
+                ->title(__('Created at'))
                 ->field('created_at_formatted')
                 ->makeInputDatePicker('created_at')
                 ->searchable()
@@ -65,16 +65,24 @@ class {{ componentName }} extends PowerGridComponent
     }
 
     /*
-    // Enable this section only when the route is defined
+    |--------------------------------------------------------------------------
+    | Actions Method
+    |--------------------------------------------------------------------------
+    | Enable this section only when you have defined routes for these actions.
+    |
+    */
+
+    /*
     public function actions(): array
     {
        return [
            Button::add('edit')
-               ->caption(__('Editar'))
+               ->caption(__('Edit'))
                ->class('bg-indigo-500 text-white')
                ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
+
            Button::add('destroy')
-               ->caption(__('Excluir'))
+               ->caption(__('Delete'))
                ->class('bg-red-500 text-white')
                ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
                ->method('delete')
@@ -83,7 +91,14 @@ class {{ componentName }} extends PowerGridComponent
     */
 
     /*
-    // Enable this section only if a column is editable "editOnClick"
+    |--------------------------------------------------------------------------
+    | Edit Method
+    |--------------------------------------------------------------------------
+    | Enable this section to use editOnClick() or toggleable() methods
+    |
+    */
+
+    /*
     public function update(array $data ): bool
     {
        try {

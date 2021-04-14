@@ -35,17 +35,26 @@ class {{ componentName }} extends PowerGridComponent
         return {{ columns }};
     }
 
+
     /*
-    // Enable this section only when the route is defined
+    |--------------------------------------------------------------------------
+    | Actions Method
+    |--------------------------------------------------------------------------
+    | Enable this section only when you have defined routes for these actions.
+    |
+    */
+
+    /*
     public function actions(): array
     {
        return [
            Button::add('edit')
-               ->caption(__('Editar'))
+               ->caption(__('Edit'))
                ->class('bg-indigo-500 text-white')
                ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
+
            Button::add('destroy')
-               ->caption(__('Excluir'))
+               ->caption(__('Delete'))
                ->class('bg-red-500 text-white')
                ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
                ->method('delete')
@@ -53,8 +62,16 @@ class {{ componentName }} extends PowerGridComponent
     }
     */
 
+
     /*
-    // Enable this section only if a column is editable "editOnClick"
+    |--------------------------------------------------------------------------
+    | Edit Method
+    |--------------------------------------------------------------------------
+    | Enable this section to use editOnClick() or toggleable() methods
+    |
+    */
+
+    /*
     public function update(array $data ): bool
     {
        try {
