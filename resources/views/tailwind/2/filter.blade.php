@@ -11,34 +11,38 @@
                 @php
                     $customConfig = [];
                 @endphp
-                <div class="mb-4 md:flex md:flex-wrap">
+                <div class="md:flex md:flex-wrap">
                     @if(isset($make_filters['date_picker']))
-                        <div class="flex flex-col mb-4 md:w-1/4">
-                            @foreach($make_filters['date_picker'] as $field => $date)
-
+                        @foreach($make_filters['date_picker'] as $field => $date)
+                            <div class="flex flex-col mb-4 md:w-1/4">
                                 @include('livewire-powergrid::tailwind.2.components.date_picker', [
-                                    'date' => $date,
                                     'inline' => false,
                                     'class_attr' => 'w-full'
                                 ])
-
-                            @endforeach
-                        </div>
-                    @endif
-                    @if(isset($make_filters['select']))
+                            </div>
+                        @endforeach
+                @endif
+                @if(isset($make_filters['select']))
+                    @foreach($make_filters['select'] as $field => $select)
                         <div class="flex flex-col mb-4 md:w-1/4">
-                            @foreach($make_filters['select'] as $field => $select)
-                                @include('livewire-powergrid::tailwind.2.components.select', [
-                                    'select' => $select,
-                                    'inline' => false,
-                                    'class_attr' => 'w-full'
-                                ])
-                            @endforeach
+                            @include('livewire-powergrid::tailwind.2.components.select', [
+                                'inline' => false,
+                                'class_attr' => 'w-full'
+                            ])
                         </div>
-                    @endif
-                </div>
-
-
+                    @endforeach
+                @endif
+                @if(isset($make_filters['number']))
+                    @foreach($make_filters['number'] as $field => $number)
+                        <div class="flex flex-col mb-4 md:w-1/4">
+                            @include('livewire-powergrid::tailwind.2.components.number', [
+                                'inline' => false,
+                                'class_attr' => 'w-full'
+                            ])
+                        </div>
+                    @endforeach
+                @endif
+            </div>
             </div>
         </div>
     </div>

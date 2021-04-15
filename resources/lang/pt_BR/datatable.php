@@ -17,4 +17,10 @@ return [
         'search' => 'Buscar ...',
         'select' => 'Selecione um período'
     ],
+    'pagination' => [
+        'showing' => 'Mostrando',
+        'to' => 'até',
+        'of' => 'de',
+        'results' => 'Registros'
+    ]
 ];

@@ -17,4 +17,10 @@ return [
         'search' => 'Search...',
         'select' => 'Select a period'
     ],
+    'pagination' => [
+        'showing' => 'Showing',
+        'to' => 'to',
+        'of' => 'of',
+        'results' => 'Results'
+    ]
 ];

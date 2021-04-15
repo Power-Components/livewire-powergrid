@@ -58,11 +58,13 @@ class PowerGridComponent extends Component
      */
     public array $perPageValues = [10, 25, 50, 100, 0];
 
-    public $sortIcon = '&#8597;';
+    public string $sortIcon = '&#8597;';
 
-    public $sortAscIcon = '&#8593;';
+    public string $sortAscIcon = '&#8593;';
 
-    public $sortDescIcon = '&#8595;';
+    public string $sortDescIcon = '&#8595;';
+
+    public string $record_count = '';
 
     protected $listeners = [
         'inputDatePiker' => 'inputDatePiker',
@@ -86,6 +88,17 @@ class PowerGridComponent extends Component
     public function showSearchInput(): PowerGridComponent
     {
         $this->search_input = true;
+        return $this;
+    }
+
+    /**
+     * default full. other: short, min
+     * @param string $mode
+     * @return $this
+     */
+    public function showRecordCount( $mode = 'full'): PowerGridComponent
+    {
+        $this->record_count = $mode;
         return $this;
     }
 
@@ -230,6 +243,5 @@ class PowerGridComponent extends Component
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
-
 
 }

@@ -12,7 +12,6 @@
                             @foreach($make_filters['date_picker'] as $field => $date)
                                 @if($date['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.date_picker', [
-                                        'date' => $date,
                                         'inline' => true,
                                         'class' => 'w-full'
                                     ])
@@ -23,7 +22,15 @@
                             @foreach($make_filters['select'] as $field => $select)
                                 @if($select['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.select', [
-                                        'select' => $select,
+                                        'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
+                        @endif
+                        @if(isset($make_filters['number']))
+                            @foreach($make_filters['number'] as $field => $number)
+                                @if($number['field'] === $column->field)
+                                    @include('livewire-powergrid::tailwind.2.components.number', [
                                         'inline' => true
                                     ])
                                 @endif

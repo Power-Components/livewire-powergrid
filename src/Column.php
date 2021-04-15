@@ -203,12 +203,20 @@ class Column
     /**
      * Adds Toggle to a column
      *
-     * @param bool $isTogglable
+     * @param bool $isToggleable
      * @return Column
      */
-    public function toggleable(bool $isTogglable = true): Column
+    public function toggleable(bool $isToggleable = true): Column
     {
-        $this->toggleable = $isTogglable;
+        $this->toggleable = $isToggleable;
         return $this;
     }
+
+    public function rangeNumber(): Column
+    {
+        $this->inputs['number']['enabled'] = true;
+        return $this;
+    }
+
+
 }

@@ -8,21 +8,11 @@ use Illuminate\Support\Collection;
 trait Filter
 {
     public Collection $make_filters;
-
     public array $filters = [];
-
-    public bool $filter_action = false;
-
     private string $format_date = '';
-
-    public function filter()
-    {
-        $this->filter_action = true;
-    }
 
     public function clearFilter()
     {
-        $this->filter_action = false;
         $this->search = '';
         $this->filters = [];
     }
@@ -48,32 +38,45 @@ trait Filter
     private function advancedFilter( Collection $collection ): Collection
     {
         foreach ($this->filters as $type => $filter) {
-            switch ($type) {
-                case 'date_picker':
-                    $date = $filter[key($filter)];
-                    if (isset($date[0]) && isset($date[1])) {
-                        $collection = $collection->whereBetween(key($filter), [Carbon::parse($date[0]), Carbon::parse($date[1])]);
-                    }
-                    break;
-                case 'select':
-                    if (filled($filter[key($filter)])) {
-                        $key = key($filter);
-                        $value = $filter[$key];
+            $key = key($filter);
+
+            if (filled($filter[key($filter)])) {
+                $value = $filter[$key];
+                switch ($type) {
+                    case 'date_picker':
+                        if (isset($value[0]) && isset($value[1])) {
+                            $collection = $collection->whereBetween($key, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
+                        }
+                        break;
+                    case 'select':
                         $collection = $collection->where($key, $value);
-                    }
-                    break;
+                        break;
+                    case 'number':
+                        if (isset($value['start']) && isset($value['end'])) {
+                            $collection = $collection->whereBetween($key, [$value['start'], $value['end']]);
+                        }
+                        break;
+                }
             }
         }
 
         return $collection;
     }
 
-    public function inputDatePiker( $data )
+    public function inputDatePiker( $data ): void
     {
         $input = explode('.', $data[0]['values']);
         $this->filters['date_picker'][$input[2]] = $data[0]['selectedDates'];
-        $this->filter_action = true;
     }
 
+    public function filterNumberStart( $field, $value ): void
+    {
+        $this->filters['number'][$field]['start'] = $value;
+    }
+
+    public function filterNumberEnd( $field, $value ): void
+    {
+        $this->filters['number'][$field]['end'] = $value;
+    }
 
 }

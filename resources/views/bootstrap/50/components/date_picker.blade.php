@@ -7,6 +7,7 @@
             }
         }
     @endphp
+
         <div class="@if(!$inline) col-md-6 col-lg-3 @endif {!! ($date['class'] != '') ?? '' !!} pt-2" style="max-width: 370px !important;">
 
             @if(!$inline)

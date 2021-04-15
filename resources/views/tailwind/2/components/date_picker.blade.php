@@ -8,9 +8,9 @@
         }
     @endphp
     @if(!$inline)
-        <div class="{!! ($date['class'] != '') ?? '' !!} pt-2 p-2" style="max-width: 370px;">
+        <div class="{!! ($date['class'] != '') ?? '' !!} pt-2 p-2" @if($inline) style="max-width: 370px;" @endif>
             @else
-                <div class="pr-6" wire:ignore style="max-width: 370px;">
+                <div class="pr-6" wire:ignore>
             @endif
 
             @if(!$inline)
@@ -20,10 +20,7 @@
                    data-key="filters.date_picker.{!! $date['from_column'] !!}"
                    wire:model="filters.input_date_picker.{!! $date['from_column'] !!}"
                    wire:ignore
-                   class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!! $date['from_column'] !!}
-                       block appearance-no mt-2 mb-2 bg-gray-200 border border-gray-200
-                       text-gray-700 py-3 px-4 pr-8 rounded
-                       leading-tight focus:outline-none focus:bg-white focus:border-gray-500
+                   class="livewire_powergrid_input flatpickr flatpickr-input range_input_payment block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active
                        {{ (isset($class) != '') ? $class : 'w-full' }}"
                    type="text"
                    placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

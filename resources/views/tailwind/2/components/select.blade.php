@@ -5,10 +5,7 @@
         @endif
         <div class="relative">
             <select id="input_{!! $select['relation_id'] !!}"
-                    class="livewire_powergrid_input
-         block appearance-none w-full bg-gray-200 border mt-2 mb-2
-         border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight
-         focus:outline-none focus:bg-white focus:border-gray-500
+                    class="livewire_powergrid_input flatpickr flatpickr-input block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active
          {{ (isset($class)) ? $class : 'w-9/12' }}"
                     wire:model="filters.select.{!! $select['relation_id'] !!}"
                     wire:ignore
