@@ -34,7 +34,7 @@
                         @if($column->hidden === false)
                             <th
                                 class="{{ ($column->header_class != '') ?? "" }}"
-                                style="@if($column->sortable === true)cursor:pointer;@endif {{( $column->header_style != '') ?? '' }} min-width: 50px;"
+                                style="@if($column->sortable === true)cursor:pointer;@endif{{( $column->header_style != '') ?? '' }}min-width: 50px;"
                             >
                                 <div>
                                     @if($column->sortable === true)
@@ -94,12 +94,12 @@
                             @endphp
 
                             @if($column->hidden === false)
-                                <td class="{{ ($column->body_class != '') ?? ""}}"
-                                    style="{{(isset($column->body_style)? $column->body_style: "")}}"
+                                <td class="{{ ($column->body_class != '') ? $column->body_class: '' }}"
+                                    style="{{ ($column->body_style != '') ? $column->body_style: '' }}"
                                 >
                                     @if($column->editable === true)
                                         @include('livewire-powergrid::bootstrap.50.components.editable')
-                                    @elseif($column->toggleable === true)
+                                    @elseif(count($column->toggleable) > 0)
                                         @include('livewire-powergrid::bootstrap.50.components.toggleable')
                                     @else
                                         {!! $row->$field !!}

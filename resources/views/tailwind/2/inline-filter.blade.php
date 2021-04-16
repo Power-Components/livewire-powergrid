@@ -7,7 +7,7 @@
             @endif
             @foreach($columns as $column)
                 @if($column->hidden === false)
-                    <td>
+                    <td style="max-width: 0">
                         @if(isset($make_filters['date_picker']))
                             @foreach($make_filters['date_picker'] as $field => $date)
                                 @if($date['field'] === $column->field)

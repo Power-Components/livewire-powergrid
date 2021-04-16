@@ -41,7 +41,7 @@
                 </div>
             @elseif($record_count === 'short')
                 <div>
-                    <p class="text-sm text-gray-700 leading-5">
+                    <p class="text-sm text-gray-700 leading-5 mr-2">
                         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
                         -
                         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
@@ -52,7 +52,7 @@
                 </div>
             @elseif($record_count === 'min')
                 <div>
-                    <p class="text-sm text-gray-700 leading-5">
+                    <p class="text-sm text-gray-700 leading-5 mr-2">
                         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
                         -
                         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>

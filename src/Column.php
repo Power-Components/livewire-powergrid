@@ -19,9 +19,8 @@ class Column
     public bool $visible_in_export = false;
     public array $filter_date_between = [];
     public array $inputs = [];
-    public string $link = '';
     public bool $editable = false;
-    public bool $toggleable = false;
+    public array $toggleable = [];
 
     /**
      * @return static
@@ -179,7 +178,7 @@ class Column
      */
     public function makeInputDatePicker( string $from_column, array $settings = [], string $class_attr = '' ): Column
     {
-       // $this->editable = false;
+        // $this->editable = false;
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class'] = $class_attr;
         $this->inputs['date_picker']['config'] = $settings;
@@ -190,12 +189,12 @@ class Column
     /**
      * Adds Edit on click to a column
      *
-     * @param bool $isEditable
+     * @param bool $hasPermission
      * @return Column
      */
-    public function editOnClick(bool $isEditable = true): Column
+    public function editOnClick( bool $hasPermission = true ): Column
     {
-        $this->editable = $isEditable;
+        $this->editable = $hasPermission;
         return $this;
     }
 
@@ -203,18 +202,24 @@ class Column
     /**
      * Adds Toggle to a column
      *
-     * @param bool $isToggleable
+     * @param bool $hasPermission
      * @return Column
      */
-    public function toggleable(bool $isToggleable = true): Column
+    public function toggleable( bool $hasPermission = true, array $default = [] ): Column
     {
-        $this->toggleable = $isToggleable;
+        $this->toggleable = [
+            'enabled' => $hasPermission,
+            'default' => count($default) ? $default: [__('active'), __('not active')]
+        ];
         return $this;
     }
 
-    public function rangeNumber(): Column
+    public function rangeNumber($with = '', $decimal = '.', $thousands =''): Column
     {
         $this->inputs['number']['enabled'] = true;
+        $this->inputs['number']['with'] = $with;
+        $this->inputs['number']['decimal'] = $decimal;
+        $this->inputs['number']['thousands'] = $thousands;
         return $this;
     }
 

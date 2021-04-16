@@ -33,9 +33,8 @@
 
                                 <th
                                     class="@if(isset($column->sortable)) pl-0 align-middle cursor-pointer hover:text-black hover:text-current @endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    style="@if($column->sortable === true) cursor:pointer; @endif {{(isset($column->header_style)? $column->header_style: "")}}"
+                                    style="@if($column->sortable === true) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
-
                                     <div class="align-content-between" style="align-items: center; justify-content: left;">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
@@ -93,12 +92,12 @@
                                 @endphp
 
                                 @if($column->hidden === false)
-                                    <td class="{{ ($column->body_class != '') ?? "px-6 py-4 whitespace-nowrap" }}"
-                                        style="{{ ($column->body_style != '') ?? "" }}"
+                                    <td class="px-6 py-4 whitespace-nowrap {{ ($column->body_class != '') ? $column->body_class : '' }}"
+                                        style=" {{ ($column->body_style != '') ? $column->body_style : '' }}"
                                     >
                                         @if($column->editable === true)
                                             @include('livewire-powergrid::tailwind.2.components.editable')
-                                        @elseif($column->toggleable === true)
+                                        @elseif(count($column->toggleable) > 0)
                                             @include('livewire-powergrid::tailwind.2.components.toggleable')
                                         @else
                                             {!! $row->$field !!}
