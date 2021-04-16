@@ -92,15 +92,35 @@
                                 @endphp
 
                                 @if($column->hidden === false)
-                                    <td class="px-6 py-4 whitespace-nowrap {{ ($column->body_class != '') ? $column->body_class : '' }}"
+                                    <td class="px-3 py-2 whitespace-nowrap {{ ($column->body_class != '') ? $column->body_class : '' }}"
                                         style=" {{ ($column->body_style != '') ? $column->body_style : '' }}"
                                     >
                                         @if($column->editable === true)
-                                            @include('livewire-powergrid::tailwind.2.components.editable')
+                                            <span class="flex justify-between">
+                                                <div>
+                                                    @include('livewire-powergrid::tailwind.2.components.editable')
+                                                </div>
+                                                <div>
+                                                    @if(count($column->click_to_copy) > 0)
+                                                        <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                    @endif
+                                                </div>
+                                            </span>
+
                                         @elseif(count($column->toggleable) > 0)
                                             @include('livewire-powergrid::tailwind.2.components.toggleable')
                                         @else
-                                            {!! $row->$field !!}
+                                            <span class="flex justify-between">
+                                                <div>
+                                                    {!! $row->$field !!}
+                                                </div>
+                                                <div>
+                                                    @if(count($column->click_to_copy) > 0)
+                                                        <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                    @endif
+                                                </div>
+                                            </span>
+
                                         @endif
                                     </td>
                                 @endif

@@ -21,6 +21,7 @@ class Column
     public array $inputs = [];
     public bool $editable = false;
     public array $toggleable = [];
+    public array $click_to_copy = [];
 
     /**
      * @return static
@@ -209,12 +210,18 @@ class Column
     {
         $this->toggleable = [
             'enabled' => $hasPermission,
-            'default' => count($default) ? $default: [__('active'), __('not active')]
+            'default' => count($default) ? $default : [__('active'), __('not active')]
         ];
         return $this;
     }
 
-    public function rangeNumber($with = '', $decimal = '.', $thousands =''): Column
+    /**
+     * @param string $with
+     * @param string $decimal
+     * @param string $thousands
+     * @return $this
+     */
+    public function rangeNumber( $with = '', $decimal = '.', $thousands = '' ): Column
     {
         $this->inputs['number']['enabled'] = true;
         $this->inputs['number']['with'] = $with;
@@ -223,5 +230,16 @@ class Column
         return $this;
     }
 
+    /**
+     * @param string $label
+     * @return $this
+     */
+    public function clickToCopy( $label = 'copy' ): Column
+    {
+        $this->click_to_copy = [
+            'label' => $label
+        ];
+        return $this;
+    }
 
 }

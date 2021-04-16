@@ -124,7 +124,7 @@ class {{ componentName }} extends PowerGridComponent
             ]
         ];
 
-        return (isset($updateMessages[$status][$field]) ? $updateMessages[$status][$field] : $updateMessages[$status]['_default_message']);
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
 

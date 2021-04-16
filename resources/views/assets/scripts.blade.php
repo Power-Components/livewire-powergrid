@@ -31,7 +31,7 @@
 
     function returnValue(id, value, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        return '<input value="' + value + '" class="appearance-none block w-full bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
+        return '<input value="' + value + '" class="block bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
     }
 
     @elseif(config('livewire-powergrid.theme') === 'bootstrap')
@@ -78,6 +78,14 @@
 
     @endif
 
+    function copyToClipboard(button) {
+        const el = document.createElement('textarea');
+        el.value = button.getAttribute('data-value');
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
 </script>
 @stack('powergrid_scripts')
 

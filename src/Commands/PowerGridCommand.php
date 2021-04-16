@@ -95,6 +95,7 @@ class PowerGridCommand extends Command
                                 return ($info->Field === $field) ? $info->Type: '';
                             }))->Type;
 
+                            echo $type."\n";
                             if (in_array($type, ['timestamp', 'datetime'])) {
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->formatted(\'d/m/Y H:i:s\');'."\n".'            })';
@@ -105,6 +106,11 @@ class PowerGridCommand extends Command
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->toggleable(),'."\n";
+
+                            } else if ($type === 'int(11)') {
+
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->rangeNumber(),'."\n";
 
                             } else {
 
