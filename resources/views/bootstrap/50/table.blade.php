@@ -98,11 +98,29 @@
                                     style="{{ ($column->body_style != '') ? $column->body_style: '' }}"
                                 >
                                     @if($column->editable === true)
-                                        @include('livewire-powergrid::bootstrap.50.components.editable')
+                                        <span class="d-flex justify-content-between">
+                                            <div>
+                                                @include('livewire-powergrid::bootstrap.50.components.editable')
+                                            </div>
+                                            <div>
+                                                @if(count($column->click_to_copy) > 0)
+                                                    <button style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                @endif
+                                            </div>
+                                        </span>
                                     @elseif(count($column->toggleable) > 0)
                                         @include('livewire-powergrid::bootstrap.50.components.toggleable')
                                     @else
-                                        {!! $row->$field !!}
+                                        <span class="d-flex justify-content-between">
+                                            <div>
+                                                {!! $row->$field !!}
+                                            </div>
+                                            <div>
+                                                @if(count($column->click_to_copy) > 0)
+                                                    <button style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                @endif
+                                            </div>
+                                        </span>
                                     @endif
                                 </td>
 
