@@ -14,13 +14,13 @@
             @endif
 
             @if(!$inline)
-                <label for="input_{!! $date['from_column'] !!}">{!! $date['label'] !!}</label>
+                <label for="input_{!! (($column->data_field != '') ? $column->data_field: $date['field']) !!}">{!! $date['label'] !!}</label>
             @endif
-            <input id="input_{!! $date['from_column'] !!}"
-                   data-key="filters.date_picker.{!! $date['from_column'] !!}"
-                   wire:model="filters.input_date_picker.{!! $date['from_column'] !!}"
+            <input id="input_{!! (($column->data_field != '') ? $column->data_field: $date['field']) !!}"
+                   data-key="filters.input_date_picker.date_picker.{!! (($column->data_field != '') ? $column->data_field: $date['field']) !!}"
+                   wire:model="filters_value.date_picker.{!! (((($column->data_field != '') ? $column->data_field: $date['field']) != '') ? (($column->data_field != '') ? $column->data_field: $date['field']): $date['field']) !!}"
                    wire:ignore
-                   class="range_input_{!! $date['from_column'] !!} livewire_powergrid_input flatpickr flatpickr-input range_input_payment block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active
+                   class="range_input_{!! (($column->data_field != '') ? $column->data_field: $date['field']) !!} livewire_powergrid_input flatpickr flatpickr-input range_input_payment block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active
                        {{ (isset($class) != '') ? $class : 'w-full' }}"
                    type="text"
                    placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
@@ -28,7 +28,7 @@
         </div>
         @push('powergrid_scripts')
             <script type="application/javascript">
-                flatpickr(document.getElementsByClassName('range_input_{!! $date['from_column'] !!}'), {
+                flatpickr(document.getElementsByClassName('range_input_{!! (($column->data_field != '') ? $column->data_field: $date['field']) !!}'), {
                         'mode': 'range',
                         'defaultHour' : 0,
                         ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),

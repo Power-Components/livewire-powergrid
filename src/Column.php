@@ -22,6 +22,7 @@ class Column
     public bool $editable = false;
     public array $toggleable = [];
     public array $click_to_copy = [];
+    public string $data_field = '';
 
     /**
      * @return static
@@ -167,7 +168,6 @@ class Column
         $this->inputs['select']['relation_id'] = $relation_id;
         $this->inputs['select']['class'] = $settings['class'] ?? '';
         $this->inputs['select']['live-search'] = $settings['live-search'] ?? true;
-
         return $this;
     }
 
@@ -183,7 +183,7 @@ class Column
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class'] = $class_attr;
         $this->inputs['date_picker']['config'] = $settings;
-        $this->inputs['date_picker']['from_column'] = $from_column;
+        $this->data_field = $from_column;
         return $this;
     }
 
@@ -216,17 +216,17 @@ class Column
     }
 
     /**
-     * @param string $with
-     * @param string $decimal
+     * @param string $from_column
      * @param string $thousands
+     * @param string $decimal
      * @return $this
      */
-    public function rangeNumber( $with = '', $decimal = '.', $thousands = '' ): Column
+    public function makeRangeNumber( $from_column = '', $thousands = '', $decimal = '.' ): Column
     {
         $this->inputs['number']['enabled'] = true;
-        $this->inputs['number']['with'] = $with;
         $this->inputs['number']['decimal'] = $decimal;
         $this->inputs['number']['thousands'] = $thousands;
+        $this->data_field = $from_column;
         return $this;
     }
 

@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 trait Filter
 {
@@ -12,10 +11,10 @@ trait Filter
     public array $filters = [];
     private string $format_date = '';
 
-    public function clearFilter()
+    public function clearFilter($field='')
     {
         $this->search = '';
-        $this->filters = [];
+        unset($this->filters['number'][$field]);
     }
 
     private function renderFilter()
