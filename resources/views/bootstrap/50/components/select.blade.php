@@ -1,5 +1,4 @@
 @if(filled($select))
-
         <div wire:ignore class="@if(!$inline) col-md-6 col-lg-3 @endif {!! ($select['class'] != '') ?? '' !!} pt-2" style="max-width: 370px !important;">
 
                     @if(!$inline)
@@ -23,7 +22,7 @@
 
                 </div>
 
-                @push('datatable_scripts')
+                @push('powergrid_scripts')
                     <script>
                         $('.selectpicker_{!! $select['relation_id'] !!}').selectpicker();
                         $('select.selectpicker_{!! $select['relation_id'] !!}').on('change', function () {
@@ -34,7 +33,6 @@
                             })
                             $('.spinner').html('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')
                             $('.selectpicker_{!! $select['field'] !!}').selectpicker('refresh');
-
                         });
                     </script>
         @endpush

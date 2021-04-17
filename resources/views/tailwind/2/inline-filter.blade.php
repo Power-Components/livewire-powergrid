@@ -3,11 +3,11 @@
 
         @if(count($make_filters))
             @if($checkbox)
-                <td></td>
+                <td class="td_{{ $column->field }}"></td>
             @endif
             @foreach($columns as $column)
                 @if($column->hidden === false)
-                    <td style="max-width: 0">
+                    <td class="td_{{ $column->field }}">
                         @if(isset($make_filters['date_picker']))
                             @foreach($make_filters['date_picker'] as $field => $date)
                                 @if($date['field'] === $column->field)
@@ -22,6 +22,15 @@
                             @foreach($make_filters['select'] as $field => $select)
                                 @if($select['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.select', [
+                                        'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
+                        @endif
+                        @if(isset($make_filters['multi_select']))
+                            @foreach($make_filters['multi_select'] as $field => $select)
+                                @if($select['field'] === $column->field)
+                                    @include('livewire-powergrid::tailwind.2.components.multi_select', [
                                         'inline' => true
                                     ])
                                 @endif

@@ -44,12 +44,10 @@
                         @endif
                         ...@json($customConfig),
                         onClose: function (selectedDates, dateStr, instance) {
-                            let data = [];
-                            data.push({
+                            window.livewire.emit('inputDatePiker', {
                                 selectedDates: selectedDates,
                                 values: instance._input.attributes['data-key'].value
-                            })
-                            window.livewire.emit('inputDatePiker', data);
+                            });
                         }
                     }
                 );

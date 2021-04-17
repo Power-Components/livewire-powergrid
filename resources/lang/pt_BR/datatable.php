@@ -15,7 +15,8 @@ return [
     ],
     'placeholders' => [
         'search' => 'Buscar ...',
-        'select' => 'Selecione um período'
+        'select' => 'Selecione um período',
+        'multi_select' => 'Selecione'
     ],
     'pagination' => [
         'showing' => 'Mostrando',

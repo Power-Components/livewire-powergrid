@@ -12,6 +12,7 @@ trait Filter
     public array $filters = [];
     public array $filters_enabled = [];
     private string $format_date = '';
+    public array $select = [];
 
     public function clearFilter($field='')
     {
@@ -50,6 +51,11 @@ trait Filter
                                 $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
                             }
                             break;
+                        case 'multi_select':
+                            if (count(collect($value)->get('values'))) {
+                                $collection = $collection->whereIn($field, collect($value)->get('values'));
+                            }
+                            break;
                         case 'select':
                             $collection = $collection->where($field, $value);
                             break;
@@ -74,8 +80,12 @@ trait Filter
 
     public function inputDatePiker( $data ): void
     {
-        $input = explode('.', $data[0]['values']);
-        $this->filters['date_picker'][$input[2]] = $data[0]['selectedDates'];
+        $input = explode('.', $data['values']);
+        $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+    }
+
+    public function inputMultiSelect($data) {
+        $this->filters['multi_select'][$data['id']] = $data;
     }
 
     public function filterNumberStart(string $field,string $value, string $column, string $thousands,string $decimal ): void

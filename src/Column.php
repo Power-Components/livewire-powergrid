@@ -152,7 +152,6 @@ class Column
         return $this;
     }
 
-
     /**
      * @param $data_source
      * @param string $display_field
@@ -168,6 +167,22 @@ class Column
         $this->inputs['select']['relation_id'] = $relation_id;
         $this->inputs['select']['class'] = $settings['class'] ?? '';
         $this->inputs['select']['live-search'] = $settings['live-search'] ?? true;
+        return $this;
+    }
+
+    /**
+     * @param $data_source
+     * @param string $display_field
+     * @param string $relation_id
+     * @return $this
+     */
+    public function makeInputMultiSelect( $data_source, string $display_field, string $relation_id ): Column
+    {
+        $this->editable = false;
+        $this->inputs['multi_select']['data_source'] = $data_source;
+        $this->inputs['multi_select']['display_field'] = $display_field;
+        $this->inputs['multi_select']['relation_id'] = $relation_id;
+        $this->inputs['multi_select']['live-search'] = $settings['live-search'] ?? true;
         return $this;
     }
 

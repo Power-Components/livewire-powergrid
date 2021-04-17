@@ -69,7 +69,8 @@ class PowerGridComponent extends Component
     protected $listeners = [
         'inputDatePiker' => 'inputDatePiker',
         'inputChanged' => 'inputChanged',
-        'toggleChanged' => 'inputChanged'
+        'toggleChanged' => 'inputChanged',
+        'inputMultiSelect' => 'inputMultiSelect'
     ];
 
     /**
@@ -243,5 +244,4 @@ class PowerGridComponent extends Component
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
-
 }

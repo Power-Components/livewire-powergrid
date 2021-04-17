@@ -34,7 +34,12 @@
                         @if($column->hidden === false)
                             <th
                                 class="{{ ($column->header_class != '') ?? "" }}"
-                                style="@if($column->sortable === true)cursor:pointer;@endif{{( $column->header_style != '') ?? '' }}min-width: 50px;"
+                                style="@if($column->sortable === true)cursor:pointer;@endif{{( $column->header_style != '') ?? '' }}min-width: 50px;padding-left: 15px;
+                                    text-transform: uppercase;
+                                    font-size: 0.75rem;
+                                    color: #6b6a6a;
+                                    padding-top: 8px;
+                                    padding-bottom: 8px;"
                             >
                                 <div>
                                     @if($column->sortable === true)

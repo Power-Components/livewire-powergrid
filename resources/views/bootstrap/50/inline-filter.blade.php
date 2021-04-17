@@ -26,6 +26,15 @@
                                 @endif
                             @endforeach
                         @endif
+                        @if(isset($make_filters['multi_select']))
+                            @foreach($make_filters['multi_select'] as $field => $select)
+                                @if($select['field'] === $column->field)
+                                    @include('livewire-powergrid::bootstrap.50.components.multi_select', [
+                                        'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
+                        @endif
                         @if(isset($make_filters['number']))
                             @foreach($make_filters['number'] as $field => $number)
                                 @if($number['field'] === $column->field)

@@ -15,7 +15,8 @@ return [
     ],
     'placeholders' => [
         'search' => 'Search...',
-        'select' => 'Select a period'
+        'select' => 'Select a period',
+        'multi_select' => 'Selecione'
     ],
     'pagination' => [
         'showing' => 'Showing',
