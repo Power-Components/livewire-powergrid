@@ -3,18 +3,21 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 trait Filter
 {
     public Collection $make_filters;
     public array $filters = [];
+    public array $filters_enabled = [];
     private string $format_date = '';
 
     public function clearFilter($field='')
     {
         $this->search = '';
-        unset($this->filters['number'][$field]);
+        unset($this->filters_enabled[$field]);
+        $this->filters = [];
     }
 
     private function renderFilter()
@@ -53,10 +56,11 @@ trait Filter
                         case 'number':
                             if (isset($value['start']) && isset($value['end'])) {
                                 $start = str_replace($value['thousands'], '', $value['start']);
-                                $start = (float) str_replace($value['decimal'], '.', $start);
+                                $start = str_replace($value['decimal'], '.', $start);
 
                                 $end = str_replace($value['thousands'], '', $value['end']);
-                                $end = (float) str_replace($value['decimal'], '.', $end);
+                                $end = str_replace($value['decimal'], '.', $end);
+
                                 $collection = $collection->whereBetween($field, [$start, $end]);
                             }
                             break;
@@ -74,18 +78,18 @@ trait Filter
         $this->filters['date_picker'][$input[2]] = $data[0]['selectedDates'];
     }
 
-    public function filterNumberStart( $field, $value, $decimal, $thousands ): void
+    public function filterNumberStart(string $field,string $value, string $column, string $thousands,string $decimal ): void
     {
         $this->filters['number'][$field]['start'] = $value;
-        $this->filters['number'][$field]['decimal'] = $decimal;
         $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal'] = $decimal;
     }
 
-    public function filterNumberEnd( $field, $value, $decimal, $thousands ): void
+    public function filterNumberEnd(string $field,string $value, string $column, string $thousands,string $decimal ): void
     {
         $this->filters['number'][$field]['end'] = $value;
-        $this->filters['number'][$field]['decimal'] = $decimal;
         $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal'] = $decimal;
     }
 
 }

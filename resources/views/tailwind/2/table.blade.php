@@ -101,7 +101,7 @@
                                                     @include('livewire-powergrid::tailwind.2.components.editable')
                                                 </div>
                                                 <div>
-                                                    @if(count($column->click_to_copy) > 0)
+                                                    @if(count($column->click_to_copy) > 0 && ($column->click_to_copy['enabled']))
                                                         <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
                                                     @endif
                                                 </div>
@@ -115,7 +115,7 @@
                                                     {!! $row->$field !!}
                                                 </div>
                                                 <div>
-                                                    @if(count($column->click_to_copy) > 0)
+                                                    @if(count($column->click_to_copy) > 0 && ($column->click_to_copy['enabled']))
                                                         <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
                                                     @endif
                                                 </div>

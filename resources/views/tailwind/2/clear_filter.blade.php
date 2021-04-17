@@ -1,8 +1,8 @@
-@if(count($filters))
-    @if(\Illuminate\Support\Arr::exists($column->inputs, 'date_picker'))
+@foreach($filters_enabled as $field => $detail)
+    @if($field === $column->field)
         <span
             title="{{ trans('livewire-powergrid::datatable.labels.clear_filter') }}"
-            wire:click.prevent="clearFilter()"
+            wire:click.prevent="clearFilter('{{ $column->field }}')"
             class="float-right text-red-800 cursor-pointer pr-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
@@ -12,4 +12,5 @@
               </svg>
         </span>
     @endif
-@endif
+@endforeach
+

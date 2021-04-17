@@ -221,7 +221,7 @@ class Column
      * @param string $decimal
      * @return $this
      */
-    public function makeRangeNumber( $from_column = '', $thousands = '', $decimal = '.' ): Column
+    public function makeRangeNumber(string $from_column = '',string $thousands = '',string $decimal = '' ): Column
     {
         $this->inputs['number']['enabled'] = true;
         $this->inputs['number']['decimal'] = $decimal;
@@ -231,12 +231,14 @@ class Column
     }
 
     /**
+     * @param $hasPermission
      * @param string $label
      * @return $this
      */
-    public function clickToCopy( $label = 'copy' ): Column
+    public function clickToCopy( $hasPermission, string $label = 'copy'): Column
     {
         $this->click_to_copy = [
+            'enabled' => $hasPermission,
             'label' => $label
         ];
         return $this;
