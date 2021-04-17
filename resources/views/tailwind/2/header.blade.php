@@ -1,6 +1,6 @@
 <div class="flex flex-row w-full flex justify-between">
     @if($perPage_input)
-        <div>
+        <div class="flex flex-row">
             <button
                 class="block w-full float-right bg-gray-200 text-gray-700 border border-gray-100 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 items-center inline-flex"
                 wire:click="exportToExcel()"
@@ -15,13 +15,13 @@
                          trans('livewire-powergrid::datatable.buttons.export') !!}
                     </span>
             </button>
+            <div wire:loading class="pl-3 pt-1 pr-2 flex flex-col items-right justify-center">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8 pt-4"></div>
+            </div>
         </div>
     @endif
     @if($search_input)
         <div class="flex flex-row w-full flex justify-end">
-            <div wire:loading class="pt-1 pr-2 flex flex-col items-right justify-center">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8 pt-4"></div>
-            </div>
             <div class="relative w-4/12 float-end float-right">
               <span class="absolute inset-y-0 left-0 flex items-center pl-2">
                  <span class="p-1 focus:outline-none focus:shadow-outline">

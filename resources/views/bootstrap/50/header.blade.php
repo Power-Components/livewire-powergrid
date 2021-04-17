@@ -1,6 +1,7 @@
 <div class="dt--top-section">
     <div class="row">
         <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
+
             <button class="btn livewire-powergrid" wire:click="exportToExcel()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-file-earmark-excel" viewBox="0 0 16 16">
@@ -18,17 +19,21 @@
                 @endif
 
             </button>
+            <div class="d-flex align-items-center" style="padding-left: 10px;">
+                <div wire:loading class="spinner-border ms-auto" role="status" aria-hidden="true" style="color: #656363;"></div>
+            </div>
 
         </div>
         <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
-
             <div class="col-12" style="text-align: right;">
                 <label class="col-12 col-sm-8">
                     @if($search_input)
-                    <div class="form-group has-search">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input wire:model.debounce.300ms="search" type="text" class="col-12 col-sm-8 form-control livewire_powergrid_input" placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}">
-                    </div>
+                        <div class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input wire:model.debounce.300ms="search" type="text"
+                                   class="col-12 col-sm-8 form-control livewire_powergrid_input"
+                                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}">
+                        </div>
                     @endif
                 </label>
             </div>

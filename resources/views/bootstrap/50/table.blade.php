@@ -109,11 +109,18 @@
                                             </div>
                                             <div>
                                                 @if(count($column->click_to_copy) > 0)
-                                                    <button style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                    @if($column->click_to_copy['enabled'])
+                                                        <button
+                                                            style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
+                                                            onclick="copyToClipboard(this)" value="copy"
+                                                            class="img_copy"
+                                                            data-value="{{ $row->$field }}"
+                                                            title="{{ $column->click_to_copy['label'] }}"></button>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </span>
-                                    @elseif(count($column->toggleable) > 0)
+                                    @elseif(count($column->toggleable))
                                         @include('livewire-powergrid::bootstrap.50.components.toggleable')
                                     @else
                                         <span class="d-flex justify-content-between">
@@ -121,8 +128,15 @@
                                                 {!! $row->$field !!}
                                             </div>
                                             <div>
-                                                @if(count($column->click_to_copy) > 0)
-                                                    <button style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                @if(count($column->click_to_copy))
+                                                    @if($column->click_to_copy['enabled'])
+                                                        <button
+                                                            style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
+                                                            onclick="copyToClipboard(this)" value="copy"
+                                                            class="img_copy"
+                                                            data-value="{{ $row->$field }}"
+                                                            title="{{ $column->click_to_copy['label'] }}"></button>
+                                                    @endif
                                                 @endif
                                             </div>
                                         </span>
@@ -146,15 +160,19 @@
                         <div>
                             <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
                                 @if($perPage_input)
-                                    <select wire:model="perPage" class="livewire_powergrid_select dropdown bootstrap-select form-control" style="width: 110px;">
+                                    <select wire:model="perPage"
+                                            class="livewire_powergrid_select dropdown bootstrap-select form-control"
+                                            style="width: 110px;">
                                         @foreach($perPageValues as $value)
-                                            <option value="{{$value}}"> @if($value == 0) Todos @else {{ $value }} @endif</option>
+                                            <option value="{{$value}}"> @if($value == 0)
+                                                    Todos @else {{ $value }} @endif</option>
                                         @endforeach
                                     </select>
                                 @endif
                             </label>
                         </div>
-                        <span style="padding-top: 8px;padding-left: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</span>
+                        <span
+                            style="padding-top: 8px;padding-left: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</span>
                     </div>
                     <div>
                         @if(method_exists($data, 'links'))

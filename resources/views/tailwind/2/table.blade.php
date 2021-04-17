@@ -35,7 +35,8 @@
                                     class="@if(isset($column->sortable)) pl-0 align-middle cursor-pointer hover:text-black hover:text-current @endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     style="@if($column->sortable === true) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
-                                    <div class="align-content-between" style="align-items: center; justify-content: left;">
+                                    <div class="align-content-between"
+                                         style="align-items: center; justify-content: left;">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
                                                 @if ($orderBy !== $column->field)
@@ -101,8 +102,14 @@
                                                     @include('livewire-powergrid::tailwind.2.components.editable')
                                                 </div>
                                                 <div>
-                                                    @if(count($column->click_to_copy) > 0 && ($column->click_to_copy['enabled']))
-                                                        <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                    @if(count($column->click_to_copy))
+                                                        @if($column->click_to_copy['enabled'])
+                                                            <button
+                                                                style="width: 24px; height: 30px; background-repeat: no-repeat;"
+                                                                onclick="copyToClipboard(this)" value="copy"
+                                                                class="img_copy" data-value="{{ $row->$field }}"
+                                                                title="{{ $column->click_to_copy['label'] }}"></button>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </span>
@@ -115,8 +122,14 @@
                                                     {!! $row->$field !!}
                                                 </div>
                                                 <div>
-                                                    @if(count($column->click_to_copy) > 0 && ($column->click_to_copy['enabled']))
-                                                        <button style="width: 24px; height: 30px; background-repeat: no-repeat;" onclick="copyToClipboard(this)" value="copy" class="img_copy" data-value="{{ $row->$field }}" title="{{ $column->click_to_copy['label'] }}" ></button>
+                                                    @if(count($column->click_to_copy))
+                                                        @if($column->click_to_copy['enabled'])
+                                                            <button
+                                                                style="width: 24px; height: 30px; background-repeat: no-repeat;"
+                                                                onclick="copyToClipboard(this)" value="copy"
+                                                                class="img_copy" data-value="{{ $row->$field }}"
+                                                                title="{{ $column->click_to_copy['label'] }}"></button>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </span>
@@ -142,16 +155,21 @@
                                     class="block appearance-none bg-white-200 border border-gray-300 text-gray-700  py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     id="grid-state">
                                 @foreach($perPageValues as $value)
-                                    <option value="{{$value}}"> @if($value == 0) Todos @else {{ $value }} @endif</option>
+                                    <option value="{{$value}}"> @if($value == 0)
+                                            Todos @else {{ $value }} @endif</option>
                                 @endforeach
                             </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="pl-4 hidden sm:block md:block lg:block w-full" style="padding-top: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</div>
+                        <div class="pl-4 hidden sm:block md:block lg:block w-full"
+                             style="padding-top: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</div>
                     </div>
 
                     @if(!is_array($data))

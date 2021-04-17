@@ -68,7 +68,7 @@
                                          class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
                                         <div class="w-full items-center flex">
                                             <div
-                                                class=" pl-0 align-middle cursor-pointer hover:text-black hover:text-current  text-left text-xs font-medium text-gray-500 uppercase tracking-wider leading-6"
+                                                class=" pl-0 align-middle cursor-pointer hover:text-black hover:text-current text-left text-xs font-medium text-gray-600 uppercase tracking-wider leading-6"
                                                 x-model="option" x-text="option.text"></div>
                                         </div>
                                     </div>

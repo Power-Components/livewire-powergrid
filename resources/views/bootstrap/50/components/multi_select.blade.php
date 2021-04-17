@@ -23,7 +23,7 @@
             padding-left: 15px;
             text-transform: uppercase;
             font-size: 0.75rem;
-            color: #6b6a6a;
+            color: #454444;
             padding-top: 8px;
             padding-bottom: 8px;
         }
