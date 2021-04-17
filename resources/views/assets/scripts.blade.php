@@ -2,13 +2,10 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
 @if(config('livewire-powergrid.theme') === 'bootstrap')
-    <!-- POWER GRID COMPONENT SCRIPTS FOR BOOTSTRAP -->
     <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
-
 <script>
 
-    <!-- POWER GRID COMPONENT SCRIPTS -->
     @if(config('livewire-powergrid.theme') === 'tailwind')
 
     function saveEditableInput(event, id, field) {

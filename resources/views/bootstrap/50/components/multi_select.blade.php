@@ -29,6 +29,7 @@
         }
     </style>
     @push('powergrid_scripts')
+        <!-- Power Grid Multi Select Scripts -->
         <script>
             $('.selectpicker_{!! $select['relation_id'] !!}').selectpicker();
             $('select.selectpicker_{!! $select['relation_id'] !!}').on('change', function () {
@@ -44,5 +45,6 @@
                 $('.selectpicker_{!! $select['field'] !!}').selectpicker('refresh');
             });
         </script>
+        <!-- Power Grid Date Picker Scripts -->
     @endpush
 @endif

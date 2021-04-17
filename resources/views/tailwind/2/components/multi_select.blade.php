@@ -87,6 +87,7 @@
     }
 </style>
 @push('powergrid_scripts')
+    <!-- Power Grid Multi Select Scripts -->
     <script>
         function dropdown() {
             return {
@@ -144,6 +145,7 @@
             }
         }
     </script>
+    <!-- Power Grid Date Picker Scripts -->
 @endpush
 <label for="select" class="hidden"></label>
 <select class="hidden" x-cloak id="select" id="input_{!! $select['relation_id'] !!}"
