@@ -122,7 +122,7 @@
                 remove(index, option) {
                     this.options[option].selected = false;
                     this.selected.splice(index, 1);
-                    window.livewire.emit('inputMultiSelect', {
+                    window.livewire.emit('eventMultiSelect', {
                         id: '{!! $select['relation_id'] !!}',
                         values: this.selectedValues()
                     });

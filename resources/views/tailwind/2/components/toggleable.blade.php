@@ -7,7 +7,7 @@
                    :class="[toggle_{{ $row->id }} === 1 ? 'translate-x-full border-green-400' : 'translate-x-0 border-gray-400']"></label>
             <input type="checkbox" id="toggle_{{ $row->id }}" name="toggle_{{ $row->id }}"
                    class="appearance-none w-full h-full active:outline-none focus:outline-none"
-                   @click="saveToggleableInput({{ $row->id }}, '{{ $field }}', (toggle_{{ $row->id }} === 0 ? toggle_{{ $row->id }} = 1 : toggle_{{ $row->id }} = 0))">
+                   @click="saveToggleableInput((toggle_{{ $row->id }} === 0 ? toggle_{{ $row->id }} = 1 : toggle_{{ $row->id }} = 0), {{ $row->id }}, '{{ $field }}')">
         </div>
 </div>
 @else

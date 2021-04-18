@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 trait Filter
@@ -14,7 +13,7 @@ trait Filter
     private string $format_date = '';
     public array $select = [];
 
-    public function clearFilter($field='')
+    public function clearFilter( $field = '' )
     {
         $this->search = '';
         unset($this->filters_enabled[$field]);
@@ -74,28 +73,46 @@ trait Filter
                 }
             }
         }
-
         return $collection;
     }
 
-    public function inputDatePiker( $data ): void
+    /**
+     * @param $data
+     */
+    public function eventChangeDatePiker(array $data ): void
     {
         $input = explode('.', $data['values']);
         $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
     }
 
-    public function inputMultiSelect($data) {
+    /**
+     * @param $data
+     */
+    public function eventMultiSelect(array $data )
+    {
         $this->filters['multi_select'][$data['id']] = $data;
     }
 
-    public function filterNumberStart(string $field,string $value, string $column, string $thousands,string $decimal ): void
+    /**
+     * @param string $field
+     * @param string $value
+     * @param string $thousands
+     * @param string $decimal
+     */
+    public function filterNumberStart( string $field, string $value, string $thousands, string $decimal ): void
     {
         $this->filters['number'][$field]['start'] = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal'] = $decimal;
     }
 
-    public function filterNumberEnd(string $field,string $value, string $column, string $thousands,string $decimal ): void
+    /**
+     * @param string $field
+     * @param string $value
+     * @param string $thousands
+     * @param string $decimal
+     */
+    public function filterNumberEnd( string $field, string $value, string $thousands, string $decimal ): void
     {
         $this->filters['number'][$field]['end'] = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;

@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Facades\Cache;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
@@ -39,7 +38,9 @@ class PowerGridComponent extends Component
      * @var bool
      */
     public bool $orderAsc = false;
-
+    /**
+     * @var
+     */
     public $perPage;
     /**
      * @var array
@@ -57,20 +58,31 @@ class PowerGridComponent extends Component
      * @var array
      */
     public array $perPageValues = [10, 25, 50, 100, 0];
-
+    /**
+     * @var string
+     */
     public string $sortIcon = '&#8597;';
-
+    /**
+     * @var string
+     */
     public string $sortAscIcon = '&#8593;';
-
+    /**
+     * @var string
+     */
     public string $sortDescIcon = '&#8595;';
-
+    /**
+     * @var string
+     */
     public string $record_count = '';
 
+    /**
+     * @var string[]
+     */
     protected $listeners = [
-        'inputDatePiker' => 'inputDatePiker',
-        'inputChanged' => 'inputChanged',
-        'toggleChanged' => 'inputChanged',
-        'inputMultiSelect' => 'inputMultiSelect'
+        'eventChangeDatePiker' => 'eventChangeDatePiker',
+        'eventChangeInput' => 'eventChangeInput',
+        'eventToggleChanged' => 'eventChangeInput',
+        'eventMultiSelect' => 'eventMultiSelect'
     ];
 
     /**
@@ -97,7 +109,7 @@ class PowerGridComponent extends Component
      * @param string $mode
      * @return $this
      */
-    public function showRecordCount( $mode = 'full'): PowerGridComponent
+    public function showRecordCount( $mode = 'full' ): PowerGridComponent
     {
         $this->record_count = $mode;
         return $this;
@@ -149,6 +161,9 @@ class PowerGridComponent extends Component
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function dataSource(): array
     {
         return [];
@@ -157,15 +172,16 @@ class PowerGridComponent extends Component
     public function render()
     {
         $this->columns = $this->columns();
+        $collection = $this->collection();
         $data = [];
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
-        if (filled($this->collection())) {
+        if (filled($collection)) {
 
-            $data = Collection::search($this->collection(), $this->search, $this->columns());
+            $data = Collection::search($collection, $this->search, $this->columns());
             $data = $this->advancedFilter($data);
             $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
 
@@ -189,6 +205,10 @@ class PowerGridComponent extends Component
         $this->orderBy = $field;
     }
 
+    /**
+     * @param $data
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     private function renderView( $data )
     {
         $theme = config('livewire-powergrid.theme');
@@ -199,7 +219,10 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    public function inputChanged($data): void
+    /**
+     * @param $data
+     */
+    public function eventChangeInput( $data ): void
     {
         $update = $this->update($data);
         $this->collection();
@@ -211,9 +234,13 @@ class PowerGridComponent extends Component
         }
     }
 
+    /**
+     * @return \Illuminate\Support\Collection|mixed
+     * @throws \Exception
+     */
     private function collection()
     {
-        $cache = (bool) config('livewire-powergrid.cached_data');
+        $cache = (bool)config('livewire-powergrid.cached_data');
         $collection = new \Illuminate\Support\Collection($this->dataSource());
         if ($cache) {
             \cache()->forget($this->id);
@@ -224,15 +251,24 @@ class PowerGridComponent extends Component
         return $collection;
     }
 
-    public function update(array $data): bool
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function update( array $data ): bool
     {
         return false;
     }
 
-    public function updateMessages(string $status, string $field = '_default_message'): string
+    /**
+     * @param string $status
+     * @param string $field
+     * @return string
+     */
+    public function updateMessages( string $status, string $field = '_default_message' ): string
     {
         $updateMessages = [
-            'success'   => [
+            'success' => [
                 '_default_message' => __('Data has been updated successfully!'),
                 'status' => __('Custom Field updated successfully!'),
             ],

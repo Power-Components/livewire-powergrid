@@ -38,7 +38,7 @@
                 selected.each(function () {
                     arrSelected.push($(this).val());
                 });
-                window.livewire.emit('inputMultiSelect', {
+                window.livewire.emit('eventMultiSelect', {
                     id: '{!! $select['relation_id'] !!}',
                     values: arrSelected
                 })

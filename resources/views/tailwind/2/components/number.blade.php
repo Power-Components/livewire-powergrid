@@ -14,7 +14,7 @@
                         class="w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         placeholder="MIN">
                 </div>
-                <div>
+                <div class="mb-1">
                     <input
                         data-id="{{ (($column->data_field != '') ? $column->data_field: $number['field']) }}"
                         wire:model.debounce.800ms="filters_enabled.{{ $column->field }}.end"

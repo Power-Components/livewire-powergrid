@@ -10,23 +10,23 @@
 
     function saveEditableInput(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('inputChanged', {
+        window.livewire.emit('eventChangeInput', {
             id: id,
             value: event.target.value,
             field: field
         })
     }
 
-    function saveToggleableInput(id, field, value) {
+    function saveToggleableInput(value, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('toggleChanged', {
+        window.livewire.emit('eventToggleChanged', {
             id: id,
             field: field,
             value: value
         })
     }
 
-    function returnValue(id, value, field) {
+    function editableInput(id, value, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
         return '<input value="' + value + '" class="block bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
     }
@@ -41,7 +41,7 @@
         const id = event.target.getAttribute('data-id');
         const field = event.target.getAttribute('data-field');
         const checked = event.target.checked;
-        saveToggleableInput(id, field, checked);
+        saveToggleableInput(checked, id, field);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -53,23 +53,23 @@
 
     function saveEditableInput(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('inputChanged', {
+        window.livewire.emit('eventChangeInput', {
             id: id,
             value: event.target.value,
             field: field
         })
     }
 
-    function saveToggleableInput(id, field, value) {
+    function saveToggleableInput(value, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('toggleChanged', {
+        window.livewire.emit('eventToggleChanged', {
             id: id,
             field: field,
             value: value
         })
     }
 
-    function returnValue(id, value, field) {
+    function editableInput(id, value, field) {
         return '<input value="' + value + '" class="form-control" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
     }
 

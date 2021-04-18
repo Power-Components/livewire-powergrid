@@ -43,8 +43,7 @@
                     @endif
                     ...@json($customConfig),
                     onClose: function (selectedDates, dateStr, instance) {
-                        $('.spinner').html('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')
-                        window.livewire.emit('inputDatePiker', {
+                        window.livewire.emit('eventChangeDatePiker', {
                             selectedDates: selectedDates,
                             values: instance._input.attributes['data-key'].value
                         });
