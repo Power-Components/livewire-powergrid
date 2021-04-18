@@ -187,18 +187,18 @@ class Column
     }
 
     /**
-     * @param string $from_column
+     * @param string $data_field
      * @param array $settings
      * @param string $class_attr
      * @return Column
      */
-    public function makeInputDatePicker( string $from_column, array $settings = [], string $class_attr = '' ): Column
+    public function makeInputDatePicker( string $data_field, array $settings = [], string $class_attr = '' ): Column
     {
         // $this->editable = false;
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class'] = $class_attr;
         $this->inputs['date_picker']['config'] = $settings;
-        $this->data_field = $from_column;
+        $this->data_field = $data_field;
         return $this;
     }
 
@@ -231,24 +231,28 @@ class Column
     }
 
     /**
-     * @param string $from_column
+     * @param string $data_field
      * @param string $thousands
      * @param string $decimal
      * @return $this
      */
-    public function makeRangeNumber(string $from_column = '',string $thousands = '',string $decimal = '' ): Column
+    public function makeRangeNumber(string $data_field = '',string $thousands = '',string $decimal = '' ): Column
     {
         $this->inputs['number']['enabled'] = true;
         $this->inputs['number']['decimal'] = $decimal;
         $this->inputs['number']['thousands'] = $thousands;
-        $this->data_field = $from_column;
+        $this->data_field = $data_field;
         return $this;
     }
 
-    public function makeInputText(string $from_column = ''): Column
+    /**
+     * @param string $data_field
+     * @return $this
+     */
+    public function makeInputText( string $data_field = ''): Column
     {
         $this->inputs['input_text']['enabled'] = true;
-        $this->data_field = $from_column;
+        $this->data_field = $data_field;
         return $this;
     }
 
