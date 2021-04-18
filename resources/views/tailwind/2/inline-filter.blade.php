@@ -18,6 +18,7 @@
                                 @endif
                             @endforeach
                         @endif
+
                         @if(isset($make_filters['select']))
                             @foreach($make_filters['select'] as $field => $select)
                                 @if($select['field'] === $column->field)
@@ -27,6 +28,7 @@
                                 @endif
                             @endforeach
                         @endif
+
                         @if(isset($make_filters['multi_select']))
                             @foreach($make_filters['multi_select'] as $field => $select)
                                 @if($select['field'] === $column->field)
@@ -36,10 +38,21 @@
                                 @endif
                             @endforeach
                         @endif
+
                         @if(isset($make_filters['number']))
                             @foreach($make_filters['number'] as $field => $number)
                                 @if($number['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.number', [
+                                        'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
+                        @endif
+
+                        @if(isset($make_filters['input_text']))
+                            @foreach($make_filters['input_text'] as $field => $number)
+                                @if($number['field'] === $column->field)
+                                    @include('livewire-powergrid::tailwind.2.components.input_text', [
                                         'inline' => true
                                     ])
                                 @endif

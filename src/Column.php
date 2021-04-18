@@ -245,6 +245,13 @@ class Column
         return $this;
     }
 
+    public function makeInputText(string $from_column = ''): Column
+    {
+        $this->inputs['input_text']['enabled'] = true;
+        $this->data_field = $from_column;
+        return $this;
+    }
+
     /**
      * @param $hasPermission
      * @param string $label

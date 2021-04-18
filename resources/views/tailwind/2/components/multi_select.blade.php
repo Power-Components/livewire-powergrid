@@ -4,7 +4,7 @@
         <div class="flex flex-col items-center relative">
             <div x-on:click="open" class="w-full svelte-1l8159u multi_select_{{ $column->field }}"
                  style="min-width: 160px !important;">
-                <div class="my-2 p-1 flex border border-gray-200 bg-white rounded svelte-1l8159u">
+                <div class="my-2 p-1 flex svelte-1l8159u">
                     <div class="flex flex-auto flex-wrap">
                         <template x-for="(option,index) in selected" :key="options[option].value">
                             <div
@@ -26,7 +26,7 @@
                         </template>
                         <div x-show="selected.length == 0" class="flex-1">
                             <input placeholder="{{ trans('livewire-powergrid::datatable.placeholders.multi_select') }}"
-                                   class="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800"
+                                   class="w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                    x-bind:value="selectedValues()"
                             >
                         </div>
@@ -110,10 +110,11 @@
                         this.options[index].selected = true;
                         this.options[index].element = event.target;
                         this.selected.push(index);
-                        window.livewire.emit('inputMultiSelect', {
+                        window.livewire.emit('eventMultiSelect', {
                             id: '{!! $select['relation_id'] !!}',
                             values: this.selectedValues()
                         });
+                        console.log(index)
                     } else {
                         this.selected.splice(this.selected.lastIndexOf(index), 1);
                         this.options[index].selected = false

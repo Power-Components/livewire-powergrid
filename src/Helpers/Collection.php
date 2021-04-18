@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class Collection
 {
 
-    public static function paginate(BaseCollection $results, $pageSize): LengthAwarePaginator
+    public static function paginate( BaseCollection $results, $pageSize ): LengthAwarePaginator
     {
         $page = Paginator::resolveCurrentPage('page');
 
@@ -34,37 +34,29 @@ class Collection
      * @param array $options
      * @return LengthAwarePaginator
      */
-    protected static function paginator($items, $total, $perPage, $currentPage, $options): LengthAwarePaginator
+    protected static function paginator( $items, $total, $perPage, $currentPage, $options ): LengthAwarePaginator
     {
         return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
             'items', 'total', 'perPage', 'currentPage', 'options'
         ));
     }
 
-    public static function search(BaseCollection $model, string $search, $columns): BaseCollection
+    public static function search( BaseCollection $model, string $search, $columns ): BaseCollection
     {
-        $data_map = collect([]);
-
         if (!empty($search)) {
-            foreach ($model as $item) {
-                foreach ($columns as $key => $value) {
-                    $field = $value->field;
-                    if ($value->searchable === true) {
-                        if (Str::contains(strtolower($item->$field), strtolower($search))) {
-                            if (!in_array(strtolower($item->$field), $data_map->toArray())) {
-                                $data_map->push($item);
-                            }
-                        }
+
+            $model = $model->filter(function ( $row ) use ( $columns, $search ) {
+                foreach ($columns as $column) {
+                    $field = $column->field;
+                    if (Str::contains(strtolower($row->$field), strtolower($search))) {
+                        return false !== stristr($row->$field, strtolower($search));
                     }
                 }
-            }
-            $data_map =  array_unique($data_map->toArray(), SORT_REGULAR);
+                return false;
+            });
 
-        } else {
-            $data_map = $model;
         }
-
-        return collect($data_map);
+        return $model;
     }
 
 }

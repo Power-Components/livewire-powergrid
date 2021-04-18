@@ -207,7 +207,6 @@ class PowerGridComponent extends Component
 
     /**
      * @param $data
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     private function renderView( $data )
     {
@@ -220,9 +219,10 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param $data
+     * @param array $data
+     * @throws \Exception
      */
-    public function eventChangeInput( $data ): void
+    public function eventChangeInput(array $data ): void
     {
         $update = $this->update($data);
         $this->collection();

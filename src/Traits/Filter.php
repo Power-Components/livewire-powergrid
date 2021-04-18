@@ -28,6 +28,7 @@ trait Filter
         foreach ($this->columns as $column) {
             if (isset($column->inputs)) {
                 foreach ($column->inputs as $key => $input) {
+                    $input['data_field'] = ($column->data_field != '') ? $column->data_field : $column->field;
                     $input['field'] = $column->field;
                     $input['label'] = $column->title;
                     $make_filters[$key][] = $input;
@@ -57,6 +58,11 @@ trait Filter
                             break;
                         case 'select':
                             $collection = $collection->where($field, $value);
+                            break;
+                        case 'input_text':
+                            $collection = $collection->filter(function ($row) use ($field, $value) {
+                                return false !== stristr($row->$field, strtolower($value));
+                            });
                             break;
                         case 'number':
                             if (isset($value['start']) && isset($value['end'])) {
@@ -118,5 +124,15 @@ trait Filter
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal'] = $decimal;
     }
+
+    /**
+     * @param string $field
+     * @param string $value
+     */
+    public function filterInputText( string $field, string $value ): void
+    {
+        $this->filters['input_text'][$field] = $value;
+    }
+
 
 }
