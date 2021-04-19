@@ -65,6 +65,19 @@ trait Filter
                             });
                             break;
                         case 'number':
+
+                            if (isset($value['start']) && !isset($value['end'])) {
+                                $start = str_replace($value['thousands'], '', $value['start']);
+                                $start = (float)str_replace($value['decimal'], '.', $start);
+
+                                $collection = $collection->where($field, '>=', $start);
+                            }
+                            if (!isset($value['start']) && isset($value['end'])) {
+                                $end = str_replace($value['thousands'], '', $value['end']);
+                                $end = (float)str_replace($value['decimal'], '.', $end);
+
+                                $collection = $collection->where($field, '<=', $end);
+                            }
                             if (isset($value['start']) && isset($value['end'])) {
                                 $start = str_replace($value['thousands'], '', $value['start']);
                                 $start = str_replace($value['decimal'], '.', $start);
