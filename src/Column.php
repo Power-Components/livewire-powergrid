@@ -17,7 +17,6 @@ class Column
     public string $body_style = '';
     public bool $hidden = false;
     public bool $visible_in_export = false;
-    public array $filter_date_between = [];
     public array $inputs = [];
     public bool $editable = false;
     public array $toggleable = [];
@@ -107,18 +106,6 @@ class Column
         return $this;
     }
 
-    /**
-     * When the field has any changes within the scope using Collection
-     *
-     * @return $this
-     */
-    public function html(): Column
-    {
-        $this->html = true;
-        $this->sortable = false;
-        return $this;
-    }
-
     public function hidden(): Column
     {
         $this->hidden = true;
@@ -129,26 +116,6 @@ class Column
     {
         $this->visible_in_export = $visible;
         $this->searchable = false;
-        return $this;
-    }
-
-    /**
-     * Add the @datatableFilter directive before the body
-     *
-     * @param string $class_attr
-     * @param array $config [
-     * 'only_future' => true,
-     * 'no_weekends' => true
-     * ]
-     * @return $this
-     */
-    public function filterDateBetween( string $class_attr = '', array $config = [] ): Column
-    {
-        $this->filter_date_between = [
-            'enabled' => true,
-            'config' => $config,
-            'class' => (blank($class_attr)) ? 'col-3' : $class_attr
-        ];
         return $this;
     }
 
@@ -188,13 +155,15 @@ class Column
 
     /**
      * @param string $data_field
-     * @param array $settings
+     * @param array $settings [
+     * 'only_future' => true,
+     * 'no_weekends' => true
+     * ]
      * @param string $class_attr
      * @return Column
      */
     public function makeInputDatePicker( string $data_field, array $settings = [], string $class_attr = '' ): Column
     {
-        // $this->editable = false;
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class'] = $class_attr;
         $this->inputs['date_picker']['config'] = $settings;
@@ -214,7 +183,6 @@ class Column
         return $this;
     }
 
-
     /**
      * Adds Toggle to a column
      *
@@ -223,6 +191,7 @@ class Column
      */
     public function toggleable( bool $hasPermission = true, array $default = [] ): Column
     {
+        $this->editable = false;
         $this->toggleable = [
             'enabled' => $hasPermission,
             'default' => count($default) ? $default : [__('active'), __('not active')]
@@ -236,7 +205,7 @@ class Column
      * @param string $decimal
      * @return $this
      */
-    public function makeRangeNumber(string $data_field = '',string $thousands = '',string $decimal = '' ): Column
+    public function makeRangeNumber( string $data_field = '', string $thousands = '', string $decimal = '' ): Column
     {
         $this->inputs['number']['enabled'] = true;
         $this->inputs['number']['decimal'] = $decimal;
@@ -249,7 +218,7 @@ class Column
      * @param string $data_field
      * @return $this
      */
-    public function makeInputText( string $data_field = ''): Column
+    public function makeInputText( string $data_field = '' ): Column
     {
         $this->inputs['input_text']['enabled'] = true;
         $this->data_field = $data_field;
@@ -261,7 +230,7 @@ class Column
      * @param string $label
      * @return $this
      */
-    public function clickToCopy( $hasPermission, string $label = 'copy'): Column
+    public function clickToCopy( $hasPermission, string $label = 'copy' ): Column
     {
         $this->click_to_copy = [
             'enabled' => $hasPermission,

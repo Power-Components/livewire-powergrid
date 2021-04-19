@@ -15,8 +15,10 @@
                          trans('livewire-powergrid::datatable.buttons.export') !!}
                     </span>
             </button>
-            <div wire:loading class="pl-3 pt-1 pr-2 flex flex-col items-right justify-center">
-                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8 pt-4"></div>
+            <div style="min-width: 60px;">
+                <div wire:loading class="pl-3 pr-2 flex flex-col items-right justify-center">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8 pt-4"></div>
+                </div>
             </div>
         </div>
     @endif
