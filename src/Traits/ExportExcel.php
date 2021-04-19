@@ -3,6 +3,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -10,31 +12,33 @@ trait ExportExcel
 {
     public function exportToExcel(): BinaryFileResponse
     {
-        $data = $this->collection();
-
-        $except = [];
-        $title = [];
-        $headers = [];
+        $collection = $this->collection();
+        $new_collection = [];
+        $header = [];
         $file_name = 'excel';
 
         if (count($this->checkbox_values)) {
-            $data = $data->whereIn('id', $this->checkbox_values);
+            $collection = $collection->whereIn('id', $this->checkbox_values);
         }
 
-        foreach ($this->columns() as $column) {
-            if ($column->hidden === false) {
-                $title[] = $column->title;
-                $fields[] = $column->field;
-            } else {
-                $except[] = $column->field;
+        foreach ($collection as $collect) {
+            $item = [];
+            foreach ($this->columns() as $column) {
+                if ($column->hidden === false) {
+                    foreach ($collect as $key => $value) {
+                        if ($key === $column->field) {
+                            $item[$column->title] = $value;
+                        }
+                    }
+                }
+                if (!in_array($column->title, $header)) {
+                    $header[] = $column->title;
+                }
             }
+            $new_collection[] = $item;
         }
-
-        $headers[] = $title;
-
-        $data = $data->map(fn( $item) => collect($item)->except($except)->toArray());
-
-        $build_xlsx = \SimpleXLSXGen::fromArray(array_merge($headers, $data->toArray()), $file_name);
+        $headers[] = $header;
+        $build_xlsx = \SimpleXLSXGen::fromArray(array_merge($headers, $new_collection), $file_name);
 
         Storage::disk('public')->put($file_name . '_export.xlsx', $build_xlsx);
 

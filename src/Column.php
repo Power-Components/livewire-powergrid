@@ -9,7 +9,6 @@ class Column
     public string $title = '';
     public bool $searchable = true;
     public bool $sortable = false;
-    public bool $html = false;
     public string $field = '';
     public string $header_class = '';
     public string $header_style = '';
