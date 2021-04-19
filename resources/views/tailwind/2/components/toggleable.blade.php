@@ -13,11 +13,11 @@
 @else
     <div class="flex flex-row">
         @if($row->$field === 0)
-            <div style="padding-top: 0.1em; padding-bottom: 0.1rem" class="text-xs px-3 text-center w-8/12 bg-red-200 text-red-800 rounded-full">
+            <div style="padding-top: 0.1em; padding-bottom: 0.1rem" class="text-xs px-3 text-center w-full bg-red-200 text-red-800 rounded-full">
                 {{ $column->toggleable['default'][1] }}
             </div>
             @else
-            <div style="padding-top: 0.1em; padding-bottom: 0.1rem" class="text-xs px-3 text-center w-8/12 bg-blue-200 text-blue-800 rounded-full">
+            <div style="padding-top: 0.1em; padding-bottom: 0.1rem" class="text-xs px-3 text-center w-full bg-blue-200 text-blue-800 rounded-full">
                 {{ $column->toggleable['default'][0] }}
             </div>
             @endif
