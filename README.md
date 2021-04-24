@@ -8,10 +8,9 @@
 
 ## What is Livewire PowerGrid?
 
-PowerGrid is a component for [Laravel Livewire](https://laravel-livewire.com) used to generate dynamic tables for your Laravel Models.
+[Livewire](https://laravel-livewire.com) PowerGrid is a component for  generating dynamic tables with your Laravel Models.
 
-It provides out of the box:
-
+PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Searching & Filters**
 
@@ -26,6 +25,8 @@ It provides out of the box:
 ✅ **Toggle button**
 
 ✅ **Click to edit**
+
+✅ **Click to copy**
 
 ✅ **Link on table cell**
 
@@ -42,15 +43,16 @@ It provides out of the box:
 - [Configuring and Customizing](#configuring-and-customizing)
     - [setUp() Method](#setup-method)
     - [dataSource() Method](#datasource-method)
-    - [Column Methods](#column-methods)
-    - [Action Methods](#action-methods)
+      - [Column Settings](#column-settings)
+      - [Column Filters](#column-filters)
+      - [Column Actions](#column-actions)
+      - [Action Methods](#action-methods)
 - [Examples](#examples)
 - [Support](#support)
 - [Contributors](#contributors)
 - [Credits](#credits)
 
 ---
-
 
 ## Requirements
 
@@ -60,14 +62,13 @@ It provides out of the box:
     - [Install Tailwindcss](https://tailwindcss.com/docs/guides/laravel)
     - [Install Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
-
 ## Installation
 
-For the instalation guide we will create a `ProductTable` to list  products of a `Product` Model.
+This documentation will describe the creation of a table called `ProductTable` used to list products of the `Product` Model.
 
 ### 1. Via composer
 
-To install via composer, run the following command:
+To install via composer, run:
 
 ```bash
   composer require power-components/livewire-powergrid dev-main
@@ -75,7 +76,7 @@ To install via composer, run the following command:
 
 ### 2. Publish Config files
 
-You can publish the Livewire PowerGrid configuration file with the following command:
+Publish the Livewire PowerGrid configuration file with the following command:
 
 ```bash
     php artisan vendor:publish --tag=livewire-powergrid-config
@@ -83,9 +84,9 @@ You can publish the Livewire PowerGrid configuration file with the following com
 
 ### 3. Publish files [OPTIONAL] 
 
-This step is OPTIONAL. You may skip it if you don't need to customize Livewire PowerGrid.
+This step is OPTIONAL. Skip it if you don't need to customize Livewire PowerGrid.
 
-Livewire PowerGrid can publish its views and language files using the following commands:
+Language files can be published with:
 
 Views:
 
@@ -93,23 +94,19 @@ Views:
     php artisan vendor:publish --tag=livewire-powergrid-views
 ```
 
-Language files:
+Language files can be published with:
 
 ```bash
     php artisan vendor:publish --tag=livewire-powergrid-lang
 ```
 
-### 4. Change the theme of your choice in config/livewire-powergrid.php
+### 4. Configure the theme
 
-For Tailwind
+By default, PowerGrid uses Tailwind.
 
-```php
-    //...
-    'theme' => 'tailwind'
+This configuration can be changed in the file `config/livewire-powergrid.php`
 
-```
-
-For Bootstrap 5
+For Bootstrap 5 use:
 
 ```php
     //...
@@ -117,17 +114,34 @@ For Bootstrap 5
 
 ```
 
+For Tailwind use:
+
+```php
+    //...
+    'theme' => 'tailwind'
+
+```
 
 ### 5. Include PowerGrid component
 
+Include the Livewire and the PowerGrid styles and scripts:
+
 ```html
-    @powerGridStyles and @powerGridScripts
+
+<head>
+...
+ <!-- Styles -->
+  @livewireStyles
+  @powerGridStyles
 ```
 
 Make sure you have Livewired included too:
 
 ```html
-    @livewireStyle and @livewireScripts
+...
+</body>
+@livewireScripts
+@powerGridScripts
 ```
 
 You can read more about this at the official [Livewire documentation](https://laravel-livewire.com/docs/2.x/quickstart)
@@ -136,20 +150,28 @@ You can read more about this at the official [Livewire documentation](https://la
 
 ### 6.  Creating a Table Component
 
-To create a Table Component for an entity use the following Artisan command.
-
-(It's advisable to use "" around your `--model` option)
+To create a Table Component run `powergrid:create` informing your table `name` and your `model`
 
 ```bash
 php artisan powergrid:create ProductTable --model="App\Models\Product" 
 ```
 
+(It's advisable to use "" around your `--model` option)
+
+### 6.1 Create with Fillable 
+If your Model has the fillable property specified, use `--fillable` option to create columns based on its value.
+
+```bash
+php artisan powergrid:create ProductTable --model="App\Models\Product" --fillable
+```
 
 If everything was succesfull, you will find your new table component inside the `app/Http/Livewire` folder.
 
-### Options
+### 6.2 Create options
 
-| Option | Description | Example | 
+ The command `powergrid:create` accept the followning options:
+
+| Option | Description | Example |
 |----|----|----|
 |**--model**| Full model path | ```--model="App\Models\Product"``` |
 |**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
@@ -175,7 +197,6 @@ or
 ---
 
 ## Configuring and Customizing
-
 
 You can configure and customize your table component to adjust it to your needs.
 
@@ -265,22 +286,22 @@ Here we provide a full example:
 
 The Setup method is used to configure your component.
 
-
 | Method | Arguments | Description | Example |
 |----|----|----|----|
 |**showCheckBox**|-|Displays checkboxes on the table|`->showCheckBox()`|
 |**showPerPage**|*int* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
+|**showRecordCount**|*str* Min/Short/Full|Displays the records count|`->showRecordCount('short')`|
 
 ```php
   public function setUp()
   {
       $this->showCheckBox()
+      ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput();
   }
 ```
-
 
 ### dataSource() Method
 
@@ -296,14 +317,12 @@ Example:
 
 Here `$model` is receiving all products with the relationship to groups.
 
-For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 Paper" belongs to "Office Supplies" group. 
-
+For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 Paper" belongs to "Office Supplies" group.
 
 | Method | Arguments | Description | Example |
 |----|----|----|----|
 |**addColumn**| *String* $title, *\Closure*  $closure|Database field for this column |`->addColumn('id')`|
 |**make**|-|Makes the table |`->make()`|
-
 
 Example of usage:
 
@@ -314,6 +333,9 @@ return PowerGrid::eloquent($model)
   ->addColumn('price')
   ->addColumn('price_formatted', function(Product $model) {
       return  '$ ' . number_format($model->price, 2, ',', '.');
+    })
+    ->addColumn('group_id', function (Product $product) {
+        return  $product->group_id;
     })
   ->make();
 ```
@@ -333,12 +355,18 @@ The example bellow brings the price formated.
     })
 //will output $1.500,00
 ```
-                                                                                                                                                                                                                                                  
+
+The column `group_id` is added for the relationship filter.
+
+```php
+    ->addColumn('group_id', function (Product $product) {
+        return  $product->group_id;
+    })
+```
 
 ---
 
-### Column Methods
-
+#### Column Settings
 
 These are the methods available on each column added with `Column` class.
 
@@ -353,16 +381,47 @@ These are the methods available on each column added with `Column` class.
 |**headerAttribute**|[*String* $class default: ''], [*String* $style default: '']|Add the class and style elements to the column header|```->headerAttribute('text-center', 'color:red')```|
 |**bodyAttribute**|[*String* $class default: ''], [*String* $style default: '']|Add the column lines the class and style elements|```->bodyAttribute('text-center', 'color:red')```|
 |**visibleInExport**| |When true it will be invisible in the table and will show the column in the exported file|```->visibleInExport(true)```|
+
+#### Column Filters
+
+These are the filters availables for each column.
+
+| Method | Arguments | Result | Example |
+|----|----|----|----|
+|**makeInputText**| *String* $data_field | Renders a textfield filter for the column|```->makeInputText()```|
 |**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->filterDateBetween()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
+|**makeInputMultiSelect**| $data_source, *String* $display_field, *String* $relation_id |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id'])```|
+|**makeInputRange**| [*string* $data_field, *String* $thousands, *String* $decimal] |Generates a min and max input for range filter.|```->makeInputRange('price', '.', ',')```|
+
+
+
+#### Column Actions
+
+These are the actions availables for each column.
+
+| Method | Arguments | Result | Example |
+|----|----|----|----|
 |**editOnClick**|*bool* $isEditable| Allows the column to be editable by clicking on it (*\*requires Alpine.js*) |```->field('name')->editOnClick()```|
 |**toggleable**|*bool* $isTogglable| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
-
+|**clickToCopy**|*bool* $hasPermission, *string* $label| Renders a button for copying the cell contents |```->field('name')->clickToCopy()```|
 
 Example of usage:
 
-This example will bring a column with the date formatted and with a date filter for it.
+The example bellow will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow edit the values on click and have its personal input box on top.
 
+```php
+    Column::add()
+        ->title(__('Client Name'))
+        ->field('name')
+        ->searchable()
+        ->editOnClick($canEdit)
+        ->clickToCopy(true)
+        ->makeInputText()
+        ->sortable(),
+```
+
+The next example will bring a column with the date formatted and with a date filter for it.
 
 ```php
   Column::add()
@@ -372,10 +431,19 @@ This example will bring a column with the date formatted and with a date filter 
       ->searchable()
 ```
 
+The example bellow renders a min-max amount filter and configures it to handle the custom currency formatting ($ 85.133,84). The method `makeInputRange` references the `price` atrribute, while the column outputs the `price_formatted`.
+
+```php
+  Column::add()
+      ->title(__('US Price'))
+      ->field('price_formatted')
+      ->makeInputRange('price', '.', ','),
+
+```
 
 **NOTE** 
 
-To use some features (`editOnClick()` and `toggleable()`) you must include Alpine.js before the `<body>` tag.
+To use some features you must include Alpine.js before the `<body>` tag.
 
 Example with CDN:
 
@@ -406,13 +474,35 @@ public function update(array $product): bool
 }
 ```
 
+The `update()` method supports custom messages for each field.
 
+To modify the messages edit or add new messages on the `updateMessages()` message.
+
+```php
+    public function updateMessages(string $status, string $field = '_default_message'): string
+    {
+        $updateMessages = [
+            'success'   => [
+            '_default_message' => __('Data has been updated successfully!'),
+             //...
+            'name' => __('Product updated successfully!'), // Custom message for name field
+            ],
+
+            "error" => [
+                '_default_message' => __('Error updating the data.'),
+                //'custom_field' => __('rror updating custom field.'),
+            ]
+
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+```
 ---
 
 ### Action Methods
 
 These methods are available on `Button` class.
-
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -434,24 +524,16 @@ Example of usage
   //...
 ];
   ```
+
   ---
   
-  ## Examples
+## Examples
 
-Bootstrap version
-![Laravel Livewire Tables](img/bootstrap.png)
-
-Tailwind version
-![Laravel Livewire Tables](img/tailwind.png)
-
-Exported example with selected data
-
-![Laravel Livewire Tables](img/export.png)
+(comming soon)
 
 ## Support
 
 If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
-
 
 ## Contributors
 
@@ -468,4 +550,3 @@ Contributors (in alphabetical order):
 
 - [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
 - [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
-

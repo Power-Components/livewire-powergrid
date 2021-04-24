@@ -16,12 +16,15 @@ return [
     'placeholders' => [
         'search' => 'Search...',
         'select' => 'Select a period',
-        'multi_select' => 'Selecione'
     ],
     'pagination' => [
         'showing' => 'Showing',
         'to' => 'to',
         'of' => 'of',
         'results' => 'Results'
+    ],
+    'multi_select' => [
+        'select' => 'Select',
+        'all' => 'All'
     ]
 ];

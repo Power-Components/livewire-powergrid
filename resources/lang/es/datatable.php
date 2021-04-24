@@ -4,27 +4,28 @@ return [
     'buttons' => [
         'filter' => 'Filtrar',
         'export' => 'Exportar',
-        'export_one' => 'Exportar selecionado',
-        'export_selected' => 'Exportar selecionados'
+        'export_one' => 'Exportar seleccionado',
+        'export_selected' => 'Exportar seleccionados'
     ],
     'labels' => [
         'action' => 'Ações',
         'results_per_page' => 'Registros por página',
-        'clear_filter' => 'Limpar filtro',
-        'no_data' => 'Nenhum registro encontrado'
+        'clear_filter' => 'Borrar filtro',
+        'no_data' => 'No se encontraron registros.'
     ],
     'placeholders' => [
-        'search' => 'Buscar ...',
-        'select' => 'Selecione um período',
+        'search' => 'Buscar',
+        'select' => 'Seleccione un período',
     ],
     'pagination' => [
         'showing' => 'Mostrando',
-        'to' => 'até',
+        'to' => 'a',
         'of' => 'de',
-        'results' => 'Registros'
+        'results' => 'registros'
     ],
     'multi_select' => [
-        'select' => 'Selecione',
+        'select' => 'Seleccione',
         'all' => 'Todos'
     ]
+
 ];
