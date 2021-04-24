@@ -273,19 +273,20 @@ Here we provide a full example:
             return [
                 Button::add('edit')
                     ->caption(__('Edit'))
-                    //->class('btn btn-primary') bootstrap ex
+                    //->class('btn btn-primary') //bootstrap example
                     ->class('rounded border-indigo-500 bg-indigo-500 text-white')
                     ->route('product.edit', ['product' => 'id']),
     
                 Button::add('destroy')
                     ->caption(__('Delete'))
-                    //->class('btn btn-danger') bootstrap ex
+                    //->class('btn btn-danger') //bootstrap example
                     ->class('rounded border-red-500 bg-red-500 text-white')
                     ->route('product.destroy', ['product' => 'id'])
                     ->method('delete'),
             ];
         }
     }
+
 ```
 
 ### setUp() Method
