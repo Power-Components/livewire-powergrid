@@ -4,14 +4,14 @@
         @if(!$inline)
             <label for="input_{!! $select['relation_id'] !!}">{{$select['label']}}</label>
         @endif
-        <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.placeholders.multi_select') }}"
+        <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
                 multiple id="input_{!! $select['relation_id'] !!}"
                 class="livewire_powergrid_select selectpicker_{!! $select['relation_id'] !!}
                     form-control active"
                 wire:ignore
                 data-live-search="{{ $select['live-search'] }}">
 
-            <option value="">{{ __('Todos') }}</option>
+            <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
             @foreach($select['data_source'] as $relation)
                 <option value="{{ $relation['id'] }}">{{ $relation[$select['display_field']] }}</option>
             @endforeach
