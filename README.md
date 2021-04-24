@@ -104,7 +104,7 @@ Language files can be published with:
 
 By default, PowerGrid uses Tailwind.
 
-This configuration can be changed in the file `config/livewire-powergrid.php`
+This configuration can be changed in the file `config/livewire-powergrid.php`.
 
 For Bootstrap 5 use:
 
@@ -151,7 +151,9 @@ You can read more about this at the official [Livewire documentation](https://la
 
 ### 6.  Creating a Table Component
 
-To create a Table Component run `powergrid:create` informing your table `name` and your `model`
+To create a Table Component run `powergrid:create` informing your table `name` and your `model`.
+
+Example:
 
 ```bash
 php artisan powergrid:create ProductTable --model="App\Models\Product" 
@@ -160,17 +162,18 @@ php artisan powergrid:create ProductTable --model="App\Models\Product"
 (It's advisable to use "" around your `--model` option)
 
 ### 6.1 Create with Fillable 
+
 If your Model has the fillable property specified, use `--fillable` option to create columns based on its value.
 
 ```bash
 php artisan powergrid:create ProductTable --model="App\Models\Product" --fillable
 ```
 
-If everything was succesfull, you will find your new table component inside the `app/Http/Livewire` folder.
+If everything was successful, you will find your new table component inside the `app/Http/Livewire` folder.
 
 ### 6.2 Create options
 
- The command `powergrid:create` accept the followning options:
+ The command `powergrid:create` accepts the following options:
 
 | Option | Description | Example |
 |----|----|----|
@@ -201,7 +204,7 @@ or
 
 You can configure and customize your table component to adjust it to your needs.
 
-You can view more functionalities consulting each of the following methodos:
+You can view more functionalities consulting each of the following methods:
 
 - [setUp()](#setup-method)
 - [dataSource()](#datasource-method)
@@ -350,7 +353,7 @@ The data of each column can be manipulated with a closure function.
 //will output 1500.00
 ```
 
-The example bellow brings the price formated.
+The example below brings the price formated.
 
 ```php
   ->addColumn('price_formatted', function(Product $model) {
@@ -411,16 +414,17 @@ These are the actions availables for each column.
 
 Example of usage:
 
-The example bellow will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow edit the values on click and have its personal input box on top.
+The example bellow will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow editing the values on click, and have its own input box filter on top.
 
 ```php
-    $canEdit = true;
+    $canEdit = true; // this role has permission to edit
+
     Column::add()
         ->title(__('Client Name'))
         ->field('name')
         ->searchable()
         ->editOnClick($canEdit)
-        ->clickToCopy(true)
+        ->clickToCopy()
         ->makeInputText()
         ->sortable(),
 ```
@@ -480,7 +484,7 @@ public function update(array $product): bool
 
 The `update()` method supports custom messages for each field.
 
-To modify the messages edit or add new messages on the `updateMessages()` message.
+To modify the displayed message after saving data, edit or add items on the `updateMessages()` method.
 
 ```php
     public function updateMessages(string $status, string $field = '_default_message'): string
@@ -494,7 +498,7 @@ To modify the messages edit or add new messages on the `updateMessages()` messag
 
             "error" => [
                 '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('error updating custom field.'),
+                //'custom_field' => __('Error updating custom field.'),
             ]
 
         ];
@@ -533,7 +537,13 @@ Example of usage
   
 ## Examples
 
-(comming soon)
+Tailwind table
+
+ ![Laravel Livewire Tables](img/tailwind.gif)
+
+Excel export
+
+ ![Laravel Livewire Tables](img/export.png)
 
 ## Support
 
@@ -554,3 +564,4 @@ Contributors (in alphabetical order):
 
 - [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
 - [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
+- [Admin Template](https://www.tailwindtoolbox.com/templates/admin-template) used in example screenshot.
