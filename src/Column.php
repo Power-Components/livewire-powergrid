@@ -204,7 +204,7 @@ class Column
      * @param string $decimal
      * @return $this
      */
-    public function makeRangeNumber( string $data_field = '', string $thousands = '', string $decimal = '' ): Column
+    public function makeInputRange( string $data_field = '', string $thousands = '', string $decimal = '' ): Column
     {
         $this->inputs['number']['enabled'] = true;
         $this->inputs['number']['decimal'] = $decimal;
