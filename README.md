@@ -130,18 +130,19 @@ Include the Livewire and the PowerGrid styles and scripts:
 
 <head>
 ...
- <!-- Styles -->
-  @livewireStyles
-  @powerGridStyles
+    <!-- Styles -->
+    @livewireStyles
+    @powerGridStyles
 ```
 
 Make sure you have Livewired included too:
 
 ```html
 ...
+    <!-- Scripts -->
+    @livewireScripts
+    @powerGridScripts
 </body>
-@livewireScripts
-@powerGridScripts
 ```
 
 You can read more about this at the official [Livewire documentation](https://laravel-livewire.com/docs/2.x/quickstart)
@@ -269,12 +270,14 @@ Here we provide a full example:
             return [
                 Button::add('edit')
                     ->caption(__('Edit'))
-                    ->class('btn btn-primary')
+                    //->class('btn btn-primary') bootstrap ex
+                    ->class('rounded border-indigo-500 bg-indigo-500 text-white')
                     ->route('product.edit', ['product' => 'id']),
     
                 Button::add('destroy')
                     ->caption(__('Delete'))
-                    ->class('btn btn-danger')
+                    //->class('btn btn-danger') bootstrap ex
+                    ->class('rounded border-red-500 bg-red-500 text-white')
                     ->route('product.destroy', ['product' => 'id'])
                     ->method('delete'),
             ];
@@ -389,7 +392,7 @@ These are the filters availables for each column.
 | Method | Arguments | Result | Example |
 |----|----|----|----|
 |**makeInputText**| *String* $data_field | Renders a textfield filter for the column|```->makeInputText()```|
-|**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->filterDateBetween()```|
+|**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->makeInputDatePicker()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
 |**makeInputMultiSelect**| $data_source, *String* $display_field, *String* $relation_id |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id'])```|
 |**makeInputRange**| [*string* $data_field, *String* $thousands, *String* $decimal] |Generates a min and max input for range filter.|```->makeInputRange('price', '.', ',')```|
@@ -411,6 +414,7 @@ Example of usage:
 The example bellow will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow edit the values on click and have its personal input box on top.
 
 ```php
+    $canEdit = true;
     Column::add()
         ->title(__('Client Name'))
         ->field('name')
@@ -490,7 +494,7 @@ To modify the messages edit or add new messages on the `updateMessages()` messag
 
             "error" => [
                 '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('rror updating custom field.'),
+                //'custom_field' => __('error updating custom field.'),
             ]
 
         ];
