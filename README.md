@@ -474,6 +474,30 @@ public function update(array $product): bool
 }
 ```
 
+The `update()` method supports custom messages for each field.
+
+To modify the messages edit or add new messages on the `updateMessages()` message.
+
+```php
+    public function updateMessages(string $status, string $field = '_default_message'): string
+    {
+        $updateMessages = [
+            'success'   => [
+            '_default_message' => __('Data has been updated successfully!'),
+             //...
+            'name' => __('Product updated successfully!'), // Custom message for name field
+            ],
+
+            "error" => [
+                '_default_message' => __('Error updating the data.'),
+                //'custom_field' => __('rror updating custom field.'),
+            ]
+
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+```
 ---
 
 ### Action Methods
