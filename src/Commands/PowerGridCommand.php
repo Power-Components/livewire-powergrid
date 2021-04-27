@@ -95,10 +95,9 @@ class PowerGridCommand extends Command
                                 return ($info->Field === $field) ? $info->Type: '';
                             }))->Type;
 
-                            echo $type."\n";
                             if (in_array($type, ['timestamp', 'datetime'])) {
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->formatted(\'d/m/Y H:i:s\');'."\n".'            })';
+                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
 
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
                                 $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'_formatted\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
@@ -110,7 +109,7 @@ class PowerGridCommand extends Command
                             } else if ($type === 'int(11)') {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->rangeNumber(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->makeInputRange(),'."\n";
 
                             } else {
 

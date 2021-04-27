@@ -32,11 +32,11 @@
                             @if($column->hidden === false)
 
                                 <th
-                                    class="@if(isset($column->sortable)) pl-0 align-middle cursor-pointer hover:text-black hover:text-current @endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="@if(isset($column->sortable))px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider@endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     style="@if($column->sortable === true) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
                                     <div class="align-content-between"
-                                         style="align-items: center; justify-content: left;">
+                                         style="align-items: center; justify-content: left;width: max-content;">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
                                                 @if ($orderBy !== $column->field)
@@ -149,6 +149,7 @@
                 </table>
 
                 <div class="flex flex-row w-full flex justify-between p-2">
+                    @if($perPage_input)
                     <div class="flex flex-row">
                         <div class="relative h-10">
                             <select wire:model="perPage"
@@ -171,6 +172,7 @@
                         <div class="pl-4 hidden sm:block md:block lg:block w-full"
                              style="padding-top: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</div>
                     </div>
+                    @endif
 
                     @if(!is_array($data))
                         <div class="">

@@ -24,7 +24,7 @@ class PowerGridComponent extends Component
     /**
      * @var bool
      */
-    public bool $search_input = true;
+    public bool $search_input = false;
     /**
      * @var string
      */
@@ -32,7 +32,7 @@ class PowerGridComponent extends Component
     /**
      * @var bool
      */
-    public bool $perPage_input = true;
+    public bool $perPage_input = false;
     /**
      * @var string
      */
@@ -44,7 +44,7 @@ class PowerGridComponent extends Component
     /**
      * @var
      */
-    public $perPage;
+    public $perPage = 10;
     /**
      * @var array
      */
