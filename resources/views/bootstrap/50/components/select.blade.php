@@ -32,7 +32,6 @@
                                 selected: $('.selectpicker_{!! $select['relation_id'] !!} option:selected').val(),
                                 field: "{!! $select['relation_id'] !!}"
                             })
-                            $('.spinner').html('<div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>')
                             $('.selectpicker_{!! $select['field'] !!}').selectpicker('refresh');
                         });
                     </script>

@@ -47,7 +47,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         Livewire.hook('message.processed', (message, component) => {
             $('.livewire_powergrid_select').selectpicker()
-            $('.spinner').html('')
         })
     })
 

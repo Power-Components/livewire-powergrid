@@ -12,7 +12,10 @@ use PowerComponents\LivewirePowerGrid\Traits\Filter;
 class PowerGridComponent extends Component
 {
 
-    use WithPagination, Checkbox, ExportExcel, Filter;
+    use WithPagination,
+        Checkbox,
+        ExportExcel,
+        Filter;
 
     /**
      * @var array
@@ -84,6 +87,10 @@ class PowerGridComponent extends Component
         'eventToggleChanged' => 'eventChangeInput',
         'eventMultiSelect' => 'eventMultiSelect'
     ];
+    /**
+     * @var \Illuminate\Support\Collection|mixed
+     */
+    private mixed $collection;
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -109,7 +116,7 @@ class PowerGridComponent extends Component
      * @param string $mode
      * @return $this
      */
-    public function showRecordCount( $mode = 'full' ): PowerGridComponent
+    public function showRecordCount($mode = 'full'): PowerGridComponent
     {
         $this->record_count = $mode;
         return $this;
@@ -119,7 +126,7 @@ class PowerGridComponent extends Component
      * @param int $perPage
      * @return $this
      */
-    public function showPerPage( int $perPage = 10 ): PowerGridComponent
+    public function showPerPage(int $perPage = 10): PowerGridComponent
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
             $this->perPage_input = true;
@@ -172,16 +179,16 @@ class PowerGridComponent extends Component
     public function render()
     {
         $this->columns = $this->columns();
-        $collection = $this->collection();
+        $this->collection = $this->collection();
         $data = [];
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
-        if (filled($collection)) {
+        if (filled($this->collection)) {
 
-            $data = Collection::search($collection, $this->search, $this->columns());
+            $data = Collection::search($this->collection, $this->search, $this->columns());
             $data = $this->advancedFilter($data);
             $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
 
@@ -197,7 +204,7 @@ class PowerGridComponent extends Component
     /**
      * @param $field
      */
-    public function setOrder( $field )
+    public function setOrder($field)
     {
         if ($this->orderBy === $field) {
             $this->orderAsc = !$this->orderAsc;
@@ -208,7 +215,7 @@ class PowerGridComponent extends Component
     /**
      * @param $data
      */
-    private function renderView( $data )
+    private function renderView($data)
     {
         $theme = config('livewire-powergrid.theme');
         $version = config('livewire-powergrid.theme_versions')[$theme];
@@ -222,15 +229,27 @@ class PowerGridComponent extends Component
      * @param array $data
      * @throws \Exception
      */
-    public function eventChangeInput(array $data ): void
+    public function eventChangeInput(array $data): void
     {
         $update = $this->update($data);
-        $this->collection();
+
+        $collection = $this->collection();
 
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', $data['field']));
         } else {
+
+            $cached = $collection->map(function ($row) use ($data) {
+                $field = $data['field'];
+                if ($row->id === $data['id']) {
+                    $row->{$field} = $data['value'];
+                }
+                return $row;
+            });
+
             session()->flash('success', $this->updateMessages('success', $data['field']));
+
+            $this->collection($cached);
         }
     }
 
@@ -238,24 +257,29 @@ class PowerGridComponent extends Component
      * @return \Illuminate\Support\Collection|mixed
      * @throws \Exception
      */
-    private function collection()
+    private function collection($cached = '')
     {
-        $cache = (bool)config('livewire-powergrid.cached_data');
-        $collection = new \Illuminate\Support\Collection($this->dataSource());
-        if ($cache) {
+        if (filled($cached)) {
             \cache()->forget($this->id);
-            return \cache()->rememberForever($this->id, function () use ( $collection ) {
-                return $collection;
+            return \cache()->rememberForever($this->id, function () use ($cached) {
+                return $cached;
             });
         }
-        return $collection;
+
+        $cache = config('livewire-powergrid.cached_data');
+        if ($cache) {
+            return \cache()->rememberForever($this->id, function () {
+                return new \Illuminate\Support\Collection($this->dataSource());
+            });
+        }
+        return new \Illuminate\Support\Collection($this->dataSource());
     }
 
     /**
      * @param array $data
      * @return bool
      */
-    public function update( array $data ): bool
+    public function update(array $data): bool
     {
         return false;
     }
@@ -265,7 +289,7 @@ class PowerGridComponent extends Component
      * @param string $field
      * @return string
      */
-    public function updateMessages( string $status, string $field = '_default_message' ): string
+    public function updateMessages(string $status, string $field = '_default_message'): string
     {
         $updateMessages = [
             'success' => [

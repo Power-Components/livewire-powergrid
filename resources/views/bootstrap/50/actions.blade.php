@@ -14,12 +14,12 @@
                             @csrf
 
                             @if(count($action->i) == 0)
-                                <button id="actionCall" type="submit" class="{{$action->class}}">
+                                <button type="submit" class="{{$action->class}}">
                                     {{ $action->caption }}
                                 </button>
                             @endif
                             @if(count($action->i))
-                                <button type="submit" id="actionCall" class="{{$action->class}}">
+                                <button id="actionCall" class="{{$action->class}}">
                                     <i class="{{$action->i['class']}}"
                                        title="{{$action->i['text']}}"></i> {{($action->i['caption'])? $action->i['text']: ""}}
                                 </button>
