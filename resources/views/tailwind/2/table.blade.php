@@ -32,7 +32,7 @@
                             @if($column->hidden === false)
 
                                 <th
-                                    class="@if($column->sortable)px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider@endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     style="@if($column->sortable) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
                                     <div class="align-content-between"
@@ -58,8 +58,8 @@
                                     </div>
                                 </th>
                             @endif
-                            @endif
                         @endforeach
+
                         @if(isset($actionBtns) && count($actionBtns))
                             <th scope="col" colspan="{{count($actionBtns)}}"
                                 class="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
