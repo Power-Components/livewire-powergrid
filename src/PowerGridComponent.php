@@ -87,10 +87,8 @@ class PowerGridComponent extends Component
         'eventToggleChanged' => 'eventChangeInput',
         'eventMultiSelect' => 'eventMultiSelect'
     ];
-    /**
-     * @var \Illuminate\Support\Collection|mixed
-     */
-    private mixed $collection;
+
+    private $collection;
 
     /**
      * Apply checkbox, perPage and search view and theme
