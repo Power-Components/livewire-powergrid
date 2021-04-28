@@ -30,8 +30,8 @@
                         @endif
 
                         @if(isset($make_filters['multi_select']))
-                            @foreach($make_filters['multi_select'] as $field => $select)
-                                @if($select['field'] === $column->field)
+                            @foreach($make_filters['multi_select'] as $field => $multi_select)
+                                @if($multi_select['field'] === $column->field)
                                     @include('livewire-powergrid::tailwind.2.components.multi_select', [
                                         'inline' => true
                                     ])
