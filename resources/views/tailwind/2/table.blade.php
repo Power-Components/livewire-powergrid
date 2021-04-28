@@ -32,8 +32,8 @@
                             @if($column->hidden === false)
 
                                 <th
-                                    class="@if(isset($column->sortable))px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider@endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    style="@if($column->sortable === true) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
+                                    class="@if($column->sortable)px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider@endif text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    style="@if($column->sortable) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
                                     <div class="align-content-between"
                                          style="align-items: center; justify-content: left;width: max-content;">
@@ -57,6 +57,7 @@
 
                                     </div>
                                 </th>
+                            @endif
                             @endif
                         @endforeach
                         @if(isset($actionBtns) && count($actionBtns))
