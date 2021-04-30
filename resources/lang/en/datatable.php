@@ -36,6 +36,8 @@ return [
         'is' => 'Is',
         'is_not' => 'Is not',
         'contains' => 'Contains',
-        'contains_not' => 'Doesn\'t Contain'
+        'contains_not' => 'Does not contain',
+        'starts_with' => 'Starts with',
+        'ends_with' => 'Ends with',
     ]
 ];

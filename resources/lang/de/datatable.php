@@ -40,6 +40,8 @@ return [
         'is' => 'ist genau',
         'is_not' => 'ist nicht genau',
         'contains' => 'enthält',
-        'contains_not' => 'enthält nicht'
+        'contains_not' => 'enthält nicht',
+        'starts_with' => 'beginnt mit',
+        'ends_with' => 'endet with',
     ]
 ];
