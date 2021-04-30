@@ -347,6 +347,7 @@ These are the filters availables for each column.
 | Method | Arguments | Result | Example |
 |----|----|----|----|
 |**makeInputText**| *String* $data_field | Renders a textfield filter for the column|```->makeInputText()```|
+|**makeBooleanFilter**|*String* $data_field, *String* $trueLabel, *String* $falseLabel|Filter for boolean columns|```->makeBooleanFilter('is_active', 'active', 'inactive')```|
 |**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->makeInputDatePicker()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
 |**makeInputMultiSelect**| $data_source, *String* $display_field, *String* $relation_id |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id'])```|
@@ -361,7 +362,7 @@ These are the actions availables for each column.
 | Method | Arguments | Result | Example |
 |----|----|----|----|
 |**editOnClick**|*bool* $isEditable| Allows the column to be editable by clicking on it (*\*requires Alpine.js*) |```->field('name')->editOnClick()```|
-|**toggleable**|*bool* $isTogglable| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
+|**toggleable**|*bool* $isTogglable, *String* $trueLabel, *String* $falseLabel| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
 |**clickToCopy**|*bool* $hasPermission, *string* $label| Renders a button for copying the cell contents |```->field('name')->clickToCopy()```|
 
 Example of usage:
@@ -399,6 +400,16 @@ The example bellow renders a min-max amount filter and configures it to handle t
       ->field('price_formatted')
       ->makeInputRange('price', '.', ','),
 
+```
+
+Boolean column example:
+
+```php
+   Column::add()
+      ->title(__('Status'))
+      ->field('is_active'),
+      ->toggleable(true, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
+      ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
 
 **NOTE** 
@@ -463,8 +474,11 @@ public function update(array $product): bool
         **/
 
         if ($data['field'] == 'price_formatted') {
-          $data['field'] = 'price';
-          $data['value'] = Str::of($data['value'])->replace(',', '.')->replaceMatches('/[^Z0-9\.]/', '');
+              $data['field'] = 'price'; //Update the field price
+              $data['value'] = Str::of($data['value'])
+                ->replace('.', '')
+                ->replace(',', '.')
+                ->replaceMatches('/[^Z0-9\.]/', '');
         }
 
       try {
@@ -487,14 +501,14 @@ To modify the displayed message after saving data, edit or add items on the `upd
     {
         $updateMessages = [
             'success'   => [
-            '_default_message' => __('Data has been updated successfully!'),
-             //...
-            'name' => __('Product name updated successfully!'), // Custom message for name field
-            ],
+              '_default_message' => __('Data has been updated successfully!'),
+               //...
+              'name' => __('Product name updated successfully!'), // Custom message for name field
+              ],
 
             "error" => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
+              '_default_message' => __('Error updating the data.'),
+               //'custom_field' => __('Error updating custom field.'),
             ]
 
         ];
