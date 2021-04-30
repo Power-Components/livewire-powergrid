@@ -38,7 +38,7 @@ return [
     ],
     'input_text_options' => [
         'is' => 'É exatamente',
-        'is_not' => 'Não é',
+        'is_not' => 'É diferente de',
         'contains' => 'Contém',
         'contains_not' => 'Não contém',
         'starts_with' => 'Começa com',
