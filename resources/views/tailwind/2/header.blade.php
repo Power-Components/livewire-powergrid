@@ -2,7 +2,8 @@
 
     <div class="flex flex-row">
         <button
-            class="block w-full float-right bg-gray-200 text-gray-700 border border-gray-100 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 items-center inline-flex"
+            style="width: 220px;justify-content: center;"
+            class="block w-full bg-gray-200 text-gray-700 border border-gray-100 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 items-center inline-flex"
             wire:click="exportToExcel()"
         >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
