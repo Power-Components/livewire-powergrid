@@ -165,7 +165,7 @@
                                             style="width: 110px;">
                                         @foreach($perPageValues as $value)
                                             <option value="{{$value}}"> @if($value == 0)
-                                                    Todos @else {{ $value }} @endif</option>
+                                                    {{ trans('livewire-powergrid::datatable.labels.all') }} @else {{ $value }} @endif</option>
                                         @endforeach
                                     </select>
                                 @endif
