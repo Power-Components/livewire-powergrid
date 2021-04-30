@@ -26,6 +26,8 @@ return [
     'multi_select' => [
         'select' => 'Seleccione',
         'all' => 'Todos'
+    ],
+    'boolean_filter' => [
+        'all' => 'Todos'
     ]
-
 ];

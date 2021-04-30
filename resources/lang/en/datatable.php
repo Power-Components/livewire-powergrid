@@ -26,5 +26,8 @@ return [
     'multi_select' => [
         'select' => 'Select',
         'all' => 'All'
+    ],
+    'boolean_filter' => [
+        'all' => 'All'
     ]
 ];
