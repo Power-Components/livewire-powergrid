@@ -186,14 +186,16 @@ class Column
      * Adds Toggle to a column
      *
      * @param bool $hasPermission
+     * @param string $trueLabel Label for true
+     * @param string $falseLabel Label for false
      * @return Column
      */
-    public function toggleable( bool $hasPermission = true, array $default = [] ): Column
+    public function toggleable( bool $hasPermission = true, string $trueLabel = 'Yes', $falseLabel = 'No'): Column
     {
         $this->editable = false;
         $this->toggleable = [
             'enabled' => $hasPermission,
-            'default' => count($default) ? $default : [__('active'), __('not active')]
+            'default' => [$trueLabel,  $falseLabel]
         ];
         return $this;
     }
@@ -235,6 +237,24 @@ class Column
             'enabled' => $hasPermission,
             'label' => $label
         ];
+        return $this;
+    }
+
+    /**
+     * @param string $data_field
+     * @param string $trueLabel Label for true
+     * @param string $falseLabel Label for false
+     * @param array $settings Settings
+     * @return $this
+     */
+    public function makeBooleanFilter(string $data_field = '' , string $trueLabel = 'Yes', $falseLabel = 'No', array $settings = []): Column
+    {
+        $this->inputs['boolean_filter']['enabled'] = true;
+        $this->inputs['boolean_filter']['true_label'] = $trueLabel;
+        $this->inputs['boolean_filter']['false_label'] = $falseLabel;
+        $this->inputs['boolean_filter']['class'] = $settings['class'] ?? '';
+        $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
+        $this->data_field = $data_field;
         return $this;
     }
 

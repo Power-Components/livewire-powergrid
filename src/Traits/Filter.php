@@ -59,6 +59,14 @@ trait Filter
                         case 'select':
                             $collection = $collection->where($field, $value);
                             break;
+                        case 'boolean':
+
+                            if ($value != "all") {
+                                $value = ($value == "true");
+                                $collection = $collection->where($field, '=', $value);
+                            }
+
+                        break;
                         case 'input_text':
                             $collection = $collection->filter(function ($row) use ($field, $value) {
                                 return false !== stristr($row->$field, strtolower($value));
@@ -147,5 +155,13 @@ trait Filter
         $this->filters['input_text'][$field] = $value;
     }
 
+    /**
+     * @param string $field
+     * @param string $value
+     */
+    public function filterBoolean(string $field, string $value): void
+    {
+        $this->filters['boolean'][$field] = $value;
+    }
 
 }

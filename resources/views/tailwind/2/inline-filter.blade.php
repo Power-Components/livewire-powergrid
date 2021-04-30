@@ -59,6 +59,16 @@
                             @endforeach
                         @endif
 
+                        @if(isset($make_filters['boolean_filter']))
+                            @foreach($make_filters['boolean_filter'] as $field => $boolean_filter)
+                                @if($boolean_filter['field'] === $column->field)
+                                    @include('livewire-powergrid::tailwind.2.components.boolean_filter', [
+                                        'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
+                        @endif
+
                     </td>
                 @endif
             @endforeach
