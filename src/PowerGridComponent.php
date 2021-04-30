@@ -161,7 +161,7 @@ class PowerGridComponent extends Component
                 ->sortable(),
 
             Column::add()
-                ->title('Criado em')
+                ->title('Created at')
                 ->field('created_at'),
         ];
     }

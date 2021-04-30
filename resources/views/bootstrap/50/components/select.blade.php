@@ -14,7 +14,7 @@
                             wire:ignore
                             data-live-search="{{ (isset($select['live-search']))? $select['live-search']: false }}">
 
-                        <option value="">{{ __('Todos') }}</option>
+                        <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
                         @foreach($select['data_source'] as $relation)
                             <option value="{{ $relation['id'] }}">{{ $relation[$select['display_field']] }}</option>
                         @endforeach

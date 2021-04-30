@@ -34,6 +34,8 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Works with Bootstrap or Tailwind CSS**
 
+✅ **Translated in  🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
+
 ---
 
 # Get started
@@ -47,6 +49,7 @@ PowerGrid comes with a variety of out-of-the-box features:
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
       - [Action Methods](#action-methods)
+      - [Update Method](#update-method)
 - [Examples](#examples)
 - [Support](#support)
 - [Contributors](#contributors)
@@ -211,83 +214,6 @@ You can view more functionalities consulting each of the following methods:
 - [Column Methods](#column-methods)
 - [Action Methods](#action-methods)
 
-Here we provide a full example:
-
-```php
-    class ProductTable extends PowerGridComponent
-    {
-        use ActionButton;
-
-        public function setUp()
-        {
-            $this->showCheckBox()
-                ->showPerPage()
-                ->showSearchInput();
-        }
-    
-        public function dataSource(): array
-        {
-            $model = Product::query()->with('group')->get();
-            return PowerGrid::eloquent($model)
-                ->addColumn('id')
-                ->addColumn('name')
-                ->addColumn('price_formatted', function(Product $model) {
-                    return  '$ ' . number_format($model->price, 2, ',', '.');
-                })
-                ->addColumn('created_at_formatted', function(Product $model) {
-                    return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-                })
-                ->make();
-        }
-    
-        public function columns(): array
-        {
-            return [
-                Column::add()
-                    ->title('ID')
-                    ->field('id')
-                    ->searchable()
-                    ->sortable(),
-    
-                Column::add()
-                    ->title(__('Name'))
-                    ->field('name')
-                    ->searchable()
-                    ->sortable(),
-
-                Column::add()
-                    ->title(__('Price'))
-                    ->field('price_formatted')
-                    ->hidden(),
-    
-                Column::add()
-                    ->title(__('Creation date'))
-                    ->field('created_at_formatted')
-                    ->makeInputDatePicker('created_at')
-                    ->searchable()
-            ];
-        }
-    
-        public function actions(): array
-        {
-            return [
-                Button::add('edit')
-                    ->caption(__('Edit'))
-                    //->class('btn btn-primary') //bootstrap example
-                    ->class('rounded border-indigo-500 bg-indigo-500 text-white')
-                    ->route('product.edit', ['product' => 'id']),
-    
-                Button::add('destroy')
-                    ->caption(__('Delete'))
-                    //->class('btn btn-danger') //bootstrap example
-                    ->class('rounded border-red-500 bg-red-500 text-white')
-                    ->route('product.destroy', ['product' => 'id'])
-                    ->method('delete'),
-            ];
-        }
-    }
-
-```
 
 ### setUp() Method
 
@@ -298,7 +224,9 @@ The Setup method is used to configure your component.
 |**showCheckBox**|-|Displays checkboxes on the table|`->showCheckBox()`|
 |**showPerPage**|*int* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
-|**showRecordCount**|*str* Min/Short/Full|Displays the records count|`->showRecordCount('short')`|
+|**showRecordCount**|*str* (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
+
+Example of usage:
 
 ```php
   public function setUp()
@@ -335,16 +263,36 @@ Example of usage:
 
 ```php
 return PowerGrid::eloquent($model)
-  ->addColumn('id')
-  ->addColumn('name')
-  ->addColumn('price')
-  ->addColumn('price_formatted', function(Product $model) {
-      return  '$ ' . number_format($model->price, 2, ',', '.');
-    })
+    ->addColumn('id')
+    ->addColumn('name')
+    ->addColumn('size')
+
+    /** Group Relationship **/
     ->addColumn('group_id', function (Product $product) {
         return  $product->group_id;
     })
-  ->make();
+    ->addColumn('group_name', function (Product $product) {
+        return  $product->group->name;
+    })
+
+    /** Active Boolean **/
+    ->addColumn('is_active')
+    ->addColumn('is_active_label', function (Product $product) {
+        return ($product->is_active ? "active" : "inactive");
+    })
+
+    /** Price Format **/
+    ->addColumn('price')
+    ->addColumn('price_formatted', function(Product $product) {
+        return  '$ ' . number_format($product->price, 2, ',', '.');
+    })
+
+    /** Created Date Format **/
+    ->addColumn('created_at')
+    ->addColumn('created_at_formatted', function(Product $product) {
+      return Carbon::parse($product->created_at)->format('d/m/Y H:i');
+    })
+    ->make();
 ```
 
 The data of each column can be manipulated with a closure function.
@@ -357,17 +305,22 @@ The data of each column can be manipulated with a closure function.
 The example below brings the price formated.
 
 ```php
-  ->addColumn('price_formatted', function(Product $model) {
-      return  '$ ' . number_format($model->price, 2, ',', '.');
+  ->addColumn('price_formatted', function(Product $product) {
+      return  '$ ' . number_format($product->price, 2, ',', '.');
     })
-//will output $1.500,00
+//will output $ 1.500,00
 ```
 
-The column `group_id` is added for the relationship filter.
+The custom currency format should be converted back in the updated method as demonstrated below.
+
+The column `group_id` is added for the relationship filter and the column `group_name` will bring the group data via the relationship.
 
 ```php
     ->addColumn('group_id', function (Product $product) {
         return  $product->group_id;
+    })
+    ->addColumn('group_name', function (Product $product) {
+        return  $product->group->name;
     })
 ```
 
@@ -396,6 +349,7 @@ These are the filters availables for each column.
 | Method | Arguments | Result | Example |
 |----|----|----|----|
 |**makeInputText**| *String* $data_field | Renders a textfield filter for the column|```->makeInputText()```|
+|**makeBooleanFilter**|*String* $data_field, *String* $trueLabel, *String* $falseLabel|Filter for boolean columns|```->makeBooleanFilter('is_active', 'active', 'inactive')```|
 |**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->makeInputDatePicker()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
 |**makeInputMultiSelect**| $data_source, *String* $display_field, *String* $relation_id |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id'])```|
@@ -410,7 +364,7 @@ These are the actions availables for each column.
 | Method | Arguments | Result | Example |
 |----|----|----|----|
 |**editOnClick**|*bool* $isEditable| Allows the column to be editable by clicking on it (*\*requires Alpine.js*) |```->field('name')->editOnClick()```|
-|**toggleable**|*bool* $isTogglable| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
+|**toggleable**|*bool* $isTogglable, *String* $trueLabel, *String* $falseLabel| Renders a toggle control (ON/OFF) (*\*requires Alpine.js*) |```->field('is_active')->toggleable()```|
 |**clickToCopy**|*bool* $hasPermission, *string* $label| Renders a button for copying the cell contents |```->field('name')->clickToCopy()```|
 
 Example of usage:
@@ -450,6 +404,16 @@ The example bellow renders a min-max amount filter and configures it to handle t
 
 ```
 
+Boolean column example:
+
+```php
+   Column::add()
+      ->title(__('Status'))
+      ->field('is_active'),
+      ->toggleable(true, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
+      ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
+```
+
 **NOTE** 
 
 To use some features you must include Alpine.js before the `<body>` tag.
@@ -464,14 +428,61 @@ Example with CDN:
 <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 ```
 
-It's also required to have the update() method active and configured.
+It's also required to have the [update()](#update-method) method active and configured. 
+
+---
+
+### Action Methods
+
+These methods are available on `Button` class.
+
+| Method | Arguments | Result | Example |
+|----|----|----|----|
+|**add**| *String* $action |Action name |```Button::add()```|
+|**caption**| *String* $caption |Label for the button |```->caption('Edit Product')```|
+|**class**| *String* $class_attr |CSS class attribute |```->class('bg-indigo-500 text-white')```|
+|**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
+|**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
 
 Example of usage:
+
+```php
+ return [
+    Button::add('destroy')
+        ->caption(__('Delete'))
+        ->class('btn btn-danger')
+        ->route('product.destroy', ['product' => 'id'])
+        ->method('delete'),
+  //...
+];
+  ```
+
+  ---
+  
+### Update Method
+
+The update method needs to be activated and configured for the edit on click and toggle to work.
+
+The data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this converstion automatically. See the example bellow:
 
 
 ```php
 public function update(array $product): bool
 {
+
+        /**
+        * Reverts "price_formatted" to the database format and saves in 'price' field.
+        *  $ 4.947,70 --> 44947.70
+        **/
+
+        if ($data['field'] == 'price_formatted') {
+              $data['field'] = 'price'; //Update the field price
+              $data['value'] = Str::of($data['value'])
+                ->replace('.', '')
+                ->replace(',', '.')
+                ->replaceMatches('/[^Z0-9\.]/', '');
+        }
+
       try {
           $updated = Product::query()->find($product['id'])->update([
               $product['field'] => $product['value']
@@ -492,14 +503,14 @@ To modify the displayed message after saving data, edit or add items on the `upd
     {
         $updateMessages = [
             'success'   => [
-            '_default_message' => __('Data has been updated successfully!'),
-             //...
-            'name' => __('Product updated successfully!'), // Custom message for name field
-            ],
+              '_default_message' => __('Data has been updated successfully!'),
+               //...
+              'name' => __('Product name updated successfully!'), // Custom message for name field
+              ],
 
             "error" => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
+              '_default_message' => __('Error updating the data.'),
+               //'custom_field' => __('Error updating custom field.'),
             ]
 
         ];
@@ -507,35 +518,7 @@ To modify the displayed message after saving data, edit or add items on the `upd
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 ```
----
 
-### Action Methods
-
-These methods are available on `Button` class.
-
-| Method | Arguments | Result | Example |
-|----|----|----|----|
-|**add**| *String* $action |Action name |```Button::add()```|
-|**caption**| *String* $caption |Label for the button |```->caption('Edit Product')```|
-|**class**| *String* $class_attr |CSS class attribute |```->class('bg-indigo-500 text-white')```|
-|**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
-|**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
-
-Example of usage
-
-```php
- return [
-    Button::add('destroy')
-        ->caption(__('Delete'))
-        ->class('btn btn-danger')
-        ->route('product.destroy', ['product' => 'id'])
-        ->method('delete'),
-  //...
-];
-  ```
-
-  ---
-  
 ## Examples
 
 Tailwind table

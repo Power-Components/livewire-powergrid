@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 trait Filter
@@ -41,29 +42,78 @@ trait Filter
 
     private function advancedFilter( Collection $collection ): Collection
     {
+
         foreach ($this->filters as $key => $type) {
+
             foreach ($type as $field => $value) {
 
                 if (filled($value)) {
+
                     switch ($key) {
                         case 'date_picker':
                             if (isset($value[0]) && isset($value[1])) {
                                 $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
                             }
-                            break;
+                        break;
+
                         case 'multi_select':
                             if (count(collect($value)->get('values'))) {
                                 $collection = $collection->whereIn($field, collect($value)->get('values'));
                             }
-                            break;
+                        break;
+
                         case 'select':
                             $collection = $collection->where($field, $value);
-                            break;
+                        break;
+
+                        case 'boolean':
+
+                            if ($value != "all") {
+                                $value = ($value == "true");
+                                $collection = $collection->where($field, '=', $value);
+                            }
+                        break;
+
                         case 'input_text':
-                            $collection = $collection->filter(function ($row) use ($field, $value) {
-                                return false !== stristr($row->$field, strtolower($value));
-                            });
-                            break;
+
+                            $textFieldOperator = ( $this->validatenputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+
+                            if ($textFieldOperator == 'is') {
+                                $collection = $collection->where($field, '=', $value);
+                            }
+
+                            if ($textFieldOperator == 'is_not') {
+                                $collection = $collection->where($field, '!=', $value);
+                            }
+
+                            if ($textFieldOperator == 'starts_with') {
+                                $collection = $collection->filter(function ($row) use ($field, $value) {
+                                   return  Str::startsWith(Str::lower( $row->$field), Str::lower($value));
+                                    //return preg_match("#^{$value}(.*)$#i", $row->$field);
+                              });
+                            }
+
+                            if ($textFieldOperator == 'ends_with') {
+                                $collection = $collection->filter(function ($row) use ($field, $value) {
+                                    return  Str::endsWith(Str::lower($row->$field), Str::lower($value));
+
+                              });
+                            }
+
+                            if ($textFieldOperator == 'contains') {
+                                $collection = $collection->filter(function ($row) use ($field, $value) {
+                                    return false !== stristr($row->$field, strtolower($value));
+                                });
+                            }
+
+                            if ($textFieldOperator == 'contains_not') {
+                                $collection = $collection->filter(function ($row) use ($field, $value) {
+                                    return  !Str::Contains(Str::lower($row->$field), Str::lower($value));
+                                    //return (!preg_match("#(.*?)(?i)({$value})(.*?)#", $row->$field));
+                                });
+                            }
+                        break;
+
                         case 'number':
 
                             if (isset($value['start']) && !isset($value['end'])) {
@@ -87,7 +137,7 @@ trait Filter
 
                                 $collection = $collection->whereBetween($field, [$start, $end]);
                             }
-                            break;
+                        break;
                     }
                 }
             }
@@ -147,5 +197,33 @@ trait Filter
         $this->filters['input_text'][$field] = $value;
     }
 
+    /**
+     * @param string $field
+     * @param string $value
+     */
+    public function filterBoolean(string $field, string $value): void
+    {
+        $this->filters['boolean'][$field] = $value;
+    }
 
+    /**
+     * @param string $field
+     * @param string $value
+     */
+    public function filterInputTextOptions(string $field, string $value): void
+    {
+        $this->filters['input_text_options'][$field] = $value;
+    }
+
+    /**
+     * Validate if the given value is valid as an Input Option
+     *
+     * @param  string $field Field to be checked
+     * @return void
+     */
+    private function validatenputTextOptions(string $field) {
+
+        return isset($this->filters['input_text_options'][$field]) && in_array(strtolower($this->filters['input_text_options'][$field]), ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
+
+    }
 }
