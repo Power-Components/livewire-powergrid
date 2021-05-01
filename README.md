@@ -74,7 +74,7 @@ This documentation will describe the creation of a table called `ProductTable` u
 To install via composer, run:
 
 ```bash
-  composer require power-components/livewire-powergrid dev-main
+  composer require power-components/livewire-powergrid
 ```
 
 ### 2. Publish Config files
