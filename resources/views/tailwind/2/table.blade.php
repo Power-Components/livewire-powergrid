@@ -33,10 +33,9 @@
 
                                 <th
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    style="@if($column->sortable) cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
+                                    style="width: max-content;@if($column->sortable)cursor:pointer; @endif {{ ($column->header_style != '') ? $column->header_style:'' }}"
                                 >
-                                    <div class="align-content-between"
-                                         style="align-items: center; justify-content: left;width: max-content;">
+                                    <div class="align-content-between">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
                                                 @if ($orderBy !== $column->field)
