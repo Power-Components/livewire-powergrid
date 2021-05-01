@@ -17,8 +17,8 @@
                         <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
                     @endif
                     <input id="input_{!! $date['field'] !!}"
-                           data-key="filters_enabled.date_picker.{!! $date['field'] !!}"
-                           wire:model.debounce.800ms="filters_enabled.{!! $date['field'] !!}"
+                           data-key="filters_enabled.date_picker.{!! $date['data_field'] !!}"
+                           wire:model.debounce.800ms="filters_enabled.{!! $date['data_field'] !!}"
                            wire:ignore
                            class="range_input_{!! $date['field'] !!} livewire_powergrid_input flatpickr flatpickr-input range_input_payment block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active
                        {{ (isset($class) != '') ? $class : 'w-full' }}"
