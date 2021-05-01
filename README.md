@@ -540,7 +540,7 @@ Excel export
 
 ## Demo
 
- - [Demo repository](https://github.com/Power-Components/powergrid-demo) created for a live at [Beer and Code](https://www.youtube.com/watch?v=Mml5aagMOm4&ab_channel=BeerandCode) Youtube channel.
+ - [Demo project](https://github.com/Power-Components/powergrid-demo) created for a live at [Beer and Code](https://www.youtube.com/watch?v=Mml5aagMOm4&ab_channel=BeerandCode) Youtube channel.
 
 ## Support
 
@@ -552,10 +552,10 @@ Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
 Contributors (in alphabetical order):
 
-- [@Claudio Pereira](https://github.com/cpereiraweb)
+- [Claudio Pereira](https://github.com/cpereiraweb)
 - [@DanSysAnalyst](https://github.com/dansysanalyst)
-- [@Mateus Guimarães](https://github.com/mateusjatenee)
-- [@Tiago Braga](https://github.com/Tiagofv)
+- [Mateus Guimarães](https://github.com/mateusjatenee)
+- [Tiago Braga](https://github.com/Tiagofv)
 
 ## Credits
 
