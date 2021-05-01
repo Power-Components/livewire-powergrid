@@ -222,9 +222,9 @@ The Setup method is used to configure your component.
 | Method | Arguments | Description | Example |
 |----|----|----|----|
 |**showCheckBox**|-|Displays checkboxes on the table|`->showCheckBox()`|
-|**showPerPage**|*int* $perPage|Items per page (Default 10) |`->showPerPage()`|
+|**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
-|**showRecordCount**|*str* (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
+|**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
 
 Example of usage:
 
@@ -298,8 +298,8 @@ return PowerGrid::eloquent($model)
 The data of each column can be manipulated with a closure function.
 
 ```php
-  ->addColumn('price')
-//will output 1500.00
+  ->addColumn('price') 
+   //will output 1500.00
 ```
 
 The example below brings the price formated.
@@ -308,7 +308,7 @@ The example below brings the price formated.
   ->addColumn('price_formatted', function(Product $product) {
       return  '$ ' . number_format($product->price, 2, ',', '.');
     })
-//will output $ 1.500,00
+    //will output $ 1.500,00
 ```
 
 The custom currency format should be converted back in the updated method as demonstrated below.
@@ -334,7 +334,7 @@ These are the methods available on each column added with the `Column` class.
 |----|----|----|----|
 |**add**| |Add a new column |```Column::add()```|
 |**field**| *String* $field | Field name| ```->field('name')```|
-|**title**| *String* $title |Column title for the given field |```->title('Client Name')```|
+|**title**| *String* $title |Column title for the given field |```->title('Product Name')```|
 |**searchable**| |Includes the column in the global search | ```->searchable()``` |
 |**sortable**| |Includes column in the sortable list | ```->sortable()``` |
 |**hidden**| |hides the column in the table|```->hidden()```|
@@ -369,13 +369,13 @@ These are the actions available for each column.
 
 Example of usage:
 
-The example below will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow editing the values on click, and have its own input box filter on top.
+The example below will render a column for the attribute name, with the title "Product Name". This column will be searchable by the main search field, will allow editing the values on click, and have its own input box filter on top.
 
 ```php
     $canEdit = true; // this role has permission to edit
 
     Column::add()
-        ->title(__('Client Name'))
+        ->title(__('Product Name'))
         ->field('name')
         ->searchable()
         ->editOnClick($canEdit)
@@ -389,7 +389,7 @@ The next example will bring a column with the date formatted and with a date fil
 ```php
   Column::add()
       ->title('Creation date')
-      ->field('created_at_formatted')  //Display formatted data dd/mm/YYY to the user
+      ->field('created_at_formatted')  //Displays formatted data dd/mm/YYY to the user
       ->makeInputDatePicker('created_at') //Uses unformatted data
       ->searchable()
 ```
@@ -407,10 +407,12 @@ The example below renders a min-max amount filter and configures it to handle th
 Boolean column example:
 
 ```php
+   $canEditStatus = true; // permission for editing
+   
    Column::add()
       ->title(__('Status'))
       ->field('is_active'),
-      ->toggleable(true, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
+      ->toggleable($canEditStatus, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
       ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
 
