@@ -28,7 +28,7 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Click to copy**
 
-✅ **Link on table cell**
+✅ **Link inside a table cell**
 
 ✅ **Data Export to XLSx/Excel**
 
@@ -328,7 +328,7 @@ The column `group_id` is added for the relationship filter and the column `group
 
 #### Column Settings
 
-These are the methods available on each column added with `Column` class.
+These are the methods available on each column added with the `Column` class.
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -344,7 +344,7 @@ These are the methods available on each column added with `Column` class.
 
 #### Column Filters
 
-These are the filters availables for each column.
+These are the filters available for each column.
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -359,7 +359,7 @@ These are the filters availables for each column.
 
 #### Column Actions
 
-These are the actions availables for each column.
+These are the actions available for each column.
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -369,7 +369,7 @@ These are the actions availables for each column.
 
 Example of usage:
 
-The example bellow will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow editing the values on click, and have its own input box filter on top.
+The example below will render a column for the attribute name, with the title "Client Name". This column will be searchable by the main search field, will allow editing the values on click, and have its own input box filter on top.
 
 ```php
     $canEdit = true; // this role has permission to edit
@@ -394,7 +394,7 @@ The next example will bring a column with the date formatted and with a date fil
       ->searchable()
 ```
 
-The example bellow renders a min-max amount filter and configures it to handle the custom currency formatting ($ 85.133,84). The method `makeInputRange` references the `price` atrribute, while the column outputs the `price_formatted`.
+The example below renders a min-max amount filter and configures it to handle the custom currency formatting ($ 85.133,84). The method `makeInputRange` references the `price` attribute, while the column outputs the `price_formatted`.
 
 ```php
   Column::add()
@@ -434,7 +434,7 @@ It's also required to have the [update()](#update-method) method active and conf
 
 ### Action Methods
 
-These methods are available on `Button` class.
+These methods are available on the `Button` class.
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -463,7 +463,8 @@ Example of usage:
 
 The update method needs to be activated and configured for the edit on click and toggle to work.
 
-The data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this converstion automatically. See the example bellow:
+All data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this conversion automatically.
+The same would happen with dates. See the two basic examples below:
 
 
 ```php
@@ -471,7 +472,7 @@ public function update(array $product): bool
 {
 
         /**
-        * Reverts "price_formatted" to the database format and saves in 'price' field.
+        * Reverts "price_formatted" to the database format and saves in the 'price' field.
         *  $ 4.947,70 --> 44947.70
         **/
 
@@ -482,6 +483,14 @@ public function update(array $product): bool
                 ->replace(',', '.')
                 ->replaceMatches('/[^Z0-9\.]/', '');
         }
+
+        /**
+        *  Parses the date from d/m.Y (25/05/2021) 
+        **/
+         if ($data['field'] == 'created_at_formatted' && $data['value'] != '') {
+            $data['field'] = 'created_at'; // Updates created_at
+            $data['value'] =  Carbon::createFromFormat('d/m/Y', $data['value']);
+         }
 
       try {
           $updated = Product::query()->find($product['id'])->update([
