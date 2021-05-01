@@ -39,7 +39,7 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Works with Bootstrap or Tailwind CSS**
 
-✅ **Available in 🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
+✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
 
 ---
 
