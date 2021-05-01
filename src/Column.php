@@ -15,7 +15,7 @@ class Column
     public string $body_class = '';
     public string $body_style = '';
     public bool $hidden = false;
-    public bool $visible_in_export = false;
+    public bool $visible_in_export = true;
     public array $inputs = [];
     public bool $editable = false;
     public array $toggleable = [];

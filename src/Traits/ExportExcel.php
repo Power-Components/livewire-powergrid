@@ -24,16 +24,17 @@ trait ExportExcel
         foreach ($collection as $collect) {
             $item = [];
             foreach ($this->columns() as $column) {
-                if ($column->hidden === false) {
+                if ($column->hidden === false && $column->visible_in_export === true) {
                     foreach ($collect as $key => $value) {
                         if ($key === $column->field) {
                             $item[$column->title] = $value;
                         }
                     }
+                    if (!in_array($column->title, $header)) {
+                        $header[] = $column->title;
+                    }
                 }
-                if (!in_array($column->title, $header)) {
-                    $header[] = $column->title;
-                }
+
             }
             $new_collection[] = $item;
         }
