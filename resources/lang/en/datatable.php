@@ -3,9 +3,9 @@
 return [
     'buttons' => [
         'filter' => 'Filter',
-        'export' => 'Export',
-        'export_one' => 'Export selected',
-        'export_selected' => 'Export selected'
+        'export' => 'ExportXLS',
+        'export_one' => 'ExportXLS selected',
+        'export_selected' => 'ExportXLS selected'
     ],
     'labels' => [
         'action' => 'Actions',

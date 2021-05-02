@@ -3,7 +3,7 @@
         <span
             title="{{ trans('livewire-powergrid::datatable.labels.clear_filter') }}"
             wire:click.prevent="clearFilter('{{ $column->field }}')"
-            class="float-right text-red-800 cursor-pointer pr-2">
+            class="float-right text-red-800 cursor-pointer pr-2 absolute ml-3">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>

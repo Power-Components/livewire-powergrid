@@ -255,7 +255,7 @@ class PowerGridComponent extends Component
      * @return \Illuminate\Support\Collection|mixed
      * @throws \Exception
      */
-    private function collection($cached = '')
+    public function collection($cached = '')
     {
         if (filled($cached)) {
             \cache()->forget($this->id);
@@ -301,5 +301,10 @@ class PowerGridComponent extends Component
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+
+    public function checkedValues(): array
+    {
+        return $this->checkbox_values;
     }
 }
