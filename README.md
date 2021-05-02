@@ -1,5 +1,10 @@
 <div align="center">
-	<p><img  src="./img/logo.png" alt="PowerGrid Logo"></p>
+	<p><img  src="img/logo.png" alt="PowerGrid Logo"></p>
+    <p align="center">
+    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
+    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
+    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
+</p>
 </div>
 
 ------
@@ -34,7 +39,7 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Works with Bootstrap or Tailwind CSS**
 
-✅ **Translated in  🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
+✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
 
 ---
 
@@ -51,6 +56,7 @@ PowerGrid comes with a variety of out-of-the-box features:
       - [Action Methods](#action-methods)
       - [Update Method](#update-method)
 - [Examples](#examples)
+- [Demo](#demo)
 - [Support](#support)
 - [Contributors](#contributors)
 - [Credits](#credits)
@@ -130,21 +136,25 @@ For Tailwind use:
 Include the Livewire and the PowerGrid styles and scripts:
 
 ```html
-
-<head>
 ...
     <!-- Styles -->
     @livewireStyles
     @powerGridStyles
+
+   </head>
 ```
 
-Make sure you have Livewired included too:
+Apline JS is required by features like "Click to edit" and "Toggable". The example below will load it by CDN.
 
 ```html
 ...
     <!-- Scripts -->
     @livewireScripts
     @powerGridScripts
+
+    <!-- Alpine JS -->
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
 </body>
 ```
 
@@ -416,21 +426,9 @@ Boolean column example:
       ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
 
-**NOTE** 
+**NOTE**
 
-To use some features you must include Alpine.js before the `<body>` tag.
-
-Example with CDN:
-
-```php
-//...
-@powerGridScripts
-@livewireScripts
-
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-```
-
-It's also required to have the [update()](#update-method) method active and configured. 
+Performing data updating with features like  clickToEdit and Toggable will require you to have the [update()](#update-method) method uncommented and configured.
 
 ---
 
@@ -540,6 +538,10 @@ Excel export
 
  ![Laravel Livewire Tables](img/export.png)
 
+## Demo
+
+ - [Demo project](https://github.com/Power-Components/powergrid-demo) created for a live at [Beer and Code](https://www.youtube.com/watch?v=Mml5aagMOm4&ab_channel=BeerandCode) Youtube channel.
+
 ## Support
 
 If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
@@ -550,10 +552,10 @@ Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
 Contributors (in alphabetical order):
 
-- [@Claudio Pereira](https://github.com/cpereiraweb)
+- [Claudio Pereira](https://github.com/cpereiraweb)
 - [@DanSysAnalyst](https://github.com/dansysanalyst)
-- [@Mateus Guimarães](https://github.com/mateusjatenee)
-- [@Tiago Braga](https://github.com/Tiagofv)
+- [Mateus Guimarães](https://github.com/mateusjatenee)
+- [Tiago Braga](https://github.com/Tiagofv)
 
 ## Credits
 
