@@ -45,21 +45,33 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 # Get started
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Configuring and Customizing](#configuring-and-customizing)
+- [Livewire PowerGrid](#livewire-powergrid)
+  - [What is Livewire PowerGrid?](#what-is-livewire-powergrid)
+- [Get started](#get-started)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [1. Via composer](#1-via-composer)
+    - [2. Publish Config files](#2-publish-config-files)
+    - [3. Publish files [OPTIONAL]](#3-publish-files-optional)
+    - [4. Configure the theme](#4-configure-the-theme)
+    - [5. Include PowerGrid component](#5-include-powergrid-component)
+    - [6.  Creating a Table Component](#6--creating-a-table-component)
+    - [6.1 Create with Fillable](#61-create-with-fillable)
+    - [6.2 Create options](#62-create-options)
+    - [7.  Using your Table Component](#7--using-your-table-component)
+  - [Configuring and Customizing](#configuring-and-customizing)
     - [setUp() Method](#setup-method)
     - [dataSource() Method](#datasource-method)
       - [Column Settings](#column-settings)
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
-      - [Action Methods](#action-methods)
-      - [Update Method](#update-method)
-- [Examples](#examples)
-- [Demo](#demo)
-- [Support](#support)
-- [Contributors](#contributors)
-- [Credits](#credits)
+    - [Action Methods](#action-methods)
+    - [Update Method](#update-method)
+  - [Examples](#examples)
+  - [Demo](#demo)
+  - [Support](#support)
+  - [Contributors](#contributors)
+  - [Credits](#credits)
 
 ---
 
@@ -422,13 +434,13 @@ Boolean column example:
    Column::add()
       ->title(__('Status'))
       ->field('is_active'),
-      ->toggleable($canEditStatus, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
+      ->toggleable($canEditStatus, 'active', 'inactive') // Toggleable. If false, instead will render "active/inactive"
       ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
 
 **NOTE**
 
-Performing data updating with features like  clickToEdit and Toggable will require you to have the [update()](#update-method) method uncommented and configured.
+Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured.
 
 ---
 

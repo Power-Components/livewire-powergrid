@@ -20,7 +20,7 @@ class PowerGridCommand extends Command
     {--force : Overwrite any existing files}
     {--fillable : Generate data from fillable}';
 
-    protected $description = 'Make a new Laravel Livewire table component.';
+    protected $description = 'Make a new PowerGrid table component.';
 
     public function handle()
     {
