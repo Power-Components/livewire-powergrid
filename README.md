@@ -434,13 +434,13 @@ Boolean column example:
    Column::add()
       ->title(__('Status'))
       ->field('is_active'),
-      ->toggleable($canEditStatus, 'active', 'inactive') // Toggable. If false, instead will render "active/inactive"
+      ->toggleable($canEditStatus, 'active', 'inactive') // Toggleable. If false, instead will render "active/inactive"
       ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
 
 **NOTE**
 
-Performing data updating with features like  clickToEdit and Toggable will require you to have the [update()](#update-method) method uncommented and configured.
+Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured.
 
 ---
 
