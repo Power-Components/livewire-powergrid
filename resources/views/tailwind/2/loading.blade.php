@@ -1,4 +1,4 @@
-<div class="relative pb-2 h-8">
+<div class="relative">
    <span class="inset-y-0 right-4 flex items-center pl-2 pr-2 pt-1 hidden icon_success">
       <svg class="text-green-500 fill-current w-6 h-6"
            xmlns="http://www.w3.org/2000/svg" fill="none"

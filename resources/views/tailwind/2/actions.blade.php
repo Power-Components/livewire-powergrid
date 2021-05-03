@@ -5,11 +5,11 @@
             @php
                 $parameters = [];
                 foreach ($action->param as $param => $value) {
-                    $parameters[$param] = $row->$value;
+                    $parameters[$param] = $row->{$value};
                 }
             @endphp
 
-            <form action="{{ route($action->route, $parameters) }}" method="post">
+            <form target="_blank" action="{{ route($action->route, $parameters) }}" method="post">
                 @method($action->method)
                 @csrf
 
