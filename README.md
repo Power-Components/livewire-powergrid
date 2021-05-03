@@ -9,7 +9,7 @@
 
 ------
 
-# Livewire PowerGrid **
+# Livewire PowerGrid
 
 ## What is Livewire PowerGrid?
 
@@ -45,7 +45,7 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 # Get started
 
-- [Livewire PowerGrid **](#livewire-powergrid-)
+- [Livewire PowerGrid](#livewire-powergrid)
   - [What is Livewire PowerGrid?](#what-is-livewire-powergrid)
 - [Get started](#get-started)
   - [Requirements](#requirements)
