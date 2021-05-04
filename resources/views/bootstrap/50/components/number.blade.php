@@ -7,7 +7,7 @@
             <input data-id="{{ $number['field'] }}"
                    wire:model.debounce.800ms="filters_enabled.{{ $number['field'] }}.start"
                    wire:input.debounce.800ms="filterNumberStart('{{ $number['data_field'] }}', $event.target.value, '{{ addslashes($number['thousands']) }}', '{{ addslashes($number['decimal']) }}')"
-                   style="@if($inline) max-width: 130px !important; margin-bottom: 6px; @else margin-right: 12px;padding-bottom: 6px;@endif"
+                   style="@if($inline) max-width: 130px !important; @else margin-right: 12px;padding-bottom: 6px;@endif"
                    type="number" class="form-control livewire_powergrid_input" placeholder="MIN">
             <input data-id="{{ $number['field'] }}"
                    wire:model.debounce.800ms="filters_enabled.{{ $number['field'] }}.end"
