@@ -247,7 +247,7 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
-|**exportedFileName**|*String* $name|Set custom name to exported file|`->exportedFileName('short')`|
+|**exportedFileName**|*String* $name|Set custom name to exported file|`->exportedFileName('export')`|
 
 Example of usage:
 
