@@ -25,6 +25,8 @@
             <div x-show="show" class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10">
                 <a wire:click="exportToExcel()" href="#"
                    class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Excel</a>
+                <a wire:click="exportToCsv()" href="#"
+                   class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Csv</a>
             </div>
         </div>
 

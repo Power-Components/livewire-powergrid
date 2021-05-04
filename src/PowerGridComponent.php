@@ -5,16 +5,17 @@ namespace PowerComponents\LivewirePowerGrid;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
+use PowerComponents\LivewirePowerGrid\Services\ExportToCsv;
+use PowerComponents\LivewirePowerGrid\Services\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
-use PowerComponents\LivewirePowerGrid\Traits\ExportExcel;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PowerGridComponent extends Component
 {
 
     use WithPagination,
         Checkbox,
-        ExportExcel,
         Filter;
 
     /**
@@ -48,10 +49,6 @@ class PowerGridComponent extends Component
     /**
      * @var array
      */
-    private array $searchable = [];
-    /**
-     * @var array
-     */
     public array $columns = [];
     /**
      * @var string
@@ -79,6 +76,12 @@ class PowerGridComponent extends Component
     public string $record_count = '';
 
     /**
+     * @var string
+     */
+    public string $fileName = 'download';
+
+    public array $filtered = [];
+    /**
      * @var string[]
      */
     protected $listeners = [
@@ -92,7 +95,6 @@ class PowerGridComponent extends Component
 
     /**
      * Apply checkbox, perPage and search view and theme
-     *
      */
     public function setUp()
     {
@@ -178,6 +180,7 @@ class PowerGridComponent extends Component
     {
         $this->columns = $this->columns();
         $this->collection = $this->collection();
+        $this->tempSelected = [];
         $data = [];
 
         if (method_exists($this, 'initActions')) {
@@ -191,6 +194,7 @@ class PowerGridComponent extends Component
             $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
 
             if ($data->count()) {
+                $this->filtered = $data->pluck('id')->toArray();
                 $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
         }
@@ -210,9 +214,6 @@ class PowerGridComponent extends Component
         $this->orderBy = $field;
     }
 
-    /**
-     * @param $data
-     */
     private function renderView($data)
     {
         $theme = config('livewire-powergrid.theme');
@@ -306,5 +307,40 @@ class PowerGridComponent extends Component
     public function checkedValues(): array
     {
         return $this->checkbox_values;
+    }
+
+    /**
+     * set name to exported file (xlsx/csv)
+     * @param string $fileName
+     * @return $this
+     */
+    public function exportedFileName(string $fileName): PowerGridComponent
+    {
+        $this->fileName = $fileName;
+        return $this;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function exportToExcel(): BinaryFileResponse
+    {
+        return (new ExportToXLS())
+            ->fileName($this->fileName)
+            ->fromCollection($this->columns(), $this->collection())
+            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->download();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function exportToCsv(): BinaryFileResponse
+    {
+        return (new ExportToCsv())
+            ->fileName($this->fileName)
+            ->fromCollection($this->columns(), $this->collection())
+            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->download();
     }
 }

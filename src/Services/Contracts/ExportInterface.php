@@ -3,10 +3,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Contracts;
 
-
-use Illuminate\Support\Collection;
-
 interface ExportInterface
 {
-    public function export();
+    public function download();
+    public function build();
 }

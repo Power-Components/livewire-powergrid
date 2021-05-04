@@ -35,7 +35,7 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Link inside a table cell**
 
-✅ **Data Export to XLSx/Excel**
+✅ **Data Export to XLSX/CSV**
 
 ✅ **Works with Bootstrap or Tailwind CSS**
 
@@ -247,6 +247,7 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
+|**exportedFileName**|*String* $name|Set custom name to exported file|`->exportedFileName('short')`|
 
 Example of usage:
 
@@ -256,7 +257,8 @@ Example of usage:
       $this->showCheckBox()
       ->showRecordCount('short')
       ->showPerPage()
-      ->showSearchInput();
+      ->showSearchInput()
+      ->exportedFileName();
   }
 ```
 

@@ -9,7 +9,7 @@
                     }
                 @endphp
                     <div class="px-2">
-                        <form action="{{ route($action->route, $parameters) }}" method="post">
+                        <form @if($action->method !== 'delete') target="_blank" @endif action="{{ route($action->route, $parameters) }}" method="post">
                             @method($action->method)
                             @csrf
 
