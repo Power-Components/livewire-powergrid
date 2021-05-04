@@ -258,7 +258,7 @@ Example of usage:
       ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput()
-      ->exportedFileName();
+      ->exportedFileName('export');
   }
 ```
 
