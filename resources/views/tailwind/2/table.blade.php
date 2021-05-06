@@ -20,6 +20,15 @@
                 @endif
             </div>
 
+
+            <div>
+                @if (session()->has('message'))
+                    <div class="alert alert-success">
+                        {{ session('message') }}
+                    </div>
+                @endif
+            </div>
+
             @include('livewire-powergrid::tailwind.2.loading')
             <div
                 class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">

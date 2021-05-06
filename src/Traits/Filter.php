@@ -11,10 +11,10 @@ trait Filter
     public Collection $make_filters;
     public array $filters = [];
     public array $filters_enabled = [];
-    private string $format_date = '';
     public array $select = [];
+    private string $format_date = '';
 
-    public function clearFilter( $field = '' )
+    public function clearFilter($field = '')
     {
         $this->search = '';
         unset($this->filters_enabled[$field]);
@@ -40,7 +40,7 @@ trait Filter
 
     }
 
-    private function advancedFilter( Collection $collection ): Collection
+    private function advancedFilter(Collection $collection): Collection
     {
 
         foreach ($this->filters as $key => $type) {
@@ -51,93 +51,23 @@ trait Filter
 
                     switch ($key) {
                         case 'date_picker':
-                            if (isset($value[0]) && isset($value[1])) {
-                                $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
-                            }
-                        break;
-
+                            $collection = $this->usingDatePicker($collection, $field, $value);
+                            break;
                         case 'multi_select':
-                            if (count(collect($value)->get('values'))) {
-                                $collection = $collection->whereIn($field, collect($value)->get('values'));
-                            }
-                        break;
-
+                            $collection = $this->usingMultiSelect($collection, $field, $value);
+                            break;
                         case 'select':
-                            $collection = $collection->where($field, $value);
-                        break;
-
+                            $collection = $this->usingSelect($collection, $field, $value);
+                            break;
                         case 'boolean':
-
-                            if ($value != "all") {
-                                $value = ($value == "true");
-                                $collection = $collection->where($field, '=', $value);
-                            }
-                        break;
-
+                            $collection = $this->usingBoolean($collection, $field, $value);
+                            break;
                         case 'input_text':
-
-                            $textFieldOperator = ( $this->validatenputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
-
-                            if ($textFieldOperator == 'is') {
-                                $collection = $collection->where($field, '=', $value);
-                            }
-
-                            if ($textFieldOperator == 'is_not') {
-                                $collection = $collection->where($field, '!=', $value);
-                            }
-
-                            if ($textFieldOperator == 'starts_with') {
-                                $collection = $collection->filter(function ($row) use ($field, $value) {
-                                   return  Str::startsWith(Str::lower( $row->$field), Str::lower($value));
-                                    //return preg_match("#^{$value}(.*)$#i", $row->$field);
-                              });
-                            }
-
-                            if ($textFieldOperator == 'ends_with') {
-                                $collection = $collection->filter(function ($row) use ($field, $value) {
-                                    return  Str::endsWith(Str::lower($row->$field), Str::lower($value));
-
-                              });
-                            }
-
-                            if ($textFieldOperator == 'contains') {
-                                $collection = $collection->filter(function ($row) use ($field, $value) {
-                                    return false !== stristr($row->$field, strtolower($value));
-                                });
-                            }
-
-                            if ($textFieldOperator == 'contains_not') {
-                                $collection = $collection->filter(function ($row) use ($field, $value) {
-                                    return  !Str::Contains(Str::lower($row->$field), Str::lower($value));
-                                    //return (!preg_match("#(.*?)(?i)({$value})(.*?)#", $row->$field));
-                                });
-                            }
-                        break;
-
+                            $collection = $this->usingInputText($collection, $field, $value);
+                            break;
                         case 'number':
-
-                            if (isset($value['start']) && !isset($value['end'])) {
-                                $start = str_replace($value['thousands'], '', $value['start']);
-                                $start = (float)str_replace($value['decimal'], '.', $start);
-
-                                $collection = $collection->where($field, '>=', $start);
-                            }
-                            if (!isset($value['start']) && isset($value['end'])) {
-                                $end = str_replace($value['thousands'], '', $value['end']);
-                                $end = (float)str_replace($value['decimal'], '.', $end);
-
-                                $collection = $collection->where($field, '<=', $end);
-                            }
-                            if (isset($value['start']) && isset($value['end'])) {
-                                $start = str_replace($value['thousands'], '', $value['start']);
-                                $start = str_replace($value['decimal'], '.', $start);
-
-                                $end = str_replace($value['thousands'], '', $value['end']);
-                                $end = str_replace($value['decimal'], '.', $end);
-
-                                $collection = $collection->whereBetween($field, [$start, $end]);
-                            }
-                        break;
+                            $collection = $this->usingNumber($collection, $field, $value);
+                            break;
                     }
                 }
             }
@@ -148,7 +78,7 @@ trait Filter
     /**
      * @param $data
      */
-    public function eventChangeDatePiker(array $data ): void
+    public function eventChangeDatePiker(array $data): void
     {
         $input = explode('.', $data['values']);
         $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
@@ -157,7 +87,7 @@ trait Filter
     /**
      * @param $data
      */
-    public function eventMultiSelect(array $data )
+    public function eventMultiSelect(array $data)
     {
         $this->filters['multi_select'][$data['id']] = $data;
     }
@@ -168,7 +98,7 @@ trait Filter
      * @param string $thousands
      * @param string $decimal
      */
-    public function filterNumberStart( string $field, string $value, string $thousands, string $decimal ): void
+    public function filterNumberStart(string $field, string $value, string $thousands, string $decimal): void
     {
         $this->filters['number'][$field]['start'] = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
@@ -181,7 +111,7 @@ trait Filter
      * @param string $thousands
      * @param string $decimal
      */
-    public function filterNumberEnd( string $field, string $value, string $thousands, string $decimal ): void
+    public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal): void
     {
         $this->filters['number'][$field]['end'] = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
@@ -192,7 +122,7 @@ trait Filter
      * @param string $field
      * @param string $value
      */
-    public function filterInputText( string $field, string $value ): void
+    public function filterInputText(string $field, string $value): void
     {
         $this->filters['input_text'][$field] = $value;
     }
@@ -218,12 +148,146 @@ trait Filter
     /**
      * Validate if the given value is valid as an Input Option
      *
-     * @param  string $field Field to be checked
-     * @return void
+     * @param string $field Field to be checked
+     * @return bool
      */
-    private function validatenputTextOptions(string $field) {
+    private function validateInputTextOptions(string $field)
+    {
 
-        return isset($this->filters['input_text_options'][$field]) && in_array(strtolower($this->filters['input_text_options'][$field]), ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
+        return isset($this->filters['input_text_options'][$field]) && in_array(strtolower($this->filters['input_text_options'][$field]),
+                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
 
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingDatePicker(Collection $collection, string $field, $value): Collection
+    {
+        if (isset($value[0]) && isset($value[1])) {
+            $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingInputText(Collection $collection, string $field, $value): Collection
+    {
+
+        $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+
+        if ($textFieldOperator == 'is') {
+            return $collection->where($field, '=', $value);
+        }
+
+        if ($textFieldOperator == 'is_not') {
+            return $collection->where($field, '!=', $value);
+        }
+
+        if ($textFieldOperator == 'starts_with') {
+            return $collection->filter(function ($row) use ($field, $value) {
+                return Str::startsWith(Str::lower($row->$field), Str::lower($value));
+            });
+        }
+
+        if ($textFieldOperator == 'ends_with') {
+            return $collection->filter(function ($row) use ($field, $value) {
+                return Str::endsWith(Str::lower($row->$field), Str::lower($value));
+
+            });
+        }
+
+        if ($textFieldOperator == 'contains') {
+            return $collection->filter(function ($row) use ($field, $value) {
+                return false !== stristr($row->$field, strtolower($value));
+            });
+        }
+
+        if ($textFieldOperator == 'contains_not') {
+            return $collection->filter(function ($row) use ($field, $value) {
+                return !Str::Contains(Str::lower($row->$field), Str::lower($value));
+            });
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingBoolean(Collection $collection, string $field, $value): Collection
+    {
+        if ($value != "all") {
+            $value = ($value == "true");
+            return $collection->where($field, '=', $value);
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingSelect(Collection $collection, string $field, $value): Collection
+    {
+        return $collection->where($field, $value);
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingMultiSelect(Collection $collection, string $field, $value): Collection
+    {
+        if (count(collect($value)->get('values'))) {
+            return $collection->whereIn($field, collect($value)->get('values'));
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $field
+     * @param $value
+     * @return Collection
+     */
+    private function usingNumber(Collection $collection, string $field, $value): Collection
+    {
+        if (isset($value['start']) && !isset($value['end'])) {
+            $start = str_replace($value['thousands'], '', $value['start']);
+            $start = (float)str_replace($value['decimal'], '.', $start);
+
+            return $collection->where($field, '>=', $start);
+        }
+        if (!isset($value['start']) && isset($value['end'])) {
+            $end = str_replace($value['thousands'], '', $value['end']);
+            $end = (float)str_replace($value['decimal'], '.', $end);
+
+            return $collection->where($field, '<=', $end);
+        }
+        if (isset($value['start']) && isset($value['end'])) {
+            $start = str_replace($value['thousands'], '', $value['start']);
+            $start = str_replace($value['decimal'], '.', $start);
+
+            $end = str_replace($value['thousands'], '', $value['end']);
+            $end = str_replace($value['decimal'], '.', $end);
+
+            return $collection->whereBetween($field, [$start, $end]);
+        }
+        return $collection;
     }
 }
