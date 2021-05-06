@@ -13,41 +13,6 @@ class Export
     public array $columns;
     public array $checked_values;
 
-    /**
-     * @throws Exception
-     */
-    public function prepare(Collection $collection, array $columns, array $checkedValues): array
-    {
-        $header = [];
-        $title = collect();
-
-        if (count($checkedValues)) {
-            $collection = $collection->whereIn('id', $checkedValues);
-        }
-
-        $collection = $collection->map(function ($row) use ($columns, $title) {
-            $item = collect();
-            collect($columns)->each(function ($column) use ($row, $title, $item) {
-                if ($column->hidden === false && $column->visible_in_export === true) {
-                    foreach ($row as $key => $value) {
-                        if ($key === $column->field) {
-                            $item->put($column->title, $value);
-                        }
-                    }
-                    if (!$title->contains($column->title)) {
-                        $title->push($column->title);
-                    }
-
-                }
-            });
-            return $item->toArray();
-        });
-
-        $header[] = $title->toArray();
-
-        return array_merge($header, $collection->toArray());
-    }
-
     public function fileName(string $name): Export
     {
         $this->fileName = $name;
@@ -67,5 +32,40 @@ class Export
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function prepare(Collection $collection, array $columns, array $checkedValues): array
+    {
+
+        $header = collect();
+
+        if (count($checkedValues)) {
+            $collection = $collection->whereIn('id', $checkedValues);
+        }
+
+        $collection = $collection->map(function ($row) use ($columns, $header) {
+            $item = collect();
+            collect($columns)->each(function ($column) use ($row, $header, $item) {
+                if ($column->hidden === false && $column->visible_in_export === true) {
+                    foreach ($row as $key => $value) {
+                        if ($key === $column->field) {
+                            $item->put($column->title, $value);
+                        }
+                    }
+                    if (!$header->contains($column->title)) {
+                        $header->push($column->title);
+                    }
+
+                }
+            });
+            return $item->toArray();
+        });
+
+        return [
+            'headers' => $header->toArray(),
+            'rows' => $collection->toArray()
+        ];
+    }
 
 }

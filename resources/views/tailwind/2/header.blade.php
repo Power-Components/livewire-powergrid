@@ -28,6 +28,7 @@
                 <a wire:click="exportToCsv()" href="#"
                    class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Csv</a>
             </div>
+
         </div>
 
         <div style="min-width: 60px;">

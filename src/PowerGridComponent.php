@@ -5,8 +5,8 @@ namespace PowerComponents\LivewirePowerGrid;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
-use PowerComponents\LivewirePowerGrid\Services\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Services\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
+use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -330,6 +330,7 @@ class PowerGridComponent extends Component
             ->fromCollection($this->columns(), $this->collection())
             ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
             ->download();
+
     }
 
     /**
