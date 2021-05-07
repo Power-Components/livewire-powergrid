@@ -87,5 +87,29 @@ return [
     | It is updated whenever the page is reloaded or a field is changed
     |
     */
-    'cached_data' => true
+    'cached_data' => true,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Framework JS
+    |--------------------------------------------------------------------------
+    |
+    | Here you define which js framework will be used on views
+    | For example: alpinejs
+    |
+    */
+    'framework_js' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Frameworks CDN
+    |--------------------------------------------------------------------------
+    |
+    | Here you define what version will be used
+    |
+    */
+    'frameworks_cdn' => [
+        'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
+    ]
+
 ];
