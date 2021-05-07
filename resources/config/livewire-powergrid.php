@@ -91,24 +91,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Framework JS
+    | JS Framework
     |--------------------------------------------------------------------------
     |
-    | Here you define which js framework will be used on views
-    | For example: alpinejs
+    | Define here which JS framework will be imported in the views.
+    | Alpine JS is required for features like ClickToEdit and Toggleable.
+    | To include it, modify the line below:
     |
+    | 'js_framework' => 'alpinejs',
     */
-    'framework_js' => null,
+
+    'js_framework' => null,
 
     /*
     |--------------------------------------------------------------------------
     | Frameworks CDN
     |--------------------------------------------------------------------------
     |
-    | Here you define what version will be used
+    | Define here the CDN source for imported JS Framework
     |
     */
-    'frameworks_cdn' => [
+    'js_framework_cdn' => [
         'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
     ]
 
