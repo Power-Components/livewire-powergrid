@@ -53,7 +53,7 @@ PowerGrid comes with a variety of out-of-the-box features:
     - [1. Via composer](#1-via-composer)
     - [2. Publish Config files](#2-publish-config-files)
     - [3. Publish files [OPTIONAL]](#3-publish-files-optional)
-    - [4. Configure the theme](#4-configure-the-theme)
+    - [4. Configure the theme and Alpine JS](#4-configure-the-theme-and-alpine-js)
     - [5. Include PowerGrid component](#5-include-powergrid-component)
     - [6.  Creating a Table Component](#6--creating-a-table-component)
     - [6.1 Create with Fillable](#61-create-with-fillable)
@@ -121,7 +121,7 @@ Language files can be published with:
     php artisan vendor:publish --tag=livewire-powergrid-lang
 ```
 
-### 4. Configure the theme
+### 4. Configure the theme and Alpine JS
 
 By default, PowerGrid uses Tailwind.
 
@@ -143,6 +143,26 @@ For Tailwind use:
 
 ```
 
+Alpine JS is required by features like "Click to edit" and "Toggable".
+
+To activate it, modify the setting `'js_framework' => 'null'` replacing `null` with `alpinejs`:
+
+```php
+    //...
+    'js_framework' => 'alpinejs',
+```
+
+The CDN for Alpine JS is indicated next:
+
+```php
+
+    //...
+    'js_framework_cdn' => [
+        'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
+    ]
+
+```
+
 ### 5. Include PowerGrid component
 
 Include the Livewire and the PowerGrid styles and scripts:
@@ -156,16 +176,11 @@ Include the Livewire and the PowerGrid styles and scripts:
    </head>
 ```
 
-Apline JS is required by features like "Click to edit" and "Toggable". The example below will load it by CDN.
-
 ```html
 ...
     <!-- Scripts -->
     @livewireScripts
     @powerGridScripts
-
-    <!-- Alpine JS -->
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
 </body>
 ```
@@ -442,7 +457,7 @@ Boolean column example:
 
 **NOTE**
 
-Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured.
+Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured. [Alpine JS](#4-configure-the-theme-and-alpine-js) must be activated.
 
 ---
 
