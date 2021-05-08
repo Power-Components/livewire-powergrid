@@ -143,24 +143,22 @@ For Tailwind use:
 
 ```
 
-Alpine JS is required by features like "Click to edit" and "Toggable".
+Alpine JS is not mandatory but it is required by features like "Click to edit" and "Toggable".
 
-To activate it, modify the setting `'js_framework' => 'null'` replacing `null` with `alpinejs`:
+To activate it, open the file `config/livewire-powergrid.php` and modify the 'js_framework' setting replacing `null` with `'alpinejs'`.
 
 ```php
     //...
     'js_framework' => 'alpinejs',
 ```
 
-The CDN for Alpine JS is indicated next:
+The CDN for Alpine JS is  configured by default, in the same file:
 
 ```php
-
     //...
     'js_framework_cdn' => [
         'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
     ]
-
 ```
 
 ### 5. Include PowerGrid component
