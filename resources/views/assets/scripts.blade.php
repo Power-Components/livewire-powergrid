@@ -84,8 +84,8 @@
     }
 </script>
 
-@if(config('livewire-powergrid.framework_js') === 'alpinejs')
-    <script src="{{ config('livewire-powergrid.frameworks_cdn.alpinejs') }}" defer></script>
+@if(config('livewire-powergrid.js_framework') === 'alpinejs')
+    <script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
 @endif
 
 @stack('powergrid_scripts')
