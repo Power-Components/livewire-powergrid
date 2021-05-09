@@ -7,7 +7,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class PowerGridCommand extends Command
@@ -99,22 +98,22 @@ class PowerGridCommand extends Command
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
 
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n";
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'_formatted\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'_formatted\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n\n";
                             } else if ($type === 'tinyint(1)') {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->toggleable(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->toggleable(),'."\n\n";
 
                             } else if ($type === 'int(11)') {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->makeInputRange(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->makeInputRange(),'."\n\n";
 
                             } else {
 
                                 $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n";
+                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n\n";
 
                             }
                         }

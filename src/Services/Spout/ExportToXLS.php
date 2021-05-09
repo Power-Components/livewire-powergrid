@@ -25,7 +25,7 @@ class ExportToXLS extends Export implements ExportInterface
 
     public function build()
     {
-        $data = $this->prepare($this->collection, $this->columns, $this->checked_values);
+        $data = $this->prepare($this->collection, $this->columns);
 
         $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToFile(storage_path($this->fileName . '.xlsx'));

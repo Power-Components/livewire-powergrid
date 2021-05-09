@@ -9,9 +9,8 @@ class Export
 {
 
     public string $fileName;
-    public Collection $collection;
+    public $collection;
     public array $columns;
-    public array $checked_values;
 
     public function fileName(string $name): Export
     {
@@ -19,30 +18,20 @@ class Export
         return $this;
     }
 
-    public function fromCollection(array $columns, Collection $collection): Export
+    public function fromCollection(array $columns, $collection): Export
     {
         $this->columns = $columns;
-        $this->collection = $collection;
-        return $this;
-    }
-
-    public function withCheckedRows($checked_values): Export
-    {
-        $this->checked_values = $checked_values;
+        $this->collection = collect($collection->toArray());
         return $this;
     }
 
     /**
      * @throws Exception
      */
-    public function prepare(Collection $collection, array $columns, array $checkedValues): array
+    public function prepare(Collection $collection, array $columns): array
     {
 
         $header = collect();
-
-        if (count($checkedValues)) {
-            $collection = $collection->whereIn('id', $checkedValues);
-        }
 
         $collection = $collection->map(function ($row) use ($columns, $header) {
             $item = collect();

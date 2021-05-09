@@ -2,9 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use App\Models\Dish;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
-use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
@@ -18,72 +21,29 @@ class PowerGridComponent extends Component
         Checkbox,
         Filter;
 
-    /**
-     * @var array
-     */
     public array $headers = [];
-    /**
-     * @var bool
-     */
     public bool $search_input = false;
-    /**
-     * @var string
-     */
     public string $search = '';
-    /**
-     * @var bool
-     */
     public bool $perPage_input = false;
-    /**
-     * @var string
-     */
     public string $orderBy = 'id';
-    /**
-     * @var bool
-     */
     public bool $orderAsc = false;
-    /**
-     * @var
-     */
-    public $perPage = 10;
-    /**
-     * @var array
-     */
+    public int $perPage = 10;
     public array $columns = [];
-    /**
-     * @var string
-     */
     protected string $paginationTheme = 'bootstrap';
-    /**
-     * @var array
-     */
     public array $perPageValues = [10, 25, 50, 100, 0];
-    /**
-     * @var string
-     */
     public string $sortIcon = '&#8597;';
-    /**
-     * @var string
-     */
     public string $sortAscIcon = '&#8593;';
-    /**
-     * @var string
-     */
     public string $sortDescIcon = '&#8595;';
-    /**
-     * @var string
-     */
     public string $record_count = '';
-
-    /**
-     * @var string
-     */
-    public string $fileName = 'download';
-
+    public bool $export_option = false;
+    public string $export_file_name = 'download';
+    public array $export_type = [];
     public array $filtered = [];
-    /**
-     * @var string[]
-     */
+    public $transform;
+    private $collection;
+    public string $primaryKey = 'id';
+    public string $download_status;
+
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
         'eventChangeInput' => 'eventChangeInput',
@@ -91,14 +51,15 @@ class PowerGridComponent extends Component
         'eventMultiSelect' => 'eventMultiSelect'
     ];
 
-    private $collection;
+    private string $data_source;
 
     /**
      * Apply checkbox, perPage and search view and theme
      */
     public function setUp()
     {
-        $this->showPerPage();
+        $this->showPerPage()
+            ->showExportOption('download', ['excel', 'csv']);
     }
 
     /**
@@ -112,6 +73,18 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @return $this
+     * Show show export botton
+     */
+    public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
+    {
+        $this->export_option = true;
+        $this->export_file_name = $fileName;
+        $this->export_type = $type;
+        return $this;
+    }
+
+    /**
      * default full. other: short, min
      * @param string $mode
      * @return $this
@@ -119,6 +92,17 @@ class PowerGridComponent extends Component
     public function showRecordCount($mode = 'full'): PowerGridComponent
     {
         $this->record_count = $mode;
+        return $this;
+    }
+
+    /**
+     * @param string $attribute
+     * @return PowerGridComponent
+     */
+    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->checkbox = true;
+        $this->checkbox_attribute = $attribute;
         return $this;
     }
 
@@ -168,38 +152,28 @@ class PowerGridComponent extends Component
         ];
     }
 
-    /**
-     * @return array
-     */
-    protected function dataSource(): array
+    protected function dataSource()
     {
-        return [];
+        return null;
     }
 
+    public function transform()
+    {
+        return null;
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function render()
     {
         $this->columns = $this->columns();
-        $this->collection = $this->collection();
-        $this->tempSelected = [];
-        $data = [];
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
-        if (filled($this->collection)) {
-
-            $data = Collection::search($this->collection, $this->search, $this->columns());
-            $data = $this->advancedFilter($data);
-            $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
-
-            if ($data->count()) {
-                $this->filtered = $data->pluck('id')->toArray();
-                $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
-            }
-        }
-
-        return $this->renderView($data);
+        return $this->renderView($this->collection());
 
     }
 
@@ -232,46 +206,115 @@ class PowerGridComponent extends Component
     {
         $update = $this->update($data);
 
-        $collection = $this->collection();
-
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', $data['field']));
         } else {
-
-            $cached = $collection->map(function ($row) use ($data) {
-                $field = $data['field'];
-                if ($row->id === $data['id']) {
-                    $row->{$field} = $data['value'];
-                }
-                return $row;
-            });
-
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
-            $this->collection($cached);
+            $this->collection();
         }
     }
 
     /**
-     * @return \Illuminate\Support\Collection|mixed
+     * @return LengthAwarePaginator
      * @throws \Exception
      */
-    public function collection($cached = '')
+    public function collection(): LengthAwarePaginator
     {
-        if (filled($cached)) {
-            \cache()->forget($this->id);
-            return \cache()->rememberForever($this->id, function () use ($cached) {
-                return $cached;
+        $data_source = Dish::query()->with('category');
+        $table = $data_source->getModel()->getTable();
+
+        $query = $data_source->where(function ($query) use ($table) {
+            if ($this->search != '') {
+                if ($query->getModel()->count() === 0) {
+                    $query->where(function ($query) use ($table) {
+                        foreach ($this->columns() as $column) {
+                            $hasColumn = Schema::hasColumn($table, $column->field);
+                            if ($hasColumn) {
+                                $query->orWhere($column->field, 'like', '%' . $this->search . '%');
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (count($this->filters)) {
+                foreach ($this->filters as $key => $type) {
+                    $query->where(function ($query) use ($key, $type) {
+                        foreach ($type as $field => $value) {
+                            switch ($key) {
+                                case 'date_picker':
+                                    $this->usingDatePicker($query, $field, $value);
+                                    break;
+                                case 'multi_select':
+                                    $this->usingMultiSelect($query, $field, $value);
+                                    break;
+                                case 'select':
+                                    $this->usingSelect($query, $field, $value);
+                                    break;
+                                case 'boolean':
+                                    $this->usingBoolean($query, $field, $value);
+                                    break;
+                                case 'input_text':
+                                    $this->usingInputText($query, $field, $value);
+                                    break;
+                                case 'number':
+                                    $this->usingNumber($query, $field, $value);
+                                    break;
+                            }
+                        }
+                        return $query;
+                    });
+                }
+            }
+            //  $this->filtered = $query->pluck('id')->toArray();
+        })->paginate($this->perPage);
+
+        $updatedItems = $query->getCollection();
+
+        $updatedItems = $updatedItems->transform(function ($row) {
+            $columns = $this->transform()->columns;
+            foreach ($columns as $key => $column) {
+                $row->{$key} = $column($row);
+            }
+            return $row;
+        });
+
+        $query->setCollection($updatedItems);
+
+        return $query;
+    }
+
+    private function prepareToExport()
+    {
+        if (filled($this->checkbox_values)) {
+            $in_clause = $this->checkbox_values;
+        } else {
+            $in_clause = $this->filtered;
+        }
+
+        if ($in_clause) {
+            return $this->dataSource()->whereIn($this->primaryKey, $in_clause)->get()->transform(function ($row) {
+                $columns = $this->transform()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+                return $row;
             });
         }
 
-        $cache = config('livewire-powergrid.cached_data');
-        if ($cache) {
-            return \cache()->rememberForever($this->id, function () {
-                return new \Illuminate\Support\Collection($this->dataSource());
-            });
-        }
-        return new \Illuminate\Support\Collection($this->dataSource());
+        $this->download_status = 'downloading...';
+
+
+        return $this->dataSource()->get()->transform(function ($row) {
+            $columns = $this->transform()->columns;
+            foreach ($columns as $key => $column) {
+                $row->{$key} = $column($row);
+            }
+            return $row;
+        });
+
+
     }
 
     /**
@@ -310,25 +353,13 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * set name to exported file (xlsx/csv)
-     * @param string $fileName
-     * @return $this
-     */
-    public function exportedFileName(string $fileName): PowerGridComponent
-    {
-        $this->fileName = $fileName;
-        return $this;
-    }
-
-    /**
      * @throws \Exception
      */
     public function exportToExcel(): BinaryFileResponse
     {
         return (new ExportToXLS())
-            ->fileName($this->fileName)
-            ->fromCollection($this->columns(), $this->collection())
-            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->fileName($this->export_file_name)
+            ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
 
     }
@@ -339,9 +370,8 @@ class PowerGridComponent extends Component
     public function exportToCsv(): BinaryFileResponse
     {
         return (new ExportToCsv())
-            ->fileName($this->fileName)
-            ->fromCollection($this->columns(), $this->collection())
-            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->fileName($this->export_file_name)
+            ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }
 }

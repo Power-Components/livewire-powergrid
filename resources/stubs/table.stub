@@ -4,9 +4,7 @@ namespace App\Http\Livewire;
 
 use {{ modelName }};
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Button;
+use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -20,20 +18,24 @@ class {{ componentName }} extends PowerGridComponent
     {
         $this->showCheckBox()
             ->showPerPage()
+            ->showExportOption('download', ['excel', 'csv'])
             ->showSearchInput();
     }
 
-    public function dataSource(): array
+    public function dataSource(): ?Builder
     {
-        $model = {{ modelLastName }}::query()->get();
-        return PowerGrid::eloquent($model)
+        return {{ modelLastName }}::query();
+    }
+
+    public function transform(): ?PowerGrid
+    {
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            })
-            ->make();
+            });
     }
 
     public function columns(): array
@@ -101,6 +103,15 @@ class {{ componentName }} extends PowerGridComponent
     /*
     public function update(array $data ): bool
     {
+       // filter example with symbols
+       // if ($data['field'] == 'price_BRL') {
+       //       $data['field'] = 'price';
+       //       $data['value'] = Str::of($data['value'])
+       //           ->replace('.', '')
+       //           ->replace(',', '.')
+       //           ->replaceMatches('/[^Z0-9\.]/', '');
+       //}
+
        try {
            $updated = {{ modelLastName }}::query()->find($data['id'])->update([
                 $data['field'] => $data['value']

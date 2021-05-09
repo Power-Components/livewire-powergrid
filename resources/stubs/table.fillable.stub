@@ -4,9 +4,7 @@ namespace App\Http\Livewire;
 
 use {{ modelName }};
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Button;
+use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -20,21 +18,24 @@ class {{ componentName }} extends PowerGridComponent
     {
         $this->showCheckBox()
             ->showPerPage()
+            ->showExportOption('download', ['excel', 'csv'])
             ->showSearchInput();
     }
 
-    public function dataSource(): array
+    public function dataSource(): ?Builder
     {
-        $model = {{ modelLastName }}::query()->get();
-        return PowerGrid::eloquent($model){{ dataSource }}
-            ->make();
+        return {{ modelLastName }}::query();
+    }
+
+    public function transform(): ?PowerGrid
+    {
+        return PowerGrid::eloquent(){{ dataSource }};
     }
 
     public function columns(): array
     {
         return {{ columns }};
     }
-
 
     /*
     |--------------------------------------------------------------------------

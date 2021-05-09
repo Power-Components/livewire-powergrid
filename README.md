@@ -65,6 +65,7 @@ PowerGrid comes with a variety of out-of-the-box features:
       - [Column Settings](#column-settings)
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
+    - [transform() Method](#transform-method)
     - [Action Methods](#action-methods)
     - [Update Method](#update-method)
   - [Examples](#examples)
@@ -260,7 +261,7 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
-|**exportedFileName**|*String* $name|Set custom name to exported file|`->exportedFileName('export')`|
+|**showExportOption**|*String* download filename, *Array* options|Displays export button and set custom name to exported file|`->showExportOption('download', ['excel', 'csv])`|
 
 Example of usage:
 
@@ -271,7 +272,7 @@ Example of usage:
       ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput()
-      ->exportedFileName('export');
+      ->showExportOption('download', ['excel', 'csv']);
   }
 ```
 
@@ -284,12 +285,14 @@ It expects a model collection in the variable `$model`. Relationships can also b
 Example:
 
 ```php
- $model = Product::query()->with('group')->get();
+ return Product::query()->with('group'); // without get()
 ```
 
-Here `$model` is receiving all products with the relationship to groups.
+Here method is receiving all products with the relationship to groups.
 
 For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 Paper" belongs to "Office Supplies" group.
+
+### transform() Method
 
 | Method | Arguments | Description | Example |
 |----|----|----|----|
@@ -299,7 +302,7 @@ For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 
 Example of usage:
 
 ```php
-return PowerGrid::eloquent($model)
+return PowerGrid::eloquent(): ?PowerGrid
     ->addColumn('id')
     ->addColumn('name')
     ->addColumn('size')
@@ -328,8 +331,7 @@ return PowerGrid::eloquent($model)
     ->addColumn('created_at')
     ->addColumn('created_at_formatted', function(Product $product) {
       return Carbon::parse($product->created_at)->format('d/m/Y H:i');
-    })
-    ->make();
+    });
 ```
 
 The data of each column can be manipulated with a closure function.
@@ -448,7 +450,7 @@ Boolean column example:
    
    Column::add()
       ->title(__('Status'))
-      ->field('is_active'),
+      ->field('is_active')
       ->toggleable($canEditStatus, 'active', 'inactive') // Toggleable. If false, instead will render "active/inactive"
       ->makeBooleanFilter('is_active', 'active', 'inactive'), // Filter with "active/inactive" labels
 ```
@@ -468,6 +470,7 @@ These methods are available on the `Button` class.
 |**add**| *String* $action |Action name |```Button::add()```|
 |**caption**| *String* $caption |Label for the button |```->caption('Edit Product')```|
 |**class**| *String* $class_attr |CSS class attribute |```->class('bg-indigo-500 text-white')```|
+|**openModal**| *String* $component, *Array* $params| |```->openModal('product', ['product' => 'id'])```|
 |**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
 |**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
 
@@ -480,6 +483,27 @@ Example of usage:
         ->class('btn btn-danger')
         ->route('product.destroy', ['product' => 'id'])
         ->method('delete'),
+  //...
+];
+
+  ```
+
+  ---
+
+Example of usage with modal component:
+
+You will need to install the component [Livewire UI Component](https://github.com/livewire-ui)  
+
+* the first argument is within the openModal method is the name of the modal component
+  
+* the second argument is an array of parameters where the key is field name in the modal component and the second is the name of the model field of this component
+
+```php
+ return [
+    Button::add('view')
+        ->caption(__('View'))
+        ->class('btn btn-primary')
+        ->openModal('product', ['cod' => 'id']),
   //...
 ];
   ```

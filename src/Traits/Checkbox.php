@@ -25,23 +25,14 @@ trait Checkbox
      */
     public string $checkbox_attribute;
 
-    /**
-     * @param string $attribute
-     * @return PowerGridComponent
-     */
-    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
-    {
-        $this->checkbox = true;
-        $this->checkbox_attribute = $attribute;
-        return $this;
-    }
-
     public function updatedCheckboxAll()
     {
         $this->checkbox_values = [];
 
         if ($this->checkbox_all) {
-            $this->collection()->each(fn( $model) => $this->checkbox_values[] = (string)$model->{$this->checkbox_attribute});
+            $this->dataSource()->each(function($model) {
+                $this->checkbox_values[] = (string) $model->{$this->checkbox_attribute};
+            });
         }
     }
 
