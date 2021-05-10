@@ -1,4 +1,5 @@
 @if(filled($select))
+
     <div wire:ignore class="@if($inline) pr-6 @endif{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
         @if(!$inline)
             <label for="input_{!! $select['relation_id'] !!}">{{$select['label']}}</label>
@@ -10,7 +11,7 @@
                     wire:model="filters.select.{!! $select['relation_id'] !!}"
                     wire:ignore
                     data-live-search="{{ $select['live-search'] }}">
-                <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}<</option>
+                <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
                 @foreach($select['data_source'] as $relation)
                     <option value="{{ $relation['id'] }}">{{ $relation[$select['display_field']] }}</option>
                 @endforeach
@@ -25,4 +26,5 @@
             </div>
         </div>
     </div>
+
 @endif

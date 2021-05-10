@@ -29,7 +29,6 @@ class PowerGridComponent extends Component
     public bool $orderAsc = false;
     public int $perPage = 10;
     public array $columns = [];
-    protected string $paginationTheme = 'bootstrap';
     public array $perPageValues = [10, 25, 50, 100, 0];
     public string $sortIcon = '&#8597;';
     public string $sortAscIcon = '&#8593;';
@@ -40,10 +39,10 @@ class PowerGridComponent extends Component
     public array $export_type = [];
     public array $filtered = [];
     public $transform;
-    private $collection;
     public string $primaryKey = 'id';
     public string $download_status;
-
+    private $collection;
+    protected string $paginationTheme = 'bootstrap';
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
         'eventChangeInput' => 'eventChangeInput',
@@ -74,7 +73,7 @@ class PowerGridComponent extends Component
 
     /**
      * @return $this
-     * Show show export botton
+     * Show show export button
      */
     public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
     {
@@ -89,7 +88,7 @@ class PowerGridComponent extends Component
      * @param string $mode
      * @return $this
      */
-    public function showRecordCount($mode = 'full'): PowerGridComponent
+    public function showRecordCount(string $mode = 'full'): PowerGridComponent
     {
         $this->record_count = $mode;
         return $this;
@@ -139,17 +138,7 @@ class PowerGridComponent extends Component
      */
     public function columns(): array
     {
-        return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
-                ->title('Created at')
-                ->field('created_at'),
-        ];
+        return [];
     }
 
     protected function dataSource()
@@ -285,38 +274,6 @@ class PowerGridComponent extends Component
         return $query;
     }
 
-    private function prepareToExport()
-    {
-        if (filled($this->checkbox_values)) {
-            $in_clause = $this->checkbox_values;
-        } else {
-            $in_clause = $this->filtered;
-        }
-
-        if ($in_clause) {
-            return $this->dataSource()->whereIn($this->primaryKey, $in_clause)->get()->transform(function ($row) {
-                $columns = $this->transform()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
-                return $row;
-            });
-        }
-
-        $this->download_status = 'downloading...';
-
-
-        return $this->dataSource()->get()->transform(function ($row) {
-            $columns = $this->transform()->columns;
-            foreach ($columns as $key => $column) {
-                $row->{$key} = $column($row);
-            }
-            return $row;
-        });
-
-
-    }
-
     /**
      * @param array $data
      * @return bool
@@ -352,10 +309,39 @@ class PowerGridComponent extends Component
         return $this->checkbox_values;
     }
 
+
+    private function prepareToExport()
+    {
+        if (filled($this->checkbox_values)) {
+            $in_clause = $this->checkbox_values;
+        } else {
+            $in_clause = $this->filtered;
+        }
+
+        if ($in_clause) {
+            return $this->dataSource()->whereIn($this->primaryKey, $in_clause)->get()->transform(function ($row) {
+                $columns = $this->transform()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+                return $row;
+            });
+        }
+
+        return $this->dataSource()->get()->transform(function ($row) {
+            $columns = $this->transform()->columns;
+            foreach ($columns as $key => $column) {
+                $row->{$key} = $column($row);
+            }
+            return $row;
+        });
+
+    }
+
     /**
      * @throws \Exception
      */
-    public function exportToExcel(): BinaryFileResponse
+    public function exportToXLS(): BinaryFileResponse
     {
         return (new ExportToXLS())
             ->fileName($this->export_file_name)

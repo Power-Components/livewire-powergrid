@@ -71,16 +71,16 @@
 
                     @include('livewire-powergrid::tailwind.2.inline-filter')
 
-{{--                    @if(count($data) === 0)--}}
-{{--                        <tr class="border-b border-gray-200 hover:bg-gray-100 ">--}}
-{{--                            <td class="text-center p-2" colspan="{{ (($checkbox) ? 1:0)--}}
-{{--                        + ((isset($actionBtns)) ? 1: 0)--}}
-{{--                        + (count($columns))--}}
-{{--                        }}">--}}
-{{--                                <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>--}}
-{{--                            </td>--}}
-{{--                        </tr>--}}
-{{--                    @endif--}}
+                    @if(count($data) === 0)
+                        <tr class="border-b border-gray-200 hover:bg-gray-100 ">
+                            <td class="text-center p-2" colspan="{{ (($checkbox) ? 1:0)
+                        + ((isset($actionBtns)) ? 1: 0)
+                        + (count($columns))
+                        }}">
+                                <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
+                            </td>
+                        </tr>
+                    @endif
 
                     @foreach($data as $row)
                         <tr class="border-b border-gray-200 hover:bg-gray-100" wire:key="{{ $row->id }}">

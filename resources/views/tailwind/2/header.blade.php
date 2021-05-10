@@ -39,7 +39,7 @@
                      class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10">
 
                     @if(in_array('excel',$export_type))
-                        <a wire:click="exportToExcel()" href="#"
+                        <a wire:click="exportToXLS()" href="#"
                            class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Excel</a>
                     @endif
                     @if(in_array('csv',$export_type))

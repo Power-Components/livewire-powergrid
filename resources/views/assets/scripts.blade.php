@@ -2,7 +2,7 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
 @if(config('livewire-powergrid.theme') === 'bootstrap')
-    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
+<script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
 <script>
 
@@ -85,7 +85,7 @@
 </script>
 
 @if(config('livewire-powergrid.js_framework') === 'alpinejs')
-    <script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
+<script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
 @endif
 
 @stack('powergrid_scripts')

@@ -297,12 +297,11 @@ For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 
 | Method | Arguments | Description | Example |
 |----|----|----|----|
 |**addColumn**| *String* $title, *\Closure*  $closure|Database field for this column |`->addColumn('id')`|
-|**make**|-|Makes the table |`->make()`|
 
 Example of usage:
 
 ```php
-return PowerGrid::eloquent(): ?PowerGrid
+return PowerGrid::eloquent()
     ->addColumn('id')
     ->addColumn('name')
     ->addColumn('size')
