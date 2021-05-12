@@ -7,21 +7,24 @@ use Illuminate\Support\Collection;
 
 class Export
 {
-
     public string $fileName;
+
     public $collection;
+
     public array $columns;
 
     public function fileName(string $name): Export
     {
         $this->fileName = $name;
+
         return $this;
     }
 
     public function fromCollection(array $columns, $collection): Export
     {
-        $this->columns = $columns;
+        $this->columns    = $columns;
         $this->collection = collect($collection->toArray());
+
         return $this;
     }
 
@@ -30,7 +33,6 @@ class Export
      */
     public function prepare(Collection $collection, array $columns): array
     {
-
         $header = collect();
 
         $collection = $collection->map(function ($row) use ($columns, $header) {
@@ -45,16 +47,15 @@ class Export
                     if (!$header->contains($column->title)) {
                         $header->push($column->title);
                     }
-
                 }
             });
+
             return $item->toArray();
         });
 
         return [
             'headers' => $header->toArray(),
-            'rows' => $collection->toArray()
+            'rows'    => $collection->toArray()
         ];
     }
-
 }

@@ -1,18 +1,23 @@
 <?php
 
-
 namespace PowerComponents\LivewirePowerGrid;
 
 class Button
 {
-
     public string $action = '';
+
     public string $caption = '';
+
     public string $route = '';
+
     public array $param = [];
+
     public string $class = '';
+
     public array $i = [];
+
     public string $method = 'get';
+
     public string $view = '';
 
     /**
@@ -41,6 +46,7 @@ class Button
     public function caption(string $caption): Button
     {
         $this->caption = $caption;
+
         return $this;
     }
 
@@ -53,6 +59,7 @@ class Button
     {
         $this->route = $route;
         $this->param = $param;
+
         return $this;
     }
 
@@ -64,6 +71,7 @@ class Button
     public function class(string $class_attr): Button
     {
         $this->class = $class_attr;
+
         return $this;
     }
 
@@ -76,10 +84,11 @@ class Button
     public function i(string $class, string $text, bool $showCaption = false): Button
     {
         $this->i = [
-            'class' => $class,
-            'text' => $text,
+            'class'   => $class,
+            'text'    => $text,
             'caption' => $showCaption
         ];
+
         return $this;
     }
 
@@ -91,6 +100,7 @@ class Button
     public function method(string $method): Button
     {
         $this->method = $method;
+
         return $this;
     }
 
@@ -102,10 +112,11 @@ class Button
      */
     public function openModal(string $component, array $param): Button
     {
-        $this->view = $component;
-        $this->param = $param;
+        $this->view   = $component;
+        $this->param  = $param;
         $this->method = 'get';
-        $this->route = '';
+        $this->route  = '';
+
         return $this;
     }
 }

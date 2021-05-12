@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
 use Box\Spout\Common\Entity\Style\CellAlignment;
@@ -12,15 +11,12 @@ use PowerComponents\LivewirePowerGrid\Services\Export;
 
 class ExportToXLS extends Export implements ExportInterface
 {
-
     public function download()
     {
-
         $this->build();
 
         return response()
             ->download(storage_path($this->fileName . '.xlsx'));
-
     }
 
     public function build()
@@ -48,6 +44,5 @@ class ExportToXLS extends Export implements ExportInterface
         }
 
         $writer->close();
-
     }
 }

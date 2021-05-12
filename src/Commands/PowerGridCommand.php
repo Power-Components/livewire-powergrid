@@ -40,7 +40,6 @@ class PowerGridCommand extends Command
 
             $this->info('Stubs published successfully.');
         } else {
-
             $tableName = $this->argument('name');
             $modelName = $this->option('model');
             $fillable  = $this->option('fillable');
@@ -51,16 +50,15 @@ class PowerGridCommand extends Command
             }
 
             if (empty($modelName)) {
-                $example = '\\App\\Models\\'.$tableName;
-                $this->error('Error: Model name is required.<info> E.g. powergrid:create '.$tableName.' --model="'.$example.'"</info>');
+                $example = '\\App\\Models\\' . $tableName;
+                $this->error('Error: Model name is required.<info> E.g. powergrid:create ' . $tableName . ' --model="' . $example . '"</info>');
                 exit;
             }
 
-            $modelNameArr = explode('\\', $modelName);
+            $modelNameArr  = explode('\\', $modelName);
             $modelLastName = Arr::last($modelNameArr);
 
             if (count($modelNameArr) == 1) {
-
                 if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                     $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
                     exit;
@@ -70,7 +68,6 @@ class PowerGridCommand extends Command
             }
 
             if (!empty($modelName)) {
-
                 if (!empty($this->option('template'))) {
                     $stub = File::get(base_path($this->option('template')));
                 } else {
@@ -78,43 +75,39 @@ class PowerGridCommand extends Command
                 }
 
                 if ($fillable) {
-
                     $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
 
-                    $model = new $modelName();
+                    $model    = new $modelName();
                     $fillable = array_merge([$model->getKeyName()], $model->getFillable());
                     $fillable = array_merge($fillable, ['created_at', 'updated_at']);
 
                     $dataSource = "";
-                    $columns = "[\n";
+                    $columns    = "[\n";
                     foreach ($fillable as $field) {
                         if (!in_array($field, $model->getHidden())) {
-
-                            $type = Arr::first(Arr::where(DB::select('describe '.$model->getTable()), function ($info) use ($field) {
-                                return ($info->Field === $field) ? $info->Type: '';
+                            $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
+                                return ($info->Field === $field) ? $info->Type : '';
                             }))->Type;
 
                             if (in_array($type, ['timestamp', 'datetime'])) {
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'_formatted\', function('.$modelLastName.' $model) { '."\n".'                return Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\');'."\n".'            })';
+                                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
 
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->hidden(),'."\n\n";
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'_formatted').'\'))'."\n".'                ->field(\''.$field.'_formatted\')'."\n".'                ->searchable()'."\n".'                ->sortable()'."\n".'                ->makeInputDatePicker(\''.$field.'\'),'."\n\n";
-                            } else if ($type === 'tinyint(1)') {
-
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->toggleable(),'."\n\n";
-
-                            } else if ($type === 'int(11)') {
-
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->makeInputRange(),'."\n\n";
-
+                                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->hidden(),' . "\n\n";
+                                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
                             } else {
-
-                                $dataSource .= "\n".'            ->addColumn(\''.$field.'\')';
-                                $columns    .= '            Column::add()'."\n".'                ->title(__(\''.Str::camel($field.'').'\'))'."\n".'                ->field(\''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n\n";
-
+                                if ($type === 'tinyint(1)') {
+                                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                                    $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                                } else {
+                                    if ($type === 'int(11)') {
+                                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                                    } else {
+                                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                                    }
+                                }
                             }
                         }
                     }
@@ -123,7 +116,6 @@ class PowerGridCommand extends Command
 
                     $stub = str_replace('{{ dataSource }}', $dataSource, $stub);
                     $stub = str_replace('{{ columns }}', $columns, $stub);
-
                 }
 
                 $stub = str_replace('{{ componentName }}', $tableName, $stub);
@@ -131,9 +123,7 @@ class PowerGridCommand extends Command
                 $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
                 $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
                 $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
-
             } else {
-
                 $this->error('Could not create, Model path is missing');
                 exit;
             }
