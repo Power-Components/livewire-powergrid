@@ -18,7 +18,7 @@ class PowerGridCommand extends Command
     {--template= : name of the file that will be used as a template}
     {--force : Overwrite any existing files}
     {--fillable : Generate data from fillable}
-    {--collection : Generate from collection - default is model collection}';
+    {--with-collection : Generate from collection - default is model collection}';
 
     protected $description = 'Make a new PowerGrid table component.';
 
@@ -44,7 +44,7 @@ class PowerGridCommand extends Command
             $tableName  = $this->argument('name');
             $modelName  = $this->option('model');
             $fillable   = $this->option('fillable');
-            $collection = $this->option('collection');
+            $collection = $this->option('with-collection');
 
             if ($tableName === 'default') {
                 $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
