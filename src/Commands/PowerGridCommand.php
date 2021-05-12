@@ -17,7 +17,8 @@ class PowerGridCommand extends Command
     {--publish : publish stubs file}
     {--template= : name of the file that will be used as a template}
     {--force : Overwrite any existing files}
-    {--fillable : Generate data from fillable}';
+    {--fillable : Generate data from fillable}
+    {--collection : Generate from collection - default is model collection}';
 
     protected $description = 'Make a new PowerGrid table component.';
 
@@ -29,7 +30,7 @@ class PowerGridCommand extends Command
             }
 
             $files = [
-                __DIR__ . '/../../resources/stubs/table.stub' => $stubsPath . '/table.stub',
+                __DIR__ . '/../../resources/stubs/table.model.stub' => $stubsPath . '/table.model.stub',
             ];
 
             foreach ($files as $from => $to) {
@@ -40,9 +41,10 @@ class PowerGridCommand extends Command
 
             $this->info('Stubs published successfully.');
         } else {
-            $tableName = $this->argument('name');
-            $modelName = $this->option('model');
-            $fillable  = $this->option('fillable');
+            $tableName  = $this->argument('name');
+            $modelName  = $this->option('model');
+            $fillable   = $this->option('fillable');
+            $collection = $this->option('collection');
 
             if ($tableName === 'default') {
                 $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
@@ -71,7 +73,11 @@ class PowerGridCommand extends Command
                 if (!empty($this->option('template'))) {
                     $stub = File::get(base_path($this->option('template')));
                 } else {
-                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.stub');
+                    if ($collection) {
+                        $stub = File::get(__DIR__ . '/../../resources/stubs/table.stub');
+                    } else {
+                        $stub = File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
+                    }
                 }
 
                 if ($fillable) {
