@@ -220,6 +220,7 @@ If everything was successful, you will find your new table component inside the 
 |**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
 |**--fillable**| Creates columns based on the Model's Fillable array | ```--fillable``` |
 |**--template**| Uses a provided stub file as template for creating tables | ```--template=stubs/table_with_buttons.sub``` |
+|**--with-collection**| Creates a table to work with collections | ```--with-collection``` |
 
 ### 7.  Using your Table Component
 
@@ -247,6 +248,7 @@ You can view more functionalities consulting each of the following methods:
 
 - [setUp()](#setup-method)
 - [dataSource()](#datasource-method)
+- [transform()](#transform-method)
 - [Column Methods](#column-methods)
 - [Action Methods](#action-methods)
 
@@ -276,16 +278,41 @@ Example of usage:
   }
 ```
 
+### NOTE
+
+NOTE: In this version some things will change:
+
+dataSource can now receive an instance of an eloquent model or a collection treated with `transform::eloquent` within the method.
+
+a method has been added to work with column mutation.
+
+**_By default, powergrid will generate based on the eloquent model**_
+
 ### dataSource() Method
 
 The `dataSource()` method is responsible for feeding data to your table.
 
 It expects a model collection in the variable `$model`. Relationships can also be included.
 
-Example:
+Example of Model:
 
 ```php
  return Product::query()->with('group'); // without get()
+```
+
+Example of Collection (--with-collection):
+
+```php
+ $model = Product::query()->with('group')->get();
+
+ return Transform::eloquent($model)
+      ->addColumn('id')
+      ->addColumn('name')
+      ->addColumn('created_at')
+      ->addColumn('created_at_formatted', function(Product $product) {
+           return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+      })
+      ->make();
 ```
 
 Here method is receiving all products with the relationship to groups.

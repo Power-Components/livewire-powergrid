@@ -205,6 +205,7 @@ class PowerGridComponent extends Component
                 $this->filtered = $data->pluck('id')->toArray();
                 $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
+
         } else {
 
             $data = $this->dataSource;
