@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
@@ -108,9 +109,9 @@ class PowerGridComponent extends Component
      */
     public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
     {
-        $this->exportOption    = true;
-        $this->exportFileName  = $fileName;
-        $this->exportType      = $type;
+        $this->exportOption   = true;
+        $this->exportFileName = $fileName;
+        $this->exportType     = $type;
 
         return $this;
     }
@@ -133,8 +134,8 @@ class PowerGridComponent extends Component
      */
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
-        $this->checkbox           = true;
-        $this->checkboxAttribute  = $attribute;
+        $this->checkbox          = true;
+        $this->checkboxAttribute = $attribute;
 
         return $this;
     }
@@ -146,8 +147,8 @@ class PowerGridComponent extends Component
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
-            $this->perPageInput  = true;
-            $this->perPage       = $perPage;
+            $this->perPageInput = true;
+            $this->perPage      = $perPage;
         }
 
         return $this;
@@ -181,8 +182,22 @@ class PowerGridComponent extends Component
         }
 
         if (is_array($this->dataSource)) {
-            $data = Collection::search($this->dataSource, $this->search, $this->columns());
-            $data = Collection::filter($this->filters, collect($data));
+
+            $data = collect($this->dataSource);
+            if (!empty($this->search)) {
+                $data = $data->filter(function ($row) {
+                    foreach ($this->columns() as $column) {
+                        $field = $column->field;
+                        if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                            return false !== stristr($row->{$field}, strtolower($this->search));
+                        }
+                    }
+
+                    return false;
+                });
+            }
+
+            $data = Collection::filter($this->filters, $data);
 
             $data = $this->applySorting($data);
 
@@ -191,20 +206,21 @@ class PowerGridComponent extends Component
                 $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
         } else {
-            $table = $this->dataSource->getModel()->getTable();
 
-            $query = $this->dataSource->where(function ($query) use ($table) {
-                if ($this->search != '') {
-                    if ($query->getModel()->count() === 0) {
-                        $query->where(function ($query) use ($table) {
-                            foreach ($this->columns() as $column) {
-                                $hasColumn = Schema::hasColumn($table, $column->field);
-                                if ($hasColumn) {
-                                    $query->orWhere($column->field, 'like', '%' . $this->search . '%');
-                                }
+            $data = $this->dataSource;
+
+            $table = $data->getModel()->getTable();
+
+            $query = $data->where(function ($query) use ($table) {
+                if ($this->search != '' && $query->getModel()->count() === 0) {
+                    $query->where(function ($query) use ($table) {
+                        foreach ($this->columns() as $column) {
+                            $hasColumn = Schema::hasColumn($table, $column->field);
+                            if ($hasColumn) {
+                                $query->orWhere($column->field, 'like', '%' . $this->search . '%');
                             }
-                        });
-                    }
+                        }
+                    });
                 }
 
                 if (count($this->filters)) {
@@ -276,7 +292,7 @@ class PowerGridComponent extends Component
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
             if (is_array($this->dataSource())) {
-                $collection = $this->dataSource->collection();
+                $collection = $this->dataSource()->collection();
 
                 $cached = $collection->map(function ($row) use ($data) {
                     $field = $data['field'];
@@ -287,9 +303,7 @@ class PowerGridComponent extends Component
                     return $row;
                 });
 
-                $this->dataSource->collection($cached);
-            } else {
-                $this->dataSource->model();
+                $this->fromCollection($cached);
             }
         }
     }

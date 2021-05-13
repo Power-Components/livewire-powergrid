@@ -1,5 +1,5 @@
 @if(filled($number))
-    <div>
+    <div class="@if($inline) pr-6 @endif{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
         @if(!$inline)
             <label>{{ $number['label'] }}</label>
         @endif
@@ -14,7 +14,7 @@
                         class="w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         placeholder="MIN">
                 </div>
-                <div class="mb-1">
+                <div class="mt-1 @if(!$inline)mb-1 pr-4 @endif">
                     <input
                         data-id="{{ $number['field'] }}"
                         wire:model.debounce.800ms="filters_enabled.{{ $number['field'] }}.end"
