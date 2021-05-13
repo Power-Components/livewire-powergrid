@@ -2,7 +2,7 @@
 
     <div class="flex flex-row">
 
-        @if($export_option)
+        @if($exportOption)
             <div x-data="{show: false}"
                  @click.away="show = false">
 
@@ -38,11 +38,11 @@
                      x-transition:leave-end="opacity-0 scale-90"
                      class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10">
 
-                    @if(in_array('excel',$export_type))
+                    @if(in_array('excel',$exportType))
                         <a wire:click="exportToXLS()" href="#"
                            class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Excel</a>
                     @endif
-                    @if(in_array('csv',$export_type))
+                    @if(in_array('csv',$exportType))
                         <a wire:click="exportToCsv()" href="#"
                            class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Csv</a>
                     @endif
@@ -59,7 +59,7 @@
 
     </div>
 
-    @if($search_input)
+    @if($searchInput)
         <div class="flex flex-row w-full flex justify-end">
             <div class="relative w-4/12 float-end float-right">
               <span class="absolute inset-y-0 left-0 flex items-center pl-2">

@@ -2,31 +2,33 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Component;
 use Livewire\WithPagination;
+use PowerComponents\LivewirePowerGrid\Helpers\Collection;
+use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
+use PowerComponents\LivewirePowerGrid\Traits\WithSorting;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PowerGridComponent extends Component
 {
     use WithPagination,
+        WithSorting,
         Checkbox,
         Filter;
 
     public array $headers = [];
 
-    public bool $search_input = false;
+    public bool $searchInput = false;
 
     public string $search = '';
 
-    public bool $perPage_input = false;
-
-    public string $orderBy = 'id';
-
-    public bool $orderAsc = false;
+    public bool $perPageInput = false;
 
     public int $perPage = 10;
 
@@ -34,27 +36,19 @@ class PowerGridComponent extends Component
 
     public array $perPageValues = [10, 25, 50, 100, 0];
 
-    public string $sortIcon = '&#8597;';
-
-    public string $sortAscIcon = '&#8593;';
-
-    public string $sortDescIcon = '&#8595;';
-
     public string $record_count = '';
 
-    public bool $export_option = false;
+    public bool $exportOption = false;
 
-    public string $export_file_name = 'download';
+    public string $exportFileName = 'download';
 
-    public array $export_type = [];
+    public array $exportType = [];
 
     public array $filtered = [];
 
     public $transform;
 
     public string $primaryKey = 'id';
-
-    public string $download_status;
 
     private $collection;
 
@@ -69,25 +63,14 @@ class PowerGridComponent extends Component
 
     private string $data_source;
 
-    private DataSource $dataSource;
-
-    /**
-     * PowerGridComponent constructor.
-     */
-    public function __construct()
-    {
-        $this->dataSource = resolve(DataSource::class);
-
-        return parent::__construct();
-    }
+    private $dataSource;
 
     /**
      * Apply checkbox, perPage and search view and theme
      */
     public function setUp()
     {
-        $this->showPerPage()
-            ->showExportOption('download', ['excel', 'csv']);
+        $this->showPerPage();
     }
 
     /**
@@ -114,7 +97,7 @@ class PowerGridComponent extends Component
      */
     public function showSearchInput(): PowerGridComponent
     {
-        $this->search_input = true;
+        $this->searchInput = true;
 
         return $this;
     }
@@ -125,9 +108,9 @@ class PowerGridComponent extends Component
      */
     public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
     {
-        $this->export_option    = true;
-        $this->export_file_name = $fileName;
-        $this->export_type      = $type;
+        $this->exportOption    = true;
+        $this->exportFileName  = $fileName;
+        $this->exportType      = $type;
 
         return $this;
     }
@@ -151,7 +134,7 @@ class PowerGridComponent extends Component
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
         $this->checkbox           = true;
-        $this->checkbox_attribute = $attribute;
+        $this->checkboxAttribute  = $attribute;
 
         return $this;
     }
@@ -163,7 +146,7 @@ class PowerGridComponent extends Component
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
-            $this->perPage_input = true;
+            $this->perPageInput  = true;
             $this->perPage       = $perPage;
         }
 
@@ -178,8 +161,6 @@ class PowerGridComponent extends Component
 
         $this->renderFilter();
 
-        $this->setUp();
-
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
@@ -190,46 +171,62 @@ class PowerGridComponent extends Component
      */
     public function render()
     {
-        $this->columns = $this->columns();
+        $this->setUp();
 
-        $this->dataSource->id($this->id)
-            ->perPage($this->perPage)
-            ->dataSource($this->dataSource())
-            ->columns($this->columns())
-            ->transform($this->transform())
-            ->filters($this->filters);
+        $this->columns    = $this->columns();
+        $this->dataSource = $this->dataSource();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
-        if (is_array($this->dataSource())) {
-            $data_source = $this->dataSource->collection();
+        if (is_array($this->dataSource)) {
+            $data = Collection::search($this->dataSource, $this->search, $this->columns());
+            $data = Collection::filter($this->filters, collect($data));
 
-            $data = Helpers\Collection::search($data_source, $this->search, $this->columns());
-            $data = Helpers\Collection::filter($data, $this->filters)
-                ->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
+            $data = $this->applySorting($data);
 
             if ($data->count()) {
                 $this->filtered = $data->pluck('id')->toArray();
-                $data           = Helpers\Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
+                $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
         } else {
-            $data = $this->dataSource->model();
+            $table = $this->dataSource->getModel()->getTable();
+
+            $query = $this->dataSource->where(function ($query) use ($table) {
+                if ($this->search != '') {
+                    if ($query->getModel()->count() === 0) {
+                        $query->where(function ($query) use ($table) {
+                            foreach ($this->columns() as $column) {
+                                $hasColumn = Schema::hasColumn($table, $column->field);
+                                if ($hasColumn) {
+                                    $query->orWhere($column->field, 'like', '%' . $this->search . '%');
+                                }
+                            }
+                        });
+                    }
+                }
+
+                if (count($this->filters)) {
+                    Model::filter($this->filters, $query);
+                }
+            })->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
+
+            $updatedItems = $query->getCollection();
+
+            $updatedItems = $updatedItems->transform(function ($row) {
+                $columns = $this->transform()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+
+                return $row;
+            });
+
+            $data = $query->setCollection($updatedItems);
         }
 
         return $this->renderView($data);
-    }
-
-    /**
-     * @param $field
-     */
-    public function setOrder($field)
-    {
-        if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
-        }
-        $this->orderBy = $field;
     }
 
     private function renderView($data)
@@ -240,6 +237,29 @@ class PowerGridComponent extends Component
         return view('livewire-powergrid::' . $theme . '.' . $version . '.table', [
             'data' => $data
         ]);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function fromCollection($cached = '')
+    {
+        if (filled($cached)) {
+            cache()->forget($this->id);
+
+            return cache()->rememberForever($this->id, function () use ($cached) {
+                return $cached;
+            });
+        }
+
+        $cache = config('livewire-powergrid.cached_data');
+        if ($cache) {
+            return \cache()->rememberForever($this->id, function () {
+                return new BaseCollection($this->dataSource());
+            });
+        }
+
+        return new BaseCollection($this->dataSource());
     }
 
     /**
@@ -306,7 +326,7 @@ class PowerGridComponent extends Component
 
     public function checkedValues(): array
     {
-        return $this->checkbox_values;
+        return $this->checkboxValues;
     }
 
     /**
@@ -314,22 +334,22 @@ class PowerGridComponent extends Component
      */
     private function prepareToExport()
     {
-        if (filled($this->checkbox_values)) {
-            $in_clause = $this->checkbox_values;
+        if (filled($this->checkboxValues)) {
+            $inClause = $this->checkboxValues;
         } else {
-            $in_clause = $this->filtered;
+            $inClause = $this->filtered;
         }
 
         if (is_array($this->dataSource())) {
-            if ($in_clause) {
-                return $this->dataSource->collection()->whereIn($this->primaryKey, $in_clause);
+            if ($inClause) {
+                return $this->fromCollection()->whereIn($this->primaryKey, $inClause);
             }
 
-            return $this->dataSource->collection();
+            return $this->fromCollection();
         }
 
-        if ($in_clause) {
-            return $this->dataSource()->whereIn($this->primaryKey, $in_clause)->get()->transform(function ($row) {
+        if ($inClause) {
+            return $this->dataSource()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
                 $columns = $this->transform()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
@@ -355,7 +375,7 @@ class PowerGridComponent extends Component
     public function exportToXLS(): BinaryFileResponse
     {
         return (new ExportToXLS())
-            ->fileName($this->export_file_name)
+            ->fileName($this->exportFileName)
             ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }
@@ -366,7 +386,7 @@ class PowerGridComponent extends Component
     public function exportToCsv(): BinaryFileResponse
     {
         return (new ExportToCsv())
-            ->fileName($this->export_file_name)
+            ->fileName($this->exportFileName)
             ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }

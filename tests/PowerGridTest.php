@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Transform;
 
 class PowerGridTest extends TestCase
 {
@@ -19,7 +19,7 @@ class PowerGridTest extends TestCase
             ])
         ]);
 
-        $grid =  PowerGrid::eloquent($collection)
+        $grid =  Transform::eloquent($collection)
                         ->addColumn('id')
                         ->addColumn('name');
 
@@ -43,7 +43,7 @@ class PowerGridTest extends TestCase
 
         $collection = new Collection([$stub]);
 
-        $grid =  PowerGrid::eloquent($collection)
+        $grid =  Transform::eloquent($collection)
                         ->addColumn('id')
                         ->addColumn('name')
                         ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name);

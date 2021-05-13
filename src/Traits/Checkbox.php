@@ -4,33 +4,21 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 trait Checkbox
 {
-    /**
-     * @var bool
-     */
     public bool $checkbox = false;
 
-    /**
-     * @var bool
-     */
-    public bool $checkbox_all = false;
+    public bool $checkboxAll = false;
 
-    /**
-     * @var array
-     */
-    public array $checkbox_values = [];
+    public array $checkboxValues = [];
 
-    /**
-     * @var string
-     */
-    public string $checkbox_attribute;
+    public string $checkboxAttribute;
 
     public function updatedCheckboxAll()
     {
-        $this->checkbox_values = [];
+        $this->checkboxValues = [];
 
-        if ($this->checkbox_all) {
-            $this->dataSource()->each(function($model) {
-                $this->checkbox_values[] = (string)$model->{$this->checkbox_attribute};
+        if ($this->checkboxAll) {
+            $this->fromCollection()->each(function($model) {
+                $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
             });
         }
     }

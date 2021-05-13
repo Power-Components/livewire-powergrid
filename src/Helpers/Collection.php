@@ -8,8 +8,9 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
+use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
-class Collection
+class Collection implements FilterInterface
 {
     public static function paginate( BaseCollection $results, $pageSize ): LengthAwarePaginator
     {
@@ -40,7 +41,7 @@ class Collection
         ));
     }
 
-    public static function search( BaseCollection $model, string $search, $columns ): BaseCollection
+    public static function search($model, string $search, $columns )
     {
         if (!empty($search)) {
             $model = $model->filter(function ( $row ) use ( $columns, $search ) {
@@ -58,51 +59,49 @@ class Collection
         return $model;
     }
 
-    public static function filter(BaseCollection $collection, $filters)
+    public static function filter($filters, $query)
     {
-        foreach ($filters as $key => $type) {
-            foreach ($type as $field => $value) {
-                if (filled($value)) {
-                    switch ($key) {
-                        case 'date_picker':
-                            $collection = self::filterDatePicker($collection, $field, $value);
+        if (count($filters)) {
+            foreach ($filters as $key => $type) {
+                foreach ($type as $field => $value) {
+                    if (filled($value)) {
+                        switch ($key) {
+                            case 'date_picker':
+                                $query = self::filterDatePicker($query, $field, $value);
 
-                            break;
-                        case 'multi_select':
-                            $collection = self::filterMultiSelect($collection, $field, $value);
+                                break;
+                            case 'multi_select':
+                                $query = self::filterMultiSelect($query, $field, $value);
 
-                            break;
-                        case 'select':
-                            $collection = self::filterSelect($collection, $field, $value);
+                                break;
+                            case 'select':
+                                $query = self::filterSelect($query, $field, $value);
 
-                            break;
-                        case 'boolean':
-                            $collection = self::filterBoolean($collection, $field, $value);
+                                break;
+                            case 'boolean':
+                                $query = self::filterBoolean($query, $field, $value);
 
-                            break;
-                        case 'input_text':
-                            $collection = self::filterInputText($collection, $field, $value, $filters);
+                                break;
+                            case 'input_text':
+                                $query = self::filterInputText($query, $field, $value, $filters);
 
-                            break;
-                        case 'number':
-                            $collection = self::filterNumber($collection, $field, $value);
+                                break;
+                            case 'number':
+                                $query = self::filterNumber($query, $field, $value);
 
-                            break;
+                                break;
+                        }
+
+                        return collect($query);
                     }
                 }
             }
         }
 
-        return $collection;
+        return collect($query);
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @return Collection
-     */
-    private static function filterDatePicker(BaseCollection $collection, string $field, $value): BaseCollection
+    public static function filterDatePicker($collection, string $field, $value)
     {
         if (isset($value[0]) && isset($value[1])) {
             $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
@@ -115,6 +114,7 @@ class Collection
      * Validate if the given value is valid as an Input Option
      *
      * @param string $field Field to be checked
+     * @param $filters
      * @return bool
      */
     private static function validateInputTextOptions(string $field, $filters): bool
@@ -123,14 +123,7 @@ class Collection
                 ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @param $filters
-     * @return BaseCollection
-     */
-    private static function filterInputText(BaseCollection $collection, string $field, $value, $filters): BaseCollection
+    public static function filterInputText($collection, string $field, $value, $filters)
     {
         $textFieldOperator = (self::validateInputTextOptions($field, $filters) ? strtolower($filters['input_text_options'][$field]) : 'contains');
 
@@ -169,13 +162,7 @@ class Collection
         return $collection;
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @return BaseCollection
-     */
-    private static function filterBoolean(BaseCollection $collection, string $field, $value): BaseCollection
+    public static function filterBoolean($collection, string $field, $value)
     {
         if ($value != "all") {
             $value = ($value == "true");
@@ -186,24 +173,12 @@ class Collection
         return $collection;
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @return BaseCollection
-     */
-    private static function filterSelect(BaseCollection $collection, string $field, $value): BaseCollection
+    public static function filterSelect($collection, string $field, $value)
     {
         return $collection->where($field, $value);
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @return BaseCollection
-     */
-    private static function filterMultiSelect(BaseCollection $collection, string $field, $value): BaseCollection
+    public static function filterMultiSelect($collection, string $field, $value)
     {
         if (count(collect($value)->get('values'))) {
             return $collection->whereIn($field, collect($value)->get('values'));
@@ -212,13 +187,7 @@ class Collection
         return $collection;
     }
 
-    /**
-     * @param BaseCollection $collection
-     * @param string $field
-     * @param $value
-     * @return BaseCollection
-     */
-    private static function filterNumber(BaseCollection $collection, string $field, $value): BaseCollection
+    public static function filterNumber($collection, string $field, $value)
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);

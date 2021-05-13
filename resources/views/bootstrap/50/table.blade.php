@@ -44,9 +44,9 @@
                                 <div>
                                     @if($column->sortable === true)
                                         <span class="text-base">
-                                                @if ($orderBy !== $column->field)
+                                                @if ($sortField !== $column->field)
                                                 {!! $sortIcon !!}
-                                            @elseif ($orderAsc)
+                                            @elseif ($sortDirection)
                                                 {!! $sortAscIcon !!}
                                             @else
                                                 {!! $sortDescIcon !!}
@@ -159,7 +159,7 @@
                     <div class="d-flex justify-content-center">
                         <div>
                             <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
-                                @if($perPage_input)
+                                @if($perPageInput )
                                     <select wire:model="perPage"
                                             class="livewire_powergrid_select dropdown bootstrap-select form-control"
                                             style="width: 110px;">
