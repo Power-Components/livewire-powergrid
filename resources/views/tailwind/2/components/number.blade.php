@@ -1,5 +1,5 @@
 @if(filled($number))
-    <div class="@if($inline) pr-6 @endif{!! ($select['class'] != '') ?? '' !!} pt-2 p-2">
+    <div class="@if($inline) pr-6 @endifpt-2 p-2">
         @if(!$inline)
             <label>{{ $number['label'] }}</label>
         @endif
