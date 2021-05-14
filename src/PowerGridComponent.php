@@ -173,14 +173,18 @@ class PowerGridComponent extends Component
         $this->setUp();
 
         $this->columns    = $this->columns();
-        $this->dataSource = $this->dataSource()->make();
+
+        if (is_a($this->dataSource(), PowerGrid::class)) {
+            $this->dataSource = $this->dataSource()->make();
+        } else {
+            $this->dataSource = $this->dataSource();
+        }
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
         }
 
         if (is_array($this->dataSource)) {
-
             $data = collect($this->dataSource);
             if (!empty($this->search)) {
                 $data = $data->filter(function ($row) {
@@ -203,9 +207,7 @@ class PowerGridComponent extends Component
                 $this->filtered = $data->pluck('id')->toArray();
                 $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
-
         } else {
-
             $data = $this->dataSource;
 
             $table = $data->getModel()->getTable();
