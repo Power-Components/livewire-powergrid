@@ -65,7 +65,7 @@ PowerGrid comes with a variety of out-of-the-box features:
       - [Column Settings](#column-settings)
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
-    - [transform() Method](#transform-method)
+    - [addColumns() Method](#addColumns-method)
     - [Action Methods](#action-methods)
     - [Update Method](#update-method)
   - [Examples](#examples)
@@ -248,7 +248,7 @@ You can view more functionalities consulting each of the following methods:
 
 - [setUp()](#setup-method)
 - [dataSource()](#datasource-method)
-- [transform()](#transform-method)
+- [addColumns()](#addColumns-method)
 - [Column Methods](#column-methods)
 - [Action Methods](#action-methods)
 
@@ -282,7 +282,7 @@ Example of usage:
 
 NOTE: In this version some things will change:
 
-dataSource can now receive an instance of an eloquent model or a collection treated with `transform::eloquent` within the method.
+dataSource can now receive an instance of an eloquent model or a collection treated with `PowerGrid::eloquent` within the method.
 
 a method has been added to work with column mutation.
 
@@ -312,7 +312,7 @@ public function dataSource() {
 
      $model = Product::query()->with('group')->get();
     
-     return Transform::eloquent($model)
+     return PowerGrid::eloquent($model)
           ->addColumn('id')
           ->addColumn('name')
           ->addColumn('created_at')
@@ -327,7 +327,7 @@ Here method is receiving all products with the relationship to groups.
 
 For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 Paper" belongs to "Office Supplies" group.
 
-### transform() Method
+### addColumns() Method
 
 | Method | Arguments | Description | Example |
 |----|----|----|----|
@@ -336,36 +336,36 @@ For instance, the product "Mouse" belongs to "Computer" group,  the product "A4 
 Example of usage:
 
 ```php
-return PowerGrid::eloquent()
-    ->addColumn('id')
-    ->addColumn('name')
-    ->addColumn('size')
-
-    /** Group Relationship **/
-    ->addColumn('group_id', function (Product $product) {
-        return  $product->group_id;
-    })
-    ->addColumn('group_name', function (Product $product) {
-        return  $product->group->name;
-    })
-
-    /** Active Boolean **/
-    ->addColumn('is_active')
-    ->addColumn('is_active_label', function (Product $product) {
-        return ($product->is_active ? "active" : "inactive");
-    })
-
-    /** Price Format **/
-    ->addColumn('price')
-    ->addColumn('price_formatted', function(Product $product) {
-        return  '$ ' . number_format($product->price, 2, ',', '.');
-    })
-
-    /** Created Date Format **/
-    ->addColumn('created_at')
-    ->addColumn('created_at_formatted', function(Product $product) {
-      return Carbon::parse($product->created_at)->format('d/m/Y H:i');
-    });
+public function addColumns(): ?PowerGrid
+{
+    return PowerGrid::eloquent()
+        ->addColumn('id')
+        ->addColumn('name')
+        ->addColumn('size')
+    
+        /** Group Relationship **/
+        ->addColumn('group_id', function (Product $product) {
+            return  $product->group_id;
+        })
+        ->addColumn('group_name', function (Product $product) {
+            return  $product->group->name;
+        })
+        /** Active Boolean **/
+        ->addColumn('is_active')
+        ->addColumn('is_active_label', function (Product $product) {
+            return ($product->is_active ? "active" : "inactive");
+        })
+        /** Price Format **/
+        ->addColumn('price')
+        ->addColumn('price_formatted', function(Product $product) {
+            return  '$ ' . number_format($product->price, 2, ',', '.');
+        })
+        /** Created Date Format **/
+        ->addColumn('created_at')
+        ->addColumn('created_at_formatted', function(Product $product) {
+          return Carbon::parse($product->created_at)->format('d/m/Y H:i');
+        });
+}
 ```
 
 The data of each column can be manipulated with a closure function.

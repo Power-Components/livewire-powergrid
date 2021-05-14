@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-class Transform
+class PowerGrid
 {
     protected $collection;
 
@@ -18,9 +18,9 @@ class Transform
 
     /**
      * @param $collection
-     * @return Transform
+     * @return PowerGrid
      */
-    public static function eloquent($collection=null): Transform
+    public static function eloquent($collection=null): PowerGrid
     {
         return new static($collection);
     }
@@ -30,7 +30,7 @@ class Transform
      * @param \Closure|null $closure
      * @return $this
      */
-    public function addColumn(string $field, \Closure $closure = null): Transform
+    public function addColumn(string $field, \Closure $closure = null): PowerGrid
     {
         $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
 
@@ -40,7 +40,7 @@ class Transform
     /**
      * @return array
      */
-    public function make(): array
+    public function make()
     {
         if (is_a($this->collection, Collection::class)) {
             return $this->collection->map(function (Model $model) {

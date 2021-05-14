@@ -27,7 +27,7 @@ class {{ componentName }} extends PowerGridComponent
         return {{ modelLastName }}::query();
     }
 
-    public function transform(): ?PowerGrid
+    public function addColumns(): ?PowerGrid
     {
         return PowerGrid::eloquent(){{ dataSource }};
     }

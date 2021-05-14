@@ -34,8 +34,7 @@ class {{ componentName }} extends PowerGridComponent
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            })
-            ->make();
+            });
     }
 
     public function columns(): array

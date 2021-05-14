@@ -47,8 +47,6 @@ class PowerGridComponent extends Component
 
     public array $filtered = [];
 
-    public $transform;
-
     public string $primaryKey = 'id';
 
     private $collection;
@@ -87,7 +85,7 @@ class PowerGridComponent extends Component
         return null;
     }
 
-    public function transform()
+    public function addColumns()
     {
         return null;
     }
@@ -175,7 +173,7 @@ class PowerGridComponent extends Component
         $this->setUp();
 
         $this->columns    = $this->columns();
-        $this->dataSource = $this->dataSource();
+        $this->dataSource = $this->dataSource()->make();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -232,7 +230,7 @@ class PowerGridComponent extends Component
             $updatedItems = $query->getCollection();
 
             $updatedItems = $updatedItems->transform(function ($row) {
-                $columns = $this->transform()->columns;
+                $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
                 }
@@ -365,7 +363,7 @@ class PowerGridComponent extends Component
 
         if ($inClause) {
             return $this->dataSource()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
-                $columns = $this->transform()->columns;
+                $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
                 }
@@ -375,7 +373,7 @@ class PowerGridComponent extends Component
         }
 
         return $this->dataSource()->get()->transform(function ($row) {
-            $columns = $this->transform()->columns;
+            $columns = $this->addColumns()->columns;
             foreach ($columns as $key => $column) {
                 $row->{$key} = $column($row);
             }
