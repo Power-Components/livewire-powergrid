@@ -294,25 +294,33 @@ The `dataSource()` method is responsible for feeding data to your table.
 
 It expects a model collection in the variable `$model`. Relationships can also be included.
 
-Example of Model:
+#### model
 
 ```php
- return Product::query()->with('group'); // without get()
+public function dataSource() {
+    
+     return Product::query()->with('group'); // without get()
+    
+}
+
 ```
 
-Example of Collection (--with-collection):
+#### collection
 
 ```php
- $model = Product::query()->with('group')->get();
+public function dataSource() {
 
- return Transform::eloquent($model)
-      ->addColumn('id')
-      ->addColumn('name')
-      ->addColumn('created_at')
-      ->addColumn('created_at_formatted', function(Product $product) {
-           return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-      })
-      ->make();
+     $model = Product::query()->with('group')->get();
+    
+     return Transform::eloquent($model)
+          ->addColumn('id')
+          ->addColumn('name')
+          ->addColumn('created_at')
+          ->addColumn('created_at_formatted', function(Product $product) {
+               return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+          })
+          ->make();
+}
 ```
 
 Here method is receiving all products with the relationship to groups.
