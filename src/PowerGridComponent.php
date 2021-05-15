@@ -159,7 +159,6 @@ class PowerGridComponent extends Component
         $this->paginationTheme = config('livewire-powergrid.theme');
 
         $this->renderFilter();
-
     }
 
     /**

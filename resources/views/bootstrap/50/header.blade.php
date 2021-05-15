@@ -3,7 +3,7 @@
 
         <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
 
-            @if($export_option)
+            @if($exportOption)
                 <div class="btn-group">
                     <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -18,10 +18,10 @@
                 </span>
                     </button>
                     <ul class="dropdown-menu">
-                        @if(in_array('excel',$export_type))
+                        @if(in_array('excel',$exportType))
                             <li><a class="dropdown-item" wire:click="exportToXLS()" href="#">Excel</a></li>
                         @endif
-                        @if(in_array('csv',$export_type))
+                        @if(in_array('csv',$exportType))
                             <li><a class="dropdown-item" wire:click="exportToCsv()" href="#">Csv</a></li>
                         @endif
                     </ul>
@@ -37,7 +37,7 @@
         <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
             <div class="col-12" style="text-align: right;">
                 <label class="col-12 col-sm-8">
-                    @if($search_input)
+                    @if($searchInput)
                         <div class="form-group has-search">
                             <span class="fa fa-search form-control-feedback"></span>
                             <input wire:model.debounce.300ms="search" type="text"

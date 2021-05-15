@@ -9,7 +9,7 @@
                         <select
                         id="input_text_options" class="appearance-none livewire_powergrid_input block appearance-no mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active"
 
-                        wire:input.debounce.100ms="filterInputTextOptions('{{ $number['field'] }}', $event.target.value)"
+                        wire:input.debounce.800ms="filterInputTextOptions('{{ $number['field'] }}', $event.target.value)"
                         >
                          <option value="contains">{{ trans('livewire-powergrid::datatable.input_text_options.contains') }}</option>
                          <option value="contains_not">{{ trans('livewire-powergrid::datatable.input_text_options.contains_not') }}</option>

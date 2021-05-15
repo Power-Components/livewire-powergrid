@@ -91,11 +91,11 @@ class Collection implements FilterInterface
 
                                 break;
                         }
-
-                        return $query;
                     }
                 }
             }
+
+            return $query;
         }
 
         return $query;
@@ -175,13 +175,24 @@ class Collection implements FilterInterface
 
     public static function filterSelect($collection, string $field, $value)
     {
-        return $collection->where($field, $value);
+        if (filled($value)) {
+            return $collection->where($field, $value);
+        }
     }
 
     public static function filterMultiSelect($collection, string $field, $value)
     {
-        if (count(collect($value)->get('values'))) {
-            return $collection->whereIn($field, collect($value)->get('values'));
+        $empty  = false;
+        $values = collect($value)->get('values');
+        if (count($values)) {
+            foreach ($values as $value) {
+                if ($value === '') {
+                    $empty = true;
+                }
+            }
+            if (!$empty) {
+                $collection->whereIn($field, $values);
+            }
         }
 
         return $collection;

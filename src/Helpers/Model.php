@@ -125,7 +125,9 @@ class Model implements FilterInterface
      */
     public static function filterSelect($collection, string $field, $value)
     {
-        $collection->where($field, $value);
+        if (filled($value)) {
+            $collection->where($field, $value);
+        }
     }
 
     /**
@@ -135,8 +137,17 @@ class Model implements FilterInterface
      */
     public static function filterMultiSelect($collection, string $field, $value)
     {
-        if (count(collect($value)->get('values'))) {
-            $collection->whereIn($field, collect($value)->get('values'));
+        $empty  = false;
+        $values = collect($value)->get('values');
+        if (count($values)) {
+            foreach ($values as $value) {
+                if ($value === '') {
+                    $empty = true;
+                }
+            }
+            if (!$empty) {
+                $collection->whereIn($field, $values);
+            }
         }
     }
 

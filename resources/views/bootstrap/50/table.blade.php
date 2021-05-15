@@ -159,9 +159,10 @@
                     <div class="d-flex justify-content-center">
                         <div>
                             <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
+
                                 @if($perPageInput )
                                     <select wire:model="perPage"
-                                            class="livewire_powergrid_select dropdown bootstrap-select form-control"
+                                            class="form-select"
                                             style="width: 110px;">
                                         @foreach($perPageValues as $value)
                                             <option value="{{$value}}"> @if($value == 0)
