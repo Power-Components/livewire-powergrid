@@ -160,9 +160,6 @@ class PowerGridComponent extends Component
 
         $this->renderFilter();
 
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-        }
     }
 
     /**
@@ -174,18 +171,18 @@ class PowerGridComponent extends Component
 
         $this->columns    = $this->columns();
 
-        if (is_a($this->dataSource(), PowerGrid::class)) {
-            $this->dataSource = $this->dataSource()->make();
+        if (!cache()->get($this->id)) {
+            $dataSource       = $this->dataSource();
         } else {
-            $this->dataSource = $this->dataSource();
+            $dataSource       = collect(cache()->get($this->id))->toArray();
         }
 
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-        }
+        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource)) {
+            // collection
+            $this->dataSource = $this->resolveCollection($dataSource);
 
-        if (is_array($this->dataSource)) {
-            $data = collect($this->dataSource);
+            $data = $this->dataSource;
+
             if (!empty($this->search)) {
                 $data = $data->filter(function ($row) {
                     foreach ($this->columns() as $column) {
@@ -208,11 +205,12 @@ class PowerGridComponent extends Component
                 $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
         } else {
-            $data = $this->dataSource;
+            // model
+            $this->dataSource = $this->dataSource();
 
-            $table = $data->getModel()->getTable();
+            $table = $this->dataSource->getModel()->getTable();
 
-            $query = $data->where(function ($query) use ($table) {
+            $query = $this->dataSource->where(function ($query) use ($table) {
                 if ($this->search != '' && $query->getModel()->count() === 0) {
                     $query->where(function ($query) use ($table) {
                         foreach ($this->columns() as $column) {
@@ -243,6 +241,10 @@ class PowerGridComponent extends Component
             $data = $query->setCollection($updatedItems);
         }
 
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
+        }
+
         return $this->renderView($data);
     }
 
@@ -259,7 +261,7 @@ class PowerGridComponent extends Component
     /**
      * @throws \Exception
      */
-    public function fromCollection($cached = '')
+    public function resolveCollection($dataSource=null, $cached = '')
     {
         if (filled($cached)) {
             cache()->forget($this->id);
@@ -271,12 +273,19 @@ class PowerGridComponent extends Component
 
         $cache = config('livewire-powergrid.cached_data');
         if ($cache) {
-            return \cache()->rememberForever($this->id, function () {
-                return new BaseCollection($this->dataSource());
+            return \cache()->rememberForever($this->id, function () use ($dataSource) {
+                if ($dataSource === null) {
+                    return new BaseCollection($this->dataSource()->make());
+                }
+                if (is_array($dataSource)) {
+                    return new BaseCollection($dataSource);
+                }
+
+                return new BaseCollection($dataSource->make());
             });
         }
 
-        return new BaseCollection($this->dataSource());
+        return new BaseCollection($this->dataSource()->make());
     }
 
     /**
@@ -292,8 +301,8 @@ class PowerGridComponent extends Component
         } else {
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
-            if (is_array($this->dataSource())) {
-                $collection = $this->dataSource()->collection();
+            if (is_array($this->dataSource)) {
+                $collection = $this->dataSource;
 
                 $cached = $collection->map(function ($row) use ($data) {
                     $field = $data['field'];
@@ -304,7 +313,7 @@ class PowerGridComponent extends Component
                     return $row;
                 });
 
-                $this->fromCollection($cached);
+                $this->resolveCollection(null, $cached);
             }
         }
     }
@@ -355,12 +364,12 @@ class PowerGridComponent extends Component
             $inClause = $this->filtered;
         }
 
-        if (is_array($this->dataSource())) {
+        if (is_a($this->dataSource(), BaseCollection::class)) {
             if ($inClause) {
-                return $this->fromCollection()->whereIn($this->primaryKey, $inClause);
+                return $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
             }
 
-            return $this->fromCollection();
+            return $this->resolveCollection();
         }
 
         if ($inClause) {

@@ -92,13 +92,13 @@ class Collection implements FilterInterface
                                 break;
                         }
 
-                        return collect($query);
+                        return $query;
                     }
                 }
             }
         }
 
-        return collect($query);
+        return $query;
     }
 
     public static function filterDatePicker($collection, string $field, $value)

@@ -35,7 +35,7 @@ trait WithSorting
     public function applySorting($query)
     {
         if (is_a($query, Collection::class)) {
-            return $query->sortBy($this->sortField, SORT_REGULAR, $this->sortDirection);
+            return $query->sortBy($this->sortField, SORT_REGULAR, !(($this->sortDirection === 'asc')));
         }
 
         return $query->orderBy($this->sortField, $this->sortDirection);
