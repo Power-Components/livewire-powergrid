@@ -8,8 +8,17 @@
                         $parameters[$param] = $row->$value;
                     }
                 @endphp
+
+                @if($action->view !== '')
+                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))' class="
+                 {{ (filled($action->class)) }}"
+                    >
+                        {{ (filled($action->caption)) ? $action->caption: 'Editar' }}
+                    </button>
+                @else
                     <div class="px-2">
-                        <form @if($action->method !== 'delete') target="_blank" @endif action="{{ route($action->route, $parameters) }}" method="post">
+                        <form @if($action->method !== 'delete') target="_blank"
+                              @endif action="{{ route($action->route, $parameters) }}" method="post">
                             @method($action->method)
                             @csrf
 
@@ -26,6 +35,7 @@
                             @endif
                         </form>
                     </div>
+                @endif
             @endforeach
         </div>
     </td>

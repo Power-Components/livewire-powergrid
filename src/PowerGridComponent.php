@@ -60,9 +60,12 @@ class PowerGridComponent extends Component
         'eventMultiSelect'     => 'eventMultiSelect'
     ];
 
-    private string $data_source;
+    protected $dataSource;
 
-    private $dataSource;
+    /**
+     * @var bool|mixed
+     */
+    public bool $is_collection = false;
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -178,9 +181,8 @@ class PowerGridComponent extends Component
 
         if (is_a($dataSource, PowerGrid::class) || is_array($dataSource)) {
             // collection
-            $this->dataSource = $this->resolveCollection($dataSource);
-
-            $data = $this->dataSource;
+            $this->is_collection = true;
+            $data                = $this->resolveCollection($dataSource);
 
             if (!empty($this->search)) {
                 $data = $data->filter(function ($row) {
@@ -205,11 +207,11 @@ class PowerGridComponent extends Component
             }
         } else {
             // model
-            $this->dataSource = $this->dataSource();
+            $data = $this->resolveModel($dataSource);
 
-            $table = $this->dataSource->getModel()->getTable();
+            $table = $data->getModel()->getTable();
 
-            $query = $this->dataSource->where(function ($query) use ($table) {
+            $query = $data->where(function ($query) use ($table) {
                 if ($this->search != '' && $query->getModel()->count() === 0) {
                     $query->where(function ($query) use ($table) {
                         foreach ($this->columns() as $column) {
@@ -255,6 +257,14 @@ class PowerGridComponent extends Component
         return view('livewire-powergrid::' . $theme . '.' . $version . '.table', [
             'data' => $data
         ]);
+    }
+
+    public function resolveModel($dataSource=null)
+    {
+        if (blank($dataSource)) {
+            return $this->dataSource();
+        }
+        return $dataSource;
     }
 
     /**
@@ -355,7 +365,7 @@ class PowerGridComponent extends Component
     /**
      * @throws \Exception
      */
-    private function prepareToExport()
+    public function prepareToExport()
     {
         if (filled($this->checkboxValues)) {
             $inClause = $this->checkboxValues;
@@ -363,7 +373,7 @@ class PowerGridComponent extends Component
             $inClause = $this->filtered;
         }
 
-        if (is_a($this->dataSource(), BaseCollection::class)) {
+        if ($this->is_collection) {
             if ($inClause) {
                 return $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
             }
@@ -372,7 +382,7 @@ class PowerGridComponent extends Component
         }
 
         if ($inClause) {
-            return $this->dataSource()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
+            return $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
                 $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
@@ -382,7 +392,7 @@ class PowerGridComponent extends Component
             });
         }
 
-        return $this->dataSource()->get()->transform(function ($row) {
+        return $this->resolveModel()->get()->transform(function ($row) {
             $columns = $this->addColumns()->columns;
             foreach ($columns as $key => $column) {
                 $row->{$key} = $column($row);

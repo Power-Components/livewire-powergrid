@@ -51,6 +51,7 @@ class {{ componentName }} extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
