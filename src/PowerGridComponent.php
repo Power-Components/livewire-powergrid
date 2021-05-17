@@ -2,96 +2,70 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
+use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
+use PowerComponents\LivewirePowerGrid\Traits\WithSorting;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PowerGridComponent extends Component
 {
-
     use WithPagination,
+        WithSorting,
         Checkbox,
         Filter;
 
-    /**
-     * @var array
-     */
     public array $headers = [];
-    /**
-     * @var bool
-     */
-    public bool $search_input = false;
-    /**
-     * @var string
-     */
+
+    public bool $searchInput = false;
+
     public string $search = '';
-    /**
-     * @var bool
-     */
-    public bool $perPage_input = false;
-    /**
-     * @var string
-     */
-    public string $orderBy = 'id';
-    /**
-     * @var bool
-     */
-    public bool $orderAsc = false;
-    /**
-     * @var
-     */
-    public $perPage = 10;
-    /**
-     * @var array
-     */
+
+    public bool $perPageInput = false;
+
+    public int $perPage = 10;
+
     public array $columns = [];
-    /**
-     * @var string
-     */
-    protected string $paginationTheme = 'bootstrap';
-    /**
-     * @var array
-     */
+
     public array $perPageValues = [10, 25, 50, 100, 0];
-    /**
-     * @var string
-     */
-    public string $sortIcon = '&#8597;';
-    /**
-     * @var string
-     */
-    public string $sortAscIcon = '&#8593;';
-    /**
-     * @var string
-     */
-    public string $sortDescIcon = '&#8595;';
-    /**
-     * @var string
-     */
+
     public string $record_count = '';
 
-    /**
-     * @var string
-     */
-    public string $fileName = 'download';
+    public bool $exportOption = false;
+
+    public string $exportFileName = 'download';
+
+    public array $exportType = [];
 
     public array $filtered = [];
-    /**
-     * @var string[]
-     */
-    protected $listeners = [
-        'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventChangeInput' => 'eventChangeInput',
-        'eventToggleChanged' => 'eventChangeInput',
-        'eventMultiSelect' => 'eventMultiSelect'
-    ];
+
+    public string $primaryKey = 'id';
 
     private $collection;
+
+    protected string $paginationTheme = 'bootstrap';
+
+    protected $listeners = [
+        'eventChangeDatePiker' => 'eventChangeDatePiker',
+        'eventChangeInput'     => 'eventChangeInput',
+        'eventToggleChanged'   => 'eventChangeInput',
+        'eventMultiSelect'     => 'eventMultiSelect'
+    ];
+
+    protected $dataSource;
+
+    /**
+     * @var bool|mixed
+     */
+    public bool $is_collection = false;
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -102,12 +76,44 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @return array
+     */
+    public function columns(): array
+    {
+        return [];
+    }
+
+    protected function dataSource()
+    {
+        return null;
+    }
+
+    public function addColumns()
+    {
+        return null;
+    }
+
+    /**
      * @return $this
      * Show search input into component
      */
     public function showSearchInput(): PowerGridComponent
     {
-        $this->search_input = true;
+        $this->searchInput = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * Show show export button
+     */
+    public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
+    {
+        $this->exportOption   = true;
+        $this->exportFileName = $fileName;
+        $this->exportType     = $type;
+
         return $this;
     }
 
@@ -116,9 +122,22 @@ class PowerGridComponent extends Component
      * @param string $mode
      * @return $this
      */
-    public function showRecordCount($mode = 'full'): PowerGridComponent
+    public function showRecordCount(string $mode = 'full'): PowerGridComponent
     {
         $this->record_count = $mode;
+
+        return $this;
+    }
+
+    /**
+     * @param string $attribute
+     * @return PowerGridComponent
+     */
+    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->checkbox          = true;
+        $this->checkboxAttribute = $attribute;
+
         return $this;
     }
 
@@ -129,9 +148,10 @@ class PowerGridComponent extends Component
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
-            $this->perPage_input = true;
-            $this->perPage = $perPage;
+            $this->perPageInput = true;
+            $this->perPage      = $perPage;
         }
+
         return $this;
     }
 
@@ -142,86 +162,139 @@ class PowerGridComponent extends Component
         $this->paginationTheme = config('livewire-powergrid.theme');
 
         $this->renderFilter();
-
-        $this->setUp();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-        }
     }
 
     /**
-     * @return array
+     * @throws \Exception
      */
-    public function columns(): array
-    {
-        return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
-                ->title('Created at')
-                ->field('created_at'),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function dataSource(): array
-    {
-        return [];
-    }
-
     public function render()
     {
-        $this->columns = $this->columns();
-        $this->collection = $this->collection();
-        $this->tempSelected = [];
-        $data = [];
+        $this->setUp();
 
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
+        $this->columns    = $this->columns();
+
+        if (!cache()->get($this->id)) {
+            $dataSource       = $this->dataSource();
+        } else {
+            $dataSource       = collect(cache()->get($this->id))->toArray();
         }
 
-        if (filled($this->collection)) {
+        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource)) {
+            // collection
+            $this->is_collection = true;
+            $data                = $this->resolveCollection($dataSource);
 
-            $data = Collection::search($this->collection, $this->search, $this->columns());
-            $data = $this->advancedFilter($data);
-            $data = $data->sortBy($this->orderBy, SORT_REGULAR, $this->orderAsc);
+            if (!empty($this->search)) {
+                $data = $data->filter(function ($row) {
+                    foreach ($this->columns() as $column) {
+                        $field = $column->field;
+                        if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                            return false !== stristr($row->{$field}, strtolower($this->search));
+                        }
+                    }
+
+                    return false;
+                });
+            }
+
+            $data = Collection::filter($this->filters, $data);
+
+            $data = $this->applySorting($data);
 
             if ($data->count()) {
                 $this->filtered = $data->pluck('id')->toArray();
-                $data = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
+                $data           = Collection::paginate($data, ($this->perPage == '0') ? $data->count() : $this->perPage);
             }
+        } else {
+            // model
+            $data = $this->resolveModel($dataSource);
+
+            $table = $data->getModel()->getTable();
+
+            $query = $data->where(function ($query) use ($table) {
+                if ($this->search != '' && $query->getModel()->count() === 0) {
+                    $query->where(function ($query) use ($table) {
+                        foreach ($this->columns() as $column) {
+                            $hasColumn = Schema::hasColumn($table, $column->field);
+                            if ($hasColumn) {
+                                $query->orWhere($column->field, 'like', '%' . $this->search . '%');
+                            }
+                        }
+                    });
+                }
+
+                if (count($this->filters)) {
+                    Model::filter($this->filters, $query);
+                }
+            })->orderBy($this->sortField, $this->sortDirection)->paginate($this->perPage);
+
+            $updatedItems = $query->getCollection();
+
+            $updatedItems = $updatedItems->transform(function ($row) {
+                $columns = $this->addColumns()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+
+                return $row;
+            });
+
+            $data = $query->setCollection($updatedItems);
+        }
+
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
         }
 
         return $this->renderView($data);
-
-    }
-
-    /**
-     * @param $field
-     */
-    public function setOrder($field)
-    {
-        if ($this->orderBy === $field) {
-            $this->orderAsc = !$this->orderAsc;
-        }
-        $this->orderBy = $field;
     }
 
     private function renderView($data)
     {
-        $theme = config('livewire-powergrid.theme');
+        $theme   = config('livewire-powergrid.theme');
         $version = config('livewire-powergrid.theme_versions')[$theme];
 
         return view('livewire-powergrid::' . $theme . '.' . $version . '.table', [
             'data' => $data
         ]);
+    }
+
+    public function resolveModel($dataSource=null)
+    {
+        if (blank($dataSource)) {
+            return $this->dataSource();
+        }
+        return $dataSource;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function resolveCollection($dataSource=null, $cached = '')
+    {
+        if (filled($cached)) {
+            cache()->forget($this->id);
+
+            return cache()->rememberForever($this->id, function () use ($cached) {
+                return $cached;
+            });
+        }
+
+        $cache = config('livewire-powergrid.cached_data');
+        if ($cache) {
+            return \cache()->rememberForever($this->id, function () use ($dataSource) {
+                if ($dataSource === null) {
+                    return new BaseCollection($this->dataSource()->make());
+                }
+                if (is_array($dataSource)) {
+                    return new BaseCollection($dataSource);
+                }
+
+                return new BaseCollection($dataSource->make());
+            });
+        }
+
+        return new BaseCollection($this->dataSource()->make());
     }
 
     /**
@@ -232,46 +305,26 @@ class PowerGridComponent extends Component
     {
         $update = $this->update($data);
 
-        $collection = $this->collection();
-
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', $data['field']));
         } else {
-
-            $cached = $collection->map(function ($row) use ($data) {
-                $field = $data['field'];
-                if ($row->id === $data['id']) {
-                    $row->{$field} = $data['value'];
-                }
-                return $row;
-            });
-
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
-            $this->collection($cached);
-        }
-    }
+            if (is_array($this->dataSource)) {
+                $collection = $this->dataSource;
 
-    /**
-     * @return \Illuminate\Support\Collection|mixed
-     * @throws \Exception
-     */
-    public function collection($cached = '')
-    {
-        if (filled($cached)) {
-            \cache()->forget($this->id);
-            return \cache()->rememberForever($this->id, function () use ($cached) {
-                return $cached;
-            });
-        }
+                $cached = $collection->map(function ($row) use ($data) {
+                    $field = $data['field'];
+                    if ($row->id === $data['id']) {
+                        $row->{$field} = $data['value'];
+                    }
 
-        $cache = config('livewire-powergrid.cached_data');
-        if ($cache) {
-            return \cache()->rememberForever($this->id, function () {
-                return new \Illuminate\Support\Collection($this->dataSource());
-            });
+                    return $row;
+                });
+
+                $this->resolveCollection(null, $cached);
+            }
         }
-        return new \Illuminate\Support\Collection($this->dataSource());
     }
 
     /**
@@ -293,7 +346,7 @@ class PowerGridComponent extends Component
         $updateMessages = [
             'success' => [
                 '_default_message' => __('Data has been updated successfully!'),
-                'status' => __('Custom Field updated successfully!'),
+                'status'           => __('Custom Field updated successfully!'),
             ],
             "error" => [
                 '_default_message' => __('Error updating the data.'),
@@ -306,31 +359,58 @@ class PowerGridComponent extends Component
 
     public function checkedValues(): array
     {
-        return $this->checkbox_values;
-    }
-
-    /**
-     * set name to exported file (xlsx/csv)
-     * @param string $fileName
-     * @return $this
-     */
-    public function exportedFileName(string $fileName): PowerGridComponent
-    {
-        $this->fileName = $fileName;
-        return $this;
+        return $this->checkboxValues;
     }
 
     /**
      * @throws \Exception
      */
-    public function exportToExcel(): BinaryFileResponse
+    public function prepareToExport()
+    {
+        if (filled($this->checkboxValues)) {
+            $inClause = $this->checkboxValues;
+        } else {
+            $inClause = $this->filtered;
+        }
+
+        if ($this->is_collection) {
+            if ($inClause) {
+                return $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+            }
+
+            return $this->resolveCollection();
+        }
+
+        if ($inClause) {
+            return $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
+                $columns = $this->addColumns()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+
+                return $row;
+            });
+        }
+
+        return $this->resolveModel()->get()->transform(function ($row) {
+            $columns = $this->addColumns()->columns;
+            foreach ($columns as $key => $column) {
+                $row->{$key} = $column($row);
+            }
+
+            return $row;
+        });
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function exportToXLS(): BinaryFileResponse
     {
         return (new ExportToXLS())
-            ->fileName($this->fileName)
-            ->fromCollection($this->columns(), $this->collection())
-            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->fileName($this->exportFileName)
+            ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
-
     }
 
     /**
@@ -339,9 +419,8 @@ class PowerGridComponent extends Component
     public function exportToCsv(): BinaryFileResponse
     {
         return (new ExportToCsv())
-            ->fileName($this->fileName)
-            ->fromCollection($this->columns(), $this->collection())
-            ->withCheckedRows(array_merge($this->checkbox_values, $this->filtered))
+            ->fileName($this->exportFileName)
+            ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }
 }

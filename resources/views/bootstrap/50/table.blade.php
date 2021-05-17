@@ -44,9 +44,9 @@
                                 <div>
                                     @if($column->sortable === true)
                                         <span class="text-base">
-                                                @if ($orderBy !== $column->field)
+                                                @if ($sortField !== $column->field)
                                                 {!! $sortIcon !!}
-                                            @elseif ($orderAsc)
+                                            @elseif ($sortDirection)
                                                 {!! $sortAscIcon !!}
                                             @else
                                                 {!! $sortDescIcon !!}
@@ -54,7 +54,7 @@
                                             </span>
                                     @endif
 
-                                    <span @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')"
+                                    <span @if($column->sortable === true) wire:click="sortBy('{{$column->field}}')"
                                             @endif>
                                            {{$column->title}}
                                     </span>
@@ -125,7 +125,7 @@
                                     @else
                                         <span class="d-flex justify-content-between">
                                             <div>
-                                                {!! $row->$field !!}
+                                                {!! $row->{$field} !!}
                                             </div>
                                             <div>
                                                 @if(count($column->click_to_copy))
@@ -134,7 +134,7 @@
                                                             style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
                                                             onclick="copyToClipboard(this)" value="copy"
                                                             class="img_copy"
-                                                            data-value="{{ $row->$field }}"
+                                                            data-value="{{ $row->{$field} }}"
                                                             title="{{ $column->click_to_copy['label'] }}"></button>
                                                     @endif
                                                 @endif
@@ -159,9 +159,10 @@
                     <div class="d-flex justify-content-center">
                         <div>
                             <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
-                                @if($perPage_input)
+
+                                @if($perPageInput )
                                     <select wire:model="perPage"
-                                            class="livewire_powergrid_select dropdown bootstrap-select form-control"
+                                            class="form-select"
                                             style="width: 110px;">
                                         @foreach($perPageValues as $value)
                                             <option value="{{$value}}"> @if($value == 0)
@@ -185,12 +186,6 @@
         </div>
     </div>
 
-</div>
-<div class="spinner" style="position: absolute;
-    width: 50px;
-    z-index: 99;
-    left: 50%;
-    top: 50%;">
 </div>
 
 

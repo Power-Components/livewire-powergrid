@@ -38,9 +38,9 @@
                                     <div class="align-content-between">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
-                                                @if ($orderBy !== $column->field)
+                                                @if ($sortField !== $column->field)
                                                     {!! $sortIcon !!}
-                                                @elseif ($orderAsc)
+                                                @elseif ($sortDirection)
                                                     {!! $sortAscIcon !!}
                                                 @else
                                                     {!! $sortDescIcon !!}
@@ -48,7 +48,7 @@
                                             </span>
                                         @endif
                                         <span
-                                            @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')" @endif>
+                                            @if($column->sortable === true) wire:click="sortBy('{{$column->field}}')" @endif>
                                             {{$column->title}}
                                         </span>
 
@@ -152,7 +152,7 @@
     </div>
 
     <div class="flex flex-row w-full flex justify-between pt-3 bg-white overflow-y-auto relative">
-        @if($perPage_input)
+        @if($perPageInput )
             <div class="flex flex-row">
                 <div class="relative h-10">
                     <select wire:model="perPage"
@@ -185,4 +185,6 @@
             </div>
         @endif
     </div>
+
 </div>
+

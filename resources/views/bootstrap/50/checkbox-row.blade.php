@@ -2,7 +2,7 @@
     <td class="checkbox-column">
         <div class="form-check">
             <label>
-                <input wire:model="checkbox_values" class="form-check-input" type="checkbox"  value="{{ $row->{$checkbox_attribute} }}">
+                <input wire:model="checkboxValues" class="form-check-input" type="checkbox"  value="{{ $row->{$checkboxAttribute} }}">
             </label>
         </div>
     </td>

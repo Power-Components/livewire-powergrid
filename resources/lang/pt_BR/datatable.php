@@ -2,17 +2,17 @@
 
 return [
     'buttons' => [
-        'filter' => 'Filtrar',
-        'export' => 'Exportar',
-        'export_one' => 'Exportar selecionado',
+        'filter'          => 'Filtrar',
+        'export'          => 'Exportar',
+        'export_one'      => 'Exportar selecionado',
         'export_selected' => 'Exportar selecionados'
     ],
     'labels' => [
-        'action' => 'Ações',
+        'action'           => 'Ações',
         'results_per_page' => 'Registros por página',
-        'clear_filter' => 'Limpar filtro',
-        'no_data' => 'Nenhum registro encontrado',
-        'all' => 'Todos'
+        'clear_filter'     => 'Limpar filtro',
+        'no_data'          => 'Nenhum registro encontrado',
+        'all'              => 'Todos'
     ],
     'placeholders' => [
         'search' => 'Buscar ...',
@@ -20,28 +20,28 @@ return [
     ],
     'pagination' => [
         'showing' => 'Mostrando',
-        'to' => 'até',
-        'of' => 'de',
+        'to'      => 'até',
+        'of'      => 'de',
         'results' => 'Registros',
-        'all' => 'Todos'
+        'all'     => 'Todos'
     ],
     'multi_select' => [
         'select' => 'Selecione',
-        'all' => 'Todos'
+        'all'    => 'Todos'
     ],
     'select' => [
         'select' => 'Selecione',
-        'all' => 'Todos'
+        'all'    => 'Todos'
     ],
     'boolean_filter' => [
         'all' => 'Todos'
     ],
     'input_text_options' => [
-        'is' => 'É exatamente',
-        'is_not' => 'É diferente de',
-        'contains' => 'Contém',
+        'is'           => 'É exatamente',
+        'is_not'       => 'É diferente de',
+        'contains'     => 'Contém',
         'contains_not' => 'Não contém',
-        'starts_with' => 'Começa com',
-        'ends_with' => 'Termina com',
+        'starts_with'  => 'Começa com',
+        'ends_with'    => 'Termina com',
     ]
 ];

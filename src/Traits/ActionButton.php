@@ -2,14 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use PowerComponents\LivewirePowerGrid\Button;
-
 trait ActionButton
 {
     /**
      * @var array
      */
     public array $actionRoutes = [];
+
     /**
      * @var array
      */
