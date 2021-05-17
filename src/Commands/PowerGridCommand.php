@@ -150,15 +150,27 @@ class PowerGridCommand extends Command
                 exit;
             }
 
-            $create_at = 'Http/Livewire/' . $tableName . '.php';
+            $livewire_path = 'Http/Livewire/';
+            $path = app_path($livewire_path . $tableName . '.php');
 
-            $path = app_path($create_at);
+            $filename = Str::of($path)->basename();
+            $base_path = Str::of($path)->replace($filename, '');
 
-            File::ensureDirectoryExists(app_path('Http/Livewire'));
+            $saved_at = $livewire_path . $base_path->after($livewire_path);
+
+            $component_name = Str::of($tableName)
+                ->lower()
+                ->replace('/', '.')
+                ->replace('table', '-table')
+                ->prepend('<livewire:')
+                ->append('/>');
+
+            File::ensureDirectoryExists($base_path);
 
             if (!File::exists($path) || $this->confirm('It seems <comment>' . $tableName . '</comment> already exists. Overwrite it?')) {
                 File::put($path, $stub);
-                $this->info('<comment>' . $tableName . '</comment> was successfully created at [<comment>App/' . $create_at . '</comment>]');
+                $this->info( "\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $saved_at .  '</comment>].');
+                $this->info( "\n⚡ Your PowerGrid can be now included with: <comment>" . $component_name . "</comment>\n");
             }
         }
     }
