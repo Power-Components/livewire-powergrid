@@ -36,11 +36,11 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Link inside a table cell**
 
-✅ **Livewire Modal Integration**
+✅ **Livewire Modal Integration ([Livewire UI](https://github.com/livewire-ui/modal))**
 
-✅ **Data Export to XLSX/CSV**
+✅ **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
 
-✅ **Works with Bootstrap or Tailwind CSS**
+✅ **Works with Bootstrap 5 or Tailwind CSS 2**
 
 ✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
 

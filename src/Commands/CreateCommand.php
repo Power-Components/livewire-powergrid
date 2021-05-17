@@ -1,0 +1,161 @@
+<?php
+
+namespace PowerComponents\LivewirePowerGrid\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+
+class CreateCommand extends Command
+{
+    protected $signature = 'powergrid:create
+    {name=default : name of class component}
+    {--model= : model Class}
+    {--template= : name of the file that will be used as a template}
+    {--force : Overwrite any existing files}
+    {--fillable : Generate data from fillable}
+    {--with-collection : Generate from collection - default is model collection}';
+
+    protected $description = 'Make a new PowerGrid table component.';
+
+    public function handle()
+    {
+        $tableName = $this->argument('name');
+        $tableName = str_replace(['.', '\\'], '/', $tableName);
+
+        $modelName  = $this->option('model');
+        $fillable   = $this->option('fillable');
+        $collection = $this->option('with-collection');
+
+        preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
+
+        if ($tableName === 'default') {
+            $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
+            exit;
+        }
+
+        if (empty($modelName)) {
+            $example = '\\App\\Models\\' . $tableName;
+            $this->error('Error: Model name is required.<info> E.g. powergrid:create ' . $tableName . ' --model="' . $example . '"</info>');
+            exit;
+        }
+
+        $modelNameArr  = explode('\\', $modelName);
+        $modelLastName = Arr::last($modelNameArr);
+
+        if (count($modelNameArr) == 1) {
+            if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
+                $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
+                exit;
+            }
+            $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
+            exit;
+        }
+
+        if (!empty($modelName)) {
+            if (!empty($this->option('template'))) {
+                $stub = File::get(base_path($this->option('template')));
+            } else {
+                if ($collection) {
+                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.stub');
+                } else {
+                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
+                }
+            }
+
+            if ($fillable) {
+                $stub     = $this->createFromFillable($modelName, $modelLastName);
+            }
+
+            $componentName   = $tableName;
+            $subFolder       = null;
+
+            if (!empty($matches)) {
+                $componentName = end($matches);
+                array_splice($matches, 2);
+                $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
+            }
+
+            $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
+            $stub = str_replace('{{ componentName }}', $componentName, $stub);
+            $stub = str_replace('{{ modelName }}', $modelName, $stub);
+            $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
+            $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
+            $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+        } else {
+            $this->error('Could not create, Model path is missing');
+            exit;
+        }
+
+        $livewire_path = 'Http/Livewire/';
+        $path          = app_path($livewire_path . $tableName . '.php');
+
+        $filename  = Str::of($path)->basename();
+        $base_path = Str::of($path)->replace($filename, '');
+
+        $saved_at = $livewire_path . $base_path->after($livewire_path);
+
+        $component_name = Str::of($tableName)
+            ->lower()
+            ->replace('/', '-')
+            ->replace('\\', '-')
+            ->replace('table', '-table')
+            ->prepend('<livewire:')
+            ->append('/>');
+
+        File::ensureDirectoryExists($base_path);
+
+        if (!File::exists($path) || $this->confirm('It seems <comment>' . $tableName . '</comment> already exists. Overwrite it?')) {
+            File::put($path, $stub);
+            $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $saved_at . '</comment>].');
+            $this->info("\n⚡ Your PowerGrid can be now included with: <comment>" . $component_name . "</comment>\n");
+        }
+    }
+
+    private function createFromFillable(string $modelName, string $modelLastName)
+    {
+        $model        = new $modelName();
+        $stub         = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+        $getFillables = array_merge([$model->getKeyName()], $model->getFillable());
+        $getFillables = array_merge($getFillables, ['created_at', 'updated_at']);
+
+        $dataSource = "";
+        $columns    = "[\n";
+        foreach ($getFillables as $field) {
+            if (!in_array($field, $model->getHidden())) {
+                $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
+                    return ($info->Field === $field) ? $info->Type : '';
+                }))->Type;
+
+                if (in_array($type, ['timestamp', 'datetime'])) {
+                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
+
+                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->hidden(),' . "\n\n";
+                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+                }
+
+                if ($type === 'tinyint(1)') {
+                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                } else {
+                    if ($type === 'int(11)') {
+                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                    } else {
+                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                    }
+                }
+            }
+        }
+
+        $columns .= "        ]\n";
+
+        $stub = str_replace('{{ dataSource }}', $dataSource, $stub);
+
+        return str_replace('{{ columns }}', $columns, $stub);
+    }
+}
