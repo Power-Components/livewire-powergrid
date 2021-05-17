@@ -41,10 +41,15 @@ class PowerGridCommand extends Command
 
             $this->info('Stubs published successfully.');
         } else {
-            $tableName  = $this->argument('name');
-            $modelName  = $this->option('model');
-            $fillable   = $this->option('fillable');
+
+            $tableName = $this->argument('name');
+            $tableName = str_replace(['.', '\\'], '/', $tableName);
+
+            $modelName = $this->option('model');
+            $fillable  = $this->option('fillable');
             $collection = $this->option('with-collection');
+
+            preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
             if ($tableName === 'default') {
                 $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
@@ -124,7 +129,18 @@ class PowerGridCommand extends Command
                     $stub = str_replace('{{ columns }}', $columns, $stub);
                 }
 
-                $stub = str_replace('{{ componentName }}', $tableName, $stub);
+                $class = $tableName;
+                $subFolder = null;
+
+                if(!empty($matches))
+                {
+                    $class = end($matches);
+                    array_splice($matches, 2);
+                    $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
+                }
+
+                $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
+                $stub = str_replace('{{ componentName }}', $class, $stub);
                 $stub = str_replace('{{ modelName }}', $modelName, $stub);
                 $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
                 $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
