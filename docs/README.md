@@ -199,7 +199,6 @@ If everything was successful, you will find your new table component inside the 
 | Option | Description | Example |
 |----|----|----|
 |**--model**| Full model path | ```--model="App\Models\Product"``` |
-|**--publish**| Publish stubs file into the path 'stubs' | ```--publish``` |
 |**--fillable**| Creates columns based on the Model's Fillable array | ```--fillable``` |
 |**--template**| Uses a provided stub file as template for creating tables | ```--template=stubs/table_with_buttons.sub``` |
 |**--with-collection**| Creates a table to work with collections | ```--with-collection``` |
@@ -217,7 +216,7 @@ There are two ways to do that. Both work in the same way:
 If your component lives is a sub-folder, for example Admin/ProductsTable.php:
 
 ```html
-    <livewire:admin.product-table/>
+    <livewire:admin-product-table/>
 ```
 
 You can also use a blade directive:

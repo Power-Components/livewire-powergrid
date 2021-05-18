@@ -17,7 +17,7 @@ trait Checkbox
         $this->checkboxValues = [];
 
         if ($this->checkboxAll) {
-            $this->fromCollection()->each(function($model) {
+            $this->resolveCollection()->each(function($model) {
                 $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
             });
         }
