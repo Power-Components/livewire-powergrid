@@ -12,14 +12,24 @@ trait Checkbox
 
     public string $checkboxAttribute;
 
-    public function updatedCheckboxAll()
+
+    /**
+     * @throws \Exception
+     */
+    public function selectCheckboxAll()
     {
         $this->checkboxValues = [];
 
         if ($this->checkboxAll) {
-            $this->resolveCollection()->each(function($model) {
-                $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
-            });
+            if ($this->is_collection) {
+                $this->resolveCollection()->each(function($model) {
+                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+                });
+            } else {
+                $this->resolveModel()->each(function($model) {
+                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+                });
+            }
         }
     }
 }

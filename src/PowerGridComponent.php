@@ -423,4 +423,5 @@ class PowerGridComponent extends Component
             ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }
+
 }
