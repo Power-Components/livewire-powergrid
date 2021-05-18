@@ -110,15 +110,18 @@
                     this.options[index].selected = true;
                     this.options[index].element = event.target;
                     this.selected.push(index);
+                    this.show = false
                     window.livewire.emit('eventMultiSelect', {
                         id: '{!! $multi_select['relation_id'] !!}',
                         values: this.selectedValues()
                     });
-                    console.log(index)
+
                 } else {
                     this.selected.splice(this.selected.lastIndexOf(index), 1);
                     this.options[index].selected = false
+                    this.show = false
                 }
+
             },
             remove(index, option) {
                 this.options[option].selected = false;
