@@ -90,19 +90,28 @@ Language files can be published with:
 
 ### 4. Configure the theme and Alpine JS
 
-By default, PowerGrid uses Tailwind.
+By default, PowerGrid uses Tailwind, Bootstrap 5 use.
+
+#### 4.1 your blade layout add jquery before bootstrap.js:
+```html
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+        
+        <!-- after -->
+        @powerGridScripts
+```
 
 This configuration can be changed in the file `config/livewire-powergrid.php`.
 
-For Bootstrap 5 use:
-
+#### 4.2 change config/livewire-powergrid.php:
 ```php
     //...
     'theme' => 'bootstrap'
 
 ```
 
-For Tailwind use:
+For Tailwind:
 
 ```php
     //...
@@ -161,8 +170,15 @@ To create a Table Component run `powergrid:create` informing your table `name` a
 Example:
 
 ```bash
-php artisan powergrid:create ProductTable --model="App\Models\Product" 
+php artisan powergrid:create ProductTable --model="App\Models\Product"  
 ```
+you can also do it like this
+```bash
+php artisan powergrid:create Admin.ProductTable --model="App\Models\Product"
+php artisan powergrid:create Admin\\ProductTable --model="App\Models\Product"
+```
+
+![Output](img/output.png)
 
 (It's advisable to use "" around your `--model` option)
 
