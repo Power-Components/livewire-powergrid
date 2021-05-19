@@ -153,7 +153,7 @@
 
 <label for="select" class="hidden"></label>
 <select class="hidden" x-cloak id="select_{!! $column->field !!}" id="input_{!! $multi_select['relation_id'] !!}"
-        wire:model="filters.multi_select.{!! $multi_select['relation_id'] !!}">
+        wire:model.lazy="filters.multi_select.{!! $multi_select['relation_id'] !!}">
     <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
     @foreach($multi_select['data_source'] as $relation)
         <option value="{{ $relation['id'] }}">{{ $relation[$multi_select['display_field']] }}</option>

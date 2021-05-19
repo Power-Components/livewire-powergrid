@@ -31,7 +31,7 @@ class PowerGridComponent extends Component
 
     public bool $perPageInput = false;
 
-    public int $perPage = 10;
+    public $perPage;
 
     public array $columns = [];
 
@@ -157,6 +157,8 @@ class PowerGridComponent extends Component
 
     public function mount()
     {
+        $this->setUp();
+
         $this->columns = $this->columns();
 
         $this->paginationTheme = config('livewire-powergrid.theme');
@@ -169,8 +171,6 @@ class PowerGridComponent extends Component
      */
     public function render()
     {
-        $this->setUp();
-
         $this->columns    = $this->columns();
 
         if (!cache()->get($this->id)) {
@@ -212,7 +212,7 @@ class PowerGridComponent extends Component
             $table = $data->getModel()->getTable();
 
             $query = $data->where(function ($query) use ($table) {
-                if ($this->search != '' && $query->getModel()->count() === 0) {
+                if ($this->search != '') {
                     $query->where(function ($query) use ($table) {
                         foreach ($this->columns() as $column) {
                             $hasColumn = Schema::hasColumn($table, $column->field);
@@ -238,7 +238,6 @@ class PowerGridComponent extends Component
 
                 return $row;
             });
-
             $data = $query->setCollection($updatedItems);
         }
 
@@ -264,6 +263,7 @@ class PowerGridComponent extends Component
         if (blank($dataSource)) {
             return $this->dataSource();
         }
+
         return $dataSource;
     }
 
@@ -423,5 +423,4 @@ class PowerGridComponent extends Component
             ->fromCollection($this->columns(), $this->prepareToExport())
             ->download();
     }
-
 }

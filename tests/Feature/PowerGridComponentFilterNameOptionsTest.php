@@ -42,11 +42,6 @@ it('properly filters by "name is"', function () {
         ])
     ]);
 
-    $grid =  PowerGrid::eloquent($data)
-        ->addColumn('id')
-        ->addColumn('name')
-        ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name);
-
     $this->component->filters = [
         "input_text" => [
             "name" => "john"
