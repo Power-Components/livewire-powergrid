@@ -33,13 +33,13 @@
 
                         @if($column->hidden === false)
                             <th
-                                class="{{ ($column->header_class != '') ?? "" }}"
-                                style="@if($column->sortable === true)cursor:pointer;@endif{{( $column->header_style != '') ?? '' }}min-width: 50px;padding-left: 15px;
+                                class="{{ $column->header_class ?? '' }}"
+                                style="@if($column->sortable === true)cursor:pointer;@endif min-width: 50px;padding-left: 15px;
                                     text-transform: uppercase;
                                     font-size: 0.75rem;
                                     color: #6b6a6a;
                                     padding-top: 8px;
-                                    padding-bottom: 8px;"
+                                    padding-bottom: 8px;{{ $column->header_style ?? '' }}"
                             >
                                 <div>
                                     @if($column->sortable === true)
@@ -99,8 +99,8 @@
                             @endphp
 
                             @if($column->hidden === false)
-                                <td class="{{ ($column->body_class != '') ? $column->body_class: '' }}"
-                                    style="{{ ($column->body_style != '') ? $column->body_style: '' }}"
+                                <td class="{{ $column->body_class ?? '' }}"
+                                    style="{{ $column->body_style ?? '' }}"
                                 >
                                     @if($column->editable === true)
                                         <span class="d-flex justify-content-between">

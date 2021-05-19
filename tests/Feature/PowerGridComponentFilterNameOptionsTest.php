@@ -15,7 +15,6 @@ it('clean filters', function () {
             "name" => "pizza"
         ]
     ];
-
     $this->assertNotEmpty($this->component->filters);
 
     $this->component->clearFilter();

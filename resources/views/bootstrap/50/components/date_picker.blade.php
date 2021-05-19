@@ -18,8 +18,7 @@
                data-key="filters.date_picker.{!!$date['data_field'] !!}"
                wire:model="filters.input_date_picker.{!!$date['data_field'] !!}"
                wire:ignore
-               class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!!$date['field'] !!} form-control active
-                   {{ (isset($class) != '') ? $class :  '' }}"
+               class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!!$date['field'] !!} active {{ (isset($class) != '') ? $class :  '' }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
         >
@@ -28,14 +27,14 @@
         <!-- Power Grid Date Picker Scripts -->
         <script type="application/javascript">
             flatpickr(document.getElementsByClassName('range_input_{!!$date['field'] !!}'), {
-                    'mode': 'range',
-                    'defaultHour': 0,
+                    mode: 'range',
+                    defaultHour: 0,
                     ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
                     @if(isset($customConfig['only_future']))
-                    "minDate": "today",
+                    minDate: "today",
                     @endif
                         @if(isset($customConfig['no_weekends']) === true)
-                    "disable": [
+                    disable: [
                         function (date) {
                             return (date.getDay() === 0 || date.getDay() === 6);
                         }
