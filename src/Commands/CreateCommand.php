@@ -89,13 +89,13 @@ class CreateCommand extends Command
             exit;
         }
 
-        $livewire_path = 'Http/Livewire/';
-        $path          = app_path($livewire_path . $tableName . '.php');
+        $livewirePath  = 'Http/Livewire/';
+        $path          = app_path($livewirePath . $tableName . '.php');
 
         $filename  = Str::of($path)->basename();
-        $base_path = Str::of($path)->replace($filename, '');
+        $basePath  = Str::of($path)->replace($filename, '');
 
-        $saved_at = $livewire_path . $base_path->after($livewire_path);
+        $savedAt   = $livewirePath . $basePath->after($livewirePath);
 
         $component_name = Str::of($tableName)
             ->lower()
@@ -105,25 +105,27 @@ class CreateCommand extends Command
             ->prepend('<livewire:')
             ->append('/>');
 
-        File::ensureDirectoryExists($base_path);
+        File::ensureDirectoryExists($basePath);
 
         if (!File::exists($path) || $this->confirm('It seems <comment>' . $tableName . '</comment> already exists. Overwrite it?')) {
             File::put($path, $stub);
-            $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $saved_at . '</comment>].');
+            $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
             $this->info("\n⚡ Your PowerGrid can be now included with: <comment>" . $component_name . "</comment>\n");
         }
     }
 
     private function createFromFillable(string $modelName, string $modelLastName)
     {
-        $model        = new $modelName();
-        $stub         = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-        $getFillables = array_merge([$model->getKeyName()], $model->getFillable());
-        $getFillables = array_merge($getFillables, ['created_at', 'updated_at']);
+        $model          = new $modelName();
+        $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+        $getFillables   = array_merge([$model->getKeyName()], $model->getFillable());
+        $getFillables   = array_merge($getFillables, ['created_at', 'updated_at']);
 
-        $dataSource = "";
-        $columns    = "[\n";
+        $dataSource     = "";
+        $columns        = "[\n";
+
         foreach ($getFillables as $field) {
+
             if (!in_array($field, $model->getHidden())) {
                 $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
                     return ($info->Field === $field) ? $info->Type : '';

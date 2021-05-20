@@ -3,6 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Schema;
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
 class Model implements FilterInterface
@@ -178,6 +180,20 @@ class Model implements FilterInterface
             $end = str_replace($value['decimal'], '.', $end);
 
             $collection->whereBetween($field, [$start, $end]);
+        }
+    }
+
+    public static function filterContains($query, array $columns, string $search, string $table)
+    {
+        if ($search != '') {
+            $query->where(function ($query) use ($columns, $search, $table) {
+                foreach ($columns as $column) {
+                    $hasColumn = Schema::hasColumn($table, $column->field);
+                    if ($hasColumn) {
+                        $query->orWhere($column->field, 'like', '%' . $search . '%');
+                    }
+                }
+            });
         }
     }
 }

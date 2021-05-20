@@ -4,10 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class PublishCommand extends Command
 {

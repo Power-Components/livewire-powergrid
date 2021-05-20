@@ -41,17 +41,16 @@ class Collection implements FilterInterface
         ));
     }
 
-    public static function search($model, string $search, $columns )
+    public static function search($model, string $search, $columns)
     {
         if (!empty($search)) {
-            $model = $model->filter(function ( $row ) use ( $columns, $search ) {
+            $model = $model->filter(function ($row) use ($columns, $search) {
                 foreach ($columns as $column) {
                     $field = $column->field;
                     if (Str::contains(strtolower($row->$field), strtolower($search))) {
                         return false !== stristr($row->$field, strtolower($search));
                     }
                 }
-
                 return false;
             });
         }
@@ -220,6 +219,25 @@ class Collection implements FilterInterface
             $end = str_replace($value['decimal'], '.', $end);
 
             return $collection->whereBetween($field, [$start, $end]);
+        }
+
+        return $collection;
+    }
+
+    public static function filterContains($collection, array $columns, string $search)
+    {
+
+        if (!empty($search)) {
+            return $collection->filter(function ($row) use ($columns, $search) {
+                foreach ($columns as $column) {
+                    $field = $column->field;
+                    if (Str::contains(strtolower($row->{$field}), strtolower($search))) {
+                        return false !== stristr($row->{$field}, strtolower($search));
+                    }
+                }
+
+                return false;
+            });
         }
 
         return $collection;
