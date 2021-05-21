@@ -15,7 +15,10 @@
     "autoload": {
         "psr-4": {
             "PowerComponents\\LivewirePowerGrid\\": "src"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "extra": {
         "laravel": {

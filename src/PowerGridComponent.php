@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use App\Models\Dish;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -154,6 +156,7 @@ class PowerGridComponent extends Component
         $this->paginationTheme = config('livewire-powergrid.theme');
 
         $this->renderFilter();
+
     }
 
     /**
@@ -231,10 +234,7 @@ class PowerGridComponent extends Component
 
     private function renderView($data)
     {
-        $theme   = config('livewire-powergrid.theme');
-        $version = config('livewire-powergrid.theme_versions')[$theme];
-
-        return view('livewire-powergrid::' . $theme . '.' . $version . '.table', [
+        return view('livewire-powergrid::' . powerGridTheme() . '.' . powerGridThemeVersion() . '.table', [
             'data' => $data
         ]);
     }
@@ -261,8 +261,7 @@ class PowerGridComponent extends Component
             });
         }
 
-        $cache = config('livewire-powergrid.cached_data');
-        if ($cache) {
+        if (powerGridCache()) {
             return \cache()->rememberForever($this->id, function () use ($dataSource) {
                 if ($dataSource === null) {
                     return new BaseCollection($this->dataSource()->make());

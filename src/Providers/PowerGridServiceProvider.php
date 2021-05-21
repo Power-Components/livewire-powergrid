@@ -27,6 +27,11 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../../resources/config/livewire-powergrid.php', 'livewire-powergrid'
         );
+
+        $file = __DIR__ . '/../functions.php';
+        if (file_exists($file)) {
+            require_once($file);
+        }
     }
 
     private function loadViews()
@@ -56,6 +61,5 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/livewire-powergrid')
         ], 'livewire-powergrid-lang');
-
     }
 }
