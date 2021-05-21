@@ -190,7 +190,7 @@ class Collection implements FilterInterface
                 }
             }
             if (!$empty) {
-                $collection->whereIn($field, $values);
+                $collection = $collection->whereIn($field, $values);
             }
         }
 

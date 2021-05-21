@@ -55,9 +55,9 @@ class PowerGridComponent extends Component
 
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventChangeInput' => 'eventChangeInput',
-        'eventToggleChanged' => 'eventChangeInput',
-        'eventMultiSelect' => 'eventMultiSelect'
+        'eventChangeInput'     => 'eventChangeInput',
+        'eventToggleChanged'   => 'eventChangeInput',
+        'eventMultiSelect'     => 'eventMultiSelect'
     ];
 
     /**
@@ -100,9 +100,9 @@ class PowerGridComponent extends Component
      */
     public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
     {
-        $this->exportOption = true;
+        $this->exportOption   = true;
         $this->exportFileName = $fileName;
-        $this->exportType = $type;
+        $this->exportType     = $type;
 
         return $this;
     }
@@ -125,7 +125,7 @@ class PowerGridComponent extends Component
      */
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
-        $this->checkbox = true;
+        $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;
@@ -139,7 +139,7 @@ class PowerGridComponent extends Component
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
             $this->perPageInput = true;
-            $this->perPage = $perPage;
+            $this->perPage      = $perPage;
         }
 
         return $this;
@@ -171,8 +171,7 @@ class PowerGridComponent extends Component
             $dataSource = collect(cache()->get($this->id))->toArray();
         }
 
-        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource)) {
-
+        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class)) {
             $this->isCollection = true;
 
             $collection = $this->resolveCollection($dataSource);
@@ -185,31 +184,42 @@ class PowerGridComponent extends Component
 
             if ($collection->count()) {
                 $this->filtered = $collection->pluck('id')->toArray();
-                $data = Collection::paginate($collection, ($this->perPage == '0') ? $collection->count() : $this->perPage);
+                $data           = Collection::paginate($collection, ($this->perPage == '0') ? $collection->count() : $this->perPage);
+
+                if (is_a($this->addColumns(), PowerGrid::class)) {
+                    $data       = $data->setCollection(
+                        $data->getCollection()->transform(function ($row) {
+                            $columns = $this->addColumns()->columns;
+                            foreach ($columns as $key => $column) {
+                                $row->{$key} = $column($row);
+                            }
+
+                            return $row;
+                        })
+                    );
+                }
             }
-
         } else {
-
             $model = $this->resolveModel($dataSource);
 
             $table = $model->getModel()->getTable();
 
             $model = $model->where(function ($query) use ($table) {
-
                 Model::filterContains($query, $this->columns(), $this->search, $table);
                 Model::filter($this->filters, $query);
-
             })->orderBy($this->sortField, $this->sortDirection)
                 ->paginate($this->perPage);
 
-            $data = $model->setCollection($model->getCollection()->transform(function ($row) {
-                $columns = $this->addColumns()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
+            $data = $model->setCollection(
+                $model->getCollection()->transform(function ($row) {
+                    $columns = $this->addColumns()->columns;
+                    foreach ($columns as $key => $column) {
+                        $row->{$key} = $column($row);
+                    }
 
-                return $row;
-            }));
+                    return $row;
+                })
+            );
         }
 
         if (method_exists($this, 'initActions')) {
@@ -221,7 +231,7 @@ class PowerGridComponent extends Component
 
     private function renderView($data)
     {
-        $theme = config('livewire-powergrid.theme');
+        $theme   = config('livewire-powergrid.theme');
         $version = config('livewire-powergrid.theme_versions')[$theme];
 
         return view('livewire-powergrid::' . $theme . '.' . $version . '.table', [
@@ -259,6 +269,9 @@ class PowerGridComponent extends Component
                 }
                 if (is_array($dataSource)) {
                     return new BaseCollection($dataSource);
+                }
+                if (is_a($dataSource, BaseCollection::class)) {
+                    return $dataSource;
                 }
 
                 return new BaseCollection($dataSource->make());
@@ -317,7 +330,7 @@ class PowerGridComponent extends Component
         $updateMessages = [
             'success' => [
                 '_default_message' => __('Data has been updated successfully!'),
-                'status' => __('Custom Field updated successfully!'),
+                'status'           => __('Custom Field updated successfully!'),
             ],
             "error" => [
                 '_default_message' => __('Error updating the data.'),
@@ -346,21 +359,38 @@ class PowerGridComponent extends Component
 
         if ($this->isCollection) {
             if ($inClause) {
-                return $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+                $data = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+
+                if (is_a($this->addColumns(), PowerGrid::class)) {
+                    return $data->map(function ($row) {
+                        foreach ($this->addColumns()->columns as $key => $column) {
+                            $row->{$key} = $column($row);
+                        }
+                    });
+                } else {
+                    return $data;
+                }
             }
 
-            return $this->resolveCollection();
+            $data = $this->resolveCollection();
+
+            return $data->map(function ($row) {
+                foreach ($this->addColumns()->columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+            });
         }
 
         if ($inClause) {
-            return $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get()->transform(function ($row) {
-                $columns = $this->addColumns()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
+            return $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get()
+                ->transform(function ($row) {
+                    $columns = $this->addColumns()->columns;
+                    foreach ($columns as $key => $column) {
+                        $row->{$key} = $column($row);
+                    }
 
-                return $row;
-            });
+                    return $row;
+                });
         }
 
         return $this->resolveModel()->get()->transform(function ($row) {
@@ -380,7 +410,7 @@ class PowerGridComponent extends Component
     {
         return (new ExportToXLS())
             ->fileName($this->exportFileName)
-            ->fromCollection($this->columns(), $this->prepareToExport())
+            ->setData($this->columns(), $this->prepareToExport())
             ->download();
     }
 
@@ -391,7 +421,7 @@ class PowerGridComponent extends Component
     {
         return (new ExportToCsv())
             ->fileName($this->exportFileName)
-            ->fromCollection($this->columns(), $this->prepareToExport())
+            ->setData($this->columns(), $this->prepareToExport())
             ->download();
     }
 }

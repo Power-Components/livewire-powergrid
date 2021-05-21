@@ -9,7 +9,7 @@
 
 ## What is Livewire PowerGrid?
 
-[Livewire](https://laravel-livewire.com) PowerGrid is a component for  generating dynamic tables with your Laravel Models.
+[Livewire](https://laravel-livewire.com) PowerGrid is a component for  generating dynamic tables with your Laravel Models and Collections.
 
 
 ---
@@ -269,7 +269,7 @@ Example of usage:
 
 NOTE: In this version some things will change:
 
-dataSource can now receive an instance of an eloquent model or a collection treated with `PowerGrid::eloquent` within the method.
+dataSource can now receive an instance of an eloquent models or a collection treated with `PowerGrid::eloquent` within the method.
 
 a method has been added to work with column mutation.
 
@@ -297,16 +297,8 @@ public function dataSource() {
 ```php
 public function dataSource() {
 
-     $model = Product::query()->with('group')->get();
-    
-     return PowerGrid::eloquent($model)
-          ->addColumn('id')
-          ->addColumn('name')
-          ->addColumn('created_at')
-          ->addColumn('created_at_formatted', function(Product $product) {
-               return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-          })
-          ->make();
+     return Product::query()->with('group')->get();
+     
 }
 ```
 

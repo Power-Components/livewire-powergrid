@@ -9,7 +9,7 @@ class Export
 {
     public string $fileName;
 
-    public $collection;
+    public $data;
 
     public array $columns;
 
@@ -20,10 +20,10 @@ class Export
         return $this;
     }
 
-    public function fromCollection(array $columns, $collection): Export
+    public function setData(array $columns, $data): Export
     {
         $this->columns    = $columns;
-        $this->collection = collect($collection->toArray());
+        $this->data       = collect($data->toArray());
 
         return $this;
     }
@@ -31,11 +31,11 @@ class Export
     /**
      * @throws Exception
      */
-    public function prepare(Collection $collection, array $columns): array
+    public function prepare(Collection $data, array $columns): array
     {
         $header = collect();
 
-        $collection = $collection->map(function ($row) use ($columns, $header) {
+        $data   = $data->map(function ($row) use ($columns, $header) {
             $item = collect();
             collect($columns)->each(function ($column) use ($row, $header, $item) {
                 if ($column->hidden === false && $column->visible_in_export === true) {
@@ -55,7 +55,7 @@ class Export
 
         return [
             'headers' => $header->toArray(),
-            'rows'    => $collection->toArray()
+            'rows'    => $data->toArray()
         ];
     }
 }

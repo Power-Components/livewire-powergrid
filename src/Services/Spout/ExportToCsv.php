@@ -18,7 +18,7 @@ class ExportToCsv extends Export implements ExportInterface
 
     public function build()
     {
-        $data = $this->prepare($this->collection, $this->columns);
+        $data = $this->prepare($this->data, $this->columns);
 
         $writer = WriterEntityFactory::createCSVWriter();
         $writer->openToFile(storage_path($this->fileName . '.csv'));
