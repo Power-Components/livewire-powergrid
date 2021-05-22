@@ -11,17 +11,10 @@
                 @endif
             @endif
 
-            <div class="message pt-2">
-                @if (session()->has('success'))
-                    @include('livewire-powergrid::tailwind.2.alert.success')
-                @elseif (session()->has('error'))
-                    @include('livewire-powergrid::tailwind.2.alert.error')
-                @endif
-            </div>
+            @include('livewire-powergrid::tailwind.2.alert.message')
 
             @include('livewire-powergrid::tailwind.2.loading')
-            <div
-                class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
+            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                     <tr>
@@ -35,19 +28,19 @@
                                     <div class="align-content-between">
                                         @if($column->sortable === true)
                                             <span class="text-base pr-2">
-									@if ($sortField !== $column->field)
+									            @if ($sortField !== $column->field)
                                                     {!! $sortIcon !!}
                                                 @elseif ($sortDirection)
                                                     {!! $sortAscIcon !!}
                                                 @else
                                                     {!! $sortDescIcon !!}
                                                 @endif
-									</span>
+									        </span>
                                         @endif
                                         <span
-                                            @if($column->sortable === true) wire:click="sortBy('{{$column->field}}')" @endif>
-									{{$column->title}}
-									</span>
+                                        @if($column->sortable === true) wire:click="sortBy('{{$column->field}}')" @endif>
+                                        {{$column->title}}
+                                        </span>
                                         @include('livewire-powergrid::tailwind.2.clear_filter')
                                     </div>
                                 </th>
@@ -79,25 +72,14 @@
                                 @include('livewire-powergrid::tailwind.2.rows')
                                 @include('livewire-powergrid::tailwind.2.actions')
                             </tr>
-                            <tr class="child_{{ $row->id }} hidden">
-                            </tr>
                         @endforeach
                     @endif
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-    <div class="flex flex-row w-full flex justify-between pt-3 bg-white overflow-y-auto relative">
 
-        @include('livewire-powergrid::tailwind.2.per-page')
-        @if(filled($data))
-            <div class="">
-                @if(method_exists($data, 'links'))
-                    {!! $data->links('livewire-powergrid::tailwind.2.pagination', ['record_count' => $record_count]) !!}
-                @endif
-            </div>
-        @endif
-    </div>
+    @include('livewire-powergrid::tailwind.2.footer')
+
 </div>

@@ -2,8 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use App\Models\Dish;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -156,74 +154,13 @@ class PowerGridComponent extends Component
         $this->paginationTheme = config('livewire-powergrid.theme');
 
         $this->renderFilter();
-
     }
 
-    /**
-     * @throws \Exception
-     */
     public function render()
     {
-        $data = null;
-
         $this->columns = $this->columns();
 
-        if (!cache()->get($this->id)) {
-            $dataSource = $this->dataSource();
-        } else {
-            $dataSource = collect(cache()->get($this->id))->toArray();
-        }
-
-        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class)) {
-            $this->isCollection = true;
-
-            $collection = $this->resolveCollection($dataSource);
-
-            $collection = Collection::filterContains($collection, $this->columns(), $this->search);
-
-            $collection = Collection::filter($this->filters, $collection);
-
-            $collection = $this->applySorting($collection);
-
-            if ($collection->count()) {
-                $this->filtered = $collection->pluck('id')->toArray();
-                $data           = Collection::paginate($collection, ($this->perPage == '0') ? $collection->count() : $this->perPage);
-
-                if (is_a($this->addColumns(), PowerGrid::class)) {
-                    $data       = $data->setCollection(
-                        $data->getCollection()->transform(function ($row) {
-                            $columns = $this->addColumns()->columns;
-                            foreach ($columns as $key => $column) {
-                                $row->{$key} = $column($row);
-                            }
-
-                            return $row;
-                        })
-                    );
-                }
-            }
-        } else {
-            $model = $this->resolveModel($dataSource);
-
-            $table = $model->getModel()->getTable();
-
-            $model = $model->where(function ($query) use ($table) {
-                Model::filterContains($query, $this->columns(), $this->search, $table);
-                Model::filter($this->filters, $query);
-            })->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
-
-            $data = $model->setCollection(
-                $model->getCollection()->transform(function ($row) {
-                    $columns = $this->addColumns()->columns;
-                    foreach ($columns as $key => $column) {
-                        $row->{$key} = $column($row);
-                    }
-
-                    return $row;
-                })
-            );
-        }
+        $data          = $this->loadData();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -239,7 +176,7 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    public function resolveModel($dataSource = null)
+    private function resolveModel($dataSource = null)
     {
         if (blank($dataSource)) {
             return $this->dataSource();
@@ -248,10 +185,7 @@ class PowerGridComponent extends Component
         return $dataSource;
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function resolveCollection($dataSource = null, $cached = '')
+    private function resolveCollection($dataSource = null, $cached = '')
     {
         if (filled($cached)) {
             cache()->forget($this->id);
@@ -294,9 +228,8 @@ class PowerGridComponent extends Component
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
             if (is_array($this->dataSource)) {
-                $collection = $this->dataSource;
 
-                $cached = $collection->map(function ($row) use ($data) {
+                $cached = $this->dataSource->map(function ($row) use ($data) {
                     $field = $data['field'];
                     if ($row->id === $data['id']) {
                         $row->{$field} = $data['value'];
@@ -350,10 +283,10 @@ class PowerGridComponent extends Component
      */
     public function prepareToExport()
     {
+        $inClause = $this->filtered;
+
         if (filled($this->checkboxValues)) {
             $inClause = $this->checkboxValues;
-        } else {
-            $inClause = $this->filtered;
         }
 
         if ($this->isCollection) {
@@ -422,5 +355,70 @@ class PowerGridComponent extends Component
             ->fileName($this->exportFileName)
             ->setData($this->columns(), $this->prepareToExport())
             ->download();
+    }
+
+    private function loadData()
+    {
+        $data = null;
+
+        if (!cache()->get($this->id)) {
+            $dataSource = $this->dataSource();
+        } else {
+            $dataSource = collect(cache()->get($this->id))->toArray();
+        }
+
+        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class)) {
+            $this->isCollection = true;
+
+            $collection = $this->resolveCollection($dataSource);
+
+            $collection = Collection::filterContains($collection, $this->columns(), $this->search);
+
+            $collection = Collection::filter($this->filters, $collection);
+
+            $collection = $this->applySorting($collection);
+
+            if ($collection->count()) {
+                $this->filtered = $collection->pluck('id')->toArray();
+                $pageSize       = ($this->perPage == '0') ? $collection->count() : $this->perPage;
+                $data           = Collection::paginate($collection, $pageSize);
+
+                if (is_a($this->addColumns(), PowerGrid::class)) {
+                    $data       = $data->setCollection(
+                        $data->getCollection()->transform(function ($row) {
+                            $columns = $this->addColumns()->columns;
+                            foreach ($columns as $key => $column) {
+                                $row->{$key} = $column($row);
+                            }
+
+                            return $row;
+                        })
+                    );
+                }
+            }
+        } else {
+            $model = $this->resolveModel($dataSource);
+
+            $table = $model->getModel()->getTable();
+
+            $model = $model->where(function ($query) use ($table) {
+                Model::filterContains($query, $this->columns(), $this->search, $table);
+                Model::filter($this->filters, $query);
+            })->orderBy($this->sortField, $this->sortDirection)
+                ->paginate($this->perPage);
+
+            $data = $model->setCollection(
+                $model->getCollection()->transform(function ($row) {
+                    $columns = $this->addColumns()->columns;
+                    foreach ($columns as $key => $column) {
+                        $row->{$key} = $column($row);
+                    }
+
+                    return $row;
+                })
+            );
+        }
+
+        return $data;
     }
 }

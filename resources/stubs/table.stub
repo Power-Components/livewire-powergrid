@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire{{ subFolder }};
 
 use {{ modelName }};
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -22,7 +21,7 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function dataSource(): ?Builder
+    public function dataSource()
     {
         return {{ modelLastName }}::query()->get();
     }

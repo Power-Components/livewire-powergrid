@@ -131,24 +131,28 @@ class CreateCommand extends Command
                     return ($info->Field === $field) ? $info->Type : '';
                 }))->Type;
 
+                $title = Str::of($field)->replace('_', ' ')->upper();
+
                 if (in_array($type, ['timestamp', 'datetime'])) {
-                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                     $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
 
-                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->hidden(),' . "\n\n";
-                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '_formatted') . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
                 }
 
                 if ($type === 'tinyint(1)') {
                     $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                    $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
                 } else {
                     if ($type === 'int(11)') {
                         $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
                     } else {
-                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . Str::camel($field . '') . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+
+                        if (!in_array($type, ['timestamp', 'datetime'])) {
+                            $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                            $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                        }
+
                     }
                 }
             }
