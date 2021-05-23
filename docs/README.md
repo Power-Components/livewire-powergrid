@@ -505,7 +505,7 @@ Example of usage:
 
 Example of usage with modal component:
 
-You will need to install the component [Livewire UI Component](https://github.com/livewire-ui)  
+You will need to install the component [Livewire UI Component](https://github.com/livewire-ui/modal)  
 
 * the first argument is within the openModal method is the name of the modal component
   
