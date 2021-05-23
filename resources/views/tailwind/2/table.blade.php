@@ -15,6 +15,7 @@
 
             @include('livewire-powergrid::tailwind.2.loading')
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
+
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                     <tr>
@@ -66,6 +67,7 @@
                             </td>
                         </tr>
                     @else
+
                         @foreach($data as $row)
                             <tr class="border-b border-gray-200 hover:bg-gray-100" wire:key="{{ $row->id }}">
                                 @include('livewire-powergrid::tailwind.2.checkbox-row')

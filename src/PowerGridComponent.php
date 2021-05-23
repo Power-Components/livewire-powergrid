@@ -49,7 +49,7 @@ class PowerGridComponent extends Component
 
     public bool $isCollection = false;
 
-    protected string $paginationTheme = 'bootstrap';
+    protected string $paginationTheme = 'tailwind';
 
     protected $dataSource;
 
@@ -228,7 +228,6 @@ class PowerGridComponent extends Component
             session()->flash('success', $this->updateMessages('success', $data['field']));
 
             if (is_array($this->dataSource)) {
-
                 $cached = $this->dataSource->map(function ($row) use ($data) {
                     $field = $data['field'];
                     if ($row->id === $data['id']) {
