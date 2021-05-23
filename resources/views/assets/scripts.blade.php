@@ -1,12 +1,12 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
-@if(config('livewire-powergrid.theme') === 'bootstrap')
-    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
+@if(powerGridTheme() === BOOTSTRAP)
+<script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
 <script>
 
-    @if(config('livewire-powergrid.theme') === 'tailwind')
+    @if(powerGridTheme() === TAILWIND)
 
     function saveEditableInput(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
@@ -31,7 +31,7 @@
         return '<input value="' + value + '" class="block bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") >';
     }
 
-    @elseif(config('livewire-powergrid.theme') === 'bootstrap')
+    @elseif(powerGridTheme() === 'bootstrap')
 
     $(function () {
         $('.livewire_powergrid_select').selectpicker();
@@ -84,8 +84,8 @@
     }
 </script>
 
-@if(config('livewire-powergrid.js_framework') === 'alpinejs')
-    <script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
+@if(powerGridJsFramework() === JS_FRAMEWORK_ALPINE)
+<script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
 @endif
 
 @stack('powergrid_scripts')

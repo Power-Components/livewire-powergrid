@@ -29,12 +29,42 @@ class {{ componentName }} extends PowerGridComponent
 
     public function addColumns(): ?PowerGrid
     {
-        return PowerGrid::eloquent(){{ dataSource }};
+        return PowerGrid::eloquent()
+            ->addColumn('id')
+            ->addColumn('name')
+            ->addColumn('created_at')
+            ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
+                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
+            });
     }
 
     public function columns(): array
     {
-        return {{ columns }};
+        return [
+            Column::add()
+                ->title(__('ID'))
+                ->field('id')
+                ->searchable()
+                ->sortable(),
+
+            Column::add()
+                ->title(__('Name'))
+                ->field('name')
+                ->searchable()
+                ->makeInputText('name')
+                ->sortable(),
+
+            Column::add()
+                ->title(__('Created at'))
+                ->field('created_at')
+                ->hidden(),
+
+            Column::add()
+                ->title(__('Created at'))
+                ->field('created_at_formatted')
+                ->makeInputDatePicker('created_at')
+                ->searchable()
+        ];
     }
 
     /*
@@ -74,6 +104,15 @@ class {{ componentName }} extends PowerGridComponent
     /*
     public function update(array $data ): bool
     {
+       // filter example with symbols
+       // if ($data['field'] == 'price_BRL') {
+       //       $data['field'] = 'price';
+       //       $data['value'] = Str::of($data['value'])
+       //           ->replace('.', '')
+       //           ->replace(',', '.')
+       //           ->replaceMatches('/[^Z0-9\.]/', '');
+       //}
+
        try {
            $updated = {{ modelLastName }}::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
@@ -100,4 +139,6 @@ class {{ componentName }} extends PowerGridComponent
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
+
+
 }

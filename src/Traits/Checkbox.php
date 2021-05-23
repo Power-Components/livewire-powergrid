@@ -1,48 +1,35 @@
 <?php
 
-
 namespace PowerComponents\LivewirePowerGrid\Traits;
-
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 trait Checkbox
 {
-
-    /**
-     * @var bool
-     */
     public bool $checkbox = false;
-    /**
-     * @var bool
-     */
-    public bool $checkbox_all = false;
-    /**
-     * @var array
-     */
-    public array $checkbox_values = [];
-    /**
-     * @var string
-     */
-    public string $checkbox_attribute;
+
+    public bool $checkboxAll = false;
+
+    public array $checkboxValues = [];
+
+    public string $checkboxAttribute;
+
 
     /**
-     * @param string $attribute
-     * @return PowerGridComponent
+     * @throws \Exception
      */
-    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
+    public function selectCheckboxAll()
     {
-        $this->checkbox = true;
-        $this->checkbox_attribute = $attribute;
-        return $this;
-    }
+        $this->checkboxValues = [];
 
-    public function updatedCheckboxAll()
-    {
-        $this->checkbox_values = [];
-
-        if ($this->checkbox_all) {
-            $this->collection()->each(fn( $model) => $this->checkbox_values[] = (string)$model->{$this->checkbox_attribute});
+        if ($this->checkboxAll) {
+            if ($this->isCollection) {
+                $this->resolveCollection()->each(function($model) {
+                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+                });
+            } else {
+                $this->resolveModel()->each(function($model) {
+                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+                });
+            }
         }
     }
-
 }

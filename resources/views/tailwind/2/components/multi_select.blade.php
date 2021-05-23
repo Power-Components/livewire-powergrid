@@ -110,15 +110,18 @@
                     this.options[index].selected = true;
                     this.options[index].element = event.target;
                     this.selected.push(index);
+                    this.show = false
                     window.livewire.emit('eventMultiSelect', {
                         id: '{!! $multi_select['relation_id'] !!}',
                         values: this.selectedValues()
                     });
-                    console.log(index)
+
                 } else {
                     this.selected.splice(this.selected.lastIndexOf(index), 1);
                     this.options[index].selected = false
+                    this.show = false
                 }
+
             },
             remove(index, option) {
                 this.options[option].selected = false;
@@ -150,7 +153,7 @@
 
 <label for="select" class="hidden"></label>
 <select class="hidden" x-cloak id="select_{!! $column->field !!}" id="input_{!! $multi_select['relation_id'] !!}"
-        wire:model="filters.multi_select.{!! $multi_select['relation_id'] !!}">
+        wire:model.lazy="filters.multi_select.{!! $multi_select['relation_id'] !!}">
     <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
     @foreach($multi_select['data_source'] as $relation)
         <option value="{{ $relation['id'] }}">{{ $relation[$multi_select['display_field']] }}</option>

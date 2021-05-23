@@ -2,9 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\TestCase;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 
 class PowerGridTest extends TestCase
@@ -14,7 +14,7 @@ class PowerGridTest extends TestCase
     {
         $collection = new Collection([
             new ModelStub([
-                'id' => '1',
+                'id'   => '1',
                 'name' => 'Mateus'
             ])
         ]);
@@ -24,18 +24,18 @@ class PowerGridTest extends TestCase
                         ->addColumn('name');
 
         $this->assertEquals([
-                (object) [
-                    'id' => 1,
-                    'name' => 'Mateus'
-                ]
-            ], $grid->make());
+            (object)[
+                'id'   => 1,
+                'name' => 'Mateus'
+            ]
+        ], $grid->make());
     }
 
     /** @test */
     public function it_returns_relationships_properly()
     {
         $stub = new ModelStub([
-            'id' => '1',
+            'id'   => '1',
             'name' => 'Mateus'
         ]);
 
@@ -49,12 +49,12 @@ class PowerGridTest extends TestCase
                         ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name);
 
         $this->assertEquals([
-                (object) [
-                    'id' => 1,
-                    'name' => 'Mateus',
-                    'my_arbitrary_name' => 'Parent'
-                ]
-            ], $grid->make());
+            (object)[
+                'id'                => 1,
+                'name'              => 'Mateus',
+                'my_arbitrary_name' => 'Parent'
+            ]
+        ], $grid->make());
     }
 }
 
@@ -67,7 +67,6 @@ class ModelStub extends Model
         return $this->belongsTo(ParentStub::class);
     }
 }
-
 
 class ParentStub extends Model
 {

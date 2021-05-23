@@ -21,28 +21,28 @@
                                 ])
                             </div>
                         @endforeach
-                @endif
-                @if(isset($make_filters['select']))
-                    @foreach($make_filters['select'] as $field => $select)
-                        <div class="flex flex-col mb-4 md:w-1/4">
-                            @include('livewire-powergrid::tailwind.2.components.select', [
-                                'inline' => false,
-                                'class_attr' => 'w-full'
-                            ])
-                        </div>
-                    @endforeach
-                @endif
-                @if(isset($make_filters['number']))
-                    @foreach($make_filters['number'] as $field => $number)
-                        <div class="flex flex-col mb-4 md:w-1/4">
-                            @include('livewire-powergrid::tailwind.2.components.number', [
-                                'inline' => false,
-                                'class_attr' => 'w-full'
-                            ])
-                        </div>
-                    @endforeach
-                @endif
-            </div>
+                    @endif
+                    @if(isset($make_filters['select']))
+                        @foreach($make_filters['select'] as $field => $select)
+                            <div class="flex flex-col mb-4 md:w-1/4">
+                                @include('livewire-powergrid::tailwind.2.components.select', [
+                                    'inline' => false,
+                                    'class_attr' => 'w-full'
+                                ])
+                            </div>
+                        @endforeach
+                    @endif
+                    @if(isset($make_filters['number']))
+                        @foreach($make_filters['number'] as $field => $number)
+                            <div class="flex flex-col mb-4 md:w-1/4">
+                                @include('livewire-powergrid::tailwind.2.components.number', [
+                                    'inline' => false,
+                                    'class_attr' => 'w-full'
+                                ])
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
             </div>
         </div>
     </div>

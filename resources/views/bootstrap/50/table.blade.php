@@ -12,13 +12,7 @@
             @endif
         @endif
 
-        <div class="message" style="margin: 10px 0 10px;">
-            @if (session()->has('success'))
-                @include('livewire-powergrid::bootstrap.50.alert.success')
-            @elseif (session()->has('error'))
-                @include('livewire-powergrid::bootstrap.50.alert.success')
-            @endif
-        </div>
+        @include('livewire-powergrid::bootstrap.50.alert.message')
 
         <div class="table-responsive col-md-12" style="margin: 10px 0 10px;">
 
@@ -32,21 +26,18 @@
                     @foreach($columns as $column)
 
                         @if($column->hidden === false)
-                            <th
-                                class="{{ ($column->header_class != '') ?? "" }}"
-                                style="@if($column->sortable === true)cursor:pointer;@endif{{( $column->header_style != '') ?? '' }}min-width: 50px;padding-left: 15px;
+                            <th class="{{ $column->header_class ?? '' }}" style="@if($column->sortable === true)cursor:pointer;@endif min-width: 50px;padding-left: 15px;
                                     text-transform: uppercase;
                                     font-size: 0.75rem;
                                     color: #6b6a6a;
                                     padding-top: 8px;
-                                    padding-bottom: 8px;"
-                            >
+                                    padding-bottom: 8px;{{ $column->header_style ?? '' }}">
                                 <div>
                                     @if($column->sortable === true)
                                         <span class="text-base">
-                                                @if ($orderBy !== $column->field)
+                                            @if ($sortField !== $column->field)
                                                 {!! $sortIcon !!}
-                                            @elseif ($orderAsc)
+                                            @elseif ($sortDirection)
                                                 {!! $sortAscIcon !!}
                                             @else
                                                 {!! $sortDescIcon !!}
@@ -54,7 +45,7 @@
                                             </span>
                                     @endif
 
-                                    <span @if($column->sortable === true) wire:click="setOrder('{{$column->field}}')"
+                                    <span @if($column->sortable === true) wire:click="sortBy('{{$column->field}}')"
                                             @endif>
                                            {{$column->title}}
                                     </span>
@@ -78,75 +69,16 @@
 
                 @if(count($data) === 0)
                     <tr class="border-b border-gray-200 hover:bg-gray-100 ">
-                        <td class="text-center" colspan="{{ (($checkbox) ? 1:0)
-                                        + ((isset($actionBtns)) ? 1: 0)
-                                        + (count($columns))
-                                    }}">
+                        <td class="text-center" colspan="{{ (($checkbox) ? 1:0) + ((isset($actionBtns)) ? 1: 0) + (count($columns)) }}">
                             <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
                         </td>
                     </tr>
                 @endif
 
                 @foreach($data as $row)
-
                     <tr class="border-b border-gray-200 hover:bg-gray-100 " wire:key="{{ $row->id }}">
-
                         @include('livewire-powergrid::bootstrap.50.checkbox-row')
-
-                        @foreach($columns as $column)
-                            @php
-                                $field = $column->field;
-                            @endphp
-
-                            @if($column->hidden === false)
-                                <td class="{{ ($column->body_class != '') ? $column->body_class: '' }}"
-                                    style="{{ ($column->body_style != '') ? $column->body_style: '' }}"
-                                >
-                                    @if($column->editable === true)
-                                        <span class="d-flex justify-content-between">
-                                            <div>
-                                                @include('livewire-powergrid::bootstrap.50.components.editable')
-                                            </div>
-                                            <div>
-                                                @if(count($column->click_to_copy) > 0)
-                                                    @if($column->click_to_copy['enabled'])
-                                                        <button
-                                                            style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
-                                                            onclick="copyToClipboard(this)" value="copy"
-                                                            class="img_copy"
-                                                            data-value="{{ $row->$field }}"
-                                                            title="{{ $column->click_to_copy['label'] }}"></button>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                        </span>
-                                    @elseif(count($column->toggleable))
-                                        @include('livewire-powergrid::bootstrap.50.components.toggleable')
-                                    @else
-                                        <span class="d-flex justify-content-between">
-                                            <div>
-                                                {!! $row->$field !!}
-                                            </div>
-                                            <div>
-                                                @if(count($column->click_to_copy))
-                                                    @if($column->click_to_copy['enabled'])
-                                                        <button
-                                                            style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
-                                                            onclick="copyToClipboard(this)" value="copy"
-                                                            class="img_copy"
-                                                            data-value="{{ $row->$field }}"
-                                                            title="{{ $column->click_to_copy['label'] }}"></button>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                        </span>
-                                    @endif
-                                </td>
-
-                            @endif
-
-                        @endforeach
-
+                        @include('livewire-powergrid::bootstrap.50.rows')
                         @include('livewire-powergrid::bootstrap.50.actions')
                     </tr>
                 @endforeach
@@ -154,43 +86,11 @@
                 </tbody>
             </table>
 
-            @if(!is_array($data))
-                <div class="d-flex justify-content-between">
-                    <div class="d-flex justify-content-center">
-                        <div>
-                            <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
-                                @if($perPage_input)
-                                    <select wire:model="perPage"
-                                            class="livewire_powergrid_select dropdown bootstrap-select form-control"
-                                            style="width: 110px;">
-                                        @foreach($perPageValues as $value)
-                                            <option value="{{$value}}"> @if($value == 0)
-                                                    {{ trans('livewire-powergrid::datatable.labels.all') }} @else {{ $value }} @endif</option>
-                                        @endforeach
-                                    </select>
-                                @endif
-                            </label>
-                        </div>
-                        <span
-                            style="padding-top: 8px;padding-left: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</span>
-                    </div>
-                    <div>
-                        @if(method_exists($data, 'links'))
-                            {!! $data->links() !!}
-                        @endif
-                    </div>
-                </div>
-            @endif
+            @include('livewire-powergrid::bootstrap.50.footer')
 
         </div>
     </div>
 
-</div>
-<div class="spinner" style="position: absolute;
-    width: 50px;
-    z-index: 99;
-    left: 50%;
-    top: 50%;">
 </div>
 
 

@@ -1,23 +1,30 @@
 <?php
 
-
 namespace PowerComponents\LivewirePowerGrid;
 
 class Button
 {
-
     public string $action = '';
+
     public string $caption = '';
+
     public string $route = '';
+
     public array $param = [];
+
     public string $class = '';
+
     public array $i = [];
+
     public string $method = 'get';
+
+    public string $view = '';
+
     /**
      * Button constructor.
      * @param string $action
      */
-    public function __construct( string $action )
+    public function __construct(string $action)
     {
         $this->action = $action;
     }
@@ -26,7 +33,7 @@ class Button
      * @param string|null $action
      * @return Button
      */
-    public static function add( string $action = null ): Button
+    public static function add(string $action = null): Button
     {
         return new static($action);
     }
@@ -36,9 +43,10 @@ class Button
      * @param string $caption
      * @return $this
      */
-    public function caption( string $caption ): Button
+    public function caption(string $caption): Button
     {
         $this->caption = $caption;
+
         return $this;
     }
 
@@ -47,10 +55,11 @@ class Button
      * @param array $param
      * @return $this
      */
-    public function route( string $route, array $param ): Button
+    public function route(string $route, array $param): Button
     {
         $this->route = $route;
         $this->param = $param;
+
         return $this;
     }
 
@@ -59,9 +68,10 @@ class Button
      * @param string $class_attr
      * @return $this
      */
-    public function class( string $class_attr ): Button
+    public function class(string $class_attr): Button
     {
         $this->class = $class_attr;
+
         return $this;
     }
 
@@ -71,13 +81,14 @@ class Button
      * @param bool $showCaption when false it will not display the caption
      * @return $this
      */
-    public function i( string $class, string $text, bool $showCaption = false ): Button
+    public function i(string $class, string $text, bool $showCaption = false): Button
     {
         $this->i = [
-            'class' => $class,
-            'text' => $text,
+            'class'   => $class,
+            'text'    => $text,
             'caption' => $showCaption
         ];
+
         return $this;
     }
 
@@ -86,9 +97,26 @@ class Button
      * @param string $method
      * @return $this
      */
-    public function method( string $method): Button
+    public function method(string $method): Button
     {
         $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * openModal
+     * @param string $component modal component
+     * @param array $param modal parameters
+     * @return $this
+     */
+    public function openModal(string $component, array $param): Button
+    {
+        $this->view   = $component;
+        $this->param  = $param;
+        $this->method = 'get';
+        $this->route  = '';
+
         return $this;
     }
 }
