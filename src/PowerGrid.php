@@ -2,54 +2,19 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Facade;
 
-class PowerGrid
+/**
+ * @method static PowerGridEloquent eloquent($collection=[])
+ * @method static PowerGridEloquent collection()
+ * createFromModel
+ *
+ * @see \PowerComponents\LivewirePowerGrid\PowerGridManager
+ */
+class PowerGrid extends Facade
 {
-    protected $collection;
-
-    public array $columns = [];
-
-    public function __construct($collection)
+    public static function getFacadeAccessor()
     {
-        $this->collection = $collection;
-    }
-
-    /**
-     * @param $collection
-     * @return PowerGrid
-     */
-    public static function eloquent($collection=null): PowerGrid
-    {
-        return new static($collection);
-    }
-
-    /**
-     * @param string $field
-     * @param \Closure|null $closure
-     * @return $this
-     */
-    public function addColumn(string $field, \Closure $closure = null): PowerGrid
-    {
-        $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function make()
-    {
-        if (is_a($this->collection, Collection::class)) {
-            return $this->collection->map(function (Model $model) {
-                // We need to generate a set of columns, which are already registered in the object, based on the model.
-                // To do this we iterate through each column and then resolve the closure.
-                return (object)collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
-                    return [$columnName => $closure($model)];
-                })->toArray();
-            })->toArray();
-        }
+        return 'powergrid';
     }
 }

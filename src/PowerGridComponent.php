@@ -197,9 +197,6 @@ class PowerGridComponent extends Component
 
         if (powerGridCache()) {
             return \cache()->rememberForever($this->id, function () use ($dataSource) {
-                if ($dataSource === null) {
-                    return new BaseCollection($this->dataSource()->make());
-                }
                 if (is_array($dataSource)) {
                     return new BaseCollection($dataSource);
                 }
@@ -290,48 +287,20 @@ class PowerGridComponent extends Component
 
         if ($this->isCollection) {
             if ($inClause) {
-                $data = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
-
-                if (is_a($this->addColumns(), PowerGrid::class)) {
-                    return $data->map(function ($row) {
-                        foreach ($this->addColumns()->columns as $key => $column) {
-                            $row->{$key} = $column($row);
-                        }
-                    });
-                } else {
-                    return $data;
-                }
+                $results = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+                return $this->transform($results);
             }
 
-            $data = $this->resolveCollection();
-
-            return $data->map(function ($row) {
-                foreach ($this->addColumns()->columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
-            });
+            return $this->transform($this->resolveCollection());
         }
 
         if ($inClause) {
-            return $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get()
-                ->transform(function ($row) {
-                    $columns = $this->addColumns()->columns;
-                    foreach ($columns as $key => $column) {
-                        $row->{$key} = $column($row);
-                    }
-
-                    return $row;
-                });
+            $results = $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get();
+            return $this->transform($results);
         }
 
-        return $this->resolveModel()->get()->transform(function ($row) {
-            $columns = $this->addColumns()->columns;
-            foreach ($columns as $key => $column) {
-                $row->{$key} = $column($row);
-            }
-
-            return $row;
-        });
+        $results = $this->resolveModel()->get();
+        return $this->transform($results);
     }
 
     /**
@@ -358,66 +327,65 @@ class PowerGridComponent extends Component
 
     private function loadData()
     {
-        $data = null;
-
-        if (!cache()->get($this->id)) {
-            $dataSource = $this->dataSource();
-        } else {
+        if (cache()->has($this->id)) {
             $dataSource = collect(cache()->get($this->id))->toArray();
+        } else {
+            $dataSource = $this->dataSource();
         }
 
-        if (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class)) {
+        $isCollection = $this->instanceOfCollection($dataSource);
+
+        if ($isCollection) {
             $this->isCollection = true;
 
-            $collection = $this->resolveCollection($dataSource);
+            $filters    = Collection::filterContains($this->resolveCollection($dataSource), $this->columns(), $this->search);
+            $filters    = Collection::filter($this->filters, $filters);
 
-            $collection = Collection::filterContains($collection, $this->columns(), $this->search);
+            $results    = $this->applySorting($filters);
 
-            $collection = Collection::filter($this->filters, $collection);
+            if ($results->count()) {
+                $this->filtered = $results->pluck('id')->toArray();
 
-            $collection = $this->applySorting($collection);
+                $paginate      = Collection::paginate($results, $this->perPage);
 
-            if ($collection->count()) {
-                $this->filtered = $collection->pluck('id')->toArray();
-                $pageSize       = ($this->perPage == '0') ? $collection->count() : $this->perPage;
-                $data           = Collection::paginate($collection, $pageSize);
-
-                if (is_a($this->addColumns(), PowerGrid::class)) {
-                    $data       = $data->setCollection(
-                        $data->getCollection()->transform(function ($row) {
-                            $columns = $this->addColumns()->columns;
-                            foreach ($columns as $key => $column) {
-                                $row->{$key} = $column($row);
-                            }
-
-                            return $row;
-                        })
-                    );
+                if (is_a($this->addColumns(), PowerGridCollection::class)) {
+                    $results       = $paginate->setCollection($this->transform($paginate->getCollection()));
                 }
             }
         } else {
-            $model = $this->resolveModel($dataSource);
+            $model   = $this->resolveModel($dataSource);
+            $table   = $model->getModel()->getTable();
 
-            $table = $model->getModel()->getTable();
-
-            $model = $model->where(function ($query) use ($table) {
+            $results = $model->where(function ($query) use ($table) {
                 Model::filterContains($query, $this->columns(), $this->search, $table);
                 Model::filter($this->filters, $query);
             })->orderBy($this->sortField, $this->sortDirection)
                 ->paginate($this->perPage);
 
-            $data = $model->setCollection(
-                $model->getCollection()->transform(function ($row) {
-                    $columns = $this->addColumns()->columns;
-                    foreach ($columns as $key => $column) {
-                        $row->{$key} = $column($row);
-                    }
-
-                    return $row;
-                })
-            );
+            $results = $results->setCollection($this->transform($results->getCollection()));
         }
 
-        return $data;
+        return $results;
+    }
+
+    private function instanceOfCollection($dataSource): bool
+    {
+        return (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class));
+    }
+
+    private function transform($results)
+    {
+        if (is_a($this->addColumns(), PowerGridCollection::class) || is_a($this->addColumns(), PowerGridEloquent::class)) {
+            return $results->transform(function ($row) {
+                $row = (object)$row;
+                $columns = $this->addColumns()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+
+                return $row;
+            });
+        }
+        return $results;
     }
 }

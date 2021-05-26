@@ -14,7 +14,8 @@ class Collection implements FilterInterface
 {
     public static function paginate( BaseCollection $results, $pageSize ): LengthAwarePaginator
     {
-        $page = Paginator::resolveCurrentPage('page');
+        $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
+        $page     = Paginator::resolveCurrentPage('page');
 
         $total = $results->count();
 
@@ -51,6 +52,7 @@ class Collection implements FilterInterface
                         return false !== stristr($row->$field, strtolower($search));
                     }
                 }
+
                 return false;
             });
         }
@@ -226,7 +228,6 @@ class Collection implements FilterInterface
 
     public static function filterContains($collection, array $columns, string $search)
     {
-
         if (!empty($search)) {
             return $collection->filter(function ($row) use ($columns, $search) {
                 foreach ($columns as $column) {

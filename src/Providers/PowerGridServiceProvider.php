@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
 use PowerComponents\LivewirePowerGrid\Commands\PublishCommand;
+use PowerComponents\LivewirePowerGrid\PowerGridManager;
 
 class PowerGridServiceProvider extends ServiceProvider
 {
@@ -32,6 +33,8 @@ class PowerGridServiceProvider extends ServiceProvider
         if (file_exists($file)) {
             require_once($file);
         }
+
+        $this->app->alias(PowerGridManager::class, 'powergrid');
     }
 
     private function loadViews()
