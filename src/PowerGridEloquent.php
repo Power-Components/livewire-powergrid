@@ -20,7 +20,7 @@ class PowerGridEloquent
      * @param $collection
      * @return PowerGridEloquent
      */
-    public static function eloquent($collection=null): PowerGridEloquent
+    public static function eloquent($collection = null): PowerGridEloquent
     {
         return new static($collection);
     }
@@ -42,14 +42,16 @@ class PowerGridEloquent
      */
     public function make()
     {
-        if (is_a($this->collection, Collection::class)) {
-            return $this->collection->map(function (Model $model) {
-                // We need to generate a set of columns, which are already registered in the object, based on the model.
-                // To do this we iterate through each column and then resolve the closure.
-                return (object)collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
-                    return [$columnName => $closure($model)];
-                })->toArray();
-            })->toArray();
+        if (!is_a($this->collection, Collection::class)) {
+            return;
         }
+
+        return $this->collection->map(function (Model $model) {
+            // We need to generate a set of columns, which are already registered in the object, based on the model.
+            // To do this we iterate through each column and then resolve the closure.
+            return (object)collect($this->columns)->mapWithKeys(function ($closure, $columnName) use ($model) {
+                return [$columnName => $closure($model)];
+            })->toArray();
+        })->toArray();
     }
 }

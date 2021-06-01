@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 
 class PublishCommand extends Command
 {
-    protected $signature = 'powergrid:publish';
+    protected $signature = 'powergrid:publish {--force=}';
 
     protected $description = 'Make a new PowerGrid table component.';
 
