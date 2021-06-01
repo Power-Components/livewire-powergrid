@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
 class Collection implements FilterInterface
 {
-    public static function paginate( BaseCollection $results, $pageSize ): LengthAwarePaginator
+    public static function paginate(BaseCollection $results, $pageSize): LengthAwarePaginator
     {
         $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
         $page     = Paginator::resolveCurrentPage('page');
@@ -35,68 +35,72 @@ class Collection implements FilterInterface
      * @param array $options
      * @return LengthAwarePaginator
      */
-    protected static function paginator( $items, $total, $perPage, $currentPage, $options ): LengthAwarePaginator
+    protected static function paginator($items, $total, $perPage, $currentPage, $options): LengthAwarePaginator
     {
         return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
-            'items', 'total', 'perPage', 'currentPage', 'options'
+            'items',
+            'total',
+            'perPage',
+            'currentPage',
+            'options'
         ));
     }
 
     public static function search($model, string $search, $columns)
     {
-        if (!empty($search)) {
-            $model = $model->filter(function ($row) use ($columns, $search) {
-                foreach ($columns as $column) {
-                    $field = $column->field;
-                    if (Str::contains(strtolower($row->$field), strtolower($search))) {
-                        return false !== stristr($row->$field, strtolower($search));
-                    }
-                }
-
-                return false;
-            });
+        if (empty($search)) {
+            return $model;
         }
 
-        return $model;
+        return $model->filter(function ($row) use ($columns, $search) {
+            foreach ($columns as $column) {
+                $field = $column->field;
+                if (Str::contains(strtolower($row->$field), strtolower($search))) {
+                    return false !== stristr($row->$field, strtolower($search));
+                }
+            }
+
+            return false;
+        });
     }
 
     public static function filter($filters, $query)
     {
-        if (count($filters)) {
-            foreach ($filters as $key => $type) {
-                foreach ($type as $field => $value) {
-                    if (filled($value)) {
-                        switch ($key) {
-                            case 'date_picker':
-                                $query = self::filterDatePicker($query, $field, $value);
+        if (count($filters) === 0) {
+            return $query;
+        }
+        foreach ($filters as $key => $type) {
+            foreach ($type as $field => $value) {
+                if (!filled($value)) {
+                    continue;
+                }
+                switch ($key) {
+                    case 'date_picker':
+                        $query = self::filterDatePicker($query, $field, $value);
 
-                                break;
-                            case 'multi_select':
-                                $query = self::filterMultiSelect($query, $field, $value);
+                        break;
+                    case 'multi_select':
+                        $query = self::filterMultiSelect($query, $field, $value);
 
-                                break;
-                            case 'select':
-                                $query = self::filterSelect($query, $field, $value);
+                        break;
+                    case 'select':
+                        $query = self::filterSelect($query, $field, $value);
 
-                                break;
-                            case 'boolean':
-                                $query = self::filterBoolean($query, $field, $value);
+                        break;
+                    case 'boolean':
+                        $query = self::filterBoolean($query, $field, $value);
 
-                                break;
-                            case 'input_text':
-                                $query = self::filterInputText($query, $field, $value, $filters);
+                        break;
+                    case 'input_text':
+                        $query = self::filterInputText($query, $field, $value, $filters);
 
-                                break;
-                            case 'number':
-                                $query = self::filterNumber($query, $field, $value);
+                        break;
+                    case 'number':
+                        $query = self::filterNumber($query, $field, $value);
 
-                                break;
-                        }
-                    }
+                        break;
                 }
             }
-
-            return $query;
         }
 
         return $query;
@@ -120,8 +124,10 @@ class Collection implements FilterInterface
      */
     private static function validateInputTextOptions(string $field, $filters): bool
     {
-        return isset($filters['input_text_options'][$field]) && in_array(strtolower($filters['input_text_options'][$field]),
-                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
+        return isset($filters['input_text_options'][$field]) && in_array(
+            strtolower($filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     public static function filterInputText($collection, string $field, $value, $filters)
@@ -185,15 +191,16 @@ class Collection implements FilterInterface
     {
         $empty  = false;
         $values = collect($value)->get('values');
-        if (count($values)) {
-            foreach ($values as $value) {
-                if ($value === '') {
-                    $empty = true;
-                }
+        if (count($values) === 0) {
+            return $collection;
+        }
+        foreach ($values as $value) {
+            if ($value === '') {
+                $empty = true;
             }
-            if (!$empty) {
-                $collection = $collection->whereIn($field, $values);
-            }
+        }
+        if (!$empty) {
+            $collection = $collection->whereIn($field, $values);
         }
 
         return $collection;
@@ -228,19 +235,19 @@ class Collection implements FilterInterface
 
     public static function filterContains($collection, array $columns, string $search)
     {
-        if (!empty($search)) {
-            return $collection->filter(function ($row) use ($columns, $search) {
-                foreach ($columns as $column) {
-                    $field = $column->field;
-                    if (Str::contains(strtolower($row->{$field}), strtolower($search))) {
-                        return false !== stristr($row->{$field}, strtolower($search));
-                    }
-                }
-
-                return false;
-            });
+        if (empty($search)) {
+            return $collection;
         }
 
-        return $collection;
+        return $collection->filter(function ($row) use ($columns, $search) {
+            foreach ($columns as $column) {
+                $field = $column->field;
+                if (Str::contains(strtolower($row->{$field}), strtolower($search))) {
+                    return false !== stristr($row->{$field}, strtolower($search));
+                }
+            }
+
+            return false;
+        });
     }
 }

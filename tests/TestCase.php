@@ -6,7 +6,6 @@ use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
-
     protected function getPackageProviders($app)
     {
 
@@ -14,5 +13,4 @@ class TestCase extends \Orchestra\Testbench\TestCase
             PowerGridServiceProvider::class
         ];
     }
-
 }

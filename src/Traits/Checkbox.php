@@ -12,7 +12,6 @@ trait Checkbox
 
     public string $checkboxAttribute;
 
-
     /**
      * @throws \Exception
      */
@@ -20,16 +19,18 @@ trait Checkbox
     {
         $this->checkboxValues = [];
 
-        if ($this->checkboxAll) {
-            if ($this->isCollection) {
-                $this->resolveCollection()->each(function($model) {
-                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
-                });
-            } else {
-                $this->resolveModel()->each(function($model) {
-                    $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
-                });
-            }
+        if (!$this->checkboxAll) {
+            return;
         }
+        if ($this->isCollection) {
+            $this->resolveCollection()->each(function ($model) {
+                $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+            });
+
+            return;
+        }
+        $this->resolveModel()->each(function ($model) {
+            $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
+        });
     }
 }

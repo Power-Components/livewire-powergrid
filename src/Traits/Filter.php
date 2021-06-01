@@ -29,13 +29,14 @@ trait Filter
         $make_filters  = [];
 
         foreach ($this->columns as $column) {
-            if (isset($column->inputs)) {
-                foreach ($column->inputs as $key => $input) {
-                    $input['data_field']  = ($column->data_field != '') ? $column->data_field : $column->field;
-                    $input['field']       = $column->field;
-                    $input['label']       = $column->title;
-                    $make_filters[$key][] = $input;
-                }
+            if (!isset($column->inputs)) {
+                continue;
+            }
+            foreach ($column->inputs as $key => $input) {
+                $input['data_field']  = ($column->data_field != '') ? $column->data_field : $column->field;
+                $input['field']       = $column->field;
+                $input['label']       = $column->title;
+                $make_filters[$key][] = $input;
             }
         }
         $this->make_filters = collect($make_filters);
