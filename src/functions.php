@@ -28,4 +28,3 @@ if (!function_exists('powerGridCache')) {
         return config('livewire-powergrid.cached_data');
     }
 }
-

@@ -16,10 +16,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PowerGridComponent extends Component
 {
-    use WithPagination,
-        WithSorting,
-        Checkbox,
-        Filter;
+    use WithPagination;
+    use WithSorting;
+    use Checkbox;
+    use Filter;
 
     public array $headers = [];
 
@@ -195,20 +195,20 @@ class PowerGridComponent extends Component
             });
         }
 
-        if (powerGridCache()) {
-            return \cache()->rememberForever($this->id, function () use ($dataSource) {
-                if (is_array($dataSource)) {
-                    return new BaseCollection($dataSource);
-                }
-                if (is_a($dataSource, BaseCollection::class)) {
-                    return $dataSource;
-                }
-
-                return new BaseCollection($dataSource->make());
-            });
+        if (!powerGridCache()) {
+            return new BaseCollection($this->dataSource()->make());
         }
 
-        return new BaseCollection($this->dataSource()->make());
+        return \cache()->rememberForever($this->id, function () use ($dataSource) {
+            if (is_array($dataSource)) {
+                return new BaseCollection($dataSource);
+            }
+            if (is_a($dataSource, BaseCollection::class)) {
+                return $dataSource;
+            }
+
+            return new BaseCollection($dataSource->make());
+        });
     }
 
     /**
@@ -221,22 +221,23 @@ class PowerGridComponent extends Component
 
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', $data['field']));
-        } else {
-            session()->flash('success', $this->updateMessages('success', $data['field']));
-
-            if (is_array($this->dataSource)) {
-                $cached = $this->dataSource->map(function ($row) use ($data) {
-                    $field = $data['field'];
-                    if ($row->id === $data['id']) {
-                        $row->{$field} = $data['value'];
-                    }
-
-                    return $row;
-                });
-
-                $this->resolveCollection(null, $cached);
-            }
+            return;
         }
+        session()->flash('success', $this->updateMessages('success', $data['field']));
+
+        if (!is_array($this->dataSource)) {
+            return;
+        }
+        $cached = $this->dataSource->map(function ($row) use ($data) {
+            $field = $data['field'];
+            if ($row->id === $data['id']) {
+                $row->{$field} = $data['value'];
+            }
+
+            return $row;
+        });
+
+        $this->resolveCollection(null, $cached);
     }
 
     /**

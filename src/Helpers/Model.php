@@ -56,8 +56,10 @@ class Model implements FilterInterface
      */
     private static function validateInputTextOptions(string $field, $filters): bool
     {
-        return isset($filters['input_text_options'][$field]) && in_array(strtolower($filters['input_text_options'][$field]),
-                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']);
+        return isset($filters['input_text_options'][$field]) && in_array(
+            strtolower($filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
@@ -141,15 +143,16 @@ class Model implements FilterInterface
     {
         $empty  = false;
         $values = collect($value)->get('values');
-        if (count($values)) {
-            foreach ($values as $value) {
-                if ($value === '') {
-                    $empty = true;
-                }
+        if (count($values) === 0) {
+            return;
+        }
+        foreach ($values as $value) {
+            if ($value === '') {
+                $empty = true;
             }
-            if (!$empty) {
-                $collection->whereIn($field, $values);
-            }
+        }
+        if (!$empty) {
+            $collection->whereIn($field, $values);
         }
     }
 

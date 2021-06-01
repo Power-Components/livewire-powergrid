@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 class PowerGridManager
 {
-    public function eloquent($collection=null): PowerGridEloquent
+    public function eloquent($collection = null): PowerGridEloquent
     {
         return new PowerGridEloquent($collection);
     }
@@ -13,5 +13,4 @@ class PowerGridManager
     {
         return new PowerGridCollection();
     }
-
 }

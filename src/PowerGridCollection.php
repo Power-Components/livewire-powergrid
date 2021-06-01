@@ -20,5 +20,4 @@ class PowerGridCollection
 
         return $this;
     }
-
 }

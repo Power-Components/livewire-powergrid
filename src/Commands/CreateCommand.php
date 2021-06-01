@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 class CreateCommand extends Command
 {
     protected $signature = 'powergrid:create
-    {name=default : name of class component}
-    {--model= : model Class}
-    {--template= : name of the file that will be used as a template}
-    {--force : Overwrite any existing files}
-    {--fillable : Generate data from fillable}
-    {--with-collection : Generate from collection - default is model collection}';
+        {name=default : name of class component}
+        {--model= : model Class}
+        {--template= : name of the file that will be used as a template}
+        {--force : Overwrite any existing files}
+        {--fillable : Generate data from fillable}
+        {--with-collection : Generate from collection - default is model collection}';
 
     protected $description = 'Make a new PowerGrid table component.';
 
@@ -33,61 +33,52 @@ class CreateCommand extends Command
 
         if ($tableName === 'default') {
             $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
-            exit;
+            return;
         }
 
         if (empty($modelName)) {
             $example = '\\App\\Models\\' . $tableName;
             $this->error('Error: Model name is required.<info> E.g. powergrid:create ' . $tableName . ' --model="' . $example . '"</info>');
-            exit;
+            return;
         }
 
         $modelNameArr  = explode('\\', $modelName);
         $modelLastName = Arr::last($modelNameArr);
 
-        if (count($modelNameArr) == 1) {
+        if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
-                exit;
+                return;
             }
             $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
-            exit;
+            return;
         }
 
-        if (!empty($modelName)) {
-            if (!empty($this->option('template'))) {
-                $stub = File::get(base_path($this->option('template')));
-            } else {
-                if ($collection) {
-                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.stub');
-                } else {
-                    $stub = File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
-                }
-            }
-
-            if ($fillable) {
-                $stub     = $this->createFromFillable($modelName, $modelLastName);
-            }
-
-            $componentName   = $tableName;
-            $subFolder       = null;
-
-            if (!empty($matches)) {
-                $componentName = end($matches);
-                array_splice($matches, 2);
-                $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
-            }
-
-            $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
-            $stub = str_replace('{{ componentName }}', $componentName, $stub);
-            $stub = str_replace('{{ modelName }}', $modelName, $stub);
-            $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
-            $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
-            $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
-        } else {
+        if (empty($modelName)) {
             $this->error('Could not create, Model path is missing');
             exit;
         }
+        $stub = $this->getStubs($collection);
+
+        if ($fillable) {
+            $stub     = $this->createFromFillable($modelName, $modelLastName);
+        }
+
+        $componentName   = $tableName;
+        $subFolder       = null;
+
+        if (!empty($matches)) {
+            $componentName = end($matches);
+            array_splice($matches, 2);
+            $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
+        }
+
+        $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
+        $stub = str_replace('{{ componentName }}', $componentName, $stub);
+        $stub = str_replace('{{ modelName }}', $modelName, $stub);
+        $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
+        $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
+        $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
 
         $livewirePath  = 'Http/Livewire/';
         $path          = app_path($livewirePath . $tableName . '.php');
@@ -125,36 +116,34 @@ class CreateCommand extends Command
         $columns        = "[\n";
 
         foreach ($getFillables as $field) {
+            if (in_array($field, $model->getHidden())) {
+                continue;
+            }
+            $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
+                return ($info->Field === $field) ? $info->Type : '';
+            }))->Type;
 
-            if (!in_array($field, $model->getHidden())) {
-                $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
-                    return ($info->Field === $field) ? $info->Type : '';
-                }))->Type;
+            $title = Str::of($field)->replace('_', ' ')->upper();
 
-                $title = Str::of($field)->replace('_', ' ')->upper();
+            if (in_array($type, ['timestamp', 'datetime'])) {
+                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
 
-                if (in_array($type, ['timestamp', 'datetime'])) {
-                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+            }
 
-                    $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
-                }
-
-                if ($type === 'tinyint(1)') {
-                    $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
-                } else {
-                    if ($type === 'int(11)') {
-                        $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                        $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
-                    } else {
-
-                        if (!in_array($type, ['timestamp', 'datetime'])) {
-                            $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                            $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
-                        }
-
-                    }
-                }
+            if ($type === 'tinyint(1)') {
+                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                continue;
+            }
+            if ($type === 'int(11)') {
+                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                continue;
+            }
+            if (!in_array($type, ['timestamp', 'datetime'])) {
+                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
             }
         }
 
@@ -163,5 +152,18 @@ class CreateCommand extends Command
         $stub = str_replace('{{ dataSource }}', $dataSource, $stub);
 
         return str_replace('{{ columns }}', $columns, $stub);
+    }
+
+
+    protected function getStubs($collection = null)
+    {
+        if (!empty($this->option('template'))) {
+            return File::get(base_path($this->option('template')));
+        }
+        if ($collection) {
+            return File::get(__DIR__ . '/../../resources/stubs/table.stub');
+        }
+
+        return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
     }
 }
