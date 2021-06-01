@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
 class Model implements FilterInterface

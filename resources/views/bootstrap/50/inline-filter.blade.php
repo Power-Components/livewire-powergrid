@@ -60,8 +60,8 @@
                     </td>
                 @endif
             @endforeach
-            @if(isset($actionBtns) && count($actionBtns))
-                <td colspan="{{count($actionBtns)}}"></td>
+            @if(isset($actions) && count($actions))
+                <td colspan="{{count($actions)}}"></td>
             @endif
         @endif
     </tr>

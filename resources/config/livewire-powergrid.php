@@ -8,10 +8,9 @@ return [
     |--------------------------------------------------------------------------
     |
     | You will be able to know which theme pattern will be loaded
-    | bootstrap or tailwind
     |
     */
-    'theme' => 'tailwind',
+    'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -101,7 +100,7 @@ return [
     | 'js_framework' => 'alpinejs',
     */
 
-    'js_framework' => null,
+    'js_framework' => 'alpinejs',
 
     /*
     |--------------------------------------------------------------------------

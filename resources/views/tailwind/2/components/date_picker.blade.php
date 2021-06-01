@@ -13,6 +13,40 @@
                 <div class="pr-6" wire:ignore>
                     @endif
 
+                    <label for="{{ $ref }}" class="form_label">
+                        @if(!$inline) {{ $label }} @endif
+                        <input name="{{ $ref }}" x-data x-init="flatpickr($refs.{{ $ref }}, {
+						    mode: 'range',
+                            defaultHour: 0,
+                            ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
+                            @if(isset($customConfig['only_future']))
+                            minDate: 'today',
+                            @endif
+                            @if(isset($customConfig['no_weekends']) === true)
+                            'disable': [
+                                function (date) {
+                                    return (date.getDay() === 0 || date.getDay() === 6);
+                                }
+                            ],
+                            @endif
+                            ...@json($customConfig),
+						    onClose: function (selectedDates, dateStr, instance) {
+							    window.livewire.emit('{{ $event }}', {
+								    selectedDates: selectedDates,
+								    label: '{{ $label }}',
+								    attribute: instance._input.attributes['data-key'].value
+							    });
+						}
+					}
+				)" class="input input_range"
+                               x-ref="{{ $ref }}"
+                               data-key="{{ $ref }}"
+                               type="text"
+                               placeholder="{{ $placeholder }}">
+                    </label>
+
+
+
                     @if(!$inline)
                         <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
                     @endif

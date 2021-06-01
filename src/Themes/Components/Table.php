@@ -1,0 +1,93 @@
+<?php
+
+namespace PowerComponents\LivewirePowerGrid\Themes\Components;
+
+class Table
+{
+    public string $tableClass = '';
+
+    public string $tableStyle = '';
+
+    public string $theadClass = '';
+
+    public string $theadStyle = '';
+
+    public string $trClass = '';
+
+    public string $trStyle = '';
+
+    public string $thClass = '';
+
+    public string $thStyle = '';
+
+    public string $tbodyClass = '';
+
+    public string $tbodyStyle = '';
+
+    public string $trBodyClass = '';
+
+    public string $trBodyStyle = '';
+
+    public string $tdBodyClass = '';
+
+    public string $tdBodyStyle = '';
+
+    /**
+     * Table constructor.
+     * @param string $tableClass
+     * @param string $tableStyle
+     */
+    public function __construct(string $tableClass, string $tableStyle='')
+    {
+        $this->tableClass = $tableClass;
+        $this->tableStyle = $tableStyle;
+    }
+
+    public function thead(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->theadClass = $attrClass;
+        $this->theadStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tr(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->trClass = $attrClass;
+        $this->trStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function th(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->thClass = $attrClass;
+        $this->thStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tbody(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->tbodyClass = $attrClass;
+        $this->tbodyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function trBody(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->trBodyClass = $attrClass;
+        $this->trBodyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdBody(string $attrClass, string $attrStyle=''): Table
+    {
+        $this->tdBodyClass = $attrClass;
+        $this->tdBodyStyle = $attrStyle;
+
+        return $this;
+    }
+}

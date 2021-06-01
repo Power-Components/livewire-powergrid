@@ -9,6 +9,8 @@ use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\WithSorting;
@@ -50,6 +52,8 @@ class PowerGridComponent extends Component
     public bool $isCollection = false;
 
     protected string $paginationTheme = 'tailwind';
+
+    protected ThemeBase $powerGridTheme;
 
     protected $dataSource;
 
@@ -151,13 +155,15 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $this->paginationTheme = config('livewire-powergrid.theme');
+       // $this->paginationTheme = 'tailwind';
 
         $this->renderFilter();
     }
 
     public function render()
     {
+        $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
+
         $this->columns = $this->columns();
 
         $data          = $this->loadData();
@@ -171,8 +177,10 @@ class PowerGridComponent extends Component
 
     private function renderView($data)
     {
-        return view('livewire-powergrid::' . powerGridTheme() . '.' . powerGridThemeVersion() . '.table', [
-            'data' => $data
+        return view($this->powerGridTheme->tableBaseView, [
+            'data'  => $data,
+            'theme' => $this->powerGridTheme,
+            'table' => 'livewire-powergrid::components.table'
         ]);
     }
 
@@ -288,6 +296,7 @@ class PowerGridComponent extends Component
         if ($this->isCollection) {
             if ($inClause) {
                 $results = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+
                 return $this->transform($results);
             }
 
@@ -296,10 +305,12 @@ class PowerGridComponent extends Component
 
         if ($inClause) {
             $results = $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get();
+
             return $this->transform($results);
         }
 
         $results = $this->resolveModel()->get();
+
         return $this->transform($results);
     }
 
@@ -386,6 +397,7 @@ class PowerGridComponent extends Component
                 return $row;
             });
         }
+
         return $results;
     }
 }

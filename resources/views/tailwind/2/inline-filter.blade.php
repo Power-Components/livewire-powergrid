@@ -3,12 +3,11 @@
 
         @if(count($make_filters))
             @if($checkbox)
-                <td class="td_{{ $column->field }}"></td>
+                <td></td>
             @endif
             @foreach($columns as $column)
                 @if($column->hidden === false)
-                    <td class="td_{{ $column->field }}">
-
+                    <td>
                         @if(isset($make_filters['date_picker']))
                             @foreach($make_filters['date_picker'] as $field => $date)
                                 @if($date['field'] === $column->field)
@@ -73,8 +72,8 @@
                     </td>
                 @endif
             @endforeach
-            @if(isset($actionBtns) && count($actionBtns))
-                <td colspan="{{count($actionBtns)}}"></td>
+            @if(isset($actions) && count($actions))
+                <td colspan="{{count($actions)}}"></td>
             @endif
         @endif
 

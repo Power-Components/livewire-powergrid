@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class PowerGridCollection
@@ -20,5 +19,4 @@ class PowerGridCollection
 
         return $this;
     }
-
 }

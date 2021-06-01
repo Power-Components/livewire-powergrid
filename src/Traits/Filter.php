@@ -14,8 +14,6 @@ trait Filter
 
     public array $select = [];
 
-    private string $format_date = '';
-
     public function clearFilter($field = '')
     {
         $this->search = '';

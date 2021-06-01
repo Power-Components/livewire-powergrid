@@ -1,5 +1,5 @@
-@if(isset($actionBtns) && count($actionBtns))
-    @foreach($actionBtns as $action)
+@if(isset($actions) && count($actions))
+    @foreach($actions as $action)
 
         <td class="px-1 py-1 whitespace-nowrap" style="width: 50px;">
             @php

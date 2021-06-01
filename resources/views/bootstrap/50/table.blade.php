@@ -56,7 +56,7 @@
                         @endif
 
                     @endforeach
-                    @if(isset($actionBtns) && count($actionBtns))
+                    @if(isset($actions) && count($actions))
                         <th class="text-center">
                             {{ trans('livewire-powergrid::datatable.labels.action') }}
                         </th>
@@ -69,7 +69,7 @@
 
                 @if(count($data) === 0)
                     <tr class="border-b border-gray-200 hover:bg-gray-100 ">
-                        <td class="text-center" colspan="{{ (($checkbox) ? 1:0) + ((isset($actionBtns)) ? 1: 0) + (count($columns)) }}">
+                        <td class="text-center" colspan="{{ (($checkbox) ? 1:0) + ((isset($actions)) ? 1: 0) + (count($columns)) }}">
                             <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
                         </td>
                     </tr>

@@ -1,7 +1,7 @@
-@if(isset($actionBtns) && count($actionBtns))
+@if(isset($actions) && count($actions))
     <td class="text-center">
         <div class="d-flex justify-content-center">
-            @foreach($actionBtns as $action)
+            @foreach($actions as $action)
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {

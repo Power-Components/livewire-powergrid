@@ -125,7 +125,6 @@ class CreateCommand extends Command
         $columns        = "[\n";
 
         foreach ($getFillables as $field) {
-
             if (!in_array($field, $model->getHidden())) {
                 $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
                     return ($info->Field === $field) ? $info->Type : '';
@@ -147,12 +146,10 @@ class CreateCommand extends Command
                         $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                         $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
                     } else {
-
                         if (!in_array($type, ['timestamp', 'datetime'])) {
                             $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                             $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
                         }
-
                     }
                 }
             }

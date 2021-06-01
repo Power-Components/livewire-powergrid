@@ -12,7 +12,6 @@ trait Checkbox
 
     public string $checkboxAttribute;
 
-
     /**
      * @throws \Exception
      */

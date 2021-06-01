@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
+
 class PowerGridManager
 {
     public function eloquent($collection=null): PowerGridEloquent
@@ -14,4 +16,8 @@ class PowerGridManager
         return new PowerGridCollection();
     }
 
+    public static function theme(string $class): ThemeBase
+    {
+        return new $class;
+    }
 }
