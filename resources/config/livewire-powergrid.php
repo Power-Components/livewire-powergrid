@@ -96,12 +96,11 @@ return [
     |
     | Define here which JS framework will be imported in the views.
     | Alpine JS is required for features like ClickToEdit and Toggleable.
-    | To include it, modify the line below:
     |
     | 'js_framework' => 'alpinejs',
     */
 
-    'js_framework' => null,
+    'js_framework' => 'alpinejs',
 
     /*
     |--------------------------------------------------------------------------

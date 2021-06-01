@@ -11,7 +11,7 @@ if (!function_exists('powerGridTheme')) {
     }
 }
 if (!function_exists('powerGridThemeVersion')) {
-    function powerGridThemeVersion(): string
+    function powerGridThemeVersion(): ?string
     {
         return config('livewire-powergrid.theme_versions')[config('livewire-powergrid.theme')];
     }
