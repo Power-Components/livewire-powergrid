@@ -28,6 +28,5 @@ class PublishCommand extends Command
         }
 
         $this->info('Stubs published successfully.');
-
     }
 }

@@ -51,6 +51,7 @@ class Collection implements FilterInterface
         if (empty($search)) {
             return $model;
         }
+
         return $model->filter(function ($row) use ($columns, $search) {
             foreach ($columns as $column) {
                 $field = $column->field;
@@ -237,6 +238,7 @@ class Collection implements FilterInterface
         if (empty($search)) {
             return $collection;
         }
+
         return $collection->filter(function ($row) use ($columns, $search) {
             foreach ($columns as $column) {
                 $field = $column->field;

@@ -12,7 +12,6 @@ trait Checkbox
 
     public string $checkboxAttribute;
 
-
     /**
      * @throws \Exception
      */
@@ -27,6 +26,7 @@ trait Checkbox
             $this->resolveCollection()->each(function ($model) {
                 $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
             });
+
             return;
         }
         $this->resolveModel()->each(function ($model) {

@@ -221,6 +221,7 @@ class PowerGridComponent extends Component
 
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', $data['field']));
+
             return;
         }
         session()->flash('success', $this->updateMessages('success', $data['field']));
@@ -289,6 +290,7 @@ class PowerGridComponent extends Component
         if ($this->isCollection) {
             if ($inClause) {
                 $results = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+
                 return $this->transform($results);
             }
 
@@ -297,10 +299,12 @@ class PowerGridComponent extends Component
 
         if ($inClause) {
             $results = $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get();
+
             return $this->transform($results);
         }
 
         $results = $this->resolveModel()->get();
+
         return $this->transform($results);
     }
 
@@ -387,6 +391,7 @@ class PowerGridComponent extends Component
                 return $row;
             });
         }
+
         return $results;
     }
 }

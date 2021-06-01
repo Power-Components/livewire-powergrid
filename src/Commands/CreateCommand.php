@@ -33,12 +33,14 @@ class CreateCommand extends Command
 
         if ($tableName === 'default') {
             $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
+
             return;
         }
 
         if (empty($modelName)) {
             $example = '\\App\\Models\\' . $tableName;
             $this->error('Error: Model name is required.<info> E.g. powergrid:create ' . $tableName . ' --model="' . $example . '"</info>');
+
             return;
         }
 
@@ -48,9 +50,11 @@ class CreateCommand extends Command
         if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
+
                 return;
             }
             $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
+
             return;
         }
 
@@ -134,11 +138,13 @@ class CreateCommand extends Command
             if ($type === 'tinyint(1)') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+
                 continue;
             }
             if ($type === 'int(11)') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+
                 continue;
             }
             if (!in_array($type, ['timestamp', 'datetime'])) {
@@ -153,7 +159,6 @@ class CreateCommand extends Command
 
         return str_replace('{{ columns }}', $columns, $stub);
     }
-
 
     protected function getStubs($collection = null)
     {
