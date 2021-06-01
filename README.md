@@ -80,5 +80,5 @@ If you need any support, please check our [Issues](https://github.com/Power-Comp
 
 Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
-- [Contributions](https://github.com/Power-Components/livewire-powergrid/pulls)
+- [Contributions](../../contributors)
 - [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
