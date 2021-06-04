@@ -10,10 +10,9 @@
                 @endphp
 
                 @if($action->view !== '')
-                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))' class="
-                 {{ (filled($action->class)) }}"
+                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))' class="{{ $action->class }}"
                     >
-                        {{ (filled($action->caption)) ? $action->caption: 'Editar' }}
+                        {{ $action->caption }}
                     </button>
                 @else
                     <div class="px-2">

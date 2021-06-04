@@ -22,7 +22,7 @@
         </div>
         <div>
             @if(method_exists($data, 'links'))
-                {!! $data->links() !!}
+                {!! $data->links('livewire-powergrid::bootstrap.50.pagination', ['record_count' => $record_count]) !!}
             @endif
         </div>
     </div>
