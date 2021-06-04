@@ -8,7 +8,7 @@ class PerPage
 
     public string $selectStyle = '';
 
-    public string $base = '';
+    public string $view = '';
 
     public function selectClass(string $attrClass, string $attrStyle=''): PerPage
     {
@@ -18,9 +18,9 @@ class PerPage
         return $this;
     }
 
-    public function base(string $path): PerPage
+    public function view(string $path): PerPage
     {
-        $this->base = $path;
+        $this->view = $path;
 
         return $this;
     }

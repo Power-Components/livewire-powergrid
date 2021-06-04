@@ -1,4 +1,4 @@
-@include('livewire-powergrid::components.frameworks.tailwind.header')
+@include($theme->layout->header)
 
 @if(config('livewire-powergrid.filter') === 'outside')
     @if(count($make_filters) > 0)
@@ -8,7 +8,7 @@
     @endif
 @endif
 
-@include('livewire-powergrid::components.frameworks.tailwind.message')
+@include($theme->layout->message)
 
 <x-livewire-powergrid::table-base :theme="$theme->table">
     <x-slot name="header">

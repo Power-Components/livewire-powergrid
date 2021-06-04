@@ -8,7 +8,7 @@
 
             <x-livewire-powergrid::footer>
                 <x-slot name="perPage">
-                    @include($theme->perPage->base)
+                    @include($theme->perPage->view)
                 </x-slot>
             </x-livewire-powergrid::footer>
 

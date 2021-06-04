@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class Toggleable
 {
-    public string $base = '';
+    public string $view = '';
 
-    public function base(string $base): Toggleable
+    public function view(string $view): Toggleable
     {
-        $this->base    = $base;
+        $this->view    = $view;
 
         return $this;
     }

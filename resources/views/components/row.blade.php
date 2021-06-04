@@ -27,7 +27,7 @@
                     </span>
 
                 @elseif(count($column->toggleable) > 0)
-                    @include($theme->toggleable->base)
+                    @include($theme->toggleable->view)
                 @else
                 <span class="flex justify-between">
                     <div>

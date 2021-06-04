@@ -1,10 +1,7 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
-{{ __DIR__. '\\'. \PowerComponents\LivewirePowerGrid\Themes\ThemeBase::scripts(). '.blade.php' }}
-@if(Storage::exists(__DIR__. '\\'. \PowerComponents\LivewirePowerGrid\Themes\ThemeBase::scripts(). '.blade.php'))
-    @include(\PowerComponents\LivewirePowerGrid\Themes\ThemeBase::scripts())
-@endif
+@include(\PowerComponents\LivewirePowerGrid\Themes\ThemeBase::scripts())
 
 @push('powergrid_styles')
     @if(Storage::exists(\PowerComponents\LivewirePowerGrid\Themes\ThemeBase::styles()))

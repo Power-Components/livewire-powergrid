@@ -12,14 +12,16 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
     FilterSelect,
     PerPage,
     Table,
-    Toggleable};
+    Layout,
+    Toggleable
+};
 
 class Tailwind extends ThemeBase
 {
     public function __construct()
     {
-        self::$scripts = 'components\\frameworks\\tailwind\\scripts';
-        self::$styles  = 'components\\frameworks\\tailwind\\styles';
+        self::$scripts = 'livewire-powergrid::components\\frameworks\\tailwind\\scripts';
+        self::$styles  = 'livewire-powergrid::components\\frameworks\\tailwind\\styles';
     }
 
     public function table(): Table
@@ -36,21 +38,30 @@ class Tailwind extends ThemeBase
     public function perPage(): PerPage
     {
         return Theme::perPage()
-            ->base('livewire-powergrid::components.frameworks.tailwind.footer')
+            ->view('livewire-powergrid::components.frameworks.tailwind.footer')
             ->selectClass('block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500');
     }
 
     public function toggleable(): Toggleable
     {
         return Theme::toggleable()
-            ->base('livewire-powergrid::components.frameworks.tailwind.toggleable');
+            ->view('livewire-powergrid::components.frameworks.tailwind.toggleable');
     }
 
     public function editable(): Editable
     {
         return Theme::editable()
-            ->base('livewire-powergrid::components.frameworks.tailwind.editable')
+            ->view('livewire-powergrid::components.frameworks.tailwind.editable')
             ->spanClass('flex justify-between');
+    }
+
+    public function layout(): Layout
+    {
+        return Theme::layout()
+            ->header('livewire-powergrid::components.frameworks.tailwind.header')
+            ->pagination('livewire-powergrid::components.frameworks.tailwind.pagination')
+            ->message('livewire-powergrid::components.frameworks.tailwind.message')
+            ->footer('livewire-powergrid::components.frameworks.tailwind.footer');
     }
 
     public function checkbox(): Checkbox

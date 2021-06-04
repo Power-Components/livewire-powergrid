@@ -6,11 +6,11 @@ class Editable
 {
     public string $spanClass = '';
 
-    public string $base = '';
+    public string $view = '';
 
-    public function base(string $base): Editable
+    public function view(string $view): Editable
     {
-        $this->base    = $base;
+        $this->view    = $view;
 
         return $this;
     }

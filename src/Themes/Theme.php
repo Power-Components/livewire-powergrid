@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use Illuminate\Support\Facades\Facade;
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
+    Layout,
     PerPage,
     Editable,
     FilterBoolean,
@@ -13,13 +14,13 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
     FilterNumber,
     FilterSelect,
     Table,
-    Toggleable
-};
+    Toggleable};
 
 /**
  * @method static Table table(string $attrClass, string $attrStyle='')
  * @method static PerPage perPage()
  * @method static Toggleable toggleable()
+ * @method static Layout layout()
  * @method static Checkbox checkbox()
  * @method static Editable editable()
  * @method static FilterBoolean filterBoolean()

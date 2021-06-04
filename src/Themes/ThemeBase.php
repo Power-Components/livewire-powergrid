@@ -10,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
     FilterMultiSelect,
     FilterNumber,
     FilterSelect,
+    Layout,
     PerPage,
     Table,
     Toggleable};
@@ -23,6 +24,8 @@ abstract class ThemeBase
     public ?Table $table;
 
     public ?Checkbox $checkbox;
+
+    public ?Layout $layout;
 
     public ?Editable $editable;
 
@@ -49,6 +52,7 @@ abstract class ThemeBase
         $this->table             = $this->table();
         $this->perPage           = $this->perPage();
         $this->editable          = $this->editable();
+        $this->layout            = $this->layout();
         $this->toggleable        = $this->toggleable();
         $this->checkbox          = $this->checkbox();
         $this->filterBoolean     = $this->filterBoolean();
@@ -82,6 +86,11 @@ abstract class ThemeBase
     }
 
     public function editable(): ?Editable
+    {
+        return null;
+    }
+
+    public function layout(): ?Layout
     {
         return null;
     }

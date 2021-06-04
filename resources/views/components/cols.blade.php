@@ -8,8 +8,7 @@
     'sortIcon' => null,
     'filtersEnabled' => null,
     'actions' => null
-]
-)
+])
 <div>
     @if($column->hidden === false)
         <th class="{{ $theme->thClass .' '. $column->header_class }}"

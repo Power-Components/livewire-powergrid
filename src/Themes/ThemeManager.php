@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
     Editable,
+    Layout,
     Toggleable,
     FilterBoolean,
     FilterDatePicker,
@@ -39,6 +40,11 @@ class ThemeManager
     public function editable(): Editable
     {
         return new Editable();
+    }
+
+    public function layout(): Layout
+    {
+        return new Layout();
     }
 
     public function filterBoolean(): FilterBoolean
