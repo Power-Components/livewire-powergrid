@@ -1,4 +1,3 @@
-
 <div>
 @if($exportOption)
     <div x-data="{show: false}"
@@ -30,7 +29,6 @@
                    class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Csv</a>
             @endif
         </div>
-
     </div>
 @endif
 </div>

@@ -27,7 +27,7 @@
         </div>
 
         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-            @if($record_count === 'full')
+            @if($recordCount === 'full')
                 <div>
                     <p class="text-md text-gray-700 leading-5 mr-2">
                         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
@@ -39,7 +39,7 @@
                         {{ trans('livewire-powergrid::datatable.pagination.results') }}
                     </p>
                 </div>
-            @elseif($record_count === 'short')
+            @elseif($recordCount === 'short')
                 <div>
                     <p class="text-md text-gray-700 leading-5 mr-2">
                         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
@@ -50,7 +50,7 @@
 
                     </p>
                 </div>
-            @elseif($record_count === 'min')
+            @elseif($recordCount === 'min')
                 <div>
                     <p class="text-md text-gray-700 leading-5 mr-2">
                         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>

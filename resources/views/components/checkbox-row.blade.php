@@ -4,10 +4,10 @@
     'attribute' => null
 ])
 @if($checkbox)
-    <td class="{{ $theme->checkbox->thClass }}" style="{{ $theme->checkbox->thStyle }}">
-        <div wire:ignore.self>
-            <label class="{{ $theme->checkbox->labelClass }}">
-                <input class="{{ $theme->checkbox->inputClass }}" type="checkbox" wire:model="checkboxValues"
+    <td class="{{ $theme->thClass }}" style="{{ $theme->thStyle }}">
+        <div class="{{ $theme->divClass }}" wire:ignore.self>
+            <label class="{{ $theme->labelClass }}">
+                <input class="{{ $theme->inputClass }}" type="checkbox" wire:model="checkboxValues"
                        value="{{ $attribute }}">
             </label>
         </div>

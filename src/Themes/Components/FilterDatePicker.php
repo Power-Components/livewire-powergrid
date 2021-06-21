@@ -10,21 +10,21 @@ class FilterDatePicker
 
     public string $divClassInline = '';
 
-    public function inputClass(string $inputClass): FilterDatePicker
+    public function input(string $inputClass): FilterDatePicker
     {
         $this->inputClass = $inputClass;
 
         return $this;
     }
 
-    public function divClassNotInline(string $divClassNotInline): FilterDatePicker
+    public function divNotInline(string $divClassNotInline): FilterDatePicker
     {
         $this->divClassNotInline = $divClassNotInline;
 
         return $this;
     }
 
-    public function divClassInline(string $divClassInline): FilterDatePicker
+    public function divInline(string $divClassInline): FilterDatePicker
     {
         $this->divClassInline = $divClassInline;
 

@@ -120,7 +120,6 @@ class CreateCommand extends Command
         $columns        = "[\n";
 
         foreach ($getFillables as $field) {
-
             if (in_array($field, $model->getHidden())) {
                 continue;
             }

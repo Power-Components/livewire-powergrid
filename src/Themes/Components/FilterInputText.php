@@ -12,28 +12,32 @@ class FilterInputText
 
     public string $selectClass = '';
 
-    public function selectClass(string $attrClass): FilterInputText
+    public string $relativeDivClass = '';
+
+    public function select(string $attrClass, string $relativeDivClass=''): FilterInputText
     {
         $this->selectClass = $attrClass;
+
+        $this->relativeDivClass = $relativeDivClass;
 
         return $this;
     }
 
-    public function inputClass(string $attrClass): FilterInputText
+    public function input(string $attrClass): FilterInputText
     {
         $this->inputClass = $attrClass;
 
         return $this;
     }
 
-    public function divClassNotInline(string $attrClass): FilterInputText
+    public function divNotInline(string $attrClass): FilterInputText
     {
         $this->divClassNotInline = $attrClass;
 
         return $this;
     }
 
-    public function divClassInline(string $attrClass): FilterInputText
+    public function divInline(string $attrClass): FilterInputText
     {
         $this->divClassInline = $attrClass;
 

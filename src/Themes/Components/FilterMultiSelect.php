@@ -10,23 +10,32 @@ class FilterMultiSelect
 
     public string $divClassInline = '';
 
-    public function inputClass(string $inputClass): FilterMultiSelect
+    public string $view = '';
+
+    public function input(string $attrClass=''): FilterMultiSelect
     {
-        $this->inputClass = $inputClass;
+        $this->inputClass = $attrClass;
 
         return $this;
     }
 
-    public function divClassNotInline(string $divClassNotInline): FilterMultiSelect
+    public function divNotInline(string $attrClass=''): FilterMultiSelect
     {
-        $this->divClassNotInline = $divClassNotInline;
+        $this->divClassNotInline = $attrClass;
 
         return $this;
     }
 
-    public function divClassInline(string $divClassInline): FilterMultiSelect
+    public function divInline(string $attrClass=''): FilterMultiSelect
     {
-        $this->divClassInline = $divClassInline;
+        $this->divClassInline = $attrClass;
+
+        return $this;
+    }
+
+    public function view(string $view): FilterMultiSelect
+    {
+        $this->view    = $view;
 
         return $this;
     }

@@ -3,9 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
-    Layout,
-    PerPage,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    Cols,
     Editable,
     FilterBoolean,
     FilterDatePicker,
@@ -13,6 +13,8 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
     FilterMultiSelect,
     FilterNumber,
     FilterSelect,
+    Layout,
+    PerPage,
     Table,
     Toggleable};
 
@@ -21,6 +23,8 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
  * @method static PerPage perPage()
  * @method static Toggleable toggleable()
  * @method static Layout layout()
+ * @method static Cols cols()
+ * @method static Actions actions()
  * @method static Checkbox checkbox()
  * @method static Editable editable()
  * @method static FilterBoolean filterBoolean()
@@ -33,7 +37,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
  */
 class Theme extends Facade
 {
-    public static function getFacadeAccessor()
+    public static function getFacadeAccessor(): string
     {
         return 'theme';
     }

@@ -2,20 +2,20 @@
     'makeFilters' => null,
     'checkbox' => null,
     'columns' => null,
-    'columns' => null,
+    'actions' => null,
     'theme' => null
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
-        <tr class="{{ $theme->table->trClass }}">
+        <tr class="{{ $theme->table->trClass }}" class="{{ $theme->table->trStyle }}">
 
             @if(count($makeFilters))
                 @if($checkbox)
-                    <td class="{{ $theme->table->tdBodyClass }}"></td>
+                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
                 @endif
                 @foreach($columns as $column)
                     @if($column->hidden === false)
-                        <td>
+                        <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}">
                             @if(isset($makeFilters['date_picker']))
                                 @foreach($makeFilters['date_picker'] as $field => $date)
                                     @if($date['field'] === $column->field)
@@ -41,11 +41,9 @@
                             @if(isset($makeFilters['multi_select']))
                                 @foreach($makeFilters['multi_select'] as $field => $multiSelect)
                                     @if($multiSelect['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.multi-select
-                                            :multiSelect="$multiSelect"
-                                            :column="$column"
-                                            :inline="true"
-                                            :theme="$theme->filterMultiSelect"/>
+                                        @includeIf($theme->filterMultiSelect->view, [
+                                                'inline' => true
+                                        ])
                                     @endif
                                 @endforeach
                             @endif
@@ -83,7 +81,6 @@
                                     @endif
                                 @endforeach
                             @endif
-
                         </td>
                     @endif
                 @endforeach

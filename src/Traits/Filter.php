@@ -47,6 +47,9 @@ trait Filter
     {
         $input                                   = explode('.', $data['values']);
         $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+
+        $this->filters_enabled[$data['field']]['data-field']      = $data['field'];
+        $this->filters_enabled[$data['field']]['label']           = $data['label'];
     }
 
     /**
@@ -55,6 +58,17 @@ trait Filter
     public function eventMultiSelect(array $data)
     {
         $this->filters['multi_select'][$data['id']] = $data;
+
+        $filter = collect($this->make_filters->get('multi_select'))->where('relation_id', $data['id']);
+
+        $this->filters_enabled[$data['id']]['id']                    = $data['id'];
+        $this->filters_enabled[$data['id']]['label']                 = $filter->first()['label'];
+    }
+
+    public function filterSelect(string $field, string $label)
+    {
+        $this->filters_enabled[$field]['id']                    = $field;
+        $this->filters_enabled[$field]['label']                 = $label;
     }
 
     /**
@@ -63,11 +77,14 @@ trait Filter
      * @param string $thousands
      * @param string $decimal
      */
-    public function filterNumberStart(string $field, string $value, string $thousands, string $decimal): void
+    public function filterNumberStart(string $field, string $value, string $thousands, string $decimal, string $label): void
     {
         $this->filters['number'][$field]['start']     = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
+
+        $this->filters_enabled[$field]['id']          = $field;
+        $this->filters_enabled[$field]['label']       = $label;
     }
 
     /**
@@ -76,37 +93,49 @@ trait Filter
      * @param string $thousands
      * @param string $decimal
      */
-    public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal): void
+    public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal, string $label): void
     {
         $this->filters['number'][$field]['end']       = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
+
+        $this->filters_enabled[$field]['id']          = $field;
+        $this->filters_enabled[$field]['label']       = $label;
     }
 
     /**
      * @param string $field
      * @param string $value
      */
-    public function filterInputText(string $field, string $value): void
+    public function filterInputText(string $field, string $value, string $label): void
     {
         $this->filters['input_text'][$field] = $value;
+
+        $this->filters_enabled[$field]['id']          = $field;
+        $this->filters_enabled[$field]['label']       = $label;
     }
 
     /**
      * @param string $field
      * @param string $value
      */
-    public function filterBoolean(string $field, string $value): void
+    public function filterBoolean(string $field, string $value, string $label): void
     {
         $this->filters['boolean'][$field] = $value;
+
+        $this->filters_enabled[$field]['id']          = $field;
+        $this->filters_enabled[$field]['label']       = $label;
     }
 
     /**
      * @param string $field
      * @param string $value
      */
-    public function filterInputTextOptions(string $field, string $value): void
+    public function filterInputTextOptions(string $field, string $value, string $label): void
     {
         $this->filters['input_text_options'][$field] = $value;
+
+        $this->filters_enabled[$field]['id']          = $field;
+        $this->filters_enabled[$field]['label']       = $label;
     }
 }

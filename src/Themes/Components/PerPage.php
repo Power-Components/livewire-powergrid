@@ -10,7 +10,7 @@ class PerPage
 
     public string $view = '';
 
-    public function selectClass(string $attrClass, string $attrStyle=''): PerPage
+    public function select(string $attrClass='', string $attrStyle=''): PerPage
     {
         $this->selectClass    = $attrClass;
         $this->selectStyle    = $attrStyle;

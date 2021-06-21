@@ -4,13 +4,16 @@
 ])
 <div>
     @if($checkbox)
-        <th scope="col" class="{{ $theme->checkbox->thClass }}">
-            <label class="{{ $theme->checkbox->labelClass }}">
-                <input class="{{ $theme->checkbox->inputClass }}"
-                       type="checkbox"
-                       wire:click="selectCheckboxAll()"
-                       wire:model.lazy="checkboxAll">
-            </label>
+        <th scope="col" class="{{ $theme->thClass }}" style="{{ $theme->thStyle }}">
+            <div class="{{ $theme->divClass }}">
+                <label class="{{ $theme->labelClass }}">
+                    <input class="{{ $theme->inputClass }}"
+                           type="checkbox"
+                           wire:click="selectCheckboxAll()"
+                           wire:model.lazy="checkboxAll">
+                </label>
+            </div>
+
         </th>
     @endif
 </div>

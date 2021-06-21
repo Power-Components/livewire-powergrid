@@ -10,23 +10,32 @@ class FilterSelect
 
     public string $divClassInline = '';
 
-    public function inputClass(string $inputClass): FilterSelect
+    public string $relativeDivClass = '';
+
+    public function input(string $attrClass=''): FilterSelect
     {
-        $this->inputClass = $inputClass;
+        $this->inputClass = $attrClass;
 
         return $this;
     }
 
-    public function divClassNotInline(string $divClassNotInline): FilterSelect
+    public function divNotInline(string $attrClass=''): FilterSelect
     {
-        $this->divClassNotInline = $divClassNotInline;
+        $this->divClassNotInline = $attrClass;
 
         return $this;
     }
 
-    public function divClassInline(string $divClassInline): FilterSelect
+    public function divInline(string $attrClass=''): FilterSelect
     {
-        $this->divClassInline = $divClassInline;
+        $this->divClassInline = $attrClass;
+
+        return $this;
+    }
+
+    public function relativeDiv(string $attrClass=''): FilterSelect
+    {
+        $this->relativeDivClass = $attrClass;
 
         return $this;
     }

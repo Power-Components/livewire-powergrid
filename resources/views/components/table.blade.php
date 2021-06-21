@@ -1,31 +1,31 @@
-@include($theme->layout->header)
-
 @if(config('livewire-powergrid.filter') === 'outside')
     @if(count($make_filters) > 0)
         <div>
-{{--            @include('livewire-powergrid::tailwind.2.filter')--}}
+            <x-livewire-powergrid::frameworks.tailwind.filter
+                :makeFilters="$make_filters"
+                :theme="$theme"
+
+            />
         </div>
     @endif
 @endif
 
 @include($theme->layout->message)
 
-<x-livewire-powergrid::table-base :theme="$theme->table">
+<x-livewire-powergrid::table-base
+    :theme="$theme->table">
     <x-slot name="header">
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
             <x-livewire-powergrid::checkbox-all
                 :checkbox="$checkbox"
-                :theme="$theme"/>
+                :theme="$theme->checkbox"/>
 
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
-                    :theme="$theme->table"
+                    :theme="$theme"
                     :sortField="$sortField"
                     :sortDirection="$sortDirection"
-                    :sortAscIcon="$sortAscIcon"
-                    :sortDescIcon="$sortDescIcon"
-                    :sortIcon="$sortIcon"
                     :filtersEnabled="$filters_enabled"/>
             @endforeach
 
@@ -43,12 +43,13 @@
         <x-livewire-powergrid::inline-filters
             :makeFilters="$make_filters"
             :checkbox="$checkbox"
+            :actions="$actions"
             :columns="$columns"
             :theme="$theme"
         />
         @if(is_null($data) || count($data) === 0)
             <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                <td class="text-center p-2" colspan="{{ (($checkbox) ? 1:0)
+                <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
                                     + ((isset($actions)) ? 1: 0)
                                     + (count($columns))
                                     }}">
@@ -61,7 +62,7 @@
                     <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyClass }}"
                         wire:key="{{ $row->id }}">
                         <x-livewire-powergrid::checkbox-row
-                            :theme="$theme"
+                            :theme="$theme->checkbox"
                             :attribute="$row->{$checkboxAttribute}"
                             :checkbox="$checkbox"/>
 

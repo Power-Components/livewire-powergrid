@@ -11,13 +11,6 @@ if (!function_exists('powerGridTheme')) {
     }
 }
 
-if (!function_exists('powerGridThemeVersion')) {
-    function powerGridThemeVersion(): ?string
-    {
-        return config('livewire-powergrid.theme_versions')[config('livewire-powergrid.theme')];
-    }
-}
-
 if (!function_exists('powerGridJsFramework')) {
     function powerGridJsFramework(): string
     {

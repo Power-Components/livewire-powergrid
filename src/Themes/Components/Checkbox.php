@@ -9,11 +9,16 @@ class Checkbox
     public string $thClass = '';
 
     public string $inputClass = '';
+
     public string $thStyle = '';
+
     public string $labelStyle = '';
+
     public string $inputStyle = '';
 
-    public function thClass(string $attrClass, string $attrStyle=''): Checkbox
+    public string $divClass = '';
+
+    public function th(string $attrClass, string $attrStyle=''): Checkbox
     {
         $this->thClass    = $attrClass;
         $this->thStyle    = $attrStyle;
@@ -21,7 +26,7 @@ class Checkbox
         return $this;
     }
 
-    public function labelClass(string $attrClass, string $attrStyle=''): Checkbox
+    public function label(string $attrClass, string $attrStyle=''): Checkbox
     {
         $this->labelClass = $attrClass;
         $this->labelStyle = $attrStyle;
@@ -29,10 +34,17 @@ class Checkbox
         return $this;
     }
 
-    public function inputClass (string $attrClass, string $attrStyle=''): Checkbox
+    public function input (string $attrClass, string $attrStyle=''): Checkbox
     {
         $this->inputClass = $attrClass;
         $this->inputStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function div(string $attrClass): Checkbox
+    {
+        $this->divClass = $attrClass;
 
         return $this;
     }

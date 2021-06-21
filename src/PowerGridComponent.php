@@ -9,7 +9,6 @@ use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
@@ -37,7 +36,7 @@ class PowerGridComponent extends Component
 
     public array $perPageValues = [10, 25, 50, 100, 0];
 
-    public string $record_count = '';
+    public string $recordCount = '';
 
     public bool $exportOption = false;
 
@@ -70,6 +69,11 @@ class PowerGridComponent extends Component
     public function setUp()
     {
         $this->showPerPage();
+    }
+
+    public function template(): ?string
+    {
+        return null;
     }
 
     public function columns(): array
@@ -118,7 +122,7 @@ class PowerGridComponent extends Component
      */
     public function showRecordCount(string $mode = 'full'): PowerGridComponent
     {
-        $this->record_count = $mode;
+        $this->recordCount = $mode;
 
         return $this;
     }
@@ -155,7 +159,7 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-       // $this->paginationTheme = 'tailwind';
+        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->paginationTheme();
 
         $this->renderFilter();
     }
@@ -177,7 +181,7 @@ class PowerGridComponent extends Component
 
     private function renderView($data)
     {
-        return view($this->powerGridTheme->tableBaseView, [
+        return view($this->powerGridTheme->layout->table, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,
             'table' => 'livewire-powergrid::components.table'

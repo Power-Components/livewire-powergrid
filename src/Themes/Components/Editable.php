@@ -8,15 +8,34 @@ class Editable
 
     public string $view = '';
 
+    public string $buttonClass = '';
+
+    public string $inputClass = '';
+
     public function view(string $view): Editable
     {
         $this->view    = $view;
 
         return $this;
     }
-    public function spanClass(string $spanClass): Editable
+
+    public function span(string $attrClass): Editable
     {
-        $this->spanClass    = $spanClass;
+        $this->spanClass    = $attrClass;
+
+        return $this;
+    }
+
+    public function button(string $attrClass): Editable
+    {
+        $this->buttonClass    = $attrClass;
+
+        return $this;
+    }
+
+    public function input(string $attrClass): Editable
+    {
+        $this->inputClass    = $attrClass;
 
         return $this;
     }

@@ -10,23 +10,23 @@ class FilterNumber
 
     public string $divClassInline = '';
 
-    public function inputClass(string $inputClass): FilterNumber
+    public function input(string $attrClass=''): FilterNumber
     {
-        $this->inputClass = $inputClass;
+        $this->inputClass = $attrClass;
 
         return $this;
     }
 
-    public function divClassNotInline(string $divClassNotInline): FilterNumber
+    public function divNotInline(string $attrClass=''): FilterNumber
     {
-        $this->divClassNotInline = $divClassNotInline;
+        $this->divClassNotInline = $attrClass;
 
         return $this;
     }
 
-    public function divClassInline(string $divClassInline): FilterNumber
+    public function divInline(string $attrClass=''): FilterNumber
     {
-        $this->divClassInline = $divClassInline;
+        $this->divClassInline = $attrClass;
 
         return $this;
     }

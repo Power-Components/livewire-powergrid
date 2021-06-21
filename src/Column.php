@@ -6,7 +6,7 @@ class Column
 {
     public string $title = '';
 
-    public bool $searchable = true;
+    public bool $searchable = false;
 
     public bool $sortable = false;
 

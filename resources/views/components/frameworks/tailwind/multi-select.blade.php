@@ -33,7 +33,7 @@
                             </template>
                             <div x-show="selected.length == 0" class="flex-1">
                                 <input placeholder="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
-                                       class="w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                       class="power_grid w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                        x-bind:value="selectedValues()"
                                 >
                             </div>

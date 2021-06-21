@@ -4,6 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class Layout
 {
+    public string $table = '';
+
     public string $header = '';
 
     public string $pagination = '';
@@ -11,6 +13,13 @@ class Layout
     public string $message = '';
 
     public string $footer = '';
+
+    public function table(string $path): Layout
+    {
+        $this->table    = $path;
+
+        return $this;
+    }
 
     public function header(string $path): Layout
     {
@@ -39,5 +48,4 @@ class Layout
 
         return $this;
     }
-
 }

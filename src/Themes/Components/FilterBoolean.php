@@ -12,30 +12,34 @@ class FilterBoolean
 
     public string $divStyle = '';
 
-    public function inputClass(string $inputClass): FilterBoolean
+    public string $relativeDivClass = '';
+
+    public function input(string $attrClass, string $divStyle=''): FilterBoolean
     {
-        $this->inputClass = $inputClass;
+        $this->inputClass = $attrClass;
+
+        $this->divStyle = $divStyle;
 
         return $this;
     }
 
-    public function divClassNotInline(string $divClassNotInline): FilterBoolean
+    public function relativeDiv(string $attrClass): FilterBoolean
+    {
+        $this->relativeDivClass = $attrClass;
+
+        return $this;
+    }
+
+    public function divNotInline(string $divClassNotInline): FilterBoolean
     {
         $this->divClassNotInline = $divClassNotInline;
 
         return $this;
     }
 
-    public function divClassInline(string $divClassInline): FilterBoolean
+    public function divInline(string $divClassInline): FilterBoolean
     {
         $this->divClassInline = $divClassInline;
-
-        return $this;
-    }
-
-    public function divStyle(string $divStyle): FilterBoolean
-    {
-        $this->divStyle = $divStyle;
 
         return $this;
     }

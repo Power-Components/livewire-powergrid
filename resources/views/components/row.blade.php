@@ -16,31 +16,31 @@
                     <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
                             :row="$row"
-                            :spanClass="$theme->editable->spanClass"
+                            :theme="$theme->editable"
                             :field="$field"/>
 
                         <x-livewire-powergrid::click-to-copy
                             :row="$row"
-                            :field="$row->$field"
-                            :label="$column->click_tocopy['label'] ?? null"
+                            :field="$row->{$field}"
+                            :label="$column->click_to_copy['label'] ?? null"
                             :enabled="$column->click_to_copy['enabled'] ?? false"/>
                     </span>
 
                 @elseif(count($column->toggleable) > 0)
                     @include($theme->toggleable->view)
                 @else
-                <span class="flex justify-between">
+                    <span class="flex justify-between">
                     <div>
-                        {!! $row->$field !!}
+                        {!! $row->{$field} !!}
                     </div>
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
-                        :field="$row->$field"
-                        :label="$column->click_tocopy['label'] ?? null"
+                        :field="$row->{$field}"
+                        :label="$column->click_to_copy['label'] ?? null"
                         :enabled="$column->click_to_copy['enabled'] ?? false"/>
                 </span>
                 @endif
             </td>
         @endif
     @endforeach
-    </div>
+</div>

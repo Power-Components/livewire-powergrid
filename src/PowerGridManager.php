@@ -18,7 +18,13 @@ class PowerGridManager
 
     public static function theme(string $class): ThemeBase
     {
+        if ($class === 'tailwind') {
+            $class = \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class;
+        }
+        if ($class === 'bootstrap') {
+            $class = \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class;
+        }
+
         return new $class;
     }
-
 }

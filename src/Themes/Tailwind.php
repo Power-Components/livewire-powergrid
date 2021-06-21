@@ -2,29 +2,21 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
-    Editable,
-    FilterBoolean,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect,
-    PerPage,
-    Table,
-    Layout,
-    Toggleable
-};
+use PowerComponents\LivewirePowerGrid\Themes\Components\Cols;
 
 class Tailwind extends ThemeBase
 {
     public function __construct()
     {
-        self::$scripts = 'livewire-powergrid::components\\frameworks\\tailwind\\scripts';
         self::$styles  = 'livewire-powergrid::components\\frameworks\\tailwind\\styles';
     }
 
-    public function table(): Table
+    public static function paginationTheme(): string
+    {
+        return 'tailwind';
+    }
+
+    public function table(): Components\Table
     {
         return Theme::table('min-w-full divide-y divide-gray-200')
             ->thead('bg-gray-50')
@@ -35,96 +27,107 @@ class Tailwind extends ThemeBase
             ->tdBody('px-3 py-2 whitespace-nowrap');
     }
 
-    public function perPage(): PerPage
+    public function perPage(): Components\PerPage
     {
         return Theme::perPage()
             ->view('livewire-powergrid::components.frameworks.tailwind.footer')
-            ->selectClass('block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500');
+            ->select('block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500');
     }
 
-    public function toggleable(): Toggleable
+    public function actions(): Components\Actions
     {
-        return Theme::toggleable()
-            ->view('livewire-powergrid::components.frameworks.tailwind.toggleable');
+        return Theme::actions()
+        ->btn('focus:outline-none text-sm py-2.5 px-5 rounded border');
     }
 
-    public function editable(): Editable
+    public function cols(): Cols
     {
-        return Theme::editable()
-            ->view('livewire-powergrid::components.frameworks.tailwind.editable')
-            ->spanClass('flex justify-between');
+        return Theme::cols()
+            ->div('')
+            ->clearFilter('', '');
     }
 
-    public function layout(): Layout
+    public function layout(): Components\Layout
     {
         return Theme::layout()
+            ->table('livewire-powergrid::components\\frameworks\\tailwind\\table-base')
             ->header('livewire-powergrid::components.frameworks.tailwind.header')
             ->pagination('livewire-powergrid::components.frameworks.tailwind.pagination')
             ->message('livewire-powergrid::components.frameworks.tailwind.message')
             ->footer('livewire-powergrid::components.frameworks.tailwind.footer');
     }
 
-    public function checkbox(): Checkbox
+    public function toggleable(): Components\Toggleable
+    {
+        return Theme::toggleable()
+            ->view('livewire-powergrid::components.frameworks.tailwind.toggleable');
+    }
+
+    public function editable(): Components\Editable
+    {
+        return Theme::editable()
+            ->view('livewire-powergrid::components.frameworks.tailwind.editable')
+            ->span('flex justify-between')
+            ->input('block bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500');
+    }
+
+    public function checkbox(): Components\Checkbox
     {
         return Theme::checkbox()
-            ->thClass('px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider')
-            ->labelClass('flex items-center space-x-3')
-            ->inputClass('form-checkbox h-4 w-4');
+            ->th('px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider')
+            ->label('flex items-center space-x-3')
+            ->input('form-checkbox h-4 w-4');
     }
 
-    public function filterBoolean(): FilterBoolean
+    public function filterBoolean(): Components\FilterBoolean
     {
         return Theme::filterBoolean()
-            ->inputClass('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->divClassNotInline('pt-2 p-2')
-            ->divStyle('max-width: 370px')
-            ->divClassInline('');
+            ->input('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active', 'max-width: 370px')
+            ->divNotInline('pt-2 p-2')
+            ->relativeDiv('hidden')
+            ->divInline('');
     }
 
-    public function filterDatePicker(): FilterDatePicker
+    public function filterDatePicker(): Components\FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->inputClass('appearance-none livewire_powergrid_input flatpickr flatpickr-input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->divClassNotInline('pt-2 p-2')
-            ->divClassInline('');
+            ->input('appearance-none livewire_powergrid_input flatpickr flatpickr-input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
+            ->divNotInline('pt-2 p-2')
+            ->divInline('');
     }
 
-    public function filterMultiSelect(): FilterMultiSelect
+    public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->inputClass('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->divClassNotInline('pt-2 p-2')
-            ->divClassInline('pr-6');
+            ->view('livewire-powergrid::components.frameworks.tailwind.multi-select')
+            ->input('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
+            ->divNotInline('pt-2 p-2')
+            ->divInline('pr-6');
     }
 
-    public function filterNumber(): FilterNumber
+    public function filterNumber(): Components\FilterNumber
     {
         return Theme::filterNumber()
-            ->inputClass('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->divClassNotInline('pt-2 p-2')
-            ->divClassInline('pr-6');
+            ->input('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
+            ->divNotInline('pt-2 p-2')
+            ->divInline('pr-6');
     }
 
-    public function filterSelect(): FilterSelect
+    public function filterSelect(): Components\FilterSelect
     {
         return Theme::filterSelect()
-            ->inputClass('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->divClassNotInline('pt-2 p-2')
-            ->divClassInline('pr-6');
+            ->input('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
+            ->divNotInline('pt-2 p-2')
+            ->relativeDiv('pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
+            ->divInline('pr-6');
     }
 
-    public function filterInputText(): FilterInputText
+    public function filterInputText(): Components\FilterInputText
     {
         return Theme::filterInputText()
-            ->selectClass('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active')
-            ->inputClass('mt-2 w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500')
-            ->divClassNotInline('pt-2 p-2')
-            ->divClassInline('pr-6');
+            ->select('appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active', 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
+            ->input('mt-2 w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500')
+            ->divNotInline('pt-2 p-2')
+            ->divInline('pr-6');
     }
-
-    public function tableBaseView(): string
-    {
-        return 'livewire-powergrid::components\\frameworks\\tailwind\\table-base';
-    }
-
 }

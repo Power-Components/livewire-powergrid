@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Checkbox,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    Cols,
     Editable,
     FilterBoolean,
     FilterDatePicker,
@@ -27,6 +29,8 @@ abstract class ThemeBase
 
     public ?Layout $layout;
 
+    public ?Actions $actions;
+
     public ?Editable $editable;
 
     public ?Toggleable $toggleable;
@@ -43,17 +47,21 @@ abstract class ThemeBase
 
     public ?FilterInputText $filterInputText;
 
-    public ?string $tableBaseView;
-
     public ?PerPage $perPage;
+
+    public ?Cols $cols;
+
+    public static string $paginationTheme;
 
     public function apply(): ThemeBase
     {
         $this->table             = $this->table();
         $this->perPage           = $this->perPage();
+        $this->cols              = $this->cols();
         $this->editable          = $this->editable();
         $this->layout            = $this->layout();
         $this->toggleable        = $this->toggleable();
+        $this->actions           = $this->actions();
         $this->checkbox          = $this->checkbox();
         $this->filterBoolean     = $this->filterBoolean();
         $this->filterDatePicker  = $this->filterDatePicker();
@@ -61,8 +69,13 @@ abstract class ThemeBase
         $this->filterNumber      = $this->filterNumber();
         $this->filterSelect      = $this->filterSelect();
         $this->filterInputText   = $this->filterInputText();
-        $this->tableBaseView     = $this->tableBaseView();
+
         return $this;
+    }
+
+    public static function paginationTheme(): string
+    {
+        return self::$paginationTheme;
     }
 
     public static function scripts(): string
@@ -85,7 +98,22 @@ abstract class ThemeBase
         return null;
     }
 
+    public function perPage(): ?PerPage
+    {
+        return null;
+    }
+
     public function editable(): ?Editable
+    {
+        return null;
+    }
+
+    public function cols(): ?Cols
+    {
+        return null;
+    }
+
+    public function actions(): ?Actions
     {
         return null;
     }
@@ -126,11 +154,6 @@ abstract class ThemeBase
     }
 
     public function filterInputText(): ?FilterInputText
-    {
-        return null;
-    }
-
-    public function tableBaseView()
     {
         return null;
     }

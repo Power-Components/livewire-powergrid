@@ -23,15 +23,15 @@
                 <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
             @endif
                 <input id="input_{!! $date['field'] !!}"
+                       data-field="{!! $date['data_field'] !!}"
                        data-key="filters_enabled.date_picker.{!! $date['data_field'] !!}"
-                       wire:model.debounce.800ms="filters_enabled.{!! $date['data_field'] !!}"
                        wire:ignore
-                       class="range_input_{!! $date['field'] !!} {{ $theme->inputClass }}"
+                       class="power_grid range_input_{!! $date['field'] !!} {{ $theme->inputClass }}"
                        type="text"
                        placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
                 >
             </div>
-            @push('powergrid_scripts')
+            @push('power_grid_scripts')
             <script type="application/javascript">
                 flatpickr(document.getElementsByClassName('range_input_{!! $date['field'] !!}'), {
                         mode: 'range',
@@ -51,7 +51,9 @@
                         onClose: function (selectedDates, dateStr, instance) {
                             window.livewire.emit('eventChangeDatePiker', {
                                 selectedDates: selectedDates,
-                                values: instance._input.attributes['data-key'].value
+                                field: instance._input.attributes['data-field'].value,
+                                values: instance._input.attributes['data-key'].value,
+                                label: '{{ $date['label'] }}'
                             });
                         }
                     }

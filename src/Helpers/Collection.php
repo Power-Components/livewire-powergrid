@@ -28,7 +28,7 @@ class Collection implements FilterInterface
     /**
      * Create a new length-aware paginator instance.
      *
-     * @param Collection $items
+     * @param BaseCollection $items
      * @param int $total
      * @param int $perPage
      * @param int $currentPage

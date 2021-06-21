@@ -7,10 +7,11 @@
 <div>
     @if($enabled)
         <button
-            style="width: 24px; height: 30px; background-repeat: no-repeat;"
+            style="background: transparent; text-align: left;border: 0;padding: 4px;"
             onclick="copyToClipboard(this)" value="copy"
-            class="img_copy" data-value="{{ $field }}"
+            data-value="{{ $field }}"
             title="{{ $label }}">
+        <x-livewire-powergrid::icons.copy/>
         </button>
     @endif
 </div>
