@@ -57,9 +57,9 @@ class Model implements FilterInterface
     private static function validateInputTextOptions(string $field, $filters): bool
     {
         return isset($filters['input_text_options'][$field]) && in_array(
-            strtolower($filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-        );
+                strtolower($filters['input_text_options'][$field]),
+                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+            );
     }
 
     /**
@@ -82,30 +82,36 @@ class Model implements FilterInterface
      */
     public static function filterInputText($query, string $field, $value, $filters)
     {
+        /** @var \Illuminate\Database\Eloquent\Collection $query
+         * @var string $textFieldOperator
+         */
         $textFieldOperator = (self::validateInputTextOptions($field, $filters) ? strtolower($filters['input_text_options'][$field]) : 'contains');
 
-        if ($textFieldOperator == 'is') {
-            $query->where($field, '=', $value);
-        }
+        switch ($textFieldOperator) {
+            case 'is' :
+                $query->where($field, '=', $value);
 
-        if ($textFieldOperator == 'is_not') {
-            $query->where($field, '!=', $value);
-        }
+                break;
+            case 'is_not' :
+                $query->where($field, '!=', $value);
 
-        if ($textFieldOperator == 'starts_with') {
-            $query->where($field, 'like', $value . '%');
-        }
+                break;
+            case 'starts_with' :
+                $query->where($field, 'like', $value . '%');
 
-        if ($textFieldOperator == 'ends_with') {
-            $query->where($field, 'like', '%' . $value);
-        }
+                break;
+            case 'ends_with' :
+                $query->where($field, 'like', '%' . $value);
 
-        if ($textFieldOperator == 'contains') {
-            $query->where($field, 'like', '%' . $value . '%');
-        }
+                break;
+            case 'contains' :
+                $query->where($field, 'like', '%' . $value . '%');
 
-        if ($textFieldOperator == 'contains_not') {
-            $query->where($field, 'not like', '%' . $value . '%');
+                break;
+            case 'contains_not' :
+                $query->where($field, 'not like', '%' . $value . '%');
+
+                break;
         }
     }
 
@@ -116,6 +122,7 @@ class Model implements FilterInterface
      */
     public static function filterBoolean($collection, string $field, $value)
     {
+        /** @var \Illuminate\Database\Eloquent\Collection $collection */
         if ($value != "all") {
             $value = ($value == "true");
             $collection->where($field, '=', $value);
@@ -129,6 +136,7 @@ class Model implements FilterInterface
      */
     public static function filterSelect($collection, string $field, $value)
     {
+        /** @var \Illuminate\Database\Eloquent\Collection $collection */
         if (filled($value)) {
             $collection->where($field, $value);
         }
@@ -152,6 +160,7 @@ class Model implements FilterInterface
             }
         }
         if (!$empty) {
+            /** @var \Illuminate\Database\Eloquent\Collection $collection */
             $collection->whereIn($field, $values);
         }
     }
@@ -163,6 +172,7 @@ class Model implements FilterInterface
      */
     public static function filterNumber($collection, string $field, $value)
     {
+        /** @var \Illuminate\Database\Eloquent\Collection $collection */
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
             $start = (float)str_replace($value['decimal'], '.', $start);
@@ -186,17 +196,38 @@ class Model implements FilterInterface
         }
     }
 
-    public static function filterContains($query, array $columns, string $search, string $table)
+    public static function filterContains(Builder $collection, array $columns, string $search, array $relations = [])
     {
+        /** @var \Illuminate\Database\Eloquent\Collection $collection */
         if ($search != '') {
-            $query->where(function (Builder $query) use ($columns, $search, $table) {
+            $collection->where(function (Builder $query) use ($columns, $search, $relations) {
                 foreach ($columns as $column) {
-                    $hasColumn = Schema::hasColumn($table, $column->field);
+                    $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
                     if ($hasColumn) {
                         $query->orWhere($column->field, 'like', '%' . $search . '%');
                     }
                 }
             });
+
+            if (count($relations)) {
+                foreach ($relations as $table => $relation) {
+                    if (!is_array($relation)) {
+                        return;
+                    }
+
+                    if ($collection->getRelation($table)) {
+                        foreach ($relation as $column) {
+                            if (!Schema::hasColumn($collection->getModel()->getTable(), $column)) {
+                                return;
+                            }
+
+                            $collection->orWhereHas($table, function (Builder $query) use ($search, $column, $table) {
+                                $query->where($column, 'like', '%' . $search . '%');
+                            });
+                        }
+                    }
+                }
+            }
         }
     }
 }

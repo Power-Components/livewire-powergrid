@@ -21,6 +21,11 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
+    public function template(): ?string
+    {
+        return null;
+    }
+
     public function dataSource()
     {
         return {{ modelLastName }}::query()->get();

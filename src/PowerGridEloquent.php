@@ -40,10 +40,11 @@ class PowerGridEloquent
     /**
      * @return array
      */
-    public function make()
+    public function make(): ?array
     {
         if (!is_a($this->collection, Collection::class)) {
-            return;
+
+            return null;
         }
 
         return $this->collection->map(function (Model $model) {

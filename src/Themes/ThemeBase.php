@@ -2,54 +2,43 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
-    Checkbox,
-    Cols,
-    Editable,
-    FilterBoolean,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect,
-    Layout,
-    PerPage,
-    Table,
-    Toggleable};
-
 abstract class ThemeBase
 {
-    public static string $scripts;
+    public string $name;
 
-    public static string $styles;
+    protected string $base = "livewire-powergrid::components.frameworks.";
 
-    public ?Table $table;
+    public static string $scripts = "";
 
-    public ?Checkbox $checkbox;
+    public static string $styles = "";
 
-    public ?Layout $layout;
+    public ?Components\Table $table;
 
-    public ?Actions $actions;
+    public ?Components\Checkbox $checkbox;
 
-    public ?Editable $editable;
+    public ?Components\Layout $layout;
 
-    public ?Toggleable $toggleable;
+    public ?Components\Actions $actions;
 
-    public ?FilterBoolean $filterBoolean;
+    public ?Components\Editable $editable;
 
-    public ?FilterSelect $filterSelect;
+    public ?Components\Toggleable $toggleable;
 
-    public ?FilterDatePicker $filterDatePicker;
+    public ?Components\FilterBoolean $filterBoolean;
 
-    public ?FilterMultiSelect $filterMultiSelect;
+    public ?Components\FilterSelect $filterSelect;
 
-    public ?FilterNumber $filterNumber;
+    public ?Components\FilterDatePicker $filterDatePicker;
 
-    public ?FilterInputText $filterInputText;
+    public ?Components\FilterMultiSelect $filterMultiSelect;
 
-    public ?PerPage $perPage;
+    public ?Components\FilterNumber $filterNumber;
 
-    public ?Cols $cols;
+    public ?Components\FilterInputText $filterInputText;
+
+    public ?Components\PerPage $perPage;
+
+    public ?Components\Cols $cols;
 
     public static string $paginationTheme;
 
@@ -78,82 +67,72 @@ abstract class ThemeBase
         return self::$paginationTheme;
     }
 
-    public static function scripts(): string
-    {
-        return self::$scripts;
-    }
-
-    public static function styles(): string
-    {
-        return self::$styles;
-    }
-
-    public function table(): ?Table
+    public function table(): ?Components\Table
     {
         return null;
     }
 
-    public function checkbox(): ?Checkbox
+    public function checkbox(): ?Components\Checkbox
     {
         return null;
     }
 
-    public function perPage(): ?PerPage
+    public function perPage(): ?Components\PerPage
     {
         return null;
     }
 
-    public function editable(): ?Editable
+    public function editable(): ?Components\Editable
     {
         return null;
     }
 
-    public function cols(): ?Cols
+    public function cols(): ?Components\Cols
     {
         return null;
     }
 
-    public function actions(): ?Actions
+    public function actions(): ?Components\Actions
     {
         return null;
     }
 
-    public function layout(): ?Layout
+    public function layout(): ?Components\Layout
     {
         return null;
     }
 
-    public function toggleable(): ?Toggleable
+    public function toggleable(): ?Components\Toggleable
     {
         return null;
     }
 
-    public function filterBoolean(): ?FilterBoolean
+    public function filterBoolean(): ?Components\FilterBoolean
     {
         return null;
     }
 
-    public function filterDatePicker(): ?FilterDatePicker
+    public function filterDatePicker(): ?Components\FilterDatePicker
     {
         return null;
     }
 
-    public function filterMultiSelect(): ?FilterMultiSelect
+    public function filterMultiSelect(): ?Components\FilterMultiSelect
     {
         return null;
     }
 
-    public function filterNumber(): ?FilterNumber
+    public function filterNumber(): ?Components\FilterNumber
     {
         return null;
     }
 
-    public function filterSelect(): ?FilterSelect
+    public function filterSelect(): ?Components\FilterSelect
     {
         return null;
     }
 
-    public function filterInputText(): ?FilterInputText
+    public function filterInputText(): ?Components\FilterInputText
     {
         return null;
     }

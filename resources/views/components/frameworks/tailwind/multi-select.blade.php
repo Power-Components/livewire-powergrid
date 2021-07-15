@@ -5,13 +5,15 @@
     'column' => null
 ])
 <div>
-    <div x-data="dropdown_{{ $column->field }}()" x-init="loadOptions()">
+    <div x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['relation_id'] }}')"
+         x-init="loadOptions()">
         <input name="values" type="hidden" x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">
             <div class="flex flex-col items-center relative">
                 <div x-on:click="open" class="w-full svelte-1l8159u multi_select_{{ $column->field }}"
                      style="min-width: 160px !important;">
-                    <div class="my-2 p-1 flex svelte-1l8159u">
+                    <div
+                        class="my-2 border focus:bg-white focus:border-gray-500 border-gray-300 rounded flex svelte-1l8159u">
                         <div class="flex flex-auto flex-wrap">
                             <template x-for="(option,index) in selected" :key="options[option].value">
                                 <div
@@ -31,9 +33,9 @@
                                     </div>
                                 </div>
                             </template>
-                            <div x-show="selected.length == 0" class="flex-1">
+                            <div x-show="selected.length === 0" class="flex-1">
                                 <input placeholder="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
-                                       class="power_grid w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                       class="w-full block bg-white-200 text-gray-700 py-2 text-sm uppercase px-3 leading-tight focus:outline-none "
                                        x-bind:value="selectedValues()"
                                 >
                             </div>
@@ -69,8 +71,9 @@
                         <div class="flex flex-col w-full">
                             <template x-for="(option,index) in options" :key="option">
                                 <div>
-                                    <div class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
-                                         @click="select(index,$event)">
+                                    <div
+                                        class="cursor-pointer w-full border-gray-100 rounded-t border-b hover:bg-teal-100"
+                                        @click="select(index,$event)">
                                         <div x-bind:class="option.selected ? 'border-teal-600' : ''"
                                              class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
                                             <div class="w-full items-center flex">
@@ -88,15 +91,10 @@
             </div>
         </div>
     </div>
-    <style>
-        [x-cloak] {
-            display: none;
-        }
-    </style>
 
     <!-- Power Grid Multi Select Scripts -->
     <script>
-        function dropdown_{!! $column->field !!}() {
+        function dropdown(field, relation_id) {
             return {
                 options: [],
                 selected: [],
@@ -119,7 +117,7 @@
                         this.selected.push(index);
                         this.show = false
                         window.livewire.emit('eventMultiSelect', {
-                            id: '{!! $multiSelect['relation_id'] !!}',
+                            id: relation_id,
                             values: this.selectedValues()
                         });
 
@@ -134,12 +132,12 @@
                     this.options[option].selected = false;
                     this.selected.splice(index, 1);
                     window.livewire.emit('eventMultiSelect', {
-                        id: '{!! $multiSelect['relation_id'] !!}',
-                        values: this.selectedValues()
+                        id: relation_id,
+                        values: selectedValues()
                     });
                 },
                 loadOptions() {
-                    const options = document.getElementById('select_{!! $column->field !!}').options;
+                    const options = document.getElementById('select_' + field).options;
                     for (let i = 0; i < options.length; i++) {
                         this.options.push({
                             value: options[i].value,
@@ -159,7 +157,10 @@
     <!-- Power Grid Date Picker Scripts -->
 
     <label for="select" class="hidden"></label>
-    <select class="hidden" x-cloak id="select_{!! $column->field !!}" id="input_{!! $multiSelect['relation_id'] !!}"
+    <label for="select_{!! $column->field !!}"></label>
+    <select class="hidden"
+            x-cloak
+            id="select_{!! $column->field !!}"
             wire:model.lazy="filters.multi_select.{!! $multiSelect['relation_id'] !!}">
         <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
         @foreach($multiSelect['data_source'] as $relation)

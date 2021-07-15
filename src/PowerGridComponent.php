@@ -91,6 +91,11 @@ class PowerGridComponent extends Component
         return null;
     }
 
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
     /**
      * @return $this
      * Show search input into component
@@ -170,7 +175,7 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $data          = $this->loadData();
+        $data = $this->loadData();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -355,26 +360,26 @@ class PowerGridComponent extends Component
         if ($isCollection) {
             $this->isCollection = true;
 
-            $filters    = Collection::filterContains($this->resolveCollection($dataSource), $this->columns(), $this->search);
-            $filters    = Collection::filter($this->filters, $filters);
+            $filters = Collection::filterContains($this->resolveCollection($dataSource), $this->columns(), $this->search);
+            $filters = Collection::filter($this->filters, $filters);
 
-            $results    = $this->applySorting($filters);
+            $results = $this->applySorting($filters);
 
             if ($results->count()) {
                 $this->filtered = $results->pluck('id')->toArray();
 
-                $paginate      = Collection::paginate($results, $this->perPage);
+                $paginate = Collection::paginate($results, $this->perPage);
 
                 if (is_a($this->addColumns(), PowerGridCollection::class)) {
-                    $results       = $paginate->setCollection($this->transform($paginate->getCollection()));
+                    $results = $paginate->setCollection($this->transform($paginate->getCollection()));
                 }
             }
         } else {
-            $model   = $this->resolveModel($dataSource);
-            $table   = $model->getModel()->getTable();
+            $model = $this->resolveModel($dataSource);
 
-            $results = $model->where(function ($query) use ($table) {
-                Model::filterContains($query, $this->columns(), $this->search, $table);
+            $results = $model->where(function ($query) {
+                Model::filterContains($query, $this->columns(), $this->search, $this->relationSearch());
+
                 Model::filter($this->filters, $query);
             })->orderBy($this->sortField, $this->sortDirection)
                 ->paginate($this->perPage);

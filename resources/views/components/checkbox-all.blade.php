@@ -10,7 +10,7 @@
                     <input class="{{ $theme->inputClass }}"
                            type="checkbox"
                            wire:click="selectCheckboxAll()"
-                           wire:model.lazy="checkboxAll">
+                           wire:model.defer="checkboxAll">
                 </label>
             </div>
 

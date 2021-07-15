@@ -23,12 +23,22 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function dataSource(): PowerGridEloquent
+    public function template(): ?string
+    {
+        return null;
+    }
+
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
+    public function dataSource(): Builder
     {
         return {{ modelLastName }}::query();
     }
 
-    public function addColumns(): ?PowerGrid
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')

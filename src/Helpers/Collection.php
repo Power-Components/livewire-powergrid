@@ -46,7 +46,7 @@ class Collection implements FilterInterface
         ));
     }
 
-    public static function search($model, string $search, $columns)
+    public static function search(BaseCollection $model, string $search, $columns)
     {
         if (empty($search)) {
             return $model;
@@ -64,11 +64,15 @@ class Collection implements FilterInterface
         });
     }
 
-    public static function filter($filters, $query)
+    public static function filter($filters, $query): BaseCollection
     {
+        /** @var BaseCollection $query */
+        /** @var array $filters */
+
         if (count($filters) === 0) {
             return $query;
         }
+
         foreach ($filters as $key => $type) {
             foreach ($type as $field => $value) {
                 if (!filled($value)) {
@@ -108,6 +112,7 @@ class Collection implements FilterInterface
 
     public static function filterDatePicker($collection, string $field, $value)
     {
+        /** @var BaseCollection $collection */
         if (isset($value[0]) && isset($value[1])) {
             $collection = $collection->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
         }
@@ -132,6 +137,7 @@ class Collection implements FilterInterface
 
     public static function filterInputText($collection, string $field, $value, $filters)
     {
+        /** @var BaseCollection $collection */
         $textFieldOperator = (self::validateInputTextOptions($field, $filters) ? strtolower($filters['input_text_options'][$field]) : 'contains');
 
         if ($textFieldOperator == 'is') {
@@ -171,6 +177,7 @@ class Collection implements FilterInterface
 
     public static function filterBoolean($collection, string $field, $value)
     {
+        /** @var BaseCollection $collection */
         if ($value != "all") {
             $value = ($value == "true");
 
@@ -182,6 +189,7 @@ class Collection implements FilterInterface
 
     public static function filterSelect($collection, string $field, $value)
     {
+        /** @var BaseCollection $collection */
         if (filled($value)) {
             return $collection->where($field, $value);
         }
@@ -189,6 +197,8 @@ class Collection implements FilterInterface
 
     public static function filterMultiSelect($collection, string $field, $value)
     {
+        /** @var BaseCollection $collection */
+
         $empty  = false;
         $values = collect($value)->get('values');
         if (count($values) === 0) {
@@ -208,6 +218,8 @@ class Collection implements FilterInterface
 
     public static function filterNumber($collection, string $field, $value)
     {
+        /** @var BaseCollection $collection */
+
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
             $start = (float)str_replace($value['decimal'], '.', $start);
@@ -235,6 +247,7 @@ class Collection implements FilterInterface
 
     public static function filterContains($collection, array $columns, string $search)
     {
+        /** @var BaseCollection $collection */
         if (empty($search)) {
             return $collection;
         }
