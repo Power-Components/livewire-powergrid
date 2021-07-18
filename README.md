@@ -76,7 +76,13 @@ Excel export
 
 If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
 
-## 6. Credits
+## 6. How to contribute
+
+Claudio Pereira has written an excellent document in portuguese/Brazil language for all Brazilians who want to contribute.
+
+Just click on this link to learn more => [https://github.com/Power-Components/como-contribuir-com-o-powergrid/](https://github.com/Power-Components/como-contribuir-com-o-powergrid/).
+
+## 7. Credits
 
 Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
