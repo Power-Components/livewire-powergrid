@@ -57,10 +57,10 @@ class PowerGridComponent extends Component
     protected $dataSource;
 
     protected $listeners = [
-        'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventChangeInput'     => 'eventChangeInput',
-        'eventToggleChanged'   => 'eventChangeInput',
-        'eventMultiSelect'     => 'eventMultiSelect'
+        'eventChangeDatePiker'  => 'eventChangeDatePiker',
+        'eventInputChanged'     => 'eventInputChanged',
+        'eventToggleChanged'    => 'eventInputChanged',
+        'eventMultiSelect'      => 'eventMultiSelect'
     ];
 
     /**
@@ -164,7 +164,8 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->paginationTheme();
+        ds($this->columns);
+        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
 
         $this->renderFilter();
     }
@@ -232,7 +233,7 @@ class PowerGridComponent extends Component
      * @param array $data
      * @throws \Exception
      */
-    public function eventChangeInput(array $data): void
+    public function eventInputChanged(array $data): void
     {
         $update = $this->update($data);
 

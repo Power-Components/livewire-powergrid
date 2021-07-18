@@ -8,12 +8,6 @@ class Tailwind extends ThemeBase
 {
     public string $name = "tailwind";
 
-    public function __construct()
-    {
-        self::$styles   = "livewire-powergrid::components\\frameworks\\{$this->name}\\styles";
-        self::$scripts  = "livewire-powergrid::components\\frameworks\\{$this->name}\\scripts";
-    }
-
     public static function paginationTheme(): string
     {
         return "tailwind";
@@ -30,10 +24,10 @@ class Tailwind extends ThemeBase
             ->tdBody("px-3 py-2 whitespace-nowrap");
     }
 
-    public function perPage(): Components\PerPage
+    public function footer(): Components\Footer
     {
-        return Theme::perPage()
-            ->view("{$this->base}{$this->name}.footer")
+        return Theme::footer()
+            ->view($this->root() . "footer")
             ->select("block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500");
     }
 
@@ -50,26 +44,10 @@ class Tailwind extends ThemeBase
             ->clearFilter("", "");
     }
 
-    public function layout(): Components\Layout
-    {
-        return Theme::layout()
-            ->table("{$this->base}{$this->name}.table-base")
-            ->header("{$this->base}{$this->name}.header")
-            ->pagination("{$this->base}{$this->name}.pagination")
-            ->message("{$this->base}{$this->name}.message")
-            ->footer("{$this->base}{$this->name}.footer");
-    }
-
-    public function toggleable(): Components\Toggleable
-    {
-        return Theme::toggleable()
-            ->view("{$this->base}{$this->name}.toggleable");
-    }
-
     public function editable(): Components\Editable
     {
         return Theme::editable()
-            ->view("{$this->base}{$this->name}.editable")
+            ->view($this->root() . "editable")
             ->span("flex justify-between")
             ->input("block bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500");
     }
@@ -85,7 +63,7 @@ class Tailwind extends ThemeBase
     public function filterBoolean(): Components\FilterBoolean
     {
         return Theme::filterBoolean()
-            ->input("appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active", 'max-width: 370px')
+            ->input("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active", 'max-width: 370px')
             ->divNotInline("pt-2 p-2")
             ->relativeDiv("hidden")
             ->divInline("");
@@ -94,7 +72,7 @@ class Tailwind extends ThemeBase
     public function filterDatePicker(): Components\FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input("appearance-none livewire_powergrid_input flatpickr flatpickr-input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
+            ->input("appearance-none flatpickr flatpickr-input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
             ->divNotInline("pt-2 p-2")
             ->divInline("");
     }
@@ -102,8 +80,8 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view("{$this->base}{$this->name}.multi-select")
-            ->input("appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
+            ->view($this->root()."multi-select")
+            ->input("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
             ->divNotInline("pt-2 p-2")
             ->divInline("pr-6");
     }
@@ -111,7 +89,7 @@ class Tailwind extends ThemeBase
     public function filterNumber(): Components\FilterNumber
     {
         return Theme::filterNumber()
-            ->input("appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
+            ->input("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
             ->divNotInline("pt-2 p-2")
             ->divInline("pr-6");
     }
@@ -119,7 +97,7 @@ class Tailwind extends ThemeBase
     public function filterSelect(): Components\FilterSelect
     {
         return Theme::filterSelect()
-            ->input("appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
+            ->input("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active")
             ->divNotInline("pt-2 p-2")
             ->relativeDiv("pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700")
             ->divInline("pr-6");
@@ -128,7 +106,7 @@ class Tailwind extends ThemeBase
     public function filterInputText(): Components\FilterInputText
     {
         return Theme::filterInputText()
-            ->select("appearance-none livewire_powergrid_input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active", 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
+            ->select("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active", 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
             ->input("mt-2 w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500")
             ->divNotInline("pt-2 p-2")
             ->divInline("pr-6");

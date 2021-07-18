@@ -2,13 +2,13 @@
 
     <div class="flex flex-row">
 
-        @include('livewire-powergrid::components.frameworks.tailwind.export')
+        @include($theme->base. ''.$theme->name.'.export')
 
-        @include('livewire-powergrid::components.frameworks.tailwind.loading')
+        @include($theme->base. ''.$theme->name.'.loading')
 
     </div>
 
-    @include('livewire-powergrid::components.frameworks.tailwind.search')
+    @include($theme->base. ''.$theme->name.'.search')
 
 </div>
 

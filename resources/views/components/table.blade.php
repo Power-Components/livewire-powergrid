@@ -1,10 +1,9 @@
 @if(config('livewire-powergrid.filter') === 'outside')
-    @if(count($make_filters) > 0)
+    @if(count($makeFilters) > 0)
         <div>
             <x-livewire-powergrid::frameworks.tailwind.filter
-                :makeFilters="$make_filters"
+                :makeFilters="$makeFilters"
                 :theme="$theme"
-
             />
         </div>
     @endif
@@ -41,7 +40,7 @@
 
     <x-slot name="rows">
         <x-livewire-powergrid::inline-filters
-            :makeFilters="$make_filters"
+            :makeFilters="$makeFilters"
             :checkbox="$checkbox"
             :actions="$actions"
             :columns="$columns"

@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
-class PerPage
+class Footer
 {
     public string $selectClass = '';
 
@@ -10,7 +10,7 @@ class PerPage
 
     public string $view = '';
 
-    public function select(string $attrClass='', string $attrStyle=''): PerPage
+    public function select(string $attrClass='', string $attrStyle=''): Footer
     {
         $this->selectClass    = $attrClass;
         $this->selectStyle    = $attrStyle;
@@ -18,7 +18,7 @@ class PerPage
         return $this;
     }
 
-    public function view(string $path): PerPage
+    public function view(string $path): Footer
     {
         $this->view = $path;
 

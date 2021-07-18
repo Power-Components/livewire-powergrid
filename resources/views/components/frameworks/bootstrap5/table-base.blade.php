@@ -8,11 +8,7 @@
         @include($table)
     </div>
     <div class="col-md-12">
-        <x-livewire-powergrid::footer>
-            <x-slot name="perPage">
-                @include($theme->perPage->view)
-            </x-slot>
-        </x-livewire-powergrid::footer>
+        @include($theme->footer->view, ['theme' => $theme])
     </div>
 </div>
 

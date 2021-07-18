@@ -75,7 +75,6 @@ class Column
     public function sortable(): Column
     {
         $this->sortable = true;
-        $this->html     = false;
 
         return $this;
     }

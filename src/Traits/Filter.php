@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 
 trait Filter
 {
-    public Collection $make_filters;
+    public Collection $makeFilters;
 
     public array $filters = [];
 
@@ -24,7 +24,7 @@ trait Filter
     private function renderFilter()
     {
         $this->filters = [];
-        $make_filters  = [];
+        $makeFilters  = [];
 
         foreach ($this->columns as $column) {
             if (!isset($column->inputs)) {
@@ -34,10 +34,10 @@ trait Filter
                 $input['data_field']  = ($column->data_field != '') ? $column->data_field : $column->field;
                 $input['field']       = $column->field;
                 $input['label']       = $column->title;
-                $make_filters[$key][] = $input;
+                $makeFilters[$key][] = $input;
             }
         }
-        $this->make_filters = collect($make_filters);
+        $this->makeFilters = collect($makeFilters);
     }
 
     /**
@@ -59,7 +59,7 @@ trait Filter
     {
         $this->filters['multi_select'][$data['id']] = $data;
 
-        $filter = collect($this->make_filters->get('multi_select'))->where('relation_id', $data['id']);
+        $filter = collect($this->makeFilters->get('multi_select'))->where('relation_id', $data['id']);
 
         $this->filters_enabled[$data['id']]['id']                    = $data['id'];
         $this->filters_enabled[$data['id']]['label']                 = $filter->first()['label'];

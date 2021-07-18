@@ -6,12 +6,6 @@ class Bootstrap5 extends ThemeBase
 {
     public string $name = "bootstrap5";
 
-    public function __construct()
-    {
-        self::$styles   = "livewire-powergrid::components\\frameworks\\{$this->name}\\styles";
-        self::$scripts  = "livewire-powergrid::components\\frameworks\\{$this->name}\\scripts";
-    }
-
     public static function paginationTheme(): string
     {
         return "bootstrap";
@@ -28,16 +22,6 @@ class Bootstrap5 extends ThemeBase
             ->tdBody("", "vertical-align: middle; line-height: normal;");
     }
 
-    public function layout(): Components\Layout
-    {
-        return Theme::layout()
-            ->table("{$this->base}{$this->name}.table-base")
-            ->header("{$this->base}{$this->name}.header")
-            ->pagination("{$this->base}{$this->name}.pagination")
-            ->message("{$this->base}{$this->name}.message")
-            ->footer("{$this->base}{$this->name}.footer");
-    }
-
     public function cols(): Components\Cols
     {
         return Theme::cols()
@@ -45,7 +29,7 @@ class Bootstrap5 extends ThemeBase
             ->clearFilter("", "color: #c30707; cursor:pointer; float: right;");
     }
 
-    public function perPage(): Components\PerPage
+    public function perPage(): Components\Footer
     {
         return Theme::perPage()
             ->view("{$this->base}{$this->name}.footer")
@@ -67,13 +51,13 @@ class Bootstrap5 extends ThemeBase
     public function toggleable(): Components\Toggleable
     {
         return Theme::toggleable()
-            ->view("{$this->base}{$this->name}.toggleable");
+            ->view($this->root() . "toggleable");
     }
 
     public function editable(): Components\Editable
     {
         return Theme::editable()
-            ->view("{$this->base}{$this->name}.editable")
+            ->view($this->root() . "editable")
             ->span("d-flex justify-content-between")
             ->button("width: 100%;text-align: left;border: 0;padding: 4px;background: none")
             ->input("form-control");
@@ -100,7 +84,7 @@ class Bootstrap5 extends ThemeBase
     public function filterDatePicker(): Components\FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input("livewire_powergrid_input form-control")
+            ->input("form-control")
             ->divNotInline("")
             ->divInline("");
     }
@@ -108,7 +92,7 @@ class Bootstrap5 extends ThemeBase
     public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view("{$this->base}{$this->name}.multi-select")
+            ->view($this->root() . "multi-select")
             ->input("")
             ->divNotInline("")
             ->divInline("");

@@ -7,15 +7,10 @@
             ])
 
             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
-                @include($table)
+                @include($table) <!-- livewire-powergrid::components.table -->
             </div>
 
-            <x-livewire-powergrid::footer>
-                <x-slot name="perPage">
-                    @include($theme->perPage->view)
-                </x-slot>
-            </x-livewire-powergrid::footer>
-
+            @include($theme->footer->view)
         </div>
     </div>
 </div>

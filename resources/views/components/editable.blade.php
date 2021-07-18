@@ -11,15 +11,17 @@
     ></button>
 </div>
 <script>
+
     function editableInput(id, value, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        return '<input @keydown.enter=saveEditableInput($event,' + id + ',"' + field + '") value="' + value + '" ' +
+
+        return '<input @keydown.enter=sendEventInputChanged($event,' + id + ',"' + field + '") value="' + value + '" ' +
             'class="{{ $theme->inputClass }}">';
     }
 
-    function saveEditableInput(event, id, field) {
+    function sendEventInputChanged(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('eventChangeInput', {
+        window.livewire.emit('eventInputChanged', {
             id: id,
             value: event.target.value,
             field: field

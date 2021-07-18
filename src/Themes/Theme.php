@@ -14,13 +14,13 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Layout,
-    PerPage,
+    Footer,
     Table,
     Toggleable};
 
 /**
  * @method static Table table(string $attrClass, string $attrStyle='')
- * @method static PerPage perPage()
+ * @method static Footer footer()
  * @method static Toggleable toggleable()
  * @method static Layout layout()
  * @method static Cols cols()

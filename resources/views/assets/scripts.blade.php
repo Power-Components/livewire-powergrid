@@ -1,7 +1,7 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
-@includeIf(\PowerComponents\LivewirePowerGrid\Themes\ThemeBase::$scripts)
+@includeIf((new \PowerComponents\LivewirePowerGrid\Themes\ThemeBase())->root()."scripts")
 
 <script>
     function copyToClipboard(button) {

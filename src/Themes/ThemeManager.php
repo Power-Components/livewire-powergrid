@@ -13,7 +13,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Layout,
-    PerPage,
+    Footer,
     Table,
     Toggleable};
 
@@ -34,9 +34,9 @@ class ThemeManager
         return new Cols();
     }
 
-    public function perPage(): PerPage
+    public function footer(): Footer
     {
-        return new PerPage();
+        return new Footer();
     }
 
     public function toggleable(): Toggleable

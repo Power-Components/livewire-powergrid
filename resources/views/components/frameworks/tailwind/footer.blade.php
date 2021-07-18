@@ -19,7 +19,7 @@
     @if(filled($data))
         <div>
             @if(method_exists($data, 'links'))
-                {!! $data->links('livewire-powergrid::components.frameworks.tailwind.pagination', ['recordCount' => $recordCount]) !!}
+                {!! $data->links($theme->base. ''.$theme->name.'.pagination', ['recordCount' => $recordCount]) !!}
             @endif
         </div>
     @endif

@@ -1,1 +1,1 @@
-{{ $perPage }}
+{{ $footer }}

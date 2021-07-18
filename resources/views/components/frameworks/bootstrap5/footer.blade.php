@@ -21,7 +21,7 @@
             </div>
         @endif
         <div>
-            {!! $data->links('livewire-powergrid::components.frameworks.bootstrap5.pagination') !!}
+            {!! $data->links($theme->base. ''.$theme->name.'.pagination') !!}
         </div>
     </div>
 @endif
