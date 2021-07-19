@@ -248,7 +248,7 @@ class Column
     public function makeInputText( string $dataField = '' ): Column
     {
         $this->inputs['input_text']['enabled'] = true;
-        $this->dataField                      = $dataField;
+        $this->dataField                       = $dataField;
 
         return $this;
     }
@@ -282,7 +282,7 @@ class Column
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
         $this->inputs['boolean_filter']['class']       = $settings['class'] ?? '';
         $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
-        $this->dataField                              = $dataField;
+        $this->dataField                               = $dataField;
 
         return $this;
     }
