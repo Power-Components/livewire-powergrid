@@ -9,8 +9,8 @@
             $field = $column->field;
         @endphp
         @if($column->hidden === false)
-            <td class="{{ $theme->table->tdBodyClass . ' '.$column->body_class ?? '' }}"
-                style=" {{ $theme->table->tdBodyStyle . ' '.$column->body_style ?? '' }}"
+            <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
+                style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
             >
                 @if($column->editable === true)
                     <span class="{{ $theme->editable->spanClass }}">

@@ -38,6 +38,8 @@
       - [Column Actions](#column-actions)
     - [addColumns() Method](#addColumns-method)
     - [Action Methods](#action-methods)
+      - [Open Modal](#1-openmodal)
+      - [Event Listeners](#2-event-listeners)
     - [Update Method](#update-method)
 
 ---
@@ -502,13 +504,12 @@ Example of usage:
   ```
 
   ---
+#### 1. OpenModal
 
-Example of usage with modal component:
-
-You will need to install the component [Livewire UI Component](https://github.com/livewire-ui/modal)  
+You will need to install the component [Livewire UI Component](https://github.com/livewire-ui/modal)
 
 * the first argument is within the openModal method is the name of the modal component
-  
+
 * the second argument is an array of parameters where the key is field name in the modal component and the second is the name of the model field of this component
 
 ```php
@@ -517,6 +518,31 @@ You will need to install the component [Livewire UI Component](https://github.co
         ->caption(__('View'))
         ->class('btn btn-primary')
         ->openModal('product', ['cod' => 'id']),
+  //...
+];
+  ```
+
+#### 2. Event listeners
+
+[Livewire Events](https://laravel-livewire.com/docs/2.x/events)
+
+* the first argument is inside the event method is the name of the event listeners
+
+* the second argument is an array of parameters that the event will receive.
+
+for example:
+If you want to do something like this on livewire:
+
+```html
+<button wire:click="$emit('postAdded', ['key' => 1])">
+```
+
+```php
+ return [
+    Button::add('view')
+        ->caption(__('View'))
+        ->class('btn btn-primary')
+        ->emit('postAdded', ['cod' => 'id']),
   //...
 ];
   ```

@@ -1,7 +1,7 @@
 <div>
     <div class="col-md-12">
         @include($theme->layout->header, [
-                'filtersEnabled' => $filters_enabled
+                'enabledFilters' => $enabledFilters
         ])
     </div>
     <div class="table-responsive col-md-12">

@@ -3,14 +3,14 @@
     'theme' => null,
     'sortField' => null,
     'sortDirection' => null,
-    'filtersEnabled' => null,
+    'enabledFilters' => null,
     'actions' => null
 ])
 <div>
 
     @if($column->hidden === false)
-        <th class="{{ $theme->table->thClass .' '. $column->header_class }}"
-            style="width: max-content;@if($column->sortable)cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->header_style }}">
+        <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
+            style="width: max-content;@if($column->sortable)cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
             <div class="{{ $theme->cols->divClass }}">
                 @if($column->sortable === true)
                     <span class="text-base pr-2" style="font-size: 1rem !important;">

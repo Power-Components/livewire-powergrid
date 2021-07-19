@@ -18,7 +18,7 @@
 </div>
 
 <div class="col-md-12 d-flex" style="margin-top: 5px">
-@foreach($filtersEnabled as $field => $filter)
+@foreach($enabledFilters as $field => $filter)
     <div wire:click.prevent="clearFilter('{{ $field }}')" style="cursor: pointer; padding-right: 4px">
         <span class="badge rounded-pill bg-light text-dark">{{ $filter['label'] }}
          <svg width="10" stroke="currentColor" fill="none" viewBox="0 0 8 8">

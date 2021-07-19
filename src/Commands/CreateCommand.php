@@ -11,23 +11,26 @@ use Illuminate\Support\Str;
 class CreateCommand extends Command
 {
     protected $signature = 'powergrid:create
-        {name=default : name of class component}
-        {--model= : model Class}
-        {--template= : name of the file that will be used as a template}
-        {--force : Overwrite any existing files}
-        {--fillable : Generate data from fillable}
-        {--with-collection : Generate from collection - default is model collection}';
+    {--template= : name of the file that will be used as a template}';
 
     protected $description = 'Make a new PowerGrid table component.';
 
     public function handle()
     {
-        $tableName = $this->argument('name');
+        $tableName = $this->ask('Component Name');
         $tableName = str_replace(['.', '\\'], '/', $tableName);
 
-        $modelName  = $this->option('model');
-        $fillable   = $this->option('fillable');
-        $collection = $this->option('with-collection');
+        $modelName  = $this->ask('Model (ex: "App\Models\User")');
+        $fillable   = false;
+        $collection = false;
+
+        if ($this->confirm('Use the based on fillable ?')) {
+            $fillable   = true;
+        }
+
+        if ($this->confirm('Will you use a collection? (default: Model)')) {
+            $collection   = true;
+        }
 
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
@@ -94,6 +97,7 @@ class CreateCommand extends Command
 
         $component_name = Str::of($tableName)
             ->lower()
+            ->kebab()
             ->replace('/', '-')
             ->replace('\\', '-')
             ->replace('table', '-table')
@@ -113,13 +117,13 @@ class CreateCommand extends Command
     {
         $model          = new $modelName();
         $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-        $getFillables   = array_merge([$model->getKeyName()], $model->getFillable());
-        $getFillables   = array_merge($getFillables, ['created_at', 'updated_at']);
+        $getFillable    = array_merge([$model->getKeyName()], $model->getFillable());
+        $getFillable    = array_merge($getFillable, ['created_at', 'updated_at']);
 
         $dataSource     = "";
         $columns        = "[\n";
 
-        foreach ($getFillables as $field) {
+        foreach ($getFillable as $field) {
             if (in_array($field, $model->getHidden())) {
                 continue;
             }

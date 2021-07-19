@@ -13,17 +13,24 @@
                         $parameters[$param] = $row->{$value};
                     }
                 @endphp
-                @if($action->view !== '')
+                @if($action->event !== '')
+                    <button wire:click='$emit("{{ $action->event }}", @json($parameters))'
+                            class="{{ $theme->actions->btnClass. ' '. $action->class }}">
+                        {!! $action->caption ?? '' !!}
+                    </button>
+
+                @elseif($action->view !== '')
                     <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
                             class="{{ $theme->actions->btnClass. ' '. $action->class }}">
-                        {!! (filled($action->caption)) ? $action->caption: 'Action' !!}
+                        {!! $action->caption ?? '' !!}
                     </button>
+
                 @else
                     <form @if($action->method !== 'delete') target="_blank" @endif action="{{ route($action->route, $parameters) }}" method="post">
                         @method($action->method)
                         @csrf
                         <button type="submit" class="{{ $theme->actions->btnClass. ' '. $action->class }}">
-                            {!! (filled($action->caption)) ? $action->caption: 'Editar' !!}
+                            {!! $action->caption ?? '' !!}
                         </button>
                     </form>
                 @endif

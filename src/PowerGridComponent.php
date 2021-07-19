@@ -60,7 +60,8 @@ class PowerGridComponent extends Component
         'eventChangeDatePiker'  => 'eventChangeDatePiker',
         'eventInputChanged'     => 'eventInputChanged',
         'eventToggleChanged'    => 'eventInputChanged',
-        'eventMultiSelect'      => 'eventMultiSelect'
+        'eventMultiSelect'      => 'eventMultiSelect',
+        'eventRefresh'          => '$refresh',
     ];
 
     /**
@@ -164,7 +165,6 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        ds($this->columns);
         $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
 
         $this->renderFilter();
@@ -174,7 +174,7 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns = $this->columns();
+        $this->columns        = $this->columns();
 
         $data = $this->loadData();
 
@@ -247,16 +247,8 @@ class PowerGridComponent extends Component
         if (!is_array($this->dataSource)) {
             return;
         }
-        $cached = $this->dataSource->map(function ($row) use ($data) {
-            $field = $data['field'];
-            if ($row->id === $data['id']) {
-                $row->{$field} = $data['value'];
-            }
 
-            return $row;
-        });
-
-        $this->resolveCollection(null, $cached);
+        $this->loadData();
     }
 
     /**

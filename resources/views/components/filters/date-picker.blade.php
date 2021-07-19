@@ -23,8 +23,8 @@
                 <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
             @endif
                 <input id="input_{!! $date['field'] !!}"
-                       data-field="{!! $date['data_field'] !!}"
-                       data-key="filters_enabled.date_picker.{!! $date['data_field'] !!}"
+                       data-field="{!! $date['dataField'] !!}"
+                       data-key="enabledFilters.date_picker.{!! $date['dataField'] !!}"
                        wire:ignore
                        class="power_grid range_input_{!! $date['field'] !!} {{ $theme->inputClass }}"
                        type="text"

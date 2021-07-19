@@ -14,7 +14,7 @@
 
 <div class="w-full pt-3">
 
-    @foreach($filtersEnabled as $field => $filter)
+    @foreach($enabledFilters as $field => $filter)
 
         <span
             class="cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">

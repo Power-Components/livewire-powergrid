@@ -14,11 +14,11 @@ class Button
 
     public string $class = '';
 
-    public array $i = [];
-
     public string $method = 'get';
 
     public string $view = '';
+
+    public string $event = '';
 
     /**
      * Button constructor.
@@ -76,23 +76,6 @@ class Button
     }
 
     /**
-     * @param string $class class of i tag for fontawesome or other
-     * @param string $text text of caption
-     * @param bool $showCaption when false it will not display the caption
-     * @return $this
-     */
-    public function i(string $class, string $text, bool $showCaption = false): Button
-    {
-        $this->i = [
-            'class'   => $class,
-            'text'    => $text,
-            'caption' => $showCaption
-        ];
-
-        return $this;
-    }
-
-    /**
      * Method for button
      * @param string $method
      * @return $this
@@ -116,6 +99,21 @@ class Button
         $this->param  = $param;
         $this->method = 'get';
         $this->route  = '';
+
+        return $this;
+    }
+
+    /**
+     * emit
+     * @param string $event event name
+     * @param array $param parameters
+     * @return $this
+     */
+    public function emit(string $event, array $param): Button
+    {
+        $this->event   = $event;
+        $this->param   = $param;
+        $this->route   = '';
 
         return $this;
     }
