@@ -3,8 +3,8 @@
         $field = $column->field;
     @endphp
     @if($column->hidden === false)
-        <td class="{{ $column->body_class ?? '' }}"
-            style="{{ $column->body_style ?? '' }}"
+        <td class="{{ $column->bodyClass ?? '' }}"
+            style="{{ $column->bodyStyle ?? '' }}"
         >
             @if($column->editable === true)
                 <span class="d-flex justify-content-between">
@@ -12,14 +12,14 @@
 			@include('livewire-powergrid::bootstrap.50.components.editable')
 		</div>
 		<div>
-			@if(count($column->click_to_copy) > 0)
-                @if($column->click_to_copy['enabled'])
+			@if(count($column->clickToCopy) > 0)
+                @if($column->clickToCopy['enabled'])
                     <button
                         style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
                         onclick="copyToClipboard(this)" value="copy"
                         class="img_copy"
                         data-value="{{ $row->$field }}"
-                        title="{{ $column->click_to_copy['label'] }}"></button>
+                        title="{{ $column->clickToCopy['label'] }}"></button>
                 @endif
             @endif
 		</div>
@@ -32,14 +32,14 @@
 			{!! $row->{$field} !!}
 		</div>
 		<div>
-			@if(count($column->click_to_copy))
-                @if($column->click_to_copy['enabled'])
+			@if(count($column->clickToCopy))
+                @if($column->clickToCopy['enabled'])
                     <button
                         style="width: 24px; border: 0; height: 30px; background-repeat: no-repeat;"
                         onclick="copyToClipboard(this)" value="copy"
                         class="img_copy"
                         data-value="{{ $row->{$field} }}"
-                        title="{{ $column->click_to_copy['label'] }}"></button>
+                        title="{{ $column->clickToCopy['label'] }}"></button>
                 @endif
             @endif
 		</div>

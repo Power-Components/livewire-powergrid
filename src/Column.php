@@ -12,17 +12,17 @@ class Column
 
     public string $field = '';
 
-    public string $header_class = '';
+    public string $headerClass = '';
 
-    public string $header_style = '';
+    public string $headerStyle = '';
 
-    public string $body_class = '';
+    public string $bodyClass = '';
 
-    public string $body_style = '';
+    public string $bodyStyle = '';
 
     public bool $hidden = false;
 
-    public bool $visible_in_export = true;
+    public bool $visibleInExport = true;
 
     public array $inputs = [];
 
@@ -30,9 +30,9 @@ class Column
 
     public array $toggleable = [];
 
-    public array $click_to_copy = [];
+    public array $clickToCopy = [];
 
-    public string $data_field = '';
+    public string $dataField = '';
 
     /**
      * @return static
@@ -100,10 +100,10 @@ class Column
      * @param string $style_attr
      * @return $this
      */
-    public function headerAttribute( string $class_attr = '', string $style_attr = '' ): Column
+    public function headerAttribute( string $classAttr = '', string $styleAttr = '' ): Column
     {
-        $this->header_class = $class_attr;
-        $this->header_style = $style_attr;
+        $this->headerClass = $classAttr;
+        $this->headerStyle = $styleAttr;
 
         return $this;
     }
@@ -115,10 +115,10 @@ class Column
      * @param string $style_attr
      * @return $this
      */
-    public function bodyAttribute( string $class_attr = '', string $style_attr = '' ): Column
+    public function bodyAttribute( string $classAttr = '', string $styleAttr = '' ): Column
     {
-        $this->body_class = $class_attr;
-        $this->body_style = $style_attr;
+        $this->bodyClass = $classAttr;
+        $this->bodyStyle = $styleAttr;
 
         return $this;
     }
@@ -132,7 +132,7 @@ class Column
 
     public function visibleInExport( bool $visible ): Column
     {
-        $this->visible_in_export = $visible;
+        $this->visibleInExport   = $visible;
         $this->searchable        = false;
 
         return $this;
@@ -175,7 +175,7 @@ class Column
     }
 
     /**
-     * @param string $data_field
+     * @param string $dataField
      * @param array $settings [
      * 'only_future' => true,
      * 'no_weekends' => true
@@ -183,12 +183,12 @@ class Column
      * @param string $class_attr
      * @return Column
      */
-    public function makeInputDatePicker( string $data_field, array $settings = [], string $class_attr = '' ): Column
+    public function makeInputDatePicker( string $dataField, array $settings = [], string $classAttr = '' ): Column
     {
         $this->inputs['date_picker']['enabled'] = true;
-        $this->inputs['date_picker']['class']   = $class_attr;
+        $this->inputs['date_picker']['class']   = $classAttr;
         $this->inputs['date_picker']['config']  = $settings;
-        $this->data_field                       = $data_field;
+        $this->dataField                        = $dataField;
 
         return $this;
     }
@@ -226,29 +226,29 @@ class Column
     }
 
     /**
-     * @param string $data_field
+     * @param string $dataField
      * @param string $thousands
      * @param string $decimal
      * @return $this
      */
-    public function makeInputRange( string $data_field = '', string $thousands = '', string $decimal = '' ): Column
+    public function makeInputRange( string $dataField = '', string $thousands = '', string $decimal = '' ): Column
     {
         $this->inputs['number']['enabled']   = true;
         $this->inputs['number']['decimal']   = $decimal;
         $this->inputs['number']['thousands'] = $thousands;
-        $this->data_field                    = $data_field;
+        $this->dataField                     = $dataField;
 
         return $this;
     }
 
     /**
-     * @param string $data_field
+     * @param string $dataField
      * @return $this
      */
-    public function makeInputText( string $data_field = '' ): Column
+    public function makeInputText( string $dataField = '' ): Column
     {
         $this->inputs['input_text']['enabled'] = true;
-        $this->data_field                      = $data_field;
+        $this->dataField                      = $dataField;
 
         return $this;
     }
@@ -260,7 +260,7 @@ class Column
      */
     public function clickToCopy( $hasPermission, string $label = 'copy' ): Column
     {
-        $this->click_to_copy = [
+        $this->clickToCopy = [
             'enabled' => $hasPermission,
             'label'   => $label
         ];
@@ -269,20 +269,20 @@ class Column
     }
 
     /**
-     * @param string $data_field
+     * @param string $dataField
      * @param string $trueLabel Label for true
      * @param string $falseLabel Label for false
      * @param array $settings Settings
      * @return $this
      */
-    public function makeBooleanFilter(string $data_field = '' , string $trueLabel = 'Yes', $falseLabel = 'No', array $settings = []): Column
+    public function makeBooleanFilter(string $dataField = '' , string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
     {
         $this->inputs['boolean_filter']['enabled']     = true;
         $this->inputs['boolean_filter']['true_label']  = $trueLabel;
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
         $this->inputs['boolean_filter']['class']       = $settings['class'] ?? '';
         $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
-        $this->data_field                              = $data_field;
+        $this->dataField                              = $dataField;
 
         return $this;
     }

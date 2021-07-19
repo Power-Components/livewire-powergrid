@@ -23,8 +23,8 @@
                         @foreach($columns as $column)
                             @if($column->hidden === false)
                                 <th
-                                    class="px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap {{ $column->header_class ?? '' }}"
-                                    style="width: max-content;@if($column->sortable)cursor:pointer; @endif {{ $column->header_style ?? '' }}"
+                                    class="px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap {{ $column->headerClass ?? '' }}"
+                                    style="width: max-content;@if($column->sortable)cursor:pointer; @endif {{ $column->headerStyle ?? '' }}"
                                 >
                                     <div class="align-content-between">
                                         @if($column->sortable === true)

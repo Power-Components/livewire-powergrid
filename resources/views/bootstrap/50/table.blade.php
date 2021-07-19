@@ -26,12 +26,12 @@
                     @foreach($columns as $column)
 
                         @if($column->hidden === false)
-                            <th class="{{ $column->header_class ?? '' }}" style="@if($column->sortable === true)cursor:pointer;@endif min-width: 50px;padding-left: 15px;
+                            <th class="{{ $column->headerClass ?? '' }}" style="@if($column->sortable === true)cursor:pointer;@endif min-width: 50px;padding-left: 15px;
                                     text-transform: uppercase;
                                     font-size: 0.75rem;
                                     color: #6b6a6a;
                                     padding-top: 8px;
-                                    padding-bottom: 8px;{{ $column->header_style ?? '' }}">
+                                    padding-bottom: 8px;{{ $column->headerStyle ?? '' }}">
                                 <div>
                                     @if($column->sortable === true)
                                         <span class="text-base">

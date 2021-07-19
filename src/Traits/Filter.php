@@ -33,7 +33,7 @@ trait Filter
                 continue;
             }
             foreach ($column->inputs as $key => $input) {
-                $input['data_field']  = ($column->data_field != '') ? $column->data_field : $column->field;
+                $input['dataField']   = ($column->dataField != '') ? $column->dataField : $column->field;
                 $input['field']       = $column->field;
                 $input['label']       = $column->title;
                 $make_filters[$key][] = $input;

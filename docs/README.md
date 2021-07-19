@@ -400,12 +400,12 @@ These are the filters available for each column.
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
-|**makeInputText**| *String* $data_field | Renders a textfield filter for the column|```->makeInputText()```|
-|**makeBooleanFilter**|*String* $data_field, *String* $trueLabel, *String* $falseLabel|Filter for boolean columns|```->makeBooleanFilter('is_active', 'active', 'inactive')```|
+|**makeInputText**| *String* $dataField | Renders a text field filter for the column|```->makeInputText()```|
+|**makeBooleanFilter**|*String* $dataField, *String* $trueLabel, *String* $falseLabel|Filter for boolean columns|```->makeBooleanFilter('is_active', 'active', 'inactive')```|
 |**makeInputDatePicker**| [*String* $class default: 'col-3'] |Include a specific field on the page to filter between the specific date in the column|```->makeInputDatePicker()```|
 |**makeInputSelect**| [*Array* $data_source, *String* $display_field, *String* $relation_id, *Array* $settings] |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id', ['live_search' => true ,'class' => ''])```|
 |**makeInputMultiSelect**| $data_source, *String* $display_field, *String* $relation_id |Include a specific field on the page to filter a hasOne relation in the column|```->makeInputSelect(Group::all(), 'name', 'group_id'])```|
-|**makeInputRange**| [*string* $data_field, *String* $thousands, *String* $decimal] |Generates a min and max input for range filter.|```->makeInputRange('price', '.', ',')```|
+|**makeInputRange**| [*string* $dataField, *String* $thousands, *String* $decimal] |Generates a min and max input for range filter.|```->makeInputRange('price', '.', ',')```|
 
 
 

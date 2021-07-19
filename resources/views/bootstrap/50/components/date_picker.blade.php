@@ -15,8 +15,8 @@
             <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
         @endif
         <input id="input_{!! $date['field'] !!}"
-               data-key="filters.date_picker.{!!$date['data_field'] !!}"
-               wire:model="filters.input_date_picker.{!!$date['data_field'] !!}"
+               data-key="filters.date_picker.{!!$date['dataField'] !!}"
+               wire:model="filters.input_date_picker.{!!$date['dataField'] !!}"
                wire:ignore
                class="livewire_powergrid_input flatpickr flatpickr-input range_input_{!!$date['field'] !!} active {{ (isset($class) != '') ? $class :  '' }}"
                type="text"
