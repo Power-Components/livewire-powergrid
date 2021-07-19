@@ -9,11 +9,16 @@
                     }
                 @endphp
 
-                @if($action->view !== '')
-                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))' class="{{ $action->class }}"
-                    >
-                        {{ $action->caption }}
+                @if($action->event !== '')
+                    <button wire:click='$emit("{{ $action->event }}", @json($parameters))' class="{{ $action->class }}">
+                        {{ $action->caption ?? '' }}
                     </button>
+
+                @elseif($action->view !== '')
+                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))' class="{{ $action->class }}">
+                        {{ $action->caption ?? '' }}
+                    </button>
+
                 @else
                     <div class="px-2">
                         <form @if($action->method !== 'delete') target="_blank"

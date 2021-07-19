@@ -38,6 +38,8 @@
       - [Column Actions](#column-actions)
     - [addColumns() Method](#addColumns-method)
     - [Action Methods](#action-methods)
+      - [Open Modal](#1-openmodal)
+      - [Event Listeners](#2-event-listeners)
     - [Update Method](#update-method)
 
 ---
@@ -483,6 +485,7 @@ These methods are available on the `Button` class.
 |**add**| *String* $action |Action name |```Button::add()```|
 |**caption**| *String* $caption |Label for the button |```->caption('Edit Product')```|
 |**class**| *String* $class_attr |CSS class attribute |```->class('bg-indigo-500 text-white')```|
+|**emit**| *String* $event, *Array* $params| |```->event('eventName', ['product' => 'id'])```|
 |**openModal**| *String* $component, *Array* $params| |```->openModal('product', ['product' => 'id'])```|
 |**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
 |**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
@@ -503,7 +506,7 @@ Example of usage:
 
   ---
 
-Example of usage with modal component:
+#### 1. OpenModal
 
 You will need to install the component [Livewire UI Component](https://github.com/livewire-ui/modal)  
 
@@ -517,6 +520,31 @@ You will need to install the component [Livewire UI Component](https://github.co
         ->caption(__('View'))
         ->class('btn btn-primary')
         ->openModal('product', ['cod' => 'id']),
+  //...
+];
+  ```
+
+#### 2. Event listeners
+
+[Livewire Events](https://laravel-livewire.com/docs/2.x/events)
+
+* the first argument is inside the event method is the name of the event listeners
+
+* the second argument is an array of parameters that the event will receive.
+
+for example:
+If you want to do something like this on livewire:
+
+```html
+<button wire:click="$emit('postAdded', ['key' => 1])">
+```
+
+```php
+ return [
+    Button::add('view')
+        ->caption(__('View'))
+        ->class('btn btn-primary')
+        ->emit('postAdded', ['cod' => 'id']),
   //...
 ];
   ```

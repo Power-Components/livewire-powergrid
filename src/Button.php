@@ -20,6 +20,8 @@ class Button
 
     public string $view = '';
 
+    public string $event = '';
+
     /**
      * Button constructor.
      * @param string $action
@@ -116,6 +118,22 @@ class Button
         $this->param  = $param;
         $this->method = 'get';
         $this->route  = '';
+        $this->event  = '';
+
+        return $this;
+    }
+
+    /**
+     * emit
+     * @param string $event event name
+     * @param array $param parameters
+     * @return $this
+     */
+    public function emit(string $event, array $param): Button
+    {
+        $this->event   = $event;
+        $this->param   = $param;
+        $this->route   = '';
 
         return $this;
     }
