@@ -4,10 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 trait ActionButton
 {
-    /**
-     * @var array
-     */
     public array $actionRoutes = [];
+
+    public array $actionHeader = [];
 
     /**
      * @var array
@@ -29,6 +28,11 @@ trait ActionButton
      * @return array
      */
     public function actions(): array
+    {
+        return [];
+    }
+
+    public function header(): array
     {
         return [];
     }

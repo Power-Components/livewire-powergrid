@@ -4,6 +4,11 @@
 
         @include($theme->base. ''.$theme->name.'.export')
 
+        <x-livewire-powergrid::actions
+            :theme="$theme"
+            row=""
+            :actions="$this->headers"/>
+
         @include($theme->base. ''.$theme->name.'.loading')
 
     </div>

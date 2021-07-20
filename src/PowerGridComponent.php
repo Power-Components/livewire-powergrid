@@ -180,6 +180,7 @@ class PowerGridComponent extends Component
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
+            $this->headers = $this->header();
         }
 
         return $this->renderView($data);

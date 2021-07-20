@@ -34,7 +34,8 @@ class Tailwind extends ThemeBase
     public function actions(): Components\Actions
     {
         return Theme::actions()
-        ->btn("focus:outline-none text-sm py-2.5 px-5 rounded border");
+            ->headerBtn('block w-full bg-white-200 text-center text-xs font-medium text-gray-500 uppercase border border-gray-300 rounded py-2.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500')
+            ->rowsBtn("focus:outline-none text-sm py-2.5 px-5 rounded border");
     }
 
     public function cols(): Cols

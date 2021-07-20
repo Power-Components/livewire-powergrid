@@ -12,7 +12,16 @@ class Actions
 
     public string $tdBodyStyle = '';
 
-    public function btn(string $attrClass, string $attrStyle=''): Actions
+    public string $headerBtnClass = '';
+
+    public string $headerBtnStyle = '';
+
+    /**
+     * @param string $attrClass
+     * @param string $attrStyle
+     * @return $this
+     */
+    public function rowsBtn(string $attrClass= '', string $attrStyle=''): Actions
     {
         $this->btnClass    = $attrClass;
         $this->btnStyle    = $attrStyle;
@@ -20,10 +29,28 @@ class Actions
         return $this;
     }
 
-    public function tdBody(string $attrClass, string $attrStyle=''): Actions
+    /**
+     * @param string $attrClass
+     * @param string $attrStyle
+     * @return $this
+     */
+    public function tdBody(string $attrClass= '', string $attrStyle=''): Actions
     {
         $this->tdBodyClass = $attrClass;
         $this->tdBodyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    /**
+     * @param string $attrClass
+     * @param string $attrStyle
+     * @return $this
+     */
+    public function headerBtn(string $attrClass= '', string $attrStyle=''): Actions
+    {
+        $this->headerBtnClass = $attrClass;
+        $this->headerBtnStyle = $attrStyle;
 
         return $this;
     }

@@ -17,32 +17,29 @@ class CreateCommand extends Command
 
     public function handle()
     {
-        $tableName = $this->ask('Component Name');
-        $tableName = str_replace(['.', '\\'], '/', $tableName);
+        $fillable        = false;
 
-        $modelName  = $this->ask('Model (ex: "App\Models\User")');
-        $fillable   = false;
-        $collection = false;
+        $tableName       = $this->ask('Component Name');
+        $tableName       = str_replace(['.', '\\'], '/', $tableName);
+
+        $creationModel   = $this->ask('<comment>[M]</comment>odel or <comment>[C]</comment>ollection? (default: <comment>M</comment>)');
+
+        $modelName  = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
 
         if ($this->confirm('Use the based on fillable ?')) {
             $fillable   = true;
         }
 
-        if ($this->confirm('Will you use a collection? (default: Model)')) {
-            $collection   = true;
-        }
-
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
         if ($tableName === 'default') {
-            $this->error('Error: Table name is required.<info> E.g. powergrid:create UserTable"</info>');
+            $this->error('Error: Table name is required');
 
             return;
         }
 
         if (empty($modelName)) {
-            $example = '\\App\\Models\\' . $tableName;
-            $this->error('Error: Model name is required.<info> E.g. powergrid:create ' . $tableName . ' --model="' . $example . '"</info>');
+            $this->error('Error: Model name is required.');
 
             return;
         }
@@ -52,11 +49,11 @@ class CreateCommand extends Command
 
         if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
-                $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. --model="\App\Models\ResourceModel"</info>');
+                $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
 
                 return;
             }
-            $this->error('Error: Model name is required.<info> E.g. --model="\App\Models\ResourceModel"</info>');
+            $this->error('Error: Model name is required.<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
 
             return;
         }
@@ -65,7 +62,8 @@ class CreateCommand extends Command
             $this->error('Could not create, Model path is missing');
             exit;
         }
-        $stub = $this->getStubs($collection);
+
+        $stub = $this->getStubs($creationModel);
 
         if ($fillable) {
             $stub     = $this->createFromFillable($modelName, $modelLastName);
@@ -164,15 +162,15 @@ class CreateCommand extends Command
         return str_replace('{{ columns }}', $columns, $stub);
     }
 
-    protected function getStubs($collection = null)
+    protected function getStubs($creationModel): string
     {
         if (!empty($this->option('template'))) {
             return File::get(base_path($this->option('template')));
         }
-        if ($collection) {
-            return File::get(__DIR__ . '/../../resources/stubs/table.stub');
+        if (strtolower($creationModel) === 'm') {
+            return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
         }
 
-        return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
+        return File::get(__DIR__ . '/../../resources/stubs/table.stub');
     }
 }

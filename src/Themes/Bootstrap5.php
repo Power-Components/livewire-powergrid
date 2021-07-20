@@ -31,7 +31,7 @@ class Bootstrap5 extends ThemeBase
 
     public function perPage(): Components\Footer
     {
-        return Theme::perPage()
+        return Theme::footer()
             ->view("{$this->base}{$this->name}.footer")
             ->select("");
     }
@@ -40,7 +40,7 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::actions()
             ->tdBody('text-center')
-            ->btn("");
+            ->rowsBtn("");
     }
 
     public static function styles(): string
