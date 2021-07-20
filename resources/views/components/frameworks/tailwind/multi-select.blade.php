@@ -108,6 +108,11 @@
                 isOpen() {
                     return this.show === true
                 },
+                selectedValues() {
+                    return this.selected.map((option) => {
+                        return this.options[option].value;
+                    })
+                },
                 select(index, event) {
 
                     if (!this.options[index].selected) {
@@ -133,7 +138,7 @@
                     this.selected.splice(index, 1);
                     window.livewire.emit('eventMultiSelect', {
                         id: relation_id,
-                        values: selectedValues()
+                        values: this.selectedValues()
                     });
                 },
                 loadOptions() {
@@ -145,11 +150,6 @@
                             selected: options[i].getAttribute('selected') != null ? options[i].getAttribute('selected') : false
                         });
                     }
-                },
-                selectedValues() {
-                    return this.selected.map((option) => {
-                        return this.options[option].value;
-                    })
                 }
             }
         }

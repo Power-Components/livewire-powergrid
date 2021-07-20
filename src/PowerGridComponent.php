@@ -57,11 +57,11 @@ class PowerGridComponent extends Component
     protected $dataSource;
 
     protected $listeners = [
-        'eventChangeDatePiker'  => 'eventChangeDatePiker',
-        'eventInputChanged'     => 'eventInputChanged',
-        'eventToggleChanged'    => 'eventInputChanged',
-        'eventMultiSelect'      => 'eventMultiSelect',
-        'eventRefresh'          => '$refresh',
+        'eventChangeDatePiker' => 'eventChangeDatePiker',
+        'eventInputChanged'    => 'eventInputChanged',
+        'eventToggleChanged'   => 'eventInputChanged',
+        'eventMultiSelect'     => 'eventMultiSelect',
+        'eventRefresh'         => '$refresh',
     ];
 
     /**
@@ -174,7 +174,7 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns        = $this->columns();
+        $this->columns = $this->columns();
 
         $data = $this->loadData();
 
@@ -354,27 +354,35 @@ class PowerGridComponent extends Component
         if ($isCollection) {
             $this->isCollection = true;
 
-            $filters = Collection::filterContains($this->resolveCollection($dataSource), $this->columns(), $this->search);
-            $filters = Collection::filter($this->filters, $filters);
+            $filters = Collection::query($this->resolveCollection($dataSource))
+                ->setColumns($this->columns())
+                ->setSearch($this->search)
+                ->setFilters($this->filters)
+                ->filterContains()
+                ->filter();
 
             $results = $this->applySorting($filters);
 
             if ($results->count()) {
                 $this->filtered = $results->pluck('id')->toArray();
 
-                $paginate = Collection::paginate($results, $this->perPage);
+                $paginated = Collection::paginate($results, $this->perPage);
 
                 if (is_a($this->addColumns(), PowerGridCollection::class)) {
-                    $results = $paginate->setCollection($this->transform($paginate->getCollection()));
+                    $results = $paginated->setCollection($this->transform($paginated->getCollection()));
                 }
             }
         } else {
             $model = $this->resolveModel($dataSource);
 
             $results = $model->where(function ($query) {
-                Model::filterContains($query, $this->columns(), $this->search, $this->relationSearch());
-
-                Model::filter($this->filters, $query);
+                Model::query($query)
+                    ->setColumns($this->columns())
+                    ->setSearch($this->search)
+                    ->setRelationSearch($this->relationSearch())
+                    ->setFilters($this->filters)
+                    ->filterContains()
+                    ->filter();
             })->orderBy($this->sortField, $this->sortDirection)
                 ->paginate($this->perPage);
 
@@ -392,6 +400,7 @@ class PowerGridComponent extends Component
     private function transform($results)
     {
         if (is_a($this->addColumns(), PowerGridCollection::class) || is_a($this->addColumns(), PowerGridEloquent::class)) {
+
             return $results->transform(function ($row) {
                 $row = (object)$row;
                 $columns = $this->addColumns()->columns;
