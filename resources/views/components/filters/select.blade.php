@@ -8,7 +8,7 @@
     @if(filled($select))
         <div class="@if($inline) {{ $theme->divClassInline }} @endif {{ $theme->divClassNotInline }}{!! ($select['class'] != '') ?? '' !!}">
             @if(!$inline)
-                <label for="input_{!! $select['relation_id'] !!}">{{ $select['label'] }}</label>
+                <label for="input_{!! $select['relation_id'] !!}" class="text-gray-700 dark:text-gray-300">{{ $select['label'] }}</label>
             @endif
             <div class="relative">
                 <select id="input_{!! $select['relation_id'] !!}"

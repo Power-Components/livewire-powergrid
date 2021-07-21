@@ -3,6 +3,20 @@
         @include($theme->layout->header, [
                 'enabledFilters' => $enabledFilters
         ])
+
+        @if(config('livewire-powergrid.filter') === 'outside')
+            @if(count($makeFilters) > 0)
+                <div>
+                    <x-livewire-powergrid::frameworks.bootstra5.filter
+                        :makeFilters="$makeFilters"
+                        :theme="$theme"
+                    />
+                </div>
+            @endif
+        @endif
+
+        @include($theme->layout->message)
+
     </div>
     <div class="table-responsive col-md-12">
         @include($table)

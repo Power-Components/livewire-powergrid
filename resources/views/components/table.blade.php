@@ -1,16 +1,3 @@
-@if(config('livewire-powergrid.filter') === 'outside')
-    @if(count($makeFilters) > 0)
-        <div>
-            <x-livewire-powergrid::frameworks.tailwind.filter
-                :makeFilters="$makeFilters"
-                :theme="$theme"
-            />
-        </div>
-    @endif
-@endif
-
-@include($theme->layout->message)
-
 <x-livewire-powergrid::table-base
     :theme="$theme->table">
     <x-slot name="header">

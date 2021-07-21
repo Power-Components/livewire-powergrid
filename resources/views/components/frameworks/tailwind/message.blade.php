@@ -1,4 +1,4 @@
-<div class="message">
+<div class="message pb-2 dark:bg-gray-800">
     @if(session()->has('success') || session()->has('error'))
     <div
         class="mb-2 border px-4 py-3 rounded relative

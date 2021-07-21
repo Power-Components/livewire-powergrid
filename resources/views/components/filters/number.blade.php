@@ -7,7 +7,7 @@
     @if(filled($number))
         <div class="@if(!$inline) pt-2 p-2 @endif">
             @if(!$inline)
-                <label>{{ $number['label'] }}</label>
+                <label class="text-gray-700 dark:text-gray-300">{{ $number['label'] }}</label>
             @endif
             <div class="@if($inline) flex flex-col @else flex flex-row @endif">
 

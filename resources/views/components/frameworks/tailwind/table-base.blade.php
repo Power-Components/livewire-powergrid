@@ -6,6 +6,19 @@
                 'enabledFilters' => $enabledFilters
             ])
 
+            @if(config('livewire-powergrid.filter') === 'outside')
+                @if(count($makeFilters) > 0)
+                    <div>
+                        <x-livewire-powergrid::frameworks.tailwind.filter
+                            :makeFilters="$makeFilters"
+                            :theme="$theme"
+                        />
+                    </div>
+                @endif
+            @endif
+
+            @include($theme->layout->message)
+
             <div class="overflow-hidden overflow-x-auto bg-white shadow overflow-y-auto relative">
                 @include($table) <!-- livewire-powergrid::components.table -->
             </div>

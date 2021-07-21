@@ -20,7 +20,7 @@
         @endif
 
             @if(!$inline)
-                <label for="input_{!! $date['field'] !!}">{!! $date['label'] !!}</label>
+                <label for="input_{!! $date['field'] !!}" class="text-gray-700 dark:text-gray-300">{!! $date['label'] !!}</label>
             @endif
                 <input id="input_{!! $date['field'] !!}"
                        data-field="{!! $date['dataField'] !!}"
