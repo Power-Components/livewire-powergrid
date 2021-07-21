@@ -50,6 +50,8 @@ class PowerGridComponent extends Component
 
     public bool $isCollection = false;
 
+    public string $exportCaption = '';
+
     protected string $paginationTheme = 'tailwind';
 
     protected ThemeBase $powerGridTheme;
@@ -109,14 +111,17 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @param string $fileName
+     * @param array|string[] $type
+     * @param string $caption
      * @return $this
-     * Show show export button
      */
-    public function showExportOption($fileName, $type = ['excel', 'csv']): PowerGridComponent
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], string $caption= ''): PowerGridComponent
     {
         $this->exportOption   = true;
         $this->exportFileName = $fileName;
         $this->exportType     = $type;
+        $this->exportCaption  = $caption;
 
         return $this;
     }

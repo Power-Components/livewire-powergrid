@@ -6,7 +6,7 @@
                 'enabledFilters' => $enabledFilters
             ])
 
-            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg overflow-x-auto bg-white rounded-lg shadow overflow-y-auto relative">
+            <div class="overflow-hidden overflow-x-auto bg-white shadow overflow-y-auto relative">
                 @include($table) <!-- livewire-powergrid::components.table -->
             </div>
 

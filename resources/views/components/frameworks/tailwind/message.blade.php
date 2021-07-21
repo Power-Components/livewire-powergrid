@@ -1,7 +1,7 @@
-<div class="message pt-2">
+<div class="message">
     @if(session()->has('success') || session()->has('error'))
     <div
-        class="border px-4 py-3 rounded relative
+        class="mb-2 border px-4 py-3 rounded relative
         @if (session()->has('success'))
             bg-green-100 border-green-600 text-green-700
         @elseif (session()->has('error'))

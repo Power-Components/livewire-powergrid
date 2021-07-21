@@ -11,7 +11,7 @@
                 <label>{{ $inputText['label'] }}</label>
             @endif
             <div class="@if($inline) flex flex-col @else flex flex-row @endif">
-                <div class="@if(!$inline) pr-4 @endif">
+                <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <div class="relative">
                         <select id="input_text_options" class="power_grid {{ $theme->selectClass }}"
                                 wire:input.lazy="filterInputTextOptions('{{ $inputText['field'] }}', $event.target.value, '{{ $inputText['label'] }}')">

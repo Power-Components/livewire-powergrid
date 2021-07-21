@@ -13,7 +13,6 @@
                            wire:model.defer="checkboxAll">
                 </label>
             </div>
-
         </th>
     @endif
 </div>

@@ -5,15 +5,15 @@
     'actions' => null,
     'theme' => null
 ])
-<div class="w-full my-2 pb-2">
+<div class="w-full pb-2 dark:bg-gray-700">
     <div x-data={show:true} class="rounded-sm">
-        <div class="border border-b-0 bg-blue-100 px-4 py-3 cursor-pointer" id="headingOne" @click="show=!show">
-            <button class="appearance-none text-black font-medium text-gray-500 hover:text-blue-700 focus:outline-none"
+        <div class="border border-b-0 bg-gray-200 px-4 py-3 cursor-pointer dark:bg-gray-700" id="headingOne" @click="show=!show">
+            <button class="appearance-none text-left text-base font-medium text-gray-500 focus:outline-none dark:text-gray-300"
                     type="button">
                 {{ trans('livewire-powergrid::datatable.buttons.filter') }}
             </button>
         </div>
-        <div x-show="show" class="border border-b-1 px-6 py-4">
+        <div x-show="show" class="border border-b-1 px-2 py-4 dark:bg-gray-300">
             <div>
                 @php
                     $customConfig = [];
@@ -54,7 +54,6 @@
                                 </div>
                             @endforeach
                         @endif
-
 
 {{--                    @if(isset($make_filters['select']))--}}
 {{--                        @foreach($make_filters['select'] as $field => $select)--}}

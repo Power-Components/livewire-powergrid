@@ -47,14 +47,16 @@
             :theme="$theme"
         />
         @if(is_null($data) || count($data) === 0)
-            <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
+            <th>
+                <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
+                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
                                     + ((isset($actions)) ? 1: 0)
                                     + (count($columns))
                                     }}">
-                    <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
-                </td>
-            </tr>
+                        <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
+                    </td>
+                </tr>
+            </th>
         @else
             <th>
                 @foreach($data as $row)
@@ -79,7 +81,6 @@
             </th>
         @endif
     </x-slot>
-
 </x-livewire-powergrid::table-base>
 
 

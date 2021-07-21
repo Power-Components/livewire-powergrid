@@ -3,9 +3,6 @@
 return [
     'buttons' => [
         'filter'          => 'Filtrar',
-        'export'          => 'Exportar',
-        'export_one'      => 'Exportar seleccionado',
-        'export_selected' => 'Exportar seleccionados'
     ],
     'labels' => [
         'action'           => 'Ações',
@@ -23,18 +20,18 @@ return [
         'to'      => 'a',
         'of'      => 'de',
         'results' => 'registros',
-        'all'     => 'Todos'
+        'all'     => 'Todos',
     ],
     'multi_select' => [
         'select' => 'Seleccione',
-        'all'    => 'Todos'
+        'all'    => 'Todos',
     ],
     'select' => [
         'select' => 'Seleccione',
-        'all'    => 'Todos'
+        'all'    => 'Todos',
     ],
     'boolean_filter' => [
-        'all' => 'Todos'
+        'all' => 'Todos',
     ],
     'input_text_options' => [
         'is'           => 'Es exactamente',

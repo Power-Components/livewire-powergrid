@@ -3,16 +3,13 @@
 return [
     'buttons' => [
         'filter'          => 'Filter',
-        'export'          => 'ExportXLS',
-        'export_one'      => 'ExportXLS selected',
-        'export_selected' => 'ExportXLS selected'
     ],
     'labels' => [
         'action'           => 'Actions',
         'results_per_page' => 'Records per page',
         'clear_filter'     => 'Clear filter',
         'no_data'          => 'No records found',
-        'all'              => 'All'
+        'all'              => 'All',
     ],
     'placeholders' => [
         'search' => 'Search...',
@@ -23,14 +20,14 @@ return [
         'to'      => 'to',
         'of'      => 'of',
         'results' => 'Results',
-        'all'     => 'All'
+        'all'     => 'All',
     ],
     'multi_select' => [
         'select' => 'Select',
-        'all'    => 'All'
+        'all'    => 'All',
     ],
     'boolean_filter' => [
-        'all' => 'All'
+        'all' => 'All',
     ],
     'input_text_options' => [
         'is'           => 'Is',

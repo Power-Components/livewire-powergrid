@@ -11,7 +11,7 @@
             @endif
             <div class="@if($inline) flex flex-col @else flex flex-row @endif">
 
-                <div class="@if(!$inline) pt-2 p-2 @endif">
+                <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <input
                         data-id="{{ $number['field'] }}"
                         wire:input.debounce.800ms="filterNumberStart('{{ $number['dataField'] }}', $event.target.value,'{{ addslashes($number['thousands']) }}','{{ addslashes($number['decimal']) }}','{{ $number['label'] }}')"

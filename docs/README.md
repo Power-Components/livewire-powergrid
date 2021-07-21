@@ -262,7 +262,7 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
-|**showExportOption**|*String* download filename, *Array* options|Displays export button and set custom name to exported file|`->showExportOption('download', ['excel', 'csv])`|
+|**showExportOption**|*String* download filename, *Array* options, *String* caption button|Displays export button and set custom name to exported file|`->showExportOption('download', ['excel', 'csv], 'Export')`|
 
 Example of usage:
 
@@ -273,7 +273,7 @@ Example of usage:
       ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput()
-      ->showExportOption('download', ['excel', 'csv']);
+      ->showExportOption('download', ['excel', 'csv'], 'Export');
   }
 ```
 

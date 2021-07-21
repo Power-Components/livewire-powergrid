@@ -17,7 +17,7 @@
 
 </div>
 
-<div class="w-full pt-3">
+<div class="w-full pt-3 mb-3">
 
     @foreach($enabledFilters as $field => $filter)
 
