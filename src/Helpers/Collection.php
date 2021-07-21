@@ -114,7 +114,7 @@ class Collection implements FilterInterface
      */
     public function search(): Collection
     {
-        if (!empty($search)) {
+        if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
                 foreach ($this->columns as $column) {
                     $field = $column->field;
@@ -320,7 +320,7 @@ class Collection implements FilterInterface
      */
     public function filterContains(): Collection
     {
-        if (!empty($search)) {
+        if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
                 foreach ($this->columns as $column) {
                     $field = $column->field;
