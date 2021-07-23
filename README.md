@@ -1,15 +1,15 @@
 <div align="center">
-	<p><img  src="docs/img/logo.png" alt="PowerGrid Logo"></p>
+	<p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
     <p align="center">
-        <a href="https://livewire-powergrid.docsforge.com/" target="_blank">&#129146; Visit the Documentation &#129144;</a><br/><br/> 
-    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
-    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
-    <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
-</p>
+        <a href="https://livewire-powergrid.docsforge.com/" target="_blank">&#129146; Visit the Documentation &#129144;</a><br/><br/>
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
+    </p>
 </div>
 
 ------
- 
+
 # Livewire PowerGrid
 
 ## What is Livewire PowerGrid?
