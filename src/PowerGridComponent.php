@@ -185,7 +185,9 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns = $this->columns ?? $this->columns();
+        $this->columns = collect($this->columns)->map(function ($column) {
+            return (object)$column;
+        })->toArray();
 
         $data = $this->loadData();
 
@@ -427,15 +429,14 @@ class PowerGridComponent extends Component
 
     public function toggleColumn($field)
     {
-        $newColumns = [];
-
-        foreach ($this->columns as $column) {
+        $this->columns = collect($this->columns)->map(function ($column) use ($field) {
             if ($column['field'] === $field) {
                 $column['hidden'] = !$column['hidden'];
             }
-            $newColumns[] = (object)$column;
-        }
 
-        $this->columns = $newColumns;
+            return (object)$column;
+        })->toArray();
+        ds($this->columns);
+        //$this->columns->field = !$this->columns->hidden;
     }
 }
