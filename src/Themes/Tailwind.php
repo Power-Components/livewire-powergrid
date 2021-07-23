@@ -17,7 +17,7 @@ class Tailwind extends ThemeBase
     {
         return Theme::table("min-w-full divide-y divide-gray-300 border-b dark:bg-gray-600 border-gray-400 ")
             ->thead("bg-gray-200 dark:bg-gray-700")
-            ->tr("border border-gray-300 dark:border-gray-400")
+            ->tr("border border-gray-200 dark:border-gray-400")
             ->th("px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap dark:text-gray-300")
             ->tbody("text-gray-800")
             ->trBody("border border-gray-200 dark:border-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700")
