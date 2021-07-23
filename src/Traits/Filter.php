@@ -17,7 +17,13 @@ trait Filter
     public function clearFilter(string $field = '')
     {
         $this->search = '';
+
         unset($this->enabledFilters[$field]);
+        unset($this->filters['number'][$field]);
+        unset($this->filters['input_text'][$field]);
+        unset($this->filters['boolean'][$field]);
+        unset($this->filters['input_text_options'][$field]);
+
         $this->filters = [];
     }
 

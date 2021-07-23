@@ -11,7 +11,7 @@
             @endif
             <div class="relative">
                 <select id="input_boolean_filter_{!! $booleanFilter['field']!!}" class="power_grid {{ $theme->inputClass }} {{ (isset($class)) ? $class : 'w-9/12' }}"
-                    wire:input.lazy="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')" wire:ignore data-live-search="{{ $booleanFilter['live-search'] }}">
+                        wire:input.lazy="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')">
                     <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
                     <option value="true">{{ $booleanFilter['true_label']}}</option>
                     <option value="false">{{ $booleanFilter['false_label']}}</option>

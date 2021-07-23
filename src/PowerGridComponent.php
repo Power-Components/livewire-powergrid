@@ -64,7 +64,13 @@ class PowerGridComponent extends Component
         'eventToggleChanged'   => 'eventInputChanged',
         'eventMultiSelect'     => 'eventMultiSelect',
         'eventRefresh'         => '$refresh',
+        'eventToggleColumn'    => 'toggleColumn'
     ];
+
+    /**
+     * @var array|mixed
+     */
+    private $toggleColumn = [];
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -179,7 +185,7 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns = $this->columns();
+        $this->columns = $this->columns ?? $this->columns();
 
         $data = $this->loadData();
 
@@ -405,7 +411,6 @@ class PowerGridComponent extends Component
     private function transform($results)
     {
         if (is_a($this->addColumns(), PowerGridCollection::class) || is_a($this->addColumns(), PowerGridEloquent::class)) {
-
             return $results->transform(function ($row) {
                 $row = (object)$row;
                 $columns = $this->addColumns()->columns;
@@ -418,5 +423,19 @@ class PowerGridComponent extends Component
         }
 
         return $results;
+    }
+
+    public function toggleColumn($field)
+    {
+        $newColumns = [];
+
+        foreach ($this->columns as $column) {
+            if ($column['field'] === $field) {
+                $column['hidden'] = !$column['hidden'];
+            }
+            $newColumns[] = (object)$column;
+        }
+
+        $this->columns = $newColumns;
     }
 }

@@ -14,7 +14,7 @@
                 <select id="input_{!! $select['relation_id'] !!}"
                         class="power_grid {{ $theme->inputClass }} {{ (isset($class)) ? $class : 'w-9/12' }}"
                         wire:input.lazy="filterSelect('{{ $select['relation_id'] }}','{{ $select['label'] }}')"
-                        wire:model.lazy="filters.select.{!! $select['relation_id'] !!}"
+                        wire:model.lazy="filters.select.{{ $select['relation_id'] }}"
                         data-live-search="{{ $select['live-search'] }}">
                     <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
                     @foreach($select['data_source'] as $relation)

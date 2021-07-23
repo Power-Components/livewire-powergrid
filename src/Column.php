@@ -6,7 +6,7 @@ class Column
 {
     public string $title = '';
 
-    public bool $searchable = true;
+    public bool $searchable = false;
 
     public bool $sortable = false;
 
@@ -33,6 +33,8 @@ class Column
     public array $clickToCopy = [];
 
     public string $dataField = '';
+
+    public bool $visible = true;
 
     /**
      * @return static
