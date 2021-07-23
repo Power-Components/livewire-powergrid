@@ -185,7 +185,7 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns = collect($this->columns)->map(function ($column) {
+        $this->columns        = collect($this->columns)->map(function ($column) {
             return (object)$column;
         })->toArray();
 
@@ -436,7 +436,5 @@ class PowerGridComponent extends Component
 
             return (object)$column;
         })->toArray();
-        ds($this->columns);
-        //$this->columns->field = !$this->columns->hidden;
     }
 }
