@@ -1,5 +1,5 @@
 <div align="center">
-	<p><img  src="img/logo.png" alt="PowerGrid Logo"></p>
+	<p><img  src="https://raw.githubusercontent.com/Power-Components/livewire-powergrid/main/art/header.jpg" alt="PowerGrid Header"></p>
 </p>
 </div>
 
