@@ -87,4 +87,4 @@ Just click on this link to learn more => [https://github.com/Power-Components/co
 Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
 - [Contributions](../../contributors)
-- [Online Logomaker](https://onlinelogomaker.com/logomaker/?project=50439167)
+- Logo & artwork by [Caneco](https://github.com/caneco)
