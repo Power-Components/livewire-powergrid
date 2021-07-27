@@ -1,10 +1,10 @@
-<div>
+<div class="w-1/2 md:w-auto">
     @if($exportOption)
         <div x-data="{show: false}"
              @click.away="show = false">
             <button @click="show = ! show"
                     class="block w-full bg-white-200 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
-                <div class="flex">
+                <div class="flex justify-between">
                 <span>
                     <x-livewire-powergrid::icons.export/>
                 </span>

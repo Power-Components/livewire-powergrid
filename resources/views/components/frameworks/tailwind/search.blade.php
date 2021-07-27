@@ -1,11 +1,11 @@
 @if($searchInput)
-    <div class="flex flex-row w-full flex justify-end">
+    <div class="flex flex-row mt-2 md:mt-0 w-full flex justify-start md:justify-end">
 
         <x-livewire-powergrid::toggle-columns
             :columns="$columns"
             class="mr-2"/>
 
-        <div class="relative w-4/12 float-end float-right">
+        <div class="relative w-full md:w-4/12 float-end float-right">
               <span class="absolute inset-y-0 left-0 flex items-center pl-1">
                  <span class="p-1 focus:outline-none focus:shadow-outline">
                     <x-livewire-powergrid::icons.search/>

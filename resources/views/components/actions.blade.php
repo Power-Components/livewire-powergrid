@@ -3,8 +3,7 @@
     'theme' => null,
     'row' => null
 ])
-<div>
-
+<div class="w-1/2 md:w-auto">
     @if($row === '')
         <div class="ml-2 flex flex-row">
             @foreach($actions as $action)

@@ -9,7 +9,7 @@
             @if(!$inline)
                 <label class="text-gray-700 dark:text-gray-300">{{ $number['label'] }}</label>
             @endif
-            <div class="@if($inline) flex flex-col @else flex flex-row @endif">
+            <div class="@if($inline) flex flex-col @else  flex flex-row justify-between @endif">
 
                 <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <input
