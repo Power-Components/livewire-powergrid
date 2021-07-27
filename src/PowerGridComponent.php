@@ -158,7 +158,7 @@ class PowerGridComponent extends Component
     {
         $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
 
-        $this->columns        = collect($this->columns)->map(function ($column) {
+        $this->columns = collect($this->columns)->map(function ($column) {
             return (object)$column;
         })->toArray();
 
@@ -281,11 +281,9 @@ class PowerGridComponent extends Component
             $dataSource = $this->dataSource();
         }
 
-        $isCollection = $this->instanceOfCollection($dataSource);
+        $this->instanceOfCollection($dataSource);
 
-        if ($isCollection) {
-            $this->isCollection = true;
-
+        if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($dataSource))
                 ->setColumns($this->columns())
                 ->setSearch($this->search)
@@ -304,10 +302,12 @@ class PowerGridComponent extends Component
                     $results = $paginated->setCollection($this->transform($paginated->getCollection()));
                 }
             }
-        } else {
-            $model = $this->resolveModel($dataSource);
 
-            $results = $model->where(function ($query) {
+            return $results;
+        }
+
+        $results = $this->resolveModel($dataSource)
+            ->where(function ($query) {
                 Model::query($query)
                     ->setColumns($this->columns())
                     ->setSearch($this->search)
@@ -316,22 +316,27 @@ class PowerGridComponent extends Component
                     ->filterContains()
                     ->filter();
             })->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
+            ->paginate($this->perPage);
 
-            $results = $results->setCollection($this->transform($results->getCollection()));
-        }
-
-        return $results;
+        return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function instanceOfCollection($dataSource): bool
+    private function instanceOfCollection($dataSource): void
     {
-        return (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class));
+        $checkDatasource = (is_a($dataSource, PowerGrid::class)
+            || is_array($dataSource)
+            || is_a($dataSource, BaseCollection::class)
+        );
+        if ($checkDatasource) {
+            $this->isCollection = true;
+        }
     }
 
     private function transform($results)
     {
-        if (is_a($this->addColumns(), PowerGridCollection::class) || is_a($this->addColumns(), PowerGridEloquent::class)) {
+        if (is_a($this->addColumns(), PowerGridCollection::class)
+            || is_a($this->addColumns(), PowerGridEloquent::class)
+        ) {
             return $results->transform(function ($row) {
                 $row = (object)$row;
                 $columns = $this->addColumns()->columns;

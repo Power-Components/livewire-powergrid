@@ -21,9 +21,9 @@ trait Exportable
      * @param string $fileName
      * @param array|string[] $type
      * @param string $caption
-     * @return $this
+     * @return Exportable
      */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], string $caption = ''): PowerGridComponent
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], string $caption = ''): Exportable
     {
         $this->exportOption   = true;
         $this->exportFileName = $fileName;
