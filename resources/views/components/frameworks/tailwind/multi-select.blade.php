@@ -5,7 +5,7 @@
     'column' => null
 ])
 <div>
-    <div x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['relation_id'] }}')"
+    <div x-cloak x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['relation_id'] }}')"
          x-init="loadOptions()">
         <input name="values" type="hidden" x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">

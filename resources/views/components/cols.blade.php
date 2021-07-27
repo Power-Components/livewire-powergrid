@@ -30,7 +30,6 @@
                 >
                     {{$column->title}}
                 </span>
-
             </div>
         </th>
     @endif

@@ -24,7 +24,7 @@
 
                     @if(isset($makeFilters['date_picker']))
                         @foreach($makeFilters['date_picker'] as $field => $date)
-                            <div class="flex flex-col mb-2 md:w-1/4">
+                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                                 <x-livewire-powergrid::filters.date-picker
                                     :date="$date"
                                     :inline="false"
@@ -36,7 +36,7 @@
 
                     @if(isset($makeFilters['select']))
                         @foreach($makeFilters['select'] as $field => $select)
-                            <div class="flex flex-col mb-2 md:w-1/4">
+                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                                 <x-livewire-powergrid::filters.select
                                     :select="$select"
                                     :inline="false"
@@ -47,7 +47,7 @@
 
                     @if(isset($makeFilters['number']))
                         @foreach($makeFilters['number'] as $field => $number)
-                            <div class="flex flex-col mb-2 md:w-1/4">
+                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                                 <x-livewire-powergrid::filters.number
                                     :number="$number"
                                     :inline="false"
@@ -58,7 +58,7 @@
 
                     @if(isset($makeFilters['select']))
                         @foreach($makeFilters['select'] as $field => $select)
-                            <div class="flex flex-col mb-2 md:w-1/4">
+                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                                 <x-livewire-powergrid::filters.select
                                     :select="$select"
                                     :inline="false"
@@ -68,7 +68,7 @@
                     @endif
                     @if(isset($makeFilters['number']))
                         @foreach($makeFilters['number'] as $field => $number)
-                            <div class="flex flex-col mb-2 md:w-1/4">
+                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                                 <x-livewire-powergrid::filters.number
                                     :number="$number"
                                     :inline="false"

@@ -13,9 +13,11 @@
                 @if($checkbox)
                     <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
                 @endif
+
                 @foreach($columns as $column)
                     @if($column->hidden === false)
                         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}">
+
                             @if(isset($makeFilters['date_picker']))
                                 @foreach($makeFilters['date_picker'] as $index => $date)
 
