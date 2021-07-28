@@ -1,7 +1,7 @@
 <div class="md:flex md:flex-row w-full justify-between pt-3 bg-white overflow-y-auto pl-2 pr-2 pb-1 relative dark:bg-gray-700">
 
     @if($perPageInput)
-        <div class="flex flex-row">
+        <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
             <div class="relative h-10">
 
                 <select wire:model.lazy="perPage"

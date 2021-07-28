@@ -7,15 +7,15 @@
 ])
 <div class="w-full pb-3 dark:bg-gray-800">
     <div x-data={show:true} class="rounded-sm">
-        <div class="border border-b-0 bg-gray-200 px-4 py-3 cursor-pointer dark:bg-gray-300" id="headingOne"
+        <div class="px-4 py-3 cursor-pointer bg-gray-200 shadow dark:bg-gray-500"
              @click="show=!show">
             <button
-                class="appearance-none text-left text-base font-medium text-gray-500 focus:outline-none dark:text-gray-600"
+                class="appearance-none text-left text-base font-medium text-gray-500 focus:outline-none dark:text-gray-300"
                 type="button">
                 {{ trans('livewire-powergrid::datatable.buttons.filter') }}
             </button>
         </div>
-        <div x-show="show" class="border border-b-1 px-2 py-4 dark:bg-gray-700">
+        <div x-show="show" class="border-l border-b border-r border-gray-200 dark:border-gray-600 px-2 py-4 dark:border-0 dark:bg-gray-700">
             <div>
                 @php
                     $customConfig = [];

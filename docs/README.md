@@ -262,7 +262,7 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
-|**showExportOption**|*String* download filename, *Array* options, *String* caption button|Displays export button and set custom name to exported file|`->showExportOption('download', ['excel', 'csv], 'Export')`|
+|**showExportOption**|*String* download filename, *Array* options|Displays export button|`->showExportOption('download', ['excel', 'csv])`|
 
 > To use ´showExportOption´, call **Exportable** trait;
 > 

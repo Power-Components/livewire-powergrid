@@ -13,7 +13,7 @@
         }
     @endphp
 
-    <div class="{{ $theme->divClassNotInline }}" @if($inline) style="{{ $theme->divStyle }}" @endif>
+    <div class="{{ $theme->divClassNotInline }}" @if($inline)  @endif>
 
         @if(!$inline)
             <label for="input_{!! $date['field'] !!}"

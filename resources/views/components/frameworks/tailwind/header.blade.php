@@ -1,13 +1,23 @@
 <div class="md:flex md:flex-row w-full justify-between">
 
-    <div class="flex flex-row">
+    <div class="md:flex md:flex-row w-full">
 
-        @include($theme->base. ''.$theme->name.'.export')
+        <div class="">
+            <x-livewire-powergrid::actions
+                :theme="$theme"
+                row=""
+                :actions="$this->headers"/>
+        </div>
 
-        <x-livewire-powergrid::actions
-            :theme="$theme"
-            row=""
-            :actions="$this->headers"/>
+        <div class="flex flex-row">
+            <div class="mr-2 mt-2 sm:mt-0">
+                @include($theme->base. ''.$theme->name.'.export')
+            </div>
+
+            <x-livewire-powergrid::toggle-columns
+                :columns="$columns"
+                class="mr-0 sm:mr-2 mt-2 sm:mt-0"/>
+        </div>
 
         @include($theme->base. ''.$theme->name.'.loading')
 
@@ -32,7 +42,7 @@
                   <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"/>
                 </svg>
               </button>
-            </span>
+        </span>
 
     @endforeach
 </div>

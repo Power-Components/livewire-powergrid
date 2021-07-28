@@ -3,11 +3,11 @@
     'theme' => null,
     'row' => null
 ])
-<div class="w-1/2 md:w-auto">
+<div class="w-full md:w-auto">
     @if($row === '')
-        <div class="ml-2 flex flex-row">
+        <div class="sm:flex sm:flex-row">
             @foreach($actions as $action)
-                <div class="mr-2">
+                <div class="sm:mr-2 mb-2 w-auto">
 
                     @if($action->event !== '')
                         <button wire:click='$emit("{{ $action->event }}", @json($action->param))'

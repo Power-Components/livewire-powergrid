@@ -15,20 +15,15 @@ trait Exportable
 
     public array $exportType = [];
 
-    public string $exportCaption = '';
-
     /**
      * @param string $fileName
      * @param array|string[] $type
-     * @param string $caption
-     * @return Exportable
      */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], string $caption = ''): Exportable
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'])
     {
         $this->exportOption   = true;
         $this->exportFileName = $fileName;
         $this->exportType     = $type;
-        $this->exportCaption  = $caption;
 
         return $this;
     }
