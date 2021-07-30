@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Exception;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -9,12 +10,14 @@ use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
+use PowerComponents\LivewirePowerGrid\Traits\Exportable;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\WithSorting;
 
 class PowerGridComponent extends Component
 {
     use WithPagination;
+    use Exportable;
     use WithSorting;
     use Checkbox;
     use Filter;
@@ -204,7 +207,7 @@ class PowerGridComponent extends Component
             return new BaseCollection($this->dataSource()->make());
         }
 
-        return \cache()->rememberForever($this->id, function () use ($dataSource) {
+        return cache()->rememberForever($this->id, function () use ($dataSource) {
             if (is_array($dataSource)) {
                 return new BaseCollection($dataSource);
             }
@@ -218,7 +221,7 @@ class PowerGridComponent extends Component
 
     /**
      * @param array $data
-     * @throws \Exception
+     * @throws Exception
      */
     public function eventInputChanged(array $data): void
     {

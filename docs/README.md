@@ -264,10 +264,6 @@ The Setup method is used to configure your component.
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
 |**showExportOption**|*String* download filename, *Array* options|Displays export button|`->showExportOption('download', ['excel', 'csv])`|
 
-> To use ´showExportOption´, call **Exportable** trait;
-> 
-> _use PowerComponents\LivewirePowerGrid\Traits\Exportable;_
-
 Example of usage:
 
 ```php
