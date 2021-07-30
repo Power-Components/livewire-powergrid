@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 
 class PowerGridTest extends TestCase

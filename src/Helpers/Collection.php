@@ -110,9 +110,9 @@ class Collection implements FilterInterface
     }
 
     /**
-     * @return Collection
+     * @return BaseCollection
      */
-    public function search(): Collection
+    public function search(): BaseCollection
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
@@ -124,6 +124,8 @@ class Collection implements FilterInterface
                 }
             });
         }
+
+        return $this->query;
     }
 
     /**

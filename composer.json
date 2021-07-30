@@ -20,6 +20,11 @@
             "src/functions.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "PowerComponents\\LivewirePowerGrid\\Tests\\" : "tests"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -39,10 +44,5 @@
         "phpunit/phpunit": "^9.5",
         "pestphp/pest": "^1.1",
         "orchestra/testbench": "^6.17"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\" : "tests/"
-        }
     }
 }
