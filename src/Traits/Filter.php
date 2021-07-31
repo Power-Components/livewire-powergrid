@@ -70,6 +70,8 @@ trait Filter
         $this->filters['number'][$field]['start']     = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
+        
+        $this->resetPage();
     }
 
     /**
@@ -83,6 +85,8 @@ trait Filter
         $this->filters['number'][$field]['end']       = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
+        
+        $this->resetPage();
     }
 
     /**
@@ -92,6 +96,8 @@ trait Filter
     public function filterInputText(string $field, string $value): void
     {
         $this->filters['input_text'][$field] = $value;
+        
+        $this->resetPage();
     }
 
     /**
@@ -101,6 +107,8 @@ trait Filter
     public function filterBoolean(string $field, string $value): void
     {
         $this->filters['boolean'][$field] = $value;
+        
+        $this->resetPage();
     }
 
     /**
@@ -110,5 +118,7 @@ trait Filter
     public function filterInputTextOptions(string $field, string $value): void
     {
         $this->filters['input_text_options'][$field] = $value;
+        
+        $this->resetPage();
     }
 }
