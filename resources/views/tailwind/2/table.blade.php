@@ -31,7 +31,7 @@
                                             <span class="text-base pr-2">
 									            @if ($sortField !== $column->field)
                                                     {!! $sortIcon !!}
-                                                @elseif ($sortDirection)
+                                                @elseif ($sortDirection == 'desc')
                                                     {!! $sortAscIcon !!}
                                                 @else
                                                     {!! $sortDescIcon !!}
