@@ -81,7 +81,7 @@ return [
     | 'js_framework' => 'alpinejs',
     */
 
-    'js_framework' => JS_FRAMEWORK_ALPINE,
+    'js_framework' => 'alpinejs',
 
     /*
     |--------------------------------------------------------------------------

@@ -11,12 +11,11 @@
 
         <div class="flex flex-row">
             <div class="mr-2 mt-2 sm:mt-0">
-                @include($theme->base. ''.$theme->name.'.export')
+                @includeIf($theme->base. ''.$theme->name.'.export')
             </div>
 
-            <x-livewire-powergrid::toggle-columns
-                :columns="$columns"
-                class="mr-0 sm:mr-2 mt-2 sm:mt-0"/>
+            @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
+
         </div>
 
         @include($theme->base. ''.$theme->name.'.loading')

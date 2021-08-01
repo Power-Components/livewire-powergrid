@@ -155,6 +155,7 @@ class PowerGridComponent extends Component
 
         $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
 
+        ds(powerGridTheme());
         $this->renderFilter();
     }
 

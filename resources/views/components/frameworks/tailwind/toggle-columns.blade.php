@@ -7,7 +7,7 @@
     }
 </style>
 <div x-data="toggleColumns()" x-cloak
-     {{ $attributes }}
+     class="mr-0 sm:mr-2 mt-2 sm:mt-0"
      @click.away="open = false">
     <button @click.prevent="open = ! open"
             class="block bg-white-200 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
@@ -39,7 +39,6 @@
         @endforeach
     </div>
 </div>
-
 <script>
     function toggleColumns() {
         return {

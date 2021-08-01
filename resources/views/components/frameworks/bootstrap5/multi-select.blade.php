@@ -12,8 +12,7 @@
         @endif
         <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
                 multiple id="input_{!! $multiSelect['relation_id'] !!}"
-                class="power_grid power_grid_select select_picker_{!! $multiSelect['relation_id'] !!}
-                    form-control active"
+                class="power_grid_select select_picker_{!! $multiSelect['relation_id'] !!} form-control active"
                 wire:ignore
                 data-live-search="{{ $multiSelect['live-search'] }}">
 
@@ -35,45 +34,37 @@
             vertical-align: middle;
             line-height: normal;
         }
+
         .bootstrap-select {
             padding-left: 0 !important;
         }
     </style>
 
-    @push("power_grid_styles")
-        <link rel="stylesheet" href="{{ config('livewire-powergrid.plugins.bootstrap-select.css') }}" crossorigin="anonymous"/>
-    @endpush
-
     @push('power_grid_scripts')
-
-        <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
-
-        <!-- Power Grid Multi Select Scripts -->
         <script>
             $(function () {
-                $('.select_picker_').selectpicker();
+                $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker();
             })
 
             document.addEventListener('DOMContentLoaded', () => {
                 Livewire.hook('message.processed', (message, component) => {
-                    $('.select_picker_').selectpicker()
+                    $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker()
                 })
             })
 
-            $('.select_picker_{!! $multiSelect['relation_id'] !!}').selectpicker();
-            $('select.select_picker_{!! $multiSelect['relation_id'] !!}').on('change', function () {
+            $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker();
+            $('select.select_picker_{{ $multiSelect['relation_id'] }}').on('change', function () {
                 const selected = $(this).find("option:selected");
                 const arrSelected = [];
                 selected.each(function () {
                     arrSelected.push($(this).val());
                 });
                 window.livewire.emit('eventMultiSelect', {
-                    id: '{!! $multiSelect['relation_id'] !!}',
+                    id: '{{ $multiSelect['relation_id'] }}',
                     values: arrSelected
                 })
-                $('.select_picker_{!! $multiSelect['field'] !!}').selectpicker('refresh');
+                $('.select_picker_{{ $multiSelect['field'] }}').selectpicker('refresh');
             });
         </script>
-        <!-- Power Grid Date Picker Scripts -->
     @endpush
 @endif

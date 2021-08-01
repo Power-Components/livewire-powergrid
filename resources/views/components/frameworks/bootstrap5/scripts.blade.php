@@ -1,8 +1,6 @@
-<script>
-    $(function () {
-        $('.power_grid_select').selectpicker();
-    })
+<script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 
+<script>
     function toggle(event) {
         const id = event.target.getAttribute('data-id');
         const field = event.target.getAttribute('data-field');
@@ -10,15 +8,9 @@
         saveToggleableInput(checked, id, field);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        Livewire.hook('message.processed', (message, component) => {
-            $('.power_grid_select').selectpicker()
-        })
-    })
-
     function saveEditableInput(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('eventChangeInput', {
+        window.livewire.emit('eventInputChanged', {
             id: id,
             value: event.target.value,
             field: field

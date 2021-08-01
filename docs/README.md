@@ -1,6 +1,5 @@
 <div align="center">
 	<p><img  src="https://raw.githubusercontent.com/Power-Components/livewire-powergrid/main/art/header.jpg" alt="PowerGrid Header"></p>
-</p>
 </div>
 
 ------
@@ -38,7 +37,9 @@
     - [Action Methods](#action-methods)
       - [Open Modal](#1-openmodal)
       - [Event Listeners](#2-event-listeners)
-    - [Update Method](#update-method)
+    - [template() Method](#template)
+    - [relationSearch() Method](#relation-search)
+    - [update() Method](#update-method)
 
 ---
 
@@ -249,7 +250,10 @@ You can view more functionalities consulting each of the following methods:
 - [dataSource()](#datasource-method)
 - [addColumns()](#addColumns-method)
 - [Column Methods](#column-methods)
-- [Action Methods](#action-methods)
+- [Action Methods](#action-and-header-methods)
+- [Template](#template) 
+- [Relation Search](#relation-search)
+
 
 
 ### setUp() Method
@@ -485,7 +489,7 @@ Boolean column example:
 
 ---
 
-### Action Methods and Header Actions
+### action() and header() methods
 
 If you want to add action buttons to each row of the table you can use the `actions` method.
 
@@ -575,12 +579,83 @@ If you want to do something like this on livewire:
   ```
 
   ---
+
+### Template
+
+Powergrid works with theme classes to distinguish which components will be used in rendering, internally there are two theme files that can be used:
+
+\PowerComponents\LivewirePowerGrid\Themes\Tailwind::class
+\PowerComponents\LivewirePowerGrid\Themes\Bootstrap::class
+
+This means they can be called from within the config/livewire-powergrid.php file as in the example:
+
+```php
+'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+```
+
+#### Adjusting your theme's CSS.
+
+In case you need to change some CSS behavior, you can copy this file and configure your own theme.
+
+> Powergrid will not automatically create the necessary files. So do it based on the current model.
+The required files are described in the example theme file.
+
+* copy the file to App\Http\Livewire\MyCustomTheme.class
+
+* if you have created a new folder template, add your theme's base path in the $base property:
+  Ex: public string $base = "vendor\\laravel-powergrid\\components\\frameworks\\";
+
+##### Changing globally
+* change 'theme' in your config/livewire-powergrid.php file
+  'theme' => App\Http\Livewire\MyCustomTheme.class
+
+##### Changing in a component
+Inside the powergrid-generated component class, add the following method:
+
+```php
+public function template(): ?string
+{
+    return \App\Http\Livewire\MyCustomTheme::class;
+}
+```
+
+---
+### Relation Search
+
+> If your table has relationships and you need to filter some existing columns in them, you can pass the **relationship** name in the model following the key `'relationship name' => 'columns'` as in the example below
+
+**dataSource** method with `->with('... your relationships')`:
+```php
+public function dataSource()
+    {
+        return Dish::query()->with(['category', 'kitchen']);
+    }
+```
+
+**relationSearch()** method:
+```php
+public function relationSearch(): array
+{
+    return [
+        'kitchen' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        'category' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        // ... others
+    ];
+}
+```
+---
   
 ### Update Method
 
 > The update method needs to be activated and configured for the edit on click and toggle to work.
 
-All data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this conversion automatically.
+All data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. 
+
+The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this conversion automatically.
 The same would happen with dates. See the two basic examples below:
 
 

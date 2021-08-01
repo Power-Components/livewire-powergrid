@@ -3,14 +3,16 @@
 
         <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
 
-            @include('livewire-powergrid::components.frameworks.bootstrap5.export')
+            @include($theme->base. ''.$theme->name.'.export')
+
+            @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
 
             @include('livewire-powergrid::components.frameworks.bootstrap5.loading')
 
         </div>
         <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
 
-            @include('livewire-powergrid::components.frameworks.bootstrap5.filter')
+            @include($theme->base. ''.$theme->name.'.filter')
 
         </div>
 
