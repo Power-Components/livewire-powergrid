@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 70" >
+    <title>PowerGrid logomark</title>
+    <style>.a{fill:#f59e0b}.b{fill:#fbbf24}</style>
+    <polygon class="a" points="0,4.8 21,19.1 21,10.8 35,14.9 14.6,0 14.6,9"/>
+    <polygon class="a" points="25.5,4.8 46.5,19.1 46.5,10.8 60.5,14.9 40.1,0 40.1,9"/>
+    <polygon class="a" points="51,4.8 72,19.1 72,10.8 86,14.9 65.6,0 65.6,9"/>
+    <polygon class="b" points="0,30.3 21,44.5 21,36.2 35,40.4 14.6,25.5 14.6,34.5"/>
+    <polygon class="b" points="25.5,30.3 46.5,44.5 46.5,36.2 60.5,40.4 40.1,25.5 40.1,34.5"/>
+    <polygon class="b" points="51,30.3 72,44.5 72,36.2 86,40.4 65.6,25.5 65.6,34.5"/>
+    <polygon class="b" points="0,55.7 21,70 21,61.7 35,65.8 14.6,50.9 14.6,60"/>
+    <polygon class="b" points="25.5,55.7 46.5,70 46.5,61.7 60.5,65.8 40.1,50.9 40.1,60"/>
+    <polygon class="b" points="51,55.7 72,70 72,61.7 86,65.8 65.6,50.9 65.6,60"/>
+</svg>

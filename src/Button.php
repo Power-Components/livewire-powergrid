@@ -99,6 +99,7 @@ class Button
         $this->param  = $param;
         $this->method = 'get';
         $this->route  = '';
+        $this->event  = '';
 
         return $this;
     }

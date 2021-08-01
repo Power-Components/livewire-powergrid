@@ -7,7 +7,7 @@
         @if(config('livewire-powergrid.filter') === 'outside')
             @if(count($makeFilters) > 0)
                 <div>
-                    <x-livewire-powergrid::frameworks.bootstra5.filter
+                    <x-livewire-powergrid::frameworks.bootstrap5.filter
                         :makeFilters="$makeFilters"
                         :theme="$theme"
                     />

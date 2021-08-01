@@ -43,7 +43,7 @@ class PowerGridServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'livewire-powergrid');
 
-        $this->publishes([__DIR__ . '/../../resources/views' => resource_path('views/vendor/laravel-powergrid')], 'livewire-powergrid-views');
+        $this->publishes([__DIR__ . '/../../resources/views' => resource_path('views/vendor/livewire-powergrid')], 'livewire-powergrid-views');
     }
 
     private function createDirectives()

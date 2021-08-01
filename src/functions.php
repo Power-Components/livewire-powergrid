@@ -1,8 +1,19 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\PowerGrid;
+
 const BOOTSTRAP            = 'bootstrap';
 const TAILWIND             = 'tailwind';
 const JS_FRAMEWORK_ALPINE  = 'alpinejs';
+
+if (!function_exists('powerGridThemeRoot')) {
+    function powerGridThemeRoot(): string
+    {
+        $theme = PowerGrid::theme(config('livewire-powergrid.theme'));
+
+        return $theme->root();
+    }
+}
 
 if (!function_exists('powerGridTheme')) {
     function powerGridTheme(): string

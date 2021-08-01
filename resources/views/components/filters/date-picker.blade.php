@@ -25,6 +25,8 @@
                class="power_grid range_input_{!! $date['field'] !!} {{ $theme->inputClass }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
+                wire:model="filters.input_date_picker.{!!$date['dataField'] !!}"
+               wire:ignore
         >
     </div>
     @push('power_grid_scripts')

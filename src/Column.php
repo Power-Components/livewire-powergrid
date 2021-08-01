@@ -34,8 +34,6 @@ class Column
 
     public string $dataField = '';
 
-    public bool $visible = true;
-
     /**
      * @return static
      */
@@ -181,7 +179,7 @@ class Column
      * 'only_future' => true,
      * 'no_weekends' => true
      * ]
-     * @param string $class_attr
+     * @param string $classAttr
      * @return Column
      */
     public function makeInputDatePicker( string $dataField, array $settings = [], string $classAttr = '' ): Column

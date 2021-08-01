@@ -16,7 +16,7 @@
                     <span class="text-base pr-2" style="font-size: 1rem !important;">
 						@if ($sortField !== $column->field)
                             &#8597;
-                        @elseif ($sortDirection)
+                        @elseif ($sortDirection == 'desc')
                             &#8593;
                         @else
                             &#8595;

@@ -29,10 +29,10 @@ class Bootstrap5 extends ThemeBase
             ->clearFilter("", "color: #c30707; cursor:pointer; float: right;");
     }
 
-    public function perPage(): Components\Footer
+    public function footer(): Components\Footer
     {
         return Theme::footer()
-            ->view("{$this->base}{$this->name}.footer")
+            ->view($this->root() . "footer")
             ->select("");
     }
 

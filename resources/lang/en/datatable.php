@@ -26,6 +26,10 @@ return [
         'select' => 'Select',
         'all'    => 'All',
     ],
+    'select' => [
+        'select' => 'Select',
+        'all'    => 'All'
+    ],
     'boolean_filter' => [
         'all' => 'All',
     ],

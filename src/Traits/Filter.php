@@ -92,6 +92,8 @@ trait Filter
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
+
+        $this->resetPage();
     }
 
     /**
@@ -109,6 +111,8 @@ trait Filter
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
+
+        $this->resetPage();
     }
 
     /**
@@ -122,6 +126,8 @@ trait Filter
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
+
+        $this->resetPage();
     }
 
     /**
@@ -135,6 +141,8 @@ trait Filter
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
+
+        $this->resetPage();
     }
 
     /**
@@ -148,5 +156,7 @@ trait Filter
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
+
+        $this->resetPage();
     }
 }

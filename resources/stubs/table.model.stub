@@ -150,6 +150,4 @@ class {{ componentName }} extends PowerGridComponent
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
-
-
 }

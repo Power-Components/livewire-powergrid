@@ -81,7 +81,7 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view($this->root()."multi-select")
+            ->view($this->root() . "multi-select")
             ->input("appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500")
             ->divNotInline("pt-2 p-2")
             ->divInline("pr-6");
