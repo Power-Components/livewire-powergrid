@@ -1,8 +1,3 @@
-<style>
-    [x-cloak] {
-        display: none;
-    }
-</style>
 <div x-data="toggleColumns()" x-cloak
      @click.away="open = false">
     <button @click.prevent="open = ! open"

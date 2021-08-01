@@ -267,6 +267,8 @@ The Setup method is used to configure your component.
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
 |**showExportOption**|*String* download filename, *Array* options|Displays export button|`->showExportOption('download', ['excel', 'csv])`|
+|**showToggleColumns**||Enabled toggleable button to show/hidden columns|`->showToggleColumns()`|
+
 
 Example of usage:
 
@@ -277,6 +279,7 @@ Example of usage:
       ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput()
+      ->showToggleColumns()
       ->showExportOption('download', ['excel', 'csv'], 'Export');
   }
 ```

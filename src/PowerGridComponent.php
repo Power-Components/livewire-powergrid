@@ -60,10 +60,7 @@ class PowerGridComponent extends Component
 
     ];
 
-    /**
-     * @var array|mixed
-     */
-    private $toggleColumn = [];
+    public bool $toggleColumns = false;
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -120,6 +117,18 @@ class PowerGridComponent extends Component
 
         return $this;
     }
+
+    /**
+     * default false
+     * @return $this
+     */
+    public function showToggleColumns(): PowerGridComponent
+    {
+        $this->toggleColumns = true;
+
+        return $this;
+    }
+
 
     /**
      * @param string $attribute
