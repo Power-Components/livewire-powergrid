@@ -7,9 +7,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use PowerComponents\LivewirePowerGrid\Commands\Traits\InteractsWithVersions;
 
 class CreateCommand extends Command
 {
+    use InteractsWithVersions;
+
     protected $signature = 'powergrid:create
     {--template= : name of the file that will be used as a template}';
 
@@ -17,6 +20,8 @@ class CreateCommand extends Command
 
     public function handle()
     {
+        $this->ensureLatestVersion();
+
         $fillable        = false;
 
         $tableName       = $this->ask('Component Name');

@@ -33,7 +33,7 @@
       - [Column Settings](#column-settings)
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
-    - [addColumns() Method](#addColumns-method)
+    - [addColumns() Method](#addcolumns-method)
     - [Action Methods](#action-methods)
       - [Open Modal](#1-openmodal)
       - [Event Listeners](#2-event-listeners)
@@ -178,7 +178,7 @@ Component Name:
 > DishTable
 
 [M]odel or [C]ollection? (default: M):
-> DishTable
+> M
 
 Model (ex: App\Models\User):
 > App\Models\User
@@ -186,12 +186,7 @@ Model (ex: App\Models\User):
 Use the based on fillable ? (yes/no) [no]:
 > yes
 
-
-
 ```
-
-![Output](img/command.png)
-
 
 ![Output](img/output.png)
 
@@ -249,7 +244,6 @@ You can view more functionalities consulting each of the following methods:
 - [setUp()](#setup-method)
 - [dataSource()](#datasource-method)
 - [addColumns()](#addColumns-method)
-- [Column Methods](#column-methods)
 - [Action Methods](#action-and-header-methods)
 - [Template](#template) 
 - [Relation Search](#relation-search)
@@ -587,7 +581,8 @@ If you want to do something like this on livewire:
 
 Powergrid works with theme classes to distinguish which components will be used in rendering, internally there are two theme files that can be used:
 
-\PowerComponents\LivewirePowerGrid\Themes\Tailwind::class
+\PowerComponents\LivewirePowerGrid\Themes\Tailwind::class and
+
 \PowerComponents\LivewirePowerGrid\Themes\Bootstrap::class
 
 This means they can be called from within the config/livewire-powergrid.php file as in the example:
