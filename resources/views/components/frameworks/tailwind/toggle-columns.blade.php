@@ -1,6 +1,3 @@
-@props([
-    'columns' => null
-])
 @if($toggleColumns)
     <div x-data="toggleColumns()" x-cloak
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
