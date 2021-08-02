@@ -2,6 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Traits;
 
+use Composer\Factory;
+use Composer\IO\NullIO;
+use Composer\Repository\InstalledRepositoryInterface;
+use Illuminate\Support\Carbon;
+
 trait InteractsWithVersions
 {
     /**
@@ -18,11 +23,36 @@ trait InteractsWithVersions
      */
     protected function ensureLatestVersion()
     {
-        $current = 'v' . config('livewire-powergrid.version');
+        $composer  = Factory::create(new NullIo(), null, false);
+        $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
-        if (version_compare($remote = $this->getLatestVersion(), $current) > 0) {
-            $this->info("You are using an outdated version {$current} of PowerGrid. Please update to {$remote}");
+        $current   = $this->searchPackage($localRepo);
+
+        if (isset($current['version'])) {
+            if (version_compare($remote = $this->getLatestVersion(), $current['version']) > 0) {
+                $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
+                $this->info(" Released Date: <comment>{$current['release']}</comment>");
+            }
         }
+    }
+
+    /**
+     * Search package version.
+     *
+     * @return string
+     */
+    public function searchPackage(InstalledRepositoryInterface $localRepo): array
+    {
+        foreach ($localRepo->getPackages() as $package) {
+            if ($package->getName() === 'power-components/livewire-powergrid') {
+                return [
+                    'version' => $package->getPrettyVersion(),
+                    'release' => Carbon::parse($package->getReleaseDate())->format('M d, Y h:i A'),
+                ];
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -42,16 +72,5 @@ trait InteractsWithVersions
         };
 
         return call_user_func($resolver);
-    }
-
-    /**
-     * Sets the latest version resolver.
-     *
-     * @param callable $resolver
-     * @return void
-     */
-    public static function resolveLatestVersionUsing(callable $resolver)
-    {
-        static::$latestVersionResolver = $resolver;
     }
 }

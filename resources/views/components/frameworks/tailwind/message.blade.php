@@ -3,9 +3,9 @@
     <div
         class="mb-2 border px-4 py-3 rounded relative
         @if (session()->has('success'))
-            bg-green-100 border-green-600 text-green-700
+            bg-green-100 border-green-600 text-green-700 dark:bg-green-300 dark:text-green-900
         @elseif (session()->has('error'))
-            bg-red-100 border border-red-600 text-red-700
+            bg-red-100 border border-red-600 text-red-700 dark:bg-red-300 dark:text-red-900
         @endif" role="alert">
         <span class="block sm:inline">{{ session('success') }}</span>
         <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
