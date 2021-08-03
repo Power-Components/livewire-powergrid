@@ -26,6 +26,7 @@
     - [6. Creating a Table Component](#6--creating-a-table-component)
     - [6.1 Create with Fillable](#61-create-with-fillable)
     - [6.2 Create options](#62-create-options)
+    - [6.3 Notification of Release](#63-notification-of-release)
     - [7.  Using your Table Component](#7--using-your-table-component)
   - [Configuring and Customizing](#configuring-and-customizing)
     - [setUp() Method](#setup-method)
@@ -40,7 +41,7 @@
     - [template() Method](#template)
     - [relationSearch() Method](#relation-search)
     - [update() Method](#update-method)
-
+  
 ---
 
 ## Requirements
@@ -210,6 +211,23 @@ If everything was successful, you will find your new table component inside the 
 |----|----|----|
 |**--fillable**| Creates columns based on the Model's Fillable array | ```--fillable``` |
 |**--template**| Uses a provided stub file as template for creating tables | ```--template=stubs/table_with_buttons.sub``` |
+
+### 6.3 Notification of Release
+
+When you run the `php artisan powergrid:create` command, we can let you know if you are using an older version.
+
+> Add the package: `composer require composer/composer --dev` to your project.
+
+The console output will look like this in the future if your package is out of date:
+
+```bash
+$ php artisan powergrid:create
+ You are using an outdated version v1.5.8 of PowerGrid ⚡. Please update to v2.0.0
+ Released Date: Aug 03, 2021 03:39 PM
+ 
+ Component Name:
+ >
+```
 
 ### 7.  Using your Table Component
 

@@ -39,7 +39,8 @@ trait InteractsWithVersions
     /**
      * Search package version.
      *
-     * @return string
+     * @param InstalledRepositoryInterface $localRepo
+     * @return array
      */
     public function searchPackage(InstalledRepositoryInterface $localRepo): array
     {
