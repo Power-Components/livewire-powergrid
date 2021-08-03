@@ -17,19 +17,12 @@ trait Checkbox
      */
     public function selectCheckboxAll()
     {
-        $this->checkboxValues = [];
-
         if (!$this->checkboxAll) {
+            $this->checkboxValues = [];
             return;
         }
-        if ($this->isCollection) {
-            $this->resolveCollection()->each(function ($model) {
-                $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
-            });
 
-            return;
-        }
-        $this->resolveModel()->each(function ($model) {
+        collect($this->loadData()->items())->each(function ($model) {
             $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
         });
     }

@@ -146,6 +146,13 @@ class PowerGridComponent extends Component
         return $this;
     }
 
+    public function setPage($page)
+    {
+        $this->page = $page;
+
+        $this->checkboxAll = false;
+    }
+
     public function mount()
     {
         $this->setUp();
