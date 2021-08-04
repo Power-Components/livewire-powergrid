@@ -94,7 +94,9 @@ class Model implements FilterInterface
                 }
             });
         }
+
         return $this->query;
+
     }
 
     /**
@@ -270,12 +272,13 @@ class Model implements FilterInterface
 
             if ($this->query->getRelation($table)) {
                 foreach ($relation as $column) {
+
                     if (!Schema::hasColumn($this->query->getModel()->getTable(), $column)) {
                         return;
                     }
 
-                    $this->query = $this->query->orWhereHas($table, function (Builder $query) {
-                        $query->where($this->columns, 'like', '%' . $this->search . '%');
+                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
+                        $query->where($column, 'like', '%' . $this->search . '%');
                     });
                 }
             }

@@ -129,7 +129,6 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-
     /**
      * @param string $attribute
      * @return PowerGridComponent

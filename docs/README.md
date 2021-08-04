@@ -542,7 +542,7 @@ public function header(): array
      return [
         Button::add('new')
             ->caption(__('__New'))
-            ->class('')
+            ->class('bg-gray-300')
             ->openModal('new', []),
         //...
      ];
@@ -562,7 +562,7 @@ You will need to install the component [Livewire UI Component](https://github.co
  return [
     Button::add('view')
         ->caption(__('View'))
-        ->class('btn btn-primary')
+        ->class('bg-green-500')
         ->openModal('product', ['cod' => 'id']),
   //...
 ];
