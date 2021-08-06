@@ -96,7 +96,6 @@ class Model implements FilterInterface
         }
 
         return $this->query;
-
     }
 
     /**
@@ -272,7 +271,6 @@ class Model implements FilterInterface
 
             if ($this->query->getRelation($table)) {
                 foreach ($relation as $column) {
-
                     if (!Schema::hasColumn($this->query->getModel()->getTable(), $column)) {
                         return;
                     }

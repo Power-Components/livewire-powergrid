@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
-use Composer\Repository\InstalledRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -179,5 +178,4 @@ class CreateCommand extends Command
 
         return File::get(__DIR__ . '/../../resources/stubs/table.stub');
     }
-
 }

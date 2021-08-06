@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{
+    Actions,
     Checkbox,
     Cols,
     Editable,
@@ -12,10 +13,11 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterMultiSelect,
     FilterNumber,
     FilterSelect,
-    Layout,
     Footer,
+    Layout,
     Table,
-    Toggleable};
+    Toggleable
+};
 
 class ThemeManager
 {

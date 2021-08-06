@@ -43,7 +43,6 @@ class PowerGridEloquent
     public function make(): ?array
     {
         if (!is_a($this->collection, Collection::class)) {
-
             return null;
         }
 

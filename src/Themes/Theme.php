@@ -3,7 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{
+    Actions,
     Checkbox,
     Cols,
     Editable,
@@ -13,10 +14,11 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterMultiSelect,
     FilterNumber,
     FilterSelect,
-    Layout,
     Footer,
+    Layout,
     Table,
-    Toggleable};
+    Toggleable
+};
 
 /**
  * @method static Table table(string $attrClass, string $attrStyle='')
