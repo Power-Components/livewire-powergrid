@@ -4,23 +4,22 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 trait ActionButton
 {
-    /**
-     * @var array
-     */
     public array $actionRoutes = [];
+
+    public array $actionHeader = [];
 
     /**
      * @var array
      */
-    public array $actionBtns = [];
+    public array $actions = [];
 
     public function initActions()
     {
-        $this->actionBtns = $this->actions();
+        $this->actions = $this->actions();
 
-        foreach ($this->actionBtns as $actionBtn) {
-            if (isset($actionBtn->route)) {
-                $this->actionRoutes[$actionBtn->action] = $actionBtn->route;
+        foreach ($this->actions as $action) {
+            if (isset($action->route)) {
+                $this->actionRoutes[$action->action] = $action->route;
             }
         }
     }
@@ -29,6 +28,11 @@ trait ActionButton
      * @return array
      */
     public function actions(): array
+    {
+        return [];
+    }
+
+    public function header(): array
     {
         return [];
     }

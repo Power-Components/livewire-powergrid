@@ -10,12 +10,6 @@ trait WithSorting
 
     public string $sortDirection = 'asc';
 
-    public string $sortIcon = '&#8597;';
-
-    public string $sortAscIcon = '&#8593;';
-
-    public string $sortDescIcon = '&#8595;';
-
     public function sortBy($field)
     {
         $this->sortDirection = $this->sortField === $field

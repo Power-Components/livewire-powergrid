@@ -3,16 +3,13 @@
 return [
     'buttons' => [
         'filter'          => 'Aktionen',
-        'export'          => 'Exportieren',
-        'export_one'      => '"Auswahl exportieren"',
-        'export_selected' => 'Auswahlen exportieren'
     ],
     'labels' => [
         'action'           => 'Aktionen',
         'results_per_page' => 'Ergebnisse pro Seite',
         'clear_filter'     => 'Filter löschen',
         'no_data'          => 'Keine Ergebnisse gefunden',
-        'all'              => 'Alle'
+        'all'              => 'Alle',
     ],
     'placeholders' => [
         'search' => 'Suche',
@@ -23,18 +20,18 @@ return [
         'to'      => 'bis',
         'of'      => 'von',
         'results' => 'Ergebnissen',
-        'all'     => 'Alle'
+        'all'     => 'Alle',
     ],
     'multi_select' => [
         'select' => 'Bitte wählen',
-        'all'    => 'Alle'
+        'all'    => 'Alle',
     ],
     'select' => [
         'select' => 'Bitte wählen',
-        'all'    => 'Alle'
+        'all'    => 'Alle',
     ],
     'boolean_filter' => [
-        'all' => 'Alle'
+        'all' => 'Alle',
     ],
     'input_text_options' => [
         'is'           => 'ist genau',

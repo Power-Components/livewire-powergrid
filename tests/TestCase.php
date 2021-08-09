@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 

@@ -1,6 +1,5 @@
 <div align="center">
 	<p><img  src="https://raw.githubusercontent.com/Power-Components/livewire-powergrid/main/art/header.jpg" alt="PowerGrid Header"></p>
-</p>
 </div>
 
 ------
@@ -11,9 +10,7 @@
 
 [Livewire](https://laravel-livewire.com) PowerGrid is a component for  generating dynamic tables with your Laravel Models and Collections.
 
-
 ---
-
 # Get started
 
 - [Livewire PowerGrid](#livewire-powergrid)
@@ -26,9 +23,10 @@
     - [3. Publish files [OPTIONAL]](#3-publish-files-optional)
     - [4. Configure the theme and Alpine JS](#4-configure-the-theme-and-alpine-js)
     - [5. Include PowerGrid component](#5-include-powergrid-component)
-    - [6.  Creating a Table Component](#6--creating-a-table-component)
+    - [6. Creating a Table Component](#6--creating-a-table-component)
     - [6.1 Create with Fillable](#61-create-with-fillable)
     - [6.2 Create options](#62-create-options)
+    - [6.3 Notification of Release](#63-notification-of-release)
     - [7.  Using your Table Component](#7--using-your-table-component)
   - [Configuring and Customizing](#configuring-and-customizing)
     - [setUp() Method](#setup-method)
@@ -36,12 +34,14 @@
       - [Column Settings](#column-settings)
       - [Column Filters](#column-filters)
       - [Column Actions](#column-actions)
-    - [addColumns() Method](#addColumns-method)
+    - [addColumns() Method](#addcolumns-method)
     - [Action Methods](#action-methods)
       - [Open Modal](#1-openmodal)
       - [Event Listeners](#2-event-listeners)
-    - [Update Method](#update-method)
-
+    - [template() Method](#template)
+    - [relationSearch() Method](#relation-search)
+    - [update() Method](#update-method)
+  
 ---
 
 ## Requirements
@@ -54,7 +54,7 @@
 
 ## Installation
 
-This documentation will describe the creation of a table called `ProductTable` used to list products of the `Product` Model.
+This documentation will describe the creation of a table called `DIshTable` used to list products of the `Product` Model.
 
 ### 1. Via composer
 
@@ -69,7 +69,7 @@ To install via composer, run:
 Publish the Livewire PowerGrid configuration file with the following command:
 
 ```bash
-    php artisan vendor:publish --tag=livewire-powergrid-config
+  php artisan vendor:publish --tag=livewire-powergrid-config
 ```
 
 ### 3. Publish files [OPTIONAL] 
@@ -81,13 +81,13 @@ Language files can be published with:
 Views:
 
 ```bash
-    php artisan vendor:publish --tag=livewire-powergrid-views
+  php artisan vendor:publish --tag=livewire-powergrid-views
 ```
 
 Language files can be published with:
 
 ```bash
-    php artisan vendor:publish --tag=livewire-powergrid-lang
+  php artisan vendor:publish --tag=livewire-powergrid-lang
 ```
 
 ### 4. Configure the theme and Alpine JS
@@ -96,28 +96,28 @@ By default, PowerGrid uses Tailwind, Bootstrap 5 use.
 
 #### 4.1 your blade layout add jquery before bootstrap.js:
 ```html
-        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
         
-        <!-- after -->
-        @powerGridScripts
+<!-- after -->
+@powerGridScripts
 ```
 
 This configuration can be changed in the file `config/livewire-powergrid.php`.
 
 #### 4.2 change config/livewire-powergrid.php:
 ```php
-    //...
-    'theme' => 'bootstrap'
+   //...
+   'theme' => 'bootstrap'
 
 ```
 
 For Tailwind:
 
 ```php
-    //...
-    'theme' => 'tailwind'
+  //...
+  'theme' => 'tailwind'
 
 ```
 
@@ -144,7 +144,6 @@ The CDN for Alpine JS is  configured by default, in the same file:
 Include the Livewire and the PowerGrid styles and scripts:
 
 ```html
-...
     <!-- Styles -->
     @livewireStyles
     @powerGridStyles
@@ -153,7 +152,6 @@ Include the Livewire and the PowerGrid styles and scripts:
 ```
 
 ```html
-...
     <!-- Scripts -->
     @livewireScripts
     @powerGridScripts
@@ -167,17 +165,28 @@ You can read more about this at the official [Livewire documentation](https://la
 
 ### 6.  Creating a Table Component
 
-To create a Table Component run `powergrid:create` informing your table `name` and your `model`.
+> To create a Table Component run `powergrid:create` and component will be assembled in steps using the question terminal:
 
-Example:
+Run command:
 
 ```bash
-php artisan powergrid:create ProductTable --model="App\Models\Product"  
+php artisan powergrid:create  
 ```
-you can also do it like this
+
+Fill in the questions:
 ```bash
-php artisan powergrid:create Admin.ProductTable --model="App\Models\Product"
-php artisan powergrid:create Admin\\ProductTable --model="App\Models\Product"
+Component Name:
+> DishTable
+
+[M]odel or [C]ollection? (default: M):
+> M
+
+Model (ex: App\Models\User):
+> App\Models\User
+
+Use the based on fillable ? (yes/no) [no]:
+> yes
+
 ```
 
 ![Output](img/output.png)
@@ -189,7 +198,7 @@ php artisan powergrid:create Admin\\ProductTable --model="App\Models\Product"
 If your Model has the fillable property specified, use `--fillable` option to create columns based on its value.
 
 ```bash
-php artisan powergrid:create ProductTable --model="App\Models\Product" --fillable
+php artisan powergrid:create DIshTable --model="App\Models\Product" --fillable
 ```
 
 If everything was successful, you will find your new table component inside the `app/Http/Livewire` folder.
@@ -200,25 +209,40 @@ If everything was successful, you will find your new table component inside the 
 
 | Option | Description | Example |
 |----|----|----|
-|**--model**| Full model path | ```--model="App\Models\Product"``` |
 |**--fillable**| Creates columns based on the Model's Fillable array | ```--fillable``` |
 |**--template**| Uses a provided stub file as template for creating tables | ```--template=stubs/table_with_buttons.sub``` |
-|**--with-collection**| Creates a table to work with collections | ```--with-collection``` |
+
+### 6.3 Notification of Release
+
+When you run the `php artisan powergrid:create` command, we can let you know if you are using an older version.
+
+> Add the package: `composer require composer/composer --dev` to your project.
+
+The console output will look like this in the future if your package is out of date:
+
+```bash
+$ php artisan powergrid:create
+ You are using an outdated version v1.5.8 of PowerGrid ⚡. Please update to v2.0.0
+ Released Date: Aug 03, 2021 03:39 PM
+ 
+ Component Name:
+ >
+```
 
 ### 7.  Using your Table Component
 
-The `ProductTable` component can be included in any view.
+The `DIshTable` component can be included in any view.
 
 There are two ways to do that. Both work in the same way:
 
 ```html
-    <livewire:product-table/>
+    <livewire:dish-table/>
 ```
 
-If your component lives is a sub-folder, for example Admin/ProductsTable.php:
+If your component lives is a sub-folder, for example Admin/DishTable.php:
 
 ```html
-    <livewire:admin-product-table/>
+    <livewire:admin-dish-table/>
 ```
 
 You can also use a blade directive:
@@ -238,8 +262,10 @@ You can view more functionalities consulting each of the following methods:
 - [setUp()](#setup-method)
 - [dataSource()](#datasource-method)
 - [addColumns()](#addColumns-method)
-- [Column Methods](#column-methods)
-- [Action Methods](#action-methods)
+- [Action Methods](#action-and-header-methods)
+- [Template](#template) 
+- [Relation Search](#relation-search)
+
 
 
 ### setUp() Method
@@ -252,7 +278,9 @@ The Setup method is used to configure your component.
 |**showPerPage**|*Integer* $perPage|Items per page (Default 10) |`->showPerPage()`|
 |**showSearchInput**|-|Shows the search input |`->showSearchInput()`|
 |**showRecordCount**|*String* $mode (min\|short\|full)|Displays the records count|`->showRecordCount('short')`|
-|**showExportOption**|*String* download filename, *Array* options|Displays export button and set custom name to exported file|`->showExportOption('download', ['excel', 'csv])`|
+|**showExportOption**|*String* download filename, *Array* options|Displays export button|`->showExportOption('download', ['excel', 'csv])`|
+|**showToggleColumns**||Enabled toggleable button to show/hidden columns|`->showToggleColumns()`|
+
 
 Example of usage:
 
@@ -263,7 +291,8 @@ Example of usage:
       ->showRecordCount('short')
       ->showPerPage()
       ->showSearchInput()
-      ->showExportOption('download', ['excel', 'csv']);
+      ->showToggleColumns()
+      ->showExportOption('download', ['excel', 'csv'], 'Export');
   }
 ```
 
@@ -410,7 +439,6 @@ These are the filters available for each column.
 |**makeInputRange**| [*string* $dataField, *String* $thousands, *String* $decimal] |Generates a min and max input for range filter.|```->makeInputRange('price', '.', ',')```|
 
 
-
 #### Column Actions
 
 These are the actions available for each column.
@@ -472,13 +500,17 @@ Boolean column example:
 
 **NOTE**
 
-Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured. [Alpine JS](#4-configure-the-theme-and-alpine-js) must be activated.
+> Performing data updating with features like  clickToEdit and Toggleable will require you to have the [update()](#update-method) method uncommented and configured. [Alpine JS](#4-configure-the-theme-and-alpine-js) must be activated.
 
 ---
 
-### Action Methods
+### action() and header() methods
 
-These methods are available on the `Button` class.
+If you want to add action buttons to each row of the table you can use the `actions` method.
+
+These methods are available in the `Button` class.
+
+> You can also use the `Button` class methods to add buttons beside the export button by calling a new `header` method instead of `actions`()
 
 | Method | Arguments | Result | Example |
 |----|----|----|----|
@@ -490,35 +522,47 @@ These methods are available on the `Button` class.
 |**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
 |**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
 
-Example of usage:
+Example of usage in action:
 
 ```php
- return [
-    Button::add('destroy')
-        ->caption(__('Delete'))
-        ->class('btn btn-danger')
-        ->route('product.destroy', ['product' => 'id'])
-        ->method('delete'),
-  //...
-];
+public function actions(): array
+{
+     return [
+        Button::add('destroy')
+            ->caption(__('Delete'))
+            ->class('bg-red-500 text-white')
+            ->route('product.destroy', ['product' => 'id'])
+            ->method('delete'),
+        //...
+     ];
+}
 
+public function header(): array
+{
+     return [
+        Button::add('new')
+            ->caption(__('__New'))
+            ->class('bg-gray-300')
+            ->openModal('new', []),
+        //...
+     ];
+}
   ```
 
   ---
-
 #### 1. OpenModal
 
 You will need to install the component [Livewire UI Component](https://github.com/livewire-ui/modal)  
 
 * the first argument is within the openModal method is the name of the modal component
-  
+
 * the second argument is an array of parameters where the key is field name in the modal component and the second is the name of the model field of this component
 
 ```php
  return [
     Button::add('view')
         ->caption(__('View'))
-        ->class('btn btn-primary')
+        ->class('bg-green-500')
         ->openModal('product', ['cod' => 'id']),
   //...
 ];
@@ -550,12 +594,84 @@ If you want to do something like this on livewire:
   ```
 
   ---
+
+### Template
+
+Powergrid works with theme classes to distinguish which components will be used in rendering, internally there are two theme files that can be used:
+
+\PowerComponents\LivewirePowerGrid\Themes\Tailwind::class and
+
+\PowerComponents\LivewirePowerGrid\Themes\Bootstrap::class
+
+This means they can be called from within the config/livewire-powergrid.php file as in the example:
+
+```php
+'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+```
+
+#### Adjusting your theme's CSS.
+
+In case you need to change some CSS behavior, you can copy this file and configure your own theme.
+
+> Powergrid will not automatically create the necessary files. So do it based on the current model.
+The required files are described in the example theme file.
+
+* copy the file to App\Http\Livewire\MyCustomTheme.class
+
+* if you have created a new folder template, add your theme's base path in the $base property:
+  Ex: public string $base = "vendor\\laravel-powergrid\\components\\frameworks\\";
+
+##### Changing globally
+* change 'theme' in your config/livewire-powergrid.php file
+  'theme' => App\Http\Livewire\MyCustomTheme.class
+
+##### Changing in a component
+Inside the powergrid-generated component class, add the following method:
+
+```php
+public function template(): ?string
+{
+    return \App\Http\Livewire\MyCustomTheme::class;
+}
+```
+
+---
+### Relation Search
+
+> If your table has relationships and you need to filter some existing columns in them, you can pass the **relationship** name in the model following the key `'relationship name' => 'columns'` as in the example below
+
+**dataSource** method with `->with('... your relationships')`:
+```php
+public function dataSource()
+    {
+        return Dish::query()->with(['category', 'kitchen']);
+    }
+```
+
+**relationSearch()** method:
+```php
+public function relationSearch(): array
+{
+    return [
+        'kitchen' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        'category' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        // ... others
+    ];
+}
+```
+---
   
 ### Update Method
 
-The update method needs to be activated and configured for the edit on click and toggle to work.
+> The update method needs to be activated and configured for the edit on click and toggle to work.
 
-All data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this conversion automatically.
+All data sent by the user should go under validation and treatment. For instance, the user sends `price_formatted` with the value of `$ 4.947,70` to update the `Product` `price`. 
+
+The database has the field `price` and expects `44947.70`. The developer must handle this data and point where to save it. Powergrid will not perform this conversion automatically.
 The same would happen with dates. See the two basic examples below:
 
 
