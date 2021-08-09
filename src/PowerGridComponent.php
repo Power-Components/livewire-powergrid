@@ -327,8 +327,15 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderBy($this->sortField, $this->sortDirection)
-            ->paginate($this->perPage);
+            })->orderBy($this->sortField, $this->sortDirection);
+
+        if ($this->perPage > 0) {
+            $results = $results
+                ->paginate($this->perPage);
+        } else {
+            $results = $results
+                ->paginate($results->count());
+        }
 
         return $results->setCollection($this->transform($results->getCollection()));
     }
