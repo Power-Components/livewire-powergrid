@@ -39,12 +39,24 @@
                      class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10">
 
                     @if(in_array('excel',$exportType))
-                        <a wire:click="exportToXLS()" href="#"
-                           class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Excel</a>
+                        <div class="flex items-baseline space-x-2 px-4 py-2 text-gray-800">
+                            <div>Excel</div>
+                            <a wire:click="exportToXLS()" href="#"
+                               class="hover:bg-gray-100 underline hover:text-black">all</a>
+                            <div>/</div>
+                            <a wire:click="exportToXLS(true)" href="#"
+                               class="hover:bg-gray-100 underline hover:text-black">selected</a>
+                        </div>
                     @endif
                     @if(in_array('csv',$exportType))
-                        <a wire:click="exportToCsv()" href="#"
-                           class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200">Csv</a>
+                        <div class="flex items-baseline space-x-2 px-4 py-2 text-gray-800">
+                            <div>CSV</div>
+                            <a wire:click="exportToCsv()" href="#"
+                               class="hover:bg-gray-100 underline hover:text-black">all</a>
+                            <div>/</div>
+                            <a wire:click="exportToCsv(true)" href="#"
+                               class="hover:bg-gray-100 underline hover:text-black">selected</a>
+                        </div>
                     @endif
                 </div>
 
