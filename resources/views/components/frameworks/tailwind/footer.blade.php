@@ -6,7 +6,6 @@
 
                 <select wire:model.lazy="perPage"
                         class="block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500  dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500">
-                    <option value="">{{ trans('livewire-powergrid::datatable.labels.all') }}</option>
                     @foreach($perPageValues as $value)
                         <option value="{{$value}}">
                             @if($value == 0)
