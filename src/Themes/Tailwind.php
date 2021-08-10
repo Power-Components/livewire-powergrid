@@ -24,6 +24,16 @@ class Tailwind extends ThemeBase
             ->tdBody("px-3 py-2 whitespace-nowrap dark:text-gray-200");
     }
 
+    public function layout(): Components\Layout
+    {
+        return Theme::layout()
+            ->table($this->root() . "table-base")
+            ->header($this->root() . "header")
+            ->pagination($this->root() . "pagination")
+            ->message($this->root() . "message")
+            ->footer($this->root() . "footer");
+    }
+
     public function footer(): Components\Footer
     {
         return Theme::footer()

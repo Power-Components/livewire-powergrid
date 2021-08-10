@@ -22,6 +22,16 @@ class Bootstrap5 extends ThemeBase
             ->tdBody("", "vertical-align: middle; line-height: normal;");
     }
 
+    public function layout(): Components\Layout
+    {
+        return Theme::layout()
+            ->table($this->root() . "table-base")
+            ->header($this->root() . "header")
+            ->pagination($this->root() . "pagination")
+            ->message($this->root() . "message")
+            ->footer($this->root() . "footer");
+    }
+
     public function cols(): Components\Cols
     {
         return Theme::cols()

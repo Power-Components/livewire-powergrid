@@ -4,10 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 abstract class AbstractTheme
 {
-    public string $name = "";
-
-    public string $base = "livewire-powergrid::components\\frameworks\\";
-
     public static string $scripts = "";
 
     public static string $styles = "";
