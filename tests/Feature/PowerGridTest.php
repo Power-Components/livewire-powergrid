@@ -1,11 +1,11 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Tests;
+namespace PowerComponents\LivewirePowerGrid\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 class PowerGridTest extends TestCase
 {

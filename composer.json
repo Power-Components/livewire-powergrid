@@ -42,7 +42,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\" : "tests/"
+            "PowerComponents\\LivewirePowerGrid\\Tests\\" : "tests/"
         }
     }
 }
