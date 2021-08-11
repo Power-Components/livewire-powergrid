@@ -331,6 +331,11 @@ class PowerGridComponent extends Component
             ->download();
     }
 
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
     private function loadData()
     {
         if (cache()->has($this->id)) {
@@ -386,9 +391,15 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function instanceOfCollection($dataSource): bool
+    private function instanceOfCollection($dataSource): void
     {
-        return (is_a($dataSource, PowerGrid::class) || is_array($dataSource) || is_a($dataSource, BaseCollection::class));
+        $checkDatasource = (is_a($dataSource, PowerGrid::class)
+            || is_array($dataSource)
+            || is_a($dataSource, BaseCollection::class)
+        );
+        if ($checkDatasource) {
+            $this->isCollection = true;
+        }
     }
 
     private function transform($results)
