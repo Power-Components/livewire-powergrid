@@ -165,9 +165,6 @@ Include the Livewire and the PowerGrid styles and scripts:
 You can read more about this at the official [Livewire documentation](https://laravel-livewire.com/docs/2.x/quickstart)
 
 ---
-
-### 6.  Creating a Table Component
-
 ### 6.  Creating a Table Component
 
 > To create a Table Component run `powergrid:create` and component will be assembled in steps using the question terminal:
