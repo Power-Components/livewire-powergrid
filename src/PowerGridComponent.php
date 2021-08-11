@@ -339,39 +339,51 @@ class PowerGridComponent extends Component
             $dataSource = $this->dataSource();
         }
 
-        $isCollection = $this->instanceOfCollection($dataSource);
+        $this->instanceOfCollection($dataSource);
 
-        if ($isCollection) {
-            $this->isCollection = true;
+        if ($this->isCollection) {
+            $filters = Collection::query($this->resolveCollection($dataSource))
+                ->setColumns($this->columns())
+                ->setSearch($this->search)
+                ->setFilters($this->filters)
+                ->filterContains()
+                ->filter();
 
-            $filters    = Collection::filterContains($this->resolveCollection($dataSource), $this->columns(), $this->search);
-            $filters    = Collection::filter($this->filters, $filters);
-
-            $results    = $this->applySorting($filters);
+            $results = $this->applySorting($filters);
 
             if ($results->count()) {
                 $this->filtered = $results->pluck('id')->toArray();
 
-                $paginate      = Collection::paginate($results, $this->perPage);
+                $paginated = Collection::paginate($results, $this->perPage);
 
                 if (is_a($this->addColumns(), PowerGridCollection::class)) {
-                    $results       = $paginate->setCollection($this->transform($paginate->getCollection()));
+                    $results = $paginated->setCollection($this->transform($paginated->getCollection()));
                 }
             }
-        } else {
-            $model   = $this->resolveModel($dataSource);
-            $table   = $model->getModel()->getTable();
 
-            $results = $model->where(function ($query) use ($table) {
-                Model::filterContains($query, $this->columns(), $this->search, $table);
-                Model::filter($this->filters, $query);
-            })->orderBy($this->sortField, $this->sortDirection)
-                ->paginate($this->perPage);
-
-            $results = $results->setCollection($this->transform($results->getCollection()));
+            return $results;
         }
 
-        return $results;
+        $results = $this->resolveModel($dataSource)
+            ->where(function ($query) {
+                Model::query($query)
+                    ->setColumns($this->columns())
+                    ->setSearch($this->search)
+                    ->setRelationSearch($this->relationSearch())
+                    ->setFilters($this->filters)
+                    ->filterContains()
+                    ->filter();
+            })->orderBy($this->sortField, $this->sortDirection);
+
+        if ($this->perPage > 0) {
+            $results = $results
+                ->paginate($this->perPage);
+        } else {
+            $results = $results
+                ->paginate($results->count());
+        }
+
+        return $results->setCollection($this->transform($results->getCollection()));
     }
 
     private function instanceOfCollection($dataSource): bool

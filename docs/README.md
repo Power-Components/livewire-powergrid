@@ -40,6 +40,7 @@
     - [Action Methods](#action-methods)
       - [Open Modal](#1-openmodal)
       - [Event Listeners](#2-event-listeners)
+    - [relationSearch() Method](#relation-search)
     - [Update Method](#update-method)
 
 ---
@@ -167,22 +168,33 @@ You can read more about this at the official [Livewire documentation](https://la
 
 ### 6.  Creating a Table Component
 
-To create a Table Component run `powergrid:create` informing your table `name` and your `model`.
+### 6.  Creating a Table Component
 
-Example:
+> To create a Table Component run `powergrid:create` and component will be assembled in steps using the question terminal:
+
+Run command:
 
 ```bash
-php artisan powergrid:create ProductTable --model="App\Models\Product"  
+php artisan powergrid:create  
 ```
-you can also do it like this
+
+Fill in the questions:
 ```bash
-php artisan powergrid:create Admin.ProductTable --model="App\Models\Product"
-php artisan powergrid:create Admin\\ProductTable --model="App\Models\Product"
+Component Name:
+> DishTable
+
+[M]odel or [C]ollection? (default: M):
+> M
+
+Model (ex: App\Models\User):
+> App\Models\User
+
+Use the based on fillable ? (yes/no) [no]:
+> yes
+
 ```
 
 ![Output](img/output.png)
-
-(It's advisable to use "" around your `--model` option)
 
 ### 6.1 Create with Fillable 
 
@@ -550,7 +562,35 @@ If you want to do something like this on livewire:
   ```
 
   ---
-  
+### Relation Search
+
+> If your table has relationships and you need to filter some existing columns in them, you can pass the **relationship** name in the model following the key `'relationship name' => 'columns'` as in the example below
+
+**dataSource** method with `->with('... your relationships')`:
+```php
+public function dataSource()
+    {
+        return Dish::query()->with(['category', 'kitchen']);
+    }
+```
+
+**relationSearch()** method:
+```php
+public function relationSearch(): array
+{
+    return [
+        'kitchen' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        'category' => [ // relationship on dishes model
+            'name', // column enabled to search
+        ],
+        // ... others
+    ];
+}
+```
+---
+
 ### Update Method
 
 The update method needs to be activated and configured for the edit on click and toggle to work.
