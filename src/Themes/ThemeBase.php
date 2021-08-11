@@ -6,11 +6,11 @@ class ThemeBase extends AbstractTheme
 {
     public string $name = "";
 
-    public string $base = "livewire-powergrid::components\\frameworks\\";
+    public string $base = "livewire-powergrid::components.frameworks.";
 
     public function root(): string
     {
-        return $this->base . "" . $this->name . "\\";
+        return $this->base . "" . $this->name . ".";
     }
 
     public function toggleable(): Components\Toggleable
