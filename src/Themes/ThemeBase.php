@@ -19,6 +19,16 @@ class ThemeBase extends AbstractTheme
             ->view($this->root() . "toggleable");
     }
 
+    public function layout(): Components\Layout
+    {
+        return Theme::layout()
+            ->table($this->root() . "table-base")
+            ->header($this->root() . "header")
+            ->pagination($this->root() . "pagination")
+            ->message($this->root() . "message")
+            ->footer($this->root() . "footer");
+    }
+
     public function apply(): ThemeBase
     {
         $this->table             = $this->table();
