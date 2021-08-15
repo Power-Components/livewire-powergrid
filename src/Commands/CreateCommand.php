@@ -22,9 +22,9 @@ class CreateCommand extends Command
         $tableName       = $this->ask('Component Name');
         $tableName       = str_replace(['.', '\\'], '/', $tableName);
 
-        $chosenTypes     = $this->ask('<comment>[M]</comment>odel or <comment>[C]</comment>ollection? (default: <comment>M</comment>)');
+        $creationModel   = $this->ask('<comment>[M]</comment>odel or <comment>[C]</comment>ollection? (default: <comment>M</comment>)');
 
-        $modelName       = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
+        $modelName  = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
 
         if ($this->confirm('Use the based on fillable ?')) {
             $fillable   = true;
@@ -58,7 +58,12 @@ class CreateCommand extends Command
             return;
         }
 
-        $stub = $this->getStubs($chosenTypes);
+        if (empty($modelName)) {
+            $this->error('Could not create, Model path is missing');
+            exit;
+        }
+
+        $stub = $this->getStubs($creationModel);
 
         if ($fillable) {
             $stub     = $this->createFromFillable($modelName, $modelLastName);

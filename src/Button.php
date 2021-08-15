@@ -14,8 +14,6 @@ class Button
 
     public string $class = '';
 
-    public array $i = [];
-
     public string $method = 'get';
 
     public string $view = '';
@@ -73,23 +71,6 @@ class Button
     public function class(string $class_attr): Button
     {
         $this->class = $class_attr;
-
-        return $this;
-    }
-
-    /**
-     * @param string $class class of i tag for fontawesome or other
-     * @param string $text text of caption
-     * @param bool $showCaption when false it will not display the caption
-     * @return $this
-     */
-    public function i(string $class, string $text, bool $showCaption = false): Button
-    {
-        $this->i = [
-            'class'   => $class,
-            'text'    => $text,
-            'caption' => $showCaption
-        ];
 
         return $this;
     }

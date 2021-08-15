@@ -23,6 +23,16 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
+    public function template(): ?string
+    {
+        return null;
+    }
+
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
     public function dataSource(): ?Builder
     {
         return {{ modelLastName }}::query();
@@ -140,6 +150,4 @@ class {{ componentName }} extends PowerGridComponent
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
-
-
 }

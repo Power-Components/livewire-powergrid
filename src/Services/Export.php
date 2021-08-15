@@ -38,7 +38,7 @@ class Export
         $data   = $data->map(function ($row) use ($columns, $header) {
             $item = collect();
             collect($columns)->each(function ($column) use ($row, $header, $item) {
-                if ($column->hidden === false && $column->visibleInExport === true) {
+                if (!$column->hidden && $column->visibleInExport) {
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
                             $item->put($column->title, $value);

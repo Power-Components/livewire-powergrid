@@ -4,8 +4,10 @@ namespace App\Http\Livewire{{ subFolder }};
 
 use {{ modelName }};
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridCollection;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
@@ -21,14 +23,19 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function dataSource()
+    public function template(): ?string
+    {
+        return null;
+    }
+
+    public function dataSource(): Collection
     {
         return {{ modelLastName }}::query()->get();
     }
 
-    public function addColumns(): ?PowerGrid
+    public function addColumns(): ?PowerGridCollection
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::collection()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('created_at')

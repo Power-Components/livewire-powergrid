@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
 use PowerComponents\LivewirePowerGrid\Commands\PublishCommand;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
+use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 
 class PowerGridServiceProvider extends ServiceProvider
 {
@@ -35,6 +36,7 @@ class PowerGridServiceProvider extends ServiceProvider
         }
 
         $this->app->alias(PowerGridManager::class, 'powergrid');
+        $this->app->alias(ThemeManager::class, 'theme');
     }
 
     private function loadViews()

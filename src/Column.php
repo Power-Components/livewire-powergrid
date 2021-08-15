@@ -6,7 +6,7 @@ class Column
 {
     public string $title = '';
 
-    public bool $searchable = true;
+    public bool $searchable = false;
 
     public bool $sortable = false;
 
@@ -75,7 +75,6 @@ class Column
     public function sortable(): Column
     {
         $this->sortable = true;
-        $this->html     = false;
 
         return $this;
     }
@@ -96,8 +95,8 @@ class Column
     /**
      * Class html tag header table
      *
-     * @param string $class_attr
-     * @param string $style_attr
+     * @param string $classAttr
+     * @param string $styleAttr
      * @return $this
      */
     public function headerAttribute( string $classAttr = '', string $styleAttr = '' ): Column
@@ -111,8 +110,8 @@ class Column
     /**
      * Class html tag body table
      *
-     * @param string $class_attr
-     * @param string $style_attr
+     * @param string $classAttr
+     * @param string $styleAttr
      * @return $this
      */
     public function bodyAttribute( string $classAttr = '', string $styleAttr = '' ): Column
@@ -180,7 +179,7 @@ class Column
      * 'only_future' => true,
      * 'no_weekends' => true
      * ]
-     * @param string $class_attr
+     * @param string $classAttr
      * @return Column
      */
     public function makeInputDatePicker( string $dataField, array $settings = [], string $classAttr = '' ): Column

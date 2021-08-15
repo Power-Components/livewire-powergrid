@@ -2,8 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
-
 class PowerGridCollection
 {
     public array $columns = [];
