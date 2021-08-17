@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
-use function PHPSTORM_META\type;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -132,39 +131,39 @@ class CreateCommand extends Command
                 continue;
             }
 
-            $type = Schema::getConnection()->getDoctrineColumn($model->getTable(), $field);
+            $column = Schema::getConnection()->getDoctrineColumn($model->getTable(), $field);
 
             $title = Str::of($field)->replace('_', ' ')->upper();
 
-            if ($type->getType()->getName() === 'datetime')  {
+            if ($column->getType()->getName() === 'datetime')  {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
                 $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
-            if ($type->getType()->getName() === 'date') {
+            if ($column->getType()->getName() === 'date') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
                 $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
-            if ($type->getType()->getName() === 'boolean') {
+            if ($column->getType()->getName() === 'boolean') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
 
                 continue;
             }
 
-            if (in_array($type->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
+            if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
 
                 continue;
             }
 
-            if ($type->getType()->getName() === 'string') {
+            if ($column->getType()->getName() === 'string') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
 
