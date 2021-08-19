@@ -36,8 +36,8 @@
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
                         :field="$row->{$field}"
-                        :label="$column->click_to_copy['label'] ?? null"
-                        :enabled="$column->click_to_copy['enabled'] ?? false"/>
+                        :label="data_get($column->clickToCopy, 'label') ?? null"
+                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                 </span>
                 @endif
             </td>
