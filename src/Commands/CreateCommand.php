@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
 
 class CreateCommand extends Command
 {
@@ -117,8 +117,11 @@ class CreateCommand extends Command
     {
         $model          = new $modelName();
         $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-        $getFillable    = array_merge([$model->getKeyName()], $model->getFillable());
-        $getFillable    = array_merge($getFillable, ['created_at', 'updated_at']);
+        $getFillable    = array_merge(
+                            [$model->getKeyName()],
+                            $model->getFillable(),
+                            ['created_at', 'updated_at']
+                        );
 
         $dataSource     = "";
         $columns        = "[\n";
@@ -127,34 +130,48 @@ class CreateCommand extends Command
             if (in_array($field, $model->getHidden())) {
                 continue;
             }
-            $type = Arr::first(Arr::where(DB::select('describe ' . $model->getTable()), function ($info) use ($field) {
-                return ($info->Field === $field) ? $info->Type : '';
-            }))->Type;
+
+            $column = Schema::getConnection()->getDoctrineColumn($model->getTable(), $field);
 
             $title = Str::of($field)->replace('_', ' ')->upper();
 
-            if (in_array($type, ['timestamp', 'datetime'])) {
+            if ($column->getType()->getName() === 'datetime')  {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
-
                 $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+
+                continue;
             }
 
-            if ($type === 'tinyint(1)') {
+            if ($column->getType()->getName() === 'date') {
+                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+
+                continue;
+            }
+
+            if ($column->getType()->getName() === 'boolean') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
 
                 continue;
             }
-            if ($type === 'int(11)') {
+
+            if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
 
                 continue;
             }
-            if (!in_array($type, ['timestamp', 'datetime'])) {
+
+            if ($column->getType()->getName() === 'string') {
                 $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+
+                continue;
             }
+
+            $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+            $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
         }
 
         $columns .= "        ]\n";
