@@ -58,15 +58,9 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 Our documentation is available at [https://livewire-powergrid.docsforge.com/](https://livewire-powergrid.docsforge.com/).
 
-## 3. Examples
+## 3. Example
 
-Tailwind table
-
- ![Laravel Livewire Tables](docs/img/tailwind.gif)
-
-Excel export
-
- ![Laravel Livewire Tables](docs/img/export.png)
+ ![Laravel Livewire Tables](docs/img/example.gif)
 
 ## 4. Demo
 
