@@ -20,7 +20,14 @@ class CreateCommand extends Command
     {
         if (config('livewire-powergrid.check_version') === true) {
             $ensureLatestVersion = new InteractsWithVersions();
-            $ensureLatestVersion->ensureLatestVersion();
+            $current             = $ensureLatestVersion->ensureLatestVersion();
+
+            if (isset($current['version'])) {
+                if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
+                    $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
+                    $this->info(" Released Date: <comment>{$current['release']}</comment>");
+                }
+            }
         }
 
         $fillable        = false;

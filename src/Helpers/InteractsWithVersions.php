@@ -16,21 +16,14 @@ class InteractsWithVersions
     /**
      * Warns the user about the latest version of Forge CLI.
      *
-     * @return void
+     * @return array
      */
-    public function ensureLatestVersion()
+    public function ensureLatestVersion(): array
     {
         $composer  = \Composer\Factory::create(new \Composer\IO\NullIo(), null, false);
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
-        $current   = $this->searchPackage($localRepo);
-
-        if (isset($current['version'])) {
-            if (version_compare($remote = $this->getLatestVersion(), $current['version']) > 0) {
-                $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
-                $this->info(" Released Date: <comment>{$current['release']}</comment>");
-            }
-        }
+        return $this->searchPackage($localRepo);
     }
 
     /**
@@ -58,7 +51,7 @@ class InteractsWithVersions
      *
      * @return string
      */
-    protected function getLatestVersion(): string
+    public function getLatestVersion(): string
     {
         $resolver = static::$latestVersionResolver ?? function () {
             $package = json_decode(file_get_contents(
