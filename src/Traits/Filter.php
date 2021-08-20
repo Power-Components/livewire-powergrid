@@ -37,9 +37,9 @@ trait Filter
                 continue;
             }
             foreach ($column->inputs as $key => $input) {
-                $input['dataField']   = ($column->dataField != '') ? $column->dataField : $column->field;
-                $input['field']       = $column->field;
-                $input['label']       = $column->title;
+                data_set($input, 'dataField', ($column->dataField != '') ? $column->dataField : $column->field);
+                data_set($input, 'field', $column->field);
+                data_set($input, 'label', $column->title);
                 $makeFilters[$key][]  = $input;
             }
         }

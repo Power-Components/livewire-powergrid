@@ -1,12 +1,13 @@
 @props([
+    'primaryKey' => null,
     'row' => null,
     'field' => null,
     'theme' => null
 ])
-<div x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->$field) }}</span>' }">
+<div x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->{$field}) }}</span>' }">
     <button
         style="width: 100%;{{ $theme->buttonClass }}"
-        x-on:click="value = editableInput({{ $row->id }}, '{{ addslashes($row->$field)  }}', '{{ $field }}');"
+        x-on:click="value = editableInput({{ $row->{$primaryKey} }}, '{{ addslashes($row->{$field})  }}', '{{ $field }}');"
         x-html="value"
     ></button>
 </div>
@@ -28,4 +29,3 @@
         })
     }
 </script>
-

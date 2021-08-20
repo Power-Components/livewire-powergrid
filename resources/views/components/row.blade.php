@@ -1,6 +1,7 @@
 @props([
     'theme' => null,
     'row' => null,
+    'primaryKey' => null,
     'columns' => null
 ])
 <div>
@@ -15,6 +16,7 @@
                 @if($column->editable === true)
                     <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
+                            :primaryKey="$primaryKey"
                             :row="$row"
                             :theme="$theme->editable"
                             :field="$field"/>

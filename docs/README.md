@@ -266,8 +266,6 @@ You can view more functionalities consulting each of the following methods:
 - [Template](#template) 
 - [Relation Search](#relation-search)
 
-
-
 ### setUp() Method
 
 The Setup method is used to configure your component.
@@ -351,8 +349,7 @@ public function addColumns(): ?PowerGrid
     return PowerGrid::eloquent()
         ->addColumn('id')
         ->addColumn('name')
-        ->addColumn('size')
-    
+        ->addColumn('size')    
         /** Group Relationship **/
         ->addColumn('group_id', function (Product $product) {
             return  $product->group_id;
