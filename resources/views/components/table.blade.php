@@ -55,6 +55,7 @@
                             :checkbox="$checkbox"/>
 
                         <x-livewire-powergrid::row
+                            :primaryKey="$primaryKey"
                             :theme="$theme"
                             :row="$row"
                             :columns="$columns"/>

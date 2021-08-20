@@ -15,67 +15,50 @@
                 {{ trans('livewire-powergrid::datatable.buttons.filter') }}
             </button>
         </div>
-        <div x-show="show" class="border-l border-b border-r border-gray-200 dark:border-gray-600 px-2 py-4 dark:border-0 dark:bg-gray-700">
+        <div x-show="show"
+             class="border-l border-b border-r border-gray-200 dark:border-gray-600 px-2 py-4 dark:border-0 dark:bg-gray-700">
             <div>
                 @php
                     $customConfig = [];
                 @endphp
                 <div class="md:flex md:flex-wrap">
 
-                    @if(isset($makeFilters['date_picker']))
-                        @foreach($makeFilters['date_picker'] as $field => $date)
-                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                                <x-livewire-powergrid::filters.date-picker
-                                    :date="$date"
-                                    :inline="false"
-                                    classAttr="w-full"
-                                    :theme="$theme->filterDatePicker"/>
-                            </div>
-                        @endforeach
-                    @endif
+                    @foreach(data_get($makeFilters, 'date_picker') as $field => $date)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            <x-livewire-powergrid::filters.date-picker
+                                :date="$date"
+                                :inline="false"
+                                classAttr="w-full"
+                                :theme="$theme->filterDatePicker"/>
+                        </div>
+                    @endforeach
 
-                    @if(isset($makeFilters['select']))
-                        @foreach($makeFilters['select'] as $field => $select)
-                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                                <x-livewire-powergrid::filters.select
-                                    :select="$select"
-                                    :inline="false"
-                                    :theme="$theme->filterSelect"/>
-                            </div>
-                        @endforeach
-                    @endif
+                    @foreach(data_get($makeFilters, 'select') as $field => $select)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            <x-livewire-powergrid::filters.select
+                                :select="$select"
+                                :inline="false"
+                                :theme="$theme->filterSelect"/>
+                        </div>
+                    @endforeach
 
-                    @if(isset($makeFilters['number']))
-                        @foreach($makeFilters['number'] as $field => $number)
-                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                                <x-livewire-powergrid::filters.number
-                                    :number="$number"
-                                    :inline="false"
-                                    :theme="$theme->filterNumber"/>
-                            </div>
-                        @endforeach
-                    @endif
+                    @foreach(data_get($makeFilters, 'number') as $field => $number)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            <x-livewire-powergrid::filters.number
+                                :number="$number"
+                                :inline="false"
+                                :theme="$theme->filterNumber"/>
+                        </div>
+                    @endforeach
 
-                    @if(isset($makeFilters['select']))
-                        @foreach($makeFilters['select'] as $field => $select)
-                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                                <x-livewire-powergrid::filters.select
-                                    :select="$select"
-                                    :inline="false"
-                                    :theme="$theme->filterSelect"/>
-                            </div>
-                        @endforeach
-                    @endif
-                    @if(isset($makeFilters['number']))
-                        @foreach($makeFilters['number'] as $field => $number)
-                            <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                                <x-livewire-powergrid::filters.number
-                                    :number="$number"
-                                    :inline="false"
-                                    :theme="$theme->filterNumber"/>
-                            </div>
-                        @endforeach
-                    @endif
+                    @foreach(data_get($makeFilters, 'select') as $field => $select)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            <x-livewire-powergrid::filters.select
+                                :select="$select"
+                                :inline="false"
+                                :theme="$theme->filterSelect"/>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

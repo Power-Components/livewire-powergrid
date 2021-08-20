@@ -214,6 +214,8 @@ When you run the `php artisan powergrid:create` command, we can let you know if 
 
 > Add the package: `composer require composer/composer --dev` to your project.
 
+> Change 'check_version' to `true` in `config/livewire-powergrid.php`
+
 The console output will look like this in the future if your package is out of date:
 
 ```bash
@@ -261,8 +263,6 @@ You can view more functionalities consulting each of the following methods:
 - [Action Methods](#action-and-header-methods)
 - [Template](#template) 
 - [Relation Search](#relation-search)
-
-
 
 ### setUp() Method
 
@@ -347,8 +347,7 @@ public function addColumns(): ?PowerGrid
     return PowerGrid::eloquent()
         ->addColumn('id')
         ->addColumn('name')
-        ->addColumn('size')
-    
+        ->addColumn('size')    
         /** Group Relationship **/
         ->addColumn('group_id', function (Product $product) {
             return  $product->group_id;

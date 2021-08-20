@@ -1,6 +1,7 @@
 @props([
     'theme' => null,
     'row' => null,
+    'primaryKey' => null,
     'columns' => null
 ])
 <div>
@@ -15,6 +16,7 @@
                 @if($column->editable === true)
                     <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
+                            :primaryKey="$primaryKey"
                             :row="$row"
                             :theme="$theme->editable"
                             :field="$field"/>
@@ -36,8 +38,8 @@
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
                         :field="$row->{$field}"
-                        :label="$column->click_to_copy['label'] ?? null"
-                        :enabled="$column->click_to_copy['enabled'] ?? false"/>
+                        :label="data_get($column->clickToCopy, 'label') ?? null"
+                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                 </span>
                 @endif
             </td>

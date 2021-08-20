@@ -18,72 +18,59 @@
                     @if($column->hidden === false)
                         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}">
 
-                            @if(isset($makeFilters['date_picker']))
-                                @foreach($makeFilters['date_picker'] as $index => $date)
+                            @foreach(data_get($makeFilters, 'date_picker', []) as $index => $date)
+                                @if(data_get($date, 'date_picker') === $column->field)
+                                    <x-livewire-powergrid::filters.date-picker
+                                        :date="$date"
+                                        :inline="true"
+                                        :theme="$theme->filterDatePicker"/>
+                                @endif
+                            @endforeach
 
-                                    @if($date['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.date-picker
-                                            :date="$date"
-                                            :inline="true"
-                                            :theme="$theme->filterDatePicker"/>
-                                    @endif
-                                @endforeach
-                            @endif
+                            @foreach(data_get($makeFilters, 'select', []) as $index => $select)
+                                @if(data_get($select, 'field') === $column->field)
+                                    <x-livewire-powergrid::filters.select
+                                        :select="$select"
+                                        :inline="true"
+                                        :theme="$theme->filterSelect"/>
+                                @endif
+                            @endforeach
 
-                            @if(isset($makeFilters['select']))
-                                @foreach($makeFilters['select'] as $index => $select)
-                                    @if($select['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.select
-                                            :select="$select"
-                                            :inline="true"
-                                            :theme="$theme->filterSelect"/>
-                                    @endif
-                                @endforeach
-                            @endif
+                            @foreach(data_get($makeFilters, 'multi_select', []) as $index => $multiSelect)
+                                @if(data_get($multiSelect, 'field') === $column->field)
+                                    @includeIf($theme->filterMultiSelect->view, [
+                                            'inline' => true
+                                    ])
+                                @endif
+                            @endforeach
 
-                            @if(isset($makeFilters['multi_select']))
-                                @foreach($makeFilters['multi_select'] as $index => $multiSelect)
-                                    @if($multiSelect['field'] === $column->field)
-                                        @includeIf($theme->filterMultiSelect->view, [
-                                                'inline' => true
-                                        ])
-                                    @endif
-                                @endforeach
-                            @endif
+                            @foreach(data_get($makeFilters, 'number', []) as $index => $number)
+                                @if(data_get($number, 'field') === $column->field)
+                                    <x-livewire-powergrid::filters.number
+                                        :number="$number"
+                                        :inline="true"
+                                        :theme="$theme->filterNumber"/>
+                                @endif
+                            @endforeach
 
-                            @if(isset($makeFilters['number']))
-                                @foreach($makeFilters['number'] as $index => $number)
-                                    @if($number['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.number
-                                            :number="$number"
-                                            :inline="true"
-                                            :theme="$theme->filterNumber"/>
-                                    @endif
-                                @endforeach
-                            @endif
+                            @foreach(data_get($makeFilters, 'input_text', []) as $index => $inputText)
+                                @if(data_get($inputText, 'field') === $column->field)
+                                    <x-livewire-powergrid::filters.input-text
+                                        :inputText="$inputText"
+                                        :column="$column"
+                                        :inline="true"
+                                        :theme="$theme->filterInputText"/>
+                                @endif
+                            @endforeach
 
-                            @if(isset($makeFilters['input_text']))
-                                @foreach($makeFilters['input_text'] as $index => $inputText)
-                                    @if($inputText['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.input-text
-                                            :inputText="$inputText"
-                                            :column="$column"
-                                            :inline="true"
-                                            :theme="$theme->filterInputText"/>
-                                    @endif
-                                @endforeach
-                            @endif
-
-                            @if(isset($makeFilters['boolean_filter']))
-                                @foreach($makeFilters['boolean_filter'] as $index => $booleanFilter)
-                                    @if($booleanFilter['field'] === $column->field)
-                                        <x-livewire-powergrid::filters.boolean-filter
-                                            :booleanFilter="$booleanFilter"
-                                            :inline="true"
-                                            :theme="$theme->filterBoolean"/>
-                                    @endif
-                                @endforeach
-                            @endif
+                            @foreach(data_get($makeFilters, 'boolean_filter', []) as $index => $booleanFilter)
+                                @if(data_get($booleanFilter, 'field') === $column->field)
+                                    <x-livewire-powergrid::filters.boolean-filter
+                                        :booleanFilter="$booleanFilter"
+                                        :inline="true"
+                                        :theme="$theme->filterBoolean"/>
+                                @endif
+                            @endforeach
                         </td>
                     @endif
                 @endforeach
