@@ -1,13 +1,10 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Commands\Traits;
+namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Composer\Factory;
-use Composer\IO\NullIO;
-use Composer\Repository\InstalledRepositoryInterface;
 use Illuminate\Support\Carbon;
 
-trait InteractsWithVersions
+class InteractsWithVersions
 {
     /**
      * The latest version resolver.
@@ -21,9 +18,9 @@ trait InteractsWithVersions
      *
      * @return void
      */
-    protected function ensureLatestVersion()
+    public function ensureLatestVersion()
     {
-        $composer  = Factory::create(new NullIo(), null, false);
+        $composer  = \Composer\Factory::create(new \Composer\IO\NullIo(), null, false);
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         $current   = $this->searchPackage($localRepo);
@@ -39,10 +36,10 @@ trait InteractsWithVersions
     /**
      * Search package version.
      *
-     * @param InstalledRepositoryInterface $localRepo
+     * @param \Composer\Repository\InstalledRepositoryInterface $localRepo
      * @return array
      */
-    public function searchPackage(InstalledRepositoryInterface $localRepo): array
+    public function searchPackage(\Composer\Repository\InstalledRepositoryInterface $localRepo): array
     {
         foreach ($localRepo->getPackages() as $package) {
             if ($package->getName() === 'power-components/livewire-powergrid') {

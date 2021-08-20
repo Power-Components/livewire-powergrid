@@ -93,6 +93,17 @@ return [
     */
     'js_framework_cdn' => [
         'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notification latest version
+    |--------------------------------------------------------------------------
+    |
+    | Add the package: `composer require composer/composer --dev` to your project.
+    | and change this value to `true`
+    |
+    */
+    'check_version' => false
 
 ];

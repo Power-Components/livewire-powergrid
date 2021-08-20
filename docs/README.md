@@ -218,6 +218,8 @@ When you run the `php artisan powergrid:create` command, we can let you know if 
 
 > Add the package: `composer require composer/composer --dev` to your project.
 
+> Change 'check_version' to `true` in `config/livewire-powergrid.php`
+
 The console output will look like this in the future if your package is out of date:
 
 ```bash
