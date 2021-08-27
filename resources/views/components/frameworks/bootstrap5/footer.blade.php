@@ -17,7 +17,8 @@
                         </select>
                     </label>
                 </div>
-                <span style="padding-top: 8px;padding-left: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</span>
+                <span
+                    style="padding-top: 8px;padding-left: 6px;">{{ trans('livewire-powergrid::datatable.labels.results_per_page') }}</span>
             </div>
         @endif
         <div>

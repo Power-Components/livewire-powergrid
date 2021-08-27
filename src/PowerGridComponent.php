@@ -309,10 +309,7 @@ class PowerGridComponent extends Component
                 $this->filtered = $results->pluck('id')->toArray();
 
                 $paginated = Collection::paginate($results, $this->perPage);
-
-                if (is_a($this->addColumns(), PowerGridCollection::class)) {
-                    $results = $paginated->setCollection($this->transform($paginated->getCollection()));
-                }
+                $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
             return $results;

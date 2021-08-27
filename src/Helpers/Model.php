@@ -270,14 +270,20 @@ class Model implements FilterInterface
             }
 
             if ($this->query->getRelation($table)) {
-                foreach ($relation as $column) {
-                    if (!Schema::hasColumn($this->query->getModel()->getTable(), $column)) {
-                        return;
+                foreach ($relation as $nestedTable => $column) {
+                    if (is_array($column)) {
+                        if ($this->query->getRelation($table)->getRelation($nestedTable)) {
+                            foreach ($column as $nestedColumn) {
+                                $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
+                                    $query->where($nestedColumn, 'like', '%' . $this->search . '%');
+                                });
+                            }
+                        }
+                    } else {
+                        $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
+                            $query->where($column, 'like', '%' . $this->search . '%');
+                        });
                     }
-
-                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                        $query->where($column, 'like', '%' . $this->search . '%');
-                    });
                 }
             }
         }
