@@ -68,7 +68,7 @@
                          class="absolute shadow top-100 border border-gray-300 bg-white z-50 w-full lef-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
                          x-on:click.away="close">
                         <div class="flex flex-col w-full">
-                            <template x-for="(option,index) in options" :key="option">
+                            <template x-for="(option,index) in options" :key="index">
                                 <div>
                                     <div
                                         class="cursor-pointer w-full border-gray-100 rounded-t border-b dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:border-gray-400"
