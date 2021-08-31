@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use PowerComponents\LivewirePowerGrid\Button;
+
 trait ActionButton
 {
     public array $actionRoutes = [];
@@ -15,10 +17,13 @@ trait ActionButton
 
     public function initActions()
     {
-        $this->actions = $this->actions();
+        $this->actions = collect($this->actions())
+            ->where('can', true)
+            ->toArray();
 
+        /** @var Button $action */
         foreach ($this->actions as $action) {
-            if (isset($action->route)) {
+            if (isset($action->route) && $action->can) {
                 $this->actionRoutes[$action->action] = $action->route;
             }
         }

@@ -516,15 +516,20 @@ These methods are available in the `Button` class.
 |**openModal**| *String* $component, *Array* $params| |```->openModal('product', ['product' => 'id'])```|
 |**method**| *String* $method|Method for action (GET/POST/PUT/DELETE))|```->method('delete')```|
 |**route**| *String* $route, *Array*  $param|Route for action|```->route('product.edit', ['product' => 'id'])```|
+|**can**| *bool* $can|Permission for action|```->can($canClickButton)```|
 
 Example of usage in action:
 
 ```php
 public function actions(): array
 {
+     $canDelete = false;
+     
      return [
         Button::add('destroy')
             ->caption(__('Delete'))
+            ->caption(__('Delete'))
+            ->can($canDelete)
             ->class('bg-red-500 text-white')
             ->route('product.destroy', ['product' => 'id'])
             ->method('delete'),

@@ -47,7 +47,9 @@
         @else
             <th>
                 @foreach($data as $row)
-                    <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyClass }}"
+                    @ds($row)
+                    <tr class="{{ $theme->table->trBodyClass }}"
+                        style="{{ $theme->table->trBodyStyle }}"
                         wire:key="{{ $row->id }}">
                         <x-livewire-powergrid::checkbox-row
                             :theme="$theme->checkbox"
@@ -70,5 +72,4 @@
         @endif
     </x-slot>
 </x-livewire-powergrid::table-base>
-
 

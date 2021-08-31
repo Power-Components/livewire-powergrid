@@ -20,6 +20,8 @@ class Button
 
     public string $event = '';
 
+    public bool $can = true;
+
     /**
      * Button constructor.
      * @param string $action
@@ -115,6 +117,18 @@ class Button
         $this->event   = $event;
         $this->param   = $param;
         $this->route   = '';
+
+        return $this;
+    }
+
+    /**
+     * emit
+     * @param bool $can can
+     * @return $this
+     */
+    public function can(bool $can): Button
+    {
+        $this->can = $can;
 
         return $this;
     }
