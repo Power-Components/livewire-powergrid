@@ -47,7 +47,6 @@
         @else
             <th>
                 @foreach($data as $row)
-                    @ds($row)
                     <tr class="{{ $theme->table->trBodyClass }}"
                         style="{{ $theme->table->trBodyStyle }}"
                         wire:key="{{ $row->id }}">
