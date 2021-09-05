@@ -237,11 +237,11 @@ class PowerGridComponent extends Component
         $update = $this->update($data);
 
         if (!$update) {
-            session()->flash('error', $this->updateMessages('error', $data['field']));
+            session()->flash('error', $this->updateMessages('error', data_get($data, 'field')));
 
             return;
         }
-        session()->flash('success', $this->updateMessages('success', $data['field']));
+        session()->flash('success', $this->updateMessages('success', data_get($data, 'field')));
 
         if (!is_array($this->dataSource)) {
             return;
@@ -297,7 +297,7 @@ class PowerGridComponent extends Component
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($dataSource))
-                ->setColumns($this->columns())
+                ->setColumns($this->columns)
                 ->setSearch($this->search)
                 ->setFilters($this->filters)
                 ->filterContains()
@@ -318,7 +318,7 @@ class PowerGridComponent extends Component
         $results = $this->resolveModel($dataSource)
             ->where(function ($query) {
                 Model::query($query)
-                    ->setColumns($this->columns())
+                    ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch())
                     ->setFilters($this->filters)
@@ -370,8 +370,8 @@ class PowerGridComponent extends Component
     public function toggleColumn($field): void
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {
-            if ($column['field'] === $field) {
-                $column['hidden'] = !$column['hidden'];
+            if (data_get($column, 'field') === $field) {
+                $column['hidden'] = !data_get($column, 'hidden');
             }
 
             return (object)$column;
