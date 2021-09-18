@@ -79,6 +79,7 @@ return [
     | Alpine JS is required for features like ClickToEdit and Toggleable.
     |
     | 'js_framework' => 'alpinejs',
+    | 'js_framework' => null, // If you already carry your external alpine
     */
 
     'js_framework' => 'alpinejs',
@@ -92,7 +93,7 @@ return [
     |
     */
     'js_framework_cdn' => [
-        'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js'
+        'alpinejs' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js'
     ],
 
     /*

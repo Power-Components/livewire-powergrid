@@ -17,12 +17,22 @@
          class="mt-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-gray-500">
 
         @if(in_array('excel',$exportType))
-            <a wire:click="exportToXLS()" href="#"
-               class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200  dark:hover:bg-gray-700">Excel</a>
+            <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
+                <span class="w-12">Excel</span>
+                <a wire:click="exportToXLS()" href="#"
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">All</a>
+                <a wire:click="exportToXLS(true)" href="#"
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">Selected</a>
+            </div>
         @endif
         @if(in_array('csv',$exportType))
-            <a wire:click="exportToCsv()" href="#"
-               class="block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">Csv</a>
+            <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
+                <span class="w-12">Csv</span>
+                <a wire:click="exportToCsv()" href="#"
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">All</a>
+                <a wire:click="exportToCsv(true)" href="#"
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">Selected</a>
+            </div>
         @endif
     </div>
 </div>

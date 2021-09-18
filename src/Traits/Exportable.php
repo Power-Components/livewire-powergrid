@@ -30,11 +30,11 @@ trait Exportable
     /**
      * @throws \Exception
      */
-    public function prepareToExport()
+    public function prepareToExport(bool $selected = false)
     {
         $inClause = $this->filtered;
 
-        if (filled($this->checkboxValues)) {
+        if ($selected && filled($this->checkboxValues)) {
             $inClause = $this->checkboxValues;
         }
 
@@ -62,22 +62,22 @@ trait Exportable
     /**
      * @throws \Exception
      */
-    public function exportToXLS(): BinaryFileResponse
+    public function exportToXLS(bool $selected = false): BinaryFileResponse
     {
         return (new ExportToXLS())
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport())
+            ->setData($this->columns(), $this->prepareToExport($selected))
             ->download();
     }
 
     /**
      * @throws \Exception
      */
-    public function exportToCsv(): BinaryFileResponse
+    public function exportToCsv(bool $selected = false): BinaryFileResponse
     {
         return (new ExportToCsv())
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport())
+            ->setData($this->columns(), $this->prepareToExport($selected))
             ->download();
     }
 }
