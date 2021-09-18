@@ -17,9 +17,13 @@
                     <li class="d-flex">
                         <div class="dropdown-item">
                             Excel
-                            <a class="text-black-50" wire:click="exportToXLS()" href="#">all</a>
+                            <a class="text-black-50" wire:click="exportToXLS()" href="#">
+                                @lang('livewire-powergrid::datatable.labels.all')
+                            </a>
                             /
-                            <a class="text-black-50" wire:click="exportToXLS(true)" href="#">selected</a>
+                            <a class="text-black-50" wire:click="exportToXLS(true)" href="#">
+                                @lang('livewire-powergrid::datatable.labels.selected')
+                            </a>
                         </div>
                     </li>
                 @endif
@@ -27,9 +31,13 @@
                     <li class="d-flex">
                         <div class="dropdown-item">
                             Csv
-                            <a class="text-black-50" wire:click="exportToCsv()" href="#">all</a>
+                            <a class="text-black-50" wire:click="exportToCsv()" href="#">
+                                @lang('livewire-powergrid::datatable.labels.all')
+                            </a>
                             /
-                            <a class="text-black-50" wire:click="exportToCsv(true)" href="#">selected</a>
+                            <a class="text-black-50" wire:click="exportToCsv(true)" href="#">
+                                @lang('livewire-powergrid::datatable.labels.selected')
+                            </a>
                         </div>
                     </li>
                 @endif

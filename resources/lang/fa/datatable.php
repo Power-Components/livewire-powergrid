@@ -12,7 +12,8 @@ return [
         'results_per_page' => 'آیتم در صفحه',
         'clear_filter'     => 'بدون فیلتر',
         'no_data'          => 'هیچ رکوردی یافت نشد',
-        'all'              => 'همه'
+        'all'              => 'همه',
+        'selected'         => 'انتخاب شد',
     ],
     'placeholders' => [
         'search' => 'جستجو...',

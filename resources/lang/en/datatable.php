@@ -10,6 +10,7 @@ return [
         'clear_filter'     => 'Clear filter',
         'no_data'          => 'No records found',
         'all'              => 'All',
+        'selected'         => 'Selected',
     ],
     'placeholders' => [
         'search' => 'Search...',

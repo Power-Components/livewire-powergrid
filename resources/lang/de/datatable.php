@@ -10,6 +10,7 @@ return [
         'clear_filter'     => 'Filter löschen',
         'no_data'          => 'Keine Ergebnisse gefunden',
         'all'              => 'Alle',
+        'selected'         => 'Ausgewählt'
     ],
     'placeholders' => [
         'search' => 'Suche',

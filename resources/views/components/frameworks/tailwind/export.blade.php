@@ -14,24 +14,32 @@
          x-transition:leave="transform duration-200"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-90"
-         class="mt-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-gray-500">
+         class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-gray-500">
 
         @if(in_array('excel',$exportType))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
                 <span class="w-12">Excel</span>
                 <a wire:click="exportToXLS()" href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">All</a>
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                    @lang('livewire-powergrid::datatable.labels.all')
+                </a>
                 <a wire:click="exportToXLS(true)" href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">Selected</a>
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                    @lang('livewire-powergrid::datatable.labels.selected')
+                </a>
             </div>
         @endif
         @if(in_array('csv',$exportType))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
                 <span class="w-12">Csv</span>
                 <a wire:click="exportToCsv()" href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">All</a>
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                    @lang('livewire-powergrid::datatable.labels.all')
+                </a>
                 <a wire:click="exportToCsv(true)" href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">Selected</a>
+                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                    @lang('livewire-powergrid::datatable.labels.selected')
+                </a>
             </div>
         @endif
     </div>

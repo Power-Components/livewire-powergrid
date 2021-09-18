@@ -9,7 +9,8 @@ return [
         'results_per_page' => 'Registros por página',
         'clear_filter'     => 'Limpar filtro',
         'no_data'          => 'Nenhum registro encontrado',
-        'all'              => 'Todos'
+        'all'              => 'Todos',
+        'selected'         => 'Selecionados',
     ],
     'placeholders' => [
         'search' => 'Buscar ...',
