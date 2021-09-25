@@ -8,17 +8,17 @@
     <div wire:ignore class="flex @if(!$inline) col-md-6 col-lg-3 @endif" style="max-width: 370px !important;">
 
         @if(!$inline)
-            <label for="input_{!! $multiSelect['relation_id'] !!}">{{$multiSelect['label']}}</label>
+            <label for="input_{{ data_get($multiSelect, 'relation_id') }}">{{ data_get($multiSelect, 'label') }}</label>
         @endif
         <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
-                multiple id="input_{!! $multiSelect['relation_id'] !!}"
-                class="power_grid_select select_picker_{!! $multiSelect['relation_id'] !!} form-control active"
+                multiple id="input_{{ data_get($multiSelect, 'relation_id') }}"
+                class="power_grid_select select_picker_{{ data_get($multiSelect, 'relation_id') }} form-control active"
                 wire:ignore
-                data-live-search="{{ $multiSelect['live-search'] }}">
+                data-live-search="{{ data_get($multiSelect, 'live-search') }}">
 
             <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
-            @foreach($multiSelect['data_source'] as $relation)
-                <option value="{{ $relation['id'] }}">{{ $relation[$multiSelect['display_field']] }}</option>
+            @foreach(data_get($multiSelect, 'data_source') as $relation)
+                <option value="{{ data_get($relation, 'id') }}">{{ $relation[data_get($multiSelect, 'display_field')] }}</option>
             @endforeach
         </select>
     </div>
@@ -34,7 +34,6 @@
             vertical-align: middle;
             line-height: normal;
         }
-
         .bootstrap-select {
             padding-left: 0 !important;
         }
@@ -43,27 +42,27 @@
     @push('power_grid_scripts')
         <script>
             $(function () {
-                $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker();
+                $('.select_picker_{{ data_get($multiSelect, 'relation_id') }}').selectpicker();
             })
 
             document.addEventListener('DOMContentLoaded', () => {
                 Livewire.hook('message.processed', (message, component) => {
-                    $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker()
+                    $('.select_picker_{{ data_get($multiSelect, 'relation_id') }}').selectpicker()
                 })
             })
 
-            $('.select_picker_{{ $multiSelect['relation_id'] }}').selectpicker();
-            $('select.select_picker_{{ $multiSelect['relation_id'] }}').on('change', function () {
+            $('.select_picker_{{ data_get($multiSelect, 'relation_id') }}').selectpicker();
+            $('select.select_picker_{{ data_get($multiSelect, 'relation_id') }}').on('change', function () {
                 const selected = $(this).find("option:selected");
                 const arrSelected = [];
                 selected.each(function () {
                     arrSelected.push($(this).val());
                 });
                 window.livewire.emit('eventMultiSelect', {
-                    id: '{{ $multiSelect['relation_id'] }}',
+                    id: '{{ data_get($multiSelect, 'relation_id') }}',
                     values: arrSelected
                 })
-                $('.select_picker_{{ $multiSelect['field'] }}').selectpicker('refresh');
+                $('.select_picker_{{ data_get($multiSelect, 'field') }}').selectpicker('refresh');
             });
         </script>
     @endpush

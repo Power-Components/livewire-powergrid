@@ -1,7 +1,7 @@
-<div>
-    <svg class="fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg" height="24"
-         viewBox="0 0 24 24" width="24">
-        <path d="M7 10l5 5 5-5z"/>
-        <path d="M0 0h24v24H0z" fill="none"/>
-    </svg>
-</div>
+<svg xmlns="http://www.w3.org/2000/svg"
+     {{ $attributes->merge(['class' => 'pointer-events-none']) }}
+     fill="none"
+     viewBox="0 0 24 24"
+     stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+</svg>

@@ -20,7 +20,7 @@
             @include($theme->layout->message)
 
             <div class="overflow-hidden overflow-x-auto bg-white shadow overflow-y-auto relative">
-                @include($table) <!-- livewire-powergrid::components.table -->
+                @include($table)
             </div>
 
             @include($theme->footer->view)

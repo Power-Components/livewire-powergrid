@@ -21,7 +21,7 @@
             @foreach($columns as $column)
                 <div @click="window.livewire.emit('eventToggleColumn', '{{ $column->field }}')"
                      class="@if($column->hidden) opacity-40 @endif cursor-pointer flex justify-start block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">
-                    @if($column->hidden === false)
+                    @if(!$column->hidden)
                         <x-livewire-powergrid::icons.eye class="text-gray-500 dark:text-gray-300"/>
                     @else
                         <x-livewire-powergrid::icons.eye-off class="text-gray-500 dark:text-gray-300"/>
