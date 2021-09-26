@@ -1,6 +1,6 @@
 <?php
 
-use Orchestra\Testbench\TestCase;
+use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
