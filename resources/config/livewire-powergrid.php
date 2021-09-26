@@ -67,7 +67,7 @@ return [
     | Cache
     |--------------------------------------------------------------------------
     |
-    | Cache is enabled by default to improve search performance.
+    | Cache is enabled by default to improve search performance when using collections.
     | When enabled, data is reloaded whenever the page is refreshed or a field is updated.
     |
     */
