@@ -39,7 +39,7 @@
     @if(isset($actions) && count($actions) && $row !== '')
         @foreach($actions as $action)
             <td class="{{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"
-                style="{{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyStyle }}">
+                style="{{ $theme->actions->tdBodyStyle ?? $theme->table->tdBodyStyle }}">
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {
