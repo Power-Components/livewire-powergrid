@@ -2,8 +2,6 @@
 
 namespace App\Http\Livewire{{ subFolder }};
 
-use {{ modelName }};
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
@@ -38,10 +36,7 @@ class {{ componentName }} extends PowerGridComponent
         return PowerGrid::collection()
             ->addColumn('id')
             ->addColumn('name')
-            ->addColumn('created_at')
-            ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            });
+            ->addColumn('created_at');
     }
 
     public function columns(): array
@@ -64,87 +59,6 @@ class {{ componentName }} extends PowerGridComponent
                 ->title(__('Created at'))
                 ->field('created_at')
                 ->hidden(),
-
-            Column::add()
-                ->title(__('Created at'))
-                ->field('created_at_formatted')
-                ->makeInputDatePicker('created_at')
-                ->searchable()
         ];
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Actions Method
-    |--------------------------------------------------------------------------
-    | Enable this section only when you have defined routes for these actions.
-    |
-    */
-
-    /*
-    public function actions(): array
-    {
-       return [
-           Button::add('edit')
-               ->caption(__('Edit'))
-               ->class('bg-indigo-500 text-white')
-               ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
-
-           Button::add('destroy')
-               ->caption(__('Delete'))
-               ->class('bg-red-500 text-white')
-               ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
-               ->method('delete')
-        ];
-    }
-    */
-
-    /*
-    |--------------------------------------------------------------------------
-    | Edit Method
-    |--------------------------------------------------------------------------
-    | Enable this section to use editOnClick() or toggleable() methods
-    |
-    */
-
-    /*
-    public function update(array $data ): bool
-    {
-       // filter example with symbols
-       // if ($data['field'] == 'price_BRL') {
-       //       $data['field'] = 'price';
-       //       $data['value'] = Str::of($data['value'])
-       //           ->replace('.', '')
-       //           ->replace(',', '.')
-       //           ->replaceMatches('/[^Z0-9\.]/', '');
-       //}
-
-       try {
-           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
-                $data['field'] => $data['value']
-           ]);
-       } catch (QueryException $exception) {
-           $updated = false;
-       }
-       return $updated;
-    }
-
-    public function updateMessages(string $status, string $field = '_default_message'): string
-    {
-        $updateMessages = [
-            'uccess'   => [
-                '_default_message' => __('Data has been updated successfully!'),
-                //'custom_field' => __('Custom Field updated successfully!'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
-            ]
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
-    }
-    */
-
-
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Livewire{{ subFolder }};
 
 use {{ modelName }};
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;

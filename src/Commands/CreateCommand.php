@@ -31,7 +31,8 @@ class CreateCommand extends Command
         }
 
         $fillable        = false;
-
+        $modelName       = null;
+        $modelLastName   = [];
         $tableName       = $this->ask('Component Name');
         $tableName       = str_replace(['.', '\\'], '/', $tableName);
 
