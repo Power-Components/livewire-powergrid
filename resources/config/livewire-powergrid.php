@@ -4,22 +4,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Template
+    | Theme
     |--------------------------------------------------------------------------
     |
-    | You will be able to know which theme pattern will be loaded
-    |
+    | PowerGrid supports Tailwind and Bootstrap 5 themes.
+    | Configure here the theme of your choice.
     */
+
     'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+    //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
     /*
     |--------------------------------------------------------------------------
     | Plugins
     |--------------------------------------------------------------------------
     |
-    | Plugins used: bootstrap-select when bootstrap, flatpicker.js to datepicker
+    | Plugins used: bootstrap-select when bootstrap, flatpicker.js to datepicker.
     |
     */
+
     'plugins' => [
         /*
          * https://github.com/snapappointments/bootstrap-select
@@ -51,9 +54,9 @@ return [
     | Filters
     |--------------------------------------------------------------------------
     |
-    | You choose which type of filter you want to use inline
-    | to filter inside the table or outside the table
-    | 'inline' or 'outside'
+    | PowerGrid supports inline and outside filters.
+    | 'inline': Filters data inside the table.
+    | 'outside': Filters data outside the table.
     |
     */
 
@@ -64,10 +67,11 @@ return [
     | Cache
     |--------------------------------------------------------------------------
     |
-    | When the data is cached, the search is much faster.
-    | It is updated whenever the page is reloaded or a field is changed
+    | Cache is enabled by default to improve search performance.
+    | When enabled, data is reloaded whenever the page is refreshed or a field is updated.
     |
     */
+
     'cached_data' => true,
 
     /*
@@ -78,11 +82,10 @@ return [
     | Define here which JS framework will be imported in the views.
     | Alpine JS is required for features like ClickToEdit and Toggleable.
     |
-    | 'js_framework' => 'alpinejs',
-    | 'js_framework' => null, // If you already carry your external alpine
     */
 
     'js_framework' => 'alpinejs',
+    //'js_framework' => null, // If you already have Alpine included in your project
 
     /*
     |--------------------------------------------------------------------------
@@ -92,19 +95,23 @@ return [
     | Define here the CDN source for imported JS Framework
     |
     */
+    
     'js_framework_cdn' => [
         'alpinejs' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js'
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Notification latest version
+    | New Release Notification
     |--------------------------------------------------------------------------
     |
-    | Add the package: `composer require composer/composer --dev` to your project.
-    | and change this value to `true`
+    | PowerGrid can verify if a new release is available when you create a new PowerGrid Table.
+    |
+    | This feature depends on composer/composer.
+    | To install, run: `composer require composer/composer --dev`
     |
     */
-    'check_version' => false
+
+    'check_version' => false,
 
 ];

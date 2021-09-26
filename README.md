@@ -16,7 +16,7 @@
 
 [Livewire](https://laravel-livewire.com) PowerGrid is a component for  generating dynamic tables with your Laravel Models.
 
-PowerGrid comes with a variety of out-of-the-box features:
+PowerGrid comes with a variety of features:
 
 ✅ **Searching & Filters**
 
@@ -42,9 +42,9 @@ PowerGrid comes with a variety of out-of-the-box features:
 
 ✅ **Works with Bootstrap 5 or Tailwind CSS 2**
 
-✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇩🇪 and more to come...**
+✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and more to come...**
 
----
+------
 
 # Get started
 
@@ -68,13 +68,17 @@ Our documentation is available at [https://livewire-powergrid.docsforge.com/](ht
 
 ## 5. Support
 
-If you need any support, please check our [Issues](https://github.com/Power-Components/livewire-powergrid/issues). You can ask questions or report problems there.
+For questions, issues, bug reports and feature requests, please use our [Issues](https://github.com/Power-Components/livewire-powergrid/issues).
+
+Before submiting a new request, please look into our previous issues.
+
+Verify if your bug/question or feature request has been previously submitted.
 
 ## 6. How to contribute
 
-Claudio Pereira has written an excellent document in portuguese/Brazil language for all Brazilians who want to contribute.
+🇺🇸 [How to contribute to PowerGrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/README-EN.md) - Translation by [@DanSysAnalyst](https://github.com/DanSysAnalyst)
 
-Just click on this link to learn more => [https://github.com/Power-Components/como-contribuir-com-o-powergrid/](https://github.com/Power-Components/como-contribuir-com-o-powergrid/).
+🇧🇷 [Guia para contribuir com o Powergrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/) - by [Claudio Pereira](https://github.com/cpereiraweb)
 
 ## 7. Credits
 
