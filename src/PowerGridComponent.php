@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Exception;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\Component;
-use Livewire\WithPagination;
+use PowerComponents\LivewirePowerGrid\Traits\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
