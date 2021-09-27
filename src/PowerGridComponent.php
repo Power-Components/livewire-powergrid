@@ -378,4 +378,10 @@ class PowerGridComponent extends Component
         })->toArray();
     }
 
+    public function setPage($page)
+    {
+        $this->page = $page;
+
+        $this->checkboxAll = false;
+    }
 }
