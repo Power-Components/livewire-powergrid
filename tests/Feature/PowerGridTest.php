@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Feature;
 use Illuminate\Database\Eloquent\Collection;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
+use PowerComponents\LivewirePowerGrid\Tests\ParentStub;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 class PowerGridTest extends TestCase
