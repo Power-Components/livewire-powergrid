@@ -5,8 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Feature;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
-use PowerComponents\LivewirePowerGrid\Tests\ParentStub;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 class PowerGridTest extends TestCase
@@ -22,8 +20,8 @@ class PowerGridTest extends TestCase
         ]);
 
         $grid =  PowerGrid::eloquent($collection)
-                        ->addColumn('id')
-                        ->addColumn('name');
+            ->addColumn('id')
+            ->addColumn('name');
 
         $this->assertEquals([
             (object)[
@@ -46,9 +44,9 @@ class PowerGridTest extends TestCase
         $collection = new Collection([$stub]);
 
         $grid =  PowerGrid::eloquent($collection)
-                        ->addColumn('id')
-                        ->addColumn('name')
-                        ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name);
+            ->addColumn('id')
+            ->addColumn('name')
+            ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name);
 
         $this->assertEquals([
             (object)[
@@ -58,4 +56,19 @@ class PowerGridTest extends TestCase
             ]
         ], $grid->make());
     }
+}
+
+class ModelStub extends Model
+{
+    protected array $guarded = [];
+
+    public function parent()
+    {
+        return $this->belongsTo(ParentStub::class);
+    }
+}
+
+class ParentStub extends Model
+{
+    protected array $guarded = [];
 }
