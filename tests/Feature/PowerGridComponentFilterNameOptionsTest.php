@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Collection;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\Feature\ModelStub;
+use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
 
 beforeEach(function () {
     $this->component = new PowerGridComponent;

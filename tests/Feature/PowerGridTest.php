@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 class PowerGridTest extends TestCase
@@ -56,19 +56,4 @@ class PowerGridTest extends TestCase
             ]
         ], $grid->make());
     }
-}
-
-class ModelStub extends Model
-{
-    protected $guarded = [];
-
-    public function parent()
-    {
-        return $this->belongsTo(ParentStub::class);
-    }
-}
-
-class ParentStub extends Model
-{
-    protected $guarded = [];
 }
