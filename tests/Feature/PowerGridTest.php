@@ -60,7 +60,7 @@ class PowerGridTest extends TestCase
 
 class ModelStub extends Model
 {
-    protected array $guarded = [];
+    protected $guarded = [];
 
     public function parent()
     {
@@ -70,5 +70,5 @@ class ModelStub extends Model
 
 class ParentStub extends Model
 {
-    protected array $guarded = [];
+    protected $guarded = [];
 }
