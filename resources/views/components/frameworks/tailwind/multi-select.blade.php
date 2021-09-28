@@ -28,7 +28,7 @@
                                 </div>
                             </template>
                             <div x-show="selected.length === 0" class="flex-1">
-                                <input placeholder="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
+                                <input placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
                                        class="w-full block bg-white-200 text-gray-700 py-2 text-sm uppercase px-3 leading-tight focus:outline-none dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-400"
                                        x-bind:value="selectedValues()"
                                 >

@@ -11,7 +11,7 @@
                 <label for="input_{{ data_get($select, 'relation_id') }}" class="text-gray-700 dark:text-gray-300">{{ data_get($select, 'label')  }}</label>
             @endif
             <div class="relative">
-                <select id="input_{!! $select['relation_id'] !!}"
+                <select id="input_{!! data_get($select, 'relation_id') !!}"
                         class="power_grid {{ $theme->inputClass }} {{ (isset($class)) ? $class : 'w-9/12' }}"
                         wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'relation_id') }}','{{ data_get($select, 'label')  }}')"
                         wire:model.debounce.500ms="filters.select.{{ data_get($select, 'relation_id')  }}"

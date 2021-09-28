@@ -10,9 +10,12 @@
         </div>
 
         <div class="flex flex-row">
+
+            @if($exportOption)
             <div class="mr-2 mt-2 sm:mt-0">
                 @includeIf($theme->base. ''.$theme->name.'.export')
             </div>
+            @endif
 
             @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
 

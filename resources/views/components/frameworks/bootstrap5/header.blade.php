@@ -3,7 +3,9 @@
 
         <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
 
-            @include($theme->base. ''.$theme->name.'.export')
+            @if($exportOption)
+                @include($theme->base. ''.$theme->name.'.export')
+            @endif
 
             @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
 

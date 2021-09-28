@@ -34,6 +34,8 @@ class Column
 
     public string $dataField = '';
 
+    public string $placeholder = '';
+
     /**
      * @return static
      */
@@ -51,6 +53,19 @@ class Column
     public function title( string $title ): Column
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Column title representing a field
+     *
+     * @param string $placeholder
+     * @return $this
+     */
+    public function placeholder( string $placeholder ): Column
+    {
+        $this->placeholder = $placeholder;
 
         return $this;
     }
