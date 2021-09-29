@@ -31,14 +31,12 @@ class CreateCommand extends Command
         }
 
         $fillable        = false;
-        $modelName       = null;
-        $modelLastName   = [];
         $tableName       = $this->ask('Component Name');
         $tableName       = str_replace(['.', '\\'], '/', $tableName);
 
         $creationModel   = $this->ask('<comment>[M]</comment>odel or <comment>[C]</comment>ollection? (default: <comment>M</comment>)');
 
-        $modelName  = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
+        $modelName       = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
 
         if ($this->confirm('Use the based on fillable ?')) {
             $fillable   = true;
