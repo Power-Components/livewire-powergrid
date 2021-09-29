@@ -155,7 +155,7 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-    public function mount()
+    public function mount($dataSource = null)
     {
         $this->setUp();
 
@@ -164,6 +164,8 @@ class PowerGridComponent extends Component
         $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
 
         $this->renderFilter();
+
+        $this->dataSource = $dataSource;
     }
 
     public function render()
@@ -290,7 +292,7 @@ class PowerGridComponent extends Component
         if (cache()->has($this->id)) {
             $dataSource = collect(cache()->get($this->id))->toArray();
         } else {
-            $dataSource = $this->dataSource();
+            $dataSource = $this->dataSource() ?: $this->dataSource;
         }
 
         $this->instanceOfCollection($dataSource);
@@ -327,11 +329,9 @@ class PowerGridComponent extends Component
             })->orderBy($this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
-            $results = $results
-                ->paginate($this->perPage);
+            $results = $results->paginate($this->perPage);
         } else {
-            $results = $results
-                ->paginate($results->count());
+            $results = $results->paginate($results->count());
         }
 
         return $results->setCollection($this->transform($results->getCollection()));

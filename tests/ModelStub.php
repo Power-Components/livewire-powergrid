@@ -9,6 +9,8 @@ class ModelStub extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'powergrid-table';
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(ParentStub::class);
