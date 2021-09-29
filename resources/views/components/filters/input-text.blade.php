@@ -31,7 +31,7 @@
                         wire:input.debounce.800ms="filterInputText('{{ $inputText['field'] }}', $event.target.value, '{{ $inputText['label'] }}')"
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"
-                        placeholder="{{ $column->placeholder ?? $column->title }}">
+                        placeholder="{{ $column->placeholder ?: $column->title }}">
                 </div>
             </div>
         </div>
