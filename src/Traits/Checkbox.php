@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Exception;
+
 trait Checkbox
 {
     public bool $checkbox = false;
@@ -10,10 +12,10 @@ trait Checkbox
 
     public array $checkboxValues = [];
 
-    public string $checkboxAttribute;
+    public string $checkboxAttribute = '';
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function selectCheckboxAll()
     {
@@ -25,6 +27,8 @@ trait Checkbox
         collect($this->loadData()->items())->each(function ($model) {
             $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
         });
+
+        $this->checkboxAll = false;
     }
 }
 

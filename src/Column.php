@@ -58,7 +58,7 @@ class Column
     }
 
     /**
-     * Column title representing a field
+     * Placeholder
      *
      * @param string $placeholder
      * @return $this
@@ -153,18 +153,18 @@ class Column
     }
 
     /**
-     * @param $data_source
-     * @param string $display_field
-     * @param string $relation_id
+     * @param $dataSource
+     * @param string $displayField
+     * @param string $relationId
      * @param array $settings
      * @return $this
      */
-    public function makeInputSelect( $data_source, string $display_field, string $relation_id, array $settings = [] ): Column
+    public function makeInputSelect( $dataSource, string $displayField, string $relationId, array $settings = [] ): Column
     {
         $this->editable                          = false;
-        $this->inputs['select']['data_source']   = $data_source;
-        $this->inputs['select']['display_field'] = $display_field;
-        $this->inputs['select']['relation_id']   = $relation_id;
+        $this->inputs['select']['data_source']   = $dataSource;
+        $this->inputs['select']['display_field'] = $displayField;
+        $this->inputs['select']['relation_id']   = $relationId;
         $this->inputs['select']['class']         = $settings['class'] ?? '';
         $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
 
@@ -172,17 +172,17 @@ class Column
     }
 
     /**
-     * @param $data_source
-     * @param string $display_field
-     * @param string $relation_id
+     * @param $dataSource
+     * @param string $displayField
+     * @param string $relationId
      * @return $this
      */
-    public function makeInputMultiSelect( $data_source, string $display_field, string $relation_id ): Column
+    public function makeInputMultiSelect( $dataSource, string $displayField, string $relationId ): Column
     {
         $this->editable                                = false;
-        $this->inputs['multi_select']['data_source']   = $data_source;
-        $this->inputs['multi_select']['display_field'] = $display_field;
-        $this->inputs['multi_select']['relation_id']   = $relation_id;
+        $this->inputs['multi_select']['data_source']   = $dataSource;
+        $this->inputs['multi_select']['display_field'] = $displayField;
+        $this->inputs['multi_select']['relation_id']   = $relationId;
         $this->inputs['multi_select']['live-search']   = $settings['live-search'] ?? true;
 
         return $this;
@@ -228,7 +228,7 @@ class Column
      * @param string $falseLabel Label for false
      * @return Column
      */
-    public function toggleable( bool $hasPermission = true, string $trueLabel = 'Yes', $falseLabel = 'No'): Column
+    public function toggleable(bool $hasPermission = true, string $trueLabel = 'Yes', string $falseLabel = 'No'): Column
     {
         $this->editable   = false;
         $this->toggleable = [

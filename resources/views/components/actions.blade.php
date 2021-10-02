@@ -10,23 +10,25 @@
                 <div class="sm:mr-2 mb-2 w-auto">
 
                     @if($action->event !== '')
-                        <button wire:click='$emit("{{ $action->event }}", @json($action->param))'
-                                class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                        <a wire:click='$emit("{{ $action->event }}", @json($action->param))'
+                           target="{{ $action->target }}"
+                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
-                        </button>
-
+                        </a>
                     @elseif($action->view !== '')
-                        <button wire:click='$emit("openModal", "{{$action->view}}", @json($action->param))'
+                        <a wire:click='$emit("openModal", "{{$action->view}}", @json($action->param))'
+                                target="{{ $action->target }}"
                                 class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
-                        </button>
-
+                        </a>
                     @else
-                        <form @if($action->method !== 'delete') target="_blank"
-                              @endif action="{{ route($action->route, $action->param) }}" method="post">
+                        <form target="{{ $action->target }}"
+                              action="{{ route($action->route, $action->param) }}"
+                              method="{{ $action->method }}">
                             @method($action->method)
                             @csrf
-                            <button type="submit" class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                            <button type="submit"
+                                    class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                                 {!! $action->caption !!}
                             </button>
                         </form>
@@ -48,23 +50,25 @@
                 @endphp
 
                 @if($action->event !== '')
-                    <button wire:click='$emit("{{ $action->event }}", @json($parameters))'
-                            class="{{ filled( $action->class) ? $action->class : $theme->actions->btnClass }}">
-                        {!! $action->caption ?? '' !!}
-                    </button>
-
+                    <a wire:click='$emit("{{ $action->event }}", @json($action->param))'
+                       target="{{ $action->target }}"
+                       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                        {!! $action->caption !!}
+                    </a>
                 @elseif($action->view !== '')
-                    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-                            class="{{ filled( $action->class) ? $action->class : $theme->actions->btnClass }}">
-                        {!! $action->caption ?? '' !!}
-                    </button>
-
+                    <a wire:click='$emit("openModal", "{{$action->view}}", @json($action->param))'
+                       target="{{ $action->target }}"
+                       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                        {!! $action->caption !!}
+                    </a>
                 @else
-                    <form @if($action->method !== 'delete') target="_blank"
-                          @endif action="{{ route($action->route, $parameters) }}" method="post">
+                    <form target="{{ $action->target }}"
+                          action="{{ route($action->route, $parameters) }}"
+                          method="{{ $action->target }}">
                         @method($action->method)
                         @csrf
-                        <button type="submit" class="{{ filled( $action->class) ? $action->class : $theme->actions->btnClass }}">
+                        <button type="submit"
+                                class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption ?? '' !!}
                         </button>
                     </form>

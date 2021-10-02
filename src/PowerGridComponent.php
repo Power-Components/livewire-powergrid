@@ -48,7 +48,7 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
-    protected $dataSource;
+    public $dataSource;
 
     protected $listeners = [
         'eventChangeDatePiker'  => 'eventChangeDatePiker',
@@ -287,7 +287,7 @@ class PowerGridComponent extends Component
         return $this->checkboxValues;
     }
 
-    private function loadData()
+    public function loadData()
     {
         if (cache()->has($this->id)) {
             $dataSource = collect(cache()->get($this->id))->toArray();
@@ -376,10 +376,5 @@ class PowerGridComponent extends Component
 
             return (object)$column;
         })->toArray();
-    }
-
-    public function dehydratePage()
-    {
-        $this->checkboxAll = false;
     }
 }

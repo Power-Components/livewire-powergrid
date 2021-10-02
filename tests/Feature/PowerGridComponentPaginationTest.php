@@ -2,24 +2,15 @@
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-beforeEach(function () {
-    $this->component = new PowerGridComponent;
-});
-
 it('properly paginates data', function () {
-    $this->assertFalse($this->component->perPageInput);
+    $component = new PowerGridComponent(1);
+    $component->dataSource = testDataSource();
+    $component->perPage    = 2;
 
-    $this->component->showPerPage(25);
+    $pagination            = $component->loadData();
 
-    $this->assertTrue($this->component->perPageInput);
-    $this->assertEquals(25, $this->component->perPage);
+    expect($pagination->total())->toBe(4);
+    expect($pagination->perPage())->toBe(2);
 });
 
-it('does not set a pagination value that is not supported', function () {
-    $this->assertFalse($this->component->perPageInput);
 
-    $this->component->showPerPage(22);
-
-    $this->assertFalse($this->component->perPageInput);
-    $this->assertEquals(10, $this->component->perPage);
-});

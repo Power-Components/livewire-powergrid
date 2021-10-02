@@ -12,7 +12,7 @@ class TestCase extends BaseTestCase
     {
         return [
             LivewireServiceProvider::class,
-            PowerGridServiceProvider::class
+            PowerGridServiceProvider::class,
         ];
     }
 }

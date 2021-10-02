@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Eloquent\Collection;
-
+use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
 
 beforeEach(function () {
     $this->component = new PowerGridComponent;
@@ -11,25 +9,6 @@ beforeEach(function () {
         'id',
         'name'
     ];
-
-    $this->data = new Collection([
-        new ModelStub([
-            'id'   => '1',
-            'name' => 'john smith'
-        ]),
-        new ModelStub([
-            'id'   => '2',
-            'name' => 'john'
-        ]),
-        new ModelStub([
-            'id'   => '3',
-            'name' => 'anna'
-        ]),
-        new ModelStub([
-            'id'   => '4',
-            'name' => 'thales'
-        ])
-    ]);
 });
 
 it('clean filters', function () {
@@ -56,7 +35,7 @@ it('properly filters by "name is"', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -78,12 +57,14 @@ it('properly filters by "name is" when name is not present', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
+
+
     $this->assertEmpty($filtered);
 });
 
@@ -98,14 +79,16 @@ it('properly filters by "name is not"', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
 
-    $this->assertCount(3, $filtered);
+    expect($filtered)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveCount(3);
 });
 
 it('properly filters by "name is not" when name is not present', function () {
@@ -119,14 +102,16 @@ it('properly filters by "name is not" when name is not present', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
 
-    $this->assertCount(3, $filtered);
+    expect($filtered)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveCount(3);
 });
 
 it('properly filters by "name contains"', function () {
@@ -140,14 +125,16 @@ it('properly filters by "name contains"', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
 
-    $this->assertCount(2,$filtered);
+    expect($filtered)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveCount(2);
 });
 
 it('properly filters by "name starts_with"', function () {
@@ -161,14 +148,16 @@ it('properly filters by "name starts_with"', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
 
-    $this->assertCount(2,$filtered);
+    expect($filtered)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveCount(2);
 });
 
 it('properly filters by "name ends_with"', function () {
@@ -182,12 +171,14 @@ it('properly filters by "name ends_with"', function () {
         ]
     ];
 
-    $filtered = \PowerComponents\LivewirePowerGrid\Helpers\Collection::query($this->data)
+    $filtered = Collection::query(testDataSource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
         ->filterContains()
         ->filter();
 
-    $this->assertCount(1,$filtered);
+    expect($filtered)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveCount(1);
 });

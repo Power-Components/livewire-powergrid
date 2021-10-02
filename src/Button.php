@@ -22,6 +22,8 @@ class Button
 
     public bool $can = true;
 
+    public string $target = '_blank';
+
     /**
      * Button constructor.
      * @param string $action
@@ -132,4 +134,18 @@ class Button
 
         return $this;
     }
+
+    /**
+     * target _blank, _self, _top, _parent
+     * @param string $target
+     * @return $this
+     */
+    public function target(string $target): Button
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+
 }

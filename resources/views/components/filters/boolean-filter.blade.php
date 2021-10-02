@@ -1,5 +1,6 @@
 @props([
     'theme' => '',
+    'class' => '',
     'inline' => null,
     'booleanFilter' => null
 ])
@@ -10,7 +11,7 @@
                 <label for="input_boolean_filter_{!! $booleanFilter['field']!!}">{{ $booleanFilter['label'] }}</label>
             @endif
             <div class="relative">
-                <select id="input_boolean_filter_{!! $booleanFilter['field']!!}" class="power_grid {{ $theme->inputClass }} {{ (isset($class)) ? $class : 'w-9/12' }}"
+                <select id="input_boolean_filter_{!! $booleanFilter['field']!!}" class="power_grid {{ $theme->inputClass }} {{ $class }}"
                         wire:input.debounce.300ms="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')">
                     <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
                     <option value="true">{{ $booleanFilter['true_label']}}</option>

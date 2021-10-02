@@ -12,7 +12,7 @@
             @endif
             <div class="relative">
                 <select id="input_{!! data_get($select, 'relation_id') !!}"
-                        class="power_grid {{ $theme->inputClass }} {{ (isset($class)) ? $class : 'w-9/12' }}"
+                        class="power_grid {{ $theme->inputClass }} {{ $class }}"
                         wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'relation_id') }}','{{ data_get($select, 'label')  }}')"
                         wire:model.debounce.500ms="filters.select.{{ data_get($select, 'relation_id')  }}"
                         data-live-search="{{ data_get($select, 'live-search') }}">
