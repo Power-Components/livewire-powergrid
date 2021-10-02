@@ -1,16 +1,19 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
+
 
 it('properly paginates data', function () {
     $component = new PowerGridComponent(1);
-    $component->datasource = testDatasource();
-    $component->perPage    = 2;
+    $component->datasource = ModelStub::query();
+    $component->perPage    = 10;
 
-    $pagination            = $component->fillData();
+    $pagination = $component->fillData();
 
-    expect($pagination->total())->toBe(4);
-    expect($pagination->perPage())->toBe(2);
+    expect($pagination->total())->toBe(306);
+    expect($pagination->perPage())->toBe(10);
 });
+
 
 

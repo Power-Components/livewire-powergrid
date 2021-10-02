@@ -1,13 +1,11 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Helpers\Collection;
-use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
 
 beforeEach(function () {
-    $this->component = new PowerGridComponent;
-    $this->columns   = [
+    $this->columns         = [
         Column::add()
             ->title(__('ID'))
             ->field('id')
@@ -23,191 +21,115 @@ beforeEach(function () {
             ->makeInputText('name')
             ->sortable(),
         ];
-});
 
-it('clean filters', function () {
-    $this->component->filters = [
-        "input_text" => [
-            "name" => "pizza"
-        ]
-    ];
-    $this->assertNotEmpty($this->component->filters);
+    $component = new PowerGridComponent(1);
+    $component->datasource = ModelStub::query();
+    $component->columns    = $this->columns;
+    $component->perPage    = 10;
 
-    $this->component->clearFilter();
-
-    $this->assertEquals($this->component->filters, []);
+    $this->component       = $component;
 });
 
 it('properly filters by "name is"', function () {
-
     $this->component->filters = [
         "input_text" => [
-            "name" => "john"
+            "name" => "Peixada da chef Nábia - 1"
         ],
         "input_text_options" => [
             "name" => "is"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-    $this->assertCount(1,$filtered);
-    $this->AssertEquals($filtered->first()->name, 'john');
+    expect($pagination)
+        ->toHaveCount(1);
+    expect($pagination->first()->name)
+        ->toBe('Peixada da chef Nábia - 1');
 });
 
 it('properly filters by "name is" when name is not present', function () {
-
     $this->component->filters = [
         "input_text" => [
-            "name" => "maria"
+            "name" => "Peixada do João"
         ],
-        'input_text_options' => [
-            'name' => 'is'
+        "input_text_options" => [
+            "name" => "is"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-
-    $this->assertEmpty($filtered);
+    expect($pagination->total())
+        ->toBe(0);
 });
 
 it('properly filters by "name is not"', function () {
-
     $this->component->filters = [
-        'input_text' => [
-            'name' => 'john'
+        "input_text" => [
+            "name" => "Peixada da chef Nábia - 1"
         ],
-        'input_text_options' => [
-            'name' => 'is_not'
+        "input_text_options" => [
+            "name" => "is_not"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-    expect($filtered)
-        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
-        ->toHaveCount(3);
+    expect($pagination->total())->toBe(305);
 });
 
 it('properly filters by "name is not" when name is not present', function () {
-
     $this->component->filters = [
-        'input_text' => [
-            'name' => 'anna'
+        "input_text" => [
+            "name" => "Peixada do João"
         ],
-        'input_text_options' => [
-            'name' => 'is_not'
+        "input_text_options" => [
+            "name" => "is_not"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-    expect($filtered)
-        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
-        ->toHaveCount(3);
+    expect($pagination->total())->toBe(306);
 });
 
 it('properly filters by "name contains"', function () {
-
     $this->component->filters = [
         "input_text" => [
-            "name" => "th"
+            "name" => "Tomates"
         ],
         "input_text_options" => [
             "name" => "contains"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-    expect($filtered)
-        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
-        ->toHaveCount(2);
+    expect($pagination->items())->toHaveCount(3);
+
+    foreach ($pagination->items() as $item) {
+        expect($item->name)->toContain('Sopa de Tomates Assados');
+    }
 });
 
 it('properly filters by "name starts_with"', function () {
-
     $this->component->filters = [
         "input_text" => [
-            "name" => "john"
+            "name" => "Sopa"
         ],
         "input_text_options" => [
             "name" => "starts_with"
         ]
     ];
 
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
+    $pagination = $this->component->fillData();
 
-    expect($filtered)
-        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
-        ->toHaveCount(2);
+    expect($pagination->items())->toHaveCount(6);
+
+    /** @var ModelStub $item */
+    foreach ($pagination->items() as $item) {
+        expect($item->name)->toContain('Sopa');
+    }
 });
 
-it('properly filters by "name ends_with"', function () {
-
-    $this->component->filters = [
-        "input_text" => [
-            "name" => "smith"
-        ],
-        "input_text_options" => [
-            "name" => "ends_with"
-        ]
-    ];
-
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch('')
-        ->setFilters($this->component->filters)
-        ->filterContains()
-        ->filter();
-
-    expect($filtered)
-        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
-        ->toHaveCount(1);
-});
-
-test('if a table lookup works', function () {
-
-    $search = 'Thales';
-
-    $filtered = Collection::query(testDatasource())
-        ->setColumns($this->columns)
-        ->setSearch($search)
-        ->setFilters([])
-        ->filterContains()
-        ->filter();
-
-    expect($filtered)->toHaveCount(1);
-    expect($filtered->first()->name)->toBe('Thales');
-});
