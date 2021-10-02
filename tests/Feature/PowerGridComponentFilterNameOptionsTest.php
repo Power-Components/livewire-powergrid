@@ -2,7 +2,10 @@
 
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
+
+use function Pest\Livewire\livewire;
 
 beforeEach(function () {
     $this->columns         = [
@@ -31,21 +34,17 @@ beforeEach(function () {
 });
 
 it('properly filters by "name is"', function () {
-    $this->component->filters = [
+
+    $component = livewire(DishesTable::class);
+    $component->set('filters', [
         "input_text" => [
             "name" => "Peixada da chef Nábia - 1"
         ],
         "input_text_options" => [
             "name" => "is"
         ]
-    ];
-
-    $pagination = $this->component->fillData();
-
-    expect($pagination)
-        ->toHaveCount(1);
-    expect($pagination->first()->name)
-        ->toBe('Peixada da chef Nábia - 1');
+    ]);
+    $component->assertSeeHtml('Peixada da chef Nábia - 1');
 });
 
 it('properly filters by "name is" when name is not present', function () {

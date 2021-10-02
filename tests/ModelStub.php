@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  * @property Carbon $produced_at
  *
+ * @property-read ParentStub $parent
  */
 class ModelStub extends Model
 {
@@ -27,6 +28,6 @@ class ModelStub extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(ParentStub::class);
+        return $this->belongsTo(ParentStub::class, 'category_id', 'id');
     }
 }

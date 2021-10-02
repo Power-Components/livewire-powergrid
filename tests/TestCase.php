@@ -23,6 +23,12 @@ class TestCase extends BaseTestCase
 
     protected function databaseSetup()
     {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained();
@@ -35,11 +41,15 @@ class TestCase extends BaseTestCase
             $table->timestamps();
         });
 
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
-        });
+        DB::table('categories')->insert([
+            ['name' => 'Carnes'],
+            ['name' => 'Peixe'],
+            ['name' => 'Tortas'],
+            ['name' => 'Acompanhamentos'],
+            ['name' => 'Massas'],
+            ['name' => 'Sobremesas'],
+            ['name' => 'Sopas'],
+        ]);
 
         $dishes = [
             ['name' => 'Pastel de Nata', 'category_id' => 6],
@@ -161,7 +171,6 @@ class TestCase extends BaseTestCase
                 DB::table('dishes')->insert($dish);
             }
         }
-
     }
 
 
@@ -175,6 +184,7 @@ class TestCase extends BaseTestCase
     {
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testbench');
+        $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
         $app['config']->set('database.connections.testbench', [
             'driver'   => 'sqlite',
             'database' => ':memory:',

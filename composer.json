@@ -46,6 +46,7 @@
         "pestphp/pest": "^1.1",
         "orchestra/testbench": "^6.17",
         "composer/composer": "^2.1",
-        "pestphp/pest-plugin-faker": "^1.0"
+        "pestphp/pest-plugin-faker": "^1.0",
+        "pestphp/pest-plugin-livewire": "^1.0"
     }
 }
