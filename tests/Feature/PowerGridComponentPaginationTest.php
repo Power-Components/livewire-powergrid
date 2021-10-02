@@ -7,7 +7,7 @@ it('properly paginates data', function () {
     $component->dataSource = testDataSource();
     $component->perPage    = 2;
 
-    $pagination            = $component->loadData();
+    $pagination            = $component->fillData();
 
     expect($pagination->total())->toBe(4);
     expect($pagination->perPage())->toBe(2);

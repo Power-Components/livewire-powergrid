@@ -62,6 +62,8 @@ class PowerGridComponent extends Component
 
     public bool $toggleColumns = false;
 
+    public array $relationSearch = [];
+
     /**
      * Apply checkbox, perPage and search view and theme
      */
@@ -176,7 +178,9 @@ class PowerGridComponent extends Component
             return (object)$column;
         })->toArray();
 
-        $data = $this->loadData();
+        $this->relationSearch = $this->relationSearch();
+
+        $data = $this->fillData();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -249,7 +253,7 @@ class PowerGridComponent extends Component
             return;
         }
 
-        $this->loadData();
+        $this->fillData();
     }
 
     /**
@@ -287,8 +291,9 @@ class PowerGridComponent extends Component
         return $this->checkboxValues;
     }
 
-    public function loadData()
+    public function fillData()
     {
+
         if (cache()->has($this->id)) {
             $dataSource = collect(cache()->get($this->id))->toArray();
         } else {
@@ -322,7 +327,7 @@ class PowerGridComponent extends Component
                 Model::query($query)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
-                    ->setRelationSearch($this->relationSearch())
+                    ->setRelationSearch($this->relationSearch)
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();

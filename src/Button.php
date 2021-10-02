@@ -136,7 +136,7 @@ class Button
     }
 
     /**
-     * target _blank, _self, _top, _parent
+     * target _blank, _self, _top, _parent, null
      * @param string $target
      * @return $this
      */

@@ -24,7 +24,7 @@ trait Checkbox
             return;
         }
 
-        collect($this->loadData()->items())->each(function ($model) {
+        collect($this->fillData()->items())->each(function ($model) {
             $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
         });
 

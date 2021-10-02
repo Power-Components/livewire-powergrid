@@ -1,14 +1,28 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
+use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 beforeEach(function () {
     $this->component = new PowerGridComponent;
-    $this->columns = [
-        'id',
-        'name'
-    ];
+    $this->columns   = [
+        Column::add()
+            ->title(__('ID'))
+            ->field('id')
+            ->searchable()
+            ->sortable(),
+
+        Column::add()
+            ->title(__('Name'))
+            ->field('name')
+            ->searchable()
+            ->editOnClick(true)
+            ->clickToCopy(true)
+            ->makeInputText('name')
+            ->sortable(),
+        ];
 });
 
 it('clean filters', function () {
@@ -181,4 +195,19 @@ it('properly filters by "name ends_with"', function () {
     expect($filtered)
         ->toBeInstanceOf(\Illuminate\Support\Collection::class)
         ->toHaveCount(1);
+});
+
+test('if a table lookup works', function () {
+
+    $search = 'Thales';
+
+    $filtered = Collection::query(testDataSource())
+        ->setColumns($this->columns)
+        ->setSearch($search)
+        ->setFilters([])
+        ->filterContains()
+        ->filter();
+
+    expect($filtered)->toHaveCount(1);
+    expect($filtered->first()->name)->toBe('Thales');
 });
