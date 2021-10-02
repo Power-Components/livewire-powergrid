@@ -133,7 +133,7 @@ class CreateCommand extends Command
                             ['created_at', 'updated_at']
                         );
 
-        $dataSource     = "";
+        $datasource     = "";
         $columns        = "[\n";
 
         foreach ($getFillable as $field) {
@@ -146,47 +146,47 @@ class CreateCommand extends Command
             $title = Str::of($field)->replace('_', ' ')->upper();
 
             if ($column->getType()->getName() === 'datetime') {
-                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'date') {
-                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'boolean') {
-                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
 
                 continue;
             }
 
             if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
-                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'string') {
-                $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                 $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
 
                 continue;
             }
 
-            $dataSource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+            $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
             $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
         }
 
         $columns .= "        ]\n";
 
-        $stub = str_replace('{{ dataSource }}', $dataSource, $stub);
+        $stub = str_replace('{{ datasource }}', $datasource, $stub);
 
         return str_replace('{{ columns }}', $columns, $stub);
     }

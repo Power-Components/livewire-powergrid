@@ -33,7 +33,7 @@ class {{ componentName }} extends PowerGridComponent
         return [];
     }
 
-    public function dataSource(): ?Builder
+    public function datasource(): ?Builder
     {
         return {{ modelLastName }}::query();
     }

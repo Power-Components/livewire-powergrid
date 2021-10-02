@@ -28,14 +28,14 @@ class {{ componentName }} extends PowerGridComponent
         return null;
     }
 
-    public function dataSource(): ?Builder
+    public function datasource(): ?Builder
     {
         return {{ modelLastName }}::query();
     }
 
     public function addColumns(): ?PowerGridEloquent
     {
-        return PowerGrid::eloquent(){{ dataSource }};
+        return PowerGrid::eloquent(){{ datasource }};
     }
 
     public function columns(): array

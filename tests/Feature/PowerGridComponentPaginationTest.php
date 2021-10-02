@@ -4,7 +4,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 it('properly paginates data', function () {
     $component = new PowerGridComponent(1);
-    $component->dataSource = testDataSource();
+    $component->datasource = testDatasource();
     $component->perPage    = 2;
 
     $pagination            = $component->fillData();

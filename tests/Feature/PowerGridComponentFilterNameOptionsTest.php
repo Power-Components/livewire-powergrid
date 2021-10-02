@@ -49,7 +49,7 @@ it('properly filters by "name is"', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -71,7 +71,7 @@ it('properly filters by "name is" when name is not present', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -93,7 +93,7 @@ it('properly filters by "name is not"', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -116,7 +116,7 @@ it('properly filters by "name is not" when name is not present', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -139,7 +139,7 @@ it('properly filters by "name contains"', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -162,7 +162,7 @@ it('properly filters by "name starts_with"', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -185,7 +185,7 @@ it('properly filters by "name ends_with"', function () {
         ]
     ];
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch('')
         ->setFilters($this->component->filters)
@@ -201,7 +201,7 @@ test('if a table lookup works', function () {
 
     $search = 'Thales';
 
-    $filtered = Collection::query(testDataSource())
+    $filtered = Collection::query(testDatasource())
         ->setColumns($this->columns)
         ->setSearch($search)
         ->setFilters([])

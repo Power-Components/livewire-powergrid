@@ -26,7 +26,7 @@ class {{ componentName }} extends PowerGridComponent
         return null;
     }
 
-    public function dataSource(): Collection
+    public function datasource(): Collection
     {
         return {{ modelLastName }}::query()->get();
     }

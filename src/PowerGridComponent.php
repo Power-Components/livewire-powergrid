@@ -48,7 +48,7 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
-    public $dataSource;
+    public $datasource;
 
     protected $listeners = [
         'eventChangeDatePiker'  => 'eventChangeDatePiker',
@@ -82,7 +82,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    protected function dataSource()
+    protected function datasource()
     {
         return null;
     }
@@ -157,7 +157,7 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-    public function mount($dataSource = null)
+    public function mount($datasource = null)
     {
         $this->setUp();
 
@@ -167,7 +167,7 @@ class PowerGridComponent extends Component
 
         $this->renderFilter();
 
-        $this->dataSource = $dataSource;
+        $this->datasource = $datasource;
     }
 
     public function render()
@@ -199,16 +199,16 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    private function resolveModel($dataSource = null)
+    private function resolveModel($datasource = null)
     {
-        if (blank($dataSource)) {
-            return $this->dataSource();
+        if (blank($datasource)) {
+            return $this->datasource();
         }
 
-        return $dataSource;
+        return $datasource;
     }
 
-    private function resolveCollection($dataSource = null, $cached = '')
+    private function resolveCollection($datasource = null, $cached = '')
     {
         if (filled($cached)) {
             cache()->forget($this->id);
@@ -219,18 +219,18 @@ class PowerGridComponent extends Component
         }
 
         if (!powerGridCache()) {
-            return new BaseCollection($this->dataSource()->make());
+            return new BaseCollection($this->datasource()->make());
         }
 
-        return cache()->rememberForever($this->id, function () use ($dataSource) {
-            if (is_array($dataSource)) {
-                return new BaseCollection($dataSource);
+        return cache()->rememberForever($this->id, function () use ($datasource) {
+            if (is_array($datasource)) {
+                return new BaseCollection($datasource);
             }
-            if (is_a($dataSource, BaseCollection::class)) {
-                return $dataSource;
+            if (is_a($datasource, BaseCollection::class)) {
+                return $datasource;
             }
 
-            return new BaseCollection($dataSource->make());
+            return new BaseCollection($datasource->make());
         });
     }
 
@@ -249,7 +249,7 @@ class PowerGridComponent extends Component
         }
         session()->flash('success', $this->updateMessages('success', data_get($data, 'field')));
 
-        if (!is_array($this->dataSource)) {
+        if (!is_array($this->datasource)) {
             return;
         }
 
@@ -295,15 +295,15 @@ class PowerGridComponent extends Component
     {
 
         if (cache()->has($this->id)) {
-            $dataSource = collect(cache()->get($this->id))->toArray();
+            $datasource = collect(cache()->get($this->id))->toArray();
         } else {
-            $dataSource = $this->dataSource() ?: $this->dataSource;
+            $datasource = $this->datasource() ?: $this->datasource;
         }
 
-        $this->instanceOfCollection($dataSource);
+        $this->instanceOfCollection($datasource);
 
         if ($this->isCollection) {
-            $filters = Collection::query($this->resolveCollection($dataSource))
+            $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
                 ->setSearch($this->search)
                 ->setFilters($this->filters)
@@ -322,7 +322,7 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        $results = $this->resolveModel($dataSource)
+        $results = $this->resolveModel($datasource)
             ->where(function ($query) {
                 Model::query($query)
                     ->setColumns($this->columns)
@@ -342,11 +342,11 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function instanceOfCollection($dataSource): void
+    private function instanceOfCollection($datasource): void
     {
-        $checkDatasource = (is_a($dataSource, PowerGrid::class)
-            || is_array($dataSource)
-            || is_a($dataSource, BaseCollection::class)
+        $checkDatasource = (is_a($datasource, PowerGrid::class)
+            || is_array($datasource)
+            || is_a($datasource, BaseCollection::class)
         );
         if ($checkDatasource) {
             $this->isCollection = true;

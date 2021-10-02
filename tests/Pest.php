@@ -7,7 +7,7 @@ use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
-function testDataSource(): Collection
+function testDatasource(): Collection
 {
     $johnSmith = new ModelStub([
         'id'   => '53',
