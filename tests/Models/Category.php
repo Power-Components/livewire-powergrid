@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Tests;
+namespace PowerComponents\LivewirePowerGrid\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class ParentStub extends Model
+class Category extends Model
 {
     protected $table = 'categories';
 
@@ -22,6 +22,6 @@ class ParentStub extends Model
 
     public function dishes()
     {
-        return $this->hasMany(ModelStub::class, "category_id");
+        return $this->hasMany(Dish::class, "category_id");
     }
 }

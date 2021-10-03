@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Tests;
+namespace PowerComponents\LivewirePowerGrid\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property ParentStub $category_id
+ * @property Category $category_id
  * @property string $name
  * @property float $price
  * @property int $calories
@@ -18,16 +18,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  * @property Carbon $produced_at
  *
- * @property-read ParentStub $parent
+ * @property-read Category $category
  */
-class ModelStub extends Model
+class Dish extends Model
 {
     protected $guarded = [];
 
     protected $table = 'dishes';
 
-    public function parent(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(ParentStub::class, 'category_id', 'id');
+        return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 }

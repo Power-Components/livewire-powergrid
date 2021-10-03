@@ -4,8 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Collection;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Tests\ModelStub;
-use PowerComponents\LivewirePowerGrid\Tests\ParentStub;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 class PowerGridTest extends TestCase
@@ -14,7 +14,7 @@ class PowerGridTest extends TestCase
     public function it_infers_a_models_attribute()
     {
         $collection = new Collection([
-            new ModelStub([
+            new Dish([
                 'id'   => '1',
                 'name' => 'Mateus'
             ])
@@ -35,12 +35,12 @@ class PowerGridTest extends TestCase
     /** @test */
     public function it_returns_relationships_properly()
     {
-        $stub = new ModelStub([
+        $stub = new Dish([
             'id'   => '1',
             'name' => 'Mateus'
         ]);
 
-        $stub->setRelation('parent', new ParentStub(['name' => 'Parent']));
+        $stub->setRelation('parent', new Category(['name' => 'Parent']));
 
         $collection = new Collection([$stub]);
 

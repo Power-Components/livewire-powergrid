@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
 class DishesTable extends PowerGridComponent
@@ -29,7 +30,7 @@ class DishesTable extends PowerGridComponent
 
     public function datasource(): ?Builder
     {
-        return ModelStub::with('parent');
+        return Dish::with('category');
     }
 
     public function relationSearch(): array
@@ -47,31 +48,31 @@ class DishesTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('calories')
-            ->addColumn('calories', function (ModelStub $dish) {
+            ->addColumn('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
             })
-            ->addColumn('category_id', function (ModelStub $dish) {
+            ->addColumn('category_id', function (Dish $dish) {
                 return $dish->category_id;
             })
-            ->addColumn('category_name', function (ModelStub $dish) {
-                return $dish->parent->name;
+            ->addColumn('category_name', function (Dish $dish) {
+                return $dish->category->name;
             })
             ->addColumn('price')
-            ->addColumn('price_BRL', function (ModelStub $dish) {
+            ->addColumn('price_BRL', function (Dish $dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
             ->addColumn('sales_price')
-            ->addColumn('sales_price_BRL', function (ModelStub $dish) {
+            ->addColumn('sales_price_BRL', function (Dish $dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
                 return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
             })
             ->addColumn('in_stock')
-            ->addColumn('in_stock_label', function (ModelStub $dish) {
+            ->addColumn('in_stock_label', function (Dish $dish) {
                 return ($dish->in_stock ? "sim" : "não");
             })
             ->addColumn('produced_at')
-            ->addColumn('produced_at_formatted', function (ModelStub $dish) {
+            ->addColumn('produced_at_formatted', function (Dish $dish) {
                 return Carbon::parse($dish->produced_at)->format('d/m/Y');
             });
     }
@@ -101,7 +102,7 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Categoria'))
                 ->field('category_name')
                 ->placeholder('Categoria placeholder')
-                ->makeInputMultiSelect(ParentStub::all(), 'name', 'category_id'),
+                ->makeInputMultiSelect(Category::all(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
@@ -143,7 +144,7 @@ class DishesTable extends PowerGridComponent
         }
 
         try {
-            $updated = ModelStub::query()->find($data['id'])->update([
+            $updated = Dish::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
             ]);
         } catch (QueryException $exception) {
