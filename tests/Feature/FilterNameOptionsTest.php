@@ -75,3 +75,17 @@ it('properly filters by "name ends with" using nonexistent record')
     ->assertDontSeeHtml('Francesinha')
     ->assertDontSeeHtml('Francesinha vegana')
     ->assertDontSeeHtml('Barco-Sushi da Sueli');
+
+//Helper
+
+function filterInputText(string $text, string $type): array
+{
+    return [
+        "input_text" => [
+            "name" => $text
+        ],
+        "input_text_options" => [
+            "name" => $type
+        ]
+    ];
+}
