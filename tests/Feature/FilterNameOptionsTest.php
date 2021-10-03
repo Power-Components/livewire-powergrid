@@ -1,116 +1,91 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-use function Pest\Livewire\livewire;
+it('properly filters by "name is"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Francesinha', 'is'))
+    ->assertSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana');
 
-beforeEach(function () {
-    $this->columns         = [
-        Column::add()
-            ->title('Id')
-            ->field('id')
-            ->searchable()
-            ->sortable(),
+it('properly filters by "name is" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent dish', 'is'))
+    ->assertDontSeeHtml('Francesinha');
 
-        Column::add()
-            ->title('Name')
-            ->field('name')
-            ->searchable()
-            ->editOnClick(true)
-            ->clickToCopy(true)
-            ->makeInputText('name')
-            ->sortable(),
-        ];
+it('properly filters by "name is not"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Francesinha vegana', 'is_not'))
+    ->assertSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana');
 
-    $component = new PowerGridComponent(1);
-    $component->datasource = Dish::query();
-    $component->columns    = $this->columns;
-    $component->perPage    = 10;
+it('properly filters by "name is not" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent dish', 'is_not'))
+    ->assertSeeHtml('Francesinha')
+    ->assertSeeHtml('Francesinha vegana');
 
-    $this->component       = $component;
-});
+it('properly filters by "name contains"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('francesinha', 'contains'))
+    ->assertSeeHtml('Francesinha')
+    ->assertSeeHtml('Francesinha vegana');
 
-it('properly filters by "name is"', function () {
-    $component = livewire(DishesTable::class);
-    $component->set('filters', filterInputText('Peixada da chef Nábia', 'is'));
-    $component->assertSeeHtml('Peixada da chef Nábia');
-});
+it('properly filters by "name contains" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent dish', 'contains'))
+    ->assertDontSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana');
 
-it('properly filters by "name is" when name is not present', function () {
-    $component = livewire(DishesTable::class);
-    $component->set('filters', filterInputText('Peixada do João', 'is'));
-    $component->assertDontSeeText('Peixada do João');
-});
+it('properly filters by "name contains not"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('francesinha', 'contains_not'))
+    ->assertDontSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana');
 
-it('properly filters by "name is not"', function () {
-    $this->component->filters = filterInputText('Peixada da chef Nábia', 'is_not');
-    $pagination               = $this->component->fillData();
+it('properly filters by "name contains not" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent dish', 'contains_not'))
+    ->assertSeeHtml('Francesinha')
+    ->assertSeeHtml('Francesinha vegana');
 
-    expect($pagination->total())->toBe(101);
-});
+it('properly filters by "name starts with"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('fran', 'starts_with'))
+    ->assertSeeHtml('Francesinha')
+    ->assertSeeHtml('Francesinha vegana')
+    ->assertDontSeeHtml('Barco-Sushi da Sueli');
 
-it('properly filters by "name is not" when name is not present', function () {
-    $this->component->filters = filterInputText('Peixada do João', 'is_not');
-    $pagination               = $this->component->fillData();
+it('properly filters by "name starts with" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent', 'starts_with'))
+    ->assertDontSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana')
+    ->assertDontSeeHtml('Barco-Sushi da Sueli');
 
-    expect($pagination->total())->toBe(102);
-});
+it('properly filters by "name ends with"')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('vegana', 'ends_with'))
+    ->assertSeeHtml('Francesinha vegana')
+    ->assertDontSeeHtml('Barco-Sushi da Sueli');
 
-it('properly filters by "name contains"', function () {
-    $this->component->filters = filterInputText('Tomates', 'contains');
-    $pagination               = $this->component->fillData();
+it('properly filters by "name ends with" using nonexistent record')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterInputText('Nonexistent', 'ends_with'))
+    ->assertDontSeeHtml('Francesinha')
+    ->assertDontSeeHtml('Francesinha vegana')
+    ->assertDontSeeHtml('Barco-Sushi da Sueli');
 
-    expect($pagination->items())
-        ->toHaveCount(1);
+//Helper
 
-    expect($pagination->first()->name)
-        ->toContain('Sopa de Tomates Assados');
-});
-
-
-it('properly filters by "name contains" when name is not present', function () {
-    $this->component->filters = filterInputText('Luan', 'contains');
-    $pagination               = $this->component->fillData();
-
-    expect($pagination->total())->toBe(0);
-});
-
-it('properly filters by "name starts_with"', function () {
-    $this->component->filters = filterInputText('Sopa', 'starts_with');
-    $pagination               = $this->component->fillData();
-
-    expect($pagination->items())->toHaveCount(2);
-
-    expect($pagination->first()->name)
-        ->toContain('Tomates Assados');
-});
-
-it('properly filters by "name starts_with" when name is not present', function () {
-    $this->component->filters = filterInputText('mamão', 'starts_with');
-    $pagination               = $this->component->fillData();
-
-    expect($pagination->items())->toHaveCount(0);
-});
-
-it('properly filters by "name ends_with"', function () {
-    $this->component->filters = filterInputText('Assados', 'ends_with');
-    $pagination               = $this->component->fillData();
-
-    expect($pagination->items())
-        ->toHaveCount(1);
-
-    expect($pagination->first()->name)
-        ->toContain('Sopa de Tomates');
-});
-
-
-it('properly filters by "name ends_with" when name is not present', function () {
-    $this->component->filters = filterInputText('Panqueca', 'ends_with');
-    $pagination               = $this->component->fillData();
-
-    expect($pagination->items())->toHaveCount(0);
-});
-
+function filterInputText(string $text, string $type): array
+{
+    return [
+        "input_text" => [
+            "name" => $text
+        ],
+        "input_text_options" => [
+            "name" => $type
+        ]
+    ];
+}
