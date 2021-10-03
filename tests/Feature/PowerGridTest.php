@@ -16,7 +16,7 @@ class PowerGridTest extends TestCase
         $collection = new Collection([
             new Dish([
                 'id'   => '1',
-                'name' => 'Mateus'
+                'name' => 'Bolo'
             ])
         ]);
 
@@ -27,7 +27,7 @@ class PowerGridTest extends TestCase
         $this->assertEquals([
             (object)[
                 'id'   => 1,
-                'name' => 'Mateus'
+                'name' => 'Bolo'
             ]
         ], $grid->make());
     }
@@ -37,7 +37,7 @@ class PowerGridTest extends TestCase
     {
         $stub = new Dish([
             'id'   => '1',
-            'name' => 'Mateus'
+            'name' => 'Bolo'
         ]);
 
         $stub->setRelation('parent', new Category(['name' => 'Parent']));
@@ -52,7 +52,7 @@ class PowerGridTest extends TestCase
         $this->assertEquals([
             (object)[
                 'id'                => 1,
-                'name'              => 'Mateus',
+                'name'              => 'Bolo',
                 'my_arbitrary_name' => 'Parent'
             ]
         ], $grid->make());
