@@ -55,16 +55,16 @@ class TestCase extends BaseTestCase
         ]);
 
         $dishes = [
-            ['name' => 'Pastel de Nata', 'category_id' => 6],
-            ['name' => 'Peixada da chef Nábia', 'category_id' => 1],
-            ['name' => 'Carne Louca', 'category_id' => 1],
-            ['name' => 'Bife à Rolê', 'category_id' => 1],
-            ['name' => 'Francesinha vegana', 'category_id' => 2],
-            ['name' => 'Francesinha', 'category_id' => 1],
-            ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1],
-            ['name' => 'Barco-Sushi Simples', 'category_id' => 1],
-            ['name' => 'Polpetone Filé Mignon', 'category_id' => 1],
-            ['name' => 'борщ', 'category_id' => 7],
+            ['name' => 'Pastel de Nata', 'category_id' => 6, 'price' => 10.00],
+            ['name' => 'Peixada da chef Nábia', 'category_id' => 1, 'price' => 20.50],
+            ['name' => 'Carne Louca', 'category_id' => 1, 'price' => 30.00],
+            ['name' => 'Bife à Rolê', 'category_id' => 1, 'price' => 40.50],
+            ['name' => 'Francesinha vegana', 'category_id' => 2,'price' => 50.00],
+            ['name' => 'Francesinha', 'category_id' => 1, 'price' => 60.50],
+            ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1, 'price' => 70.00],
+            ['name' => 'Barco-Sushi Simples', 'category_id' => 1, 'price' => 80.40],
+            ['name' => 'Polpetone Filé Mignon', 'category_id' => 1, 'price' => 90.10],
+            ['name' => 'борщ', 'category_id' => 7, 'price' => 100.90],
             ['name' => 'Bife à Parmegiana', 'category_id' => 1],
             ['name' => 'Berinjela à Parmegiana', 'category_id' => 4],
             ['name' => 'Almôndegas ao Sugo', 'category_id' => 1],
@@ -162,10 +162,12 @@ class TestCase extends BaseTestCase
         $faker = faker();
 
         foreach ($dishes as $dish) {
+            $price = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
+
             $dish = [
                 'name' => $dish['name'],
                 'category_id' => $dish['category_id'],
-                'price' => $faker->randomFloat(2, 50, 200),
+                'price' =>  $price,
                 'calories' => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
                 'in_stock' => $faker->boolean(),
                 'produced_at' => $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d")

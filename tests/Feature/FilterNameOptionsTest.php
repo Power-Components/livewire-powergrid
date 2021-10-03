@@ -11,6 +11,7 @@ it('properly filters by "name is"')
 it('properly filters by "name is" using nonexistent record')
     ->livewire(DishesTable::class)
     ->set('filters', filterInputText('Nonexistent dish', 'is'))
+    ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Francesinha');
 
 it('properly filters by "name is not"')
@@ -34,6 +35,7 @@ it('properly filters by "name contains"')
 it('properly filters by "name contains" using nonexistent record')
     ->livewire(DishesTable::class)
     ->set('filters', filterInputText('Nonexistent dish', 'contains'))
+    ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Francesinha')
     ->assertDontSeeHtml('Francesinha vegana');
 
@@ -59,6 +61,7 @@ it('properly filters by "name starts with"')
 it('properly filters by "name starts with" using nonexistent record')
     ->livewire(DishesTable::class)
     ->set('filters', filterInputText('Nonexistent', 'starts_with'))
+    ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Francesinha')
     ->assertDontSeeHtml('Francesinha vegana')
     ->assertDontSeeHtml('Barco-Sushi da Sueli');
@@ -72,6 +75,7 @@ it('properly filters by "name ends with"')
 it('properly filters by "name ends with" using nonexistent record')
     ->livewire(DishesTable::class)
     ->set('filters', filterInputText('Nonexistent', 'ends_with'))
+    ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Francesinha')
     ->assertDontSeeHtml('Francesinha vegana')
     ->assertDontSeeHtml('Barco-Sushi da Sueli');
