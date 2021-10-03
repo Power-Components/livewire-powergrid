@@ -2,16 +2,16 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-it('properly displayes "full" showRecordCount')
+it('properly displays "full" showRecordCount')
     ->livewire(DishesTable::class)
     ->assertSeeTextInOrder(['Showing', '1','to', '10', 'of', '102', 'Results']);
 
-it('properly displayes "short" showRecordCount')
+it('properly displays "short" showRecordCount')
     ->livewire(DishesTable::class)
     ->set('recordCount', 'short')
     ->assertSeeTextInOrder(['1', '-','10','|', '102']);
 
-it('properly displayes "min" showRecordCount')
+it('properly displays "min" showRecordCount')
     ->livewire(DishesTable::class)
     ->set('recordCount', 'min')
     ->assertSeeTextInOrder(['1', '10']);
