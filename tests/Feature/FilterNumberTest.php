@@ -25,6 +25,15 @@ it('properly filters by "min & max"')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertDontSeeHtml('Carne Louca');
 
+it('properly filters by "min & max" currency')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterNumber('price', min: 60.49, max: 100))
+    ->assertSeeHtml('Francesinha')
+    ->assertSeeHtml('Barco-Sushi da Sueli')
+    ->assertSeeHtml('Barco-Sushi Simples')
+    ->assertSeeHtml('Polpetone Filé Mignon')
+    ->assertDontSeeHtml('борщ');
+
 it('ignores null "min & max"')
     ->livewire(DishesTable::class)
     ->set('filters', filterNumber('id', min: null, max: null))
