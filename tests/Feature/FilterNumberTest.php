@@ -32,6 +32,13 @@ it('ignores null "min & max"')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertSeeHtml('борщ');
 
+it('displays "No records found" with non-existent min')
+    ->livewire(DishesTable::class)
+    ->set('filters', filterNumber('id', min: 1000000, max: null))
+    ->assertSeeHtml('No records found')
+    ->assertDontSeeHtml('Pastel de Nata');
+
+
 //Helper
 function filterNumber(string $field, ?int $min, ?int $max): array
 {
