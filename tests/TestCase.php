@@ -59,7 +59,7 @@ class TestCase extends BaseTestCase
             ['name' => 'Peixada da chef Nábia', 'category_id' => 1],
             ['name' => 'Carne Louca', 'category_id' => 1],
             ['name' => 'Bife à Rolê', 'category_id' => 1],
-            ['name' => 'Salmão a Fiorentina', 'category_id' => 2],
+            ['name' => 'Francesinha vegana', 'category_id' => 2],
             ['name' => 'Francesinha', 'category_id' => 1],
             ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1],
             ['name' => 'Barco-Sushi Simples', 'category_id' => 1],
