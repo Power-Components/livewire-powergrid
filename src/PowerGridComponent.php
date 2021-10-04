@@ -293,7 +293,6 @@ class PowerGridComponent extends Component
 
     public function fillData()
     {
-
         if (cache()->has($this->id)) {
             $datasource = collect(cache()->get($this->id))->toArray();
         } else {

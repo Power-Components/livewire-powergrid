@@ -146,6 +146,4 @@ class Button
 
         return $this;
     }
-
-
 }

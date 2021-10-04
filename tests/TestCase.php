@@ -2,15 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use Illuminate\Support\Facades\DB;
-use Livewire\LivewireServiceProvider;
-use Illuminate\Support\Facades\Schema;
+use \Orchestra\Testbench\TestCase as BaseTestCase;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
-use \Orchestra\Testbench\TestCase as BaseTestCase;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Livewire\LivewireServiceProvider;
 use function Pest\Faker\faker;
+
+use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -42,6 +42,7 @@ class TestCase extends BaseTestCase
             $table->timestamps();
         });
     }
+
     protected function seeders()
     {
         DB::table('categories')->insert([
@@ -55,16 +56,75 @@ class TestCase extends BaseTestCase
         ]);
 
         $dishes = [
-            ['name' => 'Pastel de Nata', 'category_id' => 6, 'price' => 10.00, 'in_stock' => true, 'produced_at' => '2021-01-01'],
-            ['name' => 'Peixada da chef Nábia', 'category_id' => 1, 'price' => 20.50, 'in_stock' => true, 'produced_at' => '2021-02-02'],
-            ['name' => 'Carne Louca', 'category_id' => 1, 'price' => 30.00, 'in_stock' => true, 'produced_at' => '2021-03-03'],
-            ['name' => 'Bife à Rolê', 'category_id' => 1, 'price' => 40.50, 'in_stock' => true, 'produced_at' => '2021-04-04'],
-            ['name' => 'Francesinha vegana', 'category_id' => 2,'price' => 50.00, 'in_stock' => true, 'produced_at' => '2021-05-05'],
-            ['name' => 'Francesinha', 'category_id' => 1, 'price' => 60.50, 'in_stock' => false, 'produced_at' => '2026-06-06'],
-            ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1, 'price' => 70.00, 'in_stock' => false, 'produced_at' => '2021-07-07'],
-            ['name' => 'Barco-Sushi Simples', 'category_id' => 1, 'price' => 80.40, 'in_stock' => false, 'produced_at' => '2021-08-08'],
-            ['name' => 'Polpetone Filé Mignon', 'category_id' => 1, 'price' => 90.10, 'in_stock' => false, 'produced_at' => '2021-09-09'],
-            ['name' => 'борщ', 'category_id' => 7, 'price' => 100.90, 'in_stock' => false, 'produced_at' => '2021-10-10'],
+            [
+                'name'        => 'Pastel de Nata',
+                'category_id' => 6,
+                'price'       => 10.00,
+                'in_stock'    => true,
+                'produced_at' => '2021-01-01'
+            ],
+            [
+                'name'        => 'Peixada da chef Nábia',
+                'category_id' => 1,
+                'price'       => 20.50,
+
+                'in_stock'    => true,
+                'produced_at' => '2021-02-02'
+            ],
+            [
+                'name'        => 'Carne Louca',
+                'category_id' => 1,
+                'price'       => 30.00,
+                'in_stock'    => true,
+                'produced_at' => '2021-03-03'
+            ],
+            [
+                'name'        => 'Bife à Rolê',
+                'category_id' => 1,
+                'price'       => 40.50,
+                'in_stock'    => true, 'produced_at' => '2021-04-04'],
+            [
+                'name'        => 'Francesinha vegana',
+                'category_id' => 2,
+                'price'       => 50.00,
+                'in_stock'    => true,
+                'produced_at' => '2021-05-05'
+            ],
+            [
+                'name'        => 'Francesinha',
+                'category_id' => 1,
+                'price'       => 60.50,
+                'in_stock'    => false,
+                'produced_at' => '2026-06-06'
+            ],
+            [
+                'name'        => 'Barco-Sushi da Sueli',
+                'category_id' => 1,
+                'price'       => 70.00,
+                'in_stock'    => false,
+                'produced_at' => '2021-07-07'
+            ],
+            [
+                'name'        => 'Barco-Sushi Simples',
+                'category_id' => 1,
+                'price'       => 80.40,
+                'in_stock'    => false,
+                'produced_at' => '2021-08-08'
+            ],
+            [
+                'name'        => 'Polpetone Filé Mignon',
+                'category_id' => 1,
+                'price'       => 90.10,
+                'in_stock'    => false,
+                'produced_at' => '2021-09-09'
+            ],
+            [
+                'name'        => 'борщ',
+                'category_id' => 7,
+                'price'       => 100.90,
+                'in_stock'    => false,
+                'produced_at' => '2021-10-10'
+            ],
             ['name' => 'Bife à Parmegiana', 'category_id' => 1],
             ['name' => 'Berinjela à Parmegiana', 'category_id' => 4],
             ['name' => 'Almôndegas ao Sugo', 'category_id' => 1],
@@ -162,19 +222,19 @@ class TestCase extends BaseTestCase
         $faker = faker();
 
         foreach ($dishes as $dish) {
-            $price = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
-            $in_stock = (!isset($dish['in_stock']) ? $faker->boolean() : $dish['in_stock']);
+            $price       = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
+            $in_stock    = (!isset($dish['in_stock']) ? $faker->boolean() : $dish['in_stock']);
             $produced_at = (empty($dish['produced_at']) ? $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d") : $dish['produced_at']);
 
             $dish = [
-                'name' => $dish['name'],
+                'name'        => $dish['name'],
                 'category_id' => $dish['category_id'],
-                'price' =>  $price,
-                'calories' => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
-                'in_stock' => $in_stock,
+                'price'       => $price,
+                'calories'    => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
+                'in_stock'    => $in_stock,
                 'produced_at' => $produced_at
             ];
-    
+
             DB::table('dishes')->insert($dish);
         }
     }
@@ -190,9 +250,9 @@ class TestCase extends BaseTestCase
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
         $app['config']->set('database.connections.testbench', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
     }
 

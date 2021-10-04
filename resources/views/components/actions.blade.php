@@ -15,13 +15,13 @@
                         }
                     @endphp
                     @if($action->event !== '')
-                        <a wire:click='$emit("{{ $action->event }}", @json($action->param))'
+                        <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
                            target="{{ $action->target }}"
                            class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
                         </a>
                     @elseif($action->view !== '')
-                        <a wire:click='$emit("openModal", "{{$action->view}}", @json($action->param))'
+                        <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
                                 target="{{ $action->target }}"
                                 class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
@@ -55,13 +55,13 @@
                 @endphp
 
                 @if($action->event !== '')
-                    <a wire:click='$emit("{{ $action->event }}", @json($action->param))'
+                    <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
                        target="{{ $action->target }}"
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}
                     </a>
                 @elseif($action->view !== '')
-                    <a wire:click='$emit("openModal", "{{$action->view}}", @json($action->param))'
+                    <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
                        target="{{ $action->target }}"
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}

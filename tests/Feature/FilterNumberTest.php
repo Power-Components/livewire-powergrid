@@ -9,7 +9,7 @@ it('properly filters by "min"')
     ->assertSeeHtml('Francesinha')
     ->assertSeeHtml('борщ')
     ->assertDontSeeHtml('Pastel de Nata');
-   
+
 it('properly filters by "max"')
     ->livewire(DishesTable::class)
     ->set('filters', filterNumber('id', min: null, max: '3', thousands: '', decimal: ''))
@@ -53,17 +53,16 @@ it('properly filters by "min & max" formatted')
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertDontSeeHtml('Carne Louca');
-    
-//Helper
+
 function filterNumber(string $field, ?string $min, ?string $max, ?string $thousands, ?string $decimal): array
 {
     return [
         'number' => [
-            $field =>  [
-                'start' => $min,
-                'end' => $max,
+            $field => [
+                'start'     => $min,
+                'end'       => $max,
                 'thousands' => $thousands,
-                'decimal' => $decimal
+                'decimal'   => $decimal
             ]
         ]
     ];

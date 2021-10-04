@@ -19,15 +19,14 @@ it('it infers a models attribute', function () {
         ->make();
 
     expect($grid)->toHaveCount(1)
-        ->and($grid[0])->toMatchObject([ 'id'   => 1, 'name' => 'Bolo' ]);
+        ->and($grid[0])->toMatchObject(['id'   => 1, 'name' => 'Bolo']);
 });
-
 
 it('returns relationships properly', function () {
     $stub = new Dish([
-            'id'   => '1',
-            'name' => 'Bolo'
-        ]);
+        'id'   => '1',
+        'name' => 'Bolo'
+    ]);
 
     $stub->setRelation('parent', new Category(['name' => 'Parent']));
 
@@ -39,7 +38,6 @@ it('returns relationships properly', function () {
         ->addColumn('my_arbitrary_name', fn ($model) => $model->parent->name)
         ->make();
 
-
     expect($grid)->toHaveCount(1)
-        ->and($grid[0])->toMatchObject([ 'id'   => 1, 'name' => 'Bolo', 'my_arbitrary_name' => 'Parent' ]);
+        ->and($grid[0])->toMatchObject(['id'   => 1, 'name' => 'Bolo', 'my_arbitrary_name' => 'Parent']);
 });

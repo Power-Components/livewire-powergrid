@@ -44,8 +44,6 @@ it('properly filters by bool "all"')
     ->assertSeeHtml('Barco-Sushi Simples')
     ->assertSeeHtml('Polpetone Filé Mignon')
     ->assertSeeHtml('борщ');
-    
-//Helper
 
 function filterBoolean(string $field, ?string $value): array
 {

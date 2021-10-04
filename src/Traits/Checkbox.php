@@ -21,6 +21,7 @@ trait Checkbox
     {
         if (!$this->checkboxAll) {
             $this->checkboxValues = [];
+
             return;
         }
 
@@ -31,5 +32,4 @@ trait Checkbox
         $this->checkboxAll = false;
     }
 }
-
 

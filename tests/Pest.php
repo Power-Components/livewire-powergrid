@@ -6,7 +6,6 @@ use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
-
 function powergrid()
 {
     $columns = [
@@ -24,12 +23,12 @@ function powergrid()
             ->clickToCopy(true)
             ->makeInputText('name')
             ->sortable(),
-        ];
+    ];
 
-    $component = new PowerGridComponent(1);
+    $component             = new PowerGridComponent(1);
     $component->datasource = Dish::query();
-    $component->columns = $columns;
-    $component->perPage = 10;
+    $component->columns    = $columns;
+    $component->perPage    = 10;
 
     return $component;
 }
@@ -58,7 +57,7 @@ function powergridJoinCategory()
             ->sortable(),
     ];
 
-    $component = new PowerGridComponent(1);
+    $component             = new PowerGridComponent(1);
     $component->datasource = Dish::query()->join('categories', function($categories) {
         $categories->on('dishes.category_id', '=', 'categories.id');
     })->select('dishes.*', 'categories.name as category_name');
