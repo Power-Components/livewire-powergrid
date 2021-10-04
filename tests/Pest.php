@@ -33,3 +33,37 @@ function powergrid()
 
     return $component;
 }
+
+function powergridJoinCategory()
+{
+    $columns = [
+        Column::add()
+            ->title('Id')
+            ->field('id')
+            ->searchable()
+            ->sortable(),
+
+        Column::add()
+            ->title('Name')
+            ->field('name')
+            ->searchable()
+            ->editOnClick(true)
+            ->clickToCopy(true)
+            ->makeInputText('name')
+            ->sortable(),
+
+        Column::add()
+            ->title('Name')
+            ->field('category_name')
+            ->sortable(),
+    ];
+
+    $component = new PowerGridComponent(1);
+    $component->datasource = Dish::query()->join('categories', function($categories) {
+        $categories->on('dishes.category_id', '=', 'categories.id');
+    })->select('dishes.*', 'categories.name as category_name');
+    $component->columns = $columns;
+    $component->perPage = 10;
+
+    return $component;
+}

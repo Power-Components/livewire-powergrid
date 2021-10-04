@@ -8,7 +8,12 @@
         <div class="sm:flex sm:flex-row">
             @foreach($actions as $action)
                 <div class="sm:mr-2 mb-2 w-auto">
-
+                    @php
+                        $parameters = [];
+                        foreach ($action->param as $param => $value) {
+                           $parameters[$param] = $row->{$value};
+                        }
+                    @endphp
                     @if($action->event !== '')
                         <a wire:click='$emit("{{ $action->event }}", @json($action->param))'
                            target="{{ $action->target }}"
