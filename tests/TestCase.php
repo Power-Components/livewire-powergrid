@@ -55,16 +55,16 @@ class TestCase extends BaseTestCase
         ]);
 
         $dishes = [
-            ['name' => 'Pastel de Nata', 'category_id' => 6, 'price' => 10.00],
-            ['name' => 'Peixada da chef Nábia', 'category_id' => 1, 'price' => 20.50],
-            ['name' => 'Carne Louca', 'category_id' => 1, 'price' => 30.00],
-            ['name' => 'Bife à Rolê', 'category_id' => 1, 'price' => 40.50],
-            ['name' => 'Francesinha vegana', 'category_id' => 2,'price' => 50.00],
-            ['name' => 'Francesinha', 'category_id' => 1, 'price' => 60.50],
-            ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1, 'price' => 70.00],
-            ['name' => 'Barco-Sushi Simples', 'category_id' => 1, 'price' => 80.40],
-            ['name' => 'Polpetone Filé Mignon', 'category_id' => 1, 'price' => 90.10],
-            ['name' => 'борщ', 'category_id' => 7, 'price' => 100.90],
+            ['name' => 'Pastel de Nata', 'category_id' => 6, 'price' => 10.00, 'in_stock' => true, 'produced_at' => '2021-01-01'],
+            ['name' => 'Peixada da chef Nábia', 'category_id' => 1, 'price' => 20.50, 'in_stock' => true, 'produced_at' => '2021-02-02'],
+            ['name' => 'Carne Louca', 'category_id' => 1, 'price' => 30.00, 'in_stock' => true, 'produced_at' => '2021-03-03'],
+            ['name' => 'Bife à Rolê', 'category_id' => 1, 'price' => 40.50, 'in_stock' => true, 'produced_at' => '2021-04-04'],
+            ['name' => 'Francesinha vegana', 'category_id' => 2,'price' => 50.00, 'in_stock' => true, 'produced_at' => '2021-05-05'],
+            ['name' => 'Francesinha', 'category_id' => 1, 'price' => 60.50, 'in_stock' => false, 'produced_at' => '2026-07-07'],
+            ['name' => 'Barco-Sushi da Sueli', 'category_id' => 1, 'price' => 70.00, 'in_stock' => false, 'produced_at' => '2021-08-08'],
+            ['name' => 'Barco-Sushi Simples', 'category_id' => 1, 'price' => 80.40, 'in_stock' => false, 'produced_at' => '2021-09-09'],
+            ['name' => 'Polpetone Filé Mignon', 'category_id' => 1, 'price' => 90.10, 'in_stock' => false, 'produced_at' => '2021-10-10'],
+            ['name' => 'борщ', 'category_id' => 7, 'price' => 100.90, 'in_stock' => false, 'produced_at' => '2021-01-01'],
             ['name' => 'Bife à Parmegiana', 'category_id' => 1],
             ['name' => 'Berinjela à Parmegiana', 'category_id' => 4],
             ['name' => 'Almôndegas ao Sugo', 'category_id' => 1],
@@ -163,15 +163,18 @@ class TestCase extends BaseTestCase
 
         foreach ($dishes as $dish) {
             $price = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
+            $in_stock = (!isset($dish['in_stock']) ? $faker->boolean() : $dish['in_stock']);
+            $produced_at = (empty($dish['produced_at']) ? $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d") : $dish['produced_at']);
 
             $dish = [
                 'name' => $dish['name'],
                 'category_id' => $dish['category_id'],
                 'price' =>  $price,
                 'calories' => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
-                'in_stock' => $faker->boolean(),
-                'produced_at' => $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d")
+                'in_stock' => $in_stock,
+                'produced_at' => $produced_at
             ];
+    
             DB::table('dishes')->insert($dish);
         }
     }

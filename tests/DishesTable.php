@@ -3,16 +3,17 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
+use NumberFormatter;
 use Illuminate\Support\Str;
+use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
 
 class DishesTable extends PowerGridComponent
 {
@@ -44,6 +45,8 @@ class DishesTable extends PowerGridComponent
 
     public function addColumns(): ?PowerGridEloquent
     {
+        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
+
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
@@ -58,6 +61,9 @@ class DishesTable extends PowerGridComponent
                 return $dish->category->name;
             })
             ->addColumn('price')
+            ->addColumn('price_EUR', function (Dish $dish) use ($fmt) {
+                return $fmt->formatCurrency($dish->price, "EUR");
+            })
             ->addColumn('price_BRL', function (Dish $dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
