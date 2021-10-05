@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-it('sorts by "name"')
+it('sorts by "name" and then by "id')
     ->livewire(DishesTable::class)
     ->assertSeeHtml('Pastel de Nata')
     ->call('sortBy', 'name')
