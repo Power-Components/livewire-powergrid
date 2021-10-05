@@ -21,6 +21,20 @@ it('properly changes records per page')
     ->set('perPage', '25')
     ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results']);
 
+it('navigates when click on "page #2"')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('Pastel de Nata')
+    ->call('gotoPage', '2')
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->assertDontSeeHtml('Pastel de Nata');
+
+it('navigates when click on "next page"')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('Pastel de Nata')
+    ->call('nextPage')
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->assertDontSeeHtml('Pastel de Nata');
+
 it('properly paginates', function () {
     $component = powergrid();
     $component->perPage = 5;
