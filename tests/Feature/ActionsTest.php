@@ -2,8 +2,6 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-use function Pest\Livewire\livewire;
-
 it('properly displays "openModal" on edit button')
     ->livewire(DishesTable::class)
     ->set('perPage', 5)
@@ -23,7 +21,7 @@ it('properly displays "deletedEvent" on delete button')
     ->assertPayloadNotSet('eventId', ['dishId' => 1])
     ->call('deletedEvent', ['dishId' => 1])
     ->assertPayloadSet('eventId', ['dishId' => 1])
-    
+
     //page 2
     ->call('setPage', 2)
     ->assertSeeHtml('$emit("deletedEvent", {"dishId":6})')

@@ -11,7 +11,6 @@ it('sorts by "name" and then by "id"')
     ->call('sortBy', 'id')
     ->assertSeeHtml('Pastel de Nata');
 
-
 it("searches data")
     ->livewire(DishesTable::class)
     ->assertSeeHtml('Pastel de Nata')
