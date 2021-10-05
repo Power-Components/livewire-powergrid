@@ -19,7 +19,55 @@ it('properly displays "min" showRecordCount')
 it('properly changes records per page')
     ->livewire(DishesTable::class)
     ->set('perPage', '25')
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results']);
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results'])
+    //All items
+    ->set('perPage', '0')
+    ->assertSeeHtml('Sopa Creme de Ervilha')
+    ->assertSeeHtml('Pastel de Nata');
+
+it('navigates when click on "page #2"')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('Pastel de Nata')
+    ->call('gotoPage', '2')
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->assertDontSeeHtml('Pastel de Nata');
+
+it('navigates when click on "next page"')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('Pastel de Nata')
+    ->call('nextPage')
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->assertDontSeeHtml('Pastel de Nata');
+
+it('displays ">" and ">>')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('wire:click="nextPage"')
+
+    //page #2
+    ->call('gotoPage', '2')
+    ->assertSeeHtml('wire:click="nextPage"')
+
+    //Last page
+    ->call('gotoPage', '11')
+    ->assertDontSeeHtml('wire:click="nextPage"');
+
+it('displays "<" and "<<')
+->skip('@TODO verify controls not showing')
+    ->livewire(DishesTable::class)
+    ->assertDontSeeHtml('wire:click="previousPage"')
+
+    //page #2
+    ->call('gotoPage', '2')
+    ->assertSeeHtml('wire:click="previousPage"')
+
+    //Last page
+    ->call('gotoPage', '11')
+    ->assertSeeHtml('wire:click="previousPage"')
+
+    // All items in page
+    ->call('gotoPage', '1')
+    ->assertSeeHtml('wire:click="previousPage"');
+
 
 it('properly paginates', function () {
     $component = powergrid();
