@@ -5,8 +5,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use NumberFormatter;
+use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -18,6 +20,17 @@ use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 class DishesTable extends PowerGridComponent
 {
     use ActionButton;
+
+    protected $listeners = [
+        'deletedEvent' => 'deletedEvent'
+    ];
+
+    public array $eventId = [];
+
+    public function deletedEvent(array $params)
+    {
+        $this->eventId = $params;
+    }
 
     public function setUp()
     {
@@ -136,6 +149,24 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Data de produção'))
                 ->field('produced_at_formatted')
                 ->makeInputDatePicker('produced_at')
+        ];
+    }
+
+    public function actions(): array
+    {
+        return [
+            Button::add('edit')
+                ->caption(new HtmlString(
+                    '<div id="edit">Edit</div>'
+                ))
+                ->class('text-center')
+                ->openModal('edit-dish', ['dishId' => 'id']),
+
+            Button::add('destroy')
+                ->caption(__('Deletar'))
+                ->class('text-center')
+                ->emit('deletedEvent', ['dishId' => 'id'])
+                ->method('delete')
         ];
     }
 
