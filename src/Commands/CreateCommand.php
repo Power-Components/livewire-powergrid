@@ -31,30 +31,38 @@ class CreateCommand extends Command
         }
 
         $fillable        = false;
-        $tableName       = $this->ask('Component Name');
+        $tableName       = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
         $tableName       = str_replace(['.', '\\'], '/', $tableName);
+  
+        if (empty(trim($tableName))) {
+            $this->error('You must provide a name for your ⚡ PowerGrid Table!');
+            return;
+        }
 
-        $creationModel   = $this->ask('<comment>[M]</comment>odel or <comment>[C]</comment>ollection? (default: <comment>M</comment>)');
+        $creationModel   = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
+        
+        if (empty($creationModel)) {
+            $creationModel = 'M';
+        }
 
-        $modelName       = $this->ask('Model (ex: <comment>App\Models\User</comment>)');
+        if (!in_array(strtolower($creationModel), ['m', 'c'])) {
+            $this->error('Please enter <comment>[M]</comment> for Model or <comment>[C]</comment> for Collection');
+            return;
+        }
 
-        if ($this->confirm('Use the based on fillable ?')) {
+        $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
+
+        if (empty(trim($modelName))) {
+            $this->error('Error: Model name is required.');
+            return;
+        }
+    
+        if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
             $fillable   = true;
         }
-
+     
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
-        if ($tableName === 'default') {
-            $this->error('Error: Table name is required');
-
-            return;
-        }
-
-        if (empty($modelName)) {
-            $this->error('Error: Model name is required.');
-
-            return;
-        }
 
         $modelNameArr  = explode('\\', $modelName);
         $modelLastName = Arr::last($modelNameArr);
@@ -62,19 +70,18 @@ class CreateCommand extends Command
         if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
-
                 return;
             }
-            $this->error('Error: Model name is required.<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
 
+            $this->error('Error: "'.$modelName.'" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
             return;
         }
-
+      
         if (empty($modelName)) {
             $this->error('Could not create, Model path is missing');
-            exit;
+            return;
         }
-
+       
         $stub = $this->getStubs($creationModel);
 
         if ($fillable) {
@@ -116,10 +123,20 @@ class CreateCommand extends Command
 
         File::ensureDirectoryExists($basePath);
 
-        if (!File::exists($path) || $this->confirm('It seems <comment>' . $tableName . '</comment> already exists. Overwrite it?')) {
+        $createTable = true;
+
+        if (File::exists($path)) {
+            $confirmation = $this->confirm('It seems that <comment>' . $tableName . '</comment> already exists. Would you like to overwrite it?');
+
+            if (strtolower($confirmation) !== 'yes') {
+                $createTable = false;
+            }
+        }
+
+        if ($createTable) {
             File::put($path, $stub);
             $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
-            $this->info("\n⚡ Your PowerGrid can be now included with: <comment>" . $component_name . "</comment>\n");
+            $this->info("\n⚡ Your PowerGrid can be now included with the tag: <comment>" . $component_name . "</comment>\n");
         }
     }
 
@@ -128,10 +145,10 @@ class CreateCommand extends Command
         $model          = new $modelName();
         $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
         $getFillable    = array_merge(
-                            [$model->getKeyName()],
-                            $model->getFillable(),
-                            ['created_at', 'updated_at']
-                        );
+            [$model->getKeyName()],
+            $model->getFillable(),
+            ['created_at', 'updated_at']
+        );
 
         $datasource     = "";
         $columns        = "[\n";
