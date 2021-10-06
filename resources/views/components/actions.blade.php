@@ -22,16 +22,18 @@
                         </a>
                     @elseif($action->view !== '')
                         <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-                                target="{{ $action->target }}"
-                                class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                           target="{{ $action->target }}"
+                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
                         </a>
                     @else
                         <form target="{{ $action->target }}"
                               action="{{ route($action->route, $action->param) }}"
                               method="{{ $action->method }}">
-                            @method($action->method)
-                            @csrf
+                            @if(strtolower($action->method) !== ('get'))
+                                @method($action->method)
+                                @csrf
+                            @endif
                             <button type="submit"
                                     class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                                 {!! $action->caption !!}
@@ -70,8 +72,11 @@
                     <form target="{{ $action->target }}"
                           action="{{ route($action->route, $parameters) }}"
                           method="{{ $action->target }}">
-                        @method($action->method)
-                        @csrf
+
+                        @if(strtolower($action->method) !== ('get'))
+                            @method($action->method)
+                            @csrf
+                        @endif
                         <button type="submit"
                                 class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption ?? '' !!}

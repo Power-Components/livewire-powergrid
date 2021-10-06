@@ -39,6 +39,15 @@ it('navigates when click on "next page"')
     ->assertSeeHtml('Bife à Parmegiana')
     ->assertDontSeeHtml('Pastel de Nata');
 
+it('navigates when click on "goToPage" and "previousPage"')
+    ->livewire(DishesTable::class)
+    ->assertSeeHtml('Pastel de Nata')
+    ->call('gotoPage', 2)
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->call('previousPage')
+    ->assertSeeHtml('Pastel de Nata')
+    ->assertDontSeeHtml('Bife à Parmegiana');
+
 it('displays next links ">" and ">>"')
     ->livewire(DishesTable::class)
     ->assertSeeHtml('wire:click="nextPage"')
