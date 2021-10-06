@@ -27,18 +27,24 @@
                             {!! $action->caption !!}
                         </a>
                     @else
-                        <form target="{{ $action->target }}"
-                              action="{{ route($action->route, $action->param) }}"
-                              method="{{ $action->method }}">
-                            @if(strtolower($action->method) !== ('get'))
+                        @if(strtolower($action->method) !== ('get'))
+                            <form target="{{ $action->target }}"
+                                  action="{{ route($action->route, $parameters) }}"
+                                  method="{{ $action->target }}">
                                 @method($action->method)
                                 @csrf
-                            @endif
-                            <button type="submit"
-                                    class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                                <button type="submit"
+                                        class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                                    {!! $action->caption ?? '' !!}
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route($action->route, $parameters) }}"
+                               target="{{ $action->target }}"
+                               class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                                 {!! $action->caption !!}
-                            </button>
-                        </form>
+                            </a>
+                        @endif
                     @endif
                 </div>
             @endforeach
@@ -69,19 +75,24 @@
                         {!! $action->caption !!}
                     </a>
                 @else
-                    <form target="{{ $action->target }}"
-                          action="{{ route($action->route, $parameters) }}"
-                          method="{{ $action->target }}">
-
-                        @if(strtolower($action->method) !== ('get'))
+                    @if(strtolower($action->method) !== ('get'))
+                        <form target="{{ $action->target }}"
+                              action="{{ route($action->route, $parameters) }}"
+                              method="{{ $action->target }}">
                             @method($action->method)
                             @csrf
-                        @endif
-                        <button type="submit"
-                                class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
-                            {!! $action->caption ?? '' !!}
-                        </button>
-                    </form>
+                            <button type="submit"
+                                    class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                                {!! $action->caption ?? '' !!}
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route($action->route, $parameters) }}"
+                           target="{{ $action->target }}"
+                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                            {!! $action->caption !!}
+                        </a>
+                    @endif
                 @endif
             </td>
         @endforeach
