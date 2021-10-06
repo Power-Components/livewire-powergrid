@@ -11,7 +11,6 @@ it('properly displays "openModal" on edit button')
     ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":6})')
     ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})');
 
-
 it('properly displays "deletedEvent" on delete button')
     ->livewire(DishesTable::class)
     //page 1

@@ -16,29 +16,28 @@
     <div class="{{ $theme->divClassNotInline }}" @if($inline)  @endif>
 
         @if(!$inline)
-            <label for="input_{!! $date['field'] !!}"
-                   class="text-gray-700 dark:text-gray-300">{!! $date['label'] !!}</label>
+            <label for="input_{{ data_get($date, 'field') }}"
+                   class="text-gray-700 dark:text-gray-300">{{ data_get($date, 'label') }}</label>
         @endif
-        <input id="input_{!! $date['field'] !!}"
-               data-field="{!! $date['dataField'] !!}"
-               data-key="enabledFilters.date_picker.{!! $date['dataField'] !!}"
-               class="power_grid range_input_{!! $date['field'] !!} {{ $theme->inputClass }}"
+        <input id="input_{{ data_get($date, 'field') }}"
+               data-field="{{ data_get($date, 'dataField') }}"
+               data-key="enabledFilters.date_picker.{{ data_get($date, 'dataField') }}"
+               class="power_grid range_input_{{ data_get($date, 'dataField') }} {{ $theme->inputClass }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-                wire:model="filters.input_date_picker.{!!$date['dataField'] !!}"
-               wire:ignore
-        >
+               wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}"
+               wire:ignore>
     </div>
     @push('power_grid_scripts')
         <script type="application/javascript">
-            flatpickr(document.getElementsByClassName('range_input_{!! $date['field'] !!}'), {
+            flatpickr(document.getElementsByClassName('range_input_{{ data_get($date, 'dataField') }}'), {
                     mode: 'range',
                     defaultHour: 0,
                     ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
-                    @if(isset($customConfig['only_future']))
+                    @if(data_get($customConfig, 'only_future'))
                     minDate: 'today',
                     @endif
-                        @if(isset($customConfig['no_weekends']) === true)
+                        @if(data_get($customConfig, 'no_weekends') === true)
                     disable: [
                         function (date) {
                             return (date.getDay() === 0 || date.getDay() === 6);
@@ -52,7 +51,7 @@
                                 selectedDates: selectedDates,
                                 field: instance._input.attributes['data-field'].value,
                                 values: instance._input.attributes['data-key'].value,
-                                label: '{{ $date['label'] }}'
+                                label: '{{ data_get($date, 'label') }}'
                             });
                         }
                     }
