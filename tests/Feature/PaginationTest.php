@@ -39,35 +39,25 @@ it('navigates when click on "next page"')
     ->assertSeeHtml('Bife à Parmegiana')
     ->assertDontSeeHtml('Pastel de Nata');
 
-it('displays ">" and ">>')
+it('displays next links ">" and ">>"')
     ->livewire(DishesTable::class)
     ->assertSeeHtml('wire:click="nextPage"')
-
     //page #2
     ->call('gotoPage', '2')
     ->assertSeeHtml('wire:click="nextPage"')
-
     //Last page
     ->call('gotoPage', '11')
     ->assertDontSeeHtml('wire:click="nextPage"');
 
-it('displays "<" and "<<')
-->skip('@TODO verify controls not showing')
+it('displays previous links "<" and "<<"')
     ->livewire(DishesTable::class)
     ->assertDontSeeHtml('wire:click="previousPage"')
-
     //page #2
     ->call('gotoPage', '2')
     ->assertSeeHtml('wire:click="previousPage"')
-
     //Last page
     ->call('gotoPage', '11')
-    ->assertSeeHtml('wire:click="previousPage"')
-
-    // All items in page
-    ->call('gotoPage', '1')
     ->assertSeeHtml('wire:click="previousPage"');
-
 
 it('properly paginates', function () {
     $component = powergrid();

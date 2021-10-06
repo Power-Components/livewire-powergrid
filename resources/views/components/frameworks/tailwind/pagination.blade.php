@@ -36,6 +36,28 @@
 
             <div class="flex justify-center md:flex-none md:justify-end mt-2 sm:mt-0">
 
+            @if(!$paginator->onFirstPage())
+
+            <a
+                class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                wire:click="gotoPage(1)"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </a>
+
+            <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                wire:click="previousPage"
+                rel="next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223z"/>
+                    </svg>
+                </a>
+
+            @endif
+            
             @foreach ($elements as $element)
                 @if (is_array($element))
 
