@@ -65,7 +65,7 @@ trait Filter
     {
         $this->filters['multi_select'][$data['id']] = $data;
 
-        $filter = collect($this->makeFilters->get('multi_select'))->where('relation_id', $data['id']);
+        $filter = collect($this->makeFilters->get('multi_select'))->where('data_field', $data['id']);
 
         $this->enabledFilters[$data['id']]['id']                    = $data['id'];
         $this->enabledFilters[$data['id']]['label']                 = $filter->first()['label'];

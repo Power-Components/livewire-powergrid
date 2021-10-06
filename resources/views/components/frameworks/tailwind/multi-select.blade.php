@@ -5,7 +5,7 @@
     'column' => null
 ])
 <div>
-    <div x-cloak x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['relation_id'] }}')"
+    <div x-cloak x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
          x-init="loadOptions()">
         <input name="values" type="hidden" x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">
@@ -78,7 +78,7 @@
 
     <!-- Power Grid Multi Select Scripts -->
     <script>
-        function dropdown(field, relation_id) {
+        function dropdown(field, data_field) {
             return {
                 options: [],
                 selected: [],
@@ -106,7 +106,7 @@
                         this.selected.push(index);
                         this.show = false
                         window.livewire.emit('eventMultiSelect', {
-                            id: relation_id,
+                            id: data_field,
                             values: this.selectedValues()
                         });
 
@@ -121,7 +121,7 @@
                     this.options[option].selected = false;
                     this.selected.splice(index, 1);
                     window.livewire.emit('eventMultiSelect', {
-                        id: relation_id,
+                        id: data_field,
                         values: this.selectedValues()
                     });
                 },
@@ -145,7 +145,7 @@
     <select class="hidden"
             x-cloak
             id="select_{!! $column->field !!}"
-            wire:model.lazy="filters.multi_select.{!! $multiSelect['relation_id'] !!}">
+            wire:model.lazy="filters.multi_select.{!! $multiSelect['data_field'] !!}">
         <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
         @foreach($multiSelect['data_source'] as $relation)
             <option value="{{ $relation['id'] }}">{{ $relation[$multiSelect['display_field']] }}</option>

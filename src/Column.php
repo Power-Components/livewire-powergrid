@@ -155,16 +155,16 @@ class Column
     /**
      * @param $datasource
      * @param string $displayField
-     * @param string $relationId
+     * @param string $dataField
      * @param array $settings
      * @return $this
      */
-    public function makeInputSelect( $datasource, string $displayField, string $relationId, array $settings = [] ): Column
+    public function makeInputSelect( $datasource, string $displayField, string $dataField, array $settings = [] ): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
         $this->inputs['select']['display_field'] = $displayField;
-        $this->inputs['select']['relation_id']   = $relationId;
+        $this->inputs['select']['data_field']    = $dataField;
         $this->inputs['select']['class']         = $settings['class'] ?? '';
         $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
 
@@ -174,15 +174,15 @@ class Column
     /**
      * @param $datasource
      * @param string $displayField
-     * @param string $relationId
+     * @param string $dataField
      * @return $this
      */
-    public function makeInputMultiSelect( $datasource, string $displayField, string $relationId ): Column
+    public function makeInputMultiSelect( $datasource, string $displayField, string $dataField ): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
         $this->inputs['multi_select']['display_field'] = $displayField;
-        $this->inputs['multi_select']['relation_id']   = $relationId;
+        $this->inputs['multi_select']['data_field']    = $dataField;
         $this->inputs['multi_select']['live-search']   = $settings['live-search'] ?? true;
 
         return $this;
