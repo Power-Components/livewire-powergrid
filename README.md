@@ -60,7 +60,7 @@ Our documentation is available at [https://livewire-powergrid.docsforge.com/](ht
 
 ## 3. Example
 
- ![Laravel Livewire Tables](docs/img/example.gif)
+ ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/doc/img/example.gif?raw=true)
 
 ## 4. Demo
 
