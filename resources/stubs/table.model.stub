@@ -15,6 +15,13 @@ class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Features Setup
+    |--------------------------------------------------------------------------
+    | Setup your Table general features
+    |
+    */
     public function setUp()
     {
         $this->showCheckBox()
@@ -23,21 +30,38 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
-    public function relationSearch(): array
-    {
-        return [];
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | This method provides data to your table.
+    |
+    */
     public function datasource(): ?Builder
     {
         return {{ modelLastName }}::query();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used in search and table filters.
+    |
+    */
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Here, Datasource fields are added as columns.
+    | Data can be treated using a closure to create custom columns. 
+    |
+    */
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -48,7 +72,15 @@ class {{ componentName }} extends PowerGridComponent
                 return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
             });
     }
-
+    
+    /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include here the columns you have previously created.
+    | Columns can be configured with propreties, filters, actions...
+    |
+    */
     public function columns(): array
     {
         return [
@@ -150,4 +182,9 @@ class {{ componentName }} extends PowerGridComponent
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
+
+    public function template(): ?string
+    {
+        return null;
+    }
 }

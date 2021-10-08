@@ -13,6 +13,13 @@ class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Features Setup
+    |--------------------------------------------------------------------------
+    | Setup your Table general features
+    |
+    */
     public function setUp()
     {
         $this->showCheckBox()
@@ -21,16 +28,26 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | This method provides data to your table.
+    |
+    */
     public function datasource(): Collection
     {
         return {{ modelLastName }}::query()->get();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Here, Datasource fields are added as columns.
+    | Data can be treated using a closure to create custom columns. 
+    |
+    */
     public function addColumns(): ?PowerGridCollection
     {
         return PowerGrid::collection()
@@ -38,7 +55,15 @@ class {{ componentName }} extends PowerGridComponent
             ->addColumn('name')
             ->addColumn('created_at');
     }
-
+    
+     /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include here the columns you have previously created.
+    | Columns can be configured with propreties, filters, actions...
+    |
+    */
     public function columns(): array
     {
         return [
@@ -60,5 +85,10 @@ class {{ componentName }} extends PowerGridComponent
                 ->field('created_at')
                 ->hidden(),
         ];
+    }
+
+    public function template(): ?string
+    {
+        return null;
     }
 }

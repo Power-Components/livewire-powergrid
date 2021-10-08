@@ -28,6 +28,13 @@ class PowergridDemoTable extends PowerGridComponent
     use ActionButton;
     protected $demoUsers = null; //Demo users. Should be removed in a real project.
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Features Setup
+    |--------------------------------------------------------------------------
+    | Setup your Table general features
+    |
+    */
 
     public function setUp()
     {
@@ -38,17 +45,39 @@ class PowergridDemoTable extends PowerGridComponent
             ->showExportOption('download', ['excel', 'csv']); //Enables export feature and show button on page top.
     }
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | This method provides data to your table.
+    |
+    */
     public function datasource()
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
-        return User::query();
+        //return User::query();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used in search and table filters.
+    |
+    */
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Here, Datasource fields are added as columns.
+    | Data can be treated using a closure to create custom columns. 
+    |
+    */
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -56,17 +85,25 @@ class PowergridDemoTable extends PowerGridComponent
             ->addColumn('name')
             ->addColumn('email')
 
-            // Create a column "laracon" based on "has_laracon_ticket" boolean field
+            // Create a custom column "laracon" based on "has_laracon_ticket" boolean field
             ->addColumn('laracon', function (User $model) {
                 return ($model->has_laracon_ticket ? 'yes' : 'no');
             })
 
-            //Create "laravel_since_formatted" displaying "laravel_since" in a human readable format
+            //Create a custom column "laravel_since_formatted" for humans, based on "laravel_since"
             ->addColumn('laravel_since_formatted', function (User $model) {
                 return Carbon::parse($model->laravel_since)->format('d/m/Y H:i');
             });
     }
 
+     /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include here the columns you have previously created.
+    | Columns can be configured with propreties, filters, actions...
+    |
+    */
     public function columns(): array
     {
         //User permissions. In a real world project, this would be managed by your system.
@@ -233,5 +270,10 @@ class PowergridDemoTable extends PowerGridComponent
         $this->demoUsers = $users;
 
         return $users;
+    }
+
+    public function template(): ?string
+    {
+        return null;
     }
 }
