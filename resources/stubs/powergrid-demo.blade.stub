@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+ <!-- 
+    |****************************************************************************************************************
+    |                               ⚡ PowerGrid Demo Table ⚡
+    |****************************************************************************************************************
+    | Table: App/Http/Livewire/PowerGridDemoTable.php 
+    | USAGE:
+    | ➤ You must include Route::view('/powergrid', 'powergrid-demo'); on top of your web.php file.
+    | ➤ Visit http://your-app/powergrid. Enjoy it!
+    |****************************************************************************************************************
+-->
+
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
      
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-     
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
         <title>⚡ PowerGrid Demo Table ⚡</title>
 
@@ -19,7 +29,6 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
-
         @livewireStyles
         @powerGridStyles
     </head>
@@ -27,7 +36,10 @@
         <div class="mt-2 mb-2 bg-gray-200">
         Welcome to ⚡ PowerGrid ⚡
         <br>
-        This is a demo table. Data is being generated on the fly based on Users model.
+        This is a demo table.
+        <br>
+        Data is being generated on the fly based on Users model.
+        <br>
         <br/>
         📚 Check our <a href="https://livewire-powergrid.docsforge.com/" rel="nofollow" target="_blank" class="bg-gradient-to-r from-yellow-200 to-yellow-200 bg-growing-underline">Documentation</a> for more information.
         <br/>
@@ -38,6 +50,5 @@
         <!-- Scripts -->
         @livewireScripts
         @powerGridScripts
-
     </body>
 </html>

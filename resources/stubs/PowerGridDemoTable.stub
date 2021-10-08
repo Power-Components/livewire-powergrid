@@ -4,26 +4,16 @@
 |****************************************************************************************************************
 |                               ⚡ PowerGrid Demo Table ⚡
 |****************************************************************************************************************
+| Table View: resources/views/powergrid-demo.blade.php
 | USAGE:
 | ➤ You must include Route::view('/powergrid', 'powergrid-demo'); on top of your web.php file.
 | ➤ Visit http://your-app/powergrid. Enjoy it!
 |****************************************************************************************************************
 */
 
-
-/*
-----------------------------------------
-@TODO
-    [] State filter doesn't work
-    [] Date filter doesn't work
-    [] Update error message not displaying
----------------------------------------------
-*/
-
 namespace App\Http\Livewire;
 
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Carbon;
 use Faker\Factory as FakerFactory;
 use Illuminate\Database\QueryException;
@@ -56,7 +46,7 @@ class PowergridDemoTable extends PowerGridComponent
     public function datasource()
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
-        //return User::query();
+        return User::query();
     }
 
     public function addColumns(): ?PowerGridEloquent
@@ -91,11 +81,11 @@ class PowergridDemoTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('Full name')) //Colummn header title
-                ->field('name') //Reads field 'name'
+                ->field('name') //Reads datasource field 'name'
                 ->sortable() //Adds sorting button to the header
-                ->searchable() //Include column in search option (top page)
+                ->searchable() //Includes column in search option (top page)
                 ->makeInputText()//Filter for searching text
-                ->editOnClick($canEdit), //Allow user to edit information on click
+                ->editOnClick($canEdit), //Allows user to edit information on click
 
             Column::add()
                 ->title(__('E-mail address'))
@@ -104,17 +94,16 @@ class PowergridDemoTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('US State'))
-                ->field('state_in_usa'),
-                //->makeInputMultiSelect($this->demoUsers(), 'state_in_usa', 'state_in_usa'), //Multiseelct filter
+                ->field('state_in_usa')
+                ->makeInputMultiSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiseelct filter
 
             Column::add()
                 ->title(__('Laracon visitor?'))
                 ->field('laracon')
                 ->searchable()
                 ->sortable()
-                //Boolean filter based on "has_laracon_ticket".
-                //Shows "yes" for true, "no" for false
-                ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'),
+                ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
+
 
             Column::add()
                 ->title(__('Creation date'))
@@ -161,16 +150,15 @@ class PowergridDemoTable extends PowerGridComponent
 
     public function update(array $data): bool
     {
-
-         /*
+        /*
         |--------------------------------------------------------------------------
         | ❗ Forcing update to fail ❗
         |--------------------------------------------------------------------------
         | Update will not be performed in order to protect your data.
         */
         return false;
+        //--------------------------------------------------------------------------
         
-        /*
         try {
             $updated = user::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
@@ -180,7 +168,6 @@ class PowergridDemoTable extends PowerGridComponent
         }
 
         return $updated;
-        */
     }
 
     public function updateMessages(string $status, string $field = '_default_message'): string
@@ -204,7 +191,7 @@ class PowergridDemoTable extends PowerGridComponent
     |--------------------------------------------------------------------------
     | ❗ Demo Users (Should be removed in a real project)
     |--------------------------------------------------------------------------
-    | Generate some random demo users for this table.
+    | Generate random  users for demo purpose.
     | Data will NOT be stored in your database.
     */
 
@@ -238,7 +225,7 @@ class PowergridDemoTable extends PowerGridComponent
             $user->setAttribute('id', $i);
             $user->setAttribute('state_in_usa', $faker->stateAbbr());
             $user->setAttribute('has_laracon_ticket', boolval(rand(0, 1)));
-            $user->setAttribute('created_at', $faker->dateTimeBetween('-20 days', now()));
+            $user->setAttribute('created_at', $faker->dateTimeBetween('-1 year', now()));
         
             $users->add($user);
         }
