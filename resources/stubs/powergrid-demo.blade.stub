@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="UTF-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+     
+
+        <title>⚡ PowerGrid Demo Table ⚡</title>
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <!-- Styles -->
+        <style>
+            body {
+                font-family: 'Nunito', sans-serif;
+            }
+        </style>
+
+        @livewireStyles
+        @powerGridStyles
+    </head>
+    <body class="antialiased">
+        <div class="mt-2 mb-2 bg-gray-200">
+        Welcome to ⚡ PowerGrid ⚡
+        <br>
+        This is a demo table. Data is being generated on the fly based on Users model.
+        <br/>
+        📚 Check our <a href="https://livewire-powergrid.docsforge.com/" rel="nofollow" target="_blank" class="bg-gradient-to-r from-yellow-200 to-yellow-200 bg-growing-underline">Documentation</a> for more information.
+        <br/>
+        ⭐ Enjoying? Star our <a href="https://github.com/Power-Components/livewire-powergrid" rel="nofollow" target="_blank" class="bg-gradient-to-r from-yellow-200 to-yellow-200 bg-growing-underline">Repository</a>!
+        </div>
+        <livewire:powergrid-demo-table/>
+        
+        <!-- Scripts -->
+        @livewireScripts
+        @powerGridScripts
+
+    </body>
+</html>
