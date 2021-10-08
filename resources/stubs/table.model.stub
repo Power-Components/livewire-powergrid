@@ -108,22 +108,14 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     | Edit Method
     |--------------------------------------------------------------------------
-    | Enable this section to use editOnClick() or toggleable() methods
+    | Enable this section to use editOnClick() or toggleable() methods.
+    | Data must be validated and treated (see "Update Data" in PowerGrid doc).
     |
     */
 
     /*
     public function update(array $data ): bool
     {
-       // filter example with symbols
-       // if ($data['field'] == 'price_BRL') {
-       //       $data['field'] = 'price';
-       //       $data['value'] = Str::of($data['value'])
-       //           ->replace('.', '')
-       //           ->replace(',', '.')
-       //           ->replaceMatches('/[^Z0-9\.]/', '');
-       //}
-
        try {
            $updated = {{ modelLastName }}::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
