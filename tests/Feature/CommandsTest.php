@@ -39,7 +39,7 @@ it('publishes the Demo Table', function () {
         ->expectsOutput("\n⚡ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]")
         ->expectsOutput("\n⚡ powergrid-demo.blade.php was successfully created at [resources/views/]")
         ->expectsOutput("\n⚡ *** Usage ***")
-        ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); on top of your web.php file.")
+        ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.")
         ->expectsOutput("\n➤ Visit http://your-app/powergrid. Enjoy it!\n");
 
 

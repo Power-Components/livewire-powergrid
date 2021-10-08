@@ -35,7 +35,7 @@ class DemoCommand extends Command
         $this->info("\n⚡ <comment>{$tableFileName}.php</comment> was successfully created at [<comment>App/{$livewirePath}</comment>]");
         $this->info("\n⚡ <comment>{$viewFileName}.php</comment> was successfully created at [<comment>{$viewFolder}/</comment>]");
         $this->info("\n⚡ *** Usage ***");
-        $this->info("\n<comment>➤</comment> You must include <comment>Route::view('/powergrid', 'powergrid-demo');</comment> on top of your <comment>web.php</comment> file.");
+        $this->info("\n<comment>➤</comment> You must include <comment>Route::view('/powergrid', 'powergrid-demo');</comment> in <comment>routes/web.php</comment> file.");
         $this->info("\n<comment>➤</comment> Visit <comment>http://your-app/powergrid</comment>. Enjoy it!\n");
     }
 }

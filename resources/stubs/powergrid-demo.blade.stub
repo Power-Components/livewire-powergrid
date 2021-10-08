@@ -5,7 +5,7 @@
     |****************************************************************************************************************
     | Table: App/Http/Livewire/PowerGridDemoTable.php 
     | USAGE:
-    | ➤ You must include Route::view('/powergrid', 'powergrid-demo'); on top of your web.php file.
+    | ➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.
     | ➤ Visit http://your-app/powergrid. Enjoy it!
     |****************************************************************************************************************
 -->
@@ -36,9 +36,9 @@
         <div class="mt-2 mb-2 bg-gray-200">
         Welcome to ⚡ PowerGrid ⚡
         <br>
-        This is a demo table.
+        This is a demo table, you can click around and see how things behave!
         <br>
-        Data is being generated on the fly based on Users model.
+        Data is being generated on the fly (making use of User model). Changes will not be saved in your database.
         <br>
         <br/>
         📚 Check our <a href="https://livewire-powergrid.docsforge.com/" rel="nofollow" target="_blank" class="bg-gradient-to-r from-yellow-200 to-yellow-200 bg-growing-underline">Documentation</a> for more information.
