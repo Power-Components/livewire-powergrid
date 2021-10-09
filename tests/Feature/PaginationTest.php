@@ -16,12 +16,14 @@ it('properly displays "min" showRecordCount')
     ->set('recordCount', 'min')
     ->assertSeeTextInOrder(['1', '10']);
 
-it('properly changes records per page')
+it('properly changes records and displays per page')
     ->livewire(DishesTable::class)
     ->set('perPage', '25')
     ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results'])
-    //All items
-    ->set('perPage', '0')
+    ->set('perPage', '50')
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '50', 'of', '102', 'Results'])
+    ->set('perPage', '0') //All items
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '102', 'of', '102', 'Results'])
     ->assertSeeHtml('Sopa Creme de Ervilha')
     ->assertSeeHtml('Pastel de Nata');
 
