@@ -2,6 +2,15 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
+it('updates data')
+    ->livewire(DishesTable::class)
+    ->call('gotoPage', '11')
+    ->assertDontSeeHtml('Calçots')
+    ->call('gotoPage', '1')
+    ->call('update', ['id' => '101', 'field' => 'name', 'value' => 'Calçots'])
+    ->call('gotoPage', '11')
+    ->assertSeeHtml('Calçots');
+
 it('properly displays "openModal" on edit button')
     ->livewire(DishesTable::class)
     ->set('perPage', 5)
