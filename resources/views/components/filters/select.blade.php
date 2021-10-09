@@ -12,7 +12,8 @@
             @endif
             <div class="relative">
                 <select id="input_{!! data_get($select, 'data_field') !!}"
-                        class="power_grid {{ $theme->inputClass }} {{ $class }}"
+                        class="power_grid {{ $theme->inputClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                        style="{{ data_get($column, 'headerStyle') }}"
                         wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'data_field') }}','{{ data_get($select, 'label')  }}')"
                         wire:model.debounce.500ms="filters.select.{{ data_get($select, 'data_field')  }}"
                         data-live-search="{{ data_get($select, 'live-search') }}">

@@ -1,13 +1,14 @@
 @props([
     'theme' => '',
     'inline' => null,
-    'date' => null
+    'date' => null,
+    'column' => null,
 ])
 <div>
     @php
         $customConfig = [];
-        if (isset($date['config'])) {
-            foreach ($date['config'] as $key => $value) {
+        if (data_get($date, 'config')) {
+            foreach (data_get($date, 'config') as $key => $value) {
                 $customConfig[$key] = $value;
             }
         }
@@ -17,12 +18,15 @@
 
         @if(!$inline)
             <label for="input_{{ data_get($date, 'field') }}"
-                   class="text-gray-700 dark:text-gray-300">{{ data_get($date, 'label') }}</label>
+                   class="text-gray-700 dark:text-gray-300">
+                {{ data_get($date, 'label') }}
+            </label>
         @endif
         <input id="input_{{ data_get($date, 'field') }}"
                data-field="{{ data_get($date, 'dataField') }}"
+               style="{{ data_get($column, 'headerStyle') }}"
                data-key="enabledFilters.date_picker.{{ data_get($date, 'dataField') }}"
-               class="power_grid range_input_{{ data_get($date, 'dataField') }} {{ $theme->inputClass }}"
+               class="power_grid range_input_{{ data_get($date, 'dataField') }} {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
                wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}"

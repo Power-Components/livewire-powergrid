@@ -13,8 +13,10 @@
             <div class="@if($inline) flex flex-col @else flex flex-row @endif">
                 <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <div class="relative">
-                        <select id="input_text_options" class="power_grid {{ $theme->selectClass }}"
-                                wire:input.debounce.300ms="filterInputTextOptions('{{ $inputText['field'] }}', $event.target.value, '{{ $inputText['label'] }}')">
+                        <select id="input_text_options"
+                                class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
+                                style="{{ data_get($column, 'headerStyle') }}"
+                                wire:input.debounce.300ms="filterInputTextOptions('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
                             <option value="contains">{{ trans('livewire-powergrid::datatable.input_text_options.contains') }}</option>
                             <option value="contains_not">{{ trans('livewire-powergrid::datatable.input_text_options.contains_not') }}</option>
                             <option value="is">{{ trans('livewire-powergrid::datatable.input_text_options.is') }}</option>
@@ -27,8 +29,8 @@
                         </div>
                     </div>
                     <input
-                        data-id="{{ $inputText['field'] }}"
-                        wire:input.debounce.800ms="filterInputText('{{ $inputText['field'] }}', $event.target.value, '{{ $inputText['label'] }}')"
+                        data-id="{{ data_get($inputText, 'field') }}"
+                        wire:input.debounce.800ms="filterInputText('{{ $data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"
                         placeholder="{{ $column->placeholder ?: $column->title }}">

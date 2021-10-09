@@ -30,6 +30,7 @@
                             @foreach(data_get($makeFilters, 'select', []) as $index => $select)
                                 @if(data_get($select, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.select
+                                        :column="$column"
                                         :select="$select"
                                         :inline="true"
                                         :theme="$theme->filterSelect"/>
@@ -39,7 +40,8 @@
                             @foreach(data_get($makeFilters, 'multi_select', []) as $index => $multiSelect)
                                 @if(data_get($multiSelect, 'field') === $column->field)
                                     @includeIf($theme->filterMultiSelect->view, [
-                                            'inline' => true
+                                            'inline' => true,
+                                            'column' => $column
                                     ])
                                 @endif
                             @endforeach
@@ -48,6 +50,7 @@
                                 @if(data_get($number, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.number
                                         :number="$number"
+                                        :column="$column"
                                         :inline="true"
                                         :theme="$theme->filterNumber"/>
                                 @endif
@@ -66,6 +69,7 @@
                             @foreach(data_get($makeFilters, 'boolean_filter', []) as $index => $booleanFilter)
                                 @if(data_get($booleanFilter, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.boolean-filter
+                                        :column="$column"
                                         :booleanFilter="$booleanFilter"
                                         :inline="true"
                                         :theme="$theme->filterBoolean"/>
