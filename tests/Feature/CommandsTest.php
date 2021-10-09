@@ -40,7 +40,7 @@ it('publishes the Demo Table', function () {
         ->expectsOutput("\n⚡ powergrid-demo.blade.php was successfully created at [resources/views/]")
         ->expectsOutput("\n⚡ *** Usage ***")
         ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.")
-        ->expectsOutput("\n➤ Visit http://your-app/powergrid. Enjoy it!\n");
+        ->expectsOutput("\n➤ Visit http://localhost/powergrid. Enjoy it!\n");
 
 
     $this->assertFileExists($tableFile);
@@ -58,7 +58,7 @@ it('does not accept an empty table name', function () {
         ->expectsQuestion($this->model_name_question, '')
         ->expectsOutput('You must provide a name for your ⚡ PowerGrid Table!')
         ->assertExitCode(0);
-    
+
     $this->assertFileDoesNotExist($this->tableFilePath);
 });
 
@@ -118,7 +118,7 @@ it('does overwride the existing table file w/ YES', function () {
 
     //Add some content to file
     file_put_contents($this->tableFilePath, 'x0007');
-    
+
     //Alert about overwrite
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -146,7 +146,7 @@ it('does NOT overwride the existing table file', function () {
 
     //Add some content to file
     file_put_contents($this->tableFilePath, 'x0007');
-    
+
     //Alert about overwrite
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
