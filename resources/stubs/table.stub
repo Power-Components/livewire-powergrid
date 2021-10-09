@@ -15,24 +15,9 @@ class {{ componentName }} extends PowerGridComponent
 
     /*
     |--------------------------------------------------------------------------
-    |  Features Setup
-    |--------------------------------------------------------------------------
-    | Setup your Table general features
-    |
-    */
-    public function setUp()
-    {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showExportOption('download', ['excel', 'csv'])
-            ->showSearchInput();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     |  Datasource
     |--------------------------------------------------------------------------
-    | This method provides data to your table.
+    | Provides data to your Table using a Model or Collection
     |
     */
     public function datasource(): Collection
@@ -42,10 +27,25 @@ class {{ componentName }} extends PowerGridComponent
 
     /*
     |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used by the Search and Table Filters.
+    |
+    */
+    public function setUp()
+    {
+        $this->showCheckBox()
+            ->showPerPage()
+            ->showExportOption('download', ['excel', 'csv'])
+            ->showSearchInput();
+    }
+    
+    /*
+    |--------------------------------------------------------------------------
     |  Add Column
     |--------------------------------------------------------------------------
-    | Here, Datasource fields are added as columns.
-    | Data can be treated using a closure to create custom columns. 
+    | Make Datasource fields available to be used as columns.
+    | You can pass a closure to transform/modify the data.
     |
     */
     public function addColumns(): ?PowerGridCollection
@@ -56,12 +56,12 @@ class {{ componentName }} extends PowerGridComponent
             ->addColumn('created_at');
     }
     
-     /*
+    /*
     |--------------------------------------------------------------------------
     |  Include Columns
     |--------------------------------------------------------------------------
-    | Include here the columns you have previously created.
-    | Columns can be configured with propreties, filters, actions...
+    | Include the columns aaded columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
     |
     */
     public function columns(): array

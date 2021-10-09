@@ -19,7 +19,7 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Features Setup
     |--------------------------------------------------------------------------
-    | Setup your Table general features
+    | Setup Table's general features
     |
     */
     public function setUp()
@@ -34,7 +34,7 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Datasource
     |--------------------------------------------------------------------------
-    | This method provides data to your table.
+    | Provides data to your Table using a Model or Collection
     |
     */
     public function datasource(): ?Builder
@@ -46,7 +46,7 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Relationship Search
     |--------------------------------------------------------------------------
-    | Configure here relationships to be used in search and table filters.
+    | Configure here relationships to be used by the Search and Table Filters.
     |
     */
     public function relationSearch(): array
@@ -58,8 +58,8 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Add Column
     |--------------------------------------------------------------------------
-    | Here, Datasource fields are added as columns.
-    | Data can be treated using a closure to create custom columns. 
+    | Make Datasource fields available to be used as columns.
+    | You can pass a closure to transform/modify the data.
     |
     */
     public function addColumns(): ?PowerGridEloquent
@@ -77,8 +77,8 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Include Columns
     |--------------------------------------------------------------------------
-    | Include here the columns you have previously created.
-    | Columns can be configured with propreties, filters, actions...
+    | Include the columns aaded columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
     |
     */
     public function columns(): array
