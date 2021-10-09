@@ -1,0 +1,278 @@
+<?php
+
+/*
+|****************************************************************************************************************
+|                               ⚡ PowerGrid Demo Table ⚡
+|****************************************************************************************************************
+| Table View: resources/views/powergrid-demo.blade.php
+| USAGE:
+| ➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.
+| ➤ Visit http://your-app/powergrid. Enjoy it!
+|****************************************************************************************************************
+*/
+
+namespace App\Http\Livewire;
+
+use App\Models\User;
+use Illuminate\Support\Carbon;
+use Faker\Factory as FakerFactory;
+use Illuminate\Database\QueryException;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+
+class PowergridDemoTable extends PowerGridComponent
+{
+    use ActionButton;
+    protected $demoUsers = null; //Demo users. Should be removed in a real project.
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Features Setup
+    |--------------------------------------------------------------------------
+    | Setup Table's general features
+    |
+    */
+    public function setUp()
+    {
+        $this->showCheckBox() //Adds checkboxes to each table row
+            ->showRecordCount() //Display: Showing 1 to 10 of 20 Results
+            ->showPerPage() //Shows per page option
+            ->showSearchInput() //Show search input on page top.
+            ->showExportOption('download', ['excel', 'csv']); //Enables export feature and show button on page top.
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | Provides data to your Table using a Model or Collection
+    |
+    */
+    public function datasource()
+    {
+        return $this->demoUsers(); //Get demo users. Should be removed in a real project.
+        //return User::query();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used by the Search and Table Filters.
+    |
+    */
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Make Datasource fields available to be used as columns.
+    | You can pass a closure to transform/modify the data.
+    |
+    */
+    public function addColumns(): ?PowerGridEloquent
+    {
+        return PowerGrid::eloquent()
+            ->addColumn('id')
+            ->addColumn('name')
+            ->addColumn('email')
+
+            // Create a custom column "laracon" based on "has_laracon_ticket" boolean field
+            ->addColumn('laracon', function (User $model) {
+                return ($model->has_laracon_ticket ? 'yes' : 'no');
+            })
+
+            //Create a custom column "laravel_since_formatted" for humans, based on "laravel_since"
+            ->addColumn('laravel_since_formatted', function (User $model) {
+                return Carbon::parse($model->laravel_since)->format('d/m/Y H:i');
+            });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include the columns aaded columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
+    |
+    */
+    public function columns(): array
+    {
+        //User permissions. In a real world project, this would be managed by your system.
+        $canEdit = true;
+        $canCopy = true;
+
+        return [
+            Column::add()
+                ->title(__('ID'))
+                ->field('id')
+                ->makeInputRange(), //Filter for min-max Range
+
+            Column::add()
+                ->title(__('Full name')) //Colummn header title
+                ->field('name') //Reads datasource field 'name'
+                ->sortable() //Adds sorting button to the header
+                ->searchable() //Includes column in search option (top page)
+                ->makeInputText()//Filter for searching text
+                ->editOnClick($canEdit), //Allows user to edit information on click
+
+            Column::add()
+                ->title(__('E-mail address'))
+                ->field('email')
+                ->clickToCopy($canCopy), //Button for copy to clipboard
+
+            Column::add()
+                ->title(__('US State'))
+                ->field('state_in_usa')
+                ->makeInputMultiSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiseelct filter
+
+            Column::add()
+                ->title(__('Laracon visitor?'))
+                ->field('laracon')
+                ->searchable()
+                ->sortable()
+                ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
+
+
+            Column::add()
+                ->title(__('Laravel user since'))
+                ->field('laravel_since_formatted')
+                ->searchable()
+                ->sortable()
+                ->makeInputDatePicker('laravel_since') //Date filter
+            ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Actions Method
+    |--------------------------------------------------------------------------
+    | Enable this section only when you have defined routes for these actions.
+    |
+    */
+
+    /*
+    public function actions(): array
+    {
+       return [
+           Button::add('edit')
+               ->caption(__('Edit'))
+               ->class('bg-indigo-500 text-white')
+               ->route('user.edit', ['user' => 'id']),
+
+           Button::add('destroy')
+               ->caption(__('Delete'))
+               ->class('bg-red-500 text-white')
+               ->route('user.destroy', ['user' => 'id'])
+               ->method('delete')
+        ];
+    }
+    */
+
+    /*
+    |--------------------------------------------------------------------------
+    | Edit Method
+    |--------------------------------------------------------------------------
+    | Enable this section to use editOnClick() or toggleable() methods
+    |
+    */
+
+    public function update(array $data): bool
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | ❗ Forcing update to fail ❗
+        |--------------------------------------------------------------------------
+        | Update will not be performed in order to protect your data.
+        */
+        return false;
+        //--------------------------------------------------------------------------
+        
+        try {
+            $updated = user::query()->find($data['id'])->update([
+                $data['field'] => $data['value']
+           ]);
+        } catch (QueryException $exception) {
+            $updated = false;
+        }
+
+        return $updated;
+    }
+
+    public function updateMessages(string $status, string $field = '_default_message'): string
+    {
+        $updateMessages = [
+            'success'   => [
+                '_default_message' => __('Data has been updated successfully!'),
+                //'custom_field' => __('Custom Field updated successfully!'),
+            ],
+            'error' => [
+                '_default_message' => __('Update is blocked in Demo table!'),
+                'name' => __('The update of "name" field is blocked in Demo table!'),
+                //'custom_field' => __('Error updating custom field.'),
+            ]
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+    
+    /*
+    |--------------------------------------------------------------------------
+    | ❗ Demo Users (Should be removed in a real project)
+    |--------------------------------------------------------------------------
+    | Generate random  users for demo purpose.
+    | Data will NOT be stored in your database.
+    */
+
+    /**
+     * Generate demo users
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function demoUsers(): \Illuminate\Support\Collection
+    {
+        if (!is_null($this->demoUsers)) {
+            return $this->demoUsers;
+        }
+
+        // Generate demo users.
+        // These users will not be saved in your database.
+
+        $faker = FakerFactory::create();
+
+        $users = collect();
+
+        for ($i=1; $i <= 20; $i++) {
+            $user = new User([
+                'name' => $faker->name(),
+                'email' => $faker->unique()->safeEmail(),
+                'email_verified_at' => (boolval(rand(0, 1)) === true ? now() : null),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+                'remember_token' => 'hKNojklraZ'
+            ]);
+
+            $user->setAttribute('id', $i);
+            $user->setAttribute('state_in_usa', $faker->stateAbbr());
+            $user->setAttribute('has_laracon_ticket', boolval(rand(0, 1)));
+            $user->setAttribute('laravel_since', $faker->dateTimeBetween('-1 year', now()));
+        
+            $users->add($user);
+        }
+
+        $this->demoUsers = $users;
+
+        return $users;
+    }
+
+    public function template(): ?string
+    {
+        return null;
+    }
+}

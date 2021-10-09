@@ -13,6 +13,25 @@ class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | Provides data to your Table using a Model or Collection
+    |
+    */
+    public function datasource(): Collection
+    {
+        return {{ modelLastName }}::query()->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used by the Search and Table Filters.
+    |
+    */
     public function setUp()
     {
         $this->showCheckBox()
@@ -20,17 +39,15 @@ class {{ componentName }} extends PowerGridComponent
             ->showExportOption('download', ['excel', 'csv'])
             ->showSearchInput();
     }
-
-    public function template(): ?string
-    {
-        return null;
-    }
-
-    public function datasource(): Collection
-    {
-        return {{ modelLastName }}::query()->get();
-    }
-
+    
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Make Datasource fields available to be used as columns.
+    | You can pass a closure to transform/modify the data.
+    |
+    */
     public function addColumns(): ?PowerGridCollection
     {
         return PowerGrid::collection()
@@ -38,7 +55,15 @@ class {{ componentName }} extends PowerGridComponent
             ->addColumn('name')
             ->addColumn('created_at');
     }
-
+    
+    /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include the columns aaded columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
+    |
+    */
     public function columns(): array
     {
         return [
@@ -60,5 +85,10 @@ class {{ componentName }} extends PowerGridComponent
                 ->field('created_at')
                 ->hidden(),
         ];
+    }
+
+    public function template(): ?string
+    {
+        return null;
     }
 }

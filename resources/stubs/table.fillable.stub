@@ -15,6 +15,13 @@ class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Features Setup
+    |--------------------------------------------------------------------------
+    | Setup Table's general features
+    |
+    */
     public function setUp()
     {
         $this->showCheckBox()
@@ -23,21 +30,51 @@ class {{ componentName }} extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Datasource
+    |--------------------------------------------------------------------------
+    | Provides data to your Table using a Model or Collection
+    |
+    */
     public function datasource(): ?Builder
     {
         return {{ modelLastName }}::query();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Relationship Search
+    |--------------------------------------------------------------------------
+    | Configure here relationships to be used by the Search and Table Filters.
+    |
+    */
+    public function relationSearch(): array
+    {
+        return [];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Add Column
+    |--------------------------------------------------------------------------
+    | Make Datasource fields available to be used as columns.
+    | You can pass a closure to transform/modify the data.
+    |
+    */
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent(){{ datasource }};
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Include Columns
+    |--------------------------------------------------------------------------
+    | Include the columns aaded columns, making them visible on the Table.
+    | Each column can be configured with properties, filters, actions...
+    |
+    */
     public function columns(): array
     {
         return {{ columns }};
@@ -106,4 +143,10 @@ class {{ componentName }} extends PowerGridComponent
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
     */
+
+    public function template(): ?string
+    {
+        return null;
+    }
+
 }

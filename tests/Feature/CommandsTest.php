@@ -18,12 +18,38 @@ it('creates a PowerGrid Table', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
 
     $this->assertFileExists($this->tableFilePath);
 
     File::delete($this->tableFilePath);
 });
+
+
+it('publishes the Demo Table', function () {
+    $tableFile =  __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/app/Http/Livewire/PowerGridDemoTable.php';
+    $viewsFile =  __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/resources/views/powergrid-demo.blade.php';
+
+    File::delete($tableFile);
+    File::delete($viewsFile);
+
+    $this->artisan('powergrid:demo')
+        ->expectsOutput("⚡ *** PowerGrid Demo Table is ready! ***")
+        ->expectsOutput("\n⚡ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]")
+        ->expectsOutput("\n⚡ powergrid-demo.blade.php was successfully created at [resources/views/]")
+        ->expectsOutput("\n⚡ *** Usage ***")
+        ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.")
+        ->expectsOutput("\n➤ Visit http://your-app/powergrid. Enjoy it!\n");
+
+
+    $this->assertFileExists($tableFile);
+    $this->assertFileExists($viewsFile);
+
+    File::delete($tableFile);
+    File::delete($viewsFile);
+});
+
 
 it('does not accept an empty table name', function () {
     File::delete($this->tableFilePath);

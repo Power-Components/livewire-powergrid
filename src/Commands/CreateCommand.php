@@ -15,7 +15,7 @@ class CreateCommand extends Command
     {--template= : name of the file that will be used as a template}';
 
     protected $description = 'Make a new PowerGrid table component.';
-
+    
     public function handle()
     {
         if (config('livewire-powergrid.check_version') === true) {
