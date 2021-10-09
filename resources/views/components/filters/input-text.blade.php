@@ -30,7 +30,7 @@
                     </div>
                     <input
                         data-id="{{ data_get($inputText, 'field') }}"
-                        wire:input.debounce.800ms="filterInputText('{{ $data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
+                        wire:input.debounce.800ms="filterInputText('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"
                         placeholder="{{ $column->placeholder ?: $column->title }}">
