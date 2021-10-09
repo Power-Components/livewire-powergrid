@@ -17,16 +17,24 @@ use App\Models\User;
 use Illuminate\Support\Carbon;
 use Faker\Factory as FakerFactory;
 use Illuminate\Database\QueryException;
+use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
-class PowergridDemoTable extends PowerGridComponent
+class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
+
     protected $demoUsers = null; //Demo users. Should be removed in a real project.
+
+    protected function getListeners()
+    {
+        $this->listeners[] = 'alertEvent';
+        return $this->listeners;
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -35,6 +43,12 @@ class PowergridDemoTable extends PowerGridComponent
     | Setup Table's general features
     |
     */
+
+    public function alertEvent($data)
+    {
+        $this->dispatchBrowserEvent('showAlert', $data);
+    }
+
     public function setUp()
     {
         $this->showCheckBox() //Adds checkboxes to each table row
@@ -158,23 +172,16 @@ class PowergridDemoTable extends PowerGridComponent
     |
     */
 
-    /*
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption(__('Edit'))
-               ->class('bg-indigo-500 text-white')
-               ->route('user.edit', ['user' => 'id']),
-
-           Button::add('destroy')
-               ->caption(__('Delete'))
-               ->class('bg-red-500 text-white')
-               ->route('user.destroy', ['user' => 'id'])
-               ->method('delete')
+           Button::add('info')
+               ->caption(__('Click me'))
+               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
+               ->emit('alertEvent', ['id' => 'id']),
         ];
     }
-    */
+
 
     /*
     |--------------------------------------------------------------------------
@@ -194,7 +201,7 @@ class PowergridDemoTable extends PowerGridComponent
         */
         return false;
         //--------------------------------------------------------------------------
-        
+
         try {
             $updated = user::query()->find($data['id'])->update([
                 $data['field'] => $data['value']
@@ -222,7 +229,7 @@ class PowergridDemoTable extends PowerGridComponent
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | ❗ Demo Users (Should be removed in a real project)
@@ -262,7 +269,7 @@ class PowergridDemoTable extends PowerGridComponent
             $user->setAttribute('state_in_usa', $faker->stateAbbr());
             $user->setAttribute('has_laracon_ticket', boolval(rand(0, 1)));
             $user->setAttribute('laravel_since', $faker->dateTimeBetween('-1 year', now()));
-        
+
             $users->add($user);
         }
 
