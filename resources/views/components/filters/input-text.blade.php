@@ -25,7 +25,7 @@
                             <option value="ends_with">{{ trans('livewire-powergrid::datatable.input_text_options.ends_with') }}</option>
                         </select>
                         <div class="{{ $theme->relativeDivClass }}">
-                            <x-livewire-powergrid::icons.down/>
+                            <x-livewire-powergrid::icons.down class="w-5 h-5"/>
                         </div>
                     </div>
                     <input
