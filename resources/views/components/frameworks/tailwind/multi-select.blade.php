@@ -7,7 +7,7 @@
 <div>
     <div x-cloak x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
          x-init="loadOptions()">
-        <input name="values" type="hidden" x-bind:value="selectedValues()">
+        <input name="values" type="hidden" readonly x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">
             <div class="flex flex-col items-center relative">
                 <div x-on:click="open" class="w-full multi_select_{{ $column->field }}"
@@ -28,7 +28,8 @@
                                 </div>
                             </template>
                             <div x-show="selected.length === 0" class="flex-1">
-                                <input placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
+                                <input readonly
+                                       placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
                                        class="w-full block bg-white-200 text-gray-700 py-2 text-sm uppercase px-3 leading-tight focus:outline-none dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-400"
                                        x-bind:value="selectedValues()"
                                 >
