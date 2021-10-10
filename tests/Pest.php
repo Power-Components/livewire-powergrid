@@ -6,6 +6,11 @@ use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);
 
+function getLaravelDir(): string
+{
+    return  __DIR__ . '/../vendor/orchestra/testbench-core/laravel/';
+}
+
 function powergrid()
 {
     $columns = [
@@ -58,7 +63,7 @@ function powergridJoinCategory()
     ];
 
     $component             = new PowerGridComponent(1);
-    $component->datasource = Dish::query()->join('categories', function($categories) {
+    $component->datasource = Dish::query()->join('categories', function ($categories) {
         $categories->on('dishes.category_id', '=', 'categories.id');
     })->select('dishes.*', 'categories.name as category_name');
     $component->columns = $columns;
