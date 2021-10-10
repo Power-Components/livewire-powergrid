@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
-    $this->tableFilePath = __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/app/Http/Livewire/DemoTable.php';
+    $this->tableFilePath = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->model_name_question = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
     $this->datasource_question = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
     $this->model_path_question = 'Enter your Model path (E.g., <comment>App\Models\User</comment>)';
@@ -28,8 +28,8 @@ it('creates a PowerGrid Table', function () {
 
 
 it('publishes the Demo Table', function () {
-    $tableFile =  __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/app/Http/Livewire/PowerGridDemoTable.php';
-    $viewsFile =  __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/resources/views/powergrid-demo.blade.php';
+    $tableFile =  getLaravelDir() . 'app/Http/Livewire/PowerGridDemoTable.php';
+    $viewsFile =  getLaravelDir() . 'resources/views/powergrid-demo.blade.php';
 
     File::delete($tableFile);
     File::delete($viewsFile);
@@ -162,7 +162,7 @@ it('does NOT overwride the existing table file', function () {
 
 
 it('publishes config file', function () {
-    $configFilePath = __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/config/livewire-powergrid.php';
+    $configFilePath = getLaravelDir() . 'config/livewire-powergrid.php';
 
     File::delete($configFilePath);
 
@@ -175,7 +175,7 @@ it('publishes config file', function () {
 });
 
 it('publishes views file', function () {
-    $dirPath = __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/resources/views/vendor/livewire-powergrid';
+    $dirPath = getLaravelDir() . 'resources/views/vendor/livewire-powergrid';
 
     File::delete($dirPath);
 
@@ -188,7 +188,7 @@ it('publishes views file', function () {
 });
 
 it('publishes lang file', function () {
-    $dirPath = __DIR__ . '/../../vendor/orchestra/testbench-core/laravel/resources/lang/vendor/livewire-powergrid';
+    $dirPath = getLaravelDir() . 'resources/lang/vendor/livewire-powergrid';
 
     File::delete($dirPath);
 
