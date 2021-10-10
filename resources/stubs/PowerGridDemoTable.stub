@@ -36,6 +36,11 @@ class PowerGridDemoTable extends PowerGridComponent
         return $this->listeners;
     }
 
+    public function alertEvent($data)
+    {
+        $this->dispatchBrowserEvent('showAlert', $data);
+    }
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
@@ -43,11 +48,6 @@ class PowerGridDemoTable extends PowerGridComponent
     | Setup Table's general features
     |
     */
-
-    public function alertEvent($data)
-    {
-        $this->dispatchBrowserEvent('showAlert', $data);
-    }
 
     public function setUp()
     {

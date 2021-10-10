@@ -53,5 +53,11 @@
         <!-- Scripts -->
         @livewireScripts
         @powerGridScripts
+
+        <script>
+            window.addEventListener('showAlert', event => {
+                alert('You clicked in user id#' + event.detail.id);
+            })
+        </script>
     </body>
 </html>
