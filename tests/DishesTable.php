@@ -22,7 +22,7 @@ class DishesTable extends PowerGridComponent
     use ActionButton;
 
     protected $listeners = [
-        'deletedEvent' => 'deletedEvent'
+        'deletedEvent' => 'deletedEvent',
     ];
 
     public array $eventId = [];
@@ -51,8 +51,8 @@ class DishesTable extends PowerGridComponent
     {
         return [
             'category' => [
-                'name'
-            ]
+                'name',
+            ],
         ];
     }
 
@@ -121,7 +121,7 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Categoria'))
                 ->field('category_name')
                 ->placeholder('Categoria placeholder')
-                ->makeInputMultiSelect(Category::all(), 'name', 'category_id'),
+                ->makeInputSelect(Category::all(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
@@ -148,7 +148,7 @@ class DishesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Data de produção'))
                 ->field('produced_at_formatted')
-                ->makeInputDatePicker('produced_at')
+                ->makeInputDatePicker('produced_at'),
         ];
     }
 
@@ -166,7 +166,7 @@ class DishesTable extends PowerGridComponent
                 ->caption(__('Deletar'))
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
-                ->method('delete')
+                ->method('delete'),
         ];
     }
 
@@ -182,7 +182,7 @@ class DishesTable extends PowerGridComponent
 
         try {
             $updated = Dish::query()->find($data['id'])->update([
-                $data['field'] => $data['value']
+                $data['field'] => $data['value'],
             ]);
         } catch (QueryException $exception) {
             $updated = false;
@@ -200,7 +200,7 @@ class DishesTable extends PowerGridComponent
             ],
             "error" => [
                 '_default_message' => __('Error updating the data.'),
-            ]
+            ],
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);

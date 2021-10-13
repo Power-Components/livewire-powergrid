@@ -1,5 +1,7 @@
 @props([
     'theme' => '',
+    'class' => '',
+    'column' => null,
     'inline' => null,
     'select' => null
 ])
@@ -19,7 +21,7 @@
                         data-live-search="{{ data_get($select, 'live-search') }}">
                     <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
                     @foreach(data_get($select, 'data_source') as $relation)
-                        <option value="{{ data_get($select, 'id')  }}">{{ $relation[data_get($select, 'display_field') ] }}</option>
+                        <option value="{{ data_get($relation, 'id')  }}">{{ $relation[data_get($select, 'display_field') ] }}</option>
                     @endforeach
                 </select>
                 <div class="{{ $theme->relativeDivClass }}">

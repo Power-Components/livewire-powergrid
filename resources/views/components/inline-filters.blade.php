@@ -23,6 +23,7 @@
                                     <x-livewire-powergrid::filters.date-picker
                                         :date="$date"
                                         :inline="true"
+                                        :column="$column"
                                         :theme="$theme->filterDatePicker"/>
                                 @endif
                             @endforeach

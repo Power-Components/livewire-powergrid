@@ -32,7 +32,7 @@
                 </p>
             </div>
         @endif
-        
+
 @if ($paginator->hasPages())
         <div class="flex justify-center mt-2 md:flex-none md:justify-end sm:mt-0">
 
@@ -57,7 +57,7 @@
             </a>
 
         @endif
-        
+
         @foreach ($elements as $element)
             @if (is_array($element))
 
