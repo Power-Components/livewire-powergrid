@@ -13,7 +13,7 @@ it('propertly  displays the results and options', function () {
             '<option value="">Carnes</option>',
             '<option value="">Peixe</option>',
         ]);
-});
+})->skip();
 
 it('properly filter with category_id', function () {
     livewire(DishesTable::class)
