@@ -1,11 +1,13 @@
 <x-livewire-powergrid::table-base
     :theme="$theme->table">
     <x-slot name="header">
-        <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
+        <tr class="{{ $theme->table->trClass }}"
+            style="{{ $theme->table->trStyle }}">
+            @if($checkbox)
             <x-livewire-powergrid::checkbox-all
                 :checkbox="$checkbox"
                 :theme="$theme->checkbox"/>
-
+            @endif
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
@@ -50,10 +52,12 @@
                     <tr class="{{ $theme->table->trBodyClass }}"
                         style="{{ $theme->table->trBodyStyle }}"
                         wire:key="{{ $row->id }}">
-                        <x-livewire-powergrid::checkbox-row
-                            :theme="$theme->checkbox"
-                            :attribute="$row->{$checkboxAttribute}"
-                            :checkbox="$checkbox"/>
+                        @if($checkbox)
+                            <x-livewire-powergrid::checkbox-row
+                                :theme="$theme->checkbox"
+                                :attribute="$row->{$checkboxAttribute}"
+                                :checkbox="$checkbox"/>
+                        @endif
 
                         <x-livewire-powergrid::row
                             :primaryKey="$primaryKey"

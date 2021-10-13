@@ -323,12 +323,14 @@ class Collection implements FilterInterface
     public function filterContains(): Collection
     {
         if (!empty($this->search)) {
-            $this->query = $this->query->filter(function ($row) {
+            $this->query = $this->query->filter(function ($row) {             
                 foreach ($this->columns as $column) {
                     $field = $column->field;
-                    if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
-                        return false !== stristr($row->{$field}, strtolower($this->search));
-                    }
+                    try {
+                        if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                            return false !== stristr($row->{$field}, strtolower($this->search));
+                        }
+                    } catch (\Exception $exception) {}
                 }
 
                 return false;
