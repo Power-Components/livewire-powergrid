@@ -2,18 +2,17 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use App\Http\Livewire\DishesTable;
 use App\Models\Dish;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Storage;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
- * @property mixed exportBatch
+ * @property Batch exportBatch
  */
 trait Exportable
 {
@@ -23,8 +22,6 @@ trait Exportable
 
     public array $exportType = [];
 
-    public bool $onQueue = false;
-
     public bool $exporting = false;
 
     public bool $exportFinished = false;
@@ -33,18 +30,24 @@ trait Exportable
 
     public string $extension = '';
 
+    public int $total = 0;
+
+    public int $queues = 0;
+
+    public int $progress = 0;
+
+    public array $exportedFiles = [];
+
     /**
      * @param string $fileName
      * @param array|string[] $type
-     * @param bool $onQueue
      * @return Exportable
      */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], bool $onQueue = false)
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'])
     {
         $this->exportOption   = true;
         $this->exportFileName = $fileName;
         $this->exportType     = $type;
-        $this->onQueue        = $onQueue;
 
         return $this;
     }
@@ -52,7 +55,7 @@ trait Exportable
     /**
      * @throws \Exception
      */
-    public function prepareToExport(bool $selected = false, $datasource)
+    public function prepareToExport(bool $selected = false)
     {
         $inClause = $this->filtered;
 
@@ -62,21 +65,21 @@ trait Exportable
 
         if ($this->isCollection) {
             if ($inClause) {
-                $results = $this->resolveCollection($datasource)->whereIn($this->primaryKey, $inClause);
+                $results = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
 
                 return $this->transform($results);
             }
 
-            return $this->transform($this->resolveCollection($datasource));
+            return $this->transform($this->resolveCollection());
         }
 
         if ($inClause) {
-            $results = $this->resolveModel($datasource)->whereIn($this->primaryKey, $inClause)->get();
+            $results = $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get();
 
             return $this->transform($results);
         }
 
-        $results = $this->resolveModel($datasource)->get();
+        $results = $this->resolveModel()->get();
 
         return $this->transform($results);
     }
@@ -89,7 +92,7 @@ trait Exportable
     {
         $this->runOnQueue(ExportToXLS::class, $selected);
 
-        if (!$this->onQueue) {
+        if ($this->queues === 0) {
             return (new ExportToXLS())
                 ->fileName($this->exportFileName)
                 ->setData($this->columns(), $this->prepareToExport($selected))
@@ -98,14 +101,14 @@ trait Exportable
     }
 
     /**
-     * @throws \Throwable
      * @return BinaryFileResponse
+     * @throws \Throwable
      */
     public function exportToCsv(bool $selected = false)
     {
         $this->runOnQueue(ExportToCsv::class, $selected);
 
-        if (!$this->onQueue) {
+        if ($this->queues === 0) {
             return (new ExportToCsv())
                 ->fileName($this->exportFileName)
                 ->setData($this->columns(), $this->prepareToExport($selected))
@@ -126,38 +129,66 @@ trait Exportable
     {
         if (!is_null($this->exportBatch)) {
             $this->exportFinished = $this->exportBatch->finished();
-
+            $this->progress       = $this->exportBatch->progress();
             if ($this->exportFinished) {
                 $this->exporting = false;
             }
         }
     }
 
-    public function downloadExport(): BinaryFileResponse
+    public function downloadExport(string $file): BinaryFileResponse
     {
-        return response()->download(storage_path($this->exportFileName . '.' . $this->extension));
+        return response()->download(storage_path($file));
     }
 
     /**
      * @throws \Throwable
      */
-    public function runOnQueue(string $class, bool $selected = false)
+    public function runOnQueue(string $type)
     {
-        if ($this->onQueue) {
+        if ($this->queues) {
             $this->exporting      = true;
             $this->exportFinished = false;
 
-            switch ($class) {
-                case ExportToCsv::class: $this->extension = 'csv';
+            switch ($type) {
+                case ExportToCsv::class:
+                    $this->extension = 'csv';
+
                     break;
-                case ExportToXLS::class: $this->extension = 'xls';
+                case ExportToXLS::class:
+                    $this->extension = 'xlsx';
+            }
+
+            $queues  = collect();
+            $perPage = $this->totalOfRecord / $this->queues;
+            $page    = 0;
+            $limit   = $perPage;
+
+            for ($i = 1; $i < ($this->queues +1); $i++) {
+                $queues->push(new ExportJob(
+                    get_called_class(),
+                    $type,
+                    $this->exportFileName,
+                    $this->columns(),
+                    $page,
+                    $limit,
+                ));
+
+                $this->exportedFiles[] = $this->exportFileName . '-' . $page . '-' . $limit . '.' . $this->extension;
+
+                $page  = $limit + 1;
+                $limit = ($page - 1) + $perPage;
             }
 
             $batch = Bus::batch([
-                new ExportJob($class, $this->exportFileName, $this->columns(), 0, 0, 200),
-            ])->dispatch();
+                $queues->toArray(),
+            ])
+                ->name('PowerGrid Batch')
+                ->dispatch();
 
             $this->batchId = $batch->id;
+
+            return true;
         }
     }
 }

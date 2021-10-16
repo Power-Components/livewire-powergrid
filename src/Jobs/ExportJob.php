@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Jobs;
 
+use App\Http\Livewire\DishesTable;
 use App\Models\Dish;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -9,8 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class ExportJob implements ShouldQueue
 {
@@ -22,36 +22,70 @@ class ExportJob implements ShouldQueue
 
     private string $exportFileName;
 
+    private PowerGridComponent $componentTable;
+
     private array $columns;
 
     private $datasource;
 
     private string $type;
 
-    private int $take;
+    private int $offset;
 
     private int $limit;
 
     /**
+     * @param string $componentTable
+     * @param string $type
      * @param string $exportFileName
      * @param array $columns
-     * @param Collection $data
+     * @param $datasource
+     * @param $offset
+     * @param $limit
      */
-    public function __construct(string $type, string $exportFileName, array $columns, $datasource, $take, $limit)
-    {
+    public function __construct(
+        string $componentTable,
+        string $type,
+        string $exportFileName,
+        array $columns,
+        $offset,
+        $limit
+    ) {
         $this->type           = $type;
         $this->exportFileName = $exportFileName;
         $this->columns        = $columns;
-        $this->datasource     = $datasource;
-        $this->take           = $take;
+        $this->offset         = $offset;
         $this->limit          = $limit;
+
+        $this->componentTable = new $componentTable();
     }
 
     public function handle()
     {
+        $fileName = $this->exportFileName . '-' . $this->offset . '-' . $this->limit;
+
+        $query = $this->componentTable
+            ->datasource()
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->get();
+
         return (new $this->type())
-            ->fileName($this->exportFileName . '-' . $this->take . '-' . $this->limit)
-            ->setData($this->columns, Dish::query()->take($this->take)->limit($this->limit)->get())
+            ->fileName($fileName)
+            ->setData($this->columns, $this->transform($query))
             ->store();
+    }
+
+    private function transform($results)
+    {
+        return $results->transform(function ($row) {
+            $row = (object)$row;
+            $columns = $this->componentTable->addColumns()->columns;
+            foreach ($columns as $key => $column) {
+                $row->{$key} = $column($row);
+            }
+
+            return $row;
+        });
     }
 }

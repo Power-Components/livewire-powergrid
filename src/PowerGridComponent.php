@@ -56,13 +56,20 @@ class PowerGridComponent extends Component
         'eventToggleChanged'    => 'eventInputChanged',
         'eventMultiSelect'      => 'eventMultiSelect',
         'eventRefresh'          => '$refresh',
-        'eventToggleColumn'     => 'toggleColumn'
+        'eventToggleColumn'     => 'toggleColumn',
 
     ];
 
     public bool $toggleColumns = false;
 
     public array $relationSearch = [];
+
+    public function queue()
+    {
+        return [
+            'queues' => 10,
+        ];
+    }
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -82,7 +89,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    protected function datasource()
+    public function datasource()
     {
         return null;
     }
@@ -195,7 +202,7 @@ class PowerGridComponent extends Component
         return view($this->powerGridTheme->layout->table, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,
-            'table' => 'livewire-powergrid::components.table'
+            'table' => 'livewire-powergrid::components.table',
         ]);
     }
 
@@ -204,6 +211,8 @@ class PowerGridComponent extends Component
         if (blank($datasource)) {
             return $this->datasource();
         }
+
+        $this->totalOfRecord = $datasource->count();
 
         return $datasource;
     }
@@ -280,7 +289,7 @@ class PowerGridComponent extends Component
             "error" => [
                 '_default_message' => __('Error updating the data.'),
                 //'custom_field' => __('Error updating custom field.'),
-            ]
+            ],
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
@@ -343,7 +352,8 @@ class PowerGridComponent extends Component
 
     private function instanceOfCollection($datasource): void
     {
-        $checkDatasource = (is_a($datasource, PowerGrid::class)
+        $checkDatasource = (
+            is_a($datasource, PowerGrid::class)
             || is_array($datasource)
             || is_a($datasource, BaseCollection::class)
         );

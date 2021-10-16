@@ -17,7 +17,9 @@
                 @endif
             @endif
 
-            @include($theme->layout->message)
+            <div class="my-3">
+                @include($theme->layout->message)
+            </div>
 
             <div class="overflow-hidden overflow-x-auto bg-white shadow overflow-y-auto relative">
                 @include($table)
