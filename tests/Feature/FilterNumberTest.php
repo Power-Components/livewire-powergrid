@@ -62,8 +62,8 @@ function filterNumber(string $field, ?string $min, ?string $max, ?string $thousa
                 'start'     => $min,
                 'end'       => $max,
                 'thousands' => $thousands,
-                'decimal'   => $decimal
-            ]
-        ]
+                'decimal'   => $decimal,
+            ],
+        ],
     ];
 }

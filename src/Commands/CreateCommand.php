@@ -15,7 +15,7 @@ class CreateCommand extends Command
     {--template= : name of the file that will be used as a template}';
 
     protected $description = 'Make a new PowerGrid table component.';
-    
+
     public function handle()
     {
         if (config('livewire-powergrid.check_version') === true) {
@@ -36,6 +36,7 @@ class CreateCommand extends Command
 
         if (empty(trim($tableName))) {
             $this->error('You must provide a name for your ⚡ PowerGrid Table!');
+
             return;
         }
 
@@ -47,6 +48,7 @@ class CreateCommand extends Command
 
         if (!in_array(strtolower($creationModel), ['m', 'c'])) {
             $this->error('Please enter <comment>[M]</comment> for Model or <comment>[C]</comment> for Collection');
+
             return;
         }
 
@@ -54,6 +56,7 @@ class CreateCommand extends Command
 
         if (empty(trim($modelName))) {
             $this->error('Error: Model name is required.');
+
             return;
         }
 
@@ -70,15 +73,18 @@ class CreateCommand extends Command
         if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+
                 return;
             }
 
-            $this->error('Error: "'.$modelName.'" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+            $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+
             return;
         }
 
         if (empty($modelName)) {
             $this->error('Could not create, Model path is missing');
+
             return;
         }
 
@@ -164,41 +170,41 @@ class CreateCommand extends Command
 
             if ($column->getType()->getName() === 'datetime') {
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'date') {
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '_formatted\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'boolean') {
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
 
                 continue;
             }
 
             if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
 
                 continue;
             }
 
             if ($column->getType()->getName() === 'string') {
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+                $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
 
                 continue;
             }
 
             $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-            $columns    .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+            $columns .= '            Column::add()' . "\n" . '                ->title(__(\'' . $title . '\'))' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
         }
 
         $columns .= "        ]\n";

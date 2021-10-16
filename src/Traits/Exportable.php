@@ -5,7 +5,10 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use App\Http\Livewire\DishesTable;
 use App\Models\Dish;
 use Illuminate\Bus\Batch;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
@@ -101,7 +104,6 @@ trait Exportable
     }
 
     /**
-     * @return BinaryFileResponse
      * @throws \Throwable
      */
     public function exportToCsv(bool $selected = false)
@@ -150,37 +152,9 @@ trait Exportable
             $this->exporting      = true;
             $this->exportFinished = false;
 
-            switch ($type) {
-                case ExportToCsv::class:
-                    $this->extension = 'csv';
+            $queues = $this->createQueue($type);
 
-                    break;
-                case ExportToXLS::class:
-                    $this->extension = 'xlsx';
-            }
-
-            $queues  = collect();
-            $perPage = $this->totalOfRecord / $this->queues;
-            $page    = 0;
-            $limit   = $perPage;
-
-            for ($i = 1; $i < ($this->queues +1); $i++) {
-                $queues->push(new ExportJob(
-                    get_called_class(),
-                    $type,
-                    $this->exportFileName,
-                    $this->columns(),
-                    $page,
-                    $limit,
-                ));
-
-                $this->exportedFiles[] = $this->exportFileName . '-' . $page . '-' . $limit . '.' . $this->extension;
-
-                $page  = $limit + 1;
-                $limit = ($page - 1) + $perPage;
-            }
-
-            $batch = Bus::batch([
+            $batch  = Bus::batch([
                 $queues->toArray(),
             ])
                 ->name('PowerGrid Batch')
@@ -190,5 +164,42 @@ trait Exportable
 
             return true;
         }
+    }
+
+    public function createQueue(string $type): Collection
+    {
+        $queues  = collect();
+        $perPage = $this->total / $this->queues;
+        $page    = 0;
+        $limit   = $perPage;
+
+        switch ($type) {
+            case ExportToCsv::class:
+                $this->extension = 'csv';
+
+                break;
+            case ExportToXLS::class:
+                $this->extension = 'xlsx';
+        }
+
+        for ($i = 1; $i < ($this->queues + 1); $i++) {
+            $file = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . $page . '-' . $limit . '.' . $this->extension;
+
+            $queues->push(new ExportJob(
+                get_called_class(),
+                $type,
+                $file,
+                $this->columns(),
+                $page,
+                $limit,
+            ));
+
+            $this->exportedFiles[] = $file;
+
+            $page  = $limit + 1;
+            $limit = ($page - 1) + $perPage;
+        }
+
+        return $queues;
     }
 }

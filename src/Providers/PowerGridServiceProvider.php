@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
+use PowerComponents\LivewirePowerGrid\Commands\DemoCommand;
+use PowerComponents\LivewirePowerGrid\Commands\PublishCommand;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
-use PowerComponents\LivewirePowerGrid\Commands\DemoCommand;
-use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
-use PowerComponents\LivewirePowerGrid\Commands\PublishCommand;
 
 class PowerGridServiceProvider extends ServiceProvider
 {
@@ -67,7 +67,7 @@ class PowerGridServiceProvider extends ServiceProvider
         ], 'livewire-powergrid-config');
 
         $this->publishes([
-            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/livewire-powergrid')
+            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/livewire-powergrid'),
         ], 'livewire-powergrid-lang');
     }
 }

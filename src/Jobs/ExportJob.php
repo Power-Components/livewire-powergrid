@@ -20,7 +20,7 @@ class ExportJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private string $exportFileName;
+    private string $fileName;
 
     private PowerGridComponent $componentTable;
 
@@ -37,7 +37,7 @@ class ExportJob implements ShouldQueue
     /**
      * @param string $componentTable
      * @param string $type
-     * @param string $exportFileName
+     * @param string $fileName
      * @param array $columns
      * @param $datasource
      * @param $offset
@@ -46,24 +46,22 @@ class ExportJob implements ShouldQueue
     public function __construct(
         string $componentTable,
         string $type,
-        string $exportFileName,
+        string $fileName,
         array $columns,
         $offset,
         $limit
     ) {
-        $this->type           = $type;
-        $this->exportFileName = $exportFileName;
-        $this->columns        = $columns;
-        $this->offset         = $offset;
-        $this->limit          = $limit;
+        $this->type     = $type;
+        $this->fileName = $fileName;
+        $this->columns  = $columns;
+        $this->offset   = $offset;
+        $this->limit    = $limit;
 
         $this->componentTable = new $componentTable();
     }
 
     public function handle()
     {
-        $fileName = $this->exportFileName . '-' . $this->offset . '-' . $this->limit;
-
         $query = $this->componentTable
             ->datasource()
             ->offset($this->offset)

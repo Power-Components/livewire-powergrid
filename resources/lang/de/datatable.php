@@ -10,7 +10,7 @@ return [
         'clear_filter'     => 'Filter löschen',
         'no_data'          => 'Keine Ergebnisse gefunden',
         'all'              => 'Alle',
-        'selected'         => 'Ausgewählt'
+        'selected'         => 'Ausgewählt',
     ],
     'placeholders' => [
         'search' => 'Suche',
@@ -41,5 +41,5 @@ return [
         'contains_not' => 'enthält nicht',
         'starts_with'  => 'beginnt mit',
         'ends_with'    => 'endet with',
-    ]
+    ],
 ];

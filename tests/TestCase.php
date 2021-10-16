@@ -2,12 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use \Orchestra\Testbench\TestCase as BaseTestCase;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Livewire\LivewireServiceProvider;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 use function Pest\Faker\faker;
 
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
@@ -61,70 +61,70 @@ class TestCase extends BaseTestCase
                 'category_id' => 6,
                 'price'       => 10.00,
                 'in_stock'    => true,
-                'produced_at' => '2021-01-01 00:00:00'
+                'produced_at' => '2021-01-01 00:00:00',
             ],
             [
                 'name'        => 'Peixada da chef Nábia',
                 'category_id' => 1,
                 'price'       => 20.50,
                 'in_stock'    => true,
-                'produced_at' => '2021-02-02 00:00:00'
+                'produced_at' => '2021-02-02 00:00:00',
             ],
             [
                 'name'        => 'Carne Louca',
                 'category_id' => 1,
                 'price'       => 30.00,
                 'in_stock'    => true,
-                'produced_at' => '2021-03-03 00:00:00'
+                'produced_at' => '2021-03-03 00:00:00',
             ],
             [
                 'name'        => 'Bife à Rolê',
                 'category_id' => 1,
                 'price'       => 40.50,
                 'in_stock'    => true,
-                'produced_at' => '2021-04-04 00:00:00'
+                'produced_at' => '2021-04-04 00:00:00',
             ],
             [
                 'name'        => 'Francesinha vegana',
                 'category_id' => 2,
                 'price'       => 50.00,
                 'in_stock'    => true,
-                'produced_at' => '2021-05-05 00:00:00'
+                'produced_at' => '2021-05-05 00:00:00',
             ],
             [
                 'name'        => 'Francesinha',
                 'category_id' => 1,
                 'price'       => 60.50,
                 'in_stock'    => false,
-                'produced_at' => '2026-06-06 00:00:00'
+                'produced_at' => '2026-06-06 00:00:00',
             ],
             [
                 'name'        => 'Barco-Sushi da Sueli',
                 'category_id' => 1,
                 'price'       => 70.00,
                 'in_stock'    => false,
-                'produced_at' => '2021-07-07 19:59:59'
+                'produced_at' => '2021-07-07 19:59:59',
             ],
             [
                 'name'        => 'Barco-Sushi Simples',
                 'category_id' => 1,
                 'price'       => 80.40,
                 'in_stock'    => false,
-                'produced_at' => '2021-08-08 00:00:00'
+                'produced_at' => '2021-08-08 00:00:00',
             ],
             [
                 'name'        => 'Polpetone Filé Mignon',
                 'category_id' => 1,
                 'price'       => 90.10,
                 'in_stock'    => false,
-                'produced_at' => '2021-09-09 00:00:00'
+                'produced_at' => '2021-09-09 00:00:00',
             ],
             [
                 'name'        => 'борщ',
                 'category_id' => 7,
                 'price'       => 100.90,
                 'in_stock'    => false,
-                'produced_at' => '2021-10-10 00:00:00'
+                'produced_at' => '2021-10-10 00:00:00',
             ],
             ['name' => 'Bife à Parmegiana', 'category_id' => 1],
             ['name' => 'Berinjela à Parmegiana', 'category_id' => 4],
@@ -233,7 +233,7 @@ class TestCase extends BaseTestCase
                 'price'       => $price,
                 'calories'    => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
                 'in_stock'    => $in_stock,
-                'produced_at' => $produced_at
+                'produced_at' => $produced_at,
             ];
 
             DB::table('dishes')->insert($dish);

@@ -29,7 +29,7 @@ return [
          */
         'bootstrap-select' => [
             'js'  => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js',
-            'css' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css'
+            'css' => 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css',
         ],
         /*
          * https://flatpickr.js.org
@@ -43,10 +43,10 @@ return [
                     'locale'     => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
-                    'time_24hr'  => true
-                ]
-            ]
-        ]
+                    'time_24hr'  => true,
+                ],
+            ],
+        ],
     ],
 
     /*
@@ -95,9 +95,9 @@ return [
     | Define here the CDN source for imported JS Framework
     |
     */
-    
+
     'js_framework_cdn' => [
-        'alpinejs' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js'
+        'alpinejs' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
         //'alpinejs' => 'https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js' //Alpine 2.8
     ],
 

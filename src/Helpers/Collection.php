@@ -195,9 +195,9 @@ class Collection implements FilterInterface
     private function validateInputTextOptions(string $field): bool
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
-                strtolower($this->filters['input_text_options'][$field]),
-                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-            );
+            strtolower($this->filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
@@ -323,14 +323,16 @@ class Collection implements FilterInterface
     public function filterContains(): Collection
     {
         if (!empty($this->search)) {
-            $this->query = $this->query->filter(function ($row) {             
+            $this->query = $this->query->filter(function ($row) {
                 foreach ($this->columns as $column) {
                     $field = $column->field;
+
                     try {
                         if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
                             return false !== stristr($row->{$field}, strtolower($this->search));
                         }
-                    } catch (\Exception $exception) {}
+                    } catch (\Exception $exception) {
+                    }
                 }
 
                 return false;

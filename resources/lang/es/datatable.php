@@ -41,5 +41,5 @@ return [
         'contains_not' => 'No contiene',
         'starts_with'  => 'Comienza por',
         'ends_with'    => 'Termina en',
-    ]
+    ],
 ];

@@ -44,6 +44,6 @@ return [
     ],
     'export' => [
         'exporting'  => 'Please wait!',
-        'completed' => 'Export completed! Your files are ready for download',
+        'completed'  => 'Export completed! Your files are ready for download',
     ],
 ];

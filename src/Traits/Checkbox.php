@@ -32,4 +32,3 @@ trait Checkbox
         $this->checkboxAll = false;
     }
 }
-

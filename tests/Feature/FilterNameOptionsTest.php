@@ -84,10 +84,10 @@ function filterInputText(string $text, string $type): array
 {
     return [
         "input_text" => [
-            "name" => $text
+            "name" => $text,
         ],
         "input_text_options" => [
-            "name" => $type
-        ]
+            "name" => $type,
+        ],
     ];
 }

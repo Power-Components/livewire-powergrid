@@ -212,7 +212,7 @@ class PowerGridComponent extends Component
             return $this->datasource();
         }
 
-        $this->totalOfRecord = $datasource->count();
+        $this->total = $datasource->count();
 
         return $datasource;
     }

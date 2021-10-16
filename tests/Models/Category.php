@@ -16,7 +16,7 @@ class Category extends Model
     protected $table = 'categories';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function dishes()

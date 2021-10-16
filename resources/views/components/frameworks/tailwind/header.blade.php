@@ -11,7 +11,7 @@
 
         <div class="flex flex-row">
 
-            @if($exportOption && $queues === 0)
+            @if($exportOption)
                 <div class="mr-2 mt-2 sm:mt-0">
                     @includeIf($theme->base. ''.$theme->name.'.export')
                 </div>
@@ -39,7 +39,7 @@
         </div>
     @endif
 
-    @if(count($exportedFiles) && $exportFinished)
+    @if($exportFinished)
         <div class="w-full my-3 dark:bg-gray-800">
             <div x-data={show:true} class="rounded-top">
                 <div class="px-4 py-3 rounded-md cursor-pointer bg-gray-200 shadow dark:bg-gray-500"

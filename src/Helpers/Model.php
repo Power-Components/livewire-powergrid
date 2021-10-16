@@ -107,9 +107,9 @@ class Model implements FilterInterface
     private function validateInputTextOptions(string $field): bool
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
-                strtolower($this->filters['input_text_options'][$field]),
-                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-            );
+            strtolower($this->filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
@@ -134,27 +134,27 @@ class Model implements FilterInterface
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
         switch ($textFieldOperator) {
-            case 'is' :
+            case 'is':
                 $query->where($field, '=', $value);
 
                 break;
-            case 'is_not' :
+            case 'is_not':
                 $query->where($field, '!=', $value);
 
                 break;
-            case 'starts_with' :
+            case 'starts_with':
                 $query->where($field, 'like', $value . '%');
 
                 break;
-            case 'ends_with' :
+            case 'ends_with':
                 $query->where($field, 'like', '%' . $value);
 
                 break;
-            case 'contains' :
+            case 'contains':
                 $query->where($field, 'like', '%' . $value . '%');
 
                 break;
-            case 'contains_not' :
+            case 'contains_not':
                 $query->where($field, 'not like', '%' . $value . '%');
 
                 break;

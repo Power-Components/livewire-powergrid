@@ -50,7 +50,7 @@ class Column
      * @param string $title
      * @return $this
      */
-    public function title( string $title ): Column
+    public function title(string $title): Column
     {
         $this->title = $title;
 
@@ -63,7 +63,7 @@ class Column
      * @param string $placeholder
      * @return $this
      */
-    public function placeholder( string $placeholder ): Column
+    public function placeholder(string $placeholder): Column
     {
         $this->placeholder = $placeholder;
 
@@ -100,7 +100,7 @@ class Column
      * @param string $field
      * @return $this
      */
-    public function field( string $field ): Column
+    public function field(string $field): Column
     {
         $this->field = $field;
 
@@ -114,7 +114,7 @@ class Column
      * @param string $styleAttr
      * @return $this
      */
-    public function headerAttribute( string $classAttr = '', string $styleAttr = '' ): Column
+    public function headerAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
         $this->headerClass = $classAttr;
         $this->headerStyle = $styleAttr;
@@ -129,7 +129,7 @@ class Column
      * @param string $styleAttr
      * @return $this
      */
-    public function bodyAttribute( string $classAttr = '', string $styleAttr = '' ): Column
+    public function bodyAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
         $this->bodyClass = $classAttr;
         $this->bodyStyle = $styleAttr;
@@ -144,7 +144,7 @@ class Column
         return $this;
     }
 
-    public function visibleInExport( bool $visible ): Column
+    public function visibleInExport(bool $visible): Column
     {
         $this->visibleInExport   = $visible;
         $this->searchable        = false;
@@ -159,7 +159,7 @@ class Column
      * @param array $settings
      * @return $this
      */
-    public function makeInputSelect( $datasource, string $displayField, string $dataField, array $settings = [] ): Column
+    public function makeInputSelect($datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
@@ -177,7 +177,7 @@ class Column
      * @param string $dataField
      * @return $this
      */
-    public function makeInputMultiSelect( $datasource, string $displayField, string $dataField ): Column
+    public function makeInputMultiSelect($datasource, string $displayField, string $dataField): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
@@ -197,7 +197,7 @@ class Column
      * @param string $classAttr
      * @return Column
      */
-    public function makeInputDatePicker( string $dataField, array $settings = [], string $classAttr = '' ): Column
+    public function makeInputDatePicker(string $dataField, array $settings = [], string $classAttr = ''): Column
     {
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class']   = $classAttr;
@@ -213,7 +213,7 @@ class Column
      * @param bool $hasPermission
      * @return Column
      */
-    public function editOnClick( bool $hasPermission = true ): Column
+    public function editOnClick(bool $hasPermission = true): Column
     {
         $this->editable = $hasPermission;
 
@@ -233,7 +233,7 @@ class Column
         $this->editable   = false;
         $this->toggleable = [
             'enabled' => $hasPermission,
-            'default' => [$trueLabel,  $falseLabel]
+            'default' => [$trueLabel,  $falseLabel],
         ];
 
         return $this;
@@ -245,7 +245,7 @@ class Column
      * @param string $decimal
      * @return $this
      */
-    public function makeInputRange( string $dataField = '', string $thousands = '', string $decimal = '' ): Column
+    public function makeInputRange(string $dataField = '', string $thousands = '', string $decimal = ''): Column
     {
         $this->inputs['number']['enabled']   = true;
         $this->inputs['number']['decimal']   = $decimal;
@@ -259,7 +259,7 @@ class Column
      * @param string $dataField
      * @return $this
      */
-    public function makeInputText( string $dataField = '' ): Column
+    public function makeInputText(string $dataField = ''): Column
     {
         $this->inputs['input_text']['enabled'] = true;
         $this->dataField                       = $dataField;
@@ -272,11 +272,11 @@ class Column
      * @param string $label
      * @return $this
      */
-    public function clickToCopy( $hasPermission, string $label = 'copy' ): Column
+    public function clickToCopy($hasPermission, string $label = 'copy'): Column
     {
         $this->clickToCopy = [
             'enabled' => $hasPermission,
-            'label'   => $label
+            'label'   => $label,
         ];
 
         return $this;
@@ -289,7 +289,7 @@ class Column
      * @param array $settings Settings
      * @return $this
      */
-    public function makeBooleanFilter(string $dataField = '' , string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
+    public function makeBooleanFilter(string $dataField = '', string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
     {
         $this->inputs['boolean_filter']['enabled']     = true;
         $this->inputs['boolean_filter']['true_label']  = $trueLabel;

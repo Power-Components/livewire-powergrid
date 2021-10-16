@@ -9,8 +9,8 @@ it('it infers a models attribute', function () {
     $collection = new Collection([
         new Dish([
             'id'   => '1',
-            'name' => 'Bolo'
-        ])
+            'name' => 'Bolo',
+        ]),
     ]);
 
     $grid =  PowerGrid::eloquent($collection)
@@ -25,7 +25,7 @@ it('it infers a models attribute', function () {
 it('returns relationships properly', function () {
     $stub = new Dish([
         'id'   => '1',
-        'name' => 'Bolo'
+        'name' => 'Bolo',
     ]);
 
     $stub->setRelation('parent', new Category(['name' => 'Parent']));
