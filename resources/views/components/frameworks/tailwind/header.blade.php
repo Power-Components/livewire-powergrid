@@ -12,9 +12,9 @@
         <div class="flex flex-row">
 
             @if($exportOption)
-            <div class="mr-2 mt-2 sm:mt-0">
-                @includeIf($theme->base. ''.$theme->name.'.export')
-            </div>
+                <div class="mr-2 mt-2 sm:mt-0">
+                    @includeIf($theme->base. ''.$theme->name.'.export')
+                </div>
             @endif
 
             @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
@@ -29,6 +29,33 @@
 
 </div>
 
+@if($onQueue)
+
+    @if($exporting && !$exportFinished)
+    <div wire:poll="updateExportProgress"
+         class="w-full p-2 my-2 text-sm bg-gray-50 rounded-sm border border-gray- shadow-sm text-center">
+        {{ trans('Exporting ... please wait.') }}
+    </div>
+    @endif
+
+    @if($exportFinished)
+    <div class="w-full p-2 my-2 text-sm bg-gray-50 rounded-sm border border-gray- shadow-sm text-center">
+        {{ trans('Done. Download file') }}
+        <a class="cursor-pointer text-blue-500"
+           wire:click="downloadExport">
+            {{ trans('here') }}
+        </a>
+    </div>
+    @endif
+    {{--    --}}
+    {{--        @if($exporting && !$exportFinished)--}}
+    {{--            <div wire:poll="updateExportProgress">Exporting...please wait.</div>--}}
+    {{--        @endif--}}
+
+    {{--        @if($exportFinished)--}}
+    {{--            Done. Download file <a class="stretched-link" wire:click="downloadExport">here</a>--}}
+    {{--        @endif--}}
+@endif
 <div class="w-full pt-3 mb-3">
 
     @foreach($enabledFilters as $field => $filter)
