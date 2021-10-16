@@ -23,7 +23,7 @@ if (!function_exists('powerGridTheme')) {
 }
 
 if (!function_exists('powerGridJsFramework')) {
-    function powerGridJsFramework(): string
+    function powerGridJsFramework(): ?string
     {
         return config('livewire-powergrid.js_framework');
     }
