@@ -4,16 +4,13 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-it('propertly  displays the results and options', function () {
+it('property displays the results and options', function () {
     livewire(DishesTable::class)
         ->assertSeeHtmlInOrder([
             'wire:input.debounce.500ms="filterSelect(\'category_id\',\'Categoria\')"',
             'wire:model.debounce.500ms="filters.select.category_id"',
-            '<option value="">All</option>',
-            '<option value="">Carnes</option>',
-            '<option value="">Peixe</option>',
         ]);
-})->skip();
+});
 
 it('properly filter with category_id', function () {
     livewire(DishesTable::class)

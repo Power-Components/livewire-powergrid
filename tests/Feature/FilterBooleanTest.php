@@ -50,6 +50,6 @@ function filterBoolean(string $field, ?string $value): array
     return [
         'boolean' => [
             $field => $value,
-        ]
+        ],
     ];
 }
