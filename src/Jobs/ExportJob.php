@@ -2,14 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Jobs;
 
-use App\Http\Livewire\DishesTable;
-use App\Models\Dish;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class ExportJob implements ShouldQueue
@@ -26,8 +25,6 @@ class ExportJob implements ShouldQueue
 
     private array $columns;
 
-    private $datasource;
-
     private string $type;
 
     private int $offset;
@@ -36,26 +33,19 @@ class ExportJob implements ShouldQueue
 
     /**
      * @param string $componentTable
-     * @param string $type
-     * @param string $fileName
      * @param array $columns
-     * @param $datasource
-     * @param $offset
-     * @param $limit
+     * @param array $params
      */
     public function __construct(
         string $componentTable,
-        string $type,
-        string $fileName,
         array $columns,
-        $offset,
-        $limit
+        array $params
     ) {
-        $this->type     = $type;
-        $this->fileName = $fileName;
         $this->columns  = $columns;
-        $this->offset   = $offset;
-        $this->limit    = $limit;
+        $this->type     = data_get($params, 'type');
+        $this->fileName = data_get($params, 'fileName');
+        $this->offset   = data_get($params, 'offset');
+        $this->limit    = data_get($params, 'limit');
 
         $this->componentTable = new $componentTable();
     }
@@ -69,7 +59,7 @@ class ExportJob implements ShouldQueue
             ->get();
 
         return (new $this->type())
-            ->fileName($fileName)
+            ->fileName(Str::of($this->fileName)->replace('.xlsx', '')->replace('.csv', ''))
             ->setData($this->columns, $this->transform($query))
             ->store();
     }

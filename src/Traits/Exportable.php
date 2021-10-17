@@ -7,12 +7,14 @@ use App\Models\Dish;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
 use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 /**
  * @property Batch exportBatch
@@ -30,6 +32,12 @@ trait Exportable
     public bool $exportFinished = false;
 
     public string $batchId = '';
+
+    public string $batchName = 'Powergrid batch export';
+
+    public string $onConnection = 'sync';
+
+    public string $onQueue = 'default';
 
     public string $extension = '';
 
@@ -93,7 +101,7 @@ trait Exportable
      */
     public function exportToXLS(bool $selected = false)
     {
-        $this->runOnQueue(ExportToXLS::class, $selected);
+        $this->runOnQueue(ExportToXLS::class);
 
         if ($this->queues === 0) {
             return (new ExportToXLS())
@@ -108,7 +116,7 @@ trait Exportable
      */
     public function exportToCsv(bool $selected = false)
     {
-        $this->runOnQueue(ExportToCsv::class, $selected);
+        $this->runOnQueue(ExportToCsv::class);
 
         if ($this->queues === 0) {
             return (new ExportToCsv())
@@ -143,6 +151,21 @@ trait Exportable
         return response()->download(storage_path($file));
     }
 
+    public function batchThen(Batch $batch)
+    {
+        Log::debug('batchThen: ' . json_encode($batch));
+    }
+
+    public function batchCatch(Batch $batch, Throwable $e)
+    {
+        Log::debug('batchCatch: ' . json_encode($batch) . ' e: ' . json_encode($e));
+    }
+
+    public function batchFinally(Batch $batch)
+    {
+        Log::debug('batchFinally: ' . json_encode($batch));
+    }
+
     /**
      * @throws \Throwable
      */
@@ -152,12 +175,21 @@ trait Exportable
             $this->exporting      = true;
             $this->exportFinished = false;
 
-            $queues = $this->createQueue($type);
+            $queues = $this->createQueues($type);
 
             $batch  = Bus::batch([
                 $queues->toArray(),
             ])
-                ->name('PowerGrid Batch')
+                ->name($this->batchName)
+                ->onQueue($this->onQueue)
+                ->onConnection($this->onConnection)
+                ->then(function (Batch $batch) {
+                    return $this->batchThen($batch);
+                })->catch(function (Batch $batch, Throwable $e) {
+                    return $this->batchCatch($batch, $e);
+                })->finally(function (Batch $batch) {
+                    return $this->batchFinally($batch);
+                })
                 ->dispatch();
 
             $this->batchId = $batch->id;
@@ -166,12 +198,13 @@ trait Exportable
         }
     }
 
-    public function createQueue(string $type): Collection
+    public function createQueues(string $type): Collection
     {
-        $queues  = collect();
-        $perPage = $this->total / $this->queues;
-        $page    = 0;
-        $limit   = $perPage;
+        $this->exportedFiles = [];
+        $queues              = collect();
+        $perPage             = $this->total / $this->queues;
+        $offset              = 0;
+        $limit               = $perPage;
 
         switch ($type) {
             case ExportToCsv::class:
@@ -183,21 +216,25 @@ trait Exportable
         }
 
         for ($i = 1; $i < ($this->queues + 1); $i++) {
-            $file = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . $page . '-' . $limit . '.' . $this->extension;
+            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . $offset . '-' . $limit . '-' . $this->id . '.' . $this->extension;
+
+            $params = [
+                'type'     => $type,
+                'fileName' => $fileName,
+                'offset'   => $offset,
+                'limit'    => $limit,
+            ];
 
             $queues->push(new ExportJob(
                 get_called_class(),
-                $type,
-                $file,
                 $this->columns(),
-                $page,
-                $limit,
+                $params,
             ));
 
-            $this->exportedFiles[] = $file;
+            $this->exportedFiles[] = $fileName;
 
-            $page  = $limit + 1;
-            $limit = ($page - 1) + $perPage;
+            $offset = $limit + 1;
+            $limit  = ($offset - 1) + $perPage;
         }
 
         return $queues;
