@@ -4,7 +4,7 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-it('properly filter produced_at field between date', function () {
+it('properly filter the produced_at field between two dates', function () {
     livewire(DishesTable::class)
         ->set('filters', filterDateTime('produced_at', ['2021-02-02 00:00:00', '2021-04-04 00:00:00']))
         ->assertSeeHtml('Peixada da chef Nábia')
@@ -16,7 +16,7 @@ it('properly filter produced_at field between date', function () {
         ]);
 });
 
-it('properly filter produced_at between another date', function () {
+it('properly filter the produced_at field between another two dates', function () {
     livewire(DishesTable::class)
         ->set('filters', filterDateTime('produced_at', ['2021-11-11 00:00:00', '2021-12-31 00:00:00']))
         ->assertDontSeeText('Peixada da chef Nábia')
