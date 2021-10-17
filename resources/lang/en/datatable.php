@@ -42,4 +42,8 @@ return [
         'starts_with'  => 'Starts with',
         'ends_with'    => 'Ends with',
     ],
+    'export' => [
+        'exporting'  => 'Please wait!',
+        'completed'  => 'Export completed! Your files are ready for download',
+    ],
 ];

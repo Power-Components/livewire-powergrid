@@ -43,7 +43,7 @@ return [
         'ends_with'    => 'Termina com',
     ],
     'export' => [
-        'exporting'  => 'Please wait!',
-        'completed'  => 'Export completed! Your files are ready for download',
+        'exporting'  => 'Por favor, aguarde!',
+        'completed'  => 'Exportação concluída! Seus arquivos estão prontos para download',
     ],
 ];

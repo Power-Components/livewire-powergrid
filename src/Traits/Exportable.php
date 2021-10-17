@@ -181,11 +181,11 @@ trait Exportable
                 ->onQueue($this->onQueue)
                 ->onConnection($this->onConnection)
                 ->then(function (Batch $batch) {
-                    return $this->batchThen($batch);
+                    $this->batchThen($batch);
                 })->catch(function (Batch $batch, Throwable $e) {
-                    return $this->batchCatch($batch, $e);
+                    $this->batchCatch($batch, $e);
                 })->finally(function (Batch $batch) {
-                    return $this->batchFinally($batch);
+                    $this->batchFinally($batch);
                 })
                 ->dispatch();
 
