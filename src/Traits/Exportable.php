@@ -153,17 +153,14 @@ trait Exportable
 
     public function batchThen(Batch $batch)
     {
-        Log::debug('batchThen: ' . json_encode($batch));
     }
 
     public function batchCatch(Batch $batch, Throwable $e)
     {
-        Log::debug('batchCatch: ' . json_encode($batch) . ' e: ' . json_encode($e));
     }
 
     public function batchFinally(Batch $batch)
     {
-        Log::debug('batchFinally: ' . json_encode($batch));
     }
 
     /**
