@@ -59,7 +59,11 @@ class ExportJob implements ShouldQueue
             ->get();
 
         return (new $this->type())
-            ->fileName(Str::of($this->fileName)->replace('.xlsx', '')->replace('.csv', ''))
+            ->fileName(
+                Str::of($this->fileName)
+                ->replace('.xlsx', '')
+                ->replace('.csv', '')
+            )
             ->setData($this->columns, $this->transform($query))
             ->store();
     }

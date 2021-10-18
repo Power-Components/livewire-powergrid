@@ -213,7 +213,7 @@ trait Exportable
         }
 
         for ($i = 1; $i < ($this->queues + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . $offset . '-' . $limit . '-' . $this->id . '.' . $this->extension;
+            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . ($offset + 1) . '-' . $limit . '-' . $this->id . '.' . $this->extension;
 
             $params = [
                 'type'     => $type,
@@ -230,8 +230,8 @@ trait Exportable
 
             $this->exportedFiles[] = $fileName;
 
-            $offset = $limit + 1;
-            $limit  = ($offset - 1) + $perPage;
+            $offset = $limit;
+            $limit  = $offset + $perPage;
         }
 
         return $queues;
