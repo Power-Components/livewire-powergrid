@@ -45,6 +45,8 @@ trait Exportable
 
     public int $queues = 0;
 
+    public bool $showExporting = true;
+
     public int $progress = 0;
 
     public array $exportedFiles = [];
@@ -143,6 +145,8 @@ trait Exportable
             if ($this->exportFinished) {
                 $this->exporting = false;
             }
+
+            $this->onBatchExecuting($this->exportBatch);
         }
     }
 
@@ -151,15 +155,19 @@ trait Exportable
         return response()->download(storage_path($file));
     }
 
-    public function batchThen(Batch $batch)
+    public function onBatchExecuting(Batch $batch)
     {
     }
 
-    public function batchCatch(Batch $batch, Throwable $e)
+    public function onBatchThen(Batch $batch)
     {
     }
 
-    public function batchFinally(Batch $batch)
+    public function onBatchCatch(Batch $batch, Throwable $e)
+    {
+    }
+
+    public function onBatchFinally(Batch $batch)
     {
     }
 
@@ -181,11 +189,11 @@ trait Exportable
                 ->onQueue($this->onQueue)
                 ->onConnection($this->onConnection)
                 ->then(function (Batch $batch) {
-                    $this->batchThen($batch);
+                    $this->onBatchThen($batch);
                 })->catch(function (Batch $batch, Throwable $e) {
-                    $this->batchCatch($batch, $e);
+                    $this->onBatchCatch($batch, $e);
                 })->finally(function (Batch $batch) {
-                    $this->batchFinally($batch);
+                    $this->onBatchFinally($batch);
                 })
                 ->dispatch();
 

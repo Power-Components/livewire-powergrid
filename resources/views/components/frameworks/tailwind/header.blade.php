@@ -29,7 +29,7 @@
 
 </div>
 
-@if($queues)
+@if($queues && $showExporting)
 
     @if($exporting && !$exportFinished)
         <div wire:poll="updateExportProgress"
