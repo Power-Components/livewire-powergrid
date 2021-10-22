@@ -371,6 +371,11 @@ class PowerGridComponent extends Component
         return $results;
     }
 
+    public function updatedPage()
+    {
+        $this->checkboxAll = false;
+    }
+
     public function toggleColumn($field): void
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {

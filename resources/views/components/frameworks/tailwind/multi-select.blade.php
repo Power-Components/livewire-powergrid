@@ -18,7 +18,7 @@
                             <template x-for="(option,index) in selected" :key="options[option].value">
                                 <div
                                     class="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white dark:bg-gray-500 rounded-full text-teal-700 bg-teal-100 border border-teal-300 dark:border-gray-400">
-                                    <div class="pl-0 align-middle cursor-pointer hover:text-black hover:text-current dark:text-gray-300 text-left text-xs font-medium text-gray-700 uppercase tracking-wider x-model=
+                                    <div class="pl-0 align-middle cursor-pointer hover:text-black hover:text-current dark:text-gray-300 text-left text-xs font-medium text-gray-700 tracking-wider x-model=
                                      options[option]" x-text="options[option].text"></div>
                                     <div class="flex flex-auto flex-row-reverse">
                                         <div x-on:click="remove(index,option)">
@@ -30,7 +30,7 @@
                             <div x-show="selected.length === 0" class="flex-1">
                                 <input readonly
                                        placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
-                                       class="w-full block bg-white-200 text-gray-700 py-2 text-sm uppercase px-3 leading-tight focus:outline-none dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-400"
+                                       class="w-full block bg-white-200 text-gray-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-400"
                                        x-bind:value="selectedValues()"
                                 >
                             </div>
@@ -63,7 +63,7 @@
                                              class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
                                             <div class="w-full items-center flex">
                                                 <div
-                                                    class="dark:text-gray-200 pl-0 align-middle cursor-pointer hover:text-black hover:text-current text-left text-xs font-medium text-gray-600 uppercase tracking-wider leading-6"
+                                                    class="dark:text-gray-200 pl-0 align-middle cursor-pointer hover:text-black hover:text-current text-left text-xs font-medium text-gray-600 tracking-wider leading-6"
                                                     x-model="option" x-text="option.text"></div>
                                             </div>
                                         </div>

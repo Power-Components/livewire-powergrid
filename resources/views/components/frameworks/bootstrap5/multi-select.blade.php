@@ -11,8 +11,9 @@
             <label for="input_{{ data_get($multiSelect, 'data_field') }}">{{ data_get($multiSelect, 'label') }}</label>
         @endif
         <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
-                multiple id="input_{{ data_get($multiSelect, 'data_field') }}"
-                class="power_grid_select select_picker_{{ data_get($multiSelect, 'class') }} form-control active"
+                multiple
+                id="input_{{ data_get($multiSelect, 'data_field') }}"
+                class="power_grid_select select_picker_{{ data_get($multiSelect, 'data_field') }} form-control active"
                 wire:ignore
                 data-live-search="{{ data_get($multiSelect, 'live-search') }}">
 
@@ -25,7 +26,6 @@
     <style>
         .dropdown-toggle, .dropdown-item {
             padding-left: 15px;
-            text-transform: uppercase;
             font-size: 0.85rem;
             color: #454444;
             padding-top: 8px;
@@ -62,7 +62,7 @@
                     id: '{{ data_get($multiSelect, 'data_field') }}',
                     values: arrSelected
                 })
-                $('.select_picker_{{ data_get($multiSelect, 'field') }}').selectpicker('refresh');
+                $('.select_picker_{{ data_get($multiSelect, 'data_field') }}').selectpicker('refresh');
             });
         </script>
     @endpush

@@ -28,8 +28,6 @@ trait Checkbox
         collect($this->fillData()->items())->each(function ($model) {
             $this->checkboxValues[] = (string)$model->{$this->checkboxAttribute};
         });
-
-        $this->checkboxAll = false;
     }
 }
 
