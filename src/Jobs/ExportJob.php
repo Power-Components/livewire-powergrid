@@ -5,9 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Jobs;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
 class ExportJob implements ShouldQueue
@@ -26,8 +28,8 @@ class ExportJob implements ShouldQueue
      */
     public function __construct(
         string $componentTable,
-        array $columns,
-        array $params
+        array  $columns,
+        array  $params
     ) {
         $this->columns  = $columns;
         $this->type     = data_get($params, 'type');
@@ -35,14 +37,17 @@ class ExportJob implements ShouldQueue
         $this->offset   = data_get($params, 'offset');
         $this->limit    = data_get($params, 'limit');
 
+        /** @var PowerGridComponent componentTable */
         $this->componentTable = new $componentTable();
     }
 
     public function handle()
     {
+        /** @var Builder $query */
         $query = $this->componentTable
-            ->datasource()
-            ->offset($this->offset)
+            ->datasource();
+
+        $query = $query->offset($this->offset)
             ->limit($this->limit)
             ->get();
 

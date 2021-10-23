@@ -24,15 +24,15 @@
 
 @if($queues && $showExporting)
 
-    @if($exporting && !$exportFinished)
+    @if($batchExporting && !$batchFinished)
         <div wire:poll="updateExportProgress"
              class="my-3 px-4 rounded-md py-3 shadow-sm text-center">
-            <div>{{ $progress }}%</div>
+            <div>{{ $batchProgress }}%</div>
             <div>{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
         </div>
     @endif
 
-    @if($exportFinished)
+    @if($batchFinished)
         <div class="my-3">
             <p>
                 <button class="btn btn-primary"
@@ -50,8 +50,8 @@
                         <div class="d-flex w-full p-2" style="cursor:pointer">
                             <x-livewire-powergrid::icons.download
                                 style="width: 1.5rem;
-                                       margin-right: 6px;
-                                       color: #2d3034;"/>
+                                           margin-right: 6px;
+                                           color: #2d3034;"/>
                             <a
                                 wire:click="downloadExport('{{ $file }}')">
                                 {{ $file }}

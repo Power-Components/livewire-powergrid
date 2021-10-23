@@ -1,4 +1,5 @@
-<div x-data="toggle()" x-cloak
+<div x-data="{ open: false }"
+     x-cloak
      @click.away="open = false">
     <button @click.prevent="open = ! open"
             class="block bg-white-200 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
@@ -19,11 +20,11 @@
         @if(in_array('excel',$exportType))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
                 <span class="w-12">Excel</span>
-                <a wire:click="exportToXLS()" href="#"
+                <a x-on:click="$wire.call('exportToXLS'); open = false" href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')
                 </a>
-                <a wire:click="exportToXLS(true)" href="#"
+                <a x-on:click="$wire.call('exportToXLS', true); open = false" href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.selected')
                 </a>
@@ -32,11 +33,11 @@
         @if(in_array('csv',$exportType))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
                 <span class="w-12">Csv</span>
-                <a wire:click="exportToCsv()" href="#"
+                <a x-on:click="$wire.call('exportToCsv'); open = false" href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')
                 </a>
-                <a wire:click="exportToCsv(true)" href="#"
+                <a x-on:click="$wire.call('exportToCsv', true); open = false" href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.selected')
                 </a>
@@ -44,10 +45,3 @@
         @endif
     </div>
 </div>
-<script>
-    function toggle() {
-        return {
-            open: false,
-        }
-    }
-</script>

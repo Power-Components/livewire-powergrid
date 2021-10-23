@@ -27,9 +27,9 @@ trait Exportable
 
     public array $exportType = [];
 
-    public bool $exporting = false;
+    public bool $batchExporting = false;
 
-    public bool $exportFinished = false;
+    public bool $batchFinished = false;
 
     public string $batchId = '';
 
@@ -47,11 +47,13 @@ trait Exportable
 
     public bool $showExporting = true;
 
-    public int $progress = 0;
+    public int $batchProgress = 0;
 
     public array $exportedFiles = [];
 
-    public string $exportableJobClass = '\PowerComponents\LivewirePowerGrid\Jobs\ExportJob';
+    public string $exportableJobClass = ExportJob::class;
+
+    public bool $batchErrors = false;
 
     /**
      * @param string $fileName
@@ -105,14 +107,14 @@ trait Exportable
      */
     public function exportToXLS(bool $selected = false)
     {
-        $this->runOnQueue(ExportToXLS::class);
-
-        if ($this->queues === 0) {
-            return (new ExportToXLS())
-                ->fileName($this->exportFileName)
-                ->setData($this->columns(), $this->prepareToExport($selected))
-                ->download();
+        if ($this->queues > 0 && !$selected) {
+            return $this->runOnQueue(ExportToXLS::class);
         }
+
+        return (new ExportToXLS())
+            ->fileName($this->exportFileName)
+            ->setData($this->columns(), $this->prepareToExport($selected))
+            ->download();
     }
 
     /**
@@ -120,14 +122,14 @@ trait Exportable
      */
     public function exportToCsv(bool $selected = false)
     {
-        $this->runOnQueue(ExportToCsv::class);
-
-        if ($this->queues === 0) {
-            return (new ExportToCsv())
-                ->fileName($this->exportFileName)
-                ->setData($this->columns(), $this->prepareToExport($selected))
-                ->download();
+        if ($this->queues > 0 && !$selected) {
+            return $this->runOnQueue(ExportToCsv::class);
         }
+
+        return (new ExportToCsv())
+            ->fileName($this->exportFileName)
+            ->setData($this->columns(), $this->prepareToExport($selected))
+            ->download();
     }
 
     public function getExportBatchProperty(): ?Batch
@@ -142,10 +144,12 @@ trait Exportable
     public function updateExportProgress()
     {
         if (!is_null($this->exportBatch)) {
-            $this->exportFinished = $this->exportBatch->finished();
-            $this->progress       = $this->exportBatch->progress();
-            if ($this->exportFinished) {
-                $this->exporting = false;
+            $this->batchFinished     = $this->exportBatch->finished();
+            $this->batchProgress     = $this->exportBatch->progress();
+            $this->batchErrors       = $this->exportBatch->hasFailures();
+
+            if ($this->batchFinished) {
+                $this->batchExporting = false;
             }
 
             $this->onBatchExecuting($this->exportBatch);
@@ -176,11 +180,11 @@ trait Exportable
     /**
      * @throws \Throwable
      */
-    public function runOnQueue(string $type)
+    public function runOnQueue(string $type): bool
     {
         if ($this->queues) {
-            $this->exporting      = true;
-            $this->exportFinished = false;
+            $this->batchExporting = true;
+            $this->batchFinished  = false;
 
             $queues = $this->createQueues($type);
 
@@ -223,7 +227,11 @@ trait Exportable
         }
 
         for ($i = 1; $i < ($this->queues + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) . '-' . ($offset + 1) . '-' . $limit . '-' . $this->id . '.' . $this->extension;
+            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) .
+                '-' . ($offset + 1) .
+                '-' . $limit .
+                '-' . $this->id .
+                '.' . $this->extension;
 
             $params = [
                 'type'     => $type,

@@ -31,15 +31,15 @@
 
 @if($queues && $showExporting)
 
-    @if($exporting && !$exportFinished)
+    @if($batchExporting && !$batchFinished)
         <div wire:poll="updateExportProgress"
              class="w-full my-3 px-4 rounded-md py-3 bg-gray-200 shadow-sm dark:bg-gray-500 text-center">
-            <div class="dark:text-gray-300">{{ $progress }}%</div>
+            <div class="dark:text-gray-300">{{ $batchProgress }}%</div>
             <div class="dark:text-gray-300">{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
         </div>
     @endif
 
-    @if($exportFinished)
+    @if($batchFinished)
         <div class="w-full my-3 dark:bg-gray-800">
             <div x-data={show:true} class="rounded-top">
                 <div class="px-4 py-3 rounded-md cursor-pointer bg-gray-200 shadow dark:bg-gray-500"
