@@ -4,22 +4,34 @@
     'field' => null,
     'theme' => null
 ])
-<div x-data="{ value: '<span style=\'border-bottom: dotted 1px;\'>{{ addslashes($row->{$field}) }}</span>' }">
-    <button
-        style="width: 100%;{{ $theme->buttonClass }}"
-        x-on:click="value = editableInput({{ $row->{$primaryKey} }}, '{{ addslashes($row->{$field})  }}', '{{ $field }}');"
-        x-html="value"
-    ></button>
+
+<div x-data="{
+       editable: false,
+       id: '{{ $row->{$primaryKey} }}',
+       field: '{{ $field }}',
+       content: '{{ addslashes($row->{$field}) }}'
+    }">
+    <div x-text="content"
+         style="border-bottom: dotted 1px; cursor: pointer"
+         x-show="!editable"
+         x-on:dblclick="editable = true"
+    ></div>
+    <div x-cloak
+         x-show="editable">
+        <input
+            type="text"
+            x-on:dblclick="editable = true"
+            x-on:keydown.enter="sendEventInputChanged($event, id, field); editable = false; content = $event.target.value"
+            x-on:blur="editable = false"
+            :class="{'cursor-pointer': !editable}"
+            class="{{ $theme->inputClass }}"
+            x-ref="editable"
+            x-text="content"
+            :value="content">
+    </div>
 </div>
+
 <script>
-
-    function editableInput(id, value, field) {
-        document.getElementsByClassName('message')[0].style.display = "none";
-
-        return '<input @keydown.enter=sendEventInputChanged($event,' + id + ',"' + field + '") value="' + value + '" ' +
-            'class="{{ $theme->inputClass }}">';
-    }
-
     function sendEventInputChanged(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";
         window.livewire.emit('eventInputChanged', {
