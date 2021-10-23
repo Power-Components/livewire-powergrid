@@ -8,8 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
 class ExportJob implements ShouldQueue
 {
@@ -18,18 +17,7 @@ class ExportJob implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-
-    private string $fileName;
-
-    private PowerGridComponent $componentTable;
-
-    private array $columns;
-
-    private string $type;
-
-    private int $offset;
-
-    private int $limit;
+    use ExportableJob;
 
     /**
      * @param string $componentTable
@@ -59,25 +47,8 @@ class ExportJob implements ShouldQueue
             ->get();
 
         return (new $this->type())
-            ->fileName(
-                Str::of($this->fileName)
-                ->replace('.xlsx', '')
-                ->replace('.csv', '')
-            )
+            ->fileName($this->getFilename())
             ->setData($this->columns, $this->transform($query))
             ->store();
-    }
-
-    private function transform($results)
-    {
-        return $results->transform(function ($row) {
-            $row = (object)$row;
-            $columns = $this->componentTable->addColumns()->columns;
-            foreach ($columns as $key => $column) {
-                $row->{$key} = $column($row);
-            }
-
-            return $row;
-        });
     }
 }

@@ -51,6 +51,8 @@ trait Exportable
 
     public array $exportedFiles = [];
 
+    public string $exportableJobClass = '\PowerComponents\LivewirePowerGrid\Jobs\ExportJob';
+
     /**
      * @param string $fileName
      * @param array|string[] $type
@@ -230,7 +232,7 @@ trait Exportable
                 'limit'    => $limit,
             ];
 
-            $queues->push(new ExportJob(
+            $queues->push(new $this->exportableJobClass(
                 get_called_class(),
                 $this->columns(),
                 $params,

@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
@@ -20,8 +21,8 @@ class PowerGridServiceProvider extends ServiceProvider
             $this->commands([DemoCommand::class]);
         }
 
-        $this->loadViews();
-        $this->loadConfigs();
+        $this->publishViews();
+        $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'livewire-powergrid');
         $this->createDirectives();
     }
@@ -42,11 +43,24 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(ThemeManager::class, 'theme');
     }
 
-    private function loadViews()
+    private function publishViews()
     {
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', 'livewire-powergrid');
 
-        $this->publishes([__DIR__ . '/../../resources/views' => resource_path('views/vendor/livewire-powergrid')], 'livewire-powergrid-views');
+        $this->publishes([
+            __DIR__ . '/../../resources/views' => resource_path('views/vendor/livewire-powergrid'),
+        ], 'livewire-powergrid-views');
+    }
+
+    private function publishConfigs()
+    {
+        $this->publishes([
+            __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path('livewire-powergrid.php'),
+        ], 'livewire-powergrid-config');
+
+        $this->publishes([
+            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/livewire-powergrid'),
+        ], 'livewire-powergrid-lang');
     }
 
     private function createDirectives()
@@ -58,16 +72,5 @@ class PowerGridServiceProvider extends ServiceProvider
         Blade::directive('powerGridScripts', function () {
             return "<?php echo view('livewire-powergrid::assets.scripts')->render(); ?>";
         });
-    }
-
-    private function loadConfigs()
-    {
-        $this->publishes([
-            __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path('livewire-powergrid.php'),
-        ], 'livewire-powergrid-config');
-
-        $this->publishes([
-            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/livewire-powergrid'),
-        ], 'livewire-powergrid-lang');
     }
 }
