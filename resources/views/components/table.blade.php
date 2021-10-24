@@ -58,7 +58,7 @@
                 @foreach($data as $row)
                     <tr class="{{ $theme->table->trBodyClass }}"
                         style="{{ $theme->table->trBodyStyle }}"
-                        wire:key="{{ $row->id }}">
+                        wire:key="{{ $row->{$primaryKey} }}">
 
                         @if($checkbox)
                             <x-livewire-powergrid::checkbox-row
