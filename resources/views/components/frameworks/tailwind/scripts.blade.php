@@ -7,31 +7,4 @@
             value: value
         })
     }
-
-    function hiddenInvalidCol()
-    {
-        const table = document.querySelector('.power-grid-table');
-
-        if (table !== null) {
-            for (let i in table.rows) {
-                let row = table.rows[i]
-                for (let j in row.cells) {
-                    let col = row.cells[j]
-                    if (col.classList !== undefined) {
-                        if (col.classList.length === 0) {
-                            col.setAttribute('style', 'display:none')
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        hiddenInvalidCol()
-
-        Livewire.hook('element.updated', (el, component) => {
-            hiddenInvalidCol()
-        })
-    });
 </script>

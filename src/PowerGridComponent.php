@@ -220,7 +220,7 @@ class PowerGridComponent extends Component
         }
 
         if (!powerGridCache()) {
-            return new BaseCollection($this->datasource()->make());
+            return new BaseCollection($this->datasource());
         }
 
         return cache()->rememberForever($this->id, function () use ($datasource) {
@@ -231,7 +231,7 @@ class PowerGridComponent extends Component
                 return $datasource;
             }
 
-            return new BaseCollection($datasource->make());
+            return new BaseCollection($datasource);
         });
     }
 
