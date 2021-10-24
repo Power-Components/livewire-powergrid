@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 
 class DemoCommand extends Command
 {
@@ -12,7 +11,7 @@ class DemoCommand extends Command
 
     protected $description = 'Generate a PowerGrid demo Table.';
 
-    protected string $stubPath = __DIR__ . '/../../resources/stubs/';
+    private string $stubPath = __DIR__ . '/../../resources/stubs/';
 
     public function handle()
     {

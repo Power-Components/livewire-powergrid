@@ -5,9 +5,9 @@
             style="{{ $theme->table->trStyle }}">
 
             @if($checkbox)
-            <x-livewire-powergrid::checkbox-all
-                :checkbox="$checkbox"
-                :theme="$theme->checkbox"/>
+                <x-livewire-powergrid::checkbox-all
+                    :checkbox="$checkbox"
+                    :theme="$theme->checkbox"/>
             @endif
 
             @foreach($columns as $column)
@@ -37,6 +37,7 @@
             :columns="$columns"
             :theme="$theme"
         />
+
         @if(is_null($data) || count($data) === 0)
             <th>
                 <tr class="{{ $theme->table->trBodyClass }}"
@@ -51,7 +52,8 @@
                     </td>
                 </tr>
             </th>
-        @else
+        @endif
+        @if(count($data))
             <th>
                 @foreach($data as $row)
                     <tr class="{{ $theme->table->trBodyClass }}"
