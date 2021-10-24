@@ -32,7 +32,7 @@
     @if(filled($data))
         <div>
             @if(method_exists($data, 'links'))
-                {!! $data->links($theme->base. ''.$theme->name.'.pagination', ['recordCount' => $recordCount]) !!}
+                {!! $data->links(powerGridThemeRoot().'.pagination', ['recordCount' => $recordCount]) !!}
             @endif
         </div>
     @endif

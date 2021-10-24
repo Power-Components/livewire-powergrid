@@ -3,11 +3,13 @@
     <x-slot name="header">
         <tr class="{{ $theme->table->trClass }}"
             style="{{ $theme->table->trStyle }}">
+
             @if($checkbox)
             <x-livewire-powergrid::checkbox-all
                 :checkbox="$checkbox"
                 :theme="$theme->checkbox"/>
             @endif
+
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
@@ -37,8 +39,11 @@
         />
         @if(is_null($data) || count($data) === 0)
             <th>
-                <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
+                <tr class="{{ $theme->table->trBodyClass }}"
+                    style="{{ $theme->table->trBodyStyle }}">
+                    <td class="{{ $theme->table->tdBodyClass }}"
+                        style="{{ $theme->table->tdBodyStyle }}"
+                        colspan="{{ (($checkbox) ? 1:0)
                                     + ((isset($actions)) ? 1: 0)
                                     + (count($columns))
                                     }}">
@@ -52,6 +57,7 @@
                     <tr class="{{ $theme->table->trBodyClass }}"
                         style="{{ $theme->table->trBodyStyle }}"
                         wire:key="{{ $row->id }}">
+
                         @if($checkbox)
                             <x-livewire-powergrid::checkbox-row
                                 :theme="$theme->checkbox"
