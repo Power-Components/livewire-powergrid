@@ -20,11 +20,13 @@
         @if(in_array('excel',$exportType))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
                 <span class="w-12">Excel</span>
-                <a x-on:click="$wire.call('exportToXLS'); open = false" href="#"
+                <a x-on:click="$wire.call('exportToXLS'); open = false"
+                   href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')
                 </a>
-                <a x-on:click="$wire.call('exportToXLS', true); open = false" href="#"
+                <a x-on:click="$wire.call('exportToXLS', true); open = false"
+                   href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.selected')
                 </a>

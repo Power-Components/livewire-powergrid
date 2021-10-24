@@ -2,7 +2,7 @@
 
     <div class="md:flex md:flex-row w-full">
 
-        <div class="">
+        <div>
             <x-livewire-powergrid::actions
                 :theme="$theme"
                 row=""
@@ -21,7 +21,7 @@
 
         </div>
 
-        @include($theme->base. ''.$theme->name.'.loading')
+        @includeIf(!$batchExporting, $theme->base. ''.$theme->name.'.loading')
 
     </div>
 
