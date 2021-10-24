@@ -324,6 +324,7 @@ class Collection implements FilterInterface
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
+                $row = (object)$row;
                 foreach ($this->columns as $column) {
                     $field = $column->field;
 
@@ -332,6 +333,7 @@ class Collection implements FilterInterface
                             return false !== stristr($row->{$field}, strtolower($this->search));
                         }
                     } catch (\Exception $exception) {
+                        throw new \Exception($exception);
                     }
                 }
 
