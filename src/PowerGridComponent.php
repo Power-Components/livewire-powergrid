@@ -171,7 +171,7 @@ class PowerGridComponent extends Component
 
     public function render()
     {
-        $this->powerGridTheme = PowerGrid::theme(powerGridTheme())->apply();
+        $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
             return (object)$column;
