@@ -11,7 +11,7 @@ function getLaravelDir(): string
     return  __DIR__ . '/../vendor/orchestra/testbench-core/laravel/';
 }
 
-function powergrid()
+function powergrid(): PowerGridComponent
 {
     $columns = [
         Column::add()

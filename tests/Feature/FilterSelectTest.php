@@ -4,7 +4,7 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
-it('propertly  displays the results and options', function () {
+it('property displays the results and options', function () {
     livewire(DishesTable::class)
         ->assertSeeHtmlInOrder([
             'wire:input.debounce.500ms="filterSelect(\'category_id\',\'Categoria\')"',

@@ -18,7 +18,7 @@ class Tailwind extends ThemeBase
         return Theme::table("min-w-full divide-y divide-gray-300 border-b dark:bg-gray-600 border-gray-400 ")
             ->thead("bg-gray-200 dark:bg-gray-700")
             ->tr("border border-gray-200 dark:border-gray-400")
-            ->th("px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap dark:text-gray-300")
+            ->th("px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap dark:text-gray-300")
             ->tbody("text-gray-800")
             ->trBody("border border-gray-200 dark:border-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700")
             ->tdBody("px-3 py-2 whitespace-nowrap dark:text-gray-200");
@@ -56,7 +56,7 @@ class Tailwind extends ThemeBase
     public function checkbox(): Components\Checkbox
     {
         return Theme::checkbox()
-            ->th("px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider")
+            ->th("px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider")
             ->label("flex items-center space-x-3")
             ->input("form-checkbox h-4 w-4");
     }

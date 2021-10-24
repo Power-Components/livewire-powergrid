@@ -18,7 +18,7 @@
                         @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
-                        placeholder="MIN">
+                        placeholder="Min">
                 </div>
                 <div class="@if(!$inline) mt-1 @else pt-1 @endif">
                     <input
@@ -27,7 +27,7 @@
                         @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
-                        placeholder="MAX">
+                        placeholder="Max">
                 </div>
             </div>
         </div>

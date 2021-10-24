@@ -57,19 +57,11 @@ class PowerGridComponent extends Component
         'eventMultiSelect'      => 'eventMultiSelect',
         'eventRefresh'          => '$refresh',
         'eventToggleColumn'     => 'toggleColumn',
-
     ];
 
     public bool $toggleColumns = false;
 
     public array $relationSearch = [];
-
-    public function queue()
-    {
-        return [
-            'queues' => 10,
-        ];
-    }
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -379,6 +371,11 @@ class PowerGridComponent extends Component
         }
 
         return $results;
+    }
+
+    public function updatedPage()
+    {
+        $this->checkboxAll = false;
     }
 
     public function toggleColumn($field): void
