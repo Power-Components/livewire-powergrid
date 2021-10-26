@@ -22,7 +22,6 @@
             type="text"
             x-on:dblclick="editable = true"
             x-on:keydown.enter="sendEventInputChanged($event, id, field); editable = false; content = $event.target.value"
-            x-on:blur="sendEventInputChanged($event, id, field); editable = false; content = $event.target.value"
             :class="{'cursor-pointer': !editable}"
             class="{{ $theme->inputClass }} p-2"
             x-ref="editable"
