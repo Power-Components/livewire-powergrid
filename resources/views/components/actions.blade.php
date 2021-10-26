@@ -4,7 +4,6 @@
     'row' => null
 ])
 <div class="w-full md:w-auto">
-
     @if(isset($actions) && count($actions) && $row !== '')
         @foreach($actions as $action)
             <td class="pg-actions {{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"

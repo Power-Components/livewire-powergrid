@@ -324,7 +324,9 @@ class Collection implements FilterInterface
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
+
                 $row = (object)$row;
+
                 foreach ($this->columns as $column) {
                     $field = $column->field;
 
