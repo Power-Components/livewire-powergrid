@@ -2,7 +2,7 @@
     'theme' => null
 ])
 <div>
-    <table class="power-grid-table {{ $theme->tableClass }}"
+    <table class="table power-grid-table {{ $theme->tableClass }}"
            style="{{$theme->tableStyle}}">
         <thead class="{{$theme->theadClass}}"
                style="{{$theme->theadStyle}}">

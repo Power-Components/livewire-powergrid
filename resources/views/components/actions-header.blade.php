@@ -1,21 +1,17 @@
 @props([
     'actions' => null,
     'theme' => null,
-    'row' => null
 ])
 <div class="w-full md:w-auto">
-
-    @if(isset($actions) && count($actions) && $row !== '')
+    <div class="sm:flex sm:flex-row">
         @foreach($actions as $action)
-            <td class="pg-actions {{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"
-                style="{{ $theme->actions->tdBodyStyle ?? $theme->table->tdBodyStyle }}">
+            <div class="sm:mr-2 mb-2 w-auto">
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {
                        $parameters[$param] = $row->{$value};
                     }
                 @endphp
-
                 @if($action->event !== '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
                        target="{{ $action->target }}"
@@ -29,7 +25,7 @@
                         {!! $action->caption !!}
                     </a>
                 @else
-                    @if(strtolower($action->method) !== ('get'))
+                    @if(strtolower($action->method) !== 'get')
                         <form target="{{ $action->target }}"
                               action="{{ route($action->route, $parameters) }}"
                               method="{{ $action->target }}">
@@ -48,7 +44,7 @@
                         </a>
                     @endif
                 @endif
-            </td>
+            </div>
         @endforeach
-    @endif
+    </div>
 </div>

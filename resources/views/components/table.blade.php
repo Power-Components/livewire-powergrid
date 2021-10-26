@@ -54,7 +54,7 @@
             </th>
         @endif
         @if(count($data))
-            <th>
+
                 @foreach($data as $row)
                     <tr class="{{ $theme->table->trBodyClass }}"
                         style="{{ $theme->table->trBodyStyle }}"
@@ -79,7 +79,7 @@
                             :actions="$actions"/>
                     </tr>
                 @endforeach
-            </th>
+
         @endif
     </x-slot>
 </x-livewire-powergrid::table-base>
