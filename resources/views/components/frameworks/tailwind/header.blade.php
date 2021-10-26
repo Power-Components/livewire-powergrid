@@ -3,9 +3,8 @@
     <div class="md:flex md:flex-row w-full">
 
         <div class="">
-            <x-livewire-powergrid::actions
+            <x-livewire-powergrid::actions-header
                 :theme="$theme"
-                row=""
                 :actions="$this->headers"/>
         </div>
 
