@@ -3,7 +3,7 @@
     <div class="md:flex md:flex-row w-full">
 
         <div>
-            <x-livewire-powergrid:x-livewire-powergrid::actions-header
+            <x-livewire-powergrid::actions-header
                 :theme="$theme"
                 :actions="$this->headers"/>
         </div>
