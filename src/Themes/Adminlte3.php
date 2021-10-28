@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 class Adminlte3 extends ThemeBase
 {
-    public string $name = 'bootstrap5';
+    public string $name = 'adminlte3';
 
     public static function paginationTheme(): string
     {
