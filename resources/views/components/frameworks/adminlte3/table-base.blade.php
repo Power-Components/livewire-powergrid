@@ -18,8 +18,13 @@
         @include($theme->layout->message)
 
     </div>
-    <div class="table-responsive col-md-12">
-        @include($table)
+    <div class="col-md-12">
+        <div class="card">
+          {{--  <div class="card-header"></div>  --}}
+          <div class="table-responsive">
+            @include($table)
+          </div>
+        </div>
     </div>
     <div class="col-md-12">
         @include($theme->footer->view, ['theme' => $theme])

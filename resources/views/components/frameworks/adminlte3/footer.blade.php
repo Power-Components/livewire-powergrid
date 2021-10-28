@@ -5,7 +5,7 @@
             <div class="d-flex justify-content-center">
                 <div>
                     <label class="col-12 col-sm-6 col-md-6" style="width: 120px;">
-                        <select wire:model="perPage" class="form-select" style="width: 110px;">
+                        <select wire:model="perPage" class="form-control" style="width: 110px;">
                             @foreach($perPageValues as $value)
                                 <option value="{{$value}}">
                                     @if($value == 0)
