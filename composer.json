@@ -1,5 +1,5 @@
 {
-    "name": "power-components/livewire-powergrid",
+    "name": "nguyentranchung/livewire-powergrid",
     "description": "A Laravel Livewire table component with searching, sorting, checkboxes, pagination and export data.",
     "homepage": "https://github.com/power-components/livewire-powergrid",
     "license": "MIT",
