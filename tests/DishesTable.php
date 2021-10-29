@@ -63,6 +63,7 @@ class DishesTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('storage_room')
             ->addColumn('calories')
             ->addColumn('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
@@ -108,6 +109,11 @@ class DishesTable extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
+                ->title(__('Stored at'))
+                ->field('storage_room')
+                ->sortable(),
+
+            Column::add()
                 ->title(__('Prato'))
                 ->field('name')
                 ->searchable()
@@ -149,6 +155,12 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Data de produção'))
                 ->field('produced_at_formatted')
                 ->makeInputDatePicker('produced_at'),
+
+            Column::add()
+                ->title(__('Data'))
+                ->field('produced_at')
+                ->makeInputDatePicker('produced_at')
+                ->sortable()
         ];
     }
 
