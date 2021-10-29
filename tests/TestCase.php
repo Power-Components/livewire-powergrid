@@ -37,13 +37,14 @@ class TestCase extends BaseTestCase
             $table->double('price');
             $table->integer('calories');
             $table->boolean('in_stock')->default(false);
+            $table->string('stored_at');
             $table->boolean('active')->default(true);
             $table->date('produced_at');
             $table->timestamps();
         });
     }
 
-    protected function seeders()
+    protected function seeders(array $dishes = []): void
     {
         DB::table('categories')->insert([
             ['name' => 'Carnes'],
@@ -55,7 +56,34 @@ class TestCase extends BaseTestCase
             ['name' => 'Sopas'],
         ]);
 
-        $dishes = [
+        if (empty($dishes)) {
+            $dishes = $this->getDishes();
+        }
+
+        DB::table('dishes')->insert($dishes);
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param Application $app
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('database.default', 'testbench');
+        $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
+        $app['config']->set('database.connections.testbench', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+
+    protected function getDishes()
+    {
+        $dishes = collect([
             [
                 'name'        => 'Pastel de Nata',
                 'category_id' => 6,
@@ -218,43 +246,37 @@ class TestCase extends BaseTestCase
             ['name' => 'Strudel de Maçã', 'category_id' => 6],
             ['name' => 'Sopa de Tomates Assados', 'category_id' => 7],
             ['name' => 'Sopa Creme de Ervilha', 'category_id' => 7],
-        ];
+        ]);
 
         $faker = faker();
+       
+        return $dishes->map(function ($dish) use ($faker) {
+            if (!isset($dish['price'])) {
+                $dish['price'] = $faker->randomFloat(2, 50, 200);
+            };
 
-        foreach ($dishes as $dish) {
-            $price       = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
-            $in_stock    = (!isset($dish['in_stock']) ? $faker->boolean() : $dish['in_stock']);
-            $produced_at = (empty($dish['produced_at']) ? $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d") : $dish['produced_at']);
+            if (!isset($dish['stored_at'])) {
+                $dish['stored_at'] = rand(1, 3) . $faker->randomElement(['', 'a', 'b']);
+            };
 
-            $dish = [
-                'name'        => $dish['name'],
-                'category_id' => $dish['category_id'],
-                'price'       => $price,
-                'calories'    => $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt'),
-                'in_stock'    => $in_stock,
-                'produced_at' => $produced_at,
-            ];
+            if (!isset($dish['calories'])) {
+                $dish['calories'] = $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt');
+            }
 
-            DB::table('dishes')->insert($dish);
-        }
-    }
+            if (!isset($dish['in_stock'])) {
+                $dish['in_stock'] = $dish['in_stock'] =  $faker->boolean();
+            }
 
-    /**
-     * Define environment setup.
-     *
-     * @param Application $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('database.default', 'testbench');
-        $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
-        $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
-        ]);
+            if (!isset($dish['produced_at'])) {
+                $dish['produced_at'] = $dish['produced_at'] =  $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d");
+            }
+
+            if (!isset($dish['stored_at'])) {
+                $dish['price'] = $faker->randomFloat(2, 50, 200);
+            };
+
+            return $dish;
+        })->toArray();
     }
 
     protected function getPackageProviders($app)
