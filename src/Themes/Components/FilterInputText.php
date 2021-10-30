@@ -14,7 +14,7 @@ class FilterInputText
 
     public string $relativeDivClass = '';
 
-    public function select(string $attrClass, string $relativeDivClass=''): FilterInputText
+    public function select(string $attrClass, string $relativeDivClass = ''): FilterInputText
     {
         $this->selectClass = $attrClass;
 

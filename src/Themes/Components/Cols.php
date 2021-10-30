@@ -12,7 +12,7 @@ class Cols
 
     public string $clearFilterStyle = '';
 
-    public function div(string $attrClass='', string $attrStyle=''): Cols
+    public function div(string $attrClass = '', string $attrStyle = ''): Cols
     {
         $this->divClass    = $attrClass;
         $this->divStyle    = $attrStyle;
@@ -20,7 +20,7 @@ class Cols
         return $this;
     }
 
-    public function clearFilter(string $attrClass='', string $attrStyle=''): Cols
+    public function clearFilter(string $attrClass = '', string $attrStyle = ''): Cols
     {
         $this->clearFilterClass    = $attrClass;
         $this->clearFilterStyle    = $attrStyle;

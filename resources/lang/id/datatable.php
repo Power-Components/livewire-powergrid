@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filter',
+        'filter' => 'Filter',
     ],
     'labels' => [
         'action'           => 'Aksi',
@@ -41,5 +41,5 @@ return [
         'contains_not' => 'Tidak terkait',
         'starts_with'  => 'Dimulai dengan',
         'ends_with'    => 'Diakhiri dengan',
-    ]
+    ],
 ];

@@ -21,7 +21,7 @@ class Actions
      * @param string $attrStyle
      * @return $this
      */
-    public function rowsBtn(string $attrClass= '', string $attrStyle=''): Actions
+    public function rowsBtn(string $attrClass = '', string $attrStyle = ''): Actions
     {
         $this->btnClass    = $attrClass;
         $this->btnStyle    = $attrStyle;
@@ -34,7 +34,7 @@ class Actions
      * @param string $attrStyle
      * @return $this
      */
-    public function tdBody(string $attrClass= '', string $attrStyle=''): Actions
+    public function tdBody(string $attrClass = '', string $attrStyle = ''): Actions
     {
         $this->tdBodyClass = $attrClass;
         $this->tdBodyStyle = $attrStyle;
@@ -47,7 +47,7 @@ class Actions
      * @param string $attrStyle
      * @return $this
      */
-    public function headerBtn(string $attrClass= '', string $attrStyle=''): Actions
+    public function headerBtn(string $attrClass = '', string $attrStyle = ''): Actions
     {
         $this->headerBtnClass = $attrClass;
         $this->headerBtnStyle = $attrStyle;

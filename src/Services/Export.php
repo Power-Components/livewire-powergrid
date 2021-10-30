@@ -55,7 +55,7 @@ class Export
 
         return [
             'headers' => $header->toArray(),
-            'rows'    => $data->toArray()
+            'rows'    => $data->toArray(),
         ];
     }
 }

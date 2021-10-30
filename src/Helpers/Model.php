@@ -107,9 +107,9 @@ class Model implements FilterInterface
     private function validateInputTextOptions(string $field): bool
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
-                strtolower($this->filters['input_text_options'][$field]),
-                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-            );
+            strtolower($this->filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
@@ -134,27 +134,27 @@ class Model implements FilterInterface
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
         switch ($textFieldOperator) {
-            case 'is' :
+            case 'is':
                 $query->where($field, '=', $value);
 
                 break;
-            case 'is_not' :
+            case 'is_not':
                 $query->where($field, '!=', $value);
 
                 break;
-            case 'starts_with' :
+            case 'starts_with':
                 $query->where($field, 'like', $value . '%');
 
                 break;
-            case 'ends_with' :
+            case 'ends_with':
                 $query->where($field, 'like', '%' . $value);
 
                 break;
-            case 'contains' :
+            case 'contains':
                 $query->where($field, 'like', '%' . $value . '%');
 
                 break;
-            case 'contains_not' :
+            case 'contains_not':
                 $query->where($field, 'not like', '%' . $value . '%');
 
                 break;
@@ -169,8 +169,8 @@ class Model implements FilterInterface
     public function filterBoolean($query, string $field, $value)
     {
         /** @var \Illuminate\Database\Eloquent\Builder $query */
-        if ($value != "all") {
-            $value = ($value == "true");
+        if ($value != 'all') {
+            $value = ($value == 'true');
             $query->where($field, '=', $value);
         }
     }
@@ -219,13 +219,13 @@ class Model implements FilterInterface
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float)str_replace($value['decimal'], '.', $start);
+            $start = (float) str_replace($value['decimal'], '.', $start);
 
             $query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
             $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float)str_replace($value['decimal'], '.', $end);
+            $end = (float) str_replace($value['decimal'], '.', $end);
 
             $query->where($field, '<=', $end);
         }

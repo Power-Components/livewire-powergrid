@@ -4,15 +4,10 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Support\Collection as BaseCollection;
-use Livewire\Component;
-use Livewire\WithPagination;
-use PowerComponents\LivewirePowerGrid\Helpers\Collection;
-use PowerComponents\LivewirePowerGrid\Helpers\Model;
+use Livewire\{Component, WithPagination};
+use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
-use PowerComponents\LivewirePowerGrid\Traits\Exportable;
-use PowerComponents\LivewirePowerGrid\Traits\Filter;
-use PowerComponents\LivewirePowerGrid\Traits\WithSorting;
+use PowerComponents\LivewirePowerGrid\Traits\{Checkbox, Exportable, Filter, WithSorting};
 
 class PowerGridComponent extends Component
 {
@@ -51,12 +46,12 @@ class PowerGridComponent extends Component
     public $datasource;
 
     protected $listeners = [
-        'eventChangeDatePiker'  => 'eventChangeDatePiker',
-        'eventInputChanged'     => 'eventInputChanged',
-        'eventToggleChanged'    => 'eventInputChanged',
-        'eventMultiSelect'      => 'eventMultiSelect',
-        'eventRefresh'          => '$refresh',
-        'eventToggleColumn'     => 'toggleColumn',
+        'eventChangeDatePiker' => 'eventChangeDatePiker',
+        'eventInputChanged'    => 'eventInputChanged',
+        'eventToggleChanged'   => 'eventInputChanged',
+        'eventMultiSelect'     => 'eventMultiSelect',
+        'eventRefresh'         => '$refresh',
+        'eventToggleColumn'    => 'toggleColumn',
     ];
 
     public bool $toggleColumns = false;
@@ -174,7 +169,7 @@ class PowerGridComponent extends Component
         $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
-            return (object)$column;
+            return (object) $column;
         })->toArray();
 
         $this->relationSearch = $this->relationSearch();
@@ -276,7 +271,7 @@ class PowerGridComponent extends Component
                 '_default_message' => __('Data has been updated successfully!'),
                 'status'           => __('Custom Field updated successfully!'),
             ],
-            "error" => [
+            'error' => [
                 '_default_message' => __('Error updating the data.'),
                 //'custom_field' => __('Error updating custom field.'),
             ],
@@ -358,7 +353,7 @@ class PowerGridComponent extends Component
             || is_a($this->addColumns(), PowerGridEloquent::class)
         ) {
             return $results->transform(function ($row) {
-                $row = (object)$row;
+                $row = (object) $row;
                 $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
@@ -383,7 +378,7 @@ class PowerGridComponent extends Component
                 $column['hidden'] = !data_get($column, 'hidden');
             }
 
-            return (object)$column;
+            return (object) $column;
         })->toArray();
     }
 }

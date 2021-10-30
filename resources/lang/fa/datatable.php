@@ -5,7 +5,7 @@ return [
         'filter'          => 'فیلتر',
         'export'          => 'ExportXLS',
         'export_one'      => 'ExportXLS انتخاب شده',
-        'export_selected' => 'ExportXLS انتخاب شده'
+        'export_selected' => 'ExportXLS انتخاب شده',
     ],
     'labels' => [
         'action'           => 'اقدام ها',
@@ -24,18 +24,18 @@ return [
         'to'      => 'تا',
         'of'      => 'از',
         'results' => 'نتایج',
-        'all'     => 'همه'
+        'all'     => 'همه',
     ],
     'multi_select' => [
         'select' => 'انتخاب',
-        'all'    => 'همه'
+        'all'    => 'همه',
     ],
     'select' => [
         'select' => 'انتخاب',
-        'all'    => 'همه'
+        'all'    => 'همه',
     ],
     'boolean_filter' => [
-        'all' => 'همه'
+        'all' => 'همه',
     ],
     'input_text_options' => [
         'is'           => 'برابرباشد',
@@ -44,5 +44,5 @@ return [
         'contains_not' => 'شامل نباشد',
         'starts_with'  => 'شروع شود با',
         'ends_with'    => 'خاتمه یابد با',
-    ]
+    ],
 ];

@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 trait Exportable

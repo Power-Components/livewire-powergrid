@@ -37,13 +37,13 @@ class Table
      * @param string $tableClass
      * @param string $tableStyle
      */
-    public function __construct(string $tableClass, string $tableStyle='')
+    public function __construct(string $tableClass, string $tableStyle = '')
     {
         $this->tableClass = $tableClass;
         $this->tableStyle = $tableStyle;
     }
 
-    public function thead(string $attrClass, string $attrStyle=''): Table
+    public function thead(string $attrClass, string $attrStyle = ''): Table
     {
         $this->theadClass = $attrClass;
         $this->theadStyle = $attrStyle;
@@ -51,7 +51,7 @@ class Table
         return $this;
     }
 
-    public function tr(string $attrClass, string $attrStyle=''): Table
+    public function tr(string $attrClass, string $attrStyle = ''): Table
     {
         $this->trClass = $attrClass;
         $this->trStyle = $attrStyle;
@@ -59,7 +59,7 @@ class Table
         return $this;
     }
 
-    public function th(string $attrClass, string $attrStyle=''): Table
+    public function th(string $attrClass, string $attrStyle = ''): Table
     {
         $this->thClass = $attrClass;
         $this->thStyle = $attrStyle;
@@ -67,7 +67,7 @@ class Table
         return $this;
     }
 
-    public function tbody(string $attrClass, string $attrStyle=''): Table
+    public function tbody(string $attrClass, string $attrStyle = ''): Table
     {
         $this->tbodyClass = $attrClass;
         $this->tbodyStyle = $attrStyle;
@@ -75,7 +75,7 @@ class Table
         return $this;
     }
 
-    public function trBody(string $attrClass, string $attrStyle=''): Table
+    public function trBody(string $attrClass, string $attrStyle = ''): Table
     {
         $this->trBodyClass = $attrClass;
         $this->trBodyStyle = $attrStyle;
@@ -83,7 +83,7 @@ class Table
         return $this;
     }
 
-    public function tdBody(string $attrClass, string $attrStyle=''): Table
+    public function tdBody(string $attrClass, string $attrStyle = ''): Table
     {
         $this->tdBodyClass = $attrClass;
         $this->tdBodyStyle = $attrStyle;

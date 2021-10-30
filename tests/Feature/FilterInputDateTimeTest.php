@@ -12,7 +12,7 @@ it('properly filters by "between date"')
         'type="text"',
         'placeholder="Select a period"',
         'wire:model="filters.input_date_picker.produced_at"',
-        'wire:ignore'
+        'wire:ignore',
     ])
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
@@ -32,11 +32,11 @@ it('properly filters by "between date" using incorrect filter')
 function filterInputDate(string $startDate, string $endDate): array
 {
     return [
-        "date_picker" => [
-            "produced_at" => [
+        'date_picker' => [
+            'produced_at' => [
                 0 => $startDate,
                 1 => $endDate,
-            ]
+            ],
         ],
     ];
 }

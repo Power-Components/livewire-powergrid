@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtra',
+        'filter' => 'Filtra',
     ],
     'labels' => [
         'action'           => 'Azioni',
@@ -29,7 +29,7 @@ return [
     ],
     'select' => [
         'select' => 'Seleziona',
-        'all'    => 'Tutti'
+        'all'    => 'Tutti',
     ],
     'boolean_filter' => [
         'all' => 'Tutti',
@@ -41,5 +41,5 @@ return [
         'contains_not' => 'Non contiene',
         'starts_with'  => 'Inizia con',
         'ends_with'    => 'Termina con',
-    ]
+    ],
 ];
