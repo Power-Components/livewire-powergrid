@@ -169,8 +169,8 @@ class Model implements FilterInterface
     public function filterBoolean($query, string $field, $value)
     {
         /** @var \Illuminate\Database\Eloquent\Builder $query */
-        if ($value != "all") {
-            $value = ($value == "true");
+        if ($value != 'all') {
+            $value = ($value == 'true');
             $query->where($field, '=', $value);
         }
     }
@@ -219,13 +219,13 @@ class Model implements FilterInterface
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float)str_replace($value['decimal'], '.', $start);
+            $start = (float) str_replace($value['decimal'], '.', $start);
 
             $query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
             $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float)str_replace($value['decimal'], '.', $end);
+            $end = (float) str_replace($value['decimal'], '.', $end);
 
             $query->where($field, '<=', $end);
         }

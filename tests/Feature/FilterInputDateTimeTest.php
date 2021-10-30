@@ -32,8 +32,8 @@ it('properly filters by "between date" using incorrect filter')
 function filterInputDate(string $startDate, string $endDate): array
 {
     return [
-        "date_picker" => [
-            "produced_at" => [
+        'date_picker' => [
+            'produced_at' => [
                 0 => $startDate,
                 1 => $endDate,
             ],

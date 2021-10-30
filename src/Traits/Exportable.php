@@ -3,8 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 
 /**
  * @property Batch exportBatch

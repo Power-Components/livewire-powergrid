@@ -3,8 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
+use Illuminate\Support\{Str, Stringable};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 trait ExportableJob
@@ -31,7 +30,7 @@ trait ExportableJob
     private function transform(Collection $collection): Collection
     {
         return $collection->transform(function ($row) {
-            $row = (object)$row;
+            $row = (object) $row;
             $columns = $this->componentTable->addColumns()->columns;
             foreach ($columns as $key => $column) {
                 $row->{$key} = $column($row);

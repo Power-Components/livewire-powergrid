@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtra',
+        'filter' => 'Filtra',
     ],
     'labels' => [
         'action'           => 'Azioni',
@@ -43,7 +43,7 @@ return [
         'ends_with'    => 'Termina con',
     ],
     'export' => [
-        'exporting'  => 'Attendere prego!',
-        'completed'  => 'Esportazione completata! I tuoi file sono pronti per il download',
+        'exporting' => 'Attendere prego!',
+        'completed' => 'Esportazione completata! I tuoi file sono pronti per il download',
     ],
 ];

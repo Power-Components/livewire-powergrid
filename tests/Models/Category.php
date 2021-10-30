@@ -21,6 +21,6 @@ class Category extends Model
 
     public function dishes()
     {
-        return $this->hasMany(Dish::class, "category_id");
+        return $this->hasMany(Dish::class, 'category_id');
     }
 }

@@ -3,12 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToCsv;
-use PowerComponents\LivewirePowerGrid\Services\Spout\ExportToXLS;
+use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 

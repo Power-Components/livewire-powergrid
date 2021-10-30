@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filter',
+        'filter' => 'Filter',
     ],
     'labels' => [
         'action'           => 'Actions',
@@ -43,7 +43,7 @@ return [
         'ends_with'    => 'Ends with',
     ],
     'export' => [
-        'exporting'  => 'Please wait!',
-        'completed'  => 'Export completed! Your files are ready for download',
+        'exporting' => 'Please wait!',
+        'completed' => 'Export completed! Your files are ready for download',
     ],
 ];

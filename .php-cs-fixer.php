@@ -1,18 +1,17 @@
 <?php
 
-use PhpCsFixer\Config;
-use PhpCsFixer\Finder;
+use PhpCsFixer\{Config, Finder};
 
 $rules = [
-    '@PSR12'                  => true,
-    'align_multiline_comment' => false,
-    'array_indentation'       => true,
-    "array_syntax"            => ['syntax' => 'short'],
-    'binary_operator_spaces'  => [
-        'operators' => [
-            '='  => 'align_single_space',
-            '=>' => 'align_single_space',
-        ],
+    '@PSR2'                       => true,
+    'group_import'                => true,
+    'align_multiline_comment'     => false,
+    'single_import_per_statement' => false,
+    'array_indentation'           => true,
+    'array_syntax'                => ['syntax' => 'short'],
+    'binary_operator_spaces'      => [
+        'default'   => 'align_single_space',
+        'operators' => ['=>' => 'align_single_space_minimal'],
     ],
     'blank_line_after_namespace'   => true,
     'blank_line_after_opening_tag' => false,
@@ -23,22 +22,20 @@ $rules = [
         'position_after_control_structures'           => 'same',
         'position_after_functions_and_oop_constructs' => 'next',
     ],
-    'cast_spaces'                          => ['space' => 'none'],
-    'class_attributes_separation'          => [
-        'elements' => ['method' => 'one', 'property' => 'one'],
-    ],
-    'class_keyword_remove'                 => false,
-    'combine_consecutive_issets'           => false,
-    'combine_consecutive_unsets'           => false,
-    'combine_nested_dirname'               => false,
-    'comment_to_phpdoc'                    => false,
-    'compact_nullable_typehint'            => false,
-    'concat_space'                         => ['spacing' => 'one'],
-    'constant_case'                        => [
-        'case' => 'lower',
-    ],
-    'date_time_immutable'                  => false,
-    'declare_equal_normalize'              => [
+    'lowercase_cast'              => true,
+    'no_short_bool_cast'          => true,
+    'cast_spaces'                 => ['space' => 'single'],
+    'class_attributes_separation' => ['elements' => ['property' => 'one', 'method' => 'one']],
+    'no_unused_imports'           => true,
+    'class_keyword_remove'        => false,
+    'combine_consecutive_issets'  => false,
+    'combine_consecutive_unsets'  => false,
+    'combine_nested_dirname'      => false,
+    'comment_to_phpdoc'           => false,
+    'compact_nullable_typehint'   => false,
+    'concat_space'                => ['spacing' => 'one'],
+    'date_time_immutable'         => false,
+    'declare_equal_normalize'     => [
         'space' => 'single',
     ],
     'declare_strict_types'                 => false,
@@ -49,20 +46,30 @@ $rules = [
         'ignored_tags'       => [],
         'indent_mixed_lines' => true,
     ],
-    'doctrine_annotation_spaces'           => [
+    'doctrine_annotation_spaces' => [
         'after_argument_assignments'     => false,
         'after_array_assignments_colon'  => false,
         'after_array_assignments_equals' => false,
     ],
-    'elseif'                      => false,
-    'encoding'                    => true,
-    'indentation_type'            => true,
-    'no_useless_else'             => false,
-    'no_useless_return'           => true,
-    'ordered_imports'             => true,
-    'single_quote'                => false,
-    'ternary_operator_spaces'     => true,
-    'trailing_comma_in_multiline' => true,
+    'elseif'                                      => false,
+    'encoding'                                    => true,
+    'indentation_type'                            => true,
+    'no_useless_else'                             => true,
+    'no_useless_return'                           => true,
+    'ordered_imports'                             => true,
+    'single_quote'                                => true,
+    'ternary_operator_spaces'                     => true,
+    'trailing_comma_in_multiline'                 => ['elements' => ['arrays']],
+    'no_extra_blank_lines'                        => true,
+    'no_multiline_whitespace_around_double_arrow' => true,
+    'multiline_whitespace_before_semicolons'      => true,
+    'no_singleline_whitespace_before_semicolons'  => true,
+    'no_spaces_around_offset'                     => true,
+    'ternary_to_null_coalescing'                  => true,
+    'whitespace_after_comma_in_array'             => true,
+    'trim_array_spaces'                           => true,
+    'unary_operator_spaces'                       => true,
+    'php_unit_method_casing'                      => false,
 ];
 
 $finder = Finder::create()

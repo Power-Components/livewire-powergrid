@@ -33,7 +33,7 @@
         }
     },
     "require": {
-        "php": "^7.4.1 | ^8",
+        "php": "^7.4.1 | ^8.0 | ^8.1",
         "livewire/livewire": "^2.4",
         "box/spout": "^3",
         "doctrine/dbal": "^3.1"
@@ -51,6 +51,6 @@
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
         "pestphp/pest-plugin-livewire": "^1.0",
-        "friendsofphp/php-cs-fixer": "^2.18"
+        "friendsofphp/php-cs-fixer": "^3.2"
     }
 }

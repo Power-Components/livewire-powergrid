@@ -4,9 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use PowerComponents\LivewirePowerGrid\Commands\CreateCommand;
-use PowerComponents\LivewirePowerGrid\Commands\DemoCommand;
-use PowerComponents\LivewirePowerGrid\Commands\PublishCommand;
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 

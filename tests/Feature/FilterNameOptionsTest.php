@@ -83,11 +83,11 @@ it('properly filters by "name ends with" using nonexistent record')
 function filterInputText(string $text, string $type): array
 {
     return [
-        "input_text" => [
-            "name" => $text,
+        'input_text' => [
+            'name' => $text,
         ],
-        "input_text_options" => [
-            "name" => $type,
+        'input_text_options' => [
+            'name' => $type,
         ],
     ];
 }

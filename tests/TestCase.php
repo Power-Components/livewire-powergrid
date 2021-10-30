@@ -4,8 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use function Pest\Faker\faker;
@@ -225,7 +224,7 @@ class TestCase extends BaseTestCase
         foreach ($dishes as $dish) {
             $price       = (empty($dish['price']) ? $faker->randomFloat(2, 50, 200) : $dish['price']);
             $in_stock    = (!isset($dish['in_stock']) ? $faker->boolean() : $dish['in_stock']);
-            $produced_at = (empty($dish['produced_at']) ? $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d") : $dish['produced_at']);
+            $produced_at = (empty($dish['produced_at']) ? $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format('Y-m-d') : $dish['produced_at']);
 
             $dish = [
                 'name'        => $dish['name'],

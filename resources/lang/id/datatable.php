@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filter',
+        'filter' => 'Filter',
     ],
     'labels' => [
         'action'           => 'Aksi',

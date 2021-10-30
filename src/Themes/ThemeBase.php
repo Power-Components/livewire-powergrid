@@ -4,29 +4,29 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 class ThemeBase extends AbstractTheme
 {
-    public string $name = "";
+    public string $name = '';
 
-    public string $base = "livewire-powergrid::components.frameworks.";
+    public string $base = 'livewire-powergrid::components.frameworks.';
 
     public function root(): string
     {
-        return $this->base . "" . $this->name;
+        return $this->base . '' . $this->name;
     }
 
     public function toggleable(): Components\Toggleable
     {
         return Theme::toggleable()
-            ->view($this->root() . ".toggleable");
+            ->view($this->root() . '.toggleable');
     }
 
     public function layout(): Components\Layout
     {
         return Theme::layout()
-            ->table($this->root() . ".table-base")
-            ->header($this->root() . ".header")
-            ->pagination($this->root() . ".pagination")
-            ->message($this->root() . ".message")
-            ->footer($this->root() . ".footer");
+            ->table($this->root() . '.table-base')
+            ->header($this->root() . '.header')
+            ->pagination($this->root() . '.pagination')
+            ->message($this->root() . '.message')
+            ->footer($this->root() . '.footer');
     }
 
     public function apply(): ThemeBase

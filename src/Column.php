@@ -165,7 +165,7 @@ class Column
         $this->inputs['select']['data_source']   = $datasource;
         $this->inputs['select']['display_field'] = $displayField;
         $this->inputs['select']['data_field']    = $dataField;
-        $this->inputs['select']['class']         = $settings['class'] ?? '';
+        $this->inputs['select']['class']         = $settings['class']       ?? '';
         $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
 
         return $this;
@@ -294,7 +294,7 @@ class Column
         $this->inputs['boolean_filter']['enabled']     = true;
         $this->inputs['boolean_filter']['true_label']  = $trueLabel;
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
-        $this->inputs['boolean_filter']['class']       = $settings['class'] ?? '';
+        $this->inputs['boolean_filter']['class']       = $settings['class']       ?? '';
         $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
         $this->dataField                               = $dataField;
 
