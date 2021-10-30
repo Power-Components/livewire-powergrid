@@ -1,8 +1,7 @@
 <?php
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 uses(TestCase::class)->in(__DIR__);
 

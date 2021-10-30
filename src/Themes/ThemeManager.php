@@ -21,7 +21,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{
 
 class ThemeManager
 {
-    public function table(string $attrClass, string $attrStyle=''): Table
+    public function table(string $attrClass, string $attrStyle = ''): Table
     {
         return new Table($attrClass, $attrStyle);
     }

@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 abstract class AbstractTheme
 {
-    public static string $scripts = "";
+    public static string $scripts = '';
 
-    public static string $styles = "";
+    public static string $styles = '';
 
     public ?Components\Table $table;
 

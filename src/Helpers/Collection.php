@@ -3,11 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Container\Container;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection as BaseCollection;
-use Illuminate\Support\Str;
+use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
+use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
 class Collection implements FilterInterface
@@ -249,8 +246,8 @@ class Collection implements FilterInterface
      */
     public function filterBoolean(string $field, $value): void
     {
-        if ($value != "all") {
-            $value = ($value == "true");
+        if ($value != 'all') {
+            $value = ($value == 'true');
 
             $this->query = $this->query->where($field, '=', $value);
         }
@@ -296,13 +293,13 @@ class Collection implements FilterInterface
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float)str_replace($value['decimal'], '.', $start);
+            $start = (float) str_replace($value['decimal'], '.', $start);
 
             $this->query = $this->query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
             $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float)str_replace($value['decimal'], '.', $end);
+            $end = (float) str_replace($value['decimal'], '.', $end);
 
             $this->query = $this->query->where($field, '<=', $end);
         }

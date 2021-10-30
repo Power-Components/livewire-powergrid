@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtrar',
+        'filter' => 'Filtrar',
     ],
     'labels' => [
         'action'           => 'Ações',
@@ -41,5 +41,5 @@ return [
         'contains_not' => 'No contiene',
         'starts_with'  => 'Comienza por',
         'ends_with'    => 'Termina en',
-    ]
+    ],
 ];

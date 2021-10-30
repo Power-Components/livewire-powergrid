@@ -16,11 +16,11 @@ class Category extends Model
     protected $table = 'categories';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public function dishes()
     {
-        return $this->hasMany(Dish::class, "category_id");
+        return $this->hasMany(Dish::class, 'category_id');
     }
 }

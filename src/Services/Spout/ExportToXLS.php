@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
-use Box\Spout\Common\Entity\Style\CellAlignment;
-use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Common\Entity\Style\{CellAlignment, Color};
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;

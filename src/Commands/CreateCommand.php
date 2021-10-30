@@ -3,10 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\{File, Schema};
+use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Helpers\InteractsWithVersions;
 
 class CreateCommand extends Command
@@ -36,6 +34,7 @@ class CreateCommand extends Command
 
         if (empty(trim($tableName))) {
             $this->error('You must provide a name for your ⚡ PowerGrid Table!');
+
             return;
         }
 
@@ -47,6 +46,7 @@ class CreateCommand extends Command
 
         if (!in_array(strtolower($creationModel), ['m', 'c'])) {
             $this->error('Please enter <comment>[M]</comment> for Model or <comment>[C]</comment> for Collection');
+
             return;
         }
 
@@ -54,6 +54,7 @@ class CreateCommand extends Command
 
         if (empty(trim($modelName))) {
             $this->error('Error: Model name is required.');
+
             return;
         }
 
@@ -63,22 +64,24 @@ class CreateCommand extends Command
 
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
-
         $modelNameArr  = explode('\\', $modelName);
         $modelLastName = Arr::last($modelNameArr);
 
         if (count($modelNameArr) === 1) {
             if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+
                 return;
             }
 
-            $this->error('Error: "'.$modelName.'" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+            $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+
             return;
         }
 
         if (empty($modelName)) {
             $this->error('Could not create, Model path is missing');
+
             return;
         }
 
@@ -150,7 +153,7 @@ class CreateCommand extends Command
             ['created_at', 'updated_at']
         );
 
-        $datasource     = "";
+        $datasource     = '';
         $columns        = "[\n";
 
         foreach ($getFillable as $field) {

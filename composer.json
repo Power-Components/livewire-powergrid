@@ -39,7 +39,10 @@
         "doctrine/dbal": "^3.1"
     },
     "scripts": {
-        "test": "./vendor/bin/pest"
+        "test": "./vendor/bin/pest",
+        "fix": [
+            "./vendor/bin/php-cs-fixer fix"
+        ]
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
@@ -47,6 +50,7 @@
         "orchestra/testbench": "^6.17",
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
-        "pestphp/pest-plugin-livewire": "^1.0"
+        "pestphp/pest-plugin-livewire": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.2"
     }
 }

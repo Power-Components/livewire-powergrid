@@ -55,8 +55,8 @@ class InteractsWithVersions
     {
         $resolver = static::$latestVersionResolver ?? function () {
             $package = json_decode(file_get_contents(
-                    'https://packagist.org/p2/power-components/livewire-powergrid.json'
-                ), true);
+                'https://packagist.org/p2/power-components/livewire-powergrid.json'
+            ), true);
 
             return collect($package['packages']['power-components/livewire-powergrid'])
                     ->first()['version'];

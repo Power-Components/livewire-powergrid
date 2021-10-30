@@ -10,7 +10,7 @@ class Footer
 
     public string $view = '';
 
-    public function select(string $attrClass='', string $attrStyle=''): Footer
+    public function select(string $attrClass = '', string $attrStyle = ''): Footer
     {
         $this->selectClass    = $attrClass;
         $this->selectStyle    = $attrStyle;

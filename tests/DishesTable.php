@@ -5,17 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
+use Illuminate\Support\{HtmlString, Str};
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 class DishesTable extends PowerGridComponent
 {
@@ -76,7 +70,7 @@ class DishesTable extends PowerGridComponent
             })
             ->addColumn('price')
             ->addColumn('price_EUR', function (Dish $dish) use ($fmt) {
-                return $fmt->formatCurrency($dish->price, "EUR");
+                return $fmt->formatCurrency($dish->price, 'EUR');
             })
             ->addColumn('price_BRL', function (Dish $dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
@@ -89,7 +83,7 @@ class DishesTable extends PowerGridComponent
             })
             ->addColumn('in_stock')
             ->addColumn('in_stock_label', function (Dish $dish) {
-                return ($dish->in_stock ? "sim" : "não");
+                return ($dish->in_stock ? 'sim' : 'não');
             })
             ->addColumn('produced_at')
             ->addColumn('produced_at_formatted', function (Dish $dish) {
@@ -133,7 +127,7 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->editOnClick($canEdit)
-                ->makeInputRange('price', ".", ","),
+                ->makeInputRange('price', '.', ','),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -210,7 +204,7 @@ class DishesTable extends PowerGridComponent
                 '_default_message' => __('Data has been updated successfully!'),
                 'price_BRL'        => __('Preço alterado'),
             ],
-            "error" => [
+            'error' => [
                 '_default_message' => __('Error updating the data.'),
             ],
         ];

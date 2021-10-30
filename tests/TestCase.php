@@ -4,8 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{DB, Schema};
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use function Pest\Faker\faker;
@@ -254,7 +253,7 @@ class TestCase extends BaseTestCase
             if (!isset($dish['price'])) {
                 $dish['price'] = $faker->randomFloat(2, 50, 200);
             };
-
+          
             if (!isset($dish['stored_at'])) {
                 $dish['stored_at'] = rand(1, 3) . $faker->randomElement(['', 'a', 'b']);
             };
