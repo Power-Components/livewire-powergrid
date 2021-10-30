@@ -48,8 +48,8 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: PHP CS Fixer
-          run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no --verbose --stop-on-violation
+        run: vendor/bin/php-cs-fixer fix --dry-run --using-cache=no --verbose --stop-on-violation
 
       - name: Pest tests
-          run: vendor/bin/pest
+        run: vendor/bin/pest
 
