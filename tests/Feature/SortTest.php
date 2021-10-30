@@ -69,6 +69,22 @@ it('properly sorts ASC/DESC with: string')
     ->assertSeeHtml('Dish B')
     ->assertDontSeeHtml('Zebra Dish H');
 
+
+it('properly sorts ASC/DESC with: float')
+    ->livewire(DishesTable::class)
+    ->set('perPage', '10')
+    ->call('sortBy', 'price')
+    ->set('sortDirection', 'desc')
+    ->assertSeeHtml('Zebra Dish H')
+    ->assertSeeHtml('Dish K')
+    ->assertDontSeeHtml('Dish A')
+    ->assertDontSeeHtml('Dish B')
+    ->call('sortBy', 'price')
+    ->set('sortDirection', 'asc')
+    ->assertSeeHtml('Dish A')
+    ->assertSeeHtml('Dish B')
+    ->assertDontSeeHtml('Zebra Dish H');
+
 it('properly sorts ASC/DESC with: boolean')
     ->livewire(DishesTable::class)
     ->set('perPage', '10')
@@ -120,7 +136,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish A",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 100.00,
             "stored_at" => "1",
             "calories" => 224,
             "in_stock" => true,
@@ -129,7 +145,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish B",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 200.10,
             "stored_at" => "2",
             "calories" => 224,
             "in_stock" => true,
@@ -138,7 +154,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish C",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 300.50,
             "stored_at" => "3",
             "calories" => 224,
             "in_stock" => true,
@@ -147,7 +163,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish D",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 400.00,
             "stored_at" => "4",
             "calories" => 224,
             "in_stock" => true,
@@ -156,7 +172,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish E",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 500.00,
             "stored_at" => "5",
             "calories" => 224,
             "in_stock" => true,
@@ -165,7 +181,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish F",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 600.00,
             "stored_at" => "6",
             "calories" => 224,
             "in_stock" => true,
@@ -174,7 +190,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish G",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 700.00,
             "stored_at" => "7",
             "calories" => 224,
             "in_stock" => true,
@@ -183,7 +199,7 @@ function dishesForSorting(): array
         [
             "name" => "Zebra Dish H",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 7500.00,
             "stored_at" => "8",
             "calories" => 224,
             "in_stock" => true,
@@ -192,7 +208,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish I",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 800.00,
             "stored_at" => "9",
             "calories" => 224,
             "in_stock" => true,
@@ -201,7 +217,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish J",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 900.00,
             "stored_at" => "10",
             "calories" => 224,
             "in_stock" => true,
@@ -210,7 +226,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish K",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 1000.00,
             "stored_at" => "1b",
             "calories" => 224,
             "in_stock" => false,
@@ -219,7 +235,7 @@ function dishesForSorting(): array
         [
             "name" => "Dish L",
             "category_id" => 7,
-            "price" => 174.22,
+            "price" => 2000.00,
             "stored_at" => "1a",
             "calories" => 224,
             "in_stock" => false,
