@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
@@ -29,9 +28,9 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
-    private function transform(Collection $query)
+    private function transform(Collection $collection): Collection
     {
-        return $query->transform(function ($row) {
+        return $collection->transform(function ($row) {
             $row = (object)$row;
             $columns = $this->componentTable->addColumns()->columns;
             foreach ($columns as $key => $column) {

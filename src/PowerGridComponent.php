@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 use PowerComponents\LivewirePowerGrid\Helpers\Model;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
+use PowerComponents\LivewirePowerGrid\Traits\BatchableExport;
 use PowerComponents\LivewirePowerGrid\Traits\Checkbox;
 use PowerComponents\LivewirePowerGrid\Traits\Exportable;
 use PowerComponents\LivewirePowerGrid\Traits\Filter;
@@ -21,6 +22,7 @@ class PowerGridComponent extends Component
     use WithSorting;
     use Checkbox;
     use Filter;
+    use BatchableExport;
 
     public array $headers = [];
 

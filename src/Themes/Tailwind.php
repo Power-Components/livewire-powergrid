@@ -58,7 +58,7 @@ class Tailwind extends ThemeBase
         return Theme::checkbox()
             ->th("px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider")
             ->label("flex items-center space-x-3")
-            ->input("form-checkbox h-4 w-4");
+            ->input("h-4 w-4");
     }
 
     public function filterBoolean(): Components\FilterBoolean
