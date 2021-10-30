@@ -14,12 +14,12 @@ class Bootstrap5 extends ThemeBase
     public function table(): Components\Table
     {
         return Theme::table('table table-bordered table-hover table-striped table-checkable table-highlight-head mb-2')
-            ->thead('w-full')
-            ->tr('w-full')
-            ->th('w-full', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
-            ->tbody('w-full')
-            ->trBody('w-full')
-            ->tdBody('w-full', 'vertical-align: middle; line-height: normal;');
+            ->thead('')
+            ->tr('')
+            ->th('', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
+            ->tbody('')
+            ->trBody('')
+            ->tdBody('', 'vertical-align: middle; line-height: normal;');
     }
 
     public function cols(): Components\Cols

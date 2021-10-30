@@ -27,7 +27,6 @@ $rules = [
     'cast_spaces'                 => ['space' => 'single'],
     'class_attributes_separation' => ['elements' => ['property' => 'one', 'method' => 'one']],
     'no_unused_imports'           => true,
-    'class_keyword_remove'        => false,
     'combine_consecutive_issets'  => false,
     'combine_consecutive_unsets'  => false,
     'combine_nested_dirname'      => false,

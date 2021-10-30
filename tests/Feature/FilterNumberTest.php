@@ -4,7 +4,7 @@ use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
 it('properly filters by "min"')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', min: '2', max: null, thousands: '', decimal: ''))
+    ->set('filters', filterNumber('id', '2', null, '', ''))
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertSeeHtml('Francesinha')
     ->assertSeeHtml('борщ')
@@ -12,7 +12,7 @@ it('properly filters by "min"')
 
 it('properly filters by "max"')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', min: null, max: '3', thousands: '', decimal: ''))
+    ->set('filters', filterNumber('id', null, '3', '', ''))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertSeeHtml('Carne Louca')
@@ -20,14 +20,14 @@ it('properly filters by "max"')
 
 it('properly filters by "min & max"')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', min: '1', max: '2', thousands: '', decimal: ''))
+    ->set('filters', filterNumber('id', '1', '2', '', ''))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertDontSeeHtml('Carne Louca');
 
 it('properly filters by "min & max" currency')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('price', min: '60.49', max: '100', thousands: '', decimal: ''))
+    ->set('filters', filterNumber('price', '60.49', '100', '', ''))
     ->assertSeeHtml('Francesinha')
     ->assertSeeHtml('Barco-Sushi da Sueli')
     ->assertSeeHtml('Barco-Sushi Simples')
@@ -36,20 +36,20 @@ it('properly filters by "min & max" currency')
 
 it('ignores null "min & max"')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', min: null, max: null, thousands: '', decimal: ''))
+    ->set('filters', filterNumber('id', null,  null,'', ''))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertSeeHtml('борщ');
 
 it('displays "No records found" with non-existent min')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', min: '1000000', max: null, thousands: '', decimal: ''))
+    ->set('filters', filterNumber('id', '1000000',  null,'', ''))
     ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Pastel de Nata');
 
 it('properly filters by "min & max" formatted')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('price', min: '1,50', max: '20,51', thousands: '.', decimal: ','))
+    ->set('filters', filterNumber('price', '1,50',  '20,51','.', ','))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertDontSeeHtml('Carne Louca');
