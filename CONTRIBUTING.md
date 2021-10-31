@@ -10,13 +10,13 @@ This article's objective is to facilitate the process of collaborating with  [Po
 
 ## 1) Fork the project
 To fork PowerGrid, you simply have to access the repository's page [PowerGrid](https://github.com/Power-Components/livewire-powergrid) and click *Fork*:<br />
-<img src="img/click-to-fork.png" /><br />
+<img src="https://raw.githubusercontent.com/Power-Components/como-contribuir-com-o-powergrid/main/img/click-to-fork.png" /><br />
 As a result, you should have something similar to https://github.com/cpereiraweb/livewire-powergrid.<br />
 Note: If you are a member of different teams or organizations, you must select which account you will be forking to.
 
 ## 2) Clone your fork repository to your computer
 Select or create a new folder at your computer where you want to store project files:<br />
-<img src="img/cloning-repo.png">
+<img src="https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/img/cloning-repo.png?raw=true">
 
 ## 3) Create a new branch and push it to your repository
 Access the repository's folder:
@@ -91,11 +91,11 @@ For example: `/home/cpereiraweb/code/forks/PowerComponents/livewire-powergrid`.
 ## 6) Run `composer update` command
 Now, just run `composer update` command inside your Laravel project so composer can update its references. See below the result using the repository link:<br />
 
-<img src="img/composer-update.png"><br />
+<img src="https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/img/composer-update.png?raw=true"><br />
 The image shows the commits at my repository. First, I had installed the commit  `219cdd8`.  Now, at the image above you can see that it has been updated to the commit `65ae610`.
 
 If you had your `composer.json` configured to use a local path instead, you should have a result similar to this:<br/>
-<img src="img/composer-update-local-repo.png"><br />&nbsp;<br />
+<img src="https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/img/composer-update-local-repo.png?raw=true"><br />&nbsp;<br />
 
 You may notice that the GitHub's version was removed and it was replaced by the local version. The commit indications are no longer displayed. With this configuration, I am not required to `push` my fork nor run `composer update` in my Laravel Project. It is a more dynamic process.
 
