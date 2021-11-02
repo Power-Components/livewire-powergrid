@@ -26,6 +26,29 @@ it('creates a PowerGrid Table', function () {
     File::delete($this->tableFilePath);
 });
 
+it('notifies about tailwind forms', function () {
+    File::delete($this->tableFilePath);
+
+    $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
+
+    $content = "module.exports = { theme: { // ... }, plugins: [ require('@tailwindcss/forms'), // ... ], }";
+    
+    File::delete($tailwindConfigFile);
+    File::put($tailwindConfigFile, $content);
+
+    $this->artisan('powergrid:create')
+        ->expectsQuestion($this->model_name_question, 'DemoTable')
+        ->expectsQuestion($this->datasource_question, 'M')
+        ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms for more information.")
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
+
+    File::delete($this->tableFilePath);
+    File::delete($tailwindConfigFile);
+});
+
 it('publishes the Demo Table', function () {
     $tableFile =  getLaravelDir() . 'app/Http/Livewire/PowerGridDemoTable.php';
     $viewsFile =  getLaravelDir() . 'resources/views/powergrid-demo.blade.php';

@@ -138,6 +138,9 @@ class CreateCommand extends Command
 
         if ($createTable) {
             File::put($path, $stub);
+            
+            $this->checkTailwindForms();
+
             $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
             $this->info("\n⚡ Your PowerGrid can be now included with the tag: <comment>" . $component_name . "</comment>\n");
         }
@@ -221,5 +224,18 @@ class CreateCommand extends Command
         }
 
         return File::get(__DIR__ . '/../../resources/stubs/table.stub');
+    }
+
+    protected function checkTailwindForms(): void
+    {
+        $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
+  
+        if (File::exists($tailwindConfigFile)) {
+            $fileContent    = File::get($tailwindConfigFile);
+
+            if (Str::contains($fileContent, "require('@tailwindcss/forms')") === true) {
+                $this->info("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms</comment> for more information.");
+            }
+        }
     }
 }
