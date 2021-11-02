@@ -58,6 +58,8 @@ PowerGrid offers you the following features out of the box:
 
 ✅ **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
 
+✅ **Queue Export for large tables**
+
 ✅ **Works with Bootstrap 5 or Tailwind CSS 2**
 
 ✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
