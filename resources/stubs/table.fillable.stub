@@ -4,7 +4,9 @@ namespace App\Http\Livewire{{ subFolder }};
 
 use {{ modelName }};
 use Illuminate\Support\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
+use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
@@ -71,7 +73,7 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Include Columns
     |--------------------------------------------------------------------------
-    | Include the columns aaded columns, making them visible on the Table.
+    | Include the columns added columns, making them visible on the Table.
     | Each column can be configured with properties, filters, actions...
     |
     */
