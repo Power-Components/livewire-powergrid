@@ -72,6 +72,10 @@ trait Exportable
             return $this->runOnQueue(ExportToXLS::class);
         }
 
+        if (count($this->checkboxValues) === 0 && $selected) {
+            return;
+        }
+
         return (new ExportToXLS())
             ->fileName($this->exportFileName)
             ->setData($this->columns(), $this->prepareToExport($selected))
@@ -85,6 +89,10 @@ trait Exportable
     {
         if ($this->queues > 0 && !$selected) {
             return $this->runOnQueue(ExportToCsv::class);
+        }
+
+        if (count($this->checkboxValues) === 0 && $selected) {
+            return;
         }
 
         return (new ExportToCsv())
