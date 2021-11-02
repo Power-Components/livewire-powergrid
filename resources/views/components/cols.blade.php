@@ -25,7 +25,7 @@
                 @endif
                 <span
                     @if($column->sortable === true)
-                    wire:click="sortBy('{{ $column->dataField ?? $column->field }}')"
+                    wire:click="sortBy('{{ $column->dataField !='' ? $column->dataField : $column->field }}')"
                     @endif
                 >
                     {{$column->title}}
