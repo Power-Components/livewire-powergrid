@@ -42,4 +42,8 @@ return [
         'starts_with'  => 'beginnt mit',
         'ends_with'    => 'endet with',
     ],
+    'export' => [
+        'exporting' => 'Warten Sie mal!',
+        'completed' => 'Export abgeschlossen! Ihre Dateien stehen zum Download bereit',
+    ],
 ];

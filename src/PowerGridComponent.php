@@ -7,7 +7,7 @@ use Illuminate\Support\Collection as BaseCollection;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{Checkbox, Exportable, Filter, WithSorting};
+use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
 
 class PowerGridComponent extends Component
 {
@@ -16,6 +16,7 @@ class PowerGridComponent extends Component
     use WithSorting;
     use Checkbox;
     use Filter;
+    use BatchableExport;
 
     public array $headers = [];
 
@@ -76,7 +77,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    protected function datasource()
+    public function datasource()
     {
         return null;
     }
@@ -199,6 +200,8 @@ class PowerGridComponent extends Component
             return $this->datasource();
         }
 
+        $this->total = $datasource->count();
+
         return $datasource;
     }
 
@@ -224,7 +227,7 @@ class PowerGridComponent extends Component
                 return $datasource;
             }
 
-            return new BaseCollection($datasource->make());
+            return new BaseCollection($datasource);
         });
     }
 

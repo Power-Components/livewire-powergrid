@@ -27,7 +27,7 @@ class Tailwind extends ThemeBase
     public function footer(): Components\Footer
     {
         return Theme::footer()
-            ->view($this->root() . 'footer')
+            ->view($this->root() . '.footer')
             ->select('block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500  dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
 
@@ -48,7 +48,7 @@ class Tailwind extends ThemeBase
     public function editable(): Components\Editable
     {
         return Theme::editable()
-            ->view($this->root() . 'editable')
+            ->view($this->root() . '.editable')
             ->span('flex justify-between')
             ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
@@ -58,7 +58,7 @@ class Tailwind extends ThemeBase
         return Theme::checkbox()
             ->th('px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider')
             ->label('flex items-center space-x-3')
-            ->input('form-checkbox h-4 w-4');
+            ->input('h-4 w-4');
     }
 
     public function filterBoolean(): Components\FilterBoolean
@@ -81,7 +81,7 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view($this->root() . 'multi-select')
+            ->view($this->root() . '.multi-select')
             ->input('appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
             ->divNotInline('pt-2 p-2')
             ->divInline('pr-6');

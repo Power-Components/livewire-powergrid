@@ -2,7 +2,7 @@
 
     <div class="md:flex md:flex-row w-full">
 
-        <div class="">
+        <div>
             <x-livewire-powergrid::actions-header
                 :theme="$theme"
                 :actions="$this->headers"/>
@@ -11,39 +11,24 @@
         <div class="flex flex-row">
 
             @if($exportOption)
-            <div class="mr-2 mt-2 sm:mt-0">
-                @includeIf($theme->base. ''.$theme->name.'.export')
-            </div>
+                <div class="mr-2 mt-2 sm:mt-0">
+                    @includeIf(powerGridThemeRoot().'.export')
+                </div>
             @endif
 
-            @includeIf($theme->base. ''.$theme->name.'.toggle-columns')
+            @includeIf(powerGridThemeRoot().'.toggle-columns')
 
         </div>
 
-        @include($theme->base. ''.$theme->name.'.loading')
+        @includeIf(!$batchExporting, powerGridThemeRoot().'.loading')
 
     </div>
 
-    @include($theme->base. ''.$theme->name.'.search')
+    @include(powerGridThemeRoot().'.search')
 
 </div>
 
-<div class="w-full pt-3 mb-3">
+@include(powerGridThemeRoot().'.batch-exporting')
 
-    @foreach($enabledFilters as $field => $filter)
+@include(powerGridThemeRoot().'.enabled-filters')
 
-        <span
-            class="cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-indigo-100 text-indigo-700">
-              {{ $filter['label'] }}
-              <button type="button"
-                      wire:click.prevent="clearFilter('{{ $field }}')"
-                      class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-indigo-400 hover:bg-indigo-200 hover:text-indigo-500 focus:outline-none focus:bg-indigo-500 focus:text-white">
-                <span class="sr-only"{{ $filter['label'] }}></span>
-                <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-                  <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"/>
-                </svg>
-              </button>
-        </span>
-
-    @endforeach
-</div>

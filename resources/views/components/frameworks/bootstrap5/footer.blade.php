@@ -22,7 +22,7 @@
             </div>
         @endif
         <div>
-            {!! $data->links($theme->base. ''.$theme->name.'.pagination') !!}
+            {!! $data->links(powerGridThemeRoot().'.pagination') !!}
         </div>
     </div>
 @endif

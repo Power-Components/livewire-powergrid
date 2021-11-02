@@ -4,10 +4,10 @@
     'sortField' => null,
     'sortDirection' => null,
     'enabledFilters' => null,
-    'actions' => null
+    'actions' => null,
+    'dataField' => null,
 ])
 <div>
-
     @if($column->hidden === false)
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
             style="width: max-content;@if($column->sortable)cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
@@ -25,7 +25,7 @@
                 @endif
                 <span
                     @if($column->sortable === true)
-                    wire:click="sortBy('{{ $column->dataField ?? $column->field }}')"
+                    wire:click="sortBy('{{ $column->dataField !='' ? $column->dataField : $column->field }}')"
                     @endif
                 >
                     {{$column->title}}

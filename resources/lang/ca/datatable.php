@@ -42,4 +42,8 @@ return [
         'starts_with'  => 'Comença per',
         'ends_with'    => 'Acaba en',
     ],
+    'export' => [
+        'exporting' => 'Espereu, si us plau!',
+        'completed' => 'S\'ha completat l\'exportació. Els vostres fitxers estan a punt per descarregar-se',
+    ],
 ];

@@ -36,14 +36,14 @@ it('properly filters by "min & max" currency')
 
 it('ignores null "min & max"')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', null,  null,'', ''))
+    ->set('filters', filterNumber('id', null, null, '', ''))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertSeeHtml('борщ');
 
 it('displays "No records found" with non-existent min')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('id', '1000000',  null,'', ''))
+    ->set('filters', filterNumber('id', '1000000', null, '', ''))
     ->assertSeeHtml('No records found')
     ->assertDontSeeHtml('Pastel de Nata');
 

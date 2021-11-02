@@ -32,7 +32,7 @@ class Bootstrap5 extends ThemeBase
     public function footer(): Components\Footer
     {
         return Theme::footer()
-            ->view($this->root() . 'footer')
+            ->view($this->root() . '.footer')
             ->select('');
     }
 
@@ -51,13 +51,13 @@ class Bootstrap5 extends ThemeBase
     public function toggleable(): Components\Toggleable
     {
         return Theme::toggleable()
-            ->view($this->root() . 'toggleable');
+            ->view($this->root() . '.toggleable');
     }
 
     public function editable(): Components\Editable
     {
         return Theme::editable()
-            ->view($this->root() . 'editable')
+            ->view($this->root() . '.editable')
             ->span('d-flex justify-content-between')
             ->button('width: 100%;text-align: left;border: 0;padding: 4px;background: none')
             ->input('form-control');
@@ -92,7 +92,7 @@ class Bootstrap5 extends ThemeBase
     public function filterMultiSelect(): Components\FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view($this->root() . 'multi-select')
+            ->view($this->root() . '.multi-select')
             ->input('')
             ->divNotInline('')
             ->divInline('');

@@ -33,7 +33,7 @@
         }
     },
     "require": {
-        "php": "^7.4.1 | ^8",
+        "php": "^7.4.1 | ^8.0 | ^8.1",
         "livewire/livewire": "^2.4",
         "box/spout": "^3",
         "doctrine/dbal": "^3.1"

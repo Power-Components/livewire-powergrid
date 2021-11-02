@@ -2,9 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Illuminate\Bus\Batch;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/**
+ * @property Batch exportBatch
+ */
 trait Exportable
 {
     public bool $exportOption = false;
@@ -16,6 +19,7 @@ trait Exportable
     /**
      * @param string $fileName
      * @param array|string[] $type
+     * @return Exportable
      */
     public function showExportOption(string $fileName, array $type = ['excel', 'csv'])
     {
@@ -60,9 +64,18 @@ trait Exportable
 
     /**
      * @throws \Exception
+     * @throws \Throwable
      */
-    public function exportToXLS(bool $selected = false): BinaryFileResponse
+    public function exportToXLS(bool $selected = false)
     {
+        if ($this->queues > 0 && !$selected) {
+            return $this->runOnQueue(ExportToXLS::class);
+        }
+
+        if (count($this->checkboxValues) === 0 && $selected) {
+            return;
+        }
+
         return (new ExportToXLS())
             ->fileName($this->exportFileName)
             ->setData($this->columns(), $this->prepareToExport($selected))
@@ -70,10 +83,18 @@ trait Exportable
     }
 
     /**
-     * @throws \Exception
+     * @throws \Throwable
      */
-    public function exportToCsv(bool $selected = false): BinaryFileResponse
+    public function exportToCsv(bool $selected = false)
     {
+        if ($this->queues > 0 && !$selected) {
+            return $this->runOnQueue(ExportToCsv::class);
+        }
+
+        if (count($this->checkboxValues) === 0 && $selected) {
+            return;
+        }
+
         return (new ExportToCsv())
             ->fileName($this->exportFileName)
             ->setData($this->columns(), $this->prepareToExport($selected))

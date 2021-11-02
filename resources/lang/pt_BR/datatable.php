@@ -42,4 +42,8 @@ return [
         'starts_with'  => 'Começa com',
         'ends_with'    => 'Termina com',
     ],
+    'export' => [
+        'exporting' => 'Por favor, aguarde!',
+        'completed' => 'Exportação concluída! Seus arquivos estão prontos para download',
+    ],
 ];

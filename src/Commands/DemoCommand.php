@@ -11,7 +11,7 @@ class DemoCommand extends Command
 
     protected $description = 'Generate a PowerGrid demo Table.';
 
-    protected string $stubPath = __DIR__ . '/../../resources/stubs/';
+    private string $stubPath = __DIR__ . '/../../resources/stubs/';
 
     public function handle()
     {
@@ -24,7 +24,7 @@ class DemoCommand extends Command
         $viewFolder = 'resources/views';
 
         if (!is_dir($fullLivewirePath)) {
-            (new Filesystem)->makeDirectory($fullLivewirePath);
+            (new Filesystem())->makeDirectory($fullLivewirePath);
         }
 
         $stub = str_replace('{{ url }}', config('app.url'), $this->stubPath);

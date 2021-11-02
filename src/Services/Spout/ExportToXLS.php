@@ -18,6 +18,11 @@ class ExportToXLS extends Export implements ExportInterface
             ->download(storage_path($this->fileName . '.xlsx'));
     }
 
+    public function store()
+    {
+        $this->build();
+    }
+
     public function build()
     {
         $data = $this->prepare($this->data, $this->columns);

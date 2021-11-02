@@ -25,6 +25,6 @@ class PowerGridManager
             $class = \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class;
         }
 
-        return new $class;
+        return new $class();
     }
 }
