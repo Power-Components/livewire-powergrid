@@ -113,7 +113,7 @@ class PowerGridDemoTable extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Include Columns
     |--------------------------------------------------------------------------
-    | Include the columns aaded columns, making them visible on the Table.
+    | Include the columns added columns, making them visible on the Table.
     | Each column can be configured with properties, filters, actions...
     |
     */
