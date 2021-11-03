@@ -154,7 +154,7 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Data'))
                 ->field('produced_at')
                 ->makeInputDatePicker('produced_at')
-                ->sortable()
+                ->sortable(),
         ];
     }
 

@@ -1,5 +1,4 @@
 <div x-data="{ open: false }"
-     x-cloak
      @click.away="open = false">
     <button @click.prevent="open = ! open"
             class="block bg-white-200 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
@@ -9,6 +8,7 @@
     </button>
 
     <div x-show="open"
+         x-cloak
          x-transition:enter="transform duration-200"
          x-transition:enter-start="opacity-0 scale-90"
          x-transition:enter-end="opacity-100 scale-100"

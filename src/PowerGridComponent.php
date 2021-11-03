@@ -319,7 +319,7 @@ class PowerGridComponent extends Component
         }
 
         $results = $this->resolveModel($datasource)
-            ->where(function ($query) {
+            ->where(function (\Illuminate\Database\Eloquent\Builder $query) {
                 Model::query($query)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
@@ -327,7 +327,8 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderByRaw("$this->sortField+0 $this->sortDirection")->orderBy($this->sortField, $this->sortDirection);
+            })->orderByRaw("$this->sortField+0 $this->sortDirection")
+            ->orderBy($this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);

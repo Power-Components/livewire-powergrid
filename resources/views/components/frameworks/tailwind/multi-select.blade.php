@@ -22,7 +22,7 @@
                                      options[option]" x-text="options[option].text"></div>
                                     <div class="flex flex-auto flex-row-reverse">
                                         <div x-on:click="remove(index,option)">
-                                            <x-livewire-powergrid::icons.x class="w-5 h-5 cursor-pointer"/>
+                                            <x-livewire-powergrid::icons.x class="w-4 h-4 cursor-pointer"/>
                                         </div>
                                     </div>
                                 </div>
@@ -41,18 +41,19 @@
 
                             <button type="button" x-show="isOpen() === true" x-on:click="open"
                                     class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none dark:text-gray-200">
-                                <x-livewire-powergrid::icons.up class="w-5 h-5 text-gray-400 dark:text-gray-200 cursor-pointer"/>
+                                <x-livewire-powergrid::icons.up class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
                                                             </button>
                             <button type="button" x-show="isOpen() === false" @click="close"
                                     class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none dark:text-gray-200">
-                                <x-livewire-powergrid::icons.down class="w-5 h-5 text-gray-400 dark:text-gray-200 cursor-pointer"/>
+                                <x-livewire-powergrid::icons.down class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="w-full px-4">
-                    <div x-show.transition.origin.top="isOpen()"
-                         class="absolute shadow top-100 border border-gray-300 bg-white z-50 w-full lef-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
+                    <div x-show="isOpen()"
+                         x-transition.origin.top
+                         class="absolute z-100 shadow top-100 border border-gray-300 bg-white z-50 w-full lef-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
                          x-on:click.away="close">
                         <div class="flex flex-col w-full">
                             <template x-for="(option,index) in options" :key="index">

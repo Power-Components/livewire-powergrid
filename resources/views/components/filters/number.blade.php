@@ -20,7 +20,7 @@
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                         placeholder="Min">
                 </div>
-                <div class="@if(!$inline) mt-1 @else pt-1 @endif">
+                <div class="mt-1">
                     <input
                         data-id="{{ $number['field'] }}"
                         wire:input.debounce.800ms="filterNumberEnd('{{ data_get($number, 'dataField') }}',$event.target.value,'{{ addslashes(data_get($number, 'thousands')) }}','{{ addslashes(data_get($number, 'decimal')) }}', '{{ data_get($number, 'label') }}')"

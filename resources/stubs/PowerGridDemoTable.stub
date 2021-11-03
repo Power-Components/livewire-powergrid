@@ -145,7 +145,7 @@ class PowerGridDemoTable extends PowerGridComponent
             Column::add()
                 ->title(__('US State'))
                 ->field('state_in_usa')
-                ->makeInputMultiSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiseelct filter
+                ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
             Column::add()
                 ->title(__('Laracon visitor?'))

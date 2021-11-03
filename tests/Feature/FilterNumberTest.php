@@ -49,7 +49,7 @@ it('displays "No records found" with non-existent min')
 
 it('properly filters by "min & max" formatted')
     ->livewire(DishesTable::class)
-    ->set('filters', filterNumber('price', '1,50',  '20,51','.', ','))
+    ->set('filters', filterNumber('price', '1,50', '20,51', '.', ','))
     ->assertSeeHtml('Pastel de Nata')
     ->assertSeeHtml('Peixada da chef Nábia')
     ->assertDontSeeHtml('Carne Louca');

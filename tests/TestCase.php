@@ -79,7 +79,6 @@ class TestCase extends BaseTestCase
         ]);
     }
 
-
     protected function getDishes()
     {
         $dishes = collect([
@@ -267,7 +266,7 @@ class TestCase extends BaseTestCase
             }
 
             if (!isset($dish['produced_at'])) {
-                $dish['produced_at'] = $dish['produced_at'] =  $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format("Y-m-d");
+                $dish['produced_at'] = $dish['produced_at'] =  $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format('Y-m-d');
             }
 
             if (!isset($dish['stored_at'])) {
