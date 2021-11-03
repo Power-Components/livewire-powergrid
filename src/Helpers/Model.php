@@ -247,7 +247,7 @@ class Model implements FilterInterface
             $this->query = $this->query->where(function (Builder $query) {
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
-                    if (!$column->searchable) {
+                    if ($column->searchable) {
                         $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
                         if ($hasColumn) {
                             $query->orWhere($column->field, 'like', '%' . $this->search . '%');
