@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema;
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
 
 class Model implements FilterInterface
@@ -244,10 +245,13 @@ class Model implements FilterInterface
     {
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
+                /** @var Column $column */
                 foreach ($this->columns as $column) {
-                    $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
-                    if ($hasColumn) {
-                        $query->orWhere($column->field, 'like', '%' . $this->search . '%');
+                    if (!$column->searchable) {
+                        $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
+                        if ($hasColumn) {
+                            $query->orWhere($column->field, 'like', '%' . $this->search . '%');
+                        }
                     }
                 }
 
