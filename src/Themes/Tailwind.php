@@ -50,7 +50,7 @@ class Tailwind extends ThemeBase
         return Theme::editable()
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
-            ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
+            ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
 
     public function checkbox(): Components\Checkbox

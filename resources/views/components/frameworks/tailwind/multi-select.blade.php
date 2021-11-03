@@ -4,8 +4,8 @@
     'multiSelect' => null,
     'column' => null
 ])
-<div>
-    <div x-cloak x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
+<div wire:ignore>
+    <div x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
          x-init="loadOptions()">
         <input name="values" type="hidden" readonly x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">
@@ -41,17 +41,20 @@
 
                             <button type="button" x-show="isOpen() === true" x-on:click="open"
                                     class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none dark:text-gray-200">
-                                <x-livewire-powergrid::icons.up class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
-                                                            </button>
+                                <x-livewire-powergrid::icons.up
+                                    class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
+                            </button>
                             <button type="button" x-show="isOpen() === false" @click="close"
                                     class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none dark:text-gray-200">
-                                <x-livewire-powergrid::icons.down class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
+                                <x-livewire-powergrid::icons.down
+                                    class="w-4 h-4 text-gray-400 dark:text-gray-200 cursor-pointer"/>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="w-full px-4">
                     <div x-show="isOpen()"
+                         x-cloak
                          x-transition.origin.top
                          class="absolute z-100 shadow top-100 border border-gray-300 bg-white z-50 w-full lef-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
                          x-on:click.away="close">

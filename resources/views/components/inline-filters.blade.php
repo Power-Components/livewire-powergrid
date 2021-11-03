@@ -42,7 +42,8 @@
                                 @if(data_get($multiSelect, 'field') === $column->field)
                                     @includeIf($theme->filterMultiSelect->view, [
                                             'inline' => true,
-                                            'column' => $column
+                                            'column' => $column,
+                                            'options' => "[['id' => 'laravel , 'name' => 'Laravel'], ['id' => 'alpineJs', 'name' => 'Alpine JS'], ['id' => 'livewire', 'name' => 'Livewire']]"
                                     ])
                                 @endif
                             @endforeach
