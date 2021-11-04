@@ -70,11 +70,14 @@ it('displays previous links "<" and "<<"')
     ->call('gotoPage', '11')
     ->assertSeeHtml('wire:click="previousPage"');
 
-it('search for something that is not on the current page')
+it('searches for something that is not on the current page')
     ->livewire(DishesTable::class)
     ->assertSeeHtml('Francesinha vegana')
     ->call('gotoPage', 2)
+    ->assertSeeHtml('Bife à Parmegiana')
+    ->assertDontSeeHtml('Francesinha vegana')
     ->set('search', 'Francesinha vegana')
+    ->assertDontSeeHtml('Bife à Parmegiana')
     ->assertSeeHtml('Francesinha vegana');
 
 it('properly paginates', function () {
