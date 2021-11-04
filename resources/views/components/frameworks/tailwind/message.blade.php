@@ -1,7 +1,7 @@
-<div class="pb-2 message dark:bg-gray-800">
+<div class="message">
     @if(session()->has('success') || session()->has('error'))
     <div
-        class="mb-2 border px-4 py-3 rounded relative
+        class="pb-2 dark:bg-gray-800 border px-4 py-3 rounded relative
         @if (session()->has('success'))
             bg-green-100 border-green-600 text-green-700 dark:bg-green-300 dark:text-green-900
         @elseif (session()->has('error'))
@@ -13,7 +13,7 @@
             @elseif (session()->has('error'))
                 {{ session('error') }}
             @endif
-        </span>    
+        </span>
         <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
             <svg onclick="document.getElementsByClassName('message')[0].style.display = 'none'"
                  class="w-6 h-6 text-green-500 fill-current" role="button" xmlns="http://www.w3.org/2000/svg"

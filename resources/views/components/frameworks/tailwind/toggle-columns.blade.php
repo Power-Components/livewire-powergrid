@@ -1,5 +1,5 @@
 @if($toggleColumns)
-    <div x-data="toggleColumns()" x-cloak
+    <div x-data="toggleColumns()"
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
          @click.away="open = false">
         <button @click.prevent="open = ! open"
@@ -10,6 +10,7 @@
         </button>
 
         <div x-show="open"
+             x-cloak
              x-transition:enter="transform duration-200"
              x-transition:enter-start="opacity-0 scale-90"
              x-transition:enter-end="opacity-100 scale-100"

@@ -4,17 +4,6 @@
                 'enabledFilters' => $enabledFilters
         ])
 
-        @if(config('livewire-powergrid.filter') === 'outside')
-            @if(count($makeFilters) > 0)
-                <div>
-                    <x-livewire-powergrid::frameworks.bootstrap5.filter
-                        :makeFilters="$makeFilters"
-                        :theme="$theme"
-                    />
-                </div>
-            @endif
-        @endif
-
         @include($theme->layout->message)
 
     </div>

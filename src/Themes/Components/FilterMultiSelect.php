@@ -12,21 +12,21 @@ class FilterMultiSelect
 
     public string $view = '';
 
-    public function input(string $attrClass=''): FilterMultiSelect
+    public function input(string $attrClass = ''): FilterMultiSelect
     {
         $this->inputClass = $attrClass;
 
         return $this;
     }
 
-    public function divNotInline(string $attrClass=''): FilterMultiSelect
+    public function divNotInline(string $attrClass = ''): FilterMultiSelect
     {
         $this->divClassNotInline = $attrClass;
 
         return $this;
     }
 
-    public function divInline(string $attrClass=''): FilterMultiSelect
+    public function divInline(string $attrClass = ''): FilterMultiSelect
     {
         $this->divClassInline = $attrClass;
 

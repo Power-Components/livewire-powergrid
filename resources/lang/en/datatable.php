@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filter',
+        'filter' => 'Filter',
     ],
     'labels' => [
         'action'           => 'Actions',
@@ -29,7 +29,7 @@ return [
     ],
     'select' => [
         'select' => 'Select',
-        'all'    => 'All'
+        'all'    => 'All',
     ],
     'boolean_filter' => [
         'all' => 'All',
@@ -41,5 +41,9 @@ return [
         'contains_not' => 'Does not contain',
         'starts_with'  => 'Starts with',
         'ends_with'    => 'Ends with',
-    ]
+    ],
+    'export' => [
+        'exporting' => 'Please wait!',
+        'completed' => 'Export completed! Your files are ready for download',
+    ],
 ];

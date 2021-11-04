@@ -5,7 +5,7 @@
     'actions' => null,
     'theme' => null
 ])
-<div class="w-full pb-3 dark:bg-gray-800">
+<div class="w-full my-3 dark:bg-gray-800">
     <div x-data={show:true} class="rounded-sm">
         <div class="px-4 py-3 cursor-pointer bg-gray-200 shadow dark:bg-gray-500"
              @click="show=!show">

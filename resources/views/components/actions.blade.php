@@ -6,7 +6,7 @@
 <div class="w-full md:w-auto">
     @if(isset($actions) && count($actions) && $row !== '')
         @foreach($actions as $action)
-            <td class="{{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"
+            <td class="pg-actions {{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"
                 style="{{ $theme->actions->tdBodyStyle ?? $theme->table->tdBodyStyle }}">
                 @php
                     $parameters = [];

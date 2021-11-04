@@ -26,6 +26,28 @@ it('creates a PowerGrid Table', function () {
     File::delete($this->tableFilePath);
 });
 
+it('notifies about tailwind forms', function () {
+    File::delete($this->tableFilePath);
+
+    $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
+
+    $content = "module.exports = { theme: { // ... }, plugins: [ require('@tailwindcss/forms'), // ... ], }";
+    
+    File::delete($tailwindConfigFile);
+    File::put($tailwindConfigFile, $content);
+
+    $this->artisan('powergrid:create')
+        ->expectsQuestion($this->model_name_question, 'DemoTable')
+        ->expectsQuestion($this->datasource_question, 'M')
+        ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms for more information.")
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
+
+    File::delete($this->tableFilePath);
+    File::delete($tailwindConfigFile);
+});
 
 it('publishes the Demo Table', function () {
     $tableFile =  getLaravelDir() . 'app/Http/Livewire/PowerGridDemoTable.php';
@@ -35,13 +57,12 @@ it('publishes the Demo Table', function () {
     File::delete($viewsFile);
 
     $this->artisan('powergrid:demo')
-        ->expectsOutput("⚡ *** PowerGrid Demo Table is ready! ***")
+        ->expectsOutput('⚡ *** PowerGrid Demo Table is ready! ***')
         ->expectsOutput("\n⚡ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]")
         ->expectsOutput("\n⚡ powergrid-demo.blade.php was successfully created at [resources/views/]")
         ->expectsOutput("\n⚡ *** Usage ***")
         ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.")
         ->expectsOutput("\n➤ Visit http://localhost/powergrid. Enjoy it!\n");
-
 
     $this->assertFileExists($tableFile);
     $this->assertFileExists($viewsFile);
@@ -49,7 +70,6 @@ it('publishes the Demo Table', function () {
     File::delete($tableFile);
     File::delete($viewsFile);
 });
-
 
 it('does not accept an empty table name', function () {
     File::delete($this->tableFilePath);
@@ -127,7 +147,6 @@ it('does overwride the existing table file w/ YES', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes');
 
-
     expect(file_get_contents($this->tableFilePath))->not->toContain('x0007');
 
     File::delete($this->tableFilePath);
@@ -159,7 +178,6 @@ it('does NOT overwride the existing table file', function () {
 
     File::delete($this->tableFilePath);
 });
-
 
 it('publishes config file', function () {
     $configFilePath = getLaravelDir() . 'config/livewire-powergrid.php';

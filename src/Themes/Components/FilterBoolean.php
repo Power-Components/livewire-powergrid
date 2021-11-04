@@ -14,7 +14,7 @@ class FilterBoolean
 
     public string $relativeDivClass = '';
 
-    public function input(string $attrClass, string $divStyle=''): FilterBoolean
+    public function input(string $attrClass, string $divStyle = ''): FilterBoolean
     {
         $this->inputClass = $attrClass;
 

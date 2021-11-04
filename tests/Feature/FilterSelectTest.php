@@ -31,7 +31,6 @@ it('properly filter with another category_id', function () {
         ->assertDontSeeHtml('Bife à Rolê');
 });
 
-
 function filterSelect(string $dataField, ?string $value): array
 {
     return [

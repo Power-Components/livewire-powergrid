@@ -24,7 +24,7 @@
                     <option value="false">{{ data_get($booleanFilter, 'false_label') }}</option>
                 </select>
                 <div class="{{ $theme->relativeDivClass }}">
-                    <x-livewire-powergrid::icons.down class="w-5 h-5"/>
+                    <x-livewire-powergrid::icons.down class="w-4 h-4"/>
                 </div>
             </div>
         </div>

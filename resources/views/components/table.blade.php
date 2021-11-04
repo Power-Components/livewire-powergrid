@@ -73,4 +73,3 @@
         @endif
     </x-slot>
 </x-livewire-powergrid::table-base>
-

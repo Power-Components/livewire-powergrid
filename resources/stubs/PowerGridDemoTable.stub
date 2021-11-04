@@ -113,7 +113,7 @@ class PowerGridDemoTable extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Include Columns
     |--------------------------------------------------------------------------
-    | Include the columns aaded columns, making them visible on the Table.
+    | Include the columns added columns, making them visible on the Table.
     | Each column can be configured with properties, filters, actions...
     |
     */
@@ -145,7 +145,7 @@ class PowerGridDemoTable extends PowerGridComponent
             Column::add()
                 ->title(__('US State'))
                 ->field('state_in_usa')
-                ->makeInputMultiSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiseelct filter
+                ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
             Column::add()
                 ->title(__('Laracon visitor?'))

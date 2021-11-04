@@ -2,12 +2,12 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtrar',
+        'filter' => 'Filtrar',
     ],
     'labels' => [
-        'action'           => 'Ações',
+        'action'           => 'Acción',
         'results_per_page' => 'Registros por página',
-        'clear_filter'     => 'Borrar filtro',
+        'clear_filter'     => 'Borrar el filtro',
         'no_data'          => 'No se encontraron registros.',
         'all'              => 'Todos',
         'selected'         => 'Seleccionado',
@@ -41,5 +41,9 @@ return [
         'contains_not' => 'No contiene',
         'starts_with'  => 'Comienza por',
         'ends_with'    => 'Termina en',
-    ]
+    ],
+    'export' => [
+        'exporting' => '¡Espere por favor!',
+        'completed' => '¡Exportación completada! Tus archivos están listos para descargar',
+    ],
 ];

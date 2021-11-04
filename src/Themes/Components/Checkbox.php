@@ -18,7 +18,7 @@ class Checkbox
 
     public string $divClass = '';
 
-    public function th(string $attrClass, string $attrStyle=''): Checkbox
+    public function th(string $attrClass, string $attrStyle = ''): Checkbox
     {
         $this->thClass    = $attrClass;
         $this->thStyle    = $attrStyle;
@@ -26,7 +26,7 @@ class Checkbox
         return $this;
     }
 
-    public function label(string $attrClass, string $attrStyle=''): Checkbox
+    public function label(string $attrClass, string $attrStyle = ''): Checkbox
     {
         $this->labelClass = $attrClass;
         $this->labelStyle = $attrStyle;
@@ -34,7 +34,7 @@ class Checkbox
         return $this;
     }
 
-    public function input (string $attrClass, string $attrStyle=''): Checkbox
+    public function input(string $attrClass, string $attrStyle = ''): Checkbox
     {
         $this->inputClass = $attrClass;
         $this->inputStyle = $attrStyle;

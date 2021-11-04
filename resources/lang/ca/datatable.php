@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtre',
+        'filter' => 'Filtre',
     ],
     'labels' => [
         'action'           => 'Accions',
@@ -29,7 +29,7 @@ return [
     ],
     'select' => [
         'select' => 'Seleccioneu',
-        'all'    => 'Tots'
+        'all'    => 'Tots',
     ],
     'boolean_filter' => [
         'all' => 'Tots',
@@ -41,5 +41,9 @@ return [
         'contains_not' => 'No té contingut',
         'starts_with'  => 'Comença per',
         'ends_with'    => 'Acaba en',
-    ]
+    ],
+    'export' => [
+        'exporting' => 'Espereu, si us plau!',
+        'completed' => 'S\'ha completat l\'exportació. Els vostres fitxers estan a punt per descarregar-se',
+    ],
 ];

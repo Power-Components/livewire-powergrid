@@ -2,26 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{
-    Actions,
-    Checkbox,
-    Cols,
-    Editable,
-    FilterBoolean,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect,
-    Footer,
-    Layout,
-    Table,
-    Toggleable
-};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Layout, Table, Toggleable};
 
 class ThemeManager
 {
-    public function table(string $attrClass, string $attrStyle=''): Table
+    public function table(string $attrClass, string $attrStyle = ''): Table
     {
         return new Table($attrClass, $attrStyle);
     }

@@ -2,7 +2,7 @@
 
 return [
     'buttons' => [
-        'filter'          => 'Filtrar',
+        'filter' => 'Filtrar',
     ],
     'labels' => [
         'action'           => 'Ações',
@@ -41,5 +41,9 @@ return [
         'contains_not' => 'Não contém',
         'starts_with'  => 'Começa com',
         'ends_with'    => 'Termina com',
-    ]
+    ],
+    'export' => [
+        'exporting' => 'Por favor, aguarde!',
+        'completed' => 'Exportação concluída! Seus arquivos estão prontos para download',
+    ],
 ];
