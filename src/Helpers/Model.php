@@ -108,9 +108,9 @@ class Model implements FilterInterface
     private function validateInputTextOptions(string $field): bool
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
-            strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-        );
+                strtolower($this->filters['input_text_options'][$field]),
+                ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+            );
     }
 
     /**
@@ -169,7 +169,7 @@ class Model implements FilterInterface
      */
     public function filterBoolean($query, string $field, $value)
     {
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        /** @var Builder $query */
         if ($value != 'all') {
             $value = ($value == 'true');
             $query->where($field, '=', $value);
@@ -183,7 +183,7 @@ class Model implements FilterInterface
      */
     public function filterSelect($query, string $field, $value)
     {
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        /** @var Builder $query */
         if (filled($value)) {
             $query->where($field, $value);
         }
@@ -196,7 +196,7 @@ class Model implements FilterInterface
      */
     public function filterMultiSelect($query, string $field, $value)
     {
-        $empty  = false;
+        $empty = false;
         $values = collect($value)->get('values');
         if (count($values) === 0) {
             return;
@@ -220,13 +220,13 @@ class Model implements FilterInterface
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float) str_replace($value['decimal'], '.', $start);
+            $start = (float)str_replace($value['decimal'], '.', $start);
 
             $query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
             $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float) str_replace($value['decimal'], '.', $end);
+            $end = (float)str_replace($value['decimal'], '.', $end);
 
             $query->where($field, '<=', $end);
         }
@@ -247,11 +247,10 @@ class Model implements FilterInterface
             $this->query = $this->query->where(function (Builder $query) {
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
-                    if ($column->searchable) {
-                        $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
-                        if ($hasColumn) {
-                            $query->orWhere($column->field, 'like', '%' . $this->search . '%');
-                        }
+                    $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
+
+                    if ($column->searchable && $hasColumn) {
+                        $query->orWhere($column->field, 'like', '%' . $this->search . '%');
                     }
                 }
 
