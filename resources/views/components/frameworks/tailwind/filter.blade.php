@@ -23,7 +23,7 @@
                 @endphp
                 <div class="md:flex md:flex-wrap">
 
-                    @foreach(data_get($makeFilters, 'date_picker') as $field => $date)
+                    @foreach(data_get($makeFilters, 'date_picker', []) as $field => $date)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.date-picker
                                 :date="$date"
@@ -33,7 +33,7 @@
                         </div>
                     @endforeach
 
-                    @foreach(data_get($makeFilters, 'select') as $field => $select)
+                    @foreach(data_get($makeFilters, 'select', []) as $field => $select)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.select
                                 :select="$select"
@@ -42,7 +42,7 @@
                         </div>
                     @endforeach
 
-                    @foreach(data_get($makeFilters, 'number') as $field => $number)
+                    @foreach(data_get($makeFilters, 'number', []) as $field => $number)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.number
                                 :number="$number"
@@ -51,7 +51,7 @@
                         </div>
                     @endforeach
 
-                    @foreach(data_get($makeFilters, 'select') as $field => $select)
+                    @foreach(data_get($makeFilters, 'select', []) as $field => $select)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.select
                                 :select="$select"
