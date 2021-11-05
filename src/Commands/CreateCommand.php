@@ -14,7 +14,7 @@ class CreateCommand extends Command
 
     protected $description = 'Make a new PowerGrid table component.';
 
-    public function handle()
+    public function handle(): void
     {
         if (config('livewire-powergrid.check_version') === true) {
             $ensureLatestVersion = new InteractsWithVersions();
@@ -92,7 +92,7 @@ class CreateCommand extends Command
         }
 
         $componentName   = $tableName;
-        $subFolder       = null;
+        $subFolder       = '';
 
         if (!empty($matches)) {
             $componentName = end($matches);
@@ -129,14 +129,14 @@ class CreateCommand extends Command
         $createTable = true;
 
         if (File::exists($path)) {
-            $confirmation = $this->confirm('It seems that <comment>' . $tableName . '</comment> already exists. Would you like to overwrite it?');
+            $confirmation = (bool) $this->confirm('It seems that <comment>' . $tableName . '</comment> already exists. Would you like to overwrite it?');
 
-            if (strtolower($confirmation) !== 'yes') {
+            if ($confirmation === false) {
                 $createTable = false;
             }
         }
 
-        if ($createTable) {
+        if ($createTable && is_string($stub)) {
             File::put($path, $stub);
             
             $this->checkTailwindForms();
@@ -146,9 +146,14 @@ class CreateCommand extends Command
         }
     }
 
-    private function createFromFillable(string $modelName, string $modelLastName)
+    private function createFromFillable(string $modelName, string $modelLastName): mixed
     {
-        $model          = new $modelName();
+        $model = new $modelName();
+
+        if ($model instanceof \Illuminate\Database\Eloquent\Model === false) {
+            return false;
+        }
+        
         $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
         $getFillable    = array_merge(
             [$model->getKeyName()],
@@ -214,9 +219,9 @@ class CreateCommand extends Command
         return str_replace('{{ columns }}', $columns, $stub);
     }
 
-    protected function getStubs($creationModel): string
+    protected function getStubs(string $creationModel): string
     {
-        if (!empty($this->option('template'))) {
+        if (!empty($this->option('template')) && is_string($this->option('template'))) {
             return File::get(base_path($this->option('template')));
         }
         if (strtolower($creationModel) === 'm') {
