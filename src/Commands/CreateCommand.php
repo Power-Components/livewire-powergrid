@@ -221,7 +221,7 @@ class CreateCommand extends Command
 
     protected function getStubs(string $creationModel): string
     {
-        if (!empty($this->option('template')) && is_string($this->option('template'))) {
+        if (is_string($this->option('template')) && empty($this->option('template')) === false) {
             return File::get(base_path($this->option('template')));
         }
         if (strtolower($creationModel) === 'm') {
