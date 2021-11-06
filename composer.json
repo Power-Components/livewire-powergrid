@@ -39,7 +39,12 @@
         "doctrine/dbal": "^3.1"
     },
     "scripts": {
-        "test": "./vendor/bin/pest",
+        "test:types": "phpstan analyse --ansi --memory-limit=-1",
+        "test:tests": "php ./vendor/bin/pest --colors=always",
+        "test": [
+            "@test:tests",
+            "@test:types"
+        ],
         "fix": [
             "./vendor/bin/php-cs-fixer fix"
         ]
@@ -51,6 +56,7 @@
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
         "pestphp/pest-plugin-livewire": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.2"
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "nunomaduro/larastan": "^1.0"
     }
 }
