@@ -4,11 +4,13 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
+use Psr\SimpleCache\InvalidArgumentException;
 
 class PowerGridComponent extends Component
 {
@@ -49,11 +51,11 @@ class PowerGridComponent extends Component
 
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventInputChanged' => 'eventInputChanged',
-        'eventToggleChanged' => 'eventInputChanged',
-        'eventMultiSelect' => 'eventMultiSelect',
-        'eventRefresh' => '$refresh',
-        'eventToggleColumn' => 'toggleColumn',
+        'eventInputChanged'    => 'eventInputChanged',
+        'eventToggleChanged'   => 'eventInputChanged',
+        'eventMultiSelect'     => 'eventMultiSelect',
+        'eventRefresh'         => '$refresh',
+        'eventToggleColumn'    => 'toggleColumn',
     ];
 
     public bool $toggleColumns = false;
@@ -133,7 +135,7 @@ class PowerGridComponent extends Component
      */
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
-        $this->checkbox = true;
+        $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;
@@ -147,7 +149,7 @@ class PowerGridComponent extends Component
     {
         if (\Str::contains($perPage, $this->perPageValues)) {
             $this->perPageInput = true;
-            $this->perPage = $perPage;
+            $this->perPage      = $perPage;
         }
 
         return $this;
@@ -171,7 +173,7 @@ class PowerGridComponent extends Component
         $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
-            return (object)$column;
+            return (object) $column;
         })->toArray();
 
         $this->relationSearch = $this->relationSearch();
@@ -189,7 +191,7 @@ class PowerGridComponent extends Component
     private function renderView($data)
     {
         return view($this->powerGridTheme->layout->table, [
-            'data' => $data,
+            'data'  => $data,
             'theme' => $this->powerGridTheme,
             'table' => 'livewire-powergrid::components.table',
         ]);
@@ -271,7 +273,7 @@ class PowerGridComponent extends Component
         $updateMessages = [
             'success' => [
                 '_default_message' => __('Data has been updated successfully!'),
-                'status' => __('Custom Field updated successfully!'),
+                'status'           => __('Custom Field updated successfully!'),
             ],
             'error' => [
                 '_default_message' => __('Error updating the data.'),
@@ -287,8 +289,14 @@ class PowerGridComponent extends Component
         return $this->checkboxValues;
     }
 
+    /**
+     * @return LengthAwarePaginator|BaseCollection|mixed
+     * @throws InvalidArgumentException
+     */
     public function fillData()
     {
+        /** @var Builder | array | BaseCollection $datasource */
+
         if (cache()->has($this->id)) {
             $datasource = collect(cache()->get($this->id))->toArray();
         } else {
@@ -296,6 +304,10 @@ class PowerGridComponent extends Component
         }
 
         $this->instanceOfCollection($datasource);
+
+        if (filled($this->search)) {
+            $this->gotoPage(1);
+        }
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
@@ -311,15 +323,13 @@ class PowerGridComponent extends Component
                 $this->filtered = $results->pluck('id')->toArray();
 
                 $paginated = Collection::paginate($results, $this->perPage);
-                $results = $paginated->setCollection($this->transform($paginated->getCollection()));
+                $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
             return $results;
         }
 
-        if (filled($this->search)) {
-            $this->gotoPage(1);
-        }
+        $table = $datasource->getModel()->getTable();
 
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
@@ -330,8 +340,8 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderByRaw("$this->sortField+0 $this->sortDirection")
-            ->orderBy($this->sortField, $this->sortDirection);
+            })->orderByRaw("$table.$this->sortField+0 $this->sortDirection")
+            ->orderBy($table.".".$this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
@@ -362,7 +372,7 @@ class PowerGridComponent extends Component
             || is_a($this->addColumns(), PowerGridEloquent::class)
         ) {
             return $results->transform(function ($row) {
-                $row = (object)$row;
+                $row = (object) $row;
                 $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
@@ -387,7 +397,7 @@ class PowerGridComponent extends Component
                 $column['hidden'] = !data_get($column, 'hidden');
             }
 
-            return (object)$column;
+            return (object) $column;
         })->toArray();
     }
 }
