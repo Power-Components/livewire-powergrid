@@ -329,8 +329,6 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        $table = $datasource->getModel()->getTable();
-
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
                 Model::query($query)
@@ -340,8 +338,8 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderByRaw("$table.$this->sortField+0 $this->sortDirection")
-            ->orderBy($table . '.' . $this->sortField, $this->sortDirection);
+            })->orderByRaw("$this->sortField+0 $this->sortDirection")
+            ->orderBy($this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
