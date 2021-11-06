@@ -10,7 +10,7 @@
             @if(!$inline)
                 <label>{{ $inputText['label'] }}</label>
             @endif
-            <div class="@if($inline) flex flex-col @else flex flex-row @endif">
+            <div class="@if($inline) flex flex-col @else flex flex-row justify-between @endif">
                 <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <div class="relative">
                         <select id="input_text_options"
@@ -28,12 +28,14 @@
                             <x-livewire-powergrid::icons.down class="w-4 h-4"/>
                         </div>
                     </div>
+                </div>
+                <div class="mt-1">
                     <input
-                        data-id="{{ data_get($inputText, 'field') }}"
-                        wire:input.debounce.800ms="filterInputText('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
-                        type="text"
-                        class="power_grid {{ $theme->inputClass }}"
-                        placeholder="{{ $column->placeholder ?: $column->title }}">
+                            data-id="{{ data_get($inputText, 'field') }}"
+                            wire:input.debounce.800ms="filterInputText('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
+                            type="text"
+                            class="power_grid {{ $theme->inputClass }}"
+                            placeholder="{{ empty($column)?data_get($inputText, 'label'):($column->placeholder?:$column->title) }}">
                 </div>
             </div>
         </div>
