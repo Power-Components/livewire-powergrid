@@ -2,13 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\Export;
 
 class ExportToCsv extends Export implements ExportInterface
 {
-    public function download()
+    public function download(): BinaryFileResponse
     {
         $this->build();
 
@@ -16,12 +17,12 @@ class ExportToCsv extends Export implements ExportInterface
             ->download(storage_path($this->fileName . '.csv'));
     }
 
-    public function store()
+    public function store(): void
     {
         $this->build();
     }
 
-    public function build()
+    public function build(): void
     {
         $data = $this->prepare($this->data, $this->columns);
 

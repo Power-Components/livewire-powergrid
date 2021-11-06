@@ -4,13 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Services;
 
 use Exception;
 use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Column;
 
 class Export
 {
     public string $fileName;
 
-    public $data;
+    public Collection $data;
 
+    /** @var array<Column> $columns */
     public array $columns;
 
     public function fileName(string $name): Export
@@ -20,6 +22,10 @@ class Export
         return $this;
     }
 
+    /**
+    * @param array<Column> $columns
+    * @param Collection $data
+    */
     public function setData(array $columns, $data): Export
     {
         $this->columns    = $columns;
@@ -29,6 +35,8 @@ class Export
     }
 
     /**
+     * @param Collection $data
+     * @param array<Column> $columns
      * @throws Exception
      */
     public function prepare(Collection $data, array $columns): array
