@@ -51,12 +51,21 @@
                         </div>
                     @endforeach
 
-                    @foreach(data_get($makeFilters, 'select', []) as $field => $select)
+                    @foreach(data_get($makeFilters, 'input_text', []) as $field => $inputText)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.select
-                                :select="$select"
-                                :inline="false"
-                                :theme="$theme->filterSelect"/>
+                            <x-livewire-powergrid::filters.input-text
+                                    :inputText="$inputText"
+                                    :inline="false"
+                                    :theme="$theme->filterInputText"/>
+                        </div>
+                    @endforeach
+
+                    @foreach(data_get($makeFilters, 'boolean_filter', []) as $field => $booleanFilter)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            <x-livewire-powergrid::filters.boolean-filter
+                                    :booleanFilter="$booleanFilter"
+                                    :inline="false"
+                                    :theme="$theme->filterBoolean"/>
                         </div>
                     @endforeach
                 </div>
