@@ -67,14 +67,22 @@ trait Filter
 
         $filter = collect($this->makeFilters->get('multi_select'))->where('data_field', $data['id']);
 
-        $this->enabledFilters[$data['id']]['id']                    = $data['id'];
-        $this->enabledFilters[$data['id']]['label']                 = $filter->first()['label'];
+        $this->enabledFilters[$data['id']]['id']            = $data['id'];
+        $this->enabledFilters[$data['id']]['label']         = $filter->first()['label'];
+
+        if (count($data['values']) === 0) {
+            $this->clearFilter($data['id']);
+        }
     }
 
     public function filterSelect(string $field, string $label)
     {
-        $this->enabledFilters[$field]['id']                    = $field;
-        $this->enabledFilters[$field]['label']                 = $label;
+        $this->enabledFilters[$field]['id']         = $field;
+        $this->enabledFilters[$field]['label']      = $label;
+
+        if (data_get($this->filters, "select.$field") === '') {
+            $this->clearFilter($field);
+        }
     }
 
     /**
@@ -94,6 +102,10 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if ($value == '') {
+            $this->clearFilter($field);
+        }
     }
 
     /**
@@ -113,6 +125,10 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if ($value == '') {
+            $this->clearFilter($field);
+        }
     }
 
     /**
@@ -128,6 +144,10 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if ($value == '') {
+            $this->clearFilter($field);
+        }
     }
 
     /**
@@ -143,6 +163,10 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if ($value == 'all') {
+            $this->clearFilter($field);
+        }
     }
 
     /**
@@ -158,5 +182,9 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if ($value == '') {
+            $this->clearFilter($field);
+        }
     }
 }
