@@ -341,7 +341,7 @@ class PowerGridComponent extends Component
                     ->filterContains()
                     ->filter();
             })->orderByRaw("$table.$this->sortField+0 $this->sortDirection")
-            ->orderBy($table.".".$this->sortField, $this->sortDirection);
+            ->orderBy($table . '.' . $this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);

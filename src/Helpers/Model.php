@@ -246,7 +246,7 @@ class Model implements FilterInterface
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
                 /** @var Column $column */
-                $table=$query->getModel()->getTable();
+                $table = $query->getModel()->getTable();
 
                 foreach ($this->columns as $column) {
                     $hasColumn = Schema::hasColumn($table, $column->field);
@@ -260,14 +260,14 @@ class Model implements FilterInterface
             });
 
             if (count($this->relationSearch)) {
-                $this->makeRelation();
+                $this->filterRelation();
             }
         }
 
         return $this;
     }
 
-    private function makeRelation(): void
+    private function filterRelation(): void
     {
         foreach ($this->relationSearch as $table => $relation) {
             if (!is_array($relation)) {

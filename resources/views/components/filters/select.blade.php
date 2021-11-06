@@ -8,7 +8,7 @@
 <div>
 
     @if(filled($select))
-        <div class="@if($inline) {{ $theme->divClassInline }} @endif {{ $theme->divClassNotInline }}{!! (data_get($select, 'label') != '') ?? '' !!}">
+        <div class="@if(!$inline) pt-2 p-2 @endif">
             @if(!$inline)
                 <label for="input_{{ data_get($select, 'data_field') }}" class="text-gray-700 dark:text-gray-300">{{ data_get($select, 'label')  }}</label>
             @endif
