@@ -2,8 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-class PowerGridCollection
+final class PowerGridCollection
 {
+    /**
+     *
+     * @var array<string, \Closure> $columns
+     */
     public array $columns = [];
 
     public static function collection(): PowerGridCollection
