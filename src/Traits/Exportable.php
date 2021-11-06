@@ -6,7 +6,7 @@ use Illuminate\Bus\Batch;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 
 /**
- * @property Batch exportBatch
+ * @property Batch $exportBatch
  */
 trait Exportable
 {
