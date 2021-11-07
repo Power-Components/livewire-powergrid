@@ -36,12 +36,16 @@
         "php": "^7.4.1 | ^8.0 | ^8.1",
         "livewire/livewire": "^2.4",
         "box/spout": "^3",
-        "doctrine/dbal": "^3.1"
+        "doctrine/dbal": "^3.1",
+        "friendsofphp/php-cs-fixer": "^3.2"
     },
     "scripts": {
         "test": "./vendor/bin/pest",
-        "fix": [
-            "./vendor/bin/php-cs-fixer fix"
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "fix": "./vendor/bin/php-cs-fixer fix",
+        "check": [
+            "@cs-fixer",
+            "@test"
         ]
     },
     "require-dev": {
@@ -50,7 +54,6 @@
         "orchestra/testbench": "^6.17",
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
-        "pestphp/pest-plugin-livewire": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.2"
+        "pestphp/pest-plugin-livewire": "^1.0"
     }
 }
