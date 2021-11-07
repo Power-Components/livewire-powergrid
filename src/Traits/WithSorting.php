@@ -10,7 +10,7 @@ trait WithSorting
 
     public string $sortDirection = 'asc';
 
-    public function sortBy($field)
+    public function sortBy(string $field): void
     {
         $this->sortDirection = $this->sortField === $field
             ? $this->reverseSort()
@@ -25,7 +25,7 @@ trait WithSorting
             ? 'desc'
             : 'asc';
     }
-
+    
     public function applySorting($query)
     {
         if (is_a($query, Collection::class)) {
