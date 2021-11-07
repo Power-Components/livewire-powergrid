@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
@@ -30,7 +31,12 @@ class CreateCommand extends Command
 
         $fillable        = false;
         $tableName       = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
-        $tableName       = str_replace(['.', '\\'], '/', $tableName);
+
+        if (!is_string($tableName)) {
+            throw new \Exception('Could not parse table name');
+        }
+
+        $tableName = str_replace(['.', '\\'], '/', (string) $tableName);
 
         if (empty(trim($tableName))) {
             $this->error('You must provide a name for your ⚡ PowerGrid Table!');
@@ -39,6 +45,10 @@ class CreateCommand extends Command
         }
 
         $creationModel   = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
+
+        if (!is_string($creationModel)) {
+            throw new \Exception('Could not parse table name');
+        }
 
         if (empty($creationModel)) {
             $creationModel = 'M';
@@ -52,6 +62,10 @@ class CreateCommand extends Command
 
         $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 
+        if (!is_string($modelName)) {
+            throw new \Exception('Could not parse table name');
+        }
+
         if (empty(trim($modelName))) {
             $this->error('Error: Model name is required.');
 
@@ -61,14 +75,30 @@ class CreateCommand extends Command
         if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
             $fillable   = true;
         }
+        
+        $modelNameArr = [];
 
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
+        if (!is_array($matches)) {
+            throw new Exception('Could not parse model name');
+        }
+
         $modelNameArr  = explode('\\', $modelName);
         $modelLastName = Arr::last($modelNameArr);
-
+        
+        if (empty($modelName)) {
+            $this->error('Could not create, Model path is missing');
+        }
+        
         if (count($modelNameArr) === 1) {
-            if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
+            $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
+
+            if (!is_string($cleanModelName)) {
+                throw new Exception('Could not parse model name');
+            }
+
+            if (strlen($cleanModelName)) {
                 $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
 
                 return;
@@ -79,15 +109,9 @@ class CreateCommand extends Command
             return;
         }
 
-        if (empty($modelName)) {
-            $this->error('Could not create, Model path is missing');
-
-            return;
-        }
-
         $stub = $this->getStubs($creationModel);
 
-        if ($fillable) {
+        if ($fillable && is_string($modelLastName)) {
             $stub     = $this->createFromFillable($modelName, $modelLastName);
         }
 
@@ -98,6 +122,17 @@ class CreateCommand extends Command
             $componentName = end($matches);
             array_splice($matches, 2);
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
+        }
+        
+        if (!is_string($componentName)) {
+            throw new \Exception('Could not parse component name');
+        }
+
+        if (!is_string($subFolder)) {
+            throw new \Exception('Could not parse subfolder name');
+        }
+        if (!is_string($modelLastName)) {
+            throw new \Exception('Could not model name');
         }
 
         $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
