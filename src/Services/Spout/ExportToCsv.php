@@ -33,6 +33,7 @@ class ExportToCsv extends Export implements ExportInterface
 
         $writer->addRow($row);
 
+        /** @var array<string> $row */
         foreach ($data['rows'] as $row) {
             $row = WriterEntityFactory::createRowFromArray($row);
             $writer->addRow($row);
