@@ -15,20 +15,20 @@ it('property displays the results and options', function () {
 it('properly filter with category_id', function () {
     livewire(DishesTable::class)
         ->set('filters', filterSelect('category_id', 1))
-        ->assertSeeHtml('Peixada da chef Nábia')
-        ->assertSeeHtml('Carne Louca')
-        ->assertSeeHtml('Bife à Rolê')
-        ->assertDontSeeHtml('Pastel de Nata');
+        ->assertSee('Peixada da chef Nábia')
+        ->assertSee('Carne Louca')
+        ->assertSee('Bife à Rolê')
+        ->assertDontSee('Pastel de Nata');
 });
 
 it('properly filter with another category_id', function () {
     livewire(DishesTable::class)
         ->set('filters', filterSelect('category_id', 3))
-        ->assertSeeHtml('Empadão de Palmito')
-        ->assertSeeHtml('Empadão de Alcachofra')
-        ->assertDontSeeHtml('Peixada da chef Nábia')
-        ->assertDontSeeHtml('Carne Louca')
-        ->assertDontSeeHtml('Bife à Rolê');
+        ->assertSee('Empadão de Palmito')
+        ->assertSee('Empadão de Alcachofra')
+        ->assertDontSee('Peixada da chef Nábia')
+        ->assertDontSee('Carne Louca')
+        ->assertDontSee('Bife à Rolê');
 });
 
 function filterSelect(string $dataField, ?string $value): array

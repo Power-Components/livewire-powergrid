@@ -56,6 +56,8 @@ class PowerGridComponent extends Component
         'eventMultiSelect'     => 'eventMultiSelect',
         'eventRefresh'         => '$refresh',
         'eventToggleColumn'    => 'toggleColumn',
+        'editEvent',
+        'deleteEvent',
     ];
 
     public bool $toggleColumns = false;
