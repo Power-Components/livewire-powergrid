@@ -9,9 +9,14 @@
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {
-                       $parameters[$param] = $row->{$value};
+                        if (!empty($row->{$value})) {
+                            $parameters[$param] = $row->{$value};
+                        } else {
+                            $parameters[$param] = $value;
+                        }
                     }
                 @endphp
+
                 @if($action->event !== '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
                        target="{{ $action->target }}"

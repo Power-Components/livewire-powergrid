@@ -11,7 +11,11 @@
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {
-                       $parameters[$param] = $row->{$value};
+                        if (!empty($row->{$value})) {
+                            $parameters[$param] = $row->{$value};
+                        } else {
+                            $parameters[$param] = $value;
+                        }
                     }
                 @endphp
 
