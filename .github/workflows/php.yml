@@ -48,5 +48,8 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update --dev
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
+      - name: Cs Fixer
+        run: vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
+
       - name: Pest tests
         run: vendor/bin/pest
