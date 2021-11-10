@@ -14,6 +14,7 @@
                 <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
                     <input
                         data-id="{{ data_get($number, 'field') }}"
+                        wire:model.debounce.800ms="filters.number_start.{{ data_get($number, 'dataField') }}"
                         wire:input.debounce.800ms="filterNumberStart('{{ data_get($number, 'dataField') }}', $event.target.value,'{{ addslashes(data_get($number, 'thousands')) }}','{{ addslashes(data_get($number, 'decimal')) }}','{{ data_get($number, 'label') }}')"
                         @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
@@ -23,6 +24,7 @@
                 <div class="mt-1">
                     <input
                         data-id="{{ $number['field'] }}"
+                        wire:model.debounce.800ms="filters.number_end.{{ data_get($number, 'dataField') }}"
                         wire:input.debounce.800ms="filterNumberEnd('{{ data_get($number, 'dataField') }}',$event.target.value,'{{ addslashes(data_get($number, 'thousands')) }}','{{ addslashes(data_get($number, 'decimal')) }}', '{{ data_get($number, 'label') }}')"
                         @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"

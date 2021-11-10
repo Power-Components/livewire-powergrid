@@ -12,6 +12,16 @@
         document.execCommand('copy');
         document.body.removeChild(el);
     }
+
+    function isV2() {
+        return window.Alpine && window.Alpine.version && /^2\..+\..+$/.test(window.Alpine.version)
+    }
+
+    setTimeout(function () {
+        if (isV2()) {
+            console.warn('⚡️ Powergrid alert ⚡ ️- Alpine 2x will be discontinued soo.')
+        }
+    }, 1000)
 </script>
 
 @if(powerGridJsFramework() === JS_FRAMEWORK_ALPINE)

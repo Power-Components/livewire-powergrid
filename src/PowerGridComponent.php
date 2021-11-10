@@ -3,11 +3,14 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
+use Psr\SimpleCache\InvalidArgumentException;
 
 class PowerGridComponent extends Component
 {
@@ -53,6 +56,8 @@ class PowerGridComponent extends Component
         'eventMultiSelect'     => 'eventMultiSelect',
         'eventRefresh'         => '$refresh',
         'eventToggleColumn'    => 'toggleColumn',
+        'editEvent',
+        'deleteEvent',
     ];
 
     public bool $toggleColumns = false;
@@ -200,8 +205,6 @@ class PowerGridComponent extends Component
             return $this->datasource();
         }
 
-        $this->total = $datasource->count();
-
         return $datasource;
     }
 
@@ -288,8 +291,14 @@ class PowerGridComponent extends Component
         return $this->checkboxValues;
     }
 
+    /**
+     * @return LengthAwarePaginator|BaseCollection|mixed
+     * @throws InvalidArgumentException
+     */
     public function fillData()
     {
+        /** @var Builder | array | BaseCollection $datasource */
+
         if (cache()->has($this->id)) {
             $datasource = collect(cache()->get($this->id))->toArray();
         } else {
@@ -297,6 +306,10 @@ class PowerGridComponent extends Component
         }
 
         $this->instanceOfCollection($datasource);
+
+        if (filled($this->search)) {
+            $this->gotoPage(1);
+        }
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
@@ -319,7 +332,7 @@ class PowerGridComponent extends Component
         }
 
         $results = $this->resolveModel($datasource)
-            ->where(function (\Illuminate\Database\Eloquent\Builder $query) {
+            ->where(function (Builder $query) {
                 Model::query($query)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
@@ -335,6 +348,8 @@ class PowerGridComponent extends Component
         } else {
             $results = $results->paginate($results->count());
         }
+
+        $this->total = $results->total();
 
         return $results->setCollection($this->transform($results->getCollection()));
     }

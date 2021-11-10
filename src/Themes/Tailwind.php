@@ -107,7 +107,7 @@ class Tailwind extends ThemeBase
     public function filterInputText(): Components\FilterInputText
     {
         return Theme::filterInputText()
-            ->select('appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500', 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
+            ->select('appearance-none block bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500', 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')
             ->input('w-full block bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
             ->divNotInline('mt-1')
             ->divInline('pr-6');

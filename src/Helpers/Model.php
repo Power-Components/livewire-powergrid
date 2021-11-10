@@ -169,7 +169,7 @@ class Model implements FilterInterface
      */
     public function filterBoolean($query, string $field, $value)
     {
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        /** @var Builder $query */
         if ($value != 'all') {
             $value = ($value == 'true');
             $query->where($field, '=', $value);
@@ -183,7 +183,7 @@ class Model implements FilterInterface
      */
     public function filterSelect($query, string $field, $value)
     {
-        /** @var \Illuminate\Database\Eloquent\Builder $query */
+        /** @var Builder $query */
         if (filled($value)) {
             $query->where($field, $value);
         }
@@ -246,12 +246,13 @@ class Model implements FilterInterface
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
                 /** @var Column $column */
+                $table = $query->getModel()->getTable();
+
                 foreach ($this->columns as $column) {
-                    if ($column->searchable) {
-                        $hasColumn = Schema::hasColumn($query->getModel()->getTable(), $column->field);
-                        if ($hasColumn) {
-                            $query->orWhere($column->field, 'like', '%' . $this->search . '%');
-                        }
+                    $hasColumn = Schema::hasColumn($table, $column->field);
+
+                    if ($column->searchable && $hasColumn) {
+                        $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
                     }
                 }
 
@@ -259,14 +260,14 @@ class Model implements FilterInterface
             });
 
             if (count($this->relationSearch)) {
-                $this->makeRelation();
+                $this->filterRelation();
             }
         }
 
         return $this;
     }
 
-    private function makeRelation(): void
+    private function filterRelation(): void
     {
         foreach ($this->relationSearch as $table => $relation) {
             if (!is_array($relation)) {

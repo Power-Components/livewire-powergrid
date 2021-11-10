@@ -247,12 +247,12 @@ class TestCase extends BaseTestCase
         ]);
 
         $faker = faker();
-       
+
         return $dishes->map(function ($dish) use ($faker) {
             if (!isset($dish['price'])) {
                 $dish['price'] = $faker->randomFloat(2, 50, 200);
             };
-          
+
             if (!isset($dish['stored_at'])) {
                 $dish['stored_at'] = rand(1, 3) . $faker->randomElement(['', 'a', 'b']);
             };

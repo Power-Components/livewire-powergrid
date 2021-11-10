@@ -36,6 +36,8 @@ class Column
 
     public string $placeholder = '';
 
+    public string $tableWithColumn = '';
+
     /**
      * @return static
      */
@@ -87,9 +89,10 @@ class Column
      *
      * @return $this
      */
-    public function sortable(): Column
+    public function sortable(string $tableWithColumn = ''): Column
     {
-        $this->sortable = true;
+        $this->sortable            = true;
+        $this->tableWithColumn     = $tableWithColumn;
 
         return $this;
     }

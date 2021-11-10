@@ -10,7 +10,7 @@ trait WithSorting
 
     public string $sortDirection = 'asc';
 
-    public function sortBy($field)
+    public function sortBy(string $field)
     {
         $this->sortDirection = $this->sortField === $field
             ? $this->reverseSort()
