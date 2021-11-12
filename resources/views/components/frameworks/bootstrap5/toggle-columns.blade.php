@@ -26,15 +26,5 @@
 
             </ul>
         </div>
-        <script>
-            function toggleColumns() {
-                return {
-                    open: false,
-                    toggleColumn(key) {
-                        window.livewire.emit('eventToggleColumn', key);
-                    }
-                }
-            }
-        </script>
     @endif
 </div>

@@ -49,8 +49,6 @@ class ExportJob implements ShouldQueue
             ->limit($this->limit)
             ->get();
 
-        dd($query);
-
         return (new $this->type())
             ->fileName($this->getFilename())
             ->setData($this->columns, $this->transform($query))
