@@ -126,7 +126,7 @@ class DishesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->editOnClick($canEdit)
+                ->editOnClick($canEdit, 'price')
                 ->makeInputRange('price', '.', ','),
 
             Column::add()
@@ -178,14 +178,6 @@ class DishesTable extends PowerGridComponent
 
     public function update(array $data): bool
     {
-        if ($data['field'] == 'price_BRL') {
-            $data['field'] = 'price';
-            $data['value'] = Str::of($data['value'])
-                ->replace('.', '')
-                ->replace(',', '.')
-                ->replaceMatches('/[^Z0-9\.]/', '');
-        }
-
         try {
             $updated = Dish::query()->find($data['id'])->update([
                 $data['field'] => $data['value'],
@@ -194,7 +186,7 @@ class DishesTable extends PowerGridComponent
             $updated = false;
         }
 
-        return $updated;
+        return true;
     }
 
     public function updateMessages(string $status, string $field = '_default_message'): string

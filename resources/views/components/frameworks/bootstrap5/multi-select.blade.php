@@ -8,7 +8,9 @@
     <div wire:ignore class="flex @if(!$inline) col-md-6 col-lg-3 @endif" style="max-width: 370px !important;">
 
         @if(!$inline)
-            <label for="input_{{ data_get($multiSelect, 'data_field') }}">{{ data_get($multiSelect, 'label') }}</label>
+            <label for="input_{{ data_get($multiSelect, 'data_field') }}">
+                {{ data_get($multiSelect, 'label') }}
+            </label>
         @endif
         <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
                 multiple
@@ -19,26 +21,12 @@
 
             <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
             @foreach(data_get($multiSelect, 'data_source') as $relation)
-                <option value="{{ data_get($relation, 'id') }}">{{ $relation[data_get($multiSelect, 'display_field')] }}</option>
+                <option value="{{ data_get($relation, 'id') }}">
+                    {{ $relation[data_get($multiSelect, 'display_field')] }}
+                </option>
             @endforeach
         </select>
     </div>
-    <style>
-        .dropdown-toggle, .dropdown-item {
-            padding-left: 15px;
-            font-size: 0.85rem;
-            color: #454444;
-            padding-top: 8px;
-            padding-bottom: 8px;
-            display: inline-block;
-            vertical-align: middle;
-            line-height: normal;
-        }
-        .bootstrap-select {
-            padding-left: 0 !important;
-        }
-    </style>
-
     @push('power_grid_scripts')
         <script>
             $(function () {

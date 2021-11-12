@@ -1,7 +1,7 @@
 <div>
     @if(data_get($column->toggleable, 'enabled'))
         <div class="flex justify-center"
-             x-data="{ toggle: {{ $row->{$field} }} }">
+             x-data="{ toggle: {{ $row->{$column->field} }} }">
             <div class="relative rounded-full w-12 h-6 transition duration-200 ease-linear"
                  :class="[toggle === 1 ? 'bg-green-400' : 'bg-gray-400']">
                 <label
@@ -9,11 +9,11 @@
                     :class="[toggle === 1 ? 'translate-x-full border-green-400' : 'translate-x-0 border-gray-400']"></label>
                 <input type="checkbox"
                        class="appearance-none w-full h-full active:outline-none focus:outline-none"
-                       @click="saveToggleableInput((toggle === 0 ? toggle = 1 : toggle = 0), {{ $row->{$primaryKey} }}, '{{ $field }}')">
+                       @click="saveToggleableInput((toggle === 0 ? toggle = 1 : toggle = 0), {{ $row->{$primaryKey} }}, '{{ $column->field }}')">
             </div>
             @else
                 <div class="flex flex-row justify-center">
-                    @if($row->{$field} === 0)
+                    @if($row->{$column->field} === 0)
                         <div class="text-xs px-4 w-auto py-1 text-center bg-blue-200 text-blue-800 rounded-md">
                             {{ $column->toggleable['default'][1] }}
                         </div>

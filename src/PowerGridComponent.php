@@ -340,8 +340,13 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderByRaw("$this->sortField+0 $this->sortDirection")
-            ->orderBy($this->sortField, $this->sortDirection);
+            });
+
+        if ($this->withSortStringNumber) {
+            $results->orderByRaw("$this->sortField+0 $this->sortDirection");
+        }
+
+        $results = $results->orderBy($this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
@@ -366,7 +371,7 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function transform($results)
+    private function transform($results): \Illuminate\Database\Eloquent\Collection
     {
         if (is_a($this->addColumns(), PowerGridCollection::class)
             || is_a($this->addColumns(), PowerGridEloquent::class)
@@ -385,19 +390,24 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    public function updatedPage()
+    public function updatedPage(): void
     {
         $this->checkboxAll = false;
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function toggleColumn($field): void
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {
             if (data_get($column, 'field') === $field) {
-                $column['hidden'] = !data_get($column, 'hidden');
+                data_set($column, 'hidden', !data_get($column, 'hidden'));
             }
 
             return (object) $column;
         })->toArray();
+
+        $this->fillData();
     }
 }

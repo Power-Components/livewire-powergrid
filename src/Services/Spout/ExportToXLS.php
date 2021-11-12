@@ -7,10 +7,11 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\Export;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExportToXLS extends Export implements ExportInterface
 {
-    public function download()
+    public function download(): BinaryFileResponse
     {
         $this->build();
 

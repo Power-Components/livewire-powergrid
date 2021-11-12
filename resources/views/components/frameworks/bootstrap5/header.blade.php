@@ -3,7 +3,7 @@
 
         <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
 
-            @includeIf($exportOption, powerGridThemeRoot().'.export')
+            @include(powerGridThemeRoot().'.export')
 
             @includeIf(powerGridThemeRoot().'.toggle-columns')
 

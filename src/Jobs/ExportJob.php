@@ -35,7 +35,7 @@ class ExportJob implements ShouldQueue
         $this->offset   = data_get($params, 'offset');
         $this->limit    = data_get($params, 'limit');
 
-        /** @var PowerGridComponent componentTable */
+        /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
     }
 
@@ -48,6 +48,8 @@ class ExportJob implements ShouldQueue
         $query = $query->offset($this->offset)
             ->limit($this->limit)
             ->get();
+
+        dd($query);
 
         return (new $this->type())
             ->fileName($this->getFilename())

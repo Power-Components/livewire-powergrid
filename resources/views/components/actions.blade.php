@@ -33,7 +33,7 @@
                     @if(strtolower($action->method) !== ('get'))
                         <form target="{{ $action->target }}"
                               action="{{ route($action->route, $parameters) }}"
-                              method="post">
+                              method="{{ $action->target }}">
                             @method($action->method)
                             @csrf
                             <button type="submit"

@@ -27,7 +27,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 $categories->on('dishes.category_id', '=', 'categories.id');
             })
             ->select([
-                'dishes.id',
+                'dishes.id as dishes_id',
                 'dishes.calories',
                 'categories.name as category_name',
             ]);
