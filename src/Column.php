@@ -57,7 +57,6 @@ final class Column
      */
     public static function add(): self
     {
-        /** @phpstan-ignore-next-line */
         return new static();
     }
 
