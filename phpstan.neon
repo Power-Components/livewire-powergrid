@@ -8,4 +8,4 @@ parameters:
     excludePaths:
 
     level: 8
-    checkMissingIterableValueType: true
+    checkMissingIterableValueType: false
