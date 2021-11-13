@@ -20,17 +20,18 @@ class Collection implements FilterInterface
     /**
      * Model constructor.
      */
-    public function __construct($query)
+    public function __construct(BaseCollection $query)
     {
         $this->query = $query;
     }
 
     /**
-     * @param $query
-     * @return Collection
+     * @param BaseCollection $query
+     * @return self
      */
-    public static function query($query): Collection
+    public static function query($query): self
     {
+        /** @phpstan-ignore-next-line */
         return new static($query);
     }
 
@@ -38,7 +39,7 @@ class Collection implements FilterInterface
      * @param array $columns
      * @return $this
      */
-    public function setColumns(array $columns): Collection
+    public function setColumns(array $columns): self
     {
         $this->columns = $columns;
 
@@ -49,7 +50,7 @@ class Collection implements FilterInterface
      * @param string $search
      * @return $this
      */
-    public function setSearch(string $search): Collection
+    public function setSearch(string $search): self
     {
         $this->search = $search;
 
@@ -60,7 +61,7 @@ class Collection implements FilterInterface
      * @param array $filters
      * @return $this
      */
-    public function setFilters(array $filters): Collection
+    public function setFilters(array $filters): self
     {
         $this->filters = $filters;
 
@@ -69,7 +70,7 @@ class Collection implements FilterInterface
 
     /**
      * @param BaseCollection $results
-     * @param $pageSize
+     * @param int $pageSize
      * @return LengthAwarePaginator
      */
     public static function paginate(BaseCollection $results, $pageSize): LengthAwarePaginator
@@ -173,10 +174,10 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
+     * @param array $value
      * @return void
      */
-    public function filterDatePicker(string $field, $value)
+    public function filterDatePicker(string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $this->query = $this->query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
@@ -199,10 +200,10 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
+     * @param string $value
      * @return void
      */
-    public function filterInputText(string $field, $value): void
+    public function filterInputText(string $field, string $value): void
     {
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
@@ -241,10 +242,10 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
+     * @param string $value
      * @return void
      */
-    public function filterBoolean(string $field, $value): void
+    public function filterBoolean(string $field, string $value): void
     {
         if ($value != 'all') {
             $value = ($value == 'true');
@@ -255,9 +256,9 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
+     * @param string $value
      */
-    public function filterSelect(string $field, $value): void
+    public function filterSelect(string $field, string $value): void
     {
         if (filled($value)) {
             $this->query = $this->query->where($field, $value);
@@ -266,14 +267,15 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
-     * @return mixed
+     * @param string | null $value
+     * @return void
      */
-    public function filterMultiSelect(string $field, $value): void
+    public function filterMultiSelect(string $field, ?string $value): void
     {
         $empty  = false;
+        /** @var array $values */
         $values = collect($value)->get('values');
-        if (count($values) > 0) {
+        if (is_array($values) && count($values) > 0) {
             foreach ($values as $value) {
                 if ($value === '') {
                     $empty = true;
@@ -287,9 +289,9 @@ class Collection implements FilterInterface
 
     /**
      * @param string $field
-     * @param $value
+     * @param array<string> $value
      */
-    public function filterNumber(string $field, $value): void
+    public function filterNumber(string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
@@ -315,7 +317,7 @@ class Collection implements FilterInterface
     }
 
     /**
-     * @return void
+     * @return Collection
      */
     public function filterContains(): Collection
     {

@@ -2,6 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
+use Composer\Factory;
+use Composer\IO\NullIo;
+use Composer\Repository\InstalledRepositoryInterface;
 use Illuminate\Support\Carbon;
 
 class InteractsWithVersions
@@ -14,13 +17,14 @@ class InteractsWithVersions
     protected static $latestVersionResolver = null;
 
     /**
-     * Warns the user about the latest version of Forge CLI.
+     * Warns the user about the latest version of PowerGrid.
      *
      * @return array
      */
     public function ensureLatestVersion(): array
     {
-        $composer  = \Composer\Factory::create(new \Composer\IO\NullIo(), null, false);
+        /** @phpstan-ignore-next-line */
+        $composer  = Factory::create(new NullIo(), null, false);
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         return $this->searchPackage($localRepo);
@@ -29,10 +33,10 @@ class InteractsWithVersions
     /**
      * Search package version.
      *
-     * @param \Composer\Repository\InstalledRepositoryInterface $localRepo
+     * @param InstalledRepositoryInterface $localRepo
      * @return array
      */
-    public function searchPackage(\Composer\Repository\InstalledRepositoryInterface $localRepo): array
+    public function searchPackage(InstalledRepositoryInterface $localRepo): array
     {
         foreach ($localRepo->getPackages() as $package) {
             if ($package->getName() === 'power-components/livewire-powergrid') {

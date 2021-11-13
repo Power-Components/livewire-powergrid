@@ -6,7 +6,8 @@
 ])
 <div wire:ignore>
     <div x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
-         x-init="loadOptions()">
+         x-init="loadOptions()"
+         x-cloak>
         <input name="values" type="hidden" readonly x-bind:value="selectedValues()">
         <div class="inline-block relative w-full p-2" style="min-width: 180px !important;">
             <div class="flex flex-col items-center relative">

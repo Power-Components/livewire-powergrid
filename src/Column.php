@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Collection;
+
 class Column
 {
     public string $title = '';
@@ -39,10 +41,11 @@ class Column
     public string $tableWithColumn = '';
 
     /**
-     * @return static
+     * @return self
      */
-    public static function add()
+    public static function add(): self
     {
+        /** @phpstan-ignore-next-line */
         return new static();
     }
 
@@ -156,13 +159,13 @@ class Column
     }
 
     /**
-     * @param $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
      * @param array $settings
      * @return $this
      */
-    public function makeInputSelect($datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
@@ -175,12 +178,12 @@ class Column
     }
 
     /**
-     * @param $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
      * @return $this
      */
-    public function makeInputMultiSelect($datasource, string $displayField, string $dataField): Column
+    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
@@ -273,11 +276,11 @@ class Column
     }
 
     /**
-     * @param $hasPermission
+     * @param bool $hasPermission
      * @param string $label
      * @return $this
      */
-    public function clickToCopy($hasPermission, string $label = 'copy'): Column
+    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
     {
         $this->clickToCopy = [
             'enabled' => $hasPermission,

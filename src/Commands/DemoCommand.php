@@ -13,7 +13,7 @@ class DemoCommand extends Command
 
     private string $stubPath = __DIR__ . '/../../resources/stubs/';
 
-    public function handle()
+    public function handle(): void
     {
         $tableFileName = 'PowerGridDemoTable';
         $viewFileName  = 'powergrid-demo.blade';

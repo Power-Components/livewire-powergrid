@@ -3,10 +3,12 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
+use Illuminate\Database\Eloquent\Collection;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * @property Batch exportBatch
+ * @property Batch | null $exportBatch
  */
 trait Exportable
 {
@@ -17,23 +19,9 @@ trait Exportable
     public array $exportType = [];
 
     /**
-     * @param string $fileName
-     * @param array|string[] $type
-     * @return Exportable
-     */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'])
-    {
-        $this->exportOption   = true;
-        $this->exportFileName = $fileName;
-        $this->exportType     = $type;
-
-        return $this;
-    }
-
-    /**
      * @throws \Exception
      */
-    public function prepareToExport(bool $selected = false)
+    public function prepareToExport(bool $selected = false): Collection
     {
         $inClause = $this->filtered;
 
@@ -63,8 +51,8 @@ trait Exportable
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws \Exception | \Throwable
+     * @return BinaryFileResponse | bool
      */
     public function exportToXLS(bool $selected = false)
     {
@@ -73,7 +61,7 @@ trait Exportable
         }
 
         if (count($this->checkboxValues) === 0 && $selected) {
-            return;
+            return false;
         }
 
         return (new ExportToXLS())

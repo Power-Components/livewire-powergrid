@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
@@ -21,15 +22,19 @@ class Model implements FilterInterface
     private array $filters;
 
     /**
-     * Model constructor.
+     * @param Builder | BaseCollection $query
      */
     public function __construct($query)
     {
         $this->query = $query;
     }
 
+    /**
+     * @param Builder | BaseCollection $query
+     */
     public static function query($query): Model
     {
+        /** @phpstan-ignore-next-line  */
         return new static($query);
     }
 
@@ -114,11 +119,11 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param array $value
      */
-    public function filterDatePicker($query, string $field, $value)
+    public function filterDatePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
@@ -128,9 +133,9 @@ class Model implements FilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string $value
      */
-    public function filterInputText(Builder $query, string $field, $value)
+    public function filterInputText(Builder $query, string $field, string $value): void
     {
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
@@ -163,11 +168,11 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string $value
      */
-    public function filterBoolean($query, string $field, $value)
+    public function filterBoolean(Builder $query, string $field, string $value): void
     {
         /** @var Builder $query */
         if ($value != 'all') {
@@ -177,11 +182,11 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string $value
      */
-    public function filterSelect($query, string $field, $value)
+    public function filterSelect(Builder $query, string $field, string $value): void
     {
         /** @var Builder $query */
         if (filled($value)) {
@@ -190,17 +195,21 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param array $value
      */
-    public function filterMultiSelect($query, string $field, $value)
+    public function filterMultiSelect(Builder $query, string $field, array $value): void
     {
         $empty  = false;
+
+        /** @var array $values */
         $values = collect($value)->get('values');
-        if (count($values) === 0) {
+
+        if (is_array($values) && count($values) === 0) {
             return;
         }
+
         foreach ($values as $value) {
             if ($value === '') {
                 $empty = true;
@@ -212,11 +221,11 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $collection
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string[] $value
      */
-    public function filterNumber($query, string $field, $value)
+    public function filterNumber(Builder $query, string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
@@ -245,9 +254,9 @@ class Model implements FilterInterface
     {
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
-                /** @var Column $column */
                 $table = $query->getModel()->getTable();
 
+                /** @var Column $column */
                 foreach ($this->columns as $column) {
                     $hasColumn = Schema::hasColumn($table, $column->field);
 
@@ -274,21 +283,19 @@ class Model implements FilterInterface
                 return;
             }
 
-            if ($this->query->getRelation($table)) {
-                foreach ($relation as $nestedTable => $column) {
-                    if (is_array($column)) {
-                        if ($this->query->getRelation($table)->getRelation($nestedTable)) {
-                            foreach ($column as $nestedColumn) {
-                                $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                    $query->where($nestedColumn, 'like', '%' . $this->search . '%');
-                                });
-                            }
+            foreach ($relation as $nestedTable => $column) {
+                if (is_array($column)) {
+                    if ($this->query->getRelation($table)->getRelation($nestedTable)) {
+                        foreach ($column as $nestedColumn) {
+                            $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
+                                $query->where($nestedColumn, 'like', '%' . $this->search . '%');
+                            });
                         }
-                    } else {
-                        $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                            $query->where($column, 'like', '%' . $this->search . '%');
-                        });
                     }
+                } else {
+                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
+                        $query->where($column, 'like', '%' . $this->search . '%');
+                    });
                 }
             }
         }

@@ -35,10 +35,11 @@ class Button
 
     /**
      * @param string|null $action
-     * @return Button
+     * @return self
      */
-    public static function add(string $action = null): Button
+    public static function add(string $action = null): self
     {
+        /** @phpstan-ignore-next-line */
         return new static($action);
     }
 
