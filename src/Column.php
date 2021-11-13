@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Database\Eloquent\Model;
-use PowerComponents\LivewirePowerGrid\Helpers\Collection;
+use Illuminate\Support\Collection;
 
 final class Column
 {
@@ -172,7 +171,7 @@ final class Column
     }
 
     /**
-     * @param Model|Collection $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
      * @param array<string, bool> $settings
@@ -191,13 +190,13 @@ final class Column
     }
 
     /**
-     * @param Model|Collection $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
      * @param array<string, bool> $settings
      * @return $this
      */
-    public function makeInputMultiSelect($datasource, string $displayField, string $dataField, array $settings): Column
+    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
