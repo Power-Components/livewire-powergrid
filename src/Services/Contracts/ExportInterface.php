@@ -2,9 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Contracts;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 interface ExportInterface
 {
-    public function download();
+    public function download(): BinaryFileResponse;
 
-    public function build();
+    public function build(): void;
 }

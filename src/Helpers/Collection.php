@@ -5,9 +5,9 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
+use PowerComponents\LivewirePowerGrid\Services\Contracts\CollectionFilterInterface;
 
-class Collection implements FilterInterface
+class Collection implements CollectionFilterInterface
 {
     private BaseCollection $query;
 

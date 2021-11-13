@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
+use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
-class Model implements FilterInterface
+class Model implements ModelFilterInterface
 {
     private Builder $query;
 
