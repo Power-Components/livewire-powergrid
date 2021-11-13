@@ -2,13 +2,19 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Box\Spout\Common\Exception\{IOException, InvalidArgumentException};
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Writer\Exception\WriterNotOpenedException;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\Export;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExportToCsv extends Export implements ExportInterface
 {
+    /**
+     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
+     * @throws \Exception
+     */
     public function download(): BinaryFileResponse
     {
         $this->build();
@@ -17,11 +23,19 @@ class ExportToCsv extends Export implements ExportInterface
             ->download(storage_path($this->fileName . '.csv'));
     }
 
+    /**
+     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
+     * @throws \Exception
+     */
     public function store(): void
     {
         $this->build();
     }
 
+    /**
+     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
+     * @throws \Exception
+     */
     public function build(): void
     {
         $data = $this->prepare($this->data, $this->columns);

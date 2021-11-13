@@ -3,7 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
@@ -45,15 +47,21 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
+    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder */
     public $datasource;
 
+    /**
+     * @var string[] $listeners
+     */
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventInputChanged' => 'eventInputChanged',
-        'eventToggleChanged' => 'eventInputChanged',
-        'eventMultiSelect' => 'eventMultiSelect',
-        'eventRefresh' => '$refresh',
-        'eventToggleColumn' => 'toggleColumn',
+        'eventInputChanged'    => 'eventInputChanged',
+        'eventToggleChanged'   => 'eventInputChanged',
+        'eventMultiSelect'     => 'eventMultiSelect',
+        'eventRefresh'         => '$refresh',
+        'eventToggleColumn'    => 'toggleColumn',
+        'editEvent',
+        'deleteEvent',
     ];
 
     public bool $toggleColumns = false;
@@ -62,6 +70,7 @@ class PowerGridComponent extends Component
 
     /**
      * Apply checkbox, perPage and search view and theme
+     * @return void
      */
     public function setUp()
     {
@@ -78,11 +87,17 @@ class PowerGridComponent extends Component
         return [];
     }
 
+    /**
+     * @return null
+     */
     public function datasource()
     {
         return null;
     }
 
+    /**
+     * @return null
+     */
     public function addColumns()
     {
         return null;
@@ -133,7 +148,7 @@ class PowerGridComponent extends Component
      */
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
-        $this->checkbox = true;
+        $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;
@@ -145,15 +160,15 @@ class PowerGridComponent extends Component
      */
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
-        if (\Str::contains($perPage, $this->perPageValues)) {
+        if (\Str::contains((string) $perPage, $this->perPageValues)) {
             $this->perPageInput = true;
-            $this->perPage = $perPage;
+            $this->perPage      = $perPage;
         }
 
         return $this;
     }
 
-    public function mount($datasource = null)
+    public function mount(): void
     {
         $this->setUp();
 
@@ -162,16 +177,15 @@ class PowerGridComponent extends Component
         $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
 
         $this->renderFilter();
-
-        $this->datasource = $datasource;
     }
 
     public function render()
     {
+        /** @phpstan-ignore-next-line */
         $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
-            return (object)$column;
+            return (object) $column;
         })->toArray();
 
         $this->relationSearch = $this->relationSearch();
@@ -186,15 +200,21 @@ class PowerGridComponent extends Component
         return $this->renderView($data);
     }
 
+    /** @phpstan-ignore-next-line */
     private function renderView($data)
     {
+        /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
-            'data' => $data,
+            'data'  => $data,
             'theme' => $this->powerGridTheme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }
 
+    /**
+     * @param null $datasource
+     * @return mixed|null
+     */
     private function resolveModel($datasource = null)
     {
         if (blank($datasource)) {
@@ -204,16 +224,13 @@ class PowerGridComponent extends Component
         return $datasource;
     }
 
-    private function resolveCollection($datasource = null, $cached = '')
+    /**
+     * @param array|BaseCollection|Builder $datasource
+     * @return BaseCollection
+     * @throws Exception
+     */
+    private function resolveCollection($datasource)
     {
-        if (filled($cached)) {
-            cache()->forget($this->id);
-
-            return cache()->rememberForever($this->id, function () use ($cached) {
-                return $cached;
-            });
-        }
-
         if (!powerGridCache()) {
             return new BaseCollection($this->datasource());
         }
@@ -271,7 +288,7 @@ class PowerGridComponent extends Component
         $updateMessages = [
             'success' => [
                 '_default_message' => __('Data has been updated successfully!'),
-                'status' => __('Custom Field updated successfully!'),
+                'status'           => __('Custom Field updated successfully!'),
             ],
             'error' => [
                 '_default_message' => __('Error updating the data.'),
@@ -287,15 +304,24 @@ class PowerGridComponent extends Component
         return $this->checkboxValues;
     }
 
+    /**
+     * @return LengthAwarePaginator
+     */
     public function fillData()
     {
+        /** @var Builder | array | BaseCollection $datasource */
+
         if (cache()->has($this->id)) {
             $datasource = collect(cache()->get($this->id))->toArray();
         } else {
             $datasource = $this->datasource() ?: $this->datasource;
         }
 
-        $this->instanceOfCollection($datasource);
+        $this->isCollection = is_a($datasource, BaseCollection::class);
+
+        if (filled($this->search)) {
+            $this->gotoPage(1);
+        }
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
@@ -311,16 +337,13 @@ class PowerGridComponent extends Component
                 $this->filtered = $results->pluck('id')->toArray();
 
                 $paginated = Collection::paginate($results, $this->perPage);
-                $results = $paginated->setCollection($this->transform($paginated->getCollection()));
+                $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
             return $results;
         }
 
-        if (filled($this->search)) {
-            $this->gotoPage(1);
-        }
-
+        /** @var Builder $results */
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
                 Model::query($query)
@@ -330,8 +353,13 @@ class PowerGridComponent extends Component
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();
-            })->orderByRaw("$this->sortField+0 $this->sortDirection")
-            ->orderBy($this->sortField, $this->sortDirection);
+            });
+
+        if ($this->withSortStringNumber) {
+            $results->orderByRaw("$this->sortField+0 $this->sortDirection");
+        }
+
+        $results = $results->orderBy($this->sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
@@ -344,25 +372,13 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function instanceOfCollection($datasource): void
-    {
-        $checkDatasource = (
-            is_a($datasource, PowerGrid::class)
-            || is_array($datasource)
-            || is_a($datasource, BaseCollection::class)
-        );
-        if ($checkDatasource) {
-            $this->isCollection = true;
-        }
-    }
-
-    private function transform($results)
+    private function transform($results): \Illuminate\Database\Eloquent\Collection
     {
         if (is_a($this->addColumns(), PowerGridCollection::class)
             || is_a($this->addColumns(), PowerGridEloquent::class)
         ) {
             return $results->transform(function ($row) {
-                $row = (object)$row;
+                $row = (object) $row;
                 $columns = $this->addColumns()->columns;
                 foreach ($columns as $key => $column) {
                     $row->{$key} = $column($row);
@@ -375,7 +391,7 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    public function updatedPage()
+    public function updatedPage(): void
     {
         $this->checkboxAll = false;
     }
@@ -384,10 +400,26 @@ class PowerGridComponent extends Component
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {
             if (data_get($column, 'field') === $field) {
-                $column['hidden'] = !data_get($column, 'hidden');
+                data_set($column, 'hidden', !data_get($column, 'hidden'));
             }
 
-            return (object)$column;
+            return (object) $column;
         })->toArray();
+
+        $this->fillData();
+    }
+
+    /**
+     * @param string $fileName
+     * @param array|string[] $type
+     * @return PowerGridComponent
+     */
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv']): PowerGridComponent
+    {
+        $this->exportOption   = true;
+        $this->exportFileName = $fileName;
+        $this->exportType     = $type;
+
+        return $this;
     }
 }

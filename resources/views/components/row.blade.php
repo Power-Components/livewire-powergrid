@@ -6,9 +6,6 @@
 ])
 <div>
     @foreach($columns as $column)
-        @php
-            $field = $column->field;
-        @endphp
         @if($column->hidden === false)
             <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
                 style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
@@ -19,11 +16,11 @@
                             :primaryKey="$primaryKey"
                             :row="$row"
                             :theme="$theme->editable"
-                            :field="$field"/>
+                            :field="$column->dataField != '' ? $column->dataField : $column->field"/>
 
                         <x-livewire-powergrid::click-to-copy
                             :row="$row"
-                            :field="$row->{$field}"
+                            :field="$row->{$column->field}"
                             :label="$column->click_to_copy['label'] ?? null"
                             :enabled="$column->click_to_copy['enabled'] ?? false"/>
                     </span>
@@ -33,11 +30,11 @@
                 @else
                     <span class="flex justify-between">
                     <div>
-                        {!! $row->{$field} !!}
+                        {!! $row->{$column->field} !!}
                     </div>
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
-                        :field="$row->{$field}"
+                        :field="$row->{$column->field}"
                         :label="data_get($column->clickToCopy, 'label') ?? null"
                         :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                 </span>

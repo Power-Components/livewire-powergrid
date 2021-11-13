@@ -4,25 +4,25 @@ namespace PowerComponents\LivewirePowerGrid\Services\Contracts;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as BaseCollection;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Helpers\Collection;
-use PowerComponents\LivewirePowerGrid\Helpers\Model;
+use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 
 interface FilterInterface
 {
-    public static function query(BaseCollection|Builder $query): Collection|Model;
-
     /**
-     * @param array<Column> $columns
+     * @param Builder | BaseCollection $query
+     * @return Collection | Model
      */
-    public function setColumns(array $columns): Collection|Model;
+    public static function query($query);
 
-    public function setSearch(string $search): Collection|Model;
+    /** @return Collection | Model */
+    public function setColumns(array $columns);
 
-    /**
-     * @param array<string, array<string>> $filters
-     */
-    public function setFilters(array $filters): Collection|Model;
+    /** @return Collection | Model */
+    public function setSearch(string $search);
 
-    public function filter(): BaseCollection|Builder;
+    /** @return Collection | Model */
+    public function setFilters(array $filters);
+
+    /** @return Builder | Model | BaseCollection */
+    public function filter();
 }

@@ -97,6 +97,7 @@ it('properly sorts ASC/DESC with: boolean')
 
 it('properly sorts ASC/DESC with: string-number')
     ->livewire(DishesTable::class)
+    ->set('withSortStringNumber', true)
     ->set('perPage', '10')
     ->call('sortBy', 'stored_at')
     ->set('sortDirection', 'asc')

@@ -14,7 +14,7 @@
             <div class="{{ $theme->cols->divClass }}">
                 @if($column->sortable === true)
                     <span class="text-base pr-2" style="font-size: 1rem !important;">
-						@if ($sortField !== $column->field)
+						@if ($sortField !== $column->tableWithColumn)
                             &#8597;
                         @elseif ($sortDirection == 'desc')
                             &#8593;
@@ -25,7 +25,7 @@
                 @endif
                 <span
                     @if($column->sortable === true)
-                    wire:click="sortBy('{{ $column->dataField !='' ? $column->dataField : $column->field }}')"
+                    wire:click="sortBy('{{ $column->tableWithColumn != '' ? $column->tableWithColumn : ($column->dataField !='' ? $column->dataField : $column->field) }}')"
                     @endif
                 >
                     {{$column->title}}

@@ -1,7 +1,9 @@
 <div>
     @if($exportOption)
         <div class="btn-group">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+            <button class="btn btn-secondary btn-sm dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
                     aria-expanded="false">
                     <span>
                         <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"

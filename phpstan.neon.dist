@@ -1,0 +1,17 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - src
+
+    level: 8
+
+    ignoreErrors:
+
+    excludePaths:
+        - ./tests
+
+    checkMissingIterableValueType: false
+    treatPhpDocTypesAsCertain: false
