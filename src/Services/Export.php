@@ -9,6 +9,7 @@ class Export
 {
     public string $fileName;
 
+    /** @var Collection $data */
     public $data;
 
     public array $columns;
@@ -20,7 +21,7 @@ class Export
         return $this;
     }
 
-    public function setData(array $columns, $data): Export
+    public function setData(array $columns, Collection $data): Export
     {
         $this->columns    = $columns;
         $this->data       = collect($data->toArray());

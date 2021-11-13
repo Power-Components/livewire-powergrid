@@ -43,6 +43,7 @@ final class Button
      */
     public static function add(string $action = ''): Button
     {
+        /** @phpstan-ignore-next-line */
         return new static($action);
     }
 

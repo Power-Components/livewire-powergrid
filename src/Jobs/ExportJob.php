@@ -35,11 +35,11 @@ class ExportJob implements ShouldQueue
         $this->offset   = data_get($params, 'offset');
         $this->limit    = data_get($params, 'limit');
 
-        /** @var PowerGridComponent componentTable */
+        /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
     }
 
-    public function handle()
+    public function handle(): void
     {
         /** @var Builder $query */
         $query = $this->componentTable
@@ -49,7 +49,8 @@ class ExportJob implements ShouldQueue
             ->limit($this->limit)
             ->get();
 
-        return (new $this->type())
+        /** @phpstan-ignore-next-line  */
+        (new $this->type())
             ->fileName($this->getFilename())
             ->setData($this->columns, $this->transform($query))
             ->store();

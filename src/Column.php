@@ -51,11 +51,14 @@ final class Column
      */
     public array $clickToCopy = [];
 
+    public string $tableWithColumn = '';
+
     /**
-     * @return static
+     * @return self
      */
-    public static function add()
+    public static function add(): self
     {
+        /** @phpstan-ignore-next-line */
         return new static();
     }
 
@@ -102,9 +105,10 @@ final class Column
      *
      * @return $this
      */
-    public function sortable(): Column
+    public function sortable(string $tableWithColumn = ''): Column
     {
-        $this->sortable = true;
+        $this->sortable            = true;
+        $this->tableWithColumn     = $tableWithColumn;
 
         return $this;
     }
@@ -174,7 +178,7 @@ final class Column
      * @param array<string, bool> $settings
      * @return $this
      */
-    public function makeInputSelect($datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
@@ -224,11 +228,13 @@ final class Column
      * Adds Edit on click to a column
      *
      * @param bool $hasPermission
+     * @param string $dataField
      * @return Column
      */
-    public function editOnClick(bool $hasPermission = true): Column
+    public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
     {
-        $this->editable = $hasPermission;
+        $this->editable  = $hasPermission;
+        $this->dataField = $dataField;
 
         return $this;
     }

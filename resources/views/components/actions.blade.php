@@ -6,24 +6,26 @@
 <div class="w-full md:w-auto">
     @if(isset($actions) && count($actions) && $row !== '')
         @foreach($actions as $action)
-            <td class="pg-actions {{ $theme->actions->tdBodyClass ?? $theme->table->tdBodyClass }}"
-                style="{{ $theme->actions->tdBodyStyle ?? $theme->table->tdBodyStyle }}">
+            <td class="pg-actions {{ $theme->table->tdBodyClass }}"
+                style="{{ $theme->table->tdBodyStyle }}">
                 @php
                     $parameters = [];
                     foreach ($action->param as $param => $value) {
-                       $parameters[$param] = $row->{$value};
+                        if (!empty($row->{$value})) {
+                            $parameters[$param] = $row->{$value};
+                        } else {
+                            $parameters[$param] = $value;
+                        }
                     }
                 @endphp
 
                 @if($action->event !== '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
-                       target="{{ $action->target }}"
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}
                     </a>
                 @elseif($action->view !== '')
                     <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-                       target="{{ $action->target }}"
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}
                     </a>

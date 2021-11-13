@@ -14,20 +14,20 @@ it('properly filters by "between date"')
         'wire:model="filters.input_date_picker.produced_at"',
         'wire:ignore',
     ])
-    ->assertSeeHtml('Pastel de Nata')
-    ->assertSeeHtml('Peixada da chef Nábia')
-    ->assertSeeHtml('Carne Louca')
-    ->assertDontSeeHtml('Barco-Sushi Simples')
+    ->assertSee('Pastel de Nata')
+    ->assertSee('Peixada da chef Nábia')
+    ->assertSee('Carne Louca')
+    ->assertDontSee('Barco-Sushi Simples')
     ->set('filters', filterInputDate('2021-04-04', '2021-07-07 19:59:58'))
-    ->assertSeeHtml('Bife à Rolê')
-    ->assertSeeHtml('Francesinha vegana')
-    ->assertSeeHtml('Francesinha')
+    ->assertSee('Bife à Rolê')
+    ->assertSee('Francesinha vegana')
+    ->assertSee('Francesinha')
     ->assertDontSeeHtml('Barco-Sushi da Sueli');
 
 it('properly filters by "between date" using incorrect filter')
     ->livewire(DishesTable::class)
     ->set('filters', filterInputDate('2021-03-03', '2021-03-01'))
-    ->assertSeeHtml('No records found');
+    ->assertSee('No records found');
 
 function filterInputDate(string $startDate, string $endDate): array
 {

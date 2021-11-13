@@ -173,7 +173,7 @@ class CreateCommand extends Command
 
         if ($createTable && is_string($stub)) {
             File::put($path, $stub);
-            
+
             $this->checkTailwindForms();
 
             $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
@@ -269,7 +269,7 @@ class CreateCommand extends Command
     protected function checkTailwindForms(): void
     {
         $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
-  
+
         if (File::exists($tailwindConfigFile)) {
             $fileContent    = File::get($tailwindConfigFile);
 

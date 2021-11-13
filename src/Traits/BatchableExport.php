@@ -47,7 +47,7 @@ trait BatchableExport
         return Bus::findBatch($this->batchId);
     }
 
-    public function updateExportProgress()
+    public function updateExportProgress(): void
     {
         if (!is_null($this->exportBatch)) {
             $this->batchFinished     = $this->exportBatch->finished();
@@ -68,9 +68,11 @@ trait BatchableExport
     }
 
     /**
-     * @throws \Throwable
+     * @param string $exportFileType
+     * @return bool
+     * @throws Throwable
      */
-    public function runOnQueue(string $exportFileType): void
+    public function runOnQueue(string $exportFileType): bool
     {
         $this->batchExporting = true;
         $this->batchFinished  = false;
@@ -93,6 +95,8 @@ trait BatchableExport
             ->dispatch();
 
         $this->batchId = $batch->id;
+
+        return true;
     }
 
     private function putQueuesToBus(string $type): Collection
@@ -148,19 +152,19 @@ trait BatchableExport
         return $extension;
     }
 
-    protected function onBatchExecuting(Batch $batch)
+    protected function onBatchExecuting(Batch $batch): void
     {
     }
 
-    protected function onBatchThen(Batch $batch)
+    protected function onBatchThen(Batch $batch): void
     {
     }
 
-    protected function onBatchCatch(Batch $batch, Throwable $e)
+    protected function onBatchCatch(Batch $batch, Throwable $e): void
     {
     }
 
-    protected function onBatchFinally(Batch $batch)
+    protected function onBatchFinally(Batch $batch): void
     {
     }
 }
