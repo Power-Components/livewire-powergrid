@@ -16,10 +16,13 @@ class PowerGridManager
         return new PowerGridCollection();
     }
 
-    public static function theme(string $class = Tailwind::class): ThemeBase
+    public static function theme(string $class): ThemeBase
     {
+        if ($class === 'tailwind') {
+            $class = \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class;
+        }
         if ($class === 'bootstrap') {
-            $class = Bootstrap5::class;
+            $class = \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class;
         }
 
         return new $class();

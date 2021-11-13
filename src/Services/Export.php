@@ -38,7 +38,7 @@ class Export
      * @param Collection $data
      * @param array<Column> $columns
      * @throws Exception
-     * 
+     *
      * @return array<string, array<int, string>>
      */
     public function prepare(Collection $data, array $columns): array

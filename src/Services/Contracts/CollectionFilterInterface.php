@@ -8,7 +8,6 @@ use PowerComponents\LivewirePowerGrid\Helpers\Collection;
 
 interface CollectionFilterInterface
 {
-
     public static function query(BaseCollection $query): Collection;
 
     /**

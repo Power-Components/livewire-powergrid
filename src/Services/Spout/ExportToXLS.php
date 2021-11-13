@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Box\Spout\Common\Entity\Style\{CellAlignment, Color};
 use Box\Spout\Common\Exception\{IOException, InvalidArgumentException};
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
@@ -10,7 +9,7 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Exception\WriterNotOpenedException;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\Export;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\{BinaryFileResponse};
 
 class ExportToXLS extends Export implements ExportInterface
 {
