@@ -12,7 +12,7 @@
 
             @if($exportOption)
                 <div class="mr-2 mt-2 sm:mt-0">
-                    @includeIf(powerGridThemeRoot().'.export')
+                    @include(powerGridThemeRoot().'.export')
                 </div>
             @endif
 

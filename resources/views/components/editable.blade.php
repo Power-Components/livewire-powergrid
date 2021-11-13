@@ -5,7 +5,8 @@
     'theme' => null
 ])
 
-<div x-data="{
+<div wire:ignore.self
+     x-data="{
        editable: false,
        id: '{{ $row->{$primaryKey} }}',
        field: '{{ $field }}',

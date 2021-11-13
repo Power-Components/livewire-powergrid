@@ -214,11 +214,13 @@ class Column
      * Adds Edit on click to a column
      *
      * @param bool $hasPermission
+     * @param string $dataField
      * @return Column
      */
-    public function editOnClick(bool $hasPermission = true): Column
+    public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
     {
-        $this->editable = $hasPermission;
+        $this->editable  = $hasPermission;
+        $this->dataField = $dataField;
 
         return $this;
     }

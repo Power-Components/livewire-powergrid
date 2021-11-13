@@ -57,6 +57,7 @@ return [
     | PowerGrid supports inline and outside filters.
     | 'inline': Filters data inside the table.
     | 'outside': Filters data outside the table.
+    | 'null'
     |
     */
 
