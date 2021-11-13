@@ -2,15 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-class Button
+final class Button
 {
     public string $action = '';
 
     public string $caption = '';
 
     public string $route = '';
-
-    public array $param = [];
 
     public string $class = '';
 
@@ -25,6 +23,12 @@ class Button
     public string $target = '_blank';
 
     /**
+     *
+     * @var array<int, string> $param
+     */
+    public array $param = [];
+
+    /**
      * Button constructor.
      * @param string $action
      */
@@ -34,10 +38,10 @@ class Button
     }
 
     /**
-     * @param string|null $action
-     * @return self
+     * @param string $action
+     * @return Button
      */
-    public static function add(string $action = null): self
+    public static function add(string $action = ''): Button
     {
         /** @phpstan-ignore-next-line */
         return new static($action);
@@ -57,7 +61,7 @@ class Button
 
     /**
      * @param string $route
-     * @param array $param
+     * @param array<int, string> $param
      * @return $this
      */
     public function route(string $route, array $param): Button
@@ -95,7 +99,7 @@ class Button
     /**
      * openModal
      * @param string $component modal component
-     * @param array $param modal parameters
+     * @param array<int, string> $param modal parameters
      * @return $this
      */
     public function openModal(string $component, array $param): Button
@@ -112,7 +116,7 @@ class Button
     /**
      * emit
      * @param string $event event name
-     * @param array $param parameters
+     * @param array<int, string> $param parameters
      * @return $this
      */
     public function emit(string $event, array $param): Button
