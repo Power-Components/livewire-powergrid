@@ -181,7 +181,6 @@ class PowerGridComponent extends Component
 
     public function render()
     {
-        /** @phpstan-ignore-next-line */
         $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
@@ -225,11 +224,11 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param array|BaseCollection|Builder $datasource
+     * @param array|BaseCollection|Builder|null $datasource
      * @return BaseCollection
      * @throws Exception
      */
-    private function resolveCollection($datasource)
+    private function resolveCollection($datasource = null)
     {
         if (!powerGridCache()) {
             return new BaseCollection($this->datasource());
@@ -281,9 +280,9 @@ class PowerGridComponent extends Component
     /**
      * @param string $status
      * @param string $field
-     * @return string
+     * @return array|null|string
      */
-    public function updateMessages(string $status, string $field = '_default_message'): string
+    public function updateMessages(string $status, string $field = '_default_message')
     {
         $updateMessages = [
             'success' => [
@@ -374,14 +373,16 @@ class PowerGridComponent extends Component
 
     private function transform($results): \Illuminate\Database\Eloquent\Collection
     {
-        if (is_a($this->addColumns(), PowerGridCollection::class)
-            || is_a($this->addColumns(), PowerGridEloquent::class)
+        if (is_a((object) $this->addColumns(), PowerGridCollection::class)
+            || is_a((object) $this->addColumns(), PowerGridEloquent::class)
         ) {
             return $results->transform(function ($row) {
                 $row = (object) $row;
-                $columns = $this->addColumns()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
+                if (!is_null($this->addColumns())) {
+                    $columns = $this->addColumns()->columns;
+                    foreach ($columns as $key => $column) {
+                        $row->{$key} = $column($row);
+                    }
                 }
 
                 return $row;

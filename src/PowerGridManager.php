@@ -3,9 +3,11 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
+use Illuminate\Support\Collection;
 
 class PowerGridManager
 {
+    /** @param Collection|null $collection */
     public function eloquent($collection = null): PowerGridEloquent
     {
         return new PowerGridEloquent($collection);
@@ -16,13 +18,13 @@ class PowerGridManager
         return new PowerGridCollection();
     }
 
-    public static function theme(string $class): ThemeBase
+    public static function theme(string $class): object
     {
         if ($class === 'tailwind') {
-            $class = \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class;
+            $class = Tailwind::class;
         }
         if ($class === 'bootstrap') {
-            $class = \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class;
+            $class = Bootstrap5::class;
         }
 
         return new $class();
