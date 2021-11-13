@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Composer\Factory;
-use Composer\IO\NullIo;
+use Composer\IO\NullIO;
 use Composer\Repository\InstalledRepositoryInterface;
+use Exception;
 use Illuminate\Support\Carbon;
 
 class InteractsWithVersions
@@ -23,7 +24,6 @@ class InteractsWithVersions
      */
     public function ensureLatestVersion(): array
     {
-        /** @phpstan-ignore-next-line */
         $composer  = Factory::create(new NullIo(), null, false);
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
@@ -58,9 +58,13 @@ class InteractsWithVersions
     public function getLatestVersion(): string
     {
         $resolver = static::$latestVersionResolver ?? function () {
-            $package = json_decode(file_get_contents(
+            $json = file_get_contents(
                 'https://packagist.org/p2/power-components/livewire-powergrid.json'
-            ), true);
+            );
+            if (is_string($json) === false) {
+                throw new Exception('Error: could not access PowerGrid versions URL');
+            }
+            $package = json_decode($json, true);
 
             return collect($package['packages']['power-components/livewire-powergrid'])
                     ->first()['version'];
