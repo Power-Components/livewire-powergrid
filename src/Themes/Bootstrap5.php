@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Table, Toggleable};
+
 class Bootstrap5 extends ThemeBase
 {
     public string $name = 'bootstrap5';
@@ -11,7 +13,7 @@ class Bootstrap5 extends ThemeBase
         return 'bootstrap';
     }
 
-    public function table(): Components\Table
+    public function table(): Table
     {
         return Theme::table('table table-bordered table-hover table-striped table-checkable table-highlight-head mb-2')
             ->thead('')
@@ -22,21 +24,21 @@ class Bootstrap5 extends ThemeBase
             ->tdBody('', 'vertical-align: middle; line-height: normal;');
     }
 
-    public function cols(): Components\Cols
+    public function cols(): Cols
     {
         return Theme::cols()
             ->div('')
             ->clearFilter('', 'color: #c30707; cursor:pointer; float: right;');
     }
 
-    public function footer(): Components\Footer
+    public function footer(): Footer
     {
         return Theme::footer()
             ->view($this->root() . '.footer')
             ->select('');
     }
 
-    public function actions(): Components\Actions
+    public function actions(): Actions
     {
         return Theme::actions()
             ->tdBody('text-center')
@@ -48,13 +50,13 @@ class Bootstrap5 extends ThemeBase
         return 'bootstrap';
     }
 
-    public function toggleable(): Components\Toggleable
+    public function toggleable(): Toggleable
     {
         return Theme::toggleable()
             ->view($this->root() . '.toggleable');
     }
 
-    public function editable(): Components\Editable
+    public function editable(): Editable
     {
         return Theme::editable()
             ->view($this->root() . '.editable')
@@ -63,7 +65,7 @@ class Bootstrap5 extends ThemeBase
             ->input('form-control');
     }
 
-    public function checkbox(): Components\Checkbox
+    public function checkbox(): Checkbox
     {
         return Theme::checkbox()
             ->th('', 'font-size: 1rem !important;text-align:center')
@@ -72,7 +74,7 @@ class Bootstrap5 extends ThemeBase
             ->input('form-check-input');
     }
 
-    public function filterBoolean(): Components\FilterBoolean
+    public function filterBoolean(): FilterBoolean
     {
         return Theme::filterBoolean()
             ->input('form-control')
@@ -81,7 +83,7 @@ class Bootstrap5 extends ThemeBase
             ->divInline('');
     }
 
-    public function filterDatePicker(): Components\FilterDatePicker
+    public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
             ->input('form-control')
@@ -89,7 +91,7 @@ class Bootstrap5 extends ThemeBase
             ->divInline('');
     }
 
-    public function filterMultiSelect(): Components\FilterMultiSelect
+    public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
             ->view($this->root() . '.multi-select')
@@ -98,7 +100,7 @@ class Bootstrap5 extends ThemeBase
             ->divInline('');
     }
 
-    public function filterNumber(): Components\FilterNumber
+    public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
             ->input('form-control')
@@ -106,7 +108,7 @@ class Bootstrap5 extends ThemeBase
             ->divInline('');
     }
 
-    public function filterSelect(): Components\FilterSelect
+    public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
             ->input('form-control')
@@ -115,7 +117,7 @@ class Bootstrap5 extends ThemeBase
             ->divInline('');
     }
 
-    public function filterInputText(): Components\FilterInputText
+    public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
             ->select('form-control mb-1', 'd-none')

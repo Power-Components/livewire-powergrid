@@ -2,8 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
 use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 
 class PowerGridManager
 {

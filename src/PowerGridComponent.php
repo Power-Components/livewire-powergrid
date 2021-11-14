@@ -174,8 +174,6 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
-
         $this->renderFilter();
     }
 
@@ -193,16 +191,20 @@ class PowerGridComponent extends Component
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
-            $this->headers = $this->header();
+            if (method_exists($this, 'header')) {
+                $this->headers = $this->header();
+            }
         }
 
         return $this->renderView($data);
     }
 
-    /** @phpstan-ignore-next-line */
+    /**
+     * @param LengthAwarePaginator|BaseCollection $data
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
+     */
     private function renderView($data)
     {
-        /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,
@@ -211,7 +213,7 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param null $datasource
+     * @param array|BaseCollection|Builder|null $datasource
      * @return mixed|null
      */
     private function resolveModel($datasource = null)
@@ -238,7 +240,7 @@ class PowerGridComponent extends Component
             if (is_array($datasource)) {
                 return new BaseCollection($datasource);
             }
-            if (is_a($datasource, BaseCollection::class)) {
+            if (is_a((object) $datasource, BaseCollection::class)) {
                 return $datasource;
             }
 
@@ -304,19 +306,22 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator|BaseCollection
+     * @throws Exception
      */
     public function fillData()
     {
-        /** @var Builder | array | BaseCollection $datasource */
-
         if (cache()->has($this->id)) {
             $datasource = collect(cache()->get($this->id))->toArray();
         } else {
-            $datasource = $this->datasource() ?: $this->datasource;
+            if ($this->datasource) {
+                $datasource = $this->datasource();
+            } else {
+                $datasource = $this->datasource;
+            }
         }
 
-        $this->isCollection = is_a($datasource, BaseCollection::class);
+        $this->isCollection = is_a((object) $datasource, BaseCollection::class);
 
         if (filled($this->search)) {
             $this->gotoPage(1);
@@ -371,6 +376,10 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
+    /**
+     * @param mixed $results
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     private function transform($results): \Illuminate\Database\Eloquent\Collection
     {
         if (is_a((object) $this->addColumns(), PowerGridCollection::class)
@@ -397,7 +406,7 @@ class PowerGridComponent extends Component
         $this->checkboxAll = false;
     }
 
-    public function toggleColumn($field): void
+    public function toggleColumn(string $field): void
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {
             if (data_get($column, 'field') === $field) {

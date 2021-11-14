@@ -3,9 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
-use PowerComponents\LivewirePowerGrid\Column;
 use Illuminate\Support\{Str, Stringable};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 trait ExportableJob
 {
@@ -40,6 +39,7 @@ trait ExportableJob
                     $row->{$key} = $column($row);
                 }
             }
+
             return $row;
         });
     }

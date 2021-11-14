@@ -21,11 +21,10 @@ class PowerGridEloquent
 
     /**
      * @param BaseCollection|null $collection
-     * @return PowerGridEloquent
+     * @return static
      */
-    public static function eloquent(?BaseCollection $collection): PowerGridEloquent
+    public static function eloquent(?BaseCollection $collection): static
     {
-        /** @phpstan-ignore-next-line */
         return new static($collection);
     }
 
@@ -46,7 +45,7 @@ class PowerGridEloquent
      */
     public function make(): ?array
     {
-        if (!is_a($this->collection, BaseCollection::class)) {
+        if (!is_a((object) $this->collection, BaseCollection::class)) {
             return null;
         }
 

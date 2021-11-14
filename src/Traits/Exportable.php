@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * @property Batch $exportBatch
+ * @property ?Batch $exportBatch
  */
 trait Exportable
 {

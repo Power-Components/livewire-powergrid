@@ -22,7 +22,7 @@ class Model implements ModelFilterInterface
     private array $filters;
 
     /**
-     * @param Builder | BaseCollection $query
+     * @param mixed $query
      */
     public function __construct($query)
     {

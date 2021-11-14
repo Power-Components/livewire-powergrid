@@ -40,7 +40,7 @@ trait BatchableExport
 
     public function getExportBatchProperty(): ?Batch
     {
-        if (!$this->batchId) {
+        if (empty($this->batchId)) {
             return null;
         }
 
