@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
@@ -177,6 +178,10 @@ class PowerGridComponent extends Component
         $this->renderFilter();
     }
 
+    /**
+     * @return Application|Factory|View
+     * @throws Exception
+     */
     public function render()
     {
         $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
@@ -201,7 +206,7 @@ class PowerGridComponent extends Component
 
     /**
      * @param LengthAwarePaginator|BaseCollection $data
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|View
+     * @return Application|Factory|View
      */
     private function renderView($data)
     {

@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
 
-class PowerGridEloquent
+final class PowerGridEloquent
 {
     protected ?BaseCollection $collection;
 
