@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\{HtmlString, Str};
+use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;

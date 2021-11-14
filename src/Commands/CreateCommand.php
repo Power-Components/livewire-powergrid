@@ -69,59 +69,61 @@ class CreateCommand extends Command
             return;
         }
 
-        $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
+        $stub = $this->getStubs($creationModel);
 
-        if (!is_string($modelName)) {
-            throw new \Exception('Could not parse table name');
-        }
+        if (strtolower($creationModel) === 'm') {
+            $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 
-        if (empty(trim($modelName))) {
-            $this->error('Error: Model name is required.');
-
-            return;
-        }
-
-        if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
-            $fillable   = true;
-        }
-
-        $modelNameArr = [];
-
-        preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
-
-        if (!is_array($matches)) {
-            throw new Exception('Could not parse model name');
-        }
-
-        $modelNameArr  = explode('\\', $modelName);
-        $modelLastName = Arr::last($modelNameArr);
-
-        if (empty($modelName)) {
-            $this->error('Could not create, Model path is missing');
-        }
-
-        if (count($modelNameArr) === 1) {
-            $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
-
-            if (!is_string($cleanModelName)) {
-                throw new Exception('Could not parse model name');
+            if (!is_string($modelName)) {
+                throw new \Exception('Could not parse table name');
             }
 
-            if (strlen($cleanModelName)) {
-                $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+            if (empty(trim($modelName))) {
+                $this->error('Error: Model name is required.');
 
                 return;
             }
 
-            $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+            if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
+                $fillable   = true;
+            }
 
-            return;
-        }
+            $modelNameArr = [];
 
-        $stub = $this->getStubs($creationModel);
+            preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
-        if ($fillable && is_string($modelLastName)) {
-            $stub     = $this->createFromFillable($modelName, $modelLastName);
+            if (!is_array($matches)) {
+                throw new Exception('Could not parse model name');
+            }
+
+            $modelNameArr  = explode('\\', $modelName);
+            $modelLastName = Arr::last($modelNameArr);
+
+            if (empty($modelName)) {
+                $this->error('Could not create, Model path is missing');
+            }
+
+            if (count($modelNameArr) === 1) {
+                $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
+
+                if (!is_string($cleanModelName)) {
+                    throw new Exception('Could not parse model name');
+                }
+
+                if (strlen($cleanModelName)) {
+                    $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+
+                    return;
+                }
+
+                $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+
+                return;
+            }
+
+            if ($fillable && is_string($modelLastName)) {
+                $stub     = $this->createFromFillable($modelName, $modelLastName);
+            }
         }
 
         $componentName   = $tableName;
@@ -140,16 +142,16 @@ class CreateCommand extends Command
         if (!is_string($subFolder)) {
             throw new \Exception('Could not parse subfolder name');
         }
-        if (!is_string($modelLastName)) {
-            throw new \Exception('Could not model name');
-        }
 
         $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
         $stub = str_replace('{{ componentName }}', $componentName, $stub);
-        $stub = str_replace('{{ modelName }}', $modelName, $stub);
-        $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
-        $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
-        $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+
+        if ($creationModel === 'm') {
+            $stub = str_replace('{{ modelName }}', $modelName, $stub);
+            $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
+            $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
+            $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+        }
 
         $livewirePath  = 'Http/Livewire/';
         $path          = app_path($livewirePath . $tableName . '.php');
@@ -275,7 +277,7 @@ class CreateCommand extends Command
             return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
         }
 
-        return File::get(__DIR__ . '/../../resources/stubs/table.stub');
+        return File::get(__DIR__ . '/../../resources/stubs/table.collection.stub');
     }
 
     protected function checkTailwindForms(): void

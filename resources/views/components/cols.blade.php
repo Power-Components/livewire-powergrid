@@ -11,7 +11,11 @@
     @if($column->hidden === false)
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
             style="width: max-content;@if($column->sortable)cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
-            <div class="{{ $theme->cols->divClass }}">
+            <div class="{{ $theme->cols->divClass }}"
+                 @if($column->sortable === true)
+                 wire:click="sortBy('{{ $column->tableWithColumn != '' ? $column->tableWithColumn : ($column->dataField !='' ? $column->dataField : $column->field) }}')"
+                @endif
+            >
                 @if($column->sortable === true)
                     <span class="text-base pr-2" style="font-size: 1rem !important;">
 						@if ($sortField !== $column->tableWithColumn)
@@ -23,13 +27,7 @@
                         @endif
 					</span>
                 @endif
-                <span
-                    @if($column->sortable === true)
-                    wire:click="sortBy('{{ $column->tableWithColumn != '' ? $column->tableWithColumn : ($column->dataField !='' ? $column->dataField : $column->field) }}')"
-                    @endif
-                >
-                    {{$column->title}}
-                </span>
+                {{ $column->title }}
             </div>
         </th>
     @endif

@@ -146,9 +146,4 @@ class {{ componentName }} extends PowerGridComponent
     }
     */
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
 }

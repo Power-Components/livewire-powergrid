@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as BaseCollection;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -20,8 +21,9 @@ trait Exportable
 
     /**
      * @throws \Exception
+     * @return Collection|BaseCollection
      */
-    public function prepareToExport(bool $selected = false): Collection
+    public function prepareToExport(bool $selected = false)
     {
         $inClause = $this->filtered;
 

@@ -375,27 +375,25 @@ class PowerGridComponent extends Component
 
     /**
      * @param mixed $results
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return BaseCollection|\Illuminate\Database\Eloquent\Collection
      */
-    private function transform($results): \Illuminate\Database\Eloquent\Collection
+    private function transform($results)
     {
-        if (is_a((object) $this->addColumns(), PowerGridCollection::class)
-            || is_a((object) $this->addColumns(), PowerGridEloquent::class)
-        ) {
-            return $results->transform(function ($row) {
-                $row = (object) $row;
-                if (!is_null($this->addColumns())) {
-                    $columns = $this->addColumns()->columns;
-                    foreach ($columns as $key => $column) {
-                        $row->{$key} = $column($row);
-                    }
-                }
-
-                return $row;
-            });
+        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
+            return $results;
         }
 
-        return $results;
+        return $results->transform(function ($row) {
+            $row = (object) $row;
+            if (!is_null($this->addColumns())) {
+                $columns = $this->addColumns()->columns;
+                foreach ($columns as $key => $column) {
+                    $row->{$key} = $column($row);
+                }
+            }
+
+            return $row;
+        });
     }
 
     public function updatedPage(): void
