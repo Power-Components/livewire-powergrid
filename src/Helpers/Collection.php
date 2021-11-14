@@ -71,9 +71,9 @@ class Collection implements CollectionFilterInterface
     /**
      * @param BaseCollection $results
      * @param int $pageSize
-     * @return LengthAwarePaginator
+     * @return mixed|LengthAwarePaginator
      */
-    public static function paginate(BaseCollection $results, $pageSize): LengthAwarePaginator
+    public static function paginate(BaseCollection $results, int $pageSize)
     {
         $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
         $page     = Paginator::resolveCurrentPage('page');
@@ -95,6 +95,7 @@ class Collection implements CollectionFilterInterface
      * @param int $currentPage
      * @param array $options
      * @return LengthAwarePaginator
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected static function paginator($items, $total, $perPage, $currentPage, $options): LengthAwarePaginator
     {

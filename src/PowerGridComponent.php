@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
-use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection as BaseCollection;
@@ -316,15 +316,7 @@ class PowerGridComponent extends Component
      */
     public function fillData()
     {
-        if (cache()->has($this->id)) {
-            $datasource = collect(cache()->get($this->id))->toArray();
-        } else {
-            if ($this->datasource) {
-                $datasource = $this->datasource();
-            } else {
-                $datasource = $this->datasource;
-            }
-        }
+        $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         $this->isCollection = is_a((object) $datasource, BaseCollection::class);
 

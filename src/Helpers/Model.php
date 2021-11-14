@@ -17,6 +17,9 @@ class Model implements ModelFilterInterface
 
     private string $search;
 
+    /**
+     * @var array $relationSearch
+     */
     private array $relationSearch;
 
     private array $filters;
@@ -252,25 +255,27 @@ class Model implements ModelFilterInterface
 
     public function filterContains(): Model
     {
-        if ($this->search != '') {
-            $this->query = $this->query->where(function (Builder $query) {
-                $table = $query->getModel()->getTable();
+        if (empty($this->search)) {
+            return $this;
+        }
 
-                /** @var Column $column */
-                foreach ($this->columns as $column) {
-                    $hasColumn = Schema::hasColumn($table, $column->field);
+        $this->query = $this->query->where(function (Builder $query) {
+            $table = $query->getModel()->getTable();
 
-                    if ($column->searchable && $hasColumn) {
-                        $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
-                    }
+            /** @var Column $column */
+            foreach ($this->columns as $column) {
+                $hasColumn = Schema::hasColumn($table, $column->field);
+
+                if ($column->searchable && $hasColumn) {
+                    $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
                 }
-
-                return $query;
-            });
-
-            if (count($this->relationSearch)) {
-                $this->filterRelation();
             }
+
+            return $query;
+        });
+
+        if (count($this->relationSearch)) {
+            $this->filterRelation();
         }
 
         return $this;

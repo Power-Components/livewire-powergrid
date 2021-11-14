@@ -23,10 +23,11 @@ class Export
     }
 
     /**
-    * @param array<Column> $columns
-    * @param Collection $data
-    */
-    public function setData(array $columns, $data): Export
+     * @param array<Column> $columns
+     * @param Collection $data
+     * @return Export
+     */
+    public function setData(array $columns, Collection $data): Export
     {
         $this->columns    = $columns;
         $this->data       = collect($data->toArray());
@@ -47,7 +48,9 @@ class Export
 
         $data   = $data->map(function ($row) use ($columns, $header) {
             $item = collect();
+
             collect($columns)->each(function ($column) use ($row, $header, $item) {
+                /** @var Column $column */
                 if (!$column->hidden && $column->visibleInExport) {
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {

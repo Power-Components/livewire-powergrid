@@ -7,25 +7,21 @@ use Illuminate\Support\Collection as BaseCollection;
 
 final class PowerGridEloquent
 {
-    protected ?BaseCollection $collection;
+    protected BaseCollection $collection;
 
     public array $columns = [];
 
-    /**
-     * @param BaseCollection|null $collection
-     */
-    public function __construct($collection)
+    public function __construct()
     {
-        $this->collection = $collection;
+        $this->collection = collect();
     }
 
     /**
-     * @param BaseCollection|null $collection
      * @return static
      */
-    public static function eloquent(?BaseCollection $collection): static
+    public static function eloquent(): PowerGridEloquent
     {
-        return new static($collection);
+        return new PowerGridEloquent();
     }
 
     /**

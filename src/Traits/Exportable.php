@@ -71,7 +71,8 @@ trait Exportable
     }
 
     /**
-     * @throws \Throwable
+     * @throws \Exception | \Throwable
+     * @return BinaryFileResponse | bool
      */
     public function exportToCsv(bool $selected = false)
     {
@@ -80,7 +81,7 @@ trait Exportable
         }
 
         if (count($this->checkboxValues) === 0 && $selected) {
-            return;
+            return false;
         }
 
         return (new ExportToCsv())
