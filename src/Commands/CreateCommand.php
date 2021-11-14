@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\{File, Log, Schema};
 use Illuminate\Support\{Arr, Str};
-use Illuminate\Database\Eloquent\Model;
 use PowerComponents\LivewirePowerGrid\Helpers\InteractsWithVersions;
 
 class CreateCommand extends Command
@@ -36,7 +36,6 @@ class CreateCommand extends Command
             } catch (Exception $e) {
                 Log::debug($e->getMessage());
             }
-
         }
 
         $fillable        = false;
