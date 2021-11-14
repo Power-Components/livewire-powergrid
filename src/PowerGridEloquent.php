@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
 
@@ -26,10 +27,10 @@ final class PowerGridEloquent
 
     /**
      * @param string $field
-     * @param \Closure|null $closure
+     * @param Closure|null $closure
      * @return $this
      */
-    public function addColumn(string $field, \Closure $closure = null): PowerGridEloquent
+    public function addColumn(string $field, Closure $closure = null): PowerGridEloquent
     {
         $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
 

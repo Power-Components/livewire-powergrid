@@ -2,20 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
 
 class PowerGridManager
 {
-    /** @param Collection|null $collection */
-    public function eloquent($collection = null): PowerGridEloquent
+    public function eloquent(): PowerGridEloquent
     {
-        return new PowerGridEloquent($collection);
-    }
-
-    public function collection(): PowerGridCollection
-    {
-        return new PowerGridCollection();
+        return new PowerGridEloquent();
     }
 
     /**

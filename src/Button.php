@@ -43,7 +43,7 @@ final class Button
      */
     public static function add(string $action = ''): Button
     {
-        return new static($action);
+        return new Button($action);
     }
 
     /**

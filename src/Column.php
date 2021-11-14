@@ -57,7 +57,7 @@ final class Column
      */
     public static function add(): self
     {
-        return new static();
+        return new Column();
     }
 
     /**

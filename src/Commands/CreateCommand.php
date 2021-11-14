@@ -4,8 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\{File, Schema};
+use Illuminate\Support\Facades\{File, Log, Schema};
 use Illuminate\Support\{Arr, Str};
+use Illuminate\Database\Eloquent\Model;
 use PowerComponents\LivewirePowerGrid\Helpers\InteractsWithVersions;
 
 class CreateCommand extends Command
@@ -15,18 +16,27 @@ class CreateCommand extends Command
 
     protected $description = 'Make a new PowerGrid table component.';
 
+    /**
+     * @throws Exception
+     */
     public function handle(): void
     {
         if (config('livewire-powergrid.check_version') === true) {
             $ensureLatestVersion = new InteractsWithVersions();
-            $current             = $ensureLatestVersion->ensureLatestVersion();
 
-            if (isset($current['version'])) {
-                if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
-                    $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
-                    $this->info(" Released Date: <comment>{$current['release']}</comment>");
+            try {
+                $current             = $ensureLatestVersion->ensureLatestVersion();
+
+                if (isset($current['version'])) {
+                    if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
+                        $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
+                        $this->info(" Released Date: <comment>{$current['release']}</comment>");
+                    }
                 }
+            } catch (Exception $e) {
+                Log::debug($e->getMessage());
             }
+
         }
 
         $fillable        = false;
@@ -75,7 +85,7 @@ class CreateCommand extends Command
         if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
             $fillable   = true;
         }
-        
+
         $modelNameArr = [];
 
         preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
@@ -86,11 +96,11 @@ class CreateCommand extends Command
 
         $modelNameArr  = explode('\\', $modelName);
         $modelLastName = Arr::last($modelNameArr);
-        
+
         if (empty($modelName)) {
             $this->error('Could not create, Model path is missing');
         }
-        
+
         if (count($modelNameArr) === 1) {
             $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
 
@@ -123,7 +133,7 @@ class CreateCommand extends Command
             array_splice($matches, 2);
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
-        
+
         if (!is_string($componentName)) {
             throw new \Exception('Could not parse component name');
         }
@@ -181,11 +191,14 @@ class CreateCommand extends Command
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function createFromFillable(string $modelName, string $modelLastName): string
     {
         $model = new $modelName();
 
-        if ($model instanceof \Illuminate\Database\Eloquent\Model === false) {
+        if ($model instanceof Model === false) {
             throw new \Exception('Invalid model given.');
         }
 
