@@ -11,6 +11,7 @@
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
+                    :currentTable="$currentTable"
                     :theme="$theme"
                     :sortField="$sortField"
                     :sortDirection="$sortDirection"

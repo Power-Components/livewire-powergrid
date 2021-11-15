@@ -91,9 +91,10 @@ final class Column
      *
      * @return $this
      */
-    public function searchable(): Column
+    public function searchable(string $tableWithColumn = ''): Column
     {
-        $this->searchable = true;
+        $this->searchable       = true;
+        $this->tableWithColumn  = $tableWithColumn;
 
         return $this;
     }

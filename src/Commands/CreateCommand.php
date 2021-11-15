@@ -71,6 +71,8 @@ class CreateCommand extends Command
 
         $stub = $this->getStubs($creationModel);
 
+        $modelName      = '';
+        $modelLastName  = '';
         if (strtolower($creationModel) === 'm') {
             $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 

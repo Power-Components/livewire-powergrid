@@ -7,7 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -48,7 +48,9 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
-    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder */
+    public string $currentTable = '';
+
+    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
 
     /**
@@ -344,6 +346,14 @@ class PowerGridComponent extends Component
             return $results;
         }
 
+        $this->currentTable = $datasource->getModel()->getTable();
+
+        if (Str::of($this->sortField)->contains($this->currentTable)) {
+            $sortField = "$this->currentTable.$this->sortField";
+        } else {
+            $sortField = "$this->sortField";
+        }
+
         /** @var Builder $results */
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
@@ -357,10 +367,10 @@ class PowerGridComponent extends Component
             });
 
         if ($this->withSortStringNumber) {
-            $results->orderByRaw("$this->sortField+0 $this->sortDirection");
+            $results->orderByRaw("$sortField+0 $this->sortDirection");
         }
 
-        $results = $results->orderBy($this->sortField, $this->sortDirection);
+        $results = $results->orderBy($sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);

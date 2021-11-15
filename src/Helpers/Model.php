@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
 class Model implements ModelFilterInterface
@@ -136,10 +135,15 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param string $value
+     * @param string|array $value
      */
-    public function filterInputText(Builder $query, string $field, string $value): void
+    public function filterInputText(Builder $query, string $field, $value): void
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
         switch ($textFieldOperator) {
@@ -173,10 +177,15 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param string $value
+     * @param string|array $value
      */
-    public function filterBoolean(Builder $query, string $field, string $value): void
+    public function filterBoolean(Builder $query, string $field, $value): void
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         /** @var Builder $query */
         if ($value != 'all') {
             $value = ($value == 'true');
@@ -187,10 +196,15 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param string $value
+     * @param string|array $value
      */
-    public function filterSelect(Builder $query, string $field, string $value): void
+    public function filterSelect(Builder $query, string $field, $value): void
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         /** @var Builder $query */
         if (filled($value)) {
             $query->where($field, $value);
@@ -200,9 +214,9 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param array $value
+     * @param string|array $value
      */
-    public function filterMultiSelect(Builder $query, string $field, array $value): void
+    public function filterMultiSelect(Builder $query, string $field, $value): void
     {
         $empty  = false;
 
@@ -262,12 +276,19 @@ class Model implements ModelFilterInterface
         $this->query = $this->query->where(function (Builder $query) {
             $table = $query->getModel()->getTable();
 
-            /** @var Column $column */
             foreach ($this->columns as $column) {
-                $hasColumn = Schema::hasColumn($table, $column->field);
+                if ($column->searchable) {
+                    if (filled($column->tableWithColumn)) {
+                        $query->orWhere($column->tableWithColumn, 'like', '%' . $this->search . '%');
+                    }
 
-                if ($column->searchable && $hasColumn) {
-                    $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
+                    if (blank($column->tableWithColumn)) {
+                        $hasColumn = Schema::hasColumn($table, $column->field);
+
+                        if ($hasColumn) {
+                            $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
+                        }
+                    }
                 }
             }
 

@@ -54,7 +54,18 @@ trait Filter
     public function eventChangeDatePiker(array $data): void
     {
         $input                                   = explode('.', $data['values']);
-        $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+
+        if (count($input) === 3) {
+            $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+        } else {
+            if (count($input) === 4) {
+                $this->filters['date_picker'][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            } else {
+                if (count($input) === 5) {
+                    $this->filters['date_picker'][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+                }
+            }
+        }
 
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
@@ -140,8 +151,6 @@ trait Filter
      */
     public function filterInputText(string $field, string $value, string $label): void
     {
-        $this->filters['input_text'][$field] = $value;
-
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 
