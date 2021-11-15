@@ -1,7 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesCollectionTable;
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesCollectionTable, DishesTable};
 
 it('properly filters by bool true')
     ->livewire(DishesTable::class)
@@ -24,7 +23,6 @@ it('properly filters by bool true')
     ->assertSee('Barco-Sushi Simples')
     ->assertSee('Polpetone Filé Mignon')
     ->assertSee('борщ');
-
 
 it('properly filters by bool true - using collection')
     ->livewire(DishesCollectionTable::class)
@@ -93,7 +91,6 @@ it('properly filters by bool "all"')
     ->assertSee('Barco-Sushi Simples')
     ->assertSee('Polpetone Filé Mignon')
     ->assertSee('борщ');
-
 
 it('properly filters by bool "all" - using collection')
     ->livewire(DishesCollectionTable::class)

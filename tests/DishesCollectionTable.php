@@ -42,9 +42,9 @@ class DishesCollectionTable extends PowerGridComponent
                 'created_at' => '2021-04-04 00:00:00',
             ],
             [
-                'id'    => 5,
-                'name'  => 'Name 5',
-                'price' => 1.98,
+                'id'         => 5,
+                'name'       => 'Name 5',
+                'price'      => 1.98,
                 'in_stock'   => false,
                 'created_at' => '2021-05-05 00:00:00',
             ],

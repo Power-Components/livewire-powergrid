@@ -1,7 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesCollectionTable;
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesCollectionTable, DishesTable};
 
 it('properly filters by "min"')
     ->livewire(DishesTable::class)
@@ -80,7 +79,6 @@ it('displays "No records found" with non-existent min')
     ->set('filters', filterNumber('id', '1000000', null, '', ''))
     ->assertSee('No records found')
     ->assertDontSee('Pastel de Nata');
-
 
 it('displays "No records found" with non-existent min - using collection')
     ->livewire(DishesTable::class)
