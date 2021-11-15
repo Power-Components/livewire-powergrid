@@ -4,7 +4,7 @@
     'multiSelect' => null,
     'column' => null
 ])
-<div wire:ignore>
+<div wire:ignore x-cloak>
     <div x-data="dropdown('{{ $column->field }}', '{{ $multiSelect['data_field'] }}')"
          x-init="loadOptions()">
         <input name="values" type="hidden" readonly x-bind:value="selectedValues()">

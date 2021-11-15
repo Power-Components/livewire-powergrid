@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -46,6 +46,8 @@ class PowerGridComponent extends Component
     protected string $paginationTheme = 'tailwind';
 
     protected ThemeBase $powerGridTheme;
+
+    public string $currentTable = '';
 
     public $datasource;
 
@@ -331,6 +333,14 @@ class PowerGridComponent extends Component
             return $results;
         }
 
+        $this->currentTable = $datasource->getModel()->getTable();
+
+        if (Str::of($this->sortField)->contains($this->currentTable)) {
+            $sortField = "$this->currentTable.$this->sortField";
+        } else {
+            $sortField = "$this->sortField";
+        }
+
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
                 Model::query($query)
@@ -343,10 +353,10 @@ class PowerGridComponent extends Component
             });
 
         if ($this->withSortStringNumber) {
-            $results->orderByRaw("$this->sortField+0 $this->sortDirection");
+            $results->orderByRaw("$sortField+0 $this->sortDirection");
         }
 
-        $results = $results->orderBy($this->sortField, $this->sortDirection);
+        $results = $results->orderBy($sortField, $this->sortDirection);
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);

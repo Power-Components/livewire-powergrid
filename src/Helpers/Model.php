@@ -249,10 +249,18 @@ class Model implements FilterInterface
                 $table = $query->getModel()->getTable();
 
                 foreach ($this->columns as $column) {
-                    $hasColumn = Schema::hasColumn($table, $column->field);
+                    if ($column->searchable) {
+                        if (filled($column->tableWithColumn)) {
+                            $query->orWhere($column->tableWithColumn, 'like', '%' . $this->search . '%');
+                        }
 
-                    if ($column->searchable && $hasColumn) {
-                        $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
+                        if (blank($column->tableWithColumn)) {
+                            $hasColumn = Schema::hasColumn($table, $column->field);
+
+                            if ($hasColumn) {
+                                $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
+                            }
+                        }
                     }
                 }
 
