@@ -1,5 +1,6 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesCollectionTable;
 use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
 it('properly filters by bool true')
@@ -24,6 +25,24 @@ it('properly filters by bool true')
     ->assertSee('Polpetone Filé Mignon')
     ->assertSee('борщ');
 
+
+it('properly filters by bool true - using collection')
+    ->livewire(DishesCollectionTable::class)
+    ->assertSee('In Stock')
+    ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
+    ->set('filters', filterBoolean('in_stock', 'true'))
+    ->assertSee('Name 1')
+    ->assertSee('Name 2')
+    ->assertSee('Name 4')
+    ->assertDontSee('Name 3')
+    ->assertDontSee('Name 5')
+    ->call('clearFilter', 'in_stock')
+    ->assertSee('Name 1')
+    ->assertSee('Name 2')
+    ->assertSee('Name 3')
+    ->assertSee('Name 4')
+    ->assertSee('Name 5');
+
 it('properly filters by bool false')
     ->livewire(DishesTable::class)
     ->set('filters', filterBoolean('in_stock', 'false'))
@@ -44,6 +63,23 @@ it('properly filters by bool false')
     ->assertSee('Bife à Rolê')
     ->assertSee('Francesinha vegana');
 
+it('properly filters by bool false - using collection')
+    ->livewire(DishesCollectionTable::class)
+    ->assertSee('In Stock')
+    ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
+    ->set('filters', filterBoolean('in_stock', 'false'))
+    ->assertSee('Name 3')
+    ->assertSee('Name 5')
+    ->assertDontSee('Name 1')
+    ->assertDontSee('Name 2')
+    ->assertDontSee('Name 4')
+    ->call('clearFilter', 'in_stock')
+    ->assertSee('Name 1')
+    ->assertSee('Name 2')
+    ->assertSee('Name 3')
+    ->assertSee('Name 4')
+    ->assertSee('Name 5');
+
 it('properly filters by bool "all"')
     ->livewire(DishesTable::class)
     ->set('filters', filterBoolean('in_stock', 'all'))
@@ -57,6 +93,16 @@ it('properly filters by bool "all"')
     ->assertSee('Barco-Sushi Simples')
     ->assertSee('Polpetone Filé Mignon')
     ->assertSee('борщ');
+
+
+it('properly filters by bool "all" - using collection')
+    ->livewire(DishesCollectionTable::class)
+    ->set('filters', filterBoolean('in_stock', 'all'))
+    ->assertSee('Name 1')
+    ->assertSee('Name 2')
+    ->assertSee('Name 3')
+    ->assertSee('Name 4')
+    ->assertSee('Name 5');
 
 function filterBoolean(string $field, ?string $value): array
 {
