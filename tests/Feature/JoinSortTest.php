@@ -1,8 +1,8 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesTableWithJoin;
-
 use function Pest\Livewire\livewire;
+
+use PowerComponents\LivewirePowerGrid\Tests\DishesTableWithJoin;
 
 it('properly sorts ASC/DESC with: string join column', function () {
     livewire(DishesTableWithJoin::class)
@@ -15,4 +15,3 @@ it('properly sorts ASC/DESC with: string join column', function () {
         ->set('sortDirection', 'asc')
         ->assertSeeText('Acompanhamentos');
 })->skip();
-
