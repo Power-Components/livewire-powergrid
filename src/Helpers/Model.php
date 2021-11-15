@@ -132,6 +132,11 @@ class Model implements FilterInterface
      */
     public function filterInputText(Builder $query, string $field, $value)
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
         switch ($textFieldOperator) {
