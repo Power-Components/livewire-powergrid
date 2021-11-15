@@ -174,6 +174,11 @@ class Model implements FilterInterface
      */
     public function filterBoolean($query, string $field, $value)
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         /** @var Builder $query */
         if ($value != 'all') {
             $value = ($value == 'true');
@@ -188,6 +193,11 @@ class Model implements FilterInterface
      */
     public function filterSelect($query, string $field, $value)
     {
+        if (is_array($value)) {
+            $field             = $field . '.' . key($value);
+            $value             = $value[key($value)];
+        }
+
         /** @var Builder $query */
         if (filled($value)) {
             $query->where($field, $value);
