@@ -52,7 +52,7 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
-        run: phpstan analyse --ansi --memory-limit=-1
+        run: vendor/bin/phpstan analyse --ansi --memory-limit=-1
 
       - name: Pest tests
         run: vendor/bin/pest
