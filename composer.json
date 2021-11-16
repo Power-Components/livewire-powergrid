@@ -40,14 +40,15 @@
         "friendsofphp/php-cs-fixer": "^3.2"
     },
     "scripts": {
-        "test:types": "phpstan analyse --ansi --memory-limit=-1",
-        "test:tests": "php ./vendor/bin/pest --colors=always",
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "stan": "phpstan analyse --ansi --memory-limit=-1",
+        "pest": "php ./vendor/bin/pest --colors=always",
+        "cs-check": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
         "fix": "./vendor/bin/php-cs-fixer fix",
         "test": [
-            "@test:tests",
-            "@test:types"
-        ],        
+            "@pest",
+            "@stan",
+            "@cs-check"
+        ],
         "check": [
             "@cs-fixer",
             "@test"

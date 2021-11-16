@@ -9,9 +9,9 @@ it('properly sorts ASC/DESC with: string join column', function () {
         ->set('perPage', '10')
         ->call('sortBy', 'dishes.id')
         ->set('sortDirection', 'desc')
-        ->assertSeeText('Sopas')
-        ->assertSeeText('Sobremesas')
+        ->assertSee('Sopas')
+        ->assertSee('Sobremesas')
         ->call('sortBy', 'categories.name')
         ->set('sortDirection', 'asc')
-        ->assertSeeText('Acompanhamentos');
-})->skip();
+        ->assertSee('Acompanhamentos');
+});

@@ -311,7 +311,10 @@ class Model implements ModelFilterInterface
 
             foreach ($relation as $nestedTable => $column) {
                 if (is_array($column)) {
-                    if ($this->query->getRelation($table)->getRelation($nestedTable)) {
+                    /** @var Builder $query */
+                    $query = $this->query->getRelation($table);
+
+                    if ($query->getRelation($nestedTable) != '') {
                         foreach ($column as $nestedColumn) {
                             $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
                                 $query->where($nestedColumn, 'like', '%' . $this->search . '%');

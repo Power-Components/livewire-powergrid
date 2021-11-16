@@ -66,10 +66,13 @@ trait Exportable
             return false;
         }
 
-        return (new ExportToXLS())
+        $exportable = new ExportToXLS();
+
+        $exportable
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected))
-            ->download();
+            ->setData($this->columns(), $this->prepareToExport($selected));
+
+        return $exportable->download();
     }
 
     /**
@@ -86,9 +89,12 @@ trait Exportable
             return false;
         }
 
-        return (new ExportToCsv())
+        $exportable = new ExportToCsv();
+
+        $exportable
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected))
-            ->download();
+            ->setData($this->columns(), $this->prepareToExport($selected));
+
+        return $exportable->download();
     }
 }

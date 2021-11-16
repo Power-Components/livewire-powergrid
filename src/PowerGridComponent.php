@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\{AbstractPaginator, LengthAwarePaginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
@@ -186,7 +186,10 @@ class PowerGridComponent extends Component
      */
     public function render()
     {
-        $this->powerGridTheme = PowerGrid::theme($this->template() ?? powerGridTheme())->apply();
+        /** @var ThemeBase $themeBase */
+        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+
+        $this->powerGridTheme = $themeBase->apply();
 
         $this->columns = collect($this->columns)->map(function ($column) {
             return (object) $column;
@@ -207,11 +210,12 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param LengthAwarePaginator|BaseCollection $data
+     * @param AbstractPaginator|BaseCollection $data
      * @return Application|Factory|View
      */
     private function renderView($data)
     {
+        /** @phpstan-ignore-next-line  */
         return view($this->powerGridTheme->layout->table, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,
@@ -313,11 +317,12 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return LengthAwarePaginator|BaseCollection
+     * @return AbstractPaginator|BaseCollection
      * @throws Exception
      */
     public function fillData()
     {
+        /** @var Builder|BaseCollection|\Illuminate\Database\Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         $this->isCollection = is_a((object) $datasource, BaseCollection::class);
@@ -346,12 +351,13 @@ class PowerGridComponent extends Component
             return $results;
         }
 
+        /** @phpstan-ignore-next-line */
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains($this->currentTable)) {
-            $sortField = "$this->currentTable.$this->sortField";
+        if (Str::of($this->sortField)->contains('.')) {
+            $sortField = $this->sortField;
         } else {
-            $sortField = "$this->sortField";
+            $sortField = $this->currentTable . '.' . $this->sortField;
         }
 
         /** @var Builder $results */

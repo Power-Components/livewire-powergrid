@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class Layout
 {
-    public string $table = '';
+    public ?string $table = '';
 
     public string $header = '';
 
