@@ -14,4 +14,4 @@ it('properly sorts ASC/DESC with: string join column', function () {
         ->call('sortBy', 'categories.name')
         ->set('sortDirection', 'asc')
         ->assertSeeText('Acompanhamentos');
-})->skip();
+});

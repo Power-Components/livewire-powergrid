@@ -335,10 +335,10 @@ class PowerGridComponent extends Component
 
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains($this->currentTable)) {
-            $sortField = "$this->currentTable.$this->sortField";
+        if (Str::of($this->sortField)->contains('.')) {
+            $sortField = $this->sortField;
         } else {
-            $sortField = "$this->sortField";
+            $sortField = $this->currentTable . '.' . $this->sortField;
         }
 
         $results = $this->resolveModel($datasource)
