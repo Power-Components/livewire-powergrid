@@ -269,24 +269,23 @@ class Model implements ModelFilterInterface
 
     public function filterContains(): Model
     {
-        if (empty($this->search)) {
-            return $this;
-        }
+        if ($this->search != '') {
+            $this->query = $this->query->where(function (Builder $query) {
+                /** @var Column $column */
+                $table = $query->getModel()->getTable();
 
-        $this->query = $this->query->where(function (Builder $query) {
-            $table = $query->getModel()->getTable();
+                foreach ($this->columns as $column) {
+                    if ($column->searchable) {
+                        if (filled($column->dataField)) {
+                            $field = $column->dataField;
+                        } else {
+                            $field = $column->field;
+                        }
 
-            foreach ($this->columns as $column) {
-                if ($column->searchable) {
-                    if (filled($column->tableWithColumn)) {
-                        $query->orWhere($column->tableWithColumn, 'like', '%' . $this->search . '%');
-                    }
-
-                    if (blank($column->tableWithColumn)) {
-                        $hasColumn = Schema::hasColumn($table, $column->field);
+                        $hasColumn = Schema::hasColumn($table, $field);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
+                            $query->orWhere($table . '.' . $field, 'like', '%' . $this->search . '%');
                         }
                     }
                 }

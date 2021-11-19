@@ -3,8 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
+
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -41,13 +43,27 @@ trait Exportable
             return $this->transform($this->resolveCollection());
         }
 
+        $model        = $this->resolveModel();
+        $currentTable = $model->getModel()->getTable();
+
+        if (Str::of($this->sortField)->contains('.')) {
+            $sortField = $this->sortField;
+        } else {
+            $sortField = $currentTable . '.' . $this->sortField;
+        }
+
         if ($inClause) {
-            $results = $this->resolveModel()->whereIn($this->primaryKey, $inClause)->get();
+            $results = $this->resolveModel()
+                ->orderBy($sortField, $this->sortDirection)
+                ->whereIn($this->primaryKey, $inClause)
+                ->get();
 
             return $this->transform($results);
         }
 
-        $results = $this->resolveModel()->get();
+        $results = $this->resolveModel()
+            ->orderBy($sortField, $this->sortDirection)
+            ->get();
 
         return $this->transform($results);
     }

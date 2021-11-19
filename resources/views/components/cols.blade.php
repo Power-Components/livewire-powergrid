@@ -6,28 +6,22 @@
     'enabledFilters' => null,
     'actions' => null,
     'dataField' => null,
-    'currentTable' => null,
 ])
 <div>
-
     @if($column->hidden === false)
         @php
-            $tableWithColumn = $column->tableWithColumn;
-
-            if (\Illuminate\Support\Str::of($column->tableWithColumn)->contains($currentTable)) {
-                $tableWithColumn = \Illuminate\Support\Str::replace($currentTable.".", $column->tableWithColumn, '');
+            if (filled($column->dataField)) {
+                $field = $column->dataField;
+            } else {
+                $field = $column->field;
             }
         @endphp
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
-            style="width: max-content;@if($column->sortable)cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
-            <div class="{{ $theme->cols->divClass }}"
-                 @if($column->sortable === true)
-                 wire:click="sortBy('{{ $tableWithColumn != '' ? $tableWithColumn : ($column->dataField !='' ? $column->dataField : $column->field) }}')"
-                @endif
-            >
+            style="width: max-content; @if($column->sortable) cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
+            <div class="{{ $theme->cols->divClass }}" @if($column->sortable === true) wire:click="sortBy('{{ $field }}')"@endif>
                 @if($column->sortable === true)
                     <span class="text-base pr-2" style="font-size: 1rem !important;">
-						@if ($sortField !== $tableWithColumn)
+						@if ($sortField !== $field)
                             &#8597;
                         @elseif ($sortDirection == 'desc')
                             &#8593;
@@ -36,7 +30,9 @@
                         @endif
 					</span>
                 @endif
-                {{ $column->title }}
+                <span>
+                    {{$column->title}}
+                </span>
             </div>
         </th>
     @endif

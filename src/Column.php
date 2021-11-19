@@ -50,8 +50,6 @@ final class Column
      */
     public array $clickToCopy = [];
 
-    public string $tableWithColumn = '';
-
     /**
      * @return self
      */
@@ -91,10 +89,9 @@ final class Column
      *
      * @return $this
      */
-    public function searchable(string $tableWithColumn = ''): Column
+    public function searchable(): Column
     {
         $this->searchable       = true;
-        $this->tableWithColumn  = $tableWithColumn;
 
         return $this;
     }
@@ -104,23 +101,24 @@ final class Column
      *
      * @return $this
      */
-    public function sortable(string $tableWithColumn = ''): Column
+    public function sortable(): Column
     {
         $this->sortable            = true;
-        $this->tableWithColumn     = $tableWithColumn;
 
         return $this;
     }
 
     /**
-     * Field name in the database
+     * Field in the database
      *
      * @param string $field
+     * @param string $dataField
      * @return $this
      */
-    public function field(string $field): Column
+    public function field(string $field, string $dataField = ''): Column
     {
-        $this->field = $field;
+        $this->field     = $field;
+        $this->dataField = $dataField;
 
         return $this;
     }
