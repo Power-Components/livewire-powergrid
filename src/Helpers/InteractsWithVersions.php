@@ -14,7 +14,7 @@ class InteractsWithVersions
     protected static $latestVersionResolver = null;
 
     /**
-     * Warns the user about the latest version of Forge CLI.
+     * Warns the user about the latest version of PowerGrid.
      *
      * @return array
      */

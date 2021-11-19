@@ -265,16 +265,16 @@ class Model implements FilterInterface
 
                 foreach ($this->columns as $column) {
                     if ($column->searchable) {
-                        if (filled($column->tableWithColumn)) {
-                            $query->orWhere($column->tableWithColumn, 'like', '%' . $this->search . '%');
+                        if (filled($column->dataField)) {
+                            $field = $column->dataField;
+                        } else {
+                            $field = $column->field;
                         }
 
-                        if (blank($column->tableWithColumn)) {
-                            $hasColumn = Schema::hasColumn($table, $column->field);
+                        $hasColumn = Schema::hasColumn($table, $field);
 
-                            if ($hasColumn) {
-                                $query->orWhere($table . '.' . $column->field, 'like', '%' . $this->search . '%');
-                            }
+                        if ($hasColumn) {
+                            $query->orWhere($table . '.' . $field, 'like', '%' . $this->search . '%');
                         }
                     }
                 }
