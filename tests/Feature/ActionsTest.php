@@ -44,7 +44,7 @@ it('properly displays fallback on WHEN is TRUE')
     ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":20})')
     ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":21})')
     ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})')
-    ->assertSeeHtml('this is a fallback for #20');
+    ->assertSeeHtml('this is a fallback for #20')->only();
 
 it('disables button on WHENDISABLE is TRUE')
     ->livewire(DishesTable::class)

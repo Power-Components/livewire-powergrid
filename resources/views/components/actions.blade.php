@@ -9,14 +9,19 @@
             <td class="pg-actions {{ $theme->table->tdBodyClass }}"
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
-                    $can  = $action->can;
-                    $when = true;
+                    $can           = $action->can;
+                    $whenFallback  = '';
                     if (filled($action->when)) {
-                         $when = false;
-                         $actionWhen = $action->when;
-                         $when = $actionWhen($row);
-                         unset($actionWhen);
+                         $resultCallable = [];
+                         foreach ($action->when as $key => $when) {
+                             $callableWhen  = data_get($when, 'when');
+                             if (is_callable($callableWhen)) {
+                                 $resultCallable[$key]         = $callableWhen($row);
+                             }
+                         }
+                         echo json_encode($resultCallable);
                      }
+
                      $parameters = [];
                      foreach ($action->param as $param => $value) {
                          if (!empty($row->{$value})) {
@@ -33,17 +38,21 @@
                            class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
                         </a>
+                    @else
+                        {!! $whenFallback !!}
                     @endif
                 @elseif($action->view !== '')
-                    @if($when && $can)
+                    @if($when)
                         <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
                            class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
                         </a>
+                    @else
+                        {!! $whenFallback !!}
                     @endif
                 @else
                     @if(strtolower($action->method) !== ('get'))
-                        @if($when && $can)
+                        @if($when)
                             <form target="{{ $action->target }}"
                                   action="{{ route($action->route, $parameters) }}"
                                   method="{{ $action->method }}">
@@ -54,14 +63,18 @@
                                     {!! $action->caption ?? '' !!}
                                 </button>
                             </form>
+                        @else
+                            {!! $whenFallback !!}
                         @endif
                     @else
-                        @if($when && $can)
+                        @if($when)
                             <a href="{{ route($action->route, $parameters) }}"
                                target="{{ $action->target }}"
                                class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                                 {!! $action->caption !!}
                             </a>
+                        @else
+                            {!! $whenFallback !!}
                         @endif
                     @endif
                 @endif

@@ -24,7 +24,7 @@ class Button
 
     public bool $can = true;
 
-    public $when;
+    public array $when = [];
 
     public $disableWhen;
 
@@ -152,9 +152,11 @@ class Button
      */
     public function when(Closure $closure = null, string $fallback = ''): Button
     {
-        $this->when         = $closure;
-        $this->whenFallback = $fallback;
-        
+        $when['when']         = $closure;
+        $when['whenFallback'] = $fallback;
+
+        $this->when[]         = $when;
+
         return $this;
     }
 
@@ -167,7 +169,7 @@ class Button
     public function disableWhen(Closure $closure = null): Button
     {
         $this->disableWhen         = $closure;
-        
+
         return $this;
     }
 
