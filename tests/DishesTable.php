@@ -166,7 +166,11 @@ class DishesTable extends PowerGridComponent
                     '<div id="edit">Edit</div>'
                 ))
                 ->class('text-center')
-                ->openModal('edit-dish', ['dishId' => 'id']),
+                ->openModal('edit-dish', ['dishId' => 'id'])
+                //->when(fn (Dish $dish) => $dish->id != 20, 'this is a fallback for #20'),
+                //->when(fn (Dish $dish) => $dish->id != 21),
+                ->when(fn (Dish $dish)        => ($dish->id != 20 && $dish->id != 21))
+                ->disableWhen(fn (Dish $dish) => $dish->id == 22),
 
             Button::add('destroy')
                 ->caption(__('Deletar'))

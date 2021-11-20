@@ -26,6 +26,10 @@ class Button
 
     public $when;
 
+    public $disableWhen;
+
+    public string $whenFallback;
+
     public string $target = '_blank';
 
     /**
@@ -140,14 +144,30 @@ class Button
     }
 
     /**
-     * can
+     * Renders the button when closure evaluates true
      * @param Closure|null $closure
+     * @param string $fallback Fallback message
+     *
      * @return $this
      */
-    public function when(Closure $closure = null): Button
+    public function when(Closure $closure = null, string $fallback = ''): Button
     {
-        $this->when = $closure;
+        $this->when         = $closure;
+        $this->whenFallback = $fallback;
+        
+        return $this;
+    }
 
+    /**
+     * Disables the button when closure evaluates true
+     * @param Closure|null $closure
+     *
+     * @return $this
+     */
+    public function disableWhen(Closure $closure = null): Button
+    {
+        $this->disableWhen         = $closure;
+        
         return $this;
     }
 
