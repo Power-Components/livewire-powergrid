@@ -53,7 +53,9 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
-    protected bool $showDefaultMessage = false;
+    public bool $ignoreTablePrefix = false;
+
+    public bool $showDefaultMessage = false;
 
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
@@ -226,7 +228,7 @@ class PowerGridComponent extends Component
 
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains('.')) {
+        if (Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix) {
             $sortField = $this->sortField;
         } else {
             $sortField = $this->currentTable . '.' . $this->sortField;
