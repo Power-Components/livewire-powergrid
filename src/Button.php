@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Closure;
+
 class Button
 {
     public string $action = '';
@@ -21,6 +23,8 @@ class Button
     public string $event = '';
 
     public bool $can = true;
+
+    public $when;
 
     public string $target = '_blank';
 
@@ -124,13 +128,25 @@ class Button
     }
 
     /**
-     * emit
+     * can
      * @param bool $can can
      * @return $this
      */
-    public function can(bool $can): Button
+    public function can(bool $can = true): Button
     {
         $this->can = $can;
+
+        return $this;
+    }
+
+    /**
+     * can
+     * @param Closure|null $closure
+     * @return $this
+     */
+    public function when(Closure $closure = null): Button
+    {
+        $this->when = $closure;
 
         return $this;
     }
