@@ -170,6 +170,7 @@ class DishesTable extends PowerGridComponent
                 ->when(fn (Dish $dish)        => $dish->in_stock == 1, 'Without stock')
                 ->disableWhen(fn (Dish $dish) => $dish->id === 5),
 
+
             Button::add('destroy')
                 ->caption(__('Delete'))
                 ->class('text-center')

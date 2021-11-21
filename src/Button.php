@@ -144,13 +144,11 @@ class Button
     }
 
     /**
-     * Renders the button when closure evaluates true
+     * can
      * @param Closure|null $closure
-     * @param string $fallback Fallback message
-     *
      * @return $this
      */
-    public function when(Closure $closure = null, string $fallback = ''): Button
+    public function when(Closure $closure = null): Button
     {
         $this->when         = $closure;
         $this->whenFallback = $fallback;
