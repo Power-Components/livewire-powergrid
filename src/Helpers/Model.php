@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
 class Model implements ModelFilterInterface
@@ -36,8 +37,7 @@ class Model implements ModelFilterInterface
      */
     public static function query($query): Model
     {
-        /** @phpstan-ignore-next-line  */
-        return new static($query);
+        return new Model($query);
     }
 
     public function setColumns(array $columns): Model
@@ -107,20 +107,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * Validate if the given value is valid as an Input Option
-     *
-     * @param string $field Field to be checked
-     * @return bool
-     */
-    private function validateInputTextOptions(string $field): bool
-    {
-        return isset($this->filters['input_text_options'][$field]) && in_array(
-            strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-        );
-    }
-
-    /**
      * @param Builder $query
      * @param string $field
      * @param array $value
@@ -137,11 +123,74 @@ class Model implements ModelFilterInterface
      * @param string $field
      * @param string|array $value
      */
+    public function filterMultiSelect(Builder $query, string $field, $value): void
+    {
+        $empty = false;
+
+        /** @var array $values */
+        $values = collect($value)->get('values');
+
+        if (is_array($values) && count($values) === 0) {
+            return;
+        }
+
+        foreach ($values as $value) {
+            if ($value === '') {
+                $empty = true;
+            }
+        }
+        if (!$empty) {
+            $query->whereIn($field, $values);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
+    public function filterSelect(Builder $query, string $field, $value): void
+    {
+        if (is_array($value)) {
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
+        }
+
+        /** @var Builder $query */
+        if (filled($value)) {
+            $query->where($field, $value);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
+    public function filterBoolean(Builder $query, string $field, $value): void
+    {
+        if (is_array($value)) {
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
+        }
+
+        /** @var Builder $query */
+        if ($value != 'all') {
+            $value = ($value == 'true');
+            $query->where($field, '=', $value);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
     public function filterInputText(Builder $query, string $field, $value): void
     {
         if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
         }
 
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
@@ -175,66 +224,17 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param Builder $query
-     * @param string $field
-     * @param string|array $value
+     * Validate if the given value is valid as an Input Option
+     *
+     * @param string $field Field to be checked
+     * @return bool
      */
-    public function filterBoolean(Builder $query, string $field, $value): void
+    private function validateInputTextOptions(string $field): bool
     {
-        if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if ($value != 'all') {
-            $value = ($value == 'true');
-            $query->where($field, '=', $value);
-        }
-    }
-
-    /**
-     * @param Builder $query
-     * @param string $field
-     * @param string|array $value
-     */
-    public function filterSelect(Builder $query, string $field, $value): void
-    {
-        if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if (filled($value)) {
-            $query->where($field, $value);
-        }
-    }
-
-    /**
-     * @param Builder $query
-     * @param string $field
-     * @param string|array $value
-     */
-    public function filterMultiSelect(Builder $query, string $field, $value): void
-    {
-        $empty  = false;
-
-        /** @var array $values */
-        $values = collect($value)->get('values');
-
-        if (is_array($values) && count($values) === 0) {
-            return;
-        }
-
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
-        }
-        if (!$empty) {
-            $query->whereIn($field, $values);
-        }
+        return isset($this->filters['input_text_options'][$field]) && in_array(
+            strtolower($this->filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
@@ -271,9 +271,9 @@ class Model implements ModelFilterInterface
     {
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
-                /** @var Column $column */
                 $table = $query->getModel()->getTable();
 
+                /** @var Column $column */
                 foreach ($this->columns as $column) {
                     if ($column->searchable) {
                         if (filled($column->dataField)) {
@@ -289,13 +289,13 @@ class Model implements ModelFilterInterface
                         }
                     }
                 }
+
+                return $query;
+            });
+
+            if (count($this->relationSearch)) {
+                $this->filterRelation();
             }
-
-            return $query;
-        });
-
-        if (count($this->relationSearch)) {
-            $this->filterRelation();
         }
 
         return $this;

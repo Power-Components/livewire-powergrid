@@ -22,8 +22,10 @@ final class Button
 
     public bool $can = true;
 
+    /** @var mixed $when */
     public $when;
 
+    /** @var mixed $disableWhen */
     public $disableWhen;
 
     public string $whenFallback = '';
@@ -150,7 +152,7 @@ final class Button
     /**
      * can
      * @param Closure|null $closure
-     * @param string|null $fallback
+     * @param string $fallback
      * @return $this
      */
     public function when(Closure $closure = null, string $fallback = ''): Button

@@ -53,9 +53,6 @@ class PowerGridComponent extends Component
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
 
-    /**
-     * @var string[] $listeners
-     */
     public bool $toggleColumns = false;
 
     public array $relationSearch = [];
@@ -64,6 +61,9 @@ class PowerGridComponent extends Component
 
     public bool $showDefaultMessage = false;
 
+    /**
+     * @var string[] $listeners
+     */
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
         'eventInputChanged'    => 'eventInputChanged',
@@ -161,17 +161,13 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-    public function mount($datasource = null)
+    public function mount(): void
     {
         $this->setUp();
 
         $this->columns = $this->columns();
 
-        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
-
         $this->renderFilter();
-
-        $this->datasource = $datasource;
     }
 
     /**
@@ -188,6 +184,10 @@ class PowerGridComponent extends Component
         return $this;
     }
 
+    /**
+     * @return Application|Factory|View
+     * @throws Exception
+     */
     public function render()
     {
         /** @var ThemeBase $themeBase */
