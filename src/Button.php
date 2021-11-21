@@ -30,8 +30,6 @@ class Button
 
     public string $whenFallback = '';
 
-    public string $whenAction = '';
-
     public string $target = '_blank';
 
     /**
@@ -152,11 +150,10 @@ class Button
      *
      * @return $this
      */
-    public function when(Closure $closure = null, string $fallback = '', string $action = 'hidden'): Button
+    public function when(Closure $closure = null, string $fallback = ''): Button
     {
         $this->when         = $closure;
         $this->whenFallback = $fallback;
-        $this->whenAction   = $action;
 
         return $this;
     }
