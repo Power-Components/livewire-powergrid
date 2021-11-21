@@ -15,10 +15,7 @@ class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
-    public function setUp()
-    {
-        $this->sortBy('dishes.id');
-    }
+    public string $sortField = 'dishes.id';
 
     public function datasource(): ?Builder
     {
@@ -27,21 +24,21 @@ class DishesTableWithJoin extends PowerGridComponent
                 $categories->on('dishes.category_id', '=', 'categories.id');
             })
             ->select([
-                'dishes.id as dishes_id',
+                'dishes.id',
                 'dishes.calories',
-                'categories.name as category_name',
+                'categories.name',
             ]);
     }
 
     public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
-            ->addColumn('dishes_id')
+            ->addColumn('dishes.id')
             ->addColumn('calories')
             ->addColumn('category_id', function (Dish $dish) {
                 return $dish->category_id;
             })
-            ->addColumn('category_name');
+            ->addColumn('category.name');
     }
 
     public function columns(): array
@@ -49,9 +46,9 @@ class DishesTableWithJoin extends PowerGridComponent
         return [
             Column::add()
                 ->title(__('ID'))
-                ->field('dishes_id')
+                ->field('dishes.id')
                 ->searchable()
-                ->sortable('dishes_id'),
+                ->sortable('dishes.id'),
 
             Column::add()
                 ->title(__('Calorias'))
@@ -61,7 +58,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Column::add()
                 ->title(__('Categoria'))
-                ->field('category_name')
+                ->field('categories.name')
                 ->makeInputMultiSelect(Category::all(), 'name', 'category_id')
                 ->sortable('categories.name'),
         ];

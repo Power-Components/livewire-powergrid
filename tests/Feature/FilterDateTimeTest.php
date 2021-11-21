@@ -2,7 +2,7 @@
 
 use function Pest\Livewire\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesCollectionTable, DishesTable};
 
 it('properly filter the produced_at field between two dates', function () {
     livewire(DishesTable::class)
@@ -13,6 +13,19 @@ it('properly filter the produced_at field between two dates', function () {
         ->assertDontSeeHtml('Francesinha vegana')
         ->assertSeeHtmlInOrder([
             'wire:model="filters.input_date_picker.produced_at"',
+        ]);
+});
+
+it('properly filter the created_at field between two dates using collection table', function () {
+    livewire(DishesCollectionTable::class)
+        ->set('filters', filterDateTime('created_at', ['2021-01-01 00:00:00', '2021-04-04 00:00:00']))
+        ->assertSeeText('Name 1')
+        ->assertSeeText('Name 2')
+        ->assertSeeText('Name 3')
+        ->assertSeeText('Name 4')
+        ->assertDontSeeHtml('Name 5')
+        ->assertSeeHtmlInOrder([
+            'wire:model="filters.input_date_picker.created_at"',
         ]);
 });
 

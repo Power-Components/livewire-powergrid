@@ -12,7 +12,7 @@ class PowerGridServiceProvider extends ServiceProvider
 {
     private string $packageName = 'livewire-powergrid';
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->commands([CreateCommand::class]);
@@ -26,7 +26,7 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->createDirectives();
     }
 
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(
             __DIR__ . '/../../resources/config/livewire-powergrid.php',
@@ -42,7 +42,7 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(ThemeManager::class, 'theme');
     }
 
-    private function publishViews()
+    private function publishViews(): void
     {
         $this->loadViewsFrom(__DIR__ . '/../../resources/views', $this->packageName);
 
@@ -51,7 +51,7 @@ class PowerGridServiceProvider extends ServiceProvider
         ], $this->packageName . '-views');
     }
 
-    private function publishConfigs()
+    private function publishConfigs(): void
     {
         $this->publishes([
             __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path($this->packageName . '.php'),
@@ -62,7 +62,7 @@ class PowerGridServiceProvider extends ServiceProvider
         ], $this->packageName . '-lang');
     }
 
-    private function createDirectives()
+    private function createDirectives(): void
     {
         Blade::directive('powerGridStyles', function () {
             return "<?php echo view('livewire-powergrid::assets.styles')->render(); ?>";

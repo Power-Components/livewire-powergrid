@@ -79,7 +79,7 @@ class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function getDishes()
+    protected function getDishes(): array
     {
         $dishes = collect([
             [

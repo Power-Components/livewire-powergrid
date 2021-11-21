@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\Cols;
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Table};
 
 class Tailwind extends ThemeBase
 {
@@ -13,7 +13,7 @@ class Tailwind extends ThemeBase
         return 'tailwind';
     }
 
-    public function table(): ?Components\Table
+    public function table(): Table
     {
         return Theme::table('min-w-full divide-y divide-gray-300 border-b dark:bg-gray-600 border-gray-400 ')
             ->thead('bg-gray-200 dark:bg-gray-700')
@@ -24,14 +24,14 @@ class Tailwind extends ThemeBase
             ->tdBody('px-3 py-2 whitespace-nowrap dark:text-gray-200');
     }
 
-    public function footer(): Components\Footer
+    public function footer(): Footer
     {
         return Theme::footer()
             ->view($this->root() . '.footer')
             ->select('block appearance-none bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500  dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
 
-    public function actions(): Components\Actions
+    public function actions(): Actions
     {
         return Theme::actions()
             ->headerBtn('block w-full bg-white-200 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300')
@@ -45,7 +45,7 @@ class Tailwind extends ThemeBase
             ->clearFilter('', '');
     }
 
-    public function editable(): Components\Editable
+    public function editable(): Editable
     {
         return Theme::editable()
             ->view($this->root() . '.editable')
@@ -53,7 +53,7 @@ class Tailwind extends ThemeBase
             ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
 
-    public function checkbox(): Components\Checkbox
+    public function checkbox(): Checkbox
     {
         return Theme::checkbox()
             ->th('px-6 py-3 text-left text-xs font-medium text-gray-500 tracking-wider')
@@ -61,7 +61,7 @@ class Tailwind extends ThemeBase
             ->input('h-4 w-4');
     }
 
-    public function filterBoolean(): Components\FilterBoolean
+    public function filterBoolean(): FilterBoolean
     {
         return Theme::filterBoolean()
             ->input('appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500', 'max-width: 370px')
@@ -70,7 +70,7 @@ class Tailwind extends ThemeBase
             ->divInline('');
     }
 
-    public function filterDatePicker(): Components\FilterDatePicker
+    public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
             ->input('appearance-none flatpickr flatpickr-input block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
@@ -78,7 +78,7 @@ class Tailwind extends ThemeBase
             ->divInline('');
     }
 
-    public function filterMultiSelect(): Components\FilterMultiSelect
+    public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
             ->view($this->root() . '.multi-select')
@@ -87,7 +87,7 @@ class Tailwind extends ThemeBase
             ->divInline('pr-6');
     }
 
-    public function filterNumber(): Components\FilterNumber
+    public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
             ->input('appearance-none block bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
@@ -95,7 +95,7 @@ class Tailwind extends ThemeBase
             ->divInline('pr-6');
     }
 
-    public function filterSelect(): Components\FilterSelect
+    public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
             ->input('appearance-none block mt-1 mb-1 bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
@@ -104,7 +104,7 @@ class Tailwind extends ThemeBase
             ->divInline('pr-6');
     }
 
-    public function filterInputText(): Components\FilterInputText
+    public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
             ->select('appearance-none block bg-white-200 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500', 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700')

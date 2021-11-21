@@ -3,11 +3,14 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
-use Illuminate\Support\Str;
+
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * @property Batch exportBatch
+ * @property ?Batch $exportBatch
  */
 trait Exportable
 {
@@ -18,21 +21,8 @@ trait Exportable
     public array $exportType = [];
 
     /**
-     * @param string $fileName
-     * @param array|string[] $type
-     * @return Exportable
-     */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'])
-    {
-        $this->exportOption   = true;
-        $this->exportFileName = $fileName;
-        $this->exportType     = $type;
-
-        return $this;
-    }
-
-    /**
      * @throws \Exception
+     * @return Collection|BaseCollection
      */
     public function prepareToExport(bool $selected = false)
     {
@@ -78,8 +68,8 @@ trait Exportable
     }
 
     /**
-     * @throws \Exception
-     * @throws \Throwable
+     * @throws \Exception | \Throwable
+     * @return BinaryFileResponse | bool
      */
     public function exportToXLS(bool $selected = false)
     {
@@ -91,14 +81,18 @@ trait Exportable
             return false;
         }
 
-        return (new ExportToXLS())
+        $exportable = new ExportToXLS();
+
+        $exportable
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected))
-            ->download();
+            ->setData($this->columns(), $this->prepareToExport($selected));
+
+        return $exportable->download();
     }
 
     /**
-     * @throws \Throwable
+     * @throws \Exception | \Throwable
+     * @return BinaryFileResponse | bool
      */
     public function exportToCsv(bool $selected = false)
     {
@@ -107,12 +101,15 @@ trait Exportable
         }
 
         if (count($this->checkboxValues) === 0 && $selected) {
-            return;
+            return false;
         }
 
-        return (new ExportToCsv())
+        $exportable = new ExportToCsv();
+
+        $exportable
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected))
-            ->download();
+            ->setData($this->columns(), $this->prepareToExport($selected));
+
+        return $exportable->download();
     }
 }

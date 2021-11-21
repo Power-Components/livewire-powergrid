@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\{HtmlString, Str};
+use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
@@ -161,15 +161,17 @@ class DishesTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-            Button::add('edit')
+            Button::add('edit-stock')
                 ->caption(new HtmlString(
                     '<div id="edit">Edit</div>'
                 ))
                 ->class('text-center')
-                ->openModal('edit-dish', ['dishId' => 'id']),
+                ->openModal('edit-stock', ['dishId' => 'id'])
+                ->when(fn (Dish $dish)        => $dish->in_stock == 1, 'Without stock')
+                ->disableWhen(fn (Dish $dish) => $dish->id === 5),
 
             Button::add('destroy')
-                ->caption(__('Deletar'))
+                ->caption(__('Delete'))
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),

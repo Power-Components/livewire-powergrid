@@ -4,11 +4,12 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Services\Contracts\FilterInterface;
+use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
-class Model implements FilterInterface
+class Model implements ModelFilterInterface
 {
     private Builder $query;
 
@@ -16,21 +17,27 @@ class Model implements FilterInterface
 
     private string $search;
 
+    /**
+     * @var array $relationSearch
+     */
     private array $relationSearch;
 
     private array $filters;
 
     /**
-     * Model constructor.
+     * @param mixed $query
      */
     public function __construct($query)
     {
         $this->query = $query;
     }
 
+    /**
+     * @param Builder | BaseCollection $query
+     */
     public static function query($query): Model
     {
-        return new static($query);
+        return new Model($query);
     }
 
     public function setColumns(array $columns): Model
@@ -100,25 +107,11 @@ class Model implements FilterInterface
     }
 
     /**
-     * Validate if the given value is valid as an Input Option
-     *
-     * @param string $field Field to be checked
-     * @return bool
-     */
-    private function validateInputTextOptions(string $field): bool
-    {
-        return isset($this->filters['input_text_options'][$field]) && in_array(
-            strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
-        );
-    }
-
-    /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param array $value
      */
-    public function filterDatePicker($query, string $field, $value)
+    public function filterDatePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
@@ -128,13 +121,76 @@ class Model implements FilterInterface
     /**
      * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string|array $value
      */
-    public function filterInputText(Builder $query, string $field, $value)
+    public function filterMultiSelect(Builder $query, string $field, $value): void
+    {
+        $empty = false;
+
+        /** @var array $values */
+        $values = collect($value)->get('values');
+
+        if (is_array($values) && count($values) === 0) {
+            return;
+        }
+
+        foreach ($values as $value) {
+            if ($value === '') {
+                $empty = true;
+            }
+        }
+        if (!$empty) {
+            $query->whereIn($field, $values);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
+    public function filterSelect(Builder $query, string $field, $value): void
     {
         if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
+        }
+
+        /** @var Builder $query */
+        if (filled($value)) {
+            $query->where($field, $value);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
+    public function filterBoolean(Builder $query, string $field, $value): void
+    {
+        if (is_array($value)) {
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
+        }
+
+        /** @var Builder $query */
+        if ($value != 'all') {
+            $value = ($value == 'true');
+            $query->where($field, '=', $value);
+        }
+    }
+
+    /**
+     * @param Builder $query
+     * @param string $field
+     * @param string|array $value
+     */
+    public function filterInputText(Builder $query, string $field, $value): void
+    {
+        if (is_array($value)) {
+            $field = $field . '.' . key($value);
+            $value = $value[key($value)];
         }
 
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
@@ -168,70 +224,25 @@ class Model implements FilterInterface
     }
 
     /**
-     * @param $query
-     * @param string $field
-     * @param $value
+     * Validate if the given value is valid as an Input Option
+     *
+     * @param string $field Field to be checked
+     * @return bool
      */
-    public function filterBoolean($query, string $field, $value)
+    private function validateInputTextOptions(string $field): bool
     {
-        if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if ($value != 'all') {
-            $value = ($value == 'true');
-            $query->where($field, '=', $value);
-        }
+        return isset($this->filters['input_text_options'][$field]) && in_array(
+            strtolower($this->filters['input_text_options'][$field]),
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+        );
     }
 
     /**
-     * @param $query
+     * @param Builder $query
      * @param string $field
-     * @param $value
+     * @param string[] $value
      */
-    public function filterSelect($query, string $field, $value)
-    {
-        if (is_array($value)) {
-            $field             = $field . '.' . key($value);
-            $value             = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if (filled($value)) {
-            $query->where($field, $value);
-        }
-    }
-
-    /**
-     * @param $query
-     * @param string $field
-     * @param $value
-     */
-    public function filterMultiSelect($query, string $field, $value)
-    {
-        $empty  = false;
-        $values = collect($value)->get('values');
-        if (count($values) === 0) {
-            return;
-        }
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
-        }
-        if (!$empty) {
-            $query->whereIn($field, $values);
-        }
-    }
-
-    /**
-     * @param $collection
-     * @param string $field
-     * @param $value
-     */
-    public function filterNumber($query, string $field, $value)
+    public function filterNumber(Builder $query, string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = str_replace($value['thousands'], '', $value['start']);
@@ -260,9 +271,9 @@ class Model implements FilterInterface
     {
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
-                /** @var Column $column */
                 $table = $query->getModel()->getTable();
 
+                /** @var Column $column */
                 foreach ($this->columns as $column) {
                     if ($column->searchable) {
                         if (filled($column->dataField)) {
@@ -297,21 +308,22 @@ class Model implements FilterInterface
                 return;
             }
 
-            if ($this->query->getRelation($table)) {
-                foreach ($relation as $nestedTable => $column) {
-                    if (is_array($column)) {
-                        if ($this->query->getRelation($table)->getRelation($nestedTable)) {
-                            foreach ($column as $nestedColumn) {
-                                $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                    $query->where($nestedColumn, 'like', '%' . $this->search . '%');
-                                });
-                            }
+            foreach ($relation as $nestedTable => $column) {
+                if (is_array($column)) {
+                    /** @var Builder $query */
+                    $query = $this->query->getRelation($table);
+
+                    if ($query->getRelation($nestedTable) != '') {
+                        foreach ($column as $nestedColumn) {
+                            $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
+                                $query->where($nestedColumn, 'like', '%' . $this->search . '%');
+                            });
                         }
-                    } else {
-                        $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                            $query->where($column, 'like', '%' . $this->search . '%');
-                        });
                     }
+                } else {
+                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
+                        $query->where($column, 'like', '%' . $this->search . '%');
+                    });
                 }
             }
         }

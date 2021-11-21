@@ -1,0 +1,11 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - src
+
+    excludePaths:
+
+    level: 8
+    checkMissingIterableValueType: false

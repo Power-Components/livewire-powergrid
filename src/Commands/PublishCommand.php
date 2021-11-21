@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\File;
 
 class PublishCommand extends Command
 {
@@ -11,10 +12,16 @@ class PublishCommand extends Command
 
     protected $description = 'Publish table stub';
 
-    public function handle()
+    public function handle(): void
     {
         if ($this->option('type') === 'job') {
-            $file = file_get_contents(__DIR__ . '/../Jobs/ExportJob.php');
+            $exportJobFile = __DIR__ . '/../Jobs/ExportJob.php';
+
+            if (File::exists($exportJobFile) === false && File::isReadable($exportJobFile) === true) {
+                throw new \Exception('ExportJob.php not found.');
+            }
+
+            $file = (string) file_get_contents($exportJobFile);
             $stub = str_replace('namespace PowerComponents\\LivewirePowerGrid\\Jobs', 'namespace App\Jobs', $file);
 
             if (!is_dir(app_path('Jobs'))) {

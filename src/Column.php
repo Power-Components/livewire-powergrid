@@ -2,13 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-class Column
+use Illuminate\Support\Collection;
+
+final class Column
 {
     public string $title = '';
-
-    public bool $searchable = false;
-
-    public bool $sortable = false;
 
     public string $field = '';
 
@@ -20,28 +18,44 @@ class Column
 
     public string $bodyStyle = '';
 
-    public bool $hidden = false;
-
-    public bool $visibleInExport = true;
-
-    public array $inputs = [];
-
-    public bool $editable = false;
-
-    public array $toggleable = [];
-
-    public array $clickToCopy = [];
-
     public string $dataField = '';
 
     public string $placeholder = '';
 
+    public bool $hidden = false;
+
+    public bool $visibleInExport = true;
+
+    public bool $editable = false;
+
+    public bool $searchable = false;
+
+    public bool $sortable = false;
+
     /**
-     * @return static
+     *
+     * @var array<int, string> $inputs
      */
-    public static function add()
+    public array $inputs = [];
+
+    /**
+     *
+     * @var array<string, array<int, string>|bool> $toggleable
+     */
+    public array $toggleable = [];
+
+    /**
+     *
+     * @var array<string, bool|string> $clickToCopy
+     */
+    public array $clickToCopy = [];
+
+    /**
+     * @return self
+     */
+    public static function add(): self
     {
-        return new static();
+        return new Column();
     }
 
     /**
@@ -155,13 +169,13 @@ class Column
     }
 
     /**
-     * @param $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
-     * @param array $settings
+     * @param array<string, bool> $settings
      * @return $this
      */
-    public function makeInputSelect($datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
@@ -174,12 +188,13 @@ class Column
     }
 
     /**
-     * @param $datasource
+     * @param Collection $datasource
      * @param string $displayField
      * @param string $dataField
+     * @param array<string, bool> $settings
      * @return $this
      */
-    public function makeInputMultiSelect($datasource, string $displayField, string $dataField): Column
+    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
@@ -192,10 +207,7 @@ class Column
 
     /**
      * @param string $dataField
-     * @param array $settings [
-     * 'only_future' => true,
-     * 'no_weekends' => true
-     * ]
+     * @param array<string, bool> $settings [only_future', 'no_weekends']
      * @param string $classAttr
      * @return Column
      */
@@ -272,11 +284,11 @@ class Column
     }
 
     /**
-     * @param $hasPermission
+     * @param bool $hasPermission
      * @param string $label
      * @return $this
      */
-    public function clickToCopy($hasPermission, string $label = 'copy'): Column
+    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
     {
         $this->clickToCopy = [
             'enabled' => $hasPermission,
@@ -290,7 +302,7 @@ class Column
      * @param string $dataField
      * @param string $trueLabel Label for true
      * @param string $falseLabel Label for false
-     * @param array $settings Settings
+     * @param array<string, string> $settings Settings
      * @return $this
      */
     public function makeBooleanFilter(string $dataField = '', string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
