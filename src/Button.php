@@ -24,11 +24,7 @@ class Button
 
     public bool $can = true;
 
-    public array $when = [];
-
-    public $disableWhen;
-
-    public string $whenFallback;
+    public $when;
 
     public string $target = '_blank';
 
@@ -144,18 +140,13 @@ class Button
     }
 
     /**
-     * Renders the button when closure evaluates true
+     * can
      * @param Closure|null $closure
-     * @param string $fallback Fallback message
-     *
      * @return $this
      */
-    public function when(Closure $closure = null, string $fallback = ''): Button
+    public function when(Closure $closure = null): Button
     {
-        $when['when']         = $closure;
-        $when['whenFallback'] = $fallback;
-
-        $this->when[]         = $when;
+        $this->when = $closure;
 
         return $this;
     }
