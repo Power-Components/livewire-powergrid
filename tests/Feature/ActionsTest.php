@@ -13,12 +13,13 @@ it('updates data')
 
 it('properly displays "openModal" on edit button')
     ->livewire(DishesTable::class)
-    ->set('perPage', 5)
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":6})')
+    ->set('perPage', 6)
+    ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
+    ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":2})')
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
     ->call('setPage', 2)
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":6})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})');
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})');
 
 it('properly displays "deletedEvent" on delete button')
     ->livewire(DishesTable::class)
