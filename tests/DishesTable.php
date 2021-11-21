@@ -161,15 +161,17 @@ class DishesTable extends PowerGridComponent
     public function actions(): array
     {
         return [
-            Button::add('edit')
+            Button::add('edit-stock')
                 ->caption(new HtmlString(
                     '<div id="edit">Edit</div>'
                 ))
                 ->class('text-center')
-                ->openModal('edit-dish', ['dishId' => 'id']),
+                ->openModal('edit-stock', ['dishId' => 'id'])
+                ->when(fn (Dish $dish)        => $dish->in_stock == 1, 'Without stock')
+                ->disableWhen(fn (Dish $dish) => $dish->id === 5),
 
             Button::add('destroy')
-                ->caption(__('Deletar'))
+                ->caption(__('Delete'))
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),

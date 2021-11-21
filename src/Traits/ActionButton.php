@@ -18,12 +18,11 @@ trait ActionButton
     public function initActions()
     {
         $this->actions = collect($this->actions())
-            ->where('can', true)
             ->toArray();
 
         /** @var Button $action */
         foreach ($this->actions as $action) {
-            if (isset($action->route) && $action->can) {
+            if (isset($action->route)) {
                 $this->actionRoutes[$action->action] = $action->route;
             }
         }

@@ -56,6 +56,14 @@ class PowerGridComponent extends Component
     /**
      * @var string[] $listeners
      */
+    public bool $toggleColumns = false;
+
+    public array $relationSearch = [];
+
+    public bool $ignoreTablePrefix = false;
+
+    public bool $showDefaultMessage = false;
+
     protected $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
         'eventInputChanged'    => 'eventInputChanged',
@@ -66,10 +74,6 @@ class PowerGridComponent extends Component
         'editEvent',
         'deleteEvent',
     ];
-
-    public bool $toggleColumns = false;
-
-    public array $relationSearch = [];
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -157,6 +161,19 @@ class PowerGridComponent extends Component
         return $this;
     }
 
+    public function mount($datasource = null)
+    {
+        $this->setUp();
+
+        $this->columns = $this->columns();
+
+        $this->paginationTheme = PowerGrid::theme($this->template() ?? powerGridTheme())::paginationTheme();
+
+        $this->renderFilter();
+
+        $this->datasource = $datasource;
+    }
+
     /**
      * @param int $perPage
      * @return $this
@@ -171,19 +188,6 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-    public function mount(): void
-    {
-        $this->setUp();
-
-        $this->columns = $this->columns();
-
-        $this->renderFilter();
-    }
-
-    /**
-     * @return Application|Factory|View
-     * @throws Exception
-     */
     public function render()
     {
         /** @var ThemeBase $themeBase */
@@ -290,6 +294,16 @@ class PowerGridComponent extends Component
         return false;
     }
 
+    public function checkedValues(): array
+    {
+        return $this->checkboxValues;
+    }
+
+    public function updatedPage(): void
+    {
+        $this->checkboxAll = false;
+    }
+
     /**
      * @param string $status
      * @param string $field
@@ -309,11 +323,6 @@ class PowerGridComponent extends Component
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
-    }
-
-    public function checkedValues(): array
-    {
-        return $this->checkboxValues;
     }
 
     /**
@@ -354,7 +363,7 @@ class PowerGridComponent extends Component
         /** @phpstan-ignore-next-line */
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains('.')) {
+        if (Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix) {
             $sortField = $this->sortField;
         } else {
             $sortField = $this->currentTable . '.' . $this->sortField;
@@ -410,11 +419,6 @@ class PowerGridComponent extends Component
 
             return $row;
         });
-    }
-
-    public function updatedPage(): void
-    {
-        $this->checkboxAll = false;
     }
 
     public function toggleColumn(string $field): void
