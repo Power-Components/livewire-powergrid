@@ -13,12 +13,13 @@ it('updates data')
 
 it('properly displays "openModal" on edit button')
     ->livewire(DishesTable::class)
-    ->set('perPage', 5)
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":6})')
+    ->set('perPage', 6)
+    ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
+    ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":2})')
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
     ->call('setPage', 2)
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":6})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})');
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})');
 
 it('properly displays "deletedEvent" on delete button')
     ->livewire(DishesTable::class)
@@ -40,14 +41,13 @@ it('properly displays "deletedEvent" on delete button')
 
 it('properly displays fallback on WHEN is TRUE')
     ->livewire(DishesTable::class)
-    ->set('perPage', 50)
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":20})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-dish", {"dishId":21})')
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":1})')
-    ->assertSeeHtml('this is a fallback for #20')->only();
+    ->set('perPage', 5)
+    ->assertDontSee('Without stock')
+    ->call('setPage', 2)
+    ->assertSee('Without stock');
 
-it('disables button on WHENDISABLE is TRUE')
+it('properly disable button when id is equals 5')
     ->livewire(DishesTable::class)
-    ->set('perPage', 50)
-    ->assertSeeHtml('$emit("openModal", "edit-dish", {"dishId":22})')
-    ->assertSeeHtml('<btn id="22" disabled');
+    ->set('perPage', 6)
+    ->assertSeeHtmlInOrder(['<a ', 'disabled', 'opacity-50', '</a>'])
+    ->assertDontSeeHtml('$emit("edit-stock", {"dishId":5})');

@@ -9,20 +9,30 @@
             <td class="pg-actions {{ $theme->table->tdBodyClass }}"
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
-                    $can           = $action->can;
+                    $when          = true;
+                    $disableWhen   = false;
                     $whenFallback  = '';
                     if (filled($action->when)) {
-                         $resultCallable = [];
-                         foreach ($action->when as $key => $when) {
-                             $callableWhen  = data_get($when, 'when');
-                             if (is_callable($callableWhen)) {
-                                 $resultCallable[$key]         = $callableWhen($row);
-                             }
+                         $whenFallback  = '';
+                         $when         = false;
+                         $closureWhen  = $action->when;
+                         if (is_callable($closureWhen)) {
+                            $when         = $closureWhen($row);
                          }
-                         echo json_encode($resultCallable);
+
+                         if (!$when) {
+                             $whenFallback = $action->whenFallback;
+                         }
                      }
 
-                     $parameters = [];
+                    if (filled($action->disableWhen)) {
+                         $disableWhen   = false;
+                         $closureWhen  = $action->disableWhen;
+                         if (is_callable($closureWhen)) {
+                            $disableWhen         = $closureWhen($row);
+                         }
+                     }
+
                      foreach ($action->param as $param => $value) {
                          if (!empty($row->{$value})) {
                             $parameters[$param] = $row->{$value};
@@ -32,52 +42,50 @@
                      }
                 @endphp
 
-                @if($action->event !== '')
-                    @if($when)
-                        <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
-                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                @if($when && $action->can)
+                    @if(filled($action->event) || filled($action->view))
+                        <a @if($action->event && !$disableWhen) wire:click='$emit("{{ $action->event }}", @json($parameters))'
+                           @endif
+                           @if($action->view && !$disableWhen) wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
+                           @endif
+                           @if($disableWhen) disabled @endif
+                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }} @if($disableWhen) opacity-50 @endif">
                             {!! $action->caption !!}
                         </a>
-                    @else
-                        {!! $whenFallback !!}
-                    @endif
-                @elseif($action->view !== '')
-                    @if($when)
-                        <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-                           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
-                            {!! $action->caption !!}
-                        </a>
-                    @else
-                        {!! $whenFallback !!}
                     @endif
                 @else
-                    @if(strtolower($action->method) !== ('get'))
+                    <div>{!! $whenFallback !!}</div>
+                @endif
+
+                @if(filled($action->route) && $action->can)
+                    @if(strtolower($action->method) !== 'get')
                         @if($when)
-                            <form target="{{ $action->target }}"
+                            <form @if(!$disableWhen) target="{{ $action->target }}"
                                   action="{{ route($action->route, $parameters) }}"
-                                  method="{{ $action->method }}">
+                                  method="post" @endif>
                                 @method($action->method)
                                 @csrf
-                                <button type="submit"
-                                        class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                                <button @if($disableWhen) disabled @else type="submit" @endif
+                                        class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }} @if($disableWhen) opacity-50 @endif">
                                     {!! $action->caption ?? '' !!}
                                 </button>
                             </form>
                         @else
-                            {!! $whenFallback !!}
+                            <div>{!! $whenFallback !!}</div>
                         @endif
                     @else
-                        @if($when)
-                            <a href="{{ route($action->route, $parameters) }}"
+                        @if($when && $action->can)
+                            <a @if($disableWhen) disabled @else href="{{ route($action->route, $parameters) }}" @endif
                                target="{{ $action->target }}"
-                               class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                               class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }} @if($disableWhen) opacity-50 @endif">
                                 {!! $action->caption !!}
                             </a>
                         @else
-                            {!! $whenFallback !!}
+                            <div>{!! $whenFallback !!}</div>
                         @endif
                     @endif
                 @endif
+
             </td>
         @endforeach
     @endif

@@ -24,11 +24,13 @@ class Button
 
     public bool $can = true;
 
-    public array $when = [];
+    public $when;
 
     public $disableWhen;
 
-    public string $whenFallback;
+    public string $whenFallback = '';
+
+    public string $whenAction = '';
 
     public string $target = '_blank';
 
@@ -150,12 +152,11 @@ class Button
      *
      * @return $this
      */
-    public function when(Closure $closure = null, string $fallback = ''): Button
+    public function when(Closure $closure = null, string $fallback = '', string $action = 'hidden'): Button
     {
-        $when['when']         = $closure;
-        $when['whenFallback'] = $fallback;
-
-        $this->when[]         = $when;
+        $this->when         = $closure;
+        $this->whenFallback = $fallback;
+        $this->whenAction   = $action;
 
         return $this;
     }
