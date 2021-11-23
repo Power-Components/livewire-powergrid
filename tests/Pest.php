@@ -70,3 +70,15 @@ function powergridJoinCategory()
 
     return $component;
 }
+
+function filterInputText(string $text, string $type, $field = 'name'): array
+{
+    return [
+        'input_text' => [
+            $field => $text,
+        ],
+        'input_text_options' => [
+            $field => $type,
+        ],
+    ];
+}

@@ -138,9 +138,6 @@ class Collection implements CollectionFilterInterface
 
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
-                if (!filled($value)) {
-                    continue;
-                }
                 switch ($key) {
                     case 'date_picker':
                         $this->filterDatePicker($field, $value);
@@ -195,7 +192,7 @@ class Collection implements CollectionFilterInterface
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
             strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
         );
     }
 
@@ -250,6 +247,48 @@ class Collection implements CollectionFilterInterface
                 });
 
                 break;
+
+            case 'is_blank':
+                $this->query = $this->query->whereNotNull($field)->where($field, '=', '');
+
+            break;
+
+            case 'is_not_blank':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} != '' || is_null($row->{$field});
+                });
+
+            break;
+
+            case 'is_null':
+                $this->query = $this->query->whereNull($field);
+
+            break;
+
+            case 'is_not_null':
+                $this->query = $this->query->whereNotNull($field);
+
+            break;
+
+            case 'is_empty':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} == '' || is_null($row->{$field});
+                });
+
+            break;
+
+            case 'is_not_empty':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} !== '' && !is_null($row->{$field});
+                });
+
+            break;
         }
     }
 

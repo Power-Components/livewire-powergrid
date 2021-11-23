@@ -24,6 +24,12 @@
                             <option value="is_not">{{ trans('livewire-powergrid::datatable.input_text_options.is_not') }}</option>
                             <option value="starts_with">{{ trans('livewire-powergrid::datatable.input_text_options.starts_with') }}</option>
                             <option value="ends_with">{{ trans('livewire-powergrid::datatable.input_text_options.ends_with') }}</option>
+                            <option value="is_null">{{ trans('livewire-powergrid::datatable.input_text_options.is_null') }}</option>
+                            <option value="is_not_null">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_null') }}</option>
+                            <option value="is_blank">{{ trans('livewire-powergrid::datatable.input_text_options.is_blank') }}</option>
+                            <option value="is_not_blank">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_blank') }}</option>
+                            <option value="is_empty">{{ trans('livewire-powergrid::datatable.input_text_options.is_empty') }}</option>
+                            <option value="is_not_empty">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_empty') }}</option>
                         </select>
                         <div class="{{ $theme->relativeDivClass }}">
                             <x-livewire-powergrid::icons.down class="w-4 h-4"/>
