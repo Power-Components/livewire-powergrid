@@ -12,7 +12,7 @@
        field: '{{ $field }}',
        content: '{{ addslashes($row->{$field}) }}'
     }">
-    <div x-text="content"
+    <div x-html="content"
          style="border-bottom: dotted 1px; cursor: pointer"
          x-show="!editable"
          x-on:dblclick="editable = true"
@@ -22,12 +22,12 @@
         <input
             type="text"
             x-on:dblclick="editable = true"
-            x-on:keydown.enter="sendEventInputChanged($event, id, field); editable = false; content = $event.target.value"
+            x-on:keydown.enter="sendEventInputChanged($event, id, field); editable = false; content = htmlSpecialChars($event.target.value)"
             :class="{'cursor-pointer': !editable}"
             class="{{ $theme->inputClass }} p-2"
             x-ref="editable"
             x-text="content"
-            :value="content">
+            :value="$root.firstElementChild.innerText">
     </div>
 </div>
 
