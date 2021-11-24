@@ -319,13 +319,13 @@ class Collection implements CollectionFilterInterface
 
     /**
      * @param string $field
-     * @param string | null $value
+     * @param string | null | array $value
      * @return void
      */
-    public function filterMultiSelect(string $field, ?string $value): void
+    public function filterMultiSelect(string $field, $value): void
     {
         $empty = false;
-        /** @var array $values */
+        /** @var array|null $values */
         $values = collect($value)->get('values');
         if (is_array($values) && count($values) > 0) {
             foreach ($values as $value) {
