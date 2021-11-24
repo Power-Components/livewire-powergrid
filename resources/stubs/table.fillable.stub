@@ -17,6 +17,8 @@ class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
+    public bool $showUpdateMessages = true;
+
     /*
     |--------------------------------------------------------------------------
     |  Features Setup
