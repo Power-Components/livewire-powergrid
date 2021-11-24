@@ -41,6 +41,13 @@ return [
         'contains_not' => 'Does not contain',
         'starts_with'  => 'Starts with',
         'ends_with'    => 'Ends with',
+        'is_empty'     => 'Is empty',
+        'is_not_empty' => 'Is not empty',
+        'is_null'      => 'Is null',
+        'is_not_null'  => 'Is not null',
+        'is_blank'     => 'Is blank',
+        'is_not_blank' => 'Is not blank',
+
     ],
     'export' => [
         'exporting' => 'Please wait!',

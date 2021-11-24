@@ -58,6 +58,7 @@ class DishesTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('storage_room')
+            ->addColumn('chef_name')
             ->addColumn('calories')
             ->addColumn('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
@@ -115,6 +116,16 @@ class DishesTable extends PowerGridComponent
                 ->clickToCopy(true)
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
+                ->sortable(),
+
+            Column::add()
+                ->title(__('Chef'))
+                ->field('chef_name')
+                ->searchable()
+                ->editOnClick($canEdit)
+                ->clickToCopy(true)
+                ->makeInputText('chef_name')
+                ->placeholder('Chef placeholder')
                 ->sortable(),
 
             Column::add()
