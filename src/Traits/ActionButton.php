@@ -18,6 +18,7 @@ trait ActionButton
     public function initActions()
     {
         $this->actions = collect($this->actions())
+            ->where('can', true)
             ->toArray();
 
         /** @var Button $action */

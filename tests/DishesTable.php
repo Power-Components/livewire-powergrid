@@ -166,9 +166,7 @@ class DishesTable extends PowerGridComponent
                     '<div id="edit">Edit</div>'
                 ))
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id'])
-                ->when(fn (Dish $dish)        => $dish->in_stock == 1, 'Without stock')
-                ->disableWhen(fn (Dish $dish) => $dish->id === 5),
+                ->openModal('edit-stock', ['dishId' => 'id']),
 
             Button::add('destroy')
                 ->caption(__('Delete'))
@@ -188,7 +186,7 @@ class DishesTable extends PowerGridComponent
             $updated = false;
         }
 
-        return true;
+        return $updated;
     }
 
     public function updateMessages(string $status, string $field = '_default_message'): string

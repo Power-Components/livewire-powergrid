@@ -16,7 +16,7 @@ it('properly displays "openModal" on edit button')
     ->set('perPage', 6)
     ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
     ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":2})')
-    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
+    ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":7})')
     ->call('setPage', 2)
     ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
     ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})');
