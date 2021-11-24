@@ -3,7 +3,8 @@
     'checkbox' => null,
     'columns' => null,
     'actions' => null,
-    'theme' => null
+    'theme' => null,
+    'enabledFilters' => null,
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
@@ -62,6 +63,7 @@
                                 @if(data_get($inputText, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.input-text
                                         :inputText="$inputText"
+                                        :enabledFilters="$enabledFilters"
                                         :column="$column"
                                         :inline="true"
                                         :theme="$theme->filterInputText"/>
