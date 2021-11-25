@@ -2,17 +2,18 @@ name: Powergrid Tests
 
 on:
   push:
-    branches:
-      - main
+  branches:
+    - main
+    - dev
 
   pull_request:
     types: [ ready_for_review, synchronize, opened ]
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-     
+
     services:
       mysql:
         image: mysql:5.7
@@ -32,7 +33,7 @@ jobs:
         ports:
         - 5433:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    
+
     strategy:
       matrix:
         php: [ 7.4, 8.0 ]
@@ -71,11 +72,11 @@ jobs:
 
       - name: Cs Fixer
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
-   
+
       - name: Testing with SQLite
         run: |
           ./vendor/bin/pest --configuration phpunit.sqlite.xml
-          
+
       - name: Testing with MySQL
         run: |
             ./vendor/bin/pest --configuration phpunit.mysql.xml
