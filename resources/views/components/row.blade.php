@@ -2,7 +2,8 @@
     'theme' => null,
     'row' => null,
     'primaryKey' => null,
-    'columns' => null
+    'columns' => null,
+    'currentTable' => null,
 ])
 <div>
     @foreach($columns as $column)

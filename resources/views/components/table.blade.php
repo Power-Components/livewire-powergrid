@@ -60,6 +60,7 @@
                     @endif
 
                     <x-livewire-powergrid::row
+                        :currentTable="$currentTable"
                         :primaryKey="$primaryKey"
                         :theme="$theme"
                         :row="$row"
