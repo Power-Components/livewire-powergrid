@@ -1,6 +1,6 @@
 {
     "name": "power-components/livewire-powergrid",
-    "description": "A Laravel Livewire table component with searching, sorting, checkboxes, pagination and export data.",
+    "description": "PowerGrid generates Advanced Datatables using Laravel Livewire.",
     "homepage": "https://github.com/power-components/livewire-powergrid",
     "license": "MIT",
     "minimum-stability": "dev",
@@ -50,7 +50,7 @@
             "@test:sqlite",
             "@test:mysql",
             "@test:pgsql"
-        ],     
+        ],
         "check": [
             "@cs-fixer",
             "@test",
