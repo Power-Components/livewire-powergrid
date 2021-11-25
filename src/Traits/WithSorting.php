@@ -24,7 +24,7 @@ trait WithSorting
         return $this->sortDirection === 'asc'? 'desc' : 'asc';
     }
 
-    public function applySorting($query)
+    public function applySorting(Collection $query): Collection
     {
         if (is_a($query, Collection::class)) {
             return $query->sortBy($this->sortField, SORT_REGULAR, !(($this->sortDirection === 'asc')));
