@@ -2,13 +2,12 @@ name: Powergrid Tests
 
 on:
   push:
-  branches:
-    - main
-    - dev
+    branches:
+      - main
 
   pull_request:
     types: [ ready_for_review, synchronize, opened ]
-    branches: [ main, dev ]
+    branches: [ main ]
 
 jobs:
   build:
