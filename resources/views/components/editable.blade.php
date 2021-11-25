@@ -1,15 +1,35 @@
+@inject('strClass', '\Illuminate\Support\Str')
 @props([
     'primaryKey' => null,
     'row' => null,
     'field' => null,
-    'theme' => null
+    'theme' => null,
+    'currentTable' => null,
 ])
+@php
+    $table = $currentTable;
+    $currentField = $field;
+
+    if (str_contains($currentField, '.')) {
+       $data = $strClass::of($field)->explode('.');
+       $table = $data->get(0);
+       $field = $data->get(1);
+
+       if ($table === $currentTable) {
+           $content = addslashes($row->{$field});
+       } else {
+           $content = addslashes($row->{$table}->{$field});
+       }
+   } else {
+        $content = addslashes($row->{$field});
+   }
+@endphp
 <div wire:ignore.self
      x-data="{
        editable: false,
        id: '{{ $row->{$primaryKey} ?? $row->id }}',
-       field: '{{ $field }}',
-       content: '{{ addslashes($row->{$field}) }}'
+       field: '{{ $currentField }}',
+       content: '{{ $content }}'
     }">
     <div x-html="content"
          style="border-bottom: dotted 1px; cursor: pointer"

@@ -14,6 +14,7 @@
                     <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
                             :primaryKey="$primaryKey"
+                            :currentTable="$currentTable"
                             :row="$row"
                             :theme="$theme->editable"
                             :field="$column->dataField != '' ? $column->dataField : $column->field"/>

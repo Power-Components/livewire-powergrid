@@ -6,6 +6,9 @@
     'inputText' => null
 ])
 <div>
+    @php
+        $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
+    @endphp
     @if(filled($inputText))
         <div class="@if(!$inline) pt-2 p-2 @endif">
             @if(!$inline)
@@ -17,8 +20,8 @@
                         <select id="input_text_options"
                                 class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
-                                wire:model.debounce.800ms="filters.input_option_text.{{ data_get($inputText, 'field') }}"
-                                wire:input.debounce.300ms="filterInputTextOptions('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
+                                wire:model.debounce.800ms="filters.input_option_text.{{ $field }}"
+                                wire:input.debounce.300ms="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
                             <option
                                 value="contains">{{ trans('livewire-powergrid::datatable.input_text_options.contains') }}</option>
                             <option
@@ -50,16 +53,16 @@
                     </div>
                 </div>
                 <div class="mt-1">
-                    @if(isset($enabledFilters[data_get($inputText, 'field')]))
-                        <input @if($enabledFilters[data_get($inputText, 'field')]['disabled']) disabled @endif
+                    @if(isset($enabledFilters[$field]))
+                        <input @if(isset($enabledFilters[$field]['disabled'])) disabled @endif
                         type="text"
                                class="power_grid {{ $theme->inputClass }}"
                                placeholder="{{ empty($column)?data_get($inputText, 'label'):($column->placeholder?:$column->title) }}">
                     @else
                         <input
-                            data-id="{{ data_get($inputText, 'field') }}"
-                            wire:model.debounce.800ms="filters.input_text.{{ data_get($inputText, 'field')  }}"
-                            wire:input.debounce.800ms="filterInputText('{{ data_get($inputText, 'field') }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
+                            data-id="{{ $field }}"
+                            wire:model.debounce.800ms="filters.input_text.{{ $field  }}"
+                            wire:input.debounce.800ms="filterInputText('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
                             type="text"
                             class="power_grid {{ $theme->inputClass }}"
                             placeholder="{{ empty($column)?data_get($inputText, 'label'):($column->placeholder?:$column->title) }}">
