@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
+use Illuminate\Support\{Carbon, Collection as BaseCollection, Facades\Schema, Str};
 use PowerComponents\LivewirePowerGrid\Services\Contracts\CollectionFilterInterface;
 
 class Collection implements CollectionFilterInterface
@@ -198,10 +198,10 @@ class Collection implements CollectionFilterInterface
 
     /**
      * @param string $field
-     * @param string $value
+     * @param string|null $value
      * @return void
      */
-    public function filterInputText(string $field, string $value): void
+    public function filterInputText(string $field, ?string $value): void
     {
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
@@ -378,14 +378,20 @@ class Collection implements CollectionFilterInterface
                 $row = (object) $row;
 
                 foreach ($this->columns as $column) {
-                    $field = $column->field;
-
-                    try {
-                        if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
-                            return false !== stristr($row->{$field}, strtolower($this->search));
+                    if ($column->searchable) {
+                        if (filled($column->dataField)) {
+                            $field = $column->dataField;
+                        } else {
+                            $field = $column->field;
                         }
-                    } catch (\Exception $exception) {
-                        throw new \Exception($exception);
+
+                        try {
+                            if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                                return false !== stristr($row->{$field}, strtolower($this->search));
+                            }
+                        } catch (\Exception $exception) {
+                            throw new \Exception($exception);
+                        }
                     }
                 }
 

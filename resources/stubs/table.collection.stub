@@ -98,7 +98,7 @@ class {{ componentName }} extends PowerGridComponent
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted')
+                ->field('created_at_formatted', 'created_at')
                 ->makeInputDatePicker('created_at'),
         ];
     }
