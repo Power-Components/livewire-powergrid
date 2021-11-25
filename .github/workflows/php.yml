@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev
 
   pull_request:
     types: [ ready_for_review, synchronize, opened ]
-    branches: [ main ]
+    branches: [ main, dev ]
 
 jobs:
   build:
