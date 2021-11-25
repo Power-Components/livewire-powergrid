@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Support\Facades\{DB, Schema};
+use Illuminate\Support\Facades\{DB, Log, Schema};
 
 class SqlSupport
 {
@@ -66,8 +66,11 @@ class SqlSupport
      * @param string $sortFieldType
      * @return bool
      */
-    public static function isValidSortFieldType(string $sortFieldType): bool
+    public static function isValidSortFieldType(?string $sortFieldType): bool
     {
+        if (is_null($sortFieldType)) {
+            return false;
+        }
         return in_array($sortFieldType, self::$sortStringNumberTypes);
     }
 
@@ -75,9 +78,14 @@ class SqlSupport
      * @param string $sortField
      * @return string
      */
-    public static function getSortFieldType(string $sortField): string
+    public static function getSortFieldType(string $sortField): ?string
     {
         $data = explode('.', $sortField);
+
+        if (!isset($data[1]) || !Schema::hasColumn($data[0], $data[1])) {
+
+            return null;
+        }
 
         return Schema::getConnection()
             ->getDoctrineColumn($data[0], $data[1])

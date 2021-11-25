@@ -7,7 +7,7 @@
 <div wire:ignore.self
      x-data="{
        editable: false,
-       id: '{{ $row->{$primaryKey} }}',
+       id: '{{ $row->{$primaryKey} ?? $row->id }}',
        field: '{{ $field }}',
        content: '{{ addslashes($row->{$field}) }}'
     }">
