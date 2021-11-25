@@ -39,14 +39,14 @@
         "doctrine/dbal": "^3.1"
     },
     "scripts": {
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "fix": "./vendor/bin/php-cs-fixer fix",
         "test":  "@test:sqlite",
         "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
         "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
         "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
         "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
-        "fix": "./vendor/bin/php-cs-fixer fix",
-        "dbs": [
+        "test:dbs": [
             "@test:sqlite",
             "@test:mysql",
             "@test:pgsql"
