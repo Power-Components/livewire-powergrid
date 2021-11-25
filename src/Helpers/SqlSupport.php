@@ -71,20 +71,24 @@ class SqlSupport
         if (is_null($sortFieldType)) {
             return false;
         }
+
         return in_array($sortFieldType, self::$sortStringNumberTypes);
     }
 
     /**
      * @param string $sortField
      * @return string
+     * @throws \Exception
      */
     public static function getSortFieldType(string $sortField): ?string
     {
         $data = explode('.', $sortField);
-
-        if (!isset($data[1]) || !Schema::hasColumn($data[0], $data[1])) {
-
+        if (!isset($data[1])) {
             return null;
+        }
+
+        if (!Schema::hasColumn($data[0], $data[1])) {
+            throw new \Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.docsforge.com/main/include-columns/#fieldstring-field-string-datafield");
         }
 
         return Schema::getConnection()
