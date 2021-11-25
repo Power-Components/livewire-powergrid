@@ -218,7 +218,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return Str::startsWith(Str::lower($row->{$field}), Str::lower($value));
+                    return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
@@ -226,7 +226,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return Str::endsWith(Str::lower($row->{$field}), Str::lower($value));
+                    return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
@@ -234,7 +234,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return false !== stristr($row->{$field}, strtolower($value));
+                    return false !== stristr($row->{$field}, strtolower((string) $value));
                 });
 
                 break;
@@ -243,7 +243,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return !Str::Contains(Str::lower($row->{$field}), Str::lower($value));
+                    return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
