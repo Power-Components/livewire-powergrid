@@ -52,7 +52,7 @@ return [
         'is_not_empty' => 'is_not_empty',
     ],
     'export' => [
-        'exporting' => 'Please wait!',
-        'completed' => 'Export completed! Your files are ready for download',
+        'exporting' => 'لطفا صبر کنید!',
+        'completed' => 'صادرات به پایان رسید! فایل های شما آماده بارگیری هستند',
     ],
 ];
