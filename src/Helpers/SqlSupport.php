@@ -50,7 +50,7 @@ class SqlSupport
                 '*' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
             ],
             'pgsql' => [
-                '*' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS BANANA)",
+                '*' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER)",
             ],
             'sqlsrv' => [
                 '*' => "CAST(SUBSTRING($sortField, PATINDEX('%[a-z]%', $sortField), LEN($sortField)-PATINDEX('%[a-z]%', $sortField)) AS INT)",
