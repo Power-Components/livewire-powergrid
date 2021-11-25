@@ -30,6 +30,7 @@ class SqlSupport
     public static function sortStringAsNumber(string $sortField): string
     {
         $driverName = DB::getDriverName();
+
         return self::getSortSqlByDriver($sortField, $driverName);
     }
 
