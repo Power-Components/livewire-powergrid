@@ -5,45 +5,44 @@
 ])
 <div class="w-full md:w-auto">
     @if(isset($actions) && count($actions) && $row !== '')
-        @foreach($actions as $action)
-            <td class="pg-actions {{ $theme->table->tdBodyClass }}"
+        @foreach($actions as $key => $action)
+            <td wire:key="action-{{ $key }}" class="pg-actions {{ $theme->table->tdBodyClass }}"
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
-                    $parameters = [];
                     foreach ($action->param as $param => $value) {
                         if (!empty($row->{$value})) {
-                            $parameters[$param] = $row->{$value};
+                           $parameters[$param] = $row->{$value};
                         } else {
-                            $parameters[$param] = $value;
+                           $parameters[$param] = $value;
                         }
                     }
                 @endphp
 
-                @if($action->event !== '')
-                    <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
+                @if(filled($action->event) || filled($action->view))
+                    <a @if($action->event) wire:click='$emit("{{ $action->event }}", @json($parameters))'
+                       @endif
+                       @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
+                       @endif
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}
                     </a>
-                @elseif($action->view !== '')
-                    <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-                       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
-                        {!! $action->caption !!}
-                    </a>
-                @else
-                    @if(strtolower($action->method) !== ('get'))
+                @endif
+
+                @if(filled($action->route))
+                    @if(strtolower($action->method) !== 'get')
                         <form target="{{ $action->target }}"
                               action="{{ route($action->route, $parameters) }}"
-                              method="{{ $action->target }}">
+                              method="post">
                             @method($action->method)
                             @csrf
                             <button type="submit"
-                                    class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                            class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                                 {!! $action->caption ?? '' !!}
                             </button>
                         </form>
                     @else
                         <a href="{{ route($action->route, $parameters) }}"
-                           target="{{ $action->target }}"
+                        target="{{ $action->target }}"
                            class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                             {!! $action->caption !!}
                         </a>

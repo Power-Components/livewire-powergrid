@@ -3,15 +3,16 @@
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
-    $this->tableFilePath = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
-    $this->model_name_question = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
-    $this->datasource_question = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
-    $this->model_path_question = 'Enter your Model path (E.g., <comment>App\Models\User</comment>)';
-    $this->use_fillable_question = 'Create columns based on Model\'s <comment>fillable</comment> property?';
+    $this->tableModelFilePath       = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
+    $this->tableCollectionFilePath  = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
+    $this->model_name_question      = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
+    $this->datasource_question      = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
+    $this->model_path_question      = 'Enter your Model path (E.g., <comment>App\Models\User</comment>)';
+    $this->use_fillable_question    = 'Create columns based on Model\'s <comment>fillable</comment> property?';
 });
 
-it('creates a PowerGrid Table', function () {
-    File::delete($this->tableFilePath);
+it('creates a PowerGrid Model Table', function () {
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -21,18 +22,32 @@ it('creates a PowerGrid Table', function () {
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
 
-    $this->assertFileExists($this->tableFilePath);
+    $this->assertFileExists($this->tableModelFilePath);
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
+});
+
+it('creates a PowerGrid Collection Table', function () {
+    File::delete($this->tableCollectionFilePath);
+
+    $this->artisan('powergrid:create')
+        ->expectsQuestion($this->model_name_question, 'CollectionTable')
+        ->expectsQuestion($this->datasource_question, 'C')
+        ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:collection-table/>\n");
+
+    $this->assertFileExists($this->tableCollectionFilePath);
+
+    File::delete($this->tableCollectionFilePath);
 });
 
 it('notifies about tailwind forms', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
 
     $content = "module.exports = { theme: { // ... }, plugins: [ require('@tailwindcss/forms'), // ... ], }";
-    
+
     File::delete($tailwindConfigFile);
     File::put($tailwindConfigFile, $content);
 
@@ -45,7 +60,7 @@ it('notifies about tailwind forms', function () {
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
     File::delete($tailwindConfigFile);
 });
 
@@ -72,18 +87,18 @@ it('publishes the Demo Table', function () {
 });
 
 it('does not accept an empty table name', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, '')
         ->expectsOutput('You must provide a name for your ⚡ PowerGrid Table!')
         ->assertExitCode(0);
 
-    $this->assertFileDoesNotExist($this->tableFilePath);
+    $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
 
 it('accepts only [M]odel or [C]ollection', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -91,11 +106,11 @@ it('accepts only [M]odel or [C]ollection', function () {
         ->expectsOutput('Please enter [M] for Model or [C] for Collection')
         ->assertExitCode(0);
 
-    $this->assertFileDoesNotExist($this->tableFilePath);
+    $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
 
 it('does not create a table with empty model', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -104,13 +119,13 @@ it('does not create a table with empty model', function () {
         ->expectsOutput('Error: Model name is required.')
         ->assertExitCode(0);
 
-    $this->assertFileDoesNotExist($this->tableFilePath);
+    $this->assertFileDoesNotExist($this->tableModelFilePath);
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 });
 
 it('does not create a table with invalid model path', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -120,13 +135,13 @@ it('does not create a table with invalid model path', function () {
         ->expectsOutput('Error: "xyz-model" Invalid model path. Path must be like: "\App\Models\User"')
         ->assertExitCode(0);
 
-    $this->assertFileDoesNotExist($this->tableFilePath);
+    $this->assertFileDoesNotExist($this->tableModelFilePath);
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 });
 
-it('does overwride the existing table file w/ YES', function () {
-    File::delete($this->tableFilePath);
+it('does overwrite the existing table file w/ YES', function () {
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -134,10 +149,10 @@ it('does overwride the existing table file w/ YES', function () {
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes');
 
-    $this->assertFileExists($this->tableFilePath);
+    $this->assertFileExists($this->tableModelFilePath);
 
     //Add some content to file
-    file_put_contents($this->tableFilePath, 'x0007');
+    file_put_contents($this->tableModelFilePath, 'x0007');
 
     //Alert about overwrite
     $this->artisan('powergrid:create')
@@ -147,13 +162,13 @@ it('does overwride the existing table file w/ YES', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes');
 
-    expect(file_get_contents($this->tableFilePath))->not->toContain('x0007');
+    expect(file_get_contents($this->tableModelFilePath))->not->toContain('x0007');
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 });
 
 it('does NOT overwride the existing table file', function () {
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
@@ -161,10 +176,10 @@ it('does NOT overwride the existing table file', function () {
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes');
 
-    $this->assertFileExists($this->tableFilePath);
+    $this->assertFileExists($this->tableModelFilePath);
 
     //Add some content to file
-    file_put_contents($this->tableFilePath, 'x0007');
+    file_put_contents($this->tableModelFilePath, 'x0007');
 
     //Alert about overwrite
     $this->artisan('powergrid:create')
@@ -174,9 +189,9 @@ it('does NOT overwride the existing table file', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', '');
 
-    expect(file_get_contents($this->tableFilePath))->toContain('x0007');
+    expect(file_get_contents($this->tableModelFilePath))->toContain('x0007');
 
-    File::delete($this->tableFilePath);
+    File::delete($this->tableModelFilePath);
 });
 
 it('publishes config file', function () {

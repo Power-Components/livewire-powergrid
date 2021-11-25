@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
+use Illuminate\Pagination\AbstractPaginator;
 
 trait Checkbox
 {
@@ -17,7 +18,7 @@ trait Checkbox
     /**
      * @throws Exception
      */
-    public function selectCheckboxAll()
+    public function selectCheckboxAll(): void
     {
         if (!$this->checkboxAll) {
             $this->checkboxValues = [];
@@ -25,7 +26,10 @@ trait Checkbox
             return;
         }
 
-        collect($this->fillData()->items())->each(function ($model) {
+        /** @var AbstractPaginator $data */
+        $data = $this->fillData();
+
+        collect($data->items())->each(function ($model) {
             $this->checkboxValues[] = (string) $model->{$this->checkboxAttribute};
         });
     }

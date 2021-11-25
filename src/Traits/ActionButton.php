@@ -23,7 +23,7 @@ trait ActionButton
 
         /** @var Button $action */
         foreach ($this->actions as $action) {
-            if (isset($action->route) && $action->can) {
+            if (isset($action->route)) {
                 $this->actionRoutes[$action->action] = $action->route;
             }
         }

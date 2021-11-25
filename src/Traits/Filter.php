@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Column;
 
 trait Filter
 {
@@ -14,7 +15,7 @@ trait Filter
 
     public array $select = [];
 
-    public function clearFilter(string $field = '')
+    public function clearFilter(string $field = ''): void
     {
         $this->search = '';
 
@@ -27,11 +28,12 @@ trait Filter
         $this->filters = [];
     }
 
-    private function renderFilter()
+    private function renderFilter(): void
     {
         $this->filters = [];
         $makeFilters   = [];
 
+        /** @var Column $column */
         foreach ($this->columns as $column) {
             if (!isset($column->inputs)) {
                 continue;
@@ -52,7 +54,18 @@ trait Filter
     public function eventChangeDatePiker(array $data): void
     {
         $input                                   = explode('.', $data['values']);
-        $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+
+        if (count($input) === 3) {
+            $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+        } else {
+            if (count($input) === 4) {
+                $this->filters['date_picker'][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            } else {
+                if (count($input) === 5) {
+                    $this->filters['date_picker'][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+                }
+            }
+        }
 
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
@@ -61,7 +74,7 @@ trait Filter
     /**
      * @param array $data
      */
-    public function eventMultiSelect(array $data)
+    public function eventMultiSelect(array $data): void
     {
         $this->filters['multi_select'][$data['id']] = $data;
 
@@ -75,7 +88,7 @@ trait Filter
         }
     }
 
-    public function filterSelect(string $field, string $label)
+    public function filterSelect(string $field, string $label): void
     {
         $this->enabledFilters[$field]['id']         = $field;
         $this->enabledFilters[$field]['label']      = $label;
@@ -138,8 +151,6 @@ trait Filter
      */
     public function filterInputText(string $field, string $value, string $label): void
     {
-        $this->filters['input_text'][$field] = $value;
-
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 

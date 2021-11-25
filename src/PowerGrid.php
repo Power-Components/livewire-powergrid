@@ -6,8 +6,7 @@ use Illuminate\Support\Facades\Facade;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 
 /**
- * @method static PowerGridEloquent eloquent($collection=[])
- * @method static PowerGridCollection collection()
+ * @method static PowerGridEloquent eloquent()
  * @method static ThemeBase theme(string $class)
  *
  * @see \PowerComponents\LivewirePowerGrid\PowerGridManager

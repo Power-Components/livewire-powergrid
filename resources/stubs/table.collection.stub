@@ -2,12 +2,11 @@
 
 namespace App\Http\Livewire{{ subFolder }};
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Database\QueryException;
-use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridCollection;
+use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
@@ -24,7 +23,13 @@ class {{ componentName }} extends PowerGridComponent
     */
     public function datasource(): Collection
     {
-        return {{ modelLastName }}::query()->get();
+        return collect([
+            ['id' => 1, 'name' => 'Name 1', 'price' => 1.58, 'created_at' => now(),],
+            ['id' => 2, 'name' => 'Name 2', 'price' => 1.68, 'created_at' => now(),],
+            ['id' => 3, 'name' => 'Name 3', 'price' => 1.78, 'created_at' => now(),],
+            ['id' => 4, 'name' => 'Name 4', 'price' => 1.88, 'created_at' => now(),],
+            ['id' => 5, 'name' => 'Name 5', 'price' => 1.98, 'created_at' => now(),],
+        ]);
     }
 
     /*
@@ -41,7 +46,7 @@ class {{ componentName }} extends PowerGridComponent
             ->showExportOption('download', ['excel', 'csv'])
             ->showSearchInput();
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     |  Add Column
@@ -50,14 +55,17 @@ class {{ componentName }} extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): ?PowerGridCollection
+    public function addColumns(): PowerGridEloquent
     {
-        return PowerGrid::collection()
+        return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
-            ->addColumn('created_at');
+            ->addColumn('price')
+            ->addColumn('created_at_formatted', function ($entry) {
+                return Carbon::parse($entry->created_at)->format('d/m/Y');
+            });
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     |  Include Columns
@@ -83,14 +91,15 @@ class {{ componentName }} extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Created at'))
-                ->field('created_at')
-                ->hidden(),
-        ];
-    }
+                ->title(__('price'))
+                ->field('price')
+                ->sortable()
+                ->makeInputRange('price', '.', ''),
 
-    public function template(): ?string
-    {
-        return null;
+            Column::add()
+                ->title(__('Created At'))
+                ->field('created_at_formatted')
+                ->makeInputDatePicker('created_at'),
+        ];
     }
 }

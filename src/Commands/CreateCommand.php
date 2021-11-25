@@ -2,8 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\{File, Schema};
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\{File, Log, Schema};
 use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Helpers\InteractsWithVersions;
 
@@ -14,23 +16,36 @@ class CreateCommand extends Command
 
     protected $description = 'Make a new PowerGrid table component.';
 
-    public function handle()
+    /**
+     * @throws Exception
+     */
+    public function handle(): void
     {
         if (config('livewire-powergrid.check_version') === true) {
             $ensureLatestVersion = new InteractsWithVersions();
-            $current             = $ensureLatestVersion->ensureLatestVersion();
 
-            if (isset($current['version'])) {
-                if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
-                    $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
-                    $this->info(" Released Date: <comment>{$current['release']}</comment>");
+            try {
+                $current             = $ensureLatestVersion->ensureLatestVersion();
+
+                if (isset($current['version'])) {
+                    if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
+                        $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
+                        $this->info(" Released Date: <comment>{$current['release']}</comment>");
+                    }
                 }
+            } catch (Exception $e) {
+                Log::debug($e->getMessage());
             }
         }
 
         $fillable        = false;
         $tableName       = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
-        $tableName       = str_replace(['.', '\\'], '/', $tableName);
+
+        if (!is_string($tableName)) {
+            throw new \Exception('Could not parse table name');
+        }
+
+        $tableName = str_replace(['.', '\\'], '/', (string) $tableName);
 
         if (empty(trim($tableName))) {
             $this->error('You must provide a name for your ⚡ PowerGrid Table!');
@@ -39,6 +54,10 @@ class CreateCommand extends Command
         }
 
         $creationModel   = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
+
+        if (!is_string($creationModel)) {
+            throw new \Exception('Could not parse table name');
+        }
 
         if (empty($creationModel)) {
             $creationModel = 'M';
@@ -50,49 +69,67 @@ class CreateCommand extends Command
             return;
         }
 
-        $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
+        $stub = $this->getStubs($creationModel);
 
-        if (empty(trim($modelName))) {
-            $this->error('Error: Model name is required.');
+        $modelName      = '';
+        $modelLastName  = '';
+        if (strtolower($creationModel) === 'm') {
+            $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 
-            return;
-        }
+            if (!is_string($modelName)) {
+                throw new \Exception('Could not parse table name');
+            }
 
-        if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
-            $fillable   = true;
-        }
-
-        preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
-
-        $modelNameArr  = explode('\\', $modelName);
-        $modelLastName = Arr::last($modelNameArr);
-
-        if (count($modelNameArr) === 1) {
-            if (strlen(preg_replace('![^A-Z]+!', '', $modelName))) {
-                $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+            if (empty(trim($modelName))) {
+                $this->error('Error: Model name is required.');
 
                 return;
             }
 
-            $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+            if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
+                $fillable   = true;
+            }
 
-            return;
-        }
+            $modelNameArr = [];
 
-        if (empty($modelName)) {
-            $this->error('Could not create, Model path is missing');
+            preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
 
-            return;
-        }
+            if (!is_array($matches)) {
+                throw new Exception('Could not parse model name');
+            }
 
-        $stub = $this->getStubs($creationModel);
+            $modelNameArr  = explode('\\', $modelName);
+            $modelLastName = Arr::last($modelNameArr);
 
-        if ($fillable) {
-            $stub     = $this->createFromFillable($modelName, $modelLastName);
+            if (empty($modelName)) {
+                $this->error('Could not create, Model path is missing');
+            }
+
+            if (count($modelNameArr) === 1) {
+                $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
+
+                if (!is_string($cleanModelName)) {
+                    throw new Exception('Could not parse model name');
+                }
+
+                if (strlen($cleanModelName)) {
+                    $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+
+                    return;
+                }
+
+                $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
+
+                return;
+            }
+
+            if ($fillable && is_string($modelLastName)) {
+                $stub     = $this->createFromFillable($modelName, $modelLastName);
+            }
         }
 
         $componentName   = $tableName;
-        $subFolder       = null;
+        $subFolder       = '';
 
         if (!empty($matches)) {
             $componentName = end($matches);
@@ -100,12 +137,23 @@ class CreateCommand extends Command
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
 
+        if (!is_string($componentName)) {
+            throw new \Exception('Could not parse component name');
+        }
+
+        if (!is_string($subFolder)) {
+            throw new \Exception('Could not parse subfolder name');
+        }
+
         $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
         $stub = str_replace('{{ componentName }}', $componentName, $stub);
-        $stub = str_replace('{{ modelName }}', $modelName, $stub);
-        $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
-        $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
-        $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+
+        if ($creationModel === 'm') {
+            $stub = str_replace('{{ modelName }}', $modelName, $stub);
+            $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
+            $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);
+            $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
+        }
 
         $livewirePath  = 'Http/Livewire/';
         $path          = app_path($livewirePath . $tableName . '.php');
@@ -129,16 +177,16 @@ class CreateCommand extends Command
         $createTable = true;
 
         if (File::exists($path)) {
-            $confirmation = $this->confirm('It seems that <comment>' . $tableName . '</comment> already exists. Would you like to overwrite it?');
+            $confirmation = (bool) $this->confirm('It seems that <comment>' . $tableName . '</comment> already exists. Would you like to overwrite it?');
 
-            if (strtolower($confirmation) !== 'yes') {
+            if ($confirmation === false) {
                 $createTable = false;
             }
         }
 
-        if ($createTable) {
+        if ($createTable && is_string($stub)) {
             File::put($path, $stub);
-            
+
             $this->checkTailwindForms();
 
             $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
@@ -146,9 +194,17 @@ class CreateCommand extends Command
         }
     }
 
-    private function createFromFillable(string $modelName, string $modelLastName)
+    /**
+     * @throws Exception
+     */
+    private function createFromFillable(string $modelName, string $modelLastName): string
     {
-        $model          = new $modelName();
+        $model = new $modelName();
+
+        if ($model instanceof Model === false) {
+            throw new \Exception('Invalid model given.');
+        }
+
         $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
         $getFillable    = array_merge(
             [$model->getKeyName()],
@@ -214,22 +270,22 @@ class CreateCommand extends Command
         return str_replace('{{ columns }}', $columns, $stub);
     }
 
-    protected function getStubs($creationModel): string
+    protected function getStubs(string $creationModel): string
     {
-        if (!empty($this->option('template'))) {
+        if (is_string($this->option('template')) && empty($this->option('template')) === false) {
             return File::get(base_path($this->option('template')));
         }
         if (strtolower($creationModel) === 'm') {
             return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
         }
 
-        return File::get(__DIR__ . '/../../resources/stubs/table.stub');
+        return File::get(__DIR__ . '/../../resources/stubs/table.collection.stub');
     }
 
     protected function checkTailwindForms(): void
     {
         $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
-  
+
         if (File::exists($tailwindConfigFile)) {
             $fileContent    = File::get($tailwindConfigFile);
 

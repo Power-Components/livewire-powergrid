@@ -40,9 +40,15 @@
         "friendsofphp/php-cs-fixer": "^3.2"
     },
     "scripts": {
-        "test": "./vendor/bin/pest",
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "stan": "phpstan analyse --ansi --memory-limit=-1",
+        "pest": "php ./vendor/bin/pest --colors=always",
+        "cs-check": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
         "fix": "./vendor/bin/php-cs-fixer fix",
+        "test": [
+            "@pest",
+            "@stan",
+            "@cs-check"
+        ],
         "check": [
             "@cs-fixer",
             "@test"
@@ -54,6 +60,8 @@
         "orchestra/testbench": "^6.17",
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
-        "pestphp/pest-plugin-livewire": "^1.0"
+        "pestphp/pest-plugin-livewire": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "nunomaduro/larastan": "^1.0"
     }
 }

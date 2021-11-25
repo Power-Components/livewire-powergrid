@@ -38,7 +38,7 @@ class TestCase extends BaseTestCase
             $table->boolean('in_stock')->default(false);
             $table->string('stored_at');
             $table->boolean('active')->default(true);
-            $table->date('produced_at');
+            $table->datetime('produced_at');
             $table->timestamps();
         });
     }
@@ -79,7 +79,7 @@ class TestCase extends BaseTestCase
         ]);
     }
 
-    protected function getDishes()
+    protected function getDishes(): array
     {
         $dishes = collect([
             [

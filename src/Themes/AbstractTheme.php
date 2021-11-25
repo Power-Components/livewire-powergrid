@@ -2,39 +2,41 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Layout, Table, Toggleable};
+
 abstract class AbstractTheme
 {
     public static string $scripts = '';
 
     public static string $styles = '';
 
-    public ?Components\Table $table;
+    public Table $table;
 
-    public ?Components\Checkbox $checkbox;
+    public Checkbox $checkbox;
 
-    public ?Components\Layout $layout;
+    public Layout $layout;
 
-    public ?Components\Actions $actions;
+    public Actions $actions;
 
-    public ?Components\Editable $editable;
+    public Editable $editable;
 
-    public ?Components\Toggleable $toggleable;
+    public Toggleable $toggleable;
 
-    public ?Components\FilterBoolean $filterBoolean;
+    public FilterBoolean $filterBoolean;
 
-    public ?Components\FilterSelect $filterSelect;
+    public FilterSelect $filterSelect;
 
-    public ?Components\FilterDatePicker $filterDatePicker;
+    public FilterDatePicker $filterDatePicker;
 
-    public ?Components\FilterMultiSelect $filterMultiSelect;
+    public FilterMultiSelect $filterMultiSelect;
 
-    public ?Components\FilterNumber $filterNumber;
+    public FilterNumber $filterNumber;
 
-    public ?Components\FilterInputText $filterInputText;
+    public FilterInputText $filterInputText;
 
-    public ?Components\Footer $footer;
+    public Footer $footer;
 
-    public ?Components\Cols $cols;
+    public Cols $cols;
 
     public static string $paginationTheme;
 
@@ -43,73 +45,73 @@ abstract class AbstractTheme
         return self::$paginationTheme;
     }
 
-    public function table(): ?Components\Table
+    public function table(): Table
     {
-        return null;
+        return Theme::table('');
     }
 
-    public function checkbox(): ?Components\Checkbox
+    public function checkbox(): Checkbox
     {
-        return null;
+        return Theme::checkbox();
     }
 
-    public function footer(): ?Components\Footer
+    public function footer(): Footer
     {
-        return null;
+        return Theme::footer();
     }
 
-    public function editable(): ?Components\Editable
+    public function editable(): Editable
     {
-        return null;
+        return Theme::editable();
     }
 
-    public function cols(): ?Components\Cols
+    public function cols(): Cols
     {
-        return null;
+        return Theme::cols();
     }
 
-    public function actions(): ?Components\Actions
+    public function actions(): Actions
     {
-        return null;
+        return Theme::actions();
     }
 
     public function layout(): ?Components\Layout
     {
-        return null;
+        return Theme::layout();
     }
 
-    public function toggleable(): ?Components\Toggleable
+    public function toggleable(): Toggleable
     {
-        return null;
+        return Theme::toggleable();
     }
 
-    public function filterBoolean(): ?Components\FilterBoolean
+    public function filterBoolean(): FilterBoolean
     {
-        return null;
+        return Theme::filterBoolean();
     }
 
-    public function filterDatePicker(): ?Components\FilterDatePicker
+    public function filterDatePicker(): FilterDatePicker
     {
-        return null;
+        return Theme::filterDatePicker();
     }
 
-    public function filterMultiSelect(): ?Components\FilterMultiSelect
+    public function filterMultiSelect(): FilterMultiSelect
     {
-        return null;
+        return Theme::filterMultiSelect();
     }
 
-    public function filterNumber(): ?Components\FilterNumber
+    public function filterNumber(): FilterNumber
     {
-        return null;
+        return Theme::filterNumber();
     }
 
-    public function filterSelect(): ?Components\FilterSelect
+    public function filterSelect(): FilterSelect
     {
-        return null;
+        return Theme::filterSelect();
     }
 
-    public function filterInputText(): ?Components\FilterInputText
+    public function filterInputText(): FilterInputText
     {
-        return null;
+        return Theme::filterInputText();
     }
 }

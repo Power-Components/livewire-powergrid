@@ -13,7 +13,7 @@ class DemoCommand extends Command
 
     private string $stubPath = __DIR__ . '/../../resources/stubs/';
 
-    public function handle()
+    public function handle(): void
     {
         $tableFileName = 'PowerGridDemoTable';
         $viewFileName  = 'powergrid-demo.blade';
@@ -27,7 +27,13 @@ class DemoCommand extends Command
             (new Filesystem())->makeDirectory($fullLivewirePath);
         }
 
-        $stub = str_replace('{{ url }}', config('app.url'), $this->stubPath);
+        $url = config('app.url');
+        
+        if (!is_string($url) || empty($url)) {
+            throw new \Exception('Config URL invalid or not set.');
+        }
+        
+        $stub = str_replace('{{ url }}', $url, $this->stubPath);
 
         file_put_contents($fullLivewirePath . $tableFileName . '.php', file_get_contents($stub . $tableFileName . '.stub'));
         file_put_contents($this->laravel->basePath($viewFolder) . '/' . $viewFileName . '.php', file_get_contents($stub . $viewFileName . '.stub'));

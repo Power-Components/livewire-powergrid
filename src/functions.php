@@ -1,6 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 
 const BOOTSTRAP            = 'bootstrap';
 const TAILWIND             = 'tailwind';
@@ -9,6 +10,7 @@ const JS_FRAMEWORK_ALPINE  = 'alpinejs';
 if (!function_exists('powerGridThemeRoot')) {
     function powerGridThemeRoot(): string
     {
+        /** @var ThemeBase $theme */
         $theme = PowerGrid::theme(config('livewire-powergrid.theme'));
 
         return $theme->root();

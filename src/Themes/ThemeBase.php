@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Layout, Toggleable};
+
 class ThemeBase extends AbstractTheme
 {
     public string $name = '';
@@ -13,13 +15,13 @@ class ThemeBase extends AbstractTheme
         return $this->base . '' . $this->name;
     }
 
-    public function toggleable(): Components\Toggleable
+    public function toggleable(): Toggleable
     {
         return Theme::toggleable()
             ->view($this->root() . '.toggleable');
     }
 
-    public function layout(): Components\Layout
+    public function layout(): Layout
     {
         return Theme::layout()
             ->table($this->root() . '.table-base')
