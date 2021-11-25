@@ -13,10 +13,11 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
-class {{ componentName }} extends PowerGridComponent
+final class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
-
+    
+    //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
 
     /*
@@ -26,12 +27,12 @@ class {{ componentName }} extends PowerGridComponent
     | Setup Table's general features
     |
     */
-    public function setUp()
+    public function setUp(): void
     {
         $this->showCheckBox()
             ->showPerPage()
-            ->showExportOption('download', ['excel', 'csv'])
-            ->showSearchInput();
+            ->showSearchInput()
+            ->showExportOption('download', ['excel', 'csv']);
     }
 
     /*
@@ -53,6 +54,12 @@ class {{ componentName }} extends PowerGridComponent
     | Configure here relationships to be used by the Search and Table Filters.
     |
     */
+
+    /**
+     * Relationship search.
+     *
+     * @return array<string, array<int, string>>
+     */
     public function relationSearch(): array
     {
         return [];
@@ -79,6 +86,12 @@ class {{ componentName }} extends PowerGridComponent
     | Each column can be configured with properties, filters, actions...
     |
     */
+
+     /**
+     * PowerGrid Columns.
+     *
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Column>
+     */
     public function columns(): array
     {
         return {{ columns }};
@@ -92,17 +105,23 @@ class {{ componentName }} extends PowerGridComponent
     |
     */
 
+     /**
+     * PowerGrid {{ modelLastName }} action buttons.
+     *
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     */
+     
     /*
     public function actions(): array
     {
        return [
            Button::add('edit')
-               ->caption(__('Edit'))
+               ->caption('Edit')
                ->class('bg-indigo-500 text-white')
                ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
 
            Button::add('destroy')
-               ->caption(__('Delete'))
+               ->caption('Delete')
                ->class('bg-red-500 text-white')
                ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
                ->method('delete')
@@ -114,38 +133,47 @@ class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     | Edit Method
     |--------------------------------------------------------------------------
-    | Enable this section to use editOnClick() or toggleable() methods
+    | Enable this section to use editOnClick() or toggleable() methods.
+    | Data must be validated and treated (see "Update Data" in PowerGrid doc).
     |
     */
 
+     /**
+     * PowerGrid {{ modelLastName }} Update.
+     *
+     * @param array<string,string> $data
+     */
+     
     /*
     public function update(array $data ): bool
     {
        try {
-           $updated = {{ modelLastName }}::query()->find($data['id'])->update([
-                $data['field'] => $data['value']
-           ]);
+           $updated = {{ modelLastName }}::query()->findOrFail($data['id'])
+                ->update([
+                    $data['field'] => $data['value'],
+                ]);
        } catch (QueryException $exception) {
            $updated = false;
        }
        return $updated;
     }
 
-    public function updateMessages(string $status, string $field = '_default_message'): string
+    public function updateMessages(string $status = 'error', string $field = '_default_message'): string
     {
         $updateMessages = [
             'success'   => [
                 '_default_message' => __('Data has been updated successfully!'),
-                //'custom_field' => __('Custom Field updated successfully!'),
+                //'custom_field'   => __('Custom Field updated successfully!'),
             ],
             'error' => [
                 '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
+                //'custom_field'   => __('Error updating custom field.'),
             ]
         ];
 
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+        $message = ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+
+        return (is_string($message)) ? $message : 'Error!';
     }
     */
-
 }

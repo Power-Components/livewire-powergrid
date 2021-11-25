@@ -10,7 +10,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
-class {{ componentName }} extends PowerGridComponent
+final class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
 
@@ -21,7 +21,7 @@ class {{ componentName }} extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-    public function datasource(): Collection
+    public function datasource(): ?Collection
     {
         return collect([
             ['id' => 1, 'name' => 'Name 1', 'price' => 1.58, 'created_at' => now(),],
@@ -39,7 +39,7 @@ class {{ componentName }} extends PowerGridComponent
     | Configure here relationships to be used by the Search and Table Filters.
     |
     */
-    public function setUp()
+    public function setUp(): void
     {
         $this->showCheckBox()
             ->showPerPage()
@@ -55,7 +55,7 @@ class {{ componentName }} extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): ?PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
@@ -73,32 +73,38 @@ class {{ componentName }} extends PowerGridComponent
     | Include the columns added columns, making them visible on the Table.
     | Each column can be configured with properties, filters, actions...
     |
+
     */
+     /**
+     * PowerGrid Columns.
+     *
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Column>
+     */
     public function columns(): array
     {
         return [
             Column::add()
-                ->title(__('ID'))
+                ->title('ID')
                 ->field('id')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Name'))
+                ->title('Name')
                 ->field('name')
                 ->searchable()
                 ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
-                ->title(__('price'))
+                ->title('Price')
                 ->field('price')
                 ->sortable()
                 ->makeInputRange('price', '.', ''),
 
             Column::add()
-                ->title(__('Created At'))
-                ->field('created_at_formatted', 'created_at')
+                ->title('Created At')
+                ->field('created_at_formatted')
                 ->makeInputDatePicker('created_at'),
         ];
     }
