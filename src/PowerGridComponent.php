@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\{AbstractPaginator, LengthAwarePaginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model};
+use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
 
@@ -174,7 +174,7 @@ class PowerGridComponent extends Component
      */
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
-        if (\Str::contains((string) $perPage, $this->perPageValues)) {
+        if (Str::contains((string) $perPage, $this->perPageValues)) {
             $this->perPageInput = true;
             $this->perPage      = $perPage;
         }
@@ -367,6 +367,8 @@ class PowerGridComponent extends Component
             $sortField = $this->currentTable . '.' . $this->sortField;
         }
 
+        $sortFieldType = SqlSupport::getSortFieldType($sortField);
+
         /** @var Builder $results */
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
@@ -379,8 +381,8 @@ class PowerGridComponent extends Component
                     ->filter();
             });
 
-        if ($this->withSortStringNumber) {
-            $results->orderByRaw("$sortField+0 $this->sortDirection");
+        if ($this->withSortStringNumber && SqlSupport::isValidSortFieldType($sortFieldType)) {
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
         }
 
         $results = $results->orderBy($sortField, $this->sortDirection);
@@ -419,6 +421,10 @@ class PowerGridComponent extends Component
         });
     }
 
+    /**
+     * @param string $field
+     * @throws Exception
+     */
     public function toggleColumn(string $field): void
     {
         $this->columns = collect($this->columns)->map(function ($column) use ($field) {
