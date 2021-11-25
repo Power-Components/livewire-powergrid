@@ -39,18 +39,22 @@
         "doctrine/dbal": "^3.1"
     },
     "scripts": {
-        "stan": "phpstan analyse --ansi --memory-limit=-1",
-        "pest": "php ./vendor/bin/pest --colors=always",
-        "cs-check": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "test":  "@test:sqlite",
+        "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
+        "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
+        "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
         "fix": "./vendor/bin/php-cs-fixer fix",
-        "test": [
-            "@pest",
-            "@stan",
-            "@cs-check"
-        ],
+        "dbs": [
+            "@test:sqlite",
+            "@test:mysql",
+            "@test:pgsql"
+        ],     
         "check": [
             "@cs-fixer",
-            "@test"
+            "@test",
+            "@test:types"
         ]
     },
     "require-dev": {

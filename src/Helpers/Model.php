@@ -194,7 +194,6 @@ class Model implements ModelFilterInterface
         }
 
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
-
         switch ($textFieldOperator) {
             case 'is':
                 $query->where($field, '=', $value);
@@ -205,22 +204,46 @@ class Model implements ModelFilterInterface
 
                 break;
             case 'starts_with':
-                $query->where($field, 'like', $value . '%');
+                $query->where($field, SqlSupport::like(), $value . '%');
 
                 break;
             case 'ends_with':
-                $query->where($field, 'like', '%' . $value);
+                $query->where($field, SqlSupport::like(), '%' . $value);
 
                 break;
             case 'contains':
-                $query->where($field, 'like', '%' . $value . '%');
+                $query->where($field, SqlSupport::like(), '%' . $value . '%');
 
                 break;
             case 'contains_not':
-                $query->where($field, 'not like', '%' . $value . '%');
+                $query->where($field, 'NOT ' . SqlSupport::like(), '%' . $value . '%');
 
                 break;
-        }
+        case 'is_empty':
+            $query->where($field, '=', '')->orWhereNull($field);
+
+            break;
+        case 'is_not_empty':
+            $query->where($field, '!=', '')->whereNotNull($field);
+
+            break;
+        case 'is_null':
+            $query->whereNull($field);
+
+            break;
+        case 'is_not_null':
+            $query->whereNotNull($field);
+
+            break;
+        case 'is_blank':
+            $query->where($field, '=', '');
+
+            break;
+        case 'is_not_blank':
+            $query->where($field, '!=', '')->orWhereNull($field);
+
+            break;
+    }
     }
 
     /**
@@ -233,7 +256,7 @@ class Model implements ModelFilterInterface
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
             strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
         );
     }
 
@@ -285,7 +308,7 @@ class Model implements ModelFilterInterface
                         $hasColumn = Schema::hasColumn($table, $field);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, 'like', '%' . $this->search . '%');
+                            $query->orWhere($table . '.' . $field, SqlSupport::like(), '%' . $this->search . '%');
                         }
                     }
                 }
@@ -316,13 +339,13 @@ class Model implements ModelFilterInterface
                     if ($query->getRelation($nestedTable) != '') {
                         foreach ($column as $nestedColumn) {
                             $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                $query->where($nestedColumn, 'like', '%' . $this->search . '%');
+                                $query->where($nestedColumn, SqlSupport::like(), '%' . $this->search . '%');
                             });
                         }
                     }
                 } else {
                     $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                        $query->where($column, 'like', '%' . $this->search . '%');
+                        $query->where($column, SqlSupport::like(), '%' . $this->search . '%');
                     });
                 }
             }

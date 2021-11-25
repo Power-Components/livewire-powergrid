@@ -16,11 +16,13 @@ class SqlSupport
      */
     public static function like(): string
     {
-        if (DB::getDriverName() == 'pgsql') {
-            return 'ILIKE';
-        }
+        $driverName = DB::getDriverName();
 
-        return 'LIKE';
+        $likeSyntax = [
+            'pgsql' => 'ILIKE',
+        ];
+
+        return $likeSyntax[$driverName] ?? 'LIKE';
     }
 
     /**

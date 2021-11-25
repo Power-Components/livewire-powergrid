@@ -23,6 +23,9 @@ class TestCase extends BaseTestCase
 
     protected function migrations(): void
     {
+        Schema::dropIfExists('dishes');
+        Schema::dropIfExists('categories');
+
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -39,6 +42,7 @@ class TestCase extends BaseTestCase
             $table->string('stored_at');
             $table->boolean('active')->default(true);
             $table->datetime('produced_at');
+            $table->string('chef_name')->nullable();
             $table->timestamps();
         });
     }
@@ -68,13 +72,18 @@ class TestCase extends BaseTestCase
      * @param Application $app
      * @return void
      */
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
+
         $app['config']->set('database.connections.testbench', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
+            'driver'   => env('DB_DRIVER'),
+            'host'     => env('DB_HOST'),
+            'port'     => env('DB_PORT'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'database' => env('DB_DATABASE'),
             'prefix'   => '',
         ]);
     }
@@ -88,6 +97,7 @@ class TestCase extends BaseTestCase
                 'price'       => 10.00,
                 'in_stock'    => true,
                 'produced_at' => '2021-01-01 00:00:00',
+                'chef_name'   => null,
             ],
             [
                 'name'        => 'Peixada da chef Nábia',
@@ -95,6 +105,8 @@ class TestCase extends BaseTestCase
                 'price'       => 20.50,
                 'in_stock'    => true,
                 'produced_at' => '2021-02-02 00:00:00',
+                'chef_name'   => 'Nábia',
+
             ],
             [
                 'name'        => 'Carne Louca',
@@ -102,6 +114,8 @@ class TestCase extends BaseTestCase
                 'price'       => 30.00,
                 'in_stock'    => true,
                 'produced_at' => '2021-03-03 00:00:00',
+                'chef_name'   => '',
+
             ],
             [
                 'name'        => 'Bife à Rolê',
@@ -273,6 +287,10 @@ class TestCase extends BaseTestCase
                 $dish['price'] = $faker->randomFloat(2, 50, 200);
             };
 
+            if (!array_key_exists('chef_name', $dish)) {
+                $dish['chef_name'] = 'Luan';
+            }
+            
             return $dish;
         })->toArray();
     }

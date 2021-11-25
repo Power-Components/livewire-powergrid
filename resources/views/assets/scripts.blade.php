@@ -13,6 +13,12 @@
         document.body.removeChild(el);
     }
 
+    function htmlSpecialChars(string) {
+        const el = document.createElement('div');
+        el.innerText = string;
+        return el.innerHTML;
+    }
+
     function isV2() {
         return window.Alpine && window.Alpine.version && /^2\..+\..+$/.test(window.Alpine.version)
     }

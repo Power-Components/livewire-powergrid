@@ -59,7 +59,7 @@ class PowerGridComponent extends Component
 
     public bool $ignoreTablePrefix = false;
 
-    public bool $showDefaultMessage = false;
+    public bool $showUpdateMessages = false;
 
     /**
      * @var string[] $listeners
@@ -269,18 +269,18 @@ class PowerGridComponent extends Component
     {
         $update = $this->update($data);
 
+        $this->fillData();
+
+        if (!$this->showUpdateMessages) {
+            return;
+        }
+
         if (!$update) {
             session()->flash('error', $this->updateMessages('error', data_get($data, 'field')));
 
             return;
         }
         session()->flash('success', $this->updateMessages('success', data_get($data, 'field')));
-
-        if (!is_array($this->datasource)) {
-            return;
-        }
-
-        $this->fillData();
     }
 
     /**
