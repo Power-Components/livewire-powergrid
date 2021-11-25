@@ -4,7 +4,6 @@
     'field' => null,
     'theme' => null
 ])
-
 <div wire:ignore.self
      x-data="{
        editable: false,

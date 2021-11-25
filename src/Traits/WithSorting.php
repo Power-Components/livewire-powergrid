@@ -21,7 +21,7 @@ trait WithSorting
 
     public function reverseSort(): string
     {
-        return $this->sortDirection === 'asc'? 'desc' : 'asc';
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
     public function applySorting(Collection $query): Collection

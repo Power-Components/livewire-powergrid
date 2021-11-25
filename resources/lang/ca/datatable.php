@@ -41,6 +41,12 @@ return [
         'contains_not' => 'No té contingut',
         'starts_with'  => 'Comença per',
         'ends_with'    => 'Acaba en',
+        'is_null'      => 'is_null',
+        'is_not_null'  => 'is_not_null',
+        'is_blank'     => 'is_blank',
+        'is_not_blank' => 'is_not_blank',
+        'is_empty'     => 'is_empty',
+        'is_not_empty' => 'is_not_empty',
     ],
     'export' => [
         'exporting' => 'Espereu, si us plau!',
