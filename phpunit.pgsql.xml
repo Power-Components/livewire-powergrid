@@ -20,7 +20,7 @@
         <server name="DB_HOST" value="127.0.0.1"/>
         <server name="DB_PORT" value="5433"/>
         <server name="DB_USERNAME" value="postgres"/>
-        <server name="DB_PASSWORD" value="postgres"/>
+        <server name="DB_PASSWORD" value="password"/>
         <server name="DB_DATABASE" value="powergridtest"/>
     </php>
 </phpunit>

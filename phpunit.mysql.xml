@@ -14,7 +14,7 @@
     <server name="APP_ENV" value="testing"/>
     <server name="DB_DRIVER" value="mysql"/>
     <server name="DB_HOST" value="127.0.0.1"/>
-    <server name="DB_PORT" value="3308"/>
+    <server name="DB_PORT" value="3307"/>
     <server name="DB_USERNAME" value="root"/>
     <server name="DB_PASSWORD" value="password"/>
     <server name="DB_DATABASE" value="powergridtest"/>
