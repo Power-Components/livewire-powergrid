@@ -101,7 +101,7 @@ class SqlSupport
     /**
      * @return string
      */
-    public static function getDriverVersion(): string
+    public static function getServerVersion(): string
     {
         return DB::getPdo()
             ->getAttribute(constant('PDO::ATTR_SERVER_VERSION'));
