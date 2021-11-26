@@ -10,6 +10,29 @@ it('finds database version', function () {
     expect(SqlSupport::getDatabaseVersion())->not->toBeNull();
 });
 
+it('returns the proper "LIKE" syntax', function () {
+    $driver = SqlSupport::getDatabaseDriverName();
+        
+    expect(SqlSupport::like())
+        ->when(
+            $driver === 'mysql',
+            fn ($syntax) => $syntax->toBe('LIKE')
+        )
+        ->when(
+            $driver === 'sqlite',
+            fn ($syntax) => $syntax->toBe('LIKE')
+        )
+        ->when(
+            $driver === 'sqlsrv',
+            fn ($syntax) => $syntax->toBe('LIKE')
+        )
+        ->when(
+            $driver === 'pgsql',
+            fn ($syntax) => $syntax->toBe('ILIKE')
+        )
+        ->not->toBeNull();
+});
+
 it('returns sortField', function (array $data) {
     expect(SqlSupport::getSortSqlByDriver('field', $data['db'], $data['version']))
         ->toBe($data['expected']);
