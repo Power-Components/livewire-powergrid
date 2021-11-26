@@ -31,14 +31,20 @@ class SqlSupport
         return $likeSyntax[$driverName] ?? 'LIKE';
     }
 
+    /**
+     * @throws Exception
+     */
     public static function sortStringAsNumber(string $sortField): string
     {
         $driverName              = self::getDatabaseDriverName();
         $driverVersion           = self::getDatabaseVersion();
-        
+
         return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getSortSqlByDriver(string $sortField, string $driverName = '', string $driverVersion = ''): string
     {
         if (empty($sortField) || empty($driverName) || empty($driverVersion)) {

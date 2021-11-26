@@ -23,8 +23,12 @@
    } else {
         $content = addslashes($row->{$field});
    }
+
+   $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+
 @endphp
 <div wire:ignore.self
+     x-cloak
      x-data="{
        editable: false,
        id: '{{ $row->{$primaryKey} ?? $row->id }}',
@@ -36,8 +40,7 @@
          x-show="!editable"
          x-on:dblclick="editable = true"
     ></div>
-    <div x-cloak
-         x-show="editable">
+    <div x-show="editable">
         <input
             type="text"
             x-on:dblclick="editable = true"
@@ -49,7 +52,6 @@
             :value="$root.firstElementChild.innerText">
     </div>
 </div>
-
 <script>
     function sendEventInputChanged(event, id, field) {
         document.getElementsByClassName('message')[0].style.display = "none";

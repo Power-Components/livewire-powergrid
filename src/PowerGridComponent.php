@@ -57,7 +57,7 @@ class PowerGridComponent extends Component
 
     public array $relationSearch = [];
 
-    public bool $ignoreTablePrefix = false;
+    public bool $ignoreTablePrefix = true;
 
     public bool $showUpdateMessages = false;
 
@@ -367,8 +367,6 @@ class PowerGridComponent extends Component
             $sortField = $this->currentTable . '.' . $this->sortField;
         }
 
-        $sortFieldType = SqlSupport::getSortFieldType($sortField);
-
         /** @var Builder $results */
         $results = $this->resolveModel($datasource)
             ->where(function (Builder $query) {
@@ -381,8 +379,12 @@ class PowerGridComponent extends Component
                     ->filter();
             });
 
-        if ($this->withSortStringNumber && SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+        if ($this->withSortStringNumber) {
+            $sortFieldType = SqlSupport::getSortFieldType($sortField);
+
+            if (SqlSupport::isValidSortFieldType($sortFieldType)) {
+                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            }
         }
 
         $results = $results->orderBy($sortField, $this->sortDirection);
