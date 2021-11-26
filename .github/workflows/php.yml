@@ -24,7 +24,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       postgres:
-        image: postgres:10.8
+        image: postgres:9.6
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
