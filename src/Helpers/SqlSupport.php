@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Support\Facades\{DB, Log, Schema};
+use Illuminate\Support\Facades\{DB, Schema};
+use Exception;
 
 class SqlSupport
 {
@@ -63,7 +64,7 @@ class SqlSupport
     }
 
     /**
-     * @param string $sortFieldType
+     * @param string|null $sortFieldType
      * @return bool
      */
     public static function isValidSortFieldType(?string $sortFieldType): bool
@@ -78,7 +79,7 @@ class SqlSupport
     /**
      * @param string $sortField
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getSortFieldType(string $sortField): ?string
     {
@@ -88,12 +89,21 @@ class SqlSupport
         }
 
         if (!Schema::hasColumn($data[0], $data[1])) {
-            throw new \Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.docsforge.com/main/include-columns/#fieldstring-field-string-datafield");
+            throw new Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.docsforge.com/main/include-columns/#fieldstring-field-string-datafield");
         }
 
         return Schema::getConnection()
             ->getDoctrineColumn($data[0], $data[1])
             ->getType()
             ->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getDriverVersion(): string
+    {
+        return DB::getPdo()
+            ->getAttribute(constant('PDO::ATTR_SERVER_VERSION'));
     }
 }
