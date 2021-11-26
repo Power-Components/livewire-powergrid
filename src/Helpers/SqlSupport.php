@@ -8,16 +8,21 @@ use Illuminate\Support\Facades\{DB, Schema};
 class SqlSupport
 {
     /**
-     * @var array|string[]
+     * @var array<int,string>|string[]
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
-    /**
-     * @return string
-     */
     public static function like(): string
     {
-        $driverName = DB::getDriverName();
+        $driverName = self::getDatabaseDriverName();
+
+        /*
+        |--------------------------------------------------------------------------
+        |  Search 'LIKE' (drivers)
+        |--------------------------------------------------------------------------
+        | PowerGrid needs to sort with "case-insensitive".
+        | Here, we adapt the 'LIKE' syntax for each database driver.
+        */
 
         $likeSyntax = [
             'pgsql' => 'ILIKE',
@@ -26,41 +31,59 @@ class SqlSupport
         return $likeSyntax[$driverName] ?? 'LIKE';
     }
 
-    /**
-     * @param string $sortField
-     * @return string
-     */
     public static function sortStringAsNumber(string $sortField): string
     {
-        $driverName = DB::getDriverName();
-
-        return self::getSortSqlByDriver($sortField, $driverName);
+        $driverName              = self::getDatabaseDriverName();
+        $driverVersion           = self::getDatabaseVersion();
+        
+        return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
     }
 
-    /**
-     * @param string $sortField
-     * @param string $driverName
-     * @param string $driverVersion
-     * @return string
-     */
-    private static function getSortSqlByDriver(string $sortField, string $driverName, string $driverVersion = '*'): string
+    public static function getSortSqlByDriver(string $sortField, string $driverName = '', string $driverVersion = ''): string
     {
-        $sqlByDriver = [
-            'sqlite' => [
-                '*' => "CAST($sortField AS INTEGER)",
-            ],
+        if (empty($sortField) || empty($driverName) || empty($driverVersion)) {
+            throw new Exception('sortField, driverName and driverVersion must be informed');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        |  Supported Databases (drivers)
+        |--------------------------------------------------------------------------
+        | PowerGrid needs to sort string as number. I.e: Rooms  1, 1a, 1b, 2, 3... 10.
+        | Here, we adapt the SQL sorting syntax between databases and versions.
+        |  0     => default,
+        |  x.x.x => version which the syntax was implemented.
+        */
+
+        $default = "$sortField+0"; //default, fallback
+
+        $supportedVersions = [
             'mysql' => [
-                '*' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
+                '0'     => $default,
+                '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
+            ],
+            'sqlite' => [
+                '0' => "CAST($sortField AS INTEGER)",
             ],
             'pgsql' => [
-                '*' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER)",
+                '0' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER)",
             ],
             'sqlsrv' => [
-                '*' => "CAST(SUBSTRING($sortField, PATINDEX('%[a-z]%', $sortField), LEN($sortField)-PATINDEX('%[a-z]%', $sortField)) AS INT)",
+                '0' => "CAST(SUBSTRING($sortField, PATINDEX('%[a-z]%', $sortField), LEN($sortField)-PATINDEX('%[a-z]%', $sortField)) AS INT)",
             ],
         ];
 
-        return $sqlByDriver[$driverName][$driverVersion] ??  $sortField;
+        if (!isset($supportedVersions[$driverName])) {
+            return $default;
+        }
+
+        $syntax = collect($supportedVersions[$driverName])
+                ->filter(function ($syntax, $version) use ($driverVersion) {
+                    return version_compare($version, $driverVersion, '<=');
+                })
+                ->last();
+
+        return is_null($syntax) === true ? $default : $syntax;
     }
 
     /**
@@ -98,12 +121,13 @@ class SqlSupport
             ->getName();
     }
 
-    /**
-     * @return string
-     */
-    public static function getServerVersion(): string
+    public static function getDatabaseDriverName(): string
     {
-        return DB::getPdo()
-            ->getAttribute(constant('PDO::ATTR_SERVER_VERSION'));
+        return DB::getDriverName();
+    }
+
+    public static function getDatabaseVersion(): string
+    {
+        return DB::getPdo()->getAttribute(constant('PDO::ATTR_SERVER_VERSION'));
     }
 }
