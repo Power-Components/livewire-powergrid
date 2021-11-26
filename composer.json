@@ -45,11 +45,13 @@
         "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
         "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
         "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
+        "test:sqlsrv":  "./vendor/bin/pest --configuration phpunit.sqlsrv.xml",
         "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
         "test:dbs": [
             "@test:sqlite",
             "@test:mysql",
-            "@test:pgsql"
+            "@test:pgsql",
+            "@test:sqlsrv"
         ],
         "check": [
             "@cs-fixer",
