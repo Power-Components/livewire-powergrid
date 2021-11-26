@@ -14,9 +14,9 @@
     <server name="APP_ENV" value="testing"/>
     <server name="DB_DRIVER" value="sqlsrv"/>
     <server name="DB_HOST" value="127.0.0.1"/>
-    <server name="DB_PORT" value="3308"/>
-    <server name="DB_USERNAME" value="root"/>
-    <server name="DB_PASSWORD" value="password"/>
-    <server name="DB_DATABASE" value="powergridtest"/>
+    <server name="DB_PORT" value="1434"/>
+    <server name="DB_USERNAME" value="sa"/>
+    <server name="DB_PASSWORD" value="yourStrong(!)Password"/>
+    <server name="DB_DATABASE" value="tempdb"/>
   </php>
 </phpunit>
