@@ -2,8 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Support\Facades\{DB, Schema};
 use Exception;
+use Illuminate\Support\Facades\{DB, Schema};
 
 class SqlSupport
 {
