@@ -2,8 +2,8 @@
 
 use PowerComponents\LivewirePowerGrid\Helpers\SqlSupport;
 
-it('finds database name', function () {
-    expect(SqlSupport::getDatabaseName())->not->toBeNull();
+it('finds database driver name', function () {
+    expect(SqlSupport::getDatabaseDriverName())->not->toBeNull();
 });
 
 it('finds database version', function () {

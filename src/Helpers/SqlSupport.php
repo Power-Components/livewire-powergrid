@@ -14,7 +14,15 @@ class SqlSupport
 
     public static function like(): string
     {
-        $driverName = self::getDatabaseName();
+        $driverName = self::getDatabaseDriverName();
+
+        /*
+        |--------------------------------------------------------------------------
+        |  Search 'LIKE' (drivers)
+        |--------------------------------------------------------------------------
+        | PowerGrid needs to sort with "case-insensitive".
+        | Here, we adapt the 'LIKE' syntax for each database driver.
+        */
 
         $likeSyntax = [
             'pgsql' => 'ILIKE',
@@ -25,7 +33,7 @@ class SqlSupport
 
     public static function sortStringAsNumber(string $sortField): string
     {
-        $driverName              = self::getDatabaseName();
+        $driverName              = self::getDatabaseDriverName();
         $driverVersion           = self::getDatabaseVersion();
         
         return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
@@ -37,11 +45,21 @@ class SqlSupport
             throw new Exception('sortField, driverName and driverVersion must be informed');
         }
 
-        $default = "$sortField+0";
+        /*
+        |--------------------------------------------------------------------------
+        |  Supported Databases (drivers)
+        |--------------------------------------------------------------------------
+        | PowerGrid needs to sort string as number. I.e: Rooms  1, 1a, 1b, 2, 3... 10.
+        | Here, we adapt the SQL sorting syntax between databases and versions.
+        |  0     => default,
+        |  x.x.x => version which the syntax was implemented.
+        */
+
+        $default = "$sortField+0"; //default, fallback
 
         $supportedVersions = [
             'mysql' => [
-                '0'     => "$sortField+0",
+                '0'     => $default,
                 '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
             ],
             'sqlite' => [
@@ -103,7 +121,7 @@ class SqlSupport
             ->getName();
     }
 
-    public static function getDatabaseName(): string
+    public static function getDatabaseDriverName(): string
     {
         return DB::getDriverName();
     }
