@@ -25,11 +25,13 @@
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')
                 </a>
-                <a x-on:click="$wire.call('exportToXLS', true); open = false"
-                   href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
-                    @lang('livewire-powergrid::datatable.labels.selected')
-                </a>
+                @if($checkbox)
+                    <a x-on:click="$wire.call('exportToXLS', true); open = false"
+                       href="#"
+                       class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                        @lang('livewire-powergrid::datatable.labels.selected')
+                    </a>
+                @endif
             </div>
         @endif
         @if(in_array('csv',$exportType))
@@ -39,10 +41,12 @@
                    class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')
                 </a>
-                <a x-on:click="$wire.call('exportToCsv', true); open = false" href="#"
-                   class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
-                    @lang('livewire-powergrid::datatable.labels.selected')
-                </a>
+                @if($checkbox)
+                    <a x-on:click="$wire.call('exportToCsv', true); open = false" href="#"
+                       class="px-2 block text-gray-800 hover:bg-gray-100 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
+                        @lang('livewire-powergrid::datatable.labels.selected')
+                    </a>
+                @endif
             </div>
         @endif
     </div>

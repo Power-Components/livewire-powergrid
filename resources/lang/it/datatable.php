@@ -41,6 +41,12 @@ return [
         'contains_not' => 'Non contiene',
         'starts_with'  => 'Inizia con',
         'ends_with'    => 'Termina con',
+        'is_null'      => 'is_null',
+        'is_not_null'  => 'is_not_null',
+        'is_blank'     => 'is_blank',
+        'is_not_blank' => 'is_not_blank',
+        'is_empty'     => 'is_empty',
+        'is_not_empty' => 'is_not_empty',
     ],
     'export' => [
         'exporting' => 'Attendere prego!',

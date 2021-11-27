@@ -28,7 +28,7 @@ class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
 
-    protected $demoUsers = null; //Demo users. Should be removed in a real project.
+    protected $demoUsers = null; // Demo users. Should be removed in a real project.
 
     protected function getListeners()
     {

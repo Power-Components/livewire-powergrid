@@ -34,6 +34,7 @@
             :actions="$actions"
             :columns="$columns"
             :theme="$theme"
+            :enabledFilters="$enabledFilters"
         />
         @if(is_null($data) || count($data) === 0)
             <th>
@@ -59,6 +60,7 @@
                     @endif
 
                     <x-livewire-powergrid::row
+                        :currentTable="$currentTable"
                         :primaryKey="$primaryKey"
                         :theme="$theme"
                         :row="$row"

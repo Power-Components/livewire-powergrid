@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
+use Illuminate\Support\{Carbon, Collection as BaseCollection, Facades\Schema, Str};
 use PowerComponents\LivewirePowerGrid\Services\Contracts\CollectionFilterInterface;
 
 class Collection implements CollectionFilterInterface
@@ -138,9 +138,6 @@ class Collection implements CollectionFilterInterface
 
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
-                if (!filled($value)) {
-                    continue;
-                }
                 switch ($key) {
                     case 'date_picker':
                         $this->filterDatePicker($field, $value);
@@ -195,16 +192,16 @@ class Collection implements CollectionFilterInterface
     {
         return isset($this->filters['input_text_options'][$field]) && in_array(
             strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with']
+            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
         );
     }
 
     /**
      * @param string $field
-     * @param string $value
+     * @param string|null $value
      * @return void
      */
-    public function filterInputText(string $field, string $value): void
+    public function filterInputText(string $field, ?string $value): void
     {
         $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
@@ -221,7 +218,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return Str::startsWith(Str::lower($row->{$field}), Str::lower($value));
+                    return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
@@ -229,7 +226,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return Str::endsWith(Str::lower($row->{$field}), Str::lower($value));
+                    return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
@@ -237,7 +234,7 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return false !== stristr($row->{$field}, strtolower($value));
+                    return false !== stristr($row->{$field}, strtolower((string) $value));
                 });
 
                 break;
@@ -246,10 +243,52 @@ class Collection implements CollectionFilterInterface
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
                     $row = (object) $row;
 
-                    return !Str::Contains(Str::lower($row->{$field}), Str::lower($value));
+                    return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
 
                 break;
+
+            case 'is_blank':
+                $this->query = $this->query->whereNotNull($field)->where($field, '=', '');
+
+            break;
+
+            case 'is_not_blank':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} != '' || is_null($row->{$field});
+                });
+
+            break;
+
+            case 'is_null':
+                $this->query = $this->query->whereNull($field);
+
+            break;
+
+            case 'is_not_null':
+                $this->query = $this->query->whereNotNull($field);
+
+            break;
+
+            case 'is_empty':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} == '' || is_null($row->{$field});
+                });
+
+            break;
+
+            case 'is_not_empty':
+                $this->query = $this->query->filter(function ($row) use ($field) {
+                    $row = (object) $row;
+
+                    return $row->{$field} !== '' && !is_null($row->{$field});
+                });
+
+            break;
         }
     }
 
@@ -339,14 +378,20 @@ class Collection implements CollectionFilterInterface
                 $row = (object) $row;
 
                 foreach ($this->columns as $column) {
-                    $field = $column->field;
-
-                    try {
-                        if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
-                            return false !== stristr($row->{$field}, strtolower($this->search));
+                    if ($column->searchable) {
+                        if (filled($column->dataField)) {
+                            $field = $column->dataField;
+                        } else {
+                            $field = $column->field;
                         }
-                    } catch (\Exception $exception) {
-                        throw new \Exception($exception);
+
+                        try {
+                            if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                                return false !== stristr($row->{$field}, strtolower($this->search));
+                            }
+                        } catch (\Exception $exception) {
+                            throw new \Exception($exception);
+                        }
                     }
                 }
 

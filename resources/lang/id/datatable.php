@@ -41,5 +41,15 @@ return [
         'contains_not' => 'Tidak terkait',
         'starts_with'  => 'Dimulai dengan',
         'ends_with'    => 'Diakhiri dengan',
+        'is_null'      => 'is_null',
+        'is_not_null'  => 'is_not_null',
+        'is_blank'     => 'is_blank',
+        'is_not_blank' => 'is_not_blank',
+        'is_empty'     => 'is_empty',
+        'is_not_empty' => 'is_not_empty',
+    ],
+    'export' => [
+        'exporting' => 'Please wait!',
+        'completed' => 'Export completed! Your files are ready for download',
     ],
 ];

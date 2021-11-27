@@ -22,10 +22,12 @@
                             <a class="text-black-50" wire:click="exportToXLS()" href="#">
                                 @lang('livewire-powergrid::datatable.labels.all')
                             </a>
-                            /
-                            <a class="text-black-50" wire:click="exportToXLS(true)" href="#">
-                                @lang('livewire-powergrid::datatable.labels.selected')
-                            </a>
+                            @if($checkbox)
+                                /
+                                <a class="text-black-50" wire:click="exportToXLS(true)" href="#">
+                                    @lang('livewire-powergrid::datatable.labels.selected')
+                                </a>
+                            @endif
                         </div>
                     </li>
                 @endif
@@ -36,10 +38,12 @@
                             <a class="text-black-50" wire:click="exportToCsv()" href="#">
                                 @lang('livewire-powergrid::datatable.labels.all')
                             </a>
-                            /
-                            <a class="text-black-50" wire:click="exportToCsv(true)" href="#">
-                                @lang('livewire-powergrid::datatable.labels.selected')
-                            </a>
+                            @if($checkbox)
+                                /
+                                <a class="text-black-50" wire:click="exportToCsv(true)" href="#">
+                                    @lang('livewire-powergrid::datatable.labels.selected')
+                                </a>
+                            @endif
                         </div>
                     </li>
                 @endif

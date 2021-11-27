@@ -19,6 +19,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'price'      => 1.58,
                 'in_stock'   => true,
                 'created_at' => '2021-01-01 00:00:00',
+                'chef_name'  => '',
             ],
             [
                 'id'         => 2,
@@ -26,6 +27,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'price'      => 1.68,
                 'in_stock'   => true,
                 'created_at' => '2021-02-02 00:00:00',
+                'chef_name'  => null,
             ],
             [
                 'id'         => 3,
@@ -33,6 +35,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'price'      => 1.78,
                 'in_stock'   => false,
                 'created_at' => '2021-03-03 00:00:00',
+                'chef_name'  => 'Luan',
             ],
             [
                 'id'         => 4,
@@ -40,6 +43,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'price'      => 1.88,
                 'in_stock'   => true,
                 'created_at' => '2021-04-04 00:00:00',
+                'chef_name'  => 'Luan',
             ],
             [
                 'id'         => 5,
@@ -47,6 +51,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'price'      => 1.98,
                 'in_stock'   => false,
                 'created_at' => '2021-05-05 00:00:00',
+                'chef_name'  => 'Luan',
             ],
         ]);
     }
@@ -64,6 +69,7 @@ class DishesCollectionTable extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('chef_name')
             ->addColumn('price')
             ->addColumn('in_stock')
             ->addColumn('in_stock_label', function ($entry) {
@@ -88,6 +94,13 @@ class DishesCollectionTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->makeInputText('name')
+                ->sortable(),
+
+            Column::add()
+                ->title(__('Chef'))
+                ->field('chef_name')
+                ->searchable()
+                ->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()

@@ -1,6 +1,6 @@
 {
     "name": "power-components/livewire-powergrid",
-    "description": "A Laravel Livewire table component with searching, sorting, checkboxes, pagination and export data.",
+    "description": "PowerGrid generates Advanced Datatables using Laravel Livewire.",
     "homepage": "https://github.com/power-components/livewire-powergrid",
     "license": "MIT",
     "minimum-stability": "dev",
@@ -36,22 +36,27 @@
         "php": "^7.4.1 | ^8.0 | ^8.1",
         "livewire/livewire": "^2.4",
         "box/spout": "^3",
-        "doctrine/dbal": "^3.1",
-        "friendsofphp/php-cs-fixer": "^3.2"
+        "doctrine/dbal": "^3.1"
     },
     "scripts": {
-        "stan": "phpstan analyse --ansi --memory-limit=-1",
-        "pest": "php ./vendor/bin/pest --colors=always",
-        "cs-check": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
+        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
         "fix": "./vendor/bin/php-cs-fixer fix",
-        "test": [
-            "@pest",
-            "@stan",
-            "@cs-check"
+        "test":  "@test:sqlite",
+        "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
+        "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
+        "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
+        "test:sqlsrv":  "./vendor/bin/pest --configuration phpunit.sqlsrv.xml",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
+        "test:dbs": [
+            "@test:sqlite",
+            "@test:mysql",
+            "@test:pgsql",
+            "@test:sqlsrv"
         ],
         "check": [
             "@cs-fixer",
-            "@test"
+            "@test",
+            "@test:types"
         ]
     },
     "require-dev": {

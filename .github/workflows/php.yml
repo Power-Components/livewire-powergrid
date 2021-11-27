@@ -13,6 +13,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: powergridtest
+        ports:
+         - 3307:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      postgres:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: powergridtest
+        ports:
+        - 5433:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     strategy:
       matrix:
         php: [ 7.4, 8.0 ]
@@ -50,10 +71,19 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Cs Fixer
-        run: vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
+        run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
+
+      - name: Testing with SQLite
+        run: |
+          ./vendor/bin/pest --configuration phpunit.sqlite.xml
+
+      - name: Testing with MySQL
+        run: |
+            ./vendor/bin/pest --configuration phpunit.mysql.xml
+
+      - name: Testing with PostgreSQL
+        run: |
+            ./vendor/bin/pest --configuration phpunit.pgsql.xml
 
       - name: Larastan
-        run: vendor/bin/phpstan analyse --ansi --memory-limit=-1
-
-      - name: Pest tests
-        run: vendor/bin/pest
+        run: ./vendor/bin/phpstan analyse --ansi --memory-limit=-1

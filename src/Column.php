@@ -118,7 +118,9 @@ final class Column
     public function field(string $field, string $dataField = ''): Column
     {
         $this->field     = $field;
-        $this->dataField = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -216,7 +218,9 @@ final class Column
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class']   = $classAttr;
         $this->inputs['date_picker']['config']  = $settings;
-        $this->dataField                        = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -231,7 +235,9 @@ final class Column
     public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
     {
         $this->editable  = $hasPermission;
-        $this->dataField = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -266,7 +272,9 @@ final class Column
         $this->inputs['number']['enabled']   = true;
         $this->inputs['number']['decimal']   = $decimal;
         $this->inputs['number']['thousands'] = $thousands;
-        $this->dataField                     = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -278,7 +286,9 @@ final class Column
     public function makeInputText(string $dataField = ''): Column
     {
         $this->inputs['input_text']['enabled'] = true;
-        $this->dataField                       = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
@@ -312,7 +322,9 @@ final class Column
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
         $this->inputs['boolean_filter']['class']       = $settings['class']       ?? '';
         $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
-        $this->dataField                               = $dataField;
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
 
         return $this;
     }
