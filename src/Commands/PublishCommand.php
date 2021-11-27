@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
@@ -12,13 +13,16 @@ class PublishCommand extends Command
 
     protected $description = 'Publish table stub';
 
+    /**
+     * @throws Exception
+     */
     public function handle(): void
     {
         if ($this->option('type') === 'job') {
             $exportJobFile = __DIR__ . '/../Jobs/ExportJob.php';
 
             if (File::exists($exportJobFile) === false && File::isReadable($exportJobFile) === true) {
-                throw new \Exception('ExportJob.php not found.');
+                throw new Exception('ExportJob.php not found.');
             }
 
             $file = (string) file_get_contents($exportJobFile);
