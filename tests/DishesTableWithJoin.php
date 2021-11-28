@@ -17,9 +17,12 @@ class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
-    protected $listeners = [
-        'deletedEvent' => 'deletedEvent',
-    ];
+    protected function getListeners()
+    {
+        $this->listeners[] = 'deletedEvent';
+
+        return $this->listeners;
+    }
 
     public array $eventId = [];
 
