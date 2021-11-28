@@ -121,4 +121,14 @@ class DishesCollectionTable extends PowerGridComponent
                 ->makeInputDatePicker('created_at'),
         ];
     }
+
+    public function bootstrap()
+    {
+        config(['livewire-powergrid.theme' => 'bootstrap']);
+    }
+
+    public function tailwind()
+    {
+        config(['livewire-powergrid.theme' => 'tailwind']);
+    }
 }
