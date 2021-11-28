@@ -32,7 +32,7 @@ final class PowerGridEloquent
      */
     public function addColumn(string $field, Closure $closure = null): PowerGridEloquent
     {
-        $this->columns[$field] = $closure ?? fn ($model) => $model->{$field};
+        $this->columns[$field] = $closure ?? fn ($model) => e($model->{$field});
 
         return $this;
     }

@@ -5,23 +5,22 @@
          colors="true"
 >
     <testsuites>
-        <testsuite name="Test Suite">
+        <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
             <directory suffix=".php">./app</directory>
-            <directory suffix=".php">./src</directory>
         </include>
     </coverage>
-        <php>
+    <php>
         <server name="APP_ENV" value="testing"/>
-        <server name="DB_DRIVER" value="sqlite"/>
-        <server name="DB_HOST" value=""/>
-        <server name="DB_PORT" value="0"/>
-        <server name="DB_USERNAME" value=""/>
-        <server name="DB_PASSWORD" value=""/>
-        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="DB_DRIVER" value="pgsql"/>
+        <server name="DB_HOST" value="127.0.0.1"/>
+        <server name="DB_PORT" value="5433"/>
+        <server name="DB_USERNAME" value="postgres"/>
+        <server name="DB_PASSWORD" value="password"/>
+        <server name="DB_DATABASE" value="powergridtest"/>
     </php>
 </phpunit>

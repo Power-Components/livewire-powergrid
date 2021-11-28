@@ -41,5 +41,11 @@ return [
         'contains_not' => 'İçermeyen',
         'starts_with'  => 'Başlayan',
         'ends_with'    => 'Biten',
+        'is_null'      => 'is_null',
+        'is_not_null'  => 'is_not_null',
+        'is_blank'     => 'is_blank',
+        'is_not_blank' => 'is_not_blank',
+        'is_empty'     => 'is_empty',
+        'is_not_empty' => 'is_not_empty',
     ],
 ];

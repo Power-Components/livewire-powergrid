@@ -11,7 +11,14 @@ it('sorts by "name" and then by "id"')
     ->call('sortBy', 'id')
     ->assertSeeHtml('Pastel de Nata');
 
-it('searches data')
+    it('searches data')
+        ->livewire(DishesTable::class)
+        ->assertSeeHtml('Pastel de Nata')
+        ->set('search', 'Sugo')
+        ->assertSeeHtml('Almôndegas ao Sugo')
+        ->assertDontSeeHtml('Pastel de Nata');
+
+it('searches data as case insensitive')
     ->livewire(DishesTable::class)
     ->assertSeeHtml('Pastel de Nata')
     ->set('search', 'sugo')

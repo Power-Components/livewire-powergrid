@@ -1,0 +1,54 @@
+version: '3'
+services:
+  mysql:
+    container_name: 'mysql_test'
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '3307:3306'
+    command: '--default-authentication-plugin=mysql_native_password'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: 'powergridtest'
+      MYSQL_USER: 'powergrid'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    networks:
+      - sail
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-ppassword" ]
+      retries: 3
+      timeout: 5s
+  pgsql:
+    container_name: 'pgsql_test'
+    image: 'postgres:13'
+    ports:
+      - '5433:5432'
+    environment:
+      PGPASSWORD: 'password'
+      POSTGRES_DB: 'powergridtest'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+    networks:
+      - sail
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "powergridtest", "-U", "postgres" ]
+      retries: 3
+      timeout: 5s
+  sqlsrv:
+    container_name: 'sqlsrv_test'
+    image: 'mcr.microsoft.com/mssql/server:2017-latest'
+    ports:
+      - '1434:1433'
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: 'yourStrong(!)Password'
+    networks:
+      - sail
+    healthcheck:
+      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "yourStrong(!)Password", "-Q", "select 1" ]
+      retries: 3
+      timeout: 5s
+networks:
+  sail:
+    driver: bridge

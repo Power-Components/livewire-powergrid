@@ -12,20 +12,16 @@ trait WithSorting
 
     public bool $withSortStringNumber = false;
 
-    public function sortBy(string $field): void
+    public function sortBy(string $field, string $direction = 'asc'): void
     {
-        $this->sortDirection = $this->sortField === $field
-            ? $this->reverseSort()
-            : 'asc';
+        $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : $direction;
 
         $this->sortField = $field;
     }
 
     public function reverseSort(): string
     {
-        return $this->sortDirection === 'asc'
-            ? 'desc'
-            : 'asc';
+        return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
     public function applySorting(Collection $query): Collection

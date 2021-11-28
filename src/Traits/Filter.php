@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\{Arr, Collection};
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait Filter
@@ -193,6 +193,13 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
+
+        if (in_array($value, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'])) {
+            $this->enabledFilters[$field]['disabled']       = true;
+            $this->filters['input_text'][$field]            = null;
+        } else {
+            $this->enabledFilters[$field]['disabled']       = false;
+        }
 
         if ($value == '') {
             $this->clearFilter($field);
