@@ -3,9 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\{Carbon, HtmlString};
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
-use PowerComponents\LivewirePowerGrid\{
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     PowerGrid,
     PowerGridComponent,
@@ -16,9 +17,18 @@ class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
-    public string $sortField = 'dishes.id';
+    protected array $listeners = [
+        'deletedEvent' => 'deletedEvent',
+    ];
 
-    public string $sortDirection = 'asc';
+    public array $eventId = [];
+
+    public function deletedEvent(array $params)
+    {
+        $this->eventId = $params;
+    }
+
+    public string $sortField = 'dishes.id';
 
     public string $primaryKey = 'dishes.id';
 
@@ -160,6 +170,52 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->field('produced_at_formatted')
                 ->makeInputDatePicker('produced_at'),
         ];
+    }
+
+    public function actions(): array
+    {
+        return [
+            Button::add('edit-stock')
+                ->caption(new HtmlString(
+                    '<div id="edit">Edit</div>'
+                ))
+                ->class('text-center')
+                ->openModal('edit-stock', ['dishId' => 'id']),
+
+            Button::add('destroy')
+                ->caption(__('Delete'))
+                ->class('text-center')
+                ->emit('deletedEvent', ['dishId' => 'id'])
+                ->method('delete'),
+        ];
+    }
+
+    public function update(array $data): bool
+    {
+        try {
+            $updated = Dish::query()->find($data['id'])->update([
+                $data['field'] => $data['value'],
+            ]);
+        } catch (QueryException $exception) {
+            $updated = false;
+        }
+
+        return $updated;
+    }
+
+    public function updateMessages(string $status, string $field = '_default_message'): string
+    {
+        $updateMessages = [
+            'success' => [
+                '_default_message' => __('Data has been updated successfully!'),
+                'price_BRL'        => __('Preço alterado'),
+            ],
+            'error' => [
+                '_default_message' => __('Error updating the data.'),
+            ],
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 
     public function bootstrap()

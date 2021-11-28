@@ -1,10 +1,10 @@
 <?php
 
 use function Pest\Livewire\livewire;
-use PowerComponents\LivewirePowerGrid\Tests\{DishesCollectionTable, DishesTable, DishesTableWithJoin};
 
-it('properly filters by bool true', function (string $component) {
+it('properly filters by bool true', function (string $component, object $params) {
     livewire($component)
+        ->call($params->theme)
         ->assertSee('Em Estoque')
         ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"')
         ->set('filters', filterBoolean('in_stock', 'true'))
@@ -24,30 +24,30 @@ it('properly filters by bool true', function (string $component) {
         ->assertSee('Barco-Sushi Simples')
         ->assertSee('Polpetone Filé Mignon')
         ->assertSee('борщ');
-})->with([
-    [DishesTable::class],
-    [DishesTableWithJoin::class],
-]);
+})->with('themes');
 
-it('properly filters by bool true - using collection')
-    ->livewire(DishesCollectionTable::class)
-    ->assertSee('In Stock')
-    ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
-    ->set('filters', filterBoolean('in_stock', 'true'))
-    ->assertSee('Name 1')
-    ->assertSee('Name 2')
-    ->assertSee('Name 4')
-    ->assertDontSee('Name 3')
-    ->assertDontSee('Name 5')
-    ->call('clearFilter', 'in_stock')
-    ->assertSee('Name 1')
-    ->assertSee('Name 2')
-    ->assertSee('Name 3')
-    ->assertSee('Name 4')
-    ->assertSee('Name 5');
-
-it('properly filters by bool false', function (string $component) {
+it('properly filters by bool true - using collection', function (string $component, string $theme) {
     livewire($component)
+        ->call($theme)
+        ->assertSee('In Stock')
+        ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
+        ->set('filters', filterBoolean('in_stock', 'true'))
+        ->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 4')
+        ->assertDontSee('Name 3')
+        ->assertDontSee('Name 5')
+        ->call('clearFilter', 'in_stock')
+        ->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 3')
+        ->assertSee('Name 4')
+        ->assertSee('Name 5');
+})->with('themes with collection table');
+
+it('properly filters by bool false', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
         ->set('filters', filterBoolean('in_stock', 'false'))
         ->assertSee('Francesinha')
         ->assertSee('Barco-Sushi da Sueli')
@@ -65,54 +65,53 @@ it('properly filters by bool false', function (string $component) {
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertSee('Francesinha vegana');
-})->with([
-    [DishesTable::class],
-    [DishesTableWithJoin::class],
-]);
+})->with('themes');
 
-it('properly filters by bool false - using collection')
-    ->livewire(DishesCollectionTable::class)
-    ->assertSee('In Stock')
-    ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
-    ->set('filters', filterBoolean('in_stock', 'false'))
-    ->assertSee('Name 3')
-    ->assertSee('Name 5')
-    ->assertDontSee('Name 1')
-    ->assertDontSee('Name 2')
-    ->assertDontSee('Name 4')
-    ->call('clearFilter', 'in_stock')
-    ->assertSee('Name 1')
-    ->assertSee('Name 2')
-    ->assertSee('Name 3')
-    ->assertSee('Name 4')
-    ->assertSee('Name 5');
-
-it('properly filters by bool "all"', function (string $component) {
+it('properly filters by bool false - using collection', function (string $component, string $theme) {
     livewire($component)
-    ->set('filters', filterBoolean('in_stock', 'all'))
-    ->assertSee('Pastel de Nata')
-    ->assertSee('Peixada da chef Nábia')
-    ->assertSee('Carne Louca')
-    ->assertSee('Bife à Rolê')
-    ->assertSee('Francesinha vegana')
-    ->assertSee('Francesinha')
-    ->assertSee('Barco-Sushi da Sueli')
-    ->assertSee('Barco-Sushi Simples')
-    ->assertSee('Polpetone Filé Mignon')
-    ->assertSee('борщ');
-})->with([
-    [DishesTable::class],
-    [DishesTableWithJoin::class],
-]);
+        ->call($theme)
+        ->assertSee('In Stock')
+        ->assertSeeHtml('wire:input.debounce.300ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
+        ->set('filters', filterBoolean('in_stock', 'false'))
+        ->assertSee('Name 3')
+        ->assertSee('Name 5')
+        ->assertDontSee('Name 1')
+        ->assertDontSee('Name 2')
+        ->assertDontSee('Name 4')
+        ->call('clearFilter', 'in_stock')
+        ->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 3')
+        ->assertSee('Name 4')
+        ->assertSee('Name 5');
+})->with('themes with collection table');
 
-it('properly filters by bool "all" - using collection')
-    ->livewire(DishesCollectionTable::class)
-    ->set('filters', filterBoolean('in_stock', 'all'))
-    ->assertSee('Name 1')
-    ->assertSee('Name 2')
-    ->assertSee('Name 3')
-    ->assertSee('Name 4')
-    ->assertSee('Name 5');
+it('properly filters by bool "all"', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('filters', filterBoolean('in_stock', 'all'))
+        ->assertSee('Pastel de Nata')
+        ->assertSee('Peixada da chef Nábia')
+        ->assertSee('Carne Louca')
+        ->assertSee('Bife à Rolê')
+        ->assertSee('Francesinha vegana')
+        ->assertSee('Francesinha')
+        ->assertSee('Barco-Sushi da Sueli')
+        ->assertSee('Barco-Sushi Simples')
+        ->assertSee('Polpetone Filé Mignon')
+        ->assertSee('борщ');
+})->with('themes');
+
+it('properly filters by bool "all" - using collection', function (string $component, string $theme) {
+    livewire($component)
+        ->call($theme)
+        ->set('filters', filterBoolean('in_stock', 'all'))
+        ->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 3')
+        ->assertSee('Name 4')
+        ->assertSee('Name 5');
+})->with('themes with collection table');
 
 function filterBoolean(string $field, ?string $value): array
 {

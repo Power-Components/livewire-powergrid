@@ -64,7 +64,7 @@ class PowerGridComponent extends Component
     /**
      * @var string[] $listeners
      */
-    protected $listeners = [
+    protected array $listeners = [
         'eventChangeDatePiker' => 'eventChangeDatePiker',
         'eventInputChanged'    => 'eventInputChanged',
         'eventToggleChanged'   => 'eventInputChanged',

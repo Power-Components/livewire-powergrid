@@ -13,14 +13,13 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-    Themes\Bootstrap5};
+    PowerGridEloquent};
 
 class DishesTable extends PowerGridComponent
 {
     use ActionButton;
 
-    protected $listeners = [
+    protected array $listeners = [
         'deletedEvent' => 'deletedEvent',
     ];
 
