@@ -9,7 +9,12 @@ use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent,
+    Themes\Bootstrap5};
 
 class DishesTable extends PowerGridComponent
 {
@@ -36,7 +41,7 @@ class DishesTable extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function datasource(): ?Builder
+    public function datasource(): Builder
     {
         return Dish::with('category');
     }
@@ -213,5 +218,15 @@ class DishesTable extends PowerGridComponent
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+
+    public function bootstrap()
+    {
+        config(['livewire-powergrid.theme' => 'bootstrap']);
+    }
+
+    public function tailwind()
+    {
+        config(['livewire-powergrid.theme' => 'tailwind']);
     }
 }
