@@ -82,9 +82,13 @@ PowerGrid offers you the following features out of the box:
 - [Livewire 2x](https://laravel-livewire.com)
 - [Tailwind](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
+<br/>
+
 ## 2. Install
 
 Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.docsforge.com/main/install/).
+
+<br/>
 
 ## 3. Support
 
@@ -94,11 +98,15 @@ Before submitting a new request, please look into our previous issues.
 
 Verify if your bug/question or feature request has been previously submitted.
 
+<br/>
+
 ## 4. How to contribute
 
 🇺🇸 [How to contribute to PowerGrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/README-EN.md) - Translation by [@DanSysAnalyst](https://github.com/DanSysAnalyst)
 
 🇧🇷 [Guia para contribuir com o Powergrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/) - by [Claudio Pereira](https://github.com/cpereiraweb)
+
+<br/>
 
 ## 5. Credits
 
@@ -106,3 +114,9 @@ Created by: [Luan Freitas](https://github.com/luanfreitasdev)
 
 - [Contributors](../../contributors)
 - Logo & artwork by [Caneco](https://github.com/caneco)
+
+<br/>
+
+## 6. Thanks  💓
+
+- [JetBrains PhpStorm](https://www.jetbrains.com/phpstorm/) ([@phpstorm](https://twitter.com/phpstorm)) for sponsoring open-source development.
