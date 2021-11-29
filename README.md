@@ -17,17 +17,32 @@
 
 # Livewire ⚡PowerGrid⚡
 
-PowerGrid generates Advanced Datatables using Laravel [Livewire](https://laravel-livewire.com).
+<br/>
+
+PowerGrid creates modern, powerful and easy to customize Datatables based on Laravel [Livewire](https://laravel-livewire.com) library.
+
+<br/>
+
+➔  **Zero Configuration**: Tables have basic features activated by default.
+
+➔  **It fits your needs**: Extend and customize your table including components (checkbox, action buttons, editable fields), global search feature, column data filters and data export tool.
+
+➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
+
 
 <br/>
 
 ## 🚀 Instant Demo
 
-Get to the demo in 2 commands:
+Get a view of what PowerGrid can offer in just 2 commands:
+
+Install
 
 ```bash
 composer require power-components/livewire-powergrid
 ```
+
+Run
 
 ```bash
 php artisan powergrid:demo
@@ -37,35 +52,35 @@ php artisan powergrid:demo
 
 ## Features
 
-PowerGrid offers you the following features out of the box:
+With PowerGrid you get right out of the box:
 
-✅ **Filters & Search**
+- **Filters & Search**
 
-✅ **Column Sorting**
+- **Column Sorting**
 
-✅ **Pagination**
+- **Pagination**
 
-✅ **Action checkboxes**
+- **Action checkboxes**
 
-✅ **Action buttons**
+- **Action buttons**
 
-✅ **Toggle button**
+- **Toggle button**
 
-✅ **Click to edit**
+- **Click to edit**
 
-✅ **Click to copy**
+- **Click to copy**
 
-✅ **Link inside a table cell**
+- **Link inside a table cell**
 
-✅ **Livewire Modal Integration ([Livewire UI](https://github.com/livewire-ui/modal))**
+- **Livewire Modal Integration ([Livewire UI](https://github.com/livewire-ui/modal))**
 
-✅ **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
+- **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
 
-✅ **Queue Export for large tables**
+- **Queue Export for large tables**
 
-✅ **Works with Bootstrap 5 or Tailwind CSS 2**
+- **Works with Bootstrap 5 or Tailwind CSS 2**
 
-✅ **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
+- **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
 
 <br/>
 
@@ -86,7 +101,7 @@ PowerGrid offers you the following features out of the box:
 
 ## 2. Install
 
-Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.docsforge.com/main/install/).
+Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.docsforge.com/main/install/) page.
 
 <br/>
 
