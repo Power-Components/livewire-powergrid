@@ -68,7 +68,7 @@ class DishesTableWithJoin extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('dishes.name', function (Dish $dish) {
+            ->addColumn('dish_name', function (Dish $dish) {
                 return $dish->name;
             })
             ->addColumn('calories')
@@ -113,7 +113,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public function columns(): array
     {
-        $canEdit = true; //Permissão pra editar
+        $canEdit = true;
 
         return [
             Column::add()
@@ -124,12 +124,12 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Column::add()
                 ->title(__('Prato'))
-                ->field('dishes.name')
+                ->field('dish_name')
                 ->searchable()
                 ->clickToCopy(true)
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
-                ->sortable('dishes.name'),
+                ->sortable(),
 
             Column::add()
                 ->title(__('Categoria'))

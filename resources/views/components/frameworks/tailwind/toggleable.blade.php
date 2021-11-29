@@ -18,10 +18,20 @@
                        @click="saveToggleableInput((toggle === 0 ? toggle = 1 : toggle = 0), {{ $row->{$primaryKey} }}, '{{ $column->field }}')">
             </div>
         </div>
+        <script>
+            function saveToggleableInput(value, id, field) {
+                document.getElementsByClassName('message')[0].style.display = "none";
+                window.livewire.emit('eventToggleChanged', {
+                    id: id,
+                    field: field,
+                    value: value
+                })
+            }
+        </script>
     @else
         <div class="flex flex-row justify-center">
-            @if($row->{$column->field} === 0)
-                <div class="text-xs px-4 w-auto py-1 text-center bg-blue-200 text-blue-800 rounded-md">
+            @if($row->{$column->field} == 0)
+                <div class="text-xs px-4 w-auto py-1 text-center bg-red-200 text-red-800 rounded-md">
                     {{ $column->toggleable['default'][1] }}
                 </div>
             @else
@@ -31,14 +41,4 @@
             @endif
         </div>
     @endif
-    <script>
-        function saveToggleableInput(value, id, field) {
-            document.getElementsByClassName('message')[0].style.display = "none";
-            window.livewire.emit('eventToggleChanged', {
-                id: id,
-                field: field,
-                value: value
-            })
-        }
-    </script>
 </div>
