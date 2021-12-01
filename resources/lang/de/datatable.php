@@ -45,8 +45,8 @@ return [
         'is_not_null'  => 'nicht null ',
         'is_blank'     => 'Leer',
         'is_not_blank' => 'nicht leer',
-        'is_empty'     => 'ausgefüllt',
-        'is_not_empty' => 'unausgefüllt',
+        'is_empty'     => 'unausgefüllt',
+        'is_not_empty' => 'ausgefüllt',
     ],
     'export' => [
         'exporting' => 'Warten Sie mal!',
