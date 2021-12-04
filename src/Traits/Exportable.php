@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\{Collection, Model};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -43,6 +43,7 @@ trait Exportable
         }
 
         $model        = $this->resolveModel();
+        /** @phpstan-ignore-next-line */
         $currentTable = $model->getModel()->getTable();
 
         if (Str::of($this->sortField)->contains('.')) {

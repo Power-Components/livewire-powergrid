@@ -68,8 +68,6 @@ trait BatchableExport
     }
 
     /**
-     * @param string $exportFileType
-     * @return bool
      * @throws Throwable
      */
     public function runOnQueue(string $exportFileType): bool

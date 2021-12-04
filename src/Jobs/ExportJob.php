@@ -30,10 +30,10 @@ class ExportJob implements ShouldQueue
         array  $params
     ) {
         $this->columns  = $columns;
-        $this->type     = data_get($params, 'type');
-        $this->fileName = data_get($params, 'fileName');
-        $this->offset   = data_get($params, 'offset');
-        $this->limit    = data_get($params, 'limit');
+        $this->type     = $params['type'];
+        $this->fileName = $params['fileName'];
+        $this->offset   = $params['offset'];
+        $this->limit    = $params['limit'];
 
         /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
