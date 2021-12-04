@@ -26,7 +26,9 @@
             </div>
         @endif
         <div>
-            {!! $data->links(powerGridThemeRoot().'.pagination') !!}
+            @if(method_exists($data, 'links'))
+                {!! $data->links(powerGridThemeRoot().'.pagination') !!}
+            @endif
         </div>
     </div>
 @endif

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use function Pest\Livewire\livewire;
 
 beforeEach(
     function () {
@@ -10,121 +10,133 @@ beforeEach(
     }
 );
 
-it('properly sorts ASC/DESC with: date')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->call('sortBy', 'produced_at')
-    ->set('sortDirection', 'desc')
-    ->assertSeeHtml('Dish J')
-    ->assertSeeHtml('Dish I')
-    ->assertSeeHtml('Dish H')
-    ->assertSeeHtml('Dish G')
-    ->assertSeeHtml('Dish F')
-    ->assertSeeHtml('Dish E')
-    ->assertSeeHtml('Dish D')
-    ->assertDontSeeHtml('Dish K')
-    ->assertDontSeeHtml('Dish L')
-    ->call('sortBy', 'produced_at')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish K')
-    ->assertSeeHtml('Dish L')
-    ->assertSeeHtml('Dish A')
-    ->assertSeeHtml('Dish B')
-    ->assertSeeHtml('Dish C')
-    ->assertSeeHtml('Dish D')
-    ->assertSeeHtml('Dish E')
-    ->assertSeeHtml('Dish F')
-    ->assertSeeHtml('Dish G')
-    ->assertSeeHtml('Dish H')
-    ->assertDontSeeHtml('Dish I')
-    ->assertDontSeeHtml('Dish J');
+it('properly sorts ASC/DESC with: date', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->call('sortBy', 'produced_at')
+        ->set('sortDirection', 'desc')
+        ->assertSeeHtml('Dish J')
+        ->assertSeeHtml('Dish I')
+        ->assertSeeHtml('Dish H')
+        ->assertSeeHtml('Dish G')
+        ->assertSeeHtml('Dish F')
+        ->assertSeeHtml('Dish E')
+        ->assertSeeHtml('Dish D')
+        ->assertDontSeeHtml('Dish K')
+        ->assertDontSeeHtml('Dish L')
+        ->call('sortBy', 'produced_at')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish K')
+        ->assertSeeHtml('Dish L')
+        ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish B')
+        ->assertSeeHtml('Dish C')
+        ->assertSeeHtml('Dish D')
+        ->assertSeeHtml('Dish E')
+        ->assertSeeHtml('Dish F')
+        ->assertSeeHtml('Dish G')
+        ->assertSeeHtml('Dish H')
+        ->assertDontSeeHtml('Dish I')
+        ->assertDontSeeHtml('Dish J');
+})->with('themes');
 
-it('properly sorts ASC/DESC with: int')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->call('sortBy', 'id')
-    ->set('sortDirection', 'desc')
-    ->assertSeeHtml('Dish L')
-    ->assertSeeHtml('Dish K')
-    ->assertDontSeeHtml('Dish A')
-    ->assertDontSeeHtml('Dish B')
-    ->call('sortBy', 'id')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish A')
-    ->assertSeeHtml('Dish B')
-    ->assertSeeHtml('Dish C');
+it('properly sorts ASC/DESC with: int', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->call('sortBy', 'id')
+        ->set('sortDirection', 'desc')
+        ->assertSeeHtml('Dish L')
+        ->assertSeeHtml('Dish K')
+        ->assertDontSeeHtml('Dish A')
+        ->assertDontSeeHtml('Dish B')
+        ->call('sortBy', 'id')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish B')
+        ->assertSeeHtml('Dish C');
+})->with('themes');
 
-it('properly sorts ASC/DESC with: string')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->call('sortBy', 'name')
-    ->set('sortDirection', 'desc')
-    ->assertSeeHtml('Zebra Dish H')
-    ->assertSeeHtml('Dish K')
-    ->assertDontSeeHtml('Dish A')
-    ->assertDontSeeHtml('Dish B')
-    ->call('sortBy', 'name')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish A')
-    ->assertSeeHtml('Dish B')
-    ->assertDontSeeHtml('Zebra Dish H');
+it('properly sorts ASC/DESC with: string', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->call('sortBy', 'name')
+        ->set('sortDirection', 'desc')
+        ->assertSeeHtml('Zebra Dish H')
+        ->assertSeeHtml('Dish K')
+        ->assertDontSeeHtml('Dish A')
+        ->assertDontSeeHtml('Dish B')
+        ->call('sortBy', 'name')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish B')
+        ->assertDontSeeHtml('Zebra Dish H');
+})->with('themes');
 
-it('properly sorts ASC/DESC with: float')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->call('sortBy', 'price')
-    ->set('sortDirection', 'desc')
-    ->assertSeeHtml('Zebra Dish H')
-    ->assertSeeHtml('Dish K')
-    ->assertDontSeeHtml('Dish A')
-    ->assertDontSeeHtml('Dish B')
-    ->call('sortBy', 'price')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish A')
-    ->assertSeeHtml('Dish B')
-    ->assertDontSeeHtml('Zebra Dish H');
+it('properly sorts ASC/DESC with: float', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->call('sortBy', 'price')
+        ->set('sortDirection', 'desc')
+        ->assertSeeHtml('Zebra Dish H')
+        ->assertSeeHtml('Dish K')
+        ->assertDontSeeHtml('Dish A')
+        ->assertDontSeeHtml('Dish B')
+        ->call('sortBy', 'price')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish B')
+        ->assertDontSeeHtml('Zebra Dish H');
+})->with('themes');
 
-it('properly sorts ASC/DESC with: boolean')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->call('sortBy', 'in_stock')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish L')
-    ->assertSeeHtml('Dish K')
-    ->set('sortDirection', 'desc')
-    ->assertDontSeeHtml('Dish L')
-    ->assertDontSeeHtml('Dish K');
+it('properly sorts ASC/DESC with: boolean', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->call('sortBy', 'in_stock')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish L')
+        ->assertSeeHtml('Dish K')
+        ->set('sortDirection', 'desc')
+        ->assertDontSeeHtml('Dish L')
+        ->assertDontSeeHtml('Dish K');
+})->with('themes');
 
-it('properly sorts ASC/DESC with: string-number')
-    ->livewire(DishesTable::class)
-    ->set('perPage', '10')
-    ->set('withSortStringNumber', true)
-    ->set('ignoreTablePrefix', false)
-    ->call('sortBy', 'stored_at')
-    ->set('sortDirection', 'asc')
-    ->assertSeeHtml('Dish K')
-    ->assertSeeHtml('Dish L')
-    ->assertSeeHtml('Dish A')
-    ->assertSeeHtml('Dish B')
-    ->assertSeeHtml('Dish C')
-    ->assertSeeHtml('Dish D')
-    ->assertSeeHtml('Dish E')
-    ->assertSeeHtml('Dish F')
-    ->assertSeeHtml('Dish G')
-    ->assertSeeHtml('Dish H')
-    ->assertDontSeeHtml('Dish I')
-    ->set('sortDirection', 'desc')
-    ->assertSeeHtml('Dish J')
-    ->assertSeeHtml('Dish I')
-    ->assertSeeHtml('Dish H')
-    ->assertSeeHtml('Dish G')
-    ->assertSeeHtml('Dish F')
-    ->assertSeeHtml('Dish E')
-    ->assertSeeHtml('Dish D')
-    ->assertSeeHtml('Dish C')
-    ->assertSeeHtml('Dish B')
-    ->assertSeeHtml('Dish K')
-    ->assertDontSeeHtml('Dish A');
+it('properly sorts ASC/DESC with: string-number', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('perPage', '10')
+        ->set('withSortStringNumber', true)
+        ->set('ignoreTablePrefix', false)
+        ->call('sortBy', 'stored_at')
+        ->set('sortDirection', 'asc')
+        ->assertSeeHtml('Dish K')
+        ->assertSeeHtml('Dish L')
+        ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish B')
+        ->assertSeeHtml('Dish C')
+        ->assertSeeHtml('Dish D')
+        ->assertSeeHtml('Dish E')
+        ->assertSeeHtml('Dish F')
+        ->assertSeeHtml('Dish G')
+        ->assertSeeHtml('Dish H')
+        ->assertDontSeeHtml('Dish I')
+        ->set('sortDirection', 'desc')
+        ->assertSeeHtml('Dish J')
+        ->assertSeeHtml('Dish I')
+        ->assertSeeHtml('Dish H')
+        ->assertSeeHtml('Dish G')
+        ->assertSeeHtml('Dish F')
+        ->assertSeeHtml('Dish E')
+        ->assertSeeHtml('Dish D')
+        ->assertSeeHtml('Dish C')
+        ->assertSeeHtml('Dish B')
+        ->assertSeeHtml('Dish K')
+        ->assertDontSeeHtml('Dish A');
+})->with('themes');
 
 /**
  * Small Dish dataset for sorting test
@@ -133,7 +145,7 @@ it('properly sorts ASC/DESC with: string-number')
  */
 function dishesForSorting(): array
 {
-    return  [
+    return [
         [
             'name'        => 'Dish A',
             'category_id' => 7,

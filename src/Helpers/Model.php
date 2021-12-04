@@ -4,8 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
@@ -219,31 +219,31 @@ class Model implements ModelFilterInterface
                 $query->where($field, 'NOT ' . SqlSupport::like(), '%' . $value . '%');
 
                 break;
-        case 'is_empty':
-            $query->where($field, '=', '')->orWhereNull($field);
+            case 'is_empty':
+                $query->where($field, '=', '')->orWhereNull($field);
 
-            break;
-        case 'is_not_empty':
-            $query->where($field, '!=', '')->whereNotNull($field);
+                break;
+            case 'is_not_empty':
+                $query->where($field, '!=', '')->whereNotNull($field);
 
-            break;
-        case 'is_null':
-            $query->whereNull($field);
+                break;
+            case 'is_null':
+                $query->whereNull($field);
 
-            break;
-        case 'is_not_null':
-            $query->whereNotNull($field);
+                break;
+            case 'is_not_null':
+                $query->whereNotNull($field);
 
-            break;
-        case 'is_blank':
-            $query->where($field, '=', '');
+                break;
+            case 'is_blank':
+                $query->where($field, '=', '');
 
-            break;
-        case 'is_not_blank':
-            $query->where($field, '!=', '')->orWhereNull($field);
+                break;
+            case 'is_not_blank':
+                $query->where($field, '!=', '')->orWhereNull($field);
 
-            break;
-    }
+                break;
+        }
     }
 
     /**
@@ -303,6 +303,12 @@ class Model implements ModelFilterInterface
                             $field = $column->dataField;
                         } else {
                             $field = $column->field;
+                        }
+
+                        if (str_contains($field, '.')) {
+                            $explodeField = Str::of($field)->explode('.');
+                            $table = $explodeField->get(0);
+                            $field = $explodeField->get(1);
                         }
 
                         $hasColumn = Schema::hasColumn($table, $field);

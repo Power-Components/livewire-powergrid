@@ -9,15 +9,22 @@ use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent};
 
 class DishesTable extends PowerGridComponent
 {
     use ActionButton;
 
-    protected $listeners = [
-        'deletedEvent' => 'deletedEvent',
-    ];
+    protected function getListeners()
+    {
+        $this->listeners[] = 'deletedEvent';
+
+        return $this->listeners;
+    }
 
     public array $eventId = [];
 
@@ -36,7 +43,7 @@ class DishesTable extends PowerGridComponent
             ->showSearchInput();
     }
 
-    public function datasource(): ?Builder
+    public function datasource(): Builder
     {
         return Dish::with('category');
     }
@@ -213,5 +220,15 @@ class DishesTable extends PowerGridComponent
         ];
 
         return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+
+    public function bootstrap()
+    {
+        config(['livewire-powergrid.theme' => 'bootstrap']);
+    }
+
+    public function tailwind()
+    {
+        config(['livewire-powergrid.theme' => 'tailwind']);
     }
 }

@@ -213,7 +213,7 @@ final class Column
      * @param string $classAttr
      * @return Column
      */
-    public function makeInputDatePicker(string $dataField, array $settings = [], string $classAttr = ''): Column
+    public function makeInputDatePicker(string $dataField = '', array $settings = [], string $classAttr = ''): Column
     {
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class']   = $classAttr;
