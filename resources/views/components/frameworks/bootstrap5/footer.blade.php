@@ -22,7 +22,9 @@
             @endif
         </div>
         <div class="col-auto overflow-auto mt-1 mt-sm-0">
-            {!! $data->links(powerGridThemeRoot().'.pagination', ['recordCount' => $recordCount]) !!}
+            @if(method_exists($data, 'links'))
+                {!! $data->links(powerGridThemeRoot().'.pagination', ['recordCount' => $recordCount]) !!}
+            @endif
         </div>
     </footer>
 @endif
