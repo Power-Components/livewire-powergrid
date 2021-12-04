@@ -1,13 +1,10 @@
 @if(!is_array($data))
-    <div class="d-flex justify-content-between">
-
-        @if($perPageInput)
-            <div class="d-flex justify-content-center">
-                <div>
-                    <label class="col-12 col-sm-6 col-md-6"
-                           style="width: 120px;">
-                        <select wire:model="perPage" class="form-select"
-                                style="width: 110px;">
+    <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap">
+        <div class="col-auto me-auto">
+            @if($perPageInput)
+                <div class="d-flex justify-content-center align-items-center">
+                    <label class="w-auto">
+                        <select wire:model="perPage" class="form-select pe-3">
                             @foreach($perPageValues as $value)
                                 <option value="{{$value}}">
                                     @if($value == 0)
@@ -18,15 +15,14 @@
                             @endforeach
                         </select>
                     </label>
+                    <small class="ms-50">
+                        {{ trans('livewire-powergrid::datatable.labels.results_per_page') }}
+                    </small>
                 </div>
-                <span
-                    style="padding-top: 8px;padding-left: 6px;">
-                    {{ trans('livewire-powergrid::datatable.labels.results_per_page') }}
-                </span>
-            </div>
-        @endif
-        <div>
-            {!! $data->links(powerGridThemeRoot().'.pagination') !!}
+            @endif
         </div>
-    </div>
+        <div class="col-auto overflow-auto mt-1 mt-sm-0">
+            {!! $data->links(powerGridThemeRoot().'.pagination', ['recordCount' => $recordCount]) !!}
+        </div>
+    </footer>
 @endif
