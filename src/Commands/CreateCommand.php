@@ -73,7 +73,7 @@ class CreateCommand extends Command
 
         $modelName      = '';
         $modelLastName  = '';
-        if (strtolower($creationModel) === 'm') {
+        if (strtolower($creationModel) === 'm' && is_string($modelLastName)) {
             $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 
             if (!is_string($modelName)) {
@@ -148,7 +148,7 @@ class CreateCommand extends Command
         $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
         $stub = str_replace('{{ componentName }}', $componentName, $stub);
 
-        if (strtolower($creationModel) === 'm') {
+        if (strtolower($creationModel) === 'm' && is_string($modelLastName)) {
             $stub = str_replace('{{ modelName }}', $modelName, $stub);
             $stub = str_replace('{{ modelLastName }}', $modelLastName, $stub);
             $stub = str_replace('{{ modelLowerCase }}', Str::lower($modelLastName), $stub);

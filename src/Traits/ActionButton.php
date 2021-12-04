@@ -10,9 +10,6 @@ trait ActionButton
 
     public array $actionHeader = [];
 
-    /**
-     * @var array
-     */
     public array $actions = [];
 
     public function initActions()
@@ -29,9 +26,6 @@ trait ActionButton
         }
     }
 
-    /**
-     * @return array
-     */
     public function actions(): array
     {
         return [];

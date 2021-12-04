@@ -17,23 +17,17 @@ class Model implements ModelFilterInterface
 
     private string $search;
 
-    /**
-     * @var array $relationSearch
-     */
     private array $relationSearch;
 
     private array $filters;
 
-    /**
-     * @param mixed $query
-     */
-    public function __construct($query)
+    public function __construct(Builder $query)
     {
         $this->query = $query;
     }
 
     /**
-     * @param Builder | BaseCollection $query
+     * @param Builder $query
      */
     public static function query($query): Model
     {
@@ -106,11 +100,6 @@ class Model implements ModelFilterInterface
         return $this->query;
     }
 
-    /**
-     * @param Builder $query
-     * @param string $field
-     * @param array $value
-     */
     public function filterDatePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
@@ -119,8 +108,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param Builder $query
-     * @param string $field
      * @param string|array $value
      */
     public function filterMultiSelect(Builder $query, string $field, $value): void
@@ -145,8 +132,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param Builder $query
-     * @param string $field
      * @param string|array $value
      */
     public function filterSelect(Builder $query, string $field, $value): void
@@ -163,8 +148,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param Builder $query
-     * @param string $field
      * @param string|array $value
      */
     public function filterBoolean(Builder $query, string $field, $value): void
@@ -182,8 +165,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param Builder $query
-     * @param string $field
      * @param string|array $value
      */
     public function filterInputText(Builder $query, string $field, $value): void
@@ -193,7 +174,7 @@ class Model implements ModelFilterInterface
             $value = $value[key($value)];
         }
 
-        $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
         switch ($textFieldOperator) {
             case 'is':
                 $query->where($field, '=', $value);
@@ -247,22 +228,6 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * Validate if the given value is valid as an Input Option
-     *
-     * @param string $field Field to be checked
-     * @return bool
-     */
-    private function validateInputTextOptions(string $field): bool
-    {
-        return isset($this->filters['input_text_options'][$field]) && in_array(
-            strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
-        );
-    }
-
-    /**
-     * @param Builder $query
-     * @param string $field
      * @param string[] $value
      */
     public function filterNumber(Builder $query, string $field, array $value): void

@@ -127,13 +127,31 @@ class SqlSupport
             ->getName();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDatabaseDriverName(): string
     {
-        return DB::getDriverName();
+        $driverName = DB::getDriverName();
+
+        if (!is_string($driverName)) {
+            throw new \Exception('Could not get Database version');
+        }
+
+        return $driverName;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDatabaseVersion(): string
     {
-        return DB::getPdo()->getAttribute(constant('PDO::ATTR_SERVER_VERSION'));
+        $version =   DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
+
+        if (!is_string($version)) {
+            throw new \Exception('Could not get Database version');
+        }
+
+        return $version;
     }
 }
