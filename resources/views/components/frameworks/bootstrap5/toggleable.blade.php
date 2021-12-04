@@ -10,7 +10,7 @@
     </div>
 @else
     <div class="text-center">
-        @if($row->{$column->field} === 0)
+        @if($row->{$column->field} == 0)
             <div style="padding-top: 0.1em; padding-bottom: 0.1rem"
                  class="badge bg-danger">
                 {{ $column->toggleable['default'][1] }}

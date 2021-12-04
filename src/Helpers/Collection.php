@@ -17,9 +17,6 @@ class Collection implements CollectionFilterInterface
 
     private array $filters;
 
-    /**
-     * Model constructor.
-     */
     public function __construct(BaseCollection $query)
     {
         $this->query = $query;
@@ -68,12 +65,7 @@ class Collection implements CollectionFilterInterface
         return $this;
     }
 
-    /**
-     * @param BaseCollection $results
-     * @param int $pageSize
-     * @return mixed|LengthAwarePaginator
-     */
-    public static function paginate(BaseCollection $results, int $pageSize)
+    public static function paginate(BaseCollection $results, int $pageSize): LengthAwarePaginator
     {
         $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
         $page     = Paginator::resolveCurrentPage('page');
@@ -86,39 +78,28 @@ class Collection implements CollectionFilterInterface
         ]);
     }
 
-    /**
-     * Create a new length-aware paginator instance.
-     *
-     * @param BaseCollection $items
-     * @param int $total
-     * @param int $perPage
-     * @param int $currentPage
-     * @param array $options
-     * @return LengthAwarePaginator
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    protected static function paginator($items, $total, $perPage, $currentPage, $options): LengthAwarePaginator
+    protected static function paginator(BaseCollection $items, int $total, int $perPage, int $currentPage, array $options): LengthAwarePaginator
     {
-        return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
+        /** @var LengthAwarePaginator $paginator */
+        $paginator = Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
             'items',
             'total',
             'perPage',
             'currentPage',
             'options'
         ));
+
+        return $paginator;
     }
 
-    /**
-     * @return BaseCollection
-     */
     public function search(): BaseCollection
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
                 foreach ($this->columns as $column) {
                     $field = $column->field;
-                    if (Str::contains(strtolower($row->$field), strtolower($this->search))) {
-                        return false !== stristr($row->$field, strtolower($this->search));
+                    if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                        return false !== stristr($row->{$field}, strtolower($this->search));
                     }
                 }
             });
@@ -127,9 +108,6 @@ class Collection implements CollectionFilterInterface
         return $this->query;
     }
 
-    /**
-     * @return BaseCollection
-     */
     public function filter(): BaseCollection
     {
         if (count($this->filters) === 0) {
@@ -170,11 +148,6 @@ class Collection implements CollectionFilterInterface
         return $this->query;
     }
 
-    /**
-     * @param string $field
-     * @param array $value
-     * @return void
-     */
     public function filterDatePicker(string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
@@ -182,28 +155,9 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * Validate if the given value is valid as an Input Option
-     *
-     * @param string $field Field to be checked
-     * @return bool
-     */
-    private function validateInputTextOptions(string $field): bool
-    {
-        return isset($this->filters['input_text_options'][$field]) && in_array(
-            strtolower($this->filters['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
-        );
-    }
-
-    /**
-     * @param string $field
-     * @param string|null $value
-     * @return void
-     */
     public function filterInputText(string $field, ?string $value): void
     {
-        $textFieldOperator = ($this->validateInputTextOptions($field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
         switch ($textFieldOperator) {
             case 'is':
@@ -292,11 +246,6 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * @param string $field
-     * @param string $value
-     * @return void
-     */
     public function filterBoolean(string $field, string $value): void
     {
         if ($value != 'all') {
@@ -306,10 +255,6 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * @param string $field
-     * @param string $value
-     */
     public function filterSelect(string $field, string $value): void
     {
         if (filled($value)) {
@@ -318,9 +263,7 @@ class Collection implements CollectionFilterInterface
     }
 
     /**
-     * @param string $field
      * @param string | null | array $value
-     * @return void
      */
     public function filterMultiSelect(string $field, $value): void
     {
@@ -340,7 +283,6 @@ class Collection implements CollectionFilterInterface
     }
 
     /**
-     * @param string $field
      * @param array<string> $value
      */
     public function filterNumber(string $field, array $value): void
@@ -368,9 +310,6 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * @return Collection
-     */
     public function filterContains(): Collection
     {
         if (!empty($this->search)) {

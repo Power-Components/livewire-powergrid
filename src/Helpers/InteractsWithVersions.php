@@ -54,6 +54,7 @@ class InteractsWithVersions
      * Returns the latest version.
      *
      * @return string
+     * @throws Exception
      */
     public function getLatestVersion(): string
     {
@@ -64,12 +65,27 @@ class InteractsWithVersions
             if (is_string($json) === false) {
                 throw new Exception('Error: could not access PowerGrid versions URL');
             }
+
+            /** @var array $package */
             $package = json_decode($json, true);
 
-            return collect($package['packages']['power-components/livewire-powergrid'])
+            $version = collect($package['packages']['power-components/livewire-powergrid'])
                     ->first()['version'];
+
+            if (!is_string($version)) {
+                throw new Exception('Error: could find PowerGrid version.');
+            }
+
+            return $version;
         };
 
-        return call_user_func($resolver);
+        if (is_callable($resolver)) {
+            $version = call_user_func($resolver);
+            if (!is_string($version)) {
+                throw new Exception('Error: could find PowerGrid version.');
+            }
+
+            return $version;
+        }
     }
 }

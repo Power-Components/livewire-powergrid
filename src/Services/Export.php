@@ -40,7 +40,7 @@ class Export
      * @param array<Column> $columns
      * @throws Exception
      *
-     * @return array<string, array<int, string>>
+     * @return array<string, array>.
      */
     public function prepare(Collection $data, array $columns): array
     {
