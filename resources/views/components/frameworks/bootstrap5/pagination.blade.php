@@ -15,7 +15,7 @@
         -
         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
         |
-        <span class="font-semibold"> {{ $data->links()->paginator->total() }}</span>
+        <span class="font-semibold"> {{ $paginator->total() }}</span>
     </small>
 @elseif($recordCount === 'min')
     <small class="text-muted d-block">
