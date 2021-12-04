@@ -23,12 +23,13 @@
                             :row="$row"
                             :theme="$theme->editable"
                             :field="$column->dataField != '' ? $column->dataField : $column->field"/>
-
-                        <x-livewire-powergrid::click-to-copy
-                            :row="$row"
-                            :field="$content"
-                            :label="$column->click_to_copy['label'] ?? null"
-                            :enabled="$column->click_to_copy['enabled'] ?? false"/>
+                        @if($column->clickToCopy)
+                            <x-livewire-powergrid::click-to-copy
+                                :row="$row"
+                                :field="$content"
+                                :label="data_get($column->clickToCopy, 'label') ?? null"
+                                :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                        @endif
                     </span>
 
             @elseif(count($column->toggleable) > 0)
@@ -38,11 +39,13 @@
                     <div>
                         {!! $content !!}
                     </div>
-                    <x-livewire-powergrid::click-to-copy
-                        :row="$row"
-                        :field="$content"
-                        :label="data_get($column->clickToCopy, 'label') ?? null"
-                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                    @if($column->clickToCopy)
+                        <x-livewire-powergrid::click-to-copy
+                            :row="$row"
+                            :field="$content"
+                            :label="data_get($column->clickToCopy, 'label') ?? null"
+                            :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                    @endif
                 </span>
             @endif
         </td>
