@@ -29,7 +29,7 @@
             @endif
         @endif
     @endforeach
-    @if(isset($actions))
+    @if($actions)
         <td colspan="{{ count($actions) }}">Total</td>
     @endif
 </tr>
