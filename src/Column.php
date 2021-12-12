@@ -32,6 +32,8 @@ final class Column
 
     public bool $sortable = false;
 
+    public bool $totalRow = false;
+
     /**
      *
      * @var array<int, string> $inputs
@@ -102,6 +104,18 @@ final class Column
     public function sortable(): Column
     {
         $this->sortable            = true;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total sum
+     *
+     * @return $this
+     */
+    public function totalRow(): Column
+    {
+        $this->totalRow            = true;
 
         return $this;
     }

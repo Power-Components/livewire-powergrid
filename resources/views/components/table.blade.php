@@ -72,6 +72,7 @@
                         :actions="$actions"/>
                 </tr>
             @endforeach
+            <x-livewire-powergrid::total-row :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme" :columns="$columns" :totalRow="$totalRow" :checkbox="$checkbox" :data="$data" :actions="$actions" />
         @endif
     </x-slot>
 </x-livewire-powergrid::table-base>

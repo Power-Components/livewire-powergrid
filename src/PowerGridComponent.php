@@ -61,6 +61,8 @@ class PowerGridComponent extends Component
 
     public bool $showUpdateMessages = false;
 
+    public bool $totalRow = false;
+
     /**
      * @var string[] $listeners
      */
@@ -120,6 +122,17 @@ class PowerGridComponent extends Component
     public function showSearchInput(): PowerGridComponent
     {
         $this->searchInput = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * Show total sum row into component
+     */
+    public function showTotalRow(): PowerGridComponent
+    {
+        $this->totalRow = true;
 
         return $this;
     }
