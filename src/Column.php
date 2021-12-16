@@ -32,7 +32,17 @@ final class Column
 
     public bool $sortable = false;
 
-    public bool $totalRow = false;
+    public bool $hasSum = false;
+
+    public array $sum = [];
+
+    public bool $hasCount = false;
+
+    public array $count = [];
+
+    public bool $hasAvg = false;
+
+    public array $avg = [];
 
     /**
      *
@@ -113,9 +123,42 @@ final class Column
      *
      * @return $this
      */
-    public function totalRow(): Column
+    public function withSum($label = 'Sum', $options = ['header' => true, 'footer' =>true] ): Column
     {
-        $this->totalRow            = true;
+        $this->sum['label']            = $label;
+        $this->sum['header']            = $options['header'];
+        $this->sum['footer']            = $options['footer'];
+        $this->hasSum = true;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total count
+     *
+     * @return $this
+     */
+    public function withCount($label = 'Count', $options = ['header' => true, 'footer' =>true] ): Column
+    {
+        $this->count['label']            = $label;
+        $this->count['header']            = $options['header'];
+        $this->count['footer']            = $options['footer'];
+        $this->hasCount = true;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total average
+     *
+     * @return $this
+     */
+    public function withAvg($label = 'Average', $options = ['header' => true, 'footer' =>true] ): Column
+    {
+        $this->avg['label']            = $label;
+        $this->avg['header']            = $options['header'];
+        $this->avg['footer']            = $options['footer'];
+        $this->hasAvg = true;
 
         return $this;
     }
