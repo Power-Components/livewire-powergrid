@@ -61,7 +61,9 @@ class PowerGridComponent extends Component
 
     public bool $showUpdateMessages = false;
 
-    public bool $totalRow = false;
+    public bool $footer = false;
+
+    public bool $header = false;
 
     /**
      * @var string[] $listeners
@@ -128,11 +130,22 @@ class PowerGridComponent extends Component
 
     /**
      * @return $this
-     * Show total sum row into component
+     * Show footer row into component
      */
-    public function showTotalRow(): PowerGridComponent
+    public function showFooter(): PowerGridComponent
     {
-        $this->totalRow = true;
+        $this->footer = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * Show header row into component
+     */
+    public function showHeader(): PowerGridComponent
+    {
+        $this->header = true;
 
         return $this;
     }
