@@ -6,28 +6,29 @@
 'primaryKey' => null,
 'columns' => null,
 'currentTable' => null,
+'withoutPaginatedData' => null,
 ])
 
-<tr class="{{ $theme->table->trBodyClass }} font-bold" style="{{ $theme->table->trBodyStyle }}">
+<tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
     @if($checkbox)
         <td></td>
     @endif
     @foreach ($columns as $column)
         @if($column->hidden === false)
-            @if ($column->hasSum && $column->sum['header'])
+            @if ($column->hasSum && $column->sum['header'] && is_numeric($withoutPaginatedData[0][$column->field]))
                 <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
                     style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}">
-                        <span class="">{{ $column->sum['label'] }}: {{ $data->collect()->sum($column->field) }}</span>
+                        <span class="">{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($column->field) }}</span>
                 </td>
             @elseif ($column->hasCount && $column->count['header'])
                 <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
                     style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}">
-                        <span class="">{{ $column->count['label'] }}: {{ $data->collect()->count($column->field) }}</span>
+                        <span class="">{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->count($column->field) }}</span>
                 </td>
-            @elseif ($column->hasAvg && $column->avg['header'])
+            @elseif ($column->hasAvg && $column->avg['header'] && is_numeric($withoutPaginatedData[0][$column->field]))
                 <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
                     style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}">
-                        <span class="">{{ $column->avg['label'] }}: {{ $data->collect()->avg($column->field) }}</span>
+                        <span class="">{{ $column->avg['label'] }}: {{ $withoutPaginatedData->collect()->avg($column->field) }}</span>
                 </td>
             @else
                 <td></td>           

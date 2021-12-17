@@ -35,7 +35,7 @@
         @else
         @if($header)
         <x-livewire-powergrid::table-header :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme"
-            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" />
+            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" :withoutPaginatedData="$withoutPaginatedData" />
         @endif
         @foreach($data as $row)
         <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}"
@@ -53,7 +53,7 @@
         @endforeach
         @if($footer)
         <x-livewire-powergrid::table-footer :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme"
-            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" />
+            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" :withoutPaginatedData="$withoutPaginatedData" />
         @endif
         @endif
     </x-slot>
