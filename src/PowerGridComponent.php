@@ -53,6 +53,8 @@ class PowerGridComponent extends Component
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
 
+    public $withoutPaginatedData;
+
     public bool $toggleColumns = false;
 
     public array $relationSearch = [];
@@ -404,6 +406,8 @@ class PowerGridComponent extends Component
         }
 
         $results = $results->orderBy($sortField, $this->sortDirection);
+
+        $this->withoutPaginatedData = $results->get();
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
