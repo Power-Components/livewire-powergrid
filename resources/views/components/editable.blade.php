@@ -29,22 +29,20 @@
 @endphp
 <div wire:ignore.self
      x-cloak
-     x-data="{
-       editable: false,
+     x-data="pgEditable({
        id: '{{ $row->{$primaryKey} ?? $row->id }}',
-       field: '{{ $currentField }}',
+       dataField: '{{ $currentField }}',
        content: '{{ $content }}'
-    }">
+     })">
     <div x-html="content"
          style="border-bottom: dotted 1px; cursor: pointer"
          x-show="!editable"
-         x-on:dblclick="editable = true"
+         x-on:click="editable = true"
     ></div>
     <div x-show="editable">
         <input
             type="text"
-            x-on:dblclick="editable = true"
-            x-on:keydown.enter="sendEventInputChanged($event, id, field); editable = false; content = htmlSpecialChars($event.target.value)"
+            x-on:keydown.enter="save()"
             :class="{'cursor-pointer': !editable}"
             class="{{ $theme->inputClass }} p-2"
             x-ref="editable"
@@ -52,13 +50,3 @@
             :value="$root.firstElementChild.innerText">
     </div>
 </div>
-<script>
-    function sendEventInputChanged(event, id, field) {
-        document.getElementsByClassName('message')[0].style.display = "none";
-        window.livewire.emit('eventInputChanged', {
-            id: id,
-            value: event.target.value,
-            field: field
-        })
-    }
-</script>

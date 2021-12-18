@@ -66,7 +66,7 @@ class PowerGridComponent extends Component
      */
     protected $listeners = [
         'pg:eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventInputChanged'       => 'eventInputChanged',
+        'pg:eventInputChanged'    => 'eventInputChanged',
         'pg:eventToggleChanged'   => 'eventInputChanged',
         'pg:eventMultiSelect'     => 'eventMultiSelect',
         'eventRefresh'            => '$refresh',

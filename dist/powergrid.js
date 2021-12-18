@@ -13,6 +13,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pg-toggleable */ "./js/components/pg-toggleable.js");
 /* harmony import */ var _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pg-multi-select-bs5 */ "./js/components/pg-multi-select-bs5.js");
 /* harmony import */ var _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pg-flat-pickr */ "./js/components/pg-flat-pickr.js");
+/* harmony import */ var _pg_editable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pg-editable */ "./js/components/pg-editable.js");
+
 
 
 
@@ -21,11 +23,46 @@ window.pgMultiSelect = _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__["default"];
 window.pgToggleable = _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__["default"];
 window.pgMultiSelectBs5 = _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__["default"];
 window.pgFlatPickr = _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__["default"];
+window.pgEditable = _pg_editable__WEBPACK_IMPORTED_MODULE_4__["default"];
 document.addEventListener('alpine:init', function () {
   window.Alpine.data('pgMultiSelect', _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__["default"]);
   window.Alpine.data('pgToggleable', _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__["default"]);
   window.Alpine.data('pgMultiSelectBs5', _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]);
   window.Alpine.data('pgFlatPickr', _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__["default"]);
+  window.Alpine.data('phEditable', _pg_editable__WEBPACK_IMPORTED_MODULE_4__["default"]);
+});
+
+/***/ }),
+
+/***/ "./js/components/pg-editable.js":
+/*!**************************************!*\
+  !*** ./js/components/pg-editable.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (params) {
+  var _params$id, _params$dataField;
+
+  return {
+    editable: false,
+    id: (_params$id = params.id) !== null && _params$id !== void 0 ? _params$id : null,
+    dataField: (_params$dataField = params.dataField) !== null && _params$dataField !== void 0 ? _params$dataField : null,
+    content: params.content,
+    save: function save() {
+      document.getElementsByClassName('message')[0].style.display = "none";
+      window.livewire.emit('pg:eventInputChanged', {
+        id: this.id,
+        value: this.$el.value,
+        field: this.dataField
+      });
+      this.editable = false;
+      this.content = htmlSpecialChars(this.$el.value);
+    }
+  };
 });
 
 /***/ }),
