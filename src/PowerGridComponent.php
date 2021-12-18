@@ -73,8 +73,6 @@ class PowerGridComponent extends Component
         'eventToggleColumn'       => 'toggleColumn',
     ];
 
-    public array $inputTextOptions;
-
     /**
      * Apply checkbox, perPage and search view and theme
      * @return void
