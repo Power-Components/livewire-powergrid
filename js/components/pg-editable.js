@@ -13,6 +13,11 @@ export default (params) => ({
         })
 
         this.editable = false;
-        this.content  = htmlSpecialChars(this.$el.value)
+        this.content  = this.htmlSpecialChars(this.$el.value)
+    },
+    htmlSpecialChars(string) {
+        const el = document.createElement('div');
+        el.innerText = string;
+        return el.innerHTML;
     }
 })

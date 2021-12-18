@@ -4,12 +4,11 @@
     'enabled' => null,
     'label' => null
 ])
-<div>
+<div x-data="{ value: '{{ $field }}'}">
     @if($enabled)
         <button
             style="background: transparent; text-align: left;border: 0;padding: 4px;"
-            onclick="copyToClipboard(this)" value="copy"
-            data-value="{{ $field }}"
+            x-on:click="$clipboard(value)"
             title="{{ $label }}">
         <x-livewire-powergrid::icons.copy/>
         </button>

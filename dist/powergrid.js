@@ -14,6 +14,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pg-multi-select-bs5 */ "./js/components/pg-multi-select-bs5.js");
 /* harmony import */ var _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pg-flat-pickr */ "./js/components/pg-flat-pickr.js");
 /* harmony import */ var _pg_editable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pg-editable */ "./js/components/pg-editable.js");
+/* harmony import */ var _pg_copy_to_clipboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pg-copy-to-clipboard */ "./js/components/pg-copy-to-clipboard.js");
+
 
 
 
@@ -30,7 +32,50 @@ document.addEventListener('alpine:init', function () {
   window.Alpine.data('pgMultiSelectBs5', _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]);
   window.Alpine.data('pgFlatPickr', _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__["default"]);
   window.Alpine.data('phEditable', _pg_editable__WEBPACK_IMPORTED_MODULE_4__["default"]);
+  window.Alpine.plugin(_pg_copy_to_clipboard__WEBPACK_IMPORTED_MODULE_5__["default"]);
 });
+
+/***/ }),
+
+/***/ "./js/components/pg-copy-to-clipboard.js":
+/*!***********************************************!*\
+  !*** ./js/components/pg-copy-to-clipboard.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+var onCopy = function onCopy() {};
+
+function Clipboard(Alpine) {
+  Alpine.magic('clipboard', function () {
+    return function (target) {
+      if (typeof target === 'function') {
+        target = target();
+      }
+
+      if (_typeof(target) === 'object') {
+        target = JSON.stringify(target);
+      }
+
+      return window.navigator.clipboard.writeText(target).then(onCopy);
+    };
+  });
+}
+
+Clipboard.configure = function (config) {
+  if (config.hasOwnProperty('onCopy') && typeof config.onCopy === 'function') {
+    onCopy = config.onCopy;
+  }
+
+  return Clipboard;
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Clipboard);
 
 /***/ }),
 
@@ -60,7 +105,12 @@ __webpack_require__.r(__webpack_exports__);
         field: this.dataField
       });
       this.editable = false;
-      this.content = htmlSpecialChars(this.$el.value);
+      this.content = this.htmlSpecialChars(this.$el.value);
+    },
+    htmlSpecialChars: function htmlSpecialChars(string) {
+      var el = document.createElement('div');
+      el.innerText = string;
+      return el.innerHTML;
     }
   };
 });
