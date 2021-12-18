@@ -46,6 +46,23 @@ trait Filter
             }
         }
         $this->makeFilters = collect($makeFilters);
+
+        $path = 'livewire-powergrid::datatable.input_text_options';
+
+        $this->inputTextOptions = [
+            'contains'     => "$path.contains",
+            'contains_not' => "$path.contains_not",
+            'is'           => "$path.is",
+            'is_not'       => "$path.is_not",
+            'starts_with'  => "$path.starts_with",
+            'ends_with'    => "$path.ends_with",
+            'is_null'      => "$path.is_null",
+            'is_not_null'  => "$path.is_not_null",
+            'is_blank'     => "$path.is_blank",
+            'is_not_blank' => "$path.is_not_blank",
+            'is_empty'     => "$path.is_empty",
+            'is_not_empty' => "$path.is_not_empty",
+        ];
     }
 
     public function eventChangeDatePiker(array $data): void

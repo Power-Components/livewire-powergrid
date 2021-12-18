@@ -5,6 +5,7 @@
     'actions' => null,
     'theme' => null,
     'enabledFilters' => null,
+    'inputTextOptions' => []
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
@@ -64,6 +65,7 @@
                                     <x-livewire-powergrid::filters.input-text
                                         :inputText="$inputText"
                                         :enabledFilters="$enabledFilters"
+                                        :inputTextOptions="$inputTextOptions"
                                         :column="$column"
                                         :inline="true"
                                         :theme="$theme->filterInputText"/>

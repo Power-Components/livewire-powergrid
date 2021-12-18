@@ -11,6 +11,7 @@
                     <div>
                         <x-livewire-powergrid::frameworks.tailwind.filter
                             :makeFilters="$makeFilters"
+                            :inputTextOptions="$inputTextOptions"
                             :filters="$filters"
                             :theme="$theme"
                         />

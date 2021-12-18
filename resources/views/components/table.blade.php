@@ -35,6 +35,7 @@
             :columns="$columns"
             :theme="$theme"
             :enabledFilters="$enabledFilters"
+            :inputTextOptions="$inputTextOptions"
         />
         @if(is_null($data) || count($data) === 0)
             <th>
