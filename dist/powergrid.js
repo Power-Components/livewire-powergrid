@@ -12,16 +12,86 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pg-multi-select */ "./js/components/pg-multi-select.js");
 /* harmony import */ var _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pg-toggleable */ "./js/components/pg-toggleable.js");
 /* harmony import */ var _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pg-multi-select-bs5 */ "./js/components/pg-multi-select-bs5.js");
+/* harmony import */ var _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pg-flat-pickr */ "./js/components/pg-flat-pickr.js");
+
 
 
 
 window.pgMultiSelect = _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__["default"];
 window.pgToggleable = _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__["default"];
 window.pgMultiSelectBs5 = _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__["default"];
+window.pgFlatPickr = _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__["default"];
 document.addEventListener('alpine:init', function () {
   window.Alpine.data('pgMultiSelect', _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__["default"]);
   window.Alpine.data('pgToggleable', _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__["default"]);
   window.Alpine.data('pgMultiSelectBs5', _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__["default"]);
+  window.Alpine.data('pgFlatPickr', _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__["default"]);
+});
+
+/***/ }),
+
+/***/ "./js/components/pg-flat-pickr.js":
+/*!****************************************!*\
+  !*** ./js/components/pg-flat-pickr.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function (params) {
+  var _params$dataField, _params$filterKey, _params$label, _params$locale, _params$onlyFuture, _params$noWeekEnds, _params$customConfig;
+
+  return {
+    dataField: (_params$dataField = params.dataField) !== null && _params$dataField !== void 0 ? _params$dataField : null,
+    filterKey: (_params$filterKey = params.filterKey) !== null && _params$filterKey !== void 0 ? _params$filterKey : null,
+    label: (_params$label = params.label) !== null && _params$label !== void 0 ? _params$label : null,
+    locale: (_params$locale = params.locale) !== null && _params$locale !== void 0 ? _params$locale : 'en',
+    onlyFuture: (_params$onlyFuture = params.onlyFuture) !== null && _params$onlyFuture !== void 0 ? _params$onlyFuture : false,
+    noWeekEnds: (_params$noWeekEnds = params.noWeekEnds) !== null && _params$noWeekEnds !== void 0 ? _params$noWeekEnds : false,
+    customConfig: (_params$customConfig = params.customConfig) !== null && _params$customConfig !== void 0 ? _params$customConfig : null,
+    init: function init() {
+      var _this = this;
+
+      var options = _objectSpread(_objectSpread({
+        mode: 'range',
+        defaultHour: 0
+      }, this.locale), this.customConfig);
+
+      if (this.onlyFuture) {
+        options.minDate = 'today';
+      }
+
+      if (this.noWeekEnds) {
+        options.disable = [function (date) {
+          return date.getDay() === 0 || date.getDay() === 6;
+        }];
+      }
+
+      options.onClose = function (selectedDates, dateStr, instance) {
+        if (selectedDates.length > 0) {
+          _this.filter(selectedDates);
+        }
+      };
+
+      flatpickr(this.$refs.rangeInput, options);
+    },
+    filter: function filter(selectedDates) {
+      window.livewire.emit('pg:eventChangeDatePiker', {
+        selectedDates: selectedDates,
+        field: this.dataField,
+        values: this.filterKey,
+        label: this.label
+      });
+    }
+  };
 });
 
 /***/ }),
