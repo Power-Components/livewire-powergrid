@@ -51,8 +51,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 var onCopy = function onCopy() {};
 
-function Clipboard(Alpine) {
-  Alpine.magic('clipboard', function () {
+function PgClipboard(Alpine) {
+  Alpine.magic('pgClipboard', function () {
     return function (target) {
       if (typeof target === 'function') {
         target = target();
@@ -67,15 +67,15 @@ function Clipboard(Alpine) {
   });
 }
 
-Clipboard.configure = function (config) {
+PgClipboard.configure = function (config) {
   if (config.hasOwnProperty('onCopy') && typeof config.onCopy === 'function') {
     onCopy = config.onCopy;
   }
 
-  return Clipboard;
+  return PgClipboard;
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Clipboard);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (PgClipboard);
 
 /***/ }),
 

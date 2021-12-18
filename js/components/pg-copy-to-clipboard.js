@@ -1,7 +1,7 @@
 let onCopy = () => {}
 
-function Clipboard(Alpine) {
-    Alpine.magic('clipboard', () => {
+function PgClipboard(Alpine) {
+    Alpine.magic('pgClipboard', () => {
         return function (target) {
             if (typeof target === 'function') {
                 target = target()
@@ -17,12 +17,12 @@ function Clipboard(Alpine) {
     })
 }
 
-Clipboard.configure = (config) => {
+PgClipboard.configure = (config) => {
     if (config.hasOwnProperty('onCopy') && typeof config.onCopy === 'function') {
         onCopy = config.onCopy
     }
 
-    return Clipboard
+    return PgClipboard
 }
 
-export default Clipboard;
+export default PgClipboard;
