@@ -8,7 +8,6 @@ export default (params) => ({
     customConfig: params.customConfig ?? null,
     init() {
         const _this = this;
-
         const options = {
             mode: 'range',
             defaultHour: 0,
@@ -34,7 +33,10 @@ export default (params) => ({
             }
         }
 
-        flatpickr(this.$refs.rangeInput, options);
+        if (this.$refs.rangeInput) {
+            flatpickr(this.$refs.rangeInput, options);
+        }
+
     },
     filter(selectedDates) {
         window.livewire.emit('pg:eventChangeDatePiker', {

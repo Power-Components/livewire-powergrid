@@ -1,6 +1,7 @@
 const mix = require('laravel-mix')
 
-mix.js('js/index.js', 'dist/powergrid.js')
+mix.js('resources/js/index.js', 'powergrid.js')
+    .css('resources/css/style.css', 'powergrid.css')
     .setPublicPath('dist')
 
 if (mix.inProduction()) {

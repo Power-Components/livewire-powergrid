@@ -6,10 +6,6 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols
 
 abstract class AbstractTheme
 {
-    public static string $scripts = '';
-
-    public static string $styles = '';
-
     public Table $table;
 
     public Checkbox $checkbox;

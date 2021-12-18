@@ -2,19 +2,19 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./js/components/index.js":
-/*!********************************!*\
-  !*** ./js/components/index.js ***!
-  \********************************/
+/***/ "./resources/js/components/index.js":
+/*!******************************************!*\
+  !*** ./resources/js/components/index.js ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pg-multi-select */ "./js/components/pg-multi-select.js");
-/* harmony import */ var _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pg-toggleable */ "./js/components/pg-toggleable.js");
-/* harmony import */ var _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pg-multi-select-bs5 */ "./js/components/pg-multi-select-bs5.js");
-/* harmony import */ var _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pg-flat-pickr */ "./js/components/pg-flat-pickr.js");
-/* harmony import */ var _pg_editable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pg-editable */ "./js/components/pg-editable.js");
-/* harmony import */ var _pg_copy_to_clipboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pg-copy-to-clipboard */ "./js/components/pg-copy-to-clipboard.js");
+/* harmony import */ var _pg_multi_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./pg-multi-select */ "./resources/js/components/pg-multi-select.js");
+/* harmony import */ var _pg_toggleable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pg-toggleable */ "./resources/js/components/pg-toggleable.js");
+/* harmony import */ var _pg_multi_select_bs5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pg-multi-select-bs5 */ "./resources/js/components/pg-multi-select-bs5.js");
+/* harmony import */ var _pg_flat_pickr__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pg-flat-pickr */ "./resources/js/components/pg-flat-pickr.js");
+/* harmony import */ var _pg_editable__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pg-editable */ "./resources/js/components/pg-editable.js");
+/* harmony import */ var _pg_copy_to_clipboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./pg-copy-to-clipboard */ "./resources/js/components/pg-copy-to-clipboard.js");
 
 
 
@@ -37,10 +37,10 @@ document.addEventListener('alpine:init', function () {
 
 /***/ }),
 
-/***/ "./js/components/pg-copy-to-clipboard.js":
-/*!***********************************************!*\
-  !*** ./js/components/pg-copy-to-clipboard.js ***!
-  \***********************************************/
+/***/ "./resources/js/components/pg-copy-to-clipboard.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/pg-copy-to-clipboard.js ***!
+  \*********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -79,10 +79,10 @@ PgClipboard.configure = function (config) {
 
 /***/ }),
 
-/***/ "./js/components/pg-editable.js":
-/*!**************************************!*\
-  !*** ./js/components/pg-editable.js ***!
-  \**************************************/
+/***/ "./resources/js/components/pg-editable.js":
+/*!************************************************!*\
+  !*** ./resources/js/components/pg-editable.js ***!
+  \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -117,10 +117,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./js/components/pg-flat-pickr.js":
-/*!****************************************!*\
-  !*** ./js/components/pg-flat-pickr.js ***!
-  \****************************************/
+/***/ "./resources/js/components/pg-flat-pickr.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/pg-flat-pickr.js ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -168,7 +168,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       };
 
-      flatpickr(this.$refs.rangeInput, options);
+      if (this.$refs.rangeInput) {
+        flatpickr(this.$refs.rangeInput, options);
+      }
     },
     filter: function filter(selectedDates) {
       window.livewire.emit('pg:eventChangeDatePiker', {
@@ -183,10 +185,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
-/***/ "./js/components/pg-multi-select-bs5.js":
-/*!**********************************************!*\
-  !*** ./js/components/pg-multi-select-bs5.js ***!
-  \**********************************************/
+/***/ "./resources/js/components/pg-multi-select-bs5.js":
+/*!********************************************************!*\
+  !*** ./resources/js/components/pg-multi-select-bs5.js ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -225,10 +227,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./js/components/pg-multi-select.js":
-/*!******************************************!*\
-  !*** ./js/components/pg-multi-select.js ***!
-  \******************************************/
+/***/ "./resources/js/components/pg-multi-select.js":
+/*!****************************************************!*\
+  !*** ./resources/js/components/pg-multi-select.js ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -292,10 +294,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./js/components/pg-toggleable.js":
-/*!****************************************!*\
-  !*** ./js/components/pg-toggleable.js ***!
-  \****************************************/
+/***/ "./resources/js/components/pg-toggleable.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/pg-toggleable.js ***!
+  \**************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -323,6 +325,30 @@ __webpack_require__.r(__webpack_exports__);
     }
   };
 });
+
+/***/ }),
+
+/***/ "./resources/js/index.js":
+/*!*******************************!*\
+  !*** ./resources/js/index.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components */ "./resources/js/components/index.js");
+
+
+/***/ }),
+
+/***/ "./resources/css/style.css":
+/*!*********************************!*\
+  !*** ./resources/css/style.css ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
 
 /***/ })
 
@@ -352,7 +378,42 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -381,17 +442,68 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/powergrid": 0,
+/******/ 			"powergrid": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunklivewire_powergrid"] = self["webpackChunklivewire_powergrid"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-/*!*********************!*\
-  !*** ./js/index.js ***!
-  \*********************/
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components */ "./js/components/index.js");
-
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["powergrid"], () => (__webpack_require__("./resources/js/index.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["powergrid"], () => (__webpack_require__("./resources/css/style.css")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
 /******/ })()
 ;

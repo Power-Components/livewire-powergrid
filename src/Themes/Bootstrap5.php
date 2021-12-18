@@ -21,7 +21,7 @@ class Bootstrap5 extends ThemeBase
             ->th('', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
             ->tbody('')
             ->trBody('')
-            ->tdBody('', 'vertical-align: middle; line-height: normal;');
+            ->tdBody('', 'vertical-align: middle; line-height: normal;white-space: nowrap;');
     }
 
     public function cols(): Cols
@@ -62,7 +62,7 @@ class Bootstrap5 extends ThemeBase
             ->view($this->root() . '.editable')
             ->span('d-flex justify-content-between')
             ->button('width: 100%;text-align: left;border: 0;padding: 4px;background: none')
-            ->input('form-control');
+            ->input('form-control shadow-none');
     }
 
     public function checkbox(): Checkbox
@@ -71,13 +71,13 @@ class Bootstrap5 extends ThemeBase
             ->th('', 'font-size: 1rem !important;text-align:center')
             ->div('form-check')
             ->label('form-check-label')
-            ->input('form-check-input');
+            ->input('form-check-input shadow-none');
     }
 
     public function filterBoolean(): FilterBoolean
     {
         return Theme::filterBoolean()
-            ->input('form-control')
+            ->input('form-control shadow-none')
             ->relativeDiv('d-none')
             ->divNotInline('')
             ->divInline('');
@@ -86,7 +86,7 @@ class Bootstrap5 extends ThemeBase
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input('form-control')
+            ->input('form-control shadow-none')
             ->divNotInline('')
             ->divInline('');
     }
@@ -95,7 +95,7 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::filterMultiSelect()
             ->view($this->root() . '.multi-select')
-            ->input('')
+            ->input('shadow-none')
             ->divNotInline('')
             ->divInline('');
     }
@@ -103,7 +103,7 @@ class Bootstrap5 extends ThemeBase
     public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
-            ->input('form-control')
+            ->input('form-control shadow-none')
             ->divNotInline('')
             ->divInline('');
     }
@@ -111,7 +111,7 @@ class Bootstrap5 extends ThemeBase
     public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
-            ->input('form-control')
+            ->input('form-control shadow-none')
             ->relativeDiv('d-none')
             ->divNotInline('')
             ->divInline('');
@@ -120,8 +120,8 @@ class Bootstrap5 extends ThemeBase
     public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
-            ->select('form-control mb-1', 'd-none')
-            ->input('form-control')
+            ->select('form-control mb-1 shadow-none', 'd-none')
+            ->input('form-control shadow-none')
             ->divNotInline('')
             ->divInline('');
     }

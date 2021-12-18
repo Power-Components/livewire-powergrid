@@ -1,11 +1,14 @@
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
 <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
 
-@includeIf(powerGridThemeRoot().".scripts")
-
-@if(powerGridJsFramework() === JS_FRAMEWORK_ALPINE)
-    <script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
+@if(isBootstrap5())
+    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
 
-@stack('power_grid_scripts')
+@if(filled(config('livewire-powergrid.alpinejs_cdn')))
+    <script src="{{ config('livewire-powergrid.alpinejs_cdn') }}" defer></script>
+@endif
 
+@isset($jsPath)
+    <script>{!! file_get_contents($jsPath) !!}</script>
+@endisset

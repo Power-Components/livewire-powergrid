@@ -238,7 +238,7 @@ class PowerGridComponent extends Component
      */
     private function resolveCollection($datasource = null): BaseCollection
     {
-        if (!powerGridCache()) {
+        if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new BaseCollection($this->datasource());
         }
 

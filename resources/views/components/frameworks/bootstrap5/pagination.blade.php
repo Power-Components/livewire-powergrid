@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center justify-content-between">
 @if($recordCount === 'full')
-    <small class="text-muted d-block">
+    <small class="text-muted d-block me-2">
         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
         <span class="font-semibold">{{ $paginator->firstItem() }}</span>
         {{ trans('livewire-powergrid::datatable.pagination.to') }}
@@ -10,7 +10,7 @@
         {{ trans('livewire-powergrid::datatable.pagination.results') }}
     </small>
 @elseif($recordCount === 'short')
-    <small class="text-muted d-block">
+    <small class="text-muted d-block me-2">
         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
         -
         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
@@ -18,7 +18,7 @@
         <span class="font-semibold"> {{ $paginator->total() }}</span>
     </small>
 @elseif($recordCount === 'min')
-    <small class="text-muted d-block">
+    <small class="text-muted d-block me-2">
         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
         -
         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>

@@ -30,6 +30,24 @@ trait Filter
         $this->filters = [];
     }
 
+    public static function getInputTextOptions(): array
+    {
+        return [
+            'contains',
+            'contains_not',
+            'is',
+            'is_not',
+            'starts_with',
+            'ends_with',
+            'is_empty',
+            'is_not_empty',
+            'is_null',
+            'is_not_null',
+            'is_blank',
+            'is_not_blank',
+        ];
+    }
+
     private function renderFilter(): void
     {
         $this->filters = [];
@@ -51,24 +69,15 @@ trait Filter
 
         $path = 'livewire-powergrid::datatable.input_text_options';
 
-        $this->inputTextOptions = [
-            'contains'     => "$path.contains",
-            'contains_not' => "$path.contains_not",
-            'is'           => "$path.is",
-            'is_not'       => "$path.is_not",
-            'starts_with'  => "$path.starts_with",
-            'ends_with'    => "$path.ends_with",
-            'is_null'      => "$path.is_null",
-            'is_not_null'  => "$path.is_not_null",
-            'is_blank'     => "$path.is_blank",
-            'is_not_blank' => "$path.is_not_blank",
-            'is_empty'     => "$path.is_empty",
-            'is_not_empty' => "$path.is_not_empty",
-        ];
+        foreach (self::getInputTextOptions() as $option) {
+            $this->inputTextOptions[$option] = "$path.$option";
+        }
     }
 
     public function eventChangeDatePiker(array $data): void
     {
+        $this->resetPage();
+
         $input                                   = explode('.', $data['values']);
 
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
@@ -93,14 +102,14 @@ trait Filter
 
     public function eventMultiSelect(array $data): void
     {
+        $this->resetPage();
+
         $this->filters['multi_select'][$data['id']] = $data;
 
         $filter = collect($this->makeFilters->get('multi_select'))->where('data_field', $data['id']);
 
         $this->enabledFilters[$data['id']]['id']            = $data['id'];
         $this->enabledFilters[$data['id']]['label']         = $filter->first()['label'];
-
-        $this->resetPage();
 
         if (count($data['values']) === 0) {
             $this->clearFilter($data['id']);
@@ -109,10 +118,10 @@ trait Filter
 
     public function filterSelect(string $field, string $label): void
     {
+        $this->resetPage();
+
         $this->enabledFilters[$field]['id']         = $field;
         $this->enabledFilters[$field]['label']      = $label;
-
-        $this->resetPage();
 
         if (data_get($this->filters, "select.$field") === '') {
             $this->clearFilter($field);
@@ -121,14 +130,14 @@ trait Filter
 
     public function filterNumberStart(string $field, string $value, string $thousands, string $decimal, string $label): void
     {
+        $this->resetPage();
+
         $this->filters['number'][$field]['start']     = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
-
-        $this->resetPage();
 
         if ($value == '') {
             $this->clearFilter($field);
@@ -137,14 +146,14 @@ trait Filter
 
     public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal, string $label): void
     {
+        $this->resetPage();
+
         $this->filters['number'][$field]['end']       = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
-
-        $this->resetPage();
 
         if ($value == '') {
             $this->clearFilter($field);
@@ -153,10 +162,10 @@ trait Filter
 
     public function filterInputText(string $field, string $value, string $label): void
     {
+        $this->resetPage();
+
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
-
-        $this->resetPage();
 
         if ($value == '') {
             $this->clearFilter($field);
@@ -165,12 +174,12 @@ trait Filter
 
     public function filterBoolean(string $field, string $value, string $label): void
     {
+        $this->resetPage();
+
         $this->filters['boolean'][$field] = $value;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
-
-        $this->resetPage();
 
         if ($value == 'all') {
             $this->clearFilter($field);
