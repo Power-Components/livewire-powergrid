@@ -15,6 +15,8 @@ trait Filter
 
     public array $select = [];
 
+    public array $inputTextOptions = [];
+
     public function clearFilter(string $field = ''): void
     {
         $this->search = '';
