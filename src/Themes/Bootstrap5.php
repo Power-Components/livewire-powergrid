@@ -2,7 +2,20 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Table, Toggleable};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    Cols,
+    Editable,
+    FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect,
+    Footer,
+    Row,
+    Table,
+    Toggleable};
 
 class Bootstrap5 extends ThemeBase
 {
@@ -29,6 +42,12 @@ class Bootstrap5 extends ThemeBase
         return Theme::cols()
             ->div('')
             ->clearFilter('', 'color: #c30707; cursor:pointer; float: right;');
+    }
+
+    public function rows(): Row
+    {
+        return Theme::row()
+            ->span('d-flex justify-content-between');
     }
 
     public function footer(): Footer

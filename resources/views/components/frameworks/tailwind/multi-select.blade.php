@@ -27,12 +27,12 @@
                     <div class="flex flex-auto flex-wrap">
                         <template x-for="(option,index) in selected" :key="options[option].value">
                             <div
-                                class="flex justify-center items-center m-1 font-medium py-1 px-2 bg-white dark:bg-gray-500 rounded-full text-teal-700 bg-teal-100 border border-teal-300 dark:border-gray-400">
+                                class="flex justify-center items-center m-1 font-medium p-1 bg-white dark:bg-gray-500 rounded-lg text-teal-700 bg-teal-100 border border-teal-300 dark:border-gray-400">
                                 <div class="pl-0 align-middle cursor-pointer hover:text-black hover:text-current dark:text-gray-300 text-left text-xs font-medium text-gray-700 tracking-wider x-model=
                                      options[option]" x-text="options[option].text"></div>
                                 <div class="flex flex-auto flex-row-reverse">
                                     <div x-on:click="remove(index,option)">
-                                        <x-livewire-powergrid::icons.x class="w-4 h-4 cursor-pointer"/>
+                                        <x-livewire-powergrid::icons.x class="h-5 w-5 dark:text-gray-300 cursor-pointer"/>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                 <div x-show="show"
                      x-cloak
                      x-transition.origin.top
-                     class="absolute z-100 shadow top-100 border border-gray-300 bg-white z-50 w-full lef-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
+                     class="absolute z-100 shadow top-100 border border-gray-300 bg-white z-50 w-full left-0 rounded max-h-select overflow-y-auto dark:bg-gray-700 dark:border-gray-400"
                      x-on:click.away="show = false">
                     <div class="flex flex-col w-full">
                         <template x-for="(option,index) in options" :key="index">
