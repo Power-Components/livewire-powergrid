@@ -40,7 +40,6 @@ class ThemeManager
         return new Row();
     }
 
-
     public function footer(): Footer
     {
         return new Footer();
