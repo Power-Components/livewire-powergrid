@@ -5,7 +5,8 @@
     'actions' => null,
     'theme' => null,
     'enabledFilters' => null,
-    'inputTextOptions' => []
+    'inputTextOptions' => [],
+    'tableName' => null,
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
@@ -26,6 +27,7 @@
                                         :date="$date"
                                         :inline="true"
                                         :column="$column"
+                                        :tableName="$tableName"
                                         :theme="$theme->filterDatePicker"/>
                                 @endif
                             @endforeach
@@ -45,7 +47,7 @@
                                     @includeIf($theme->filterMultiSelect->view, [
                                             'inline' => true,
                                             'column' => $column,
-                                            'options' => "[['id' => 'laravel , 'name' => 'Laravel'], ['id' => 'alpineJs', 'name' => 'Alpine JS'], ['id' => 'livewire', 'name' => 'Livewire']]"
+                                            'tableName' => $tableName,
                                     ])
                                 @endif
                             @endforeach

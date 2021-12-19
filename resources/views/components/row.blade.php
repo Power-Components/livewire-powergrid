@@ -4,6 +4,7 @@
     'primaryKey' => null,
     'columns' => null,
     'currentTable' => null,
+    'tableName' => null,
 ])
 @foreach($columns as $column)
     @php
@@ -17,6 +18,7 @@
             @if($column->editable === true)
                 <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
+                            :tableName="$tableName"
                             :primaryKey="$primaryKey"
                             :currentTable="$currentTable"
                             :row="$row"

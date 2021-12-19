@@ -2,11 +2,13 @@
     'theme' => '',
     'inline' => null,
     'multiSelect' => null,
-    'column' => null
+    'column' => null,
+    'tableName' => null,
 ])
 <div x-cloak
      x-data="pgMultiSelectBs5({
-            dataField: '{{ $multiSelect['data_field'] }}',
+        tableName: '{{ $tableName }}',
+        dataField: '{{ $multiSelect['data_field'] }}',
     })">
     @if(filled($multiSelect))
         <div wire:ignore

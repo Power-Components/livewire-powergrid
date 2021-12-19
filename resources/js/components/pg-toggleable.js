@@ -1,5 +1,6 @@
 export default (params) => ({
     field: params.field ?? null,
+    tableName: params.tableName ?? null,
     enabled: params.enabled ?? false,
     id: params.id,
     trueValue: params.trueValue,
@@ -10,7 +11,7 @@ export default (params) => ({
 
         document.getElementsByClassName('message')[0].style.display = "none";
 
-        window.livewire.emit('pg:eventToggleChanged', {
+        window.livewire.emit('pg:toggleable-' + this.tableName, {
             id: this.id,
             field: this.field,
             value: value

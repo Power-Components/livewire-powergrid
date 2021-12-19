@@ -1,23 +1,18 @@
+@inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
 @props([
     'actions' => null,
     'theme' => null,
-    'row' => null
+    'row' => null,
 ])
+
 @if(isset($actions) && count($actions) && $row !== '')
     @foreach($actions as $key => $action)
         <td wire:key="action-{{ $key }}" class="pg-actions {{ $theme->table->tdBodyClass }}"
             style="{{ $theme->table->tdBodyStyle }}">
+            @php
+                $parameters = $helperClass->makeParameters($action, $row);
+            @endphp
             <div class="w-full md:w-auto">
-                @php
-                    foreach ($action->param as $param => $value) {
-                        if (!empty($row->{$value})) {
-                           $parameters[$param] = $row->{$value};
-                        } else {
-                           $parameters[$param] = $value;
-                        }
-                    }
-                @endphp
-
                 @if(filled($action->event) || filled($action->view))
                     <a @if($action->event) wire:click='$emit("{{ $action->event }}", @json($parameters))'
                        @endif

@@ -1,12 +1,13 @@
 export default (params) => ({
     editable: false,
+    tableName: params.tableName ?? null,
     id: params.id ?? null,
     dataField: params.dataField ?? null,
     content: params.content,
     save() {
         document.getElementsByClassName('message')[0].style.display = "none";
 
-        window.livewire.emit('pg:eventInputChanged', {
+        window.livewire.emit('pg:editable-' + this.tableName, {
             id: this.id,
             value: this.$el.value,
             field: this.dataField

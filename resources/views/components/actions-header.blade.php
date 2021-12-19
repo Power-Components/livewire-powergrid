@@ -1,3 +1,4 @@
+@inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
 @props([
     'actions' => null,
     'theme' => null,
@@ -7,16 +8,8 @@
         @foreach($actions as $action)
             <div class="sm:mr-2 mb-2 w-auto">
                 @php
-                    $parameters = [];
-                    foreach ($action->param as $param => $value) {
-                        if (!empty($row->{$value})) {
-                            $parameters[$param] = $row->{$value};
-                        } else {
-                            $parameters[$param] = $value;
-                        }
-                    }
+                    $parameters = $helperClass->makeParameters($action, $row);
                 @endphp
-
                 @if($action->event !== '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
                        target="{{ $action->target }}"

@@ -1,4 +1,5 @@
 export default (params) => ({
+    tableName: params.tableName ?? null,
     columnField: params.columnField ?? null,
     dataField: params.dataField ?? null,
     options: [],
@@ -27,7 +28,7 @@ export default (params) => ({
             this.options[index].element = event.target;
             this.selected.push(index);
             this.show = false
-            this.$wire.emit('pg:eventMultiSelect', {
+            this.$wire.emit('pg:multiSelect-' + this.tableName, {
                 id: this.dataField,
                 values: this.selectedValues()
             });
@@ -40,7 +41,7 @@ export default (params) => ({
     remove(index, option) {
         this.options[option].selected = false;
         this.selected.splice(index, 1);
-        this.$wire.emit('pg:eventMultiSelect', {
+        this.$wire.emit('pg:multiSelect-' + this.tableName, {
             id: this.dataField,
             values: this.selectedValues()
         });

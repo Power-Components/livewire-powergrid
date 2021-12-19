@@ -1,6 +1,8 @@
 export default (params) => ({
     dataField: params.dataField ?? null,
+    tableName: params.tableName ?? null,
     init() {
+        const _this = this;
         const field = this.dataField
         const element = '[x-ref="select_picker_'+field+'"]';
 
@@ -19,12 +21,11 @@ export default (params) => ({
                 arrSelected.push($(this).val());
             });
 
-            window.livewire.emit('pg:eventMultiSelect', {
+            window.livewire.emit('pg:multiSelect-' + _this.tableName, {
                 id: field,
                 values: arrSelected
             })
             $(element).selectpicker('refresh');
         });
     },
-
 })

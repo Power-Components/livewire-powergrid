@@ -2,7 +2,8 @@
     'theme' => '',
     'inline' => null,
     'multiSelect' => null,
-    'column' => null
+    'column' => null,
+    'tableName' => null,
 ])
 @php
     $data = collect($multiSelect['data_source'])->transform(function ($entry) {
@@ -14,7 +15,7 @@
 <div x-cloak
      x-data="pgMultiSelect({
             data: {{ json_encode($data) }},
-            dataField: '{{ $column->field }}',
+            tableName: '{{ $tableName }}',
             dataField: '{{ $multiSelect['data_field'] }}',
          })">
     <div class="inline-block relative w-full p-2"

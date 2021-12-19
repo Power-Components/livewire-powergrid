@@ -3,8 +3,10 @@
     'inline' => null,
     'date' => null,
     'column' => null,
+    'tableName' => null,
 ])
 @php
+    $tableName = \Illuminate\Support\Str::kebab($tableName);
     $customConfig = [];
     if (data_get($date, 'config')) {
         foreach (data_get($date, 'config') as $key => $value) {
@@ -14,6 +16,7 @@
 @endphp
 <div x-data="pgFlatPickr({
         dataField: '{{ $date['dataField'] }}',
+        tableName: '{{ $tableName }}',
         filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
         label: '{{ $date['label'] }}',
         locale: {{ json_encode(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())) }},
