@@ -53,6 +53,12 @@ class CreateCommand extends Command
             return;
         }
 
+        preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
+
+        if (!is_array($matches)) {
+            throw new Exception('Could not parse model name');
+        }
+
         $creationModel   = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
 
         if (!is_string($creationModel)) {
@@ -73,6 +79,7 @@ class CreateCommand extends Command
 
         $modelName      = '';
         $modelLastName  = '';
+
         if (strtolower($creationModel) === 'm' && is_string($modelLastName)) {
             $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
 
@@ -91,12 +98,6 @@ class CreateCommand extends Command
             }
 
             $modelNameArr = [];
-
-            preg_match('/(.*)(\/|\.|\\\\)(.*)/', $tableName, $matches);
-
-            if (!is_array($matches)) {
-                throw new Exception('Could not parse model name');
-            }
 
             $modelNameArr  = explode('\\', $modelName);
             $modelLastName = Arr::last($modelNameArr);
