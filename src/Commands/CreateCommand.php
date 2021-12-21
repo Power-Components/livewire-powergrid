@@ -25,7 +25,7 @@ class CreateCommand extends Command
             $ensureLatestVersion = new InteractsWithVersions();
 
             try {
-                $current             = $ensureLatestVersion->ensureLatestVersion();
+                $current = $ensureLatestVersion->ensureLatestVersion();
 
                 if (isset($current['version'])) {
                     if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
@@ -38,8 +38,8 @@ class CreateCommand extends Command
             }
         }
 
-        $fillable        = false;
-        $tableName       = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
+        $fillable  = false;
+        $tableName = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
 
         if (!is_string($tableName)) {
             throw new \Exception('Could not parse table name');
@@ -59,7 +59,7 @@ class CreateCommand extends Command
             throw new Exception('Could not parse model name');
         }
 
-        $creationModel   = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
+        $creationModel = $this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)');
 
         if (!is_string($creationModel)) {
             throw new \Exception('Could not parse table name');
@@ -77,8 +77,8 @@ class CreateCommand extends Command
 
         $stub = $this->getStubs($creationModel);
 
-        $modelName      = '';
-        $modelLastName  = '';
+        $modelName     = '';
+        $modelLastName = '';
 
         if (strtolower($creationModel) === 'm' && is_string($modelLastName)) {
             $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
@@ -94,7 +94,7 @@ class CreateCommand extends Command
             }
 
             if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
-                $fillable   = true;
+                $fillable = true;
             }
 
             $modelNameArr = [];
@@ -125,12 +125,12 @@ class CreateCommand extends Command
             }
 
             if ($fillable && is_string($modelLastName)) {
-                $stub     = $this->createFromFillable($modelName, $modelLastName);
+                $stub = $this->createFromFillable($modelName, $modelLastName);
             }
         }
 
-        $componentName   = $tableName;
-        $subFolder       = '';
+        $componentName = $tableName;
+        $subFolder     = '';
 
         if (!empty($matches)) {
             $componentName = end($matches);
@@ -156,13 +156,13 @@ class CreateCommand extends Command
             $stub = str_replace('{{ modelKebabCase }}', Str::kebab($modelLastName), $stub);
         }
 
-        $livewirePath  = 'Http/Livewire/';
-        $path          = app_path($livewirePath . $tableName . '.php');
+        $livewirePath = 'Http/Livewire/';
+        $path         = app_path($livewirePath . $tableName . '.php');
 
-        $filename  = Str::of($path)->basename();
-        $basePath  = Str::of($path)->replace($filename, '');
+        $filename = Str::of($path)->basename();
+        $basePath = Str::of($path)->replace($filename, '');
 
-        $savedAt   = $livewirePath . $basePath->after($livewirePath);
+        $savedAt = $livewirePath . $basePath->after($livewirePath);
 
         $component_name = Str::of($tableName)
             ->lower()
@@ -195,84 +195,6 @@ class CreateCommand extends Command
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    private function createFromFillable(string $modelName, string $modelLastName): string
-    {
-        $model = new $modelName();
-
-        if ($model instanceof Model === false) {
-            throw new \Exception('Invalid model given.');
-        }
-
-        $stub           = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-        $getFillable    = array_merge(
-            [$model->getKeyName()],
-            $model->getFillable(),
-            ['created_at', 'updated_at']
-        );
-
-        $datasource     = '';
-        $columns        = "[\n";
-
-        foreach ($getFillable as $field) {
-            if (in_array($field, $model->getHidden())) {
-                continue;
-            }
-
-            $column = Schema::getConnection()->getDoctrineColumn($model->getTable(), $field);
-
-            $title = Str::of($field)->replace('_', ' ')->upper();
-
-            if (in_array($column->getType()->getName(), ['datetime', 'date'])) {
-                $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
-            }
-
-            if ($column->getType()->getName() === 'datetime') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
-
-                continue;
-            }
-
-            if ($column->getType()->getName() === 'date') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
-
-                continue;
-            }
-
-            if ($column->getType()->getName() === 'boolean') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
-
-                continue;
-            }
-
-            if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
-
-                continue;
-            }
-
-            if ($column->getType()->getName() === 'string') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
-
-                continue;
-            }
-
-            $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-            $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
-        }
-
-        $columns .= "        ]\n";
-
-        $stub = str_replace('{{ datasource }}', $datasource, $stub);
-
-        return str_replace('{{ columns }}', $columns, $stub);
-    }
-
     protected function getStubs(string $creationModel): string
     {
         if (is_string($this->option('template')) && empty($this->option('template')) === false) {
@@ -285,12 +207,102 @@ class CreateCommand extends Command
         return File::get(__DIR__ . '/../../resources/stubs/table.collection.stub');
     }
 
+    /**
+     * @throws Exception
+     */
+    private function createFromFillable(string $modelName, string $modelLastName): string
+    {
+        /** @var Model $model */
+        $model = new $modelName();
+
+        if ($model instanceof Model === false) {
+            throw new \Exception('Invalid model given.');
+        }
+
+        $stub        = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+        $getFillable = array_merge(
+            $model->getFillable(),
+            ['created_at', 'updated_at']
+        );
+
+        if (!is_null($model->getKeyName())) {
+            $getFillable = array_merge([$model->getKeyName()]);
+        }
+
+        $datasource = '';
+        $columns    = "[\n";
+
+        foreach ($getFillable as $field) {
+            if (in_array($field, $model->getHidden())) {
+                continue;
+            }
+
+            $conn = Schema::getConnection();
+
+            $conn->getDoctrineSchemaManager()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
+
+            if (Schema::hasColumn($model->getTable(), $field)) {
+                $column = $conn->getDoctrineColumn($model->getTable(), $field);
+
+                $title = Str::of($field)->replace('_', ' ')->upper();
+
+                if (in_array($column->getType()->getName(), ['datetime', 'date'])) {
+                    $columns .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(\'' . $field . '\'),' . "\n\n";
+                }
+
+                if ($column->getType()->getName() === 'datetime') {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\');' . "\n" . '            })';
+
+                    continue;
+                }
+
+                if ($column->getType()->getName() === 'date') {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', function(' . $modelLastName . ' $model) { ' . "\n" . '                return Carbon::parse($model->' . $field . ')->format(\'d/m/Y\');' . "\n" . '            })';
+
+                    continue;
+                }
+
+                if ($column->getType()->getName() === 'boolean') {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+
+                    continue;
+                }
+
+                if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+
+                    continue;
+                }
+
+                if ($column->getType()->getName() === 'string') {
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+
+                    continue;
+                }
+
+                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $columns    .= '            Column::add()' . "\n" . '                ->title(\'' . $title . '\')' . "\n" . '                ->field(\'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+            }
+        }
+
+        $columns .= "        ]\n";
+
+        $stub = str_replace('{{ datasource }}', $datasource, $stub);
+
+        return str_replace('{{ columns }}', $columns, $stub);
+    }
+
     protected function checkTailwindForms(): void
     {
         $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
 
         if (File::exists($tailwindConfigFile)) {
-            $fileContent    = File::get($tailwindConfigFile);
+            $fileContent = File::get($tailwindConfigFile);
 
             if (Str::contains($fileContent, "require('@tailwindcss/forms')") === true) {
                 $this->info("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms</comment> for more information.");
