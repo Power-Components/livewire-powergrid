@@ -212,7 +212,6 @@ class CreateCommand extends Command
      */
     private function createFromFillable(string $modelName, string $modelLastName): string
     {
-        /** @var Model $model */
         $model = new $modelName();
 
         if ($model instanceof Model === false) {
@@ -225,7 +224,7 @@ class CreateCommand extends Command
             ['created_at', 'updated_at']
         );
 
-        if (!is_null($model->getKeyName())) {
+        if (filled($model->getKeyName())) {
             $getFillable = array_merge([$model->getKeyName()]);
         }
 
