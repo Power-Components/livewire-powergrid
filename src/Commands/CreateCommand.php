@@ -219,14 +219,17 @@ class CreateCommand extends Command
         }
 
         $stub        = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-        $getFillable = array_merge(
-            $model->getFillable(),
-            ['created_at', 'updated_at']
-        );
+
+        $getFillable = $model->getFillable();
 
         if (filled($model->getKeyName())) {
-            $getFillable = array_merge([$model->getKeyName()]);
+            $getFillable = array_merge([$model->getKeyName()], $getFillable);
         }
+
+        $getFillable = array_merge(
+            $getFillable,
+            ['created_at', 'updated_at']
+        );
 
         $datasource = '';
         $columns    = "[\n";
