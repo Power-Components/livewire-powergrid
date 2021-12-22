@@ -407,7 +407,10 @@ class PowerGridComponent extends Component
 
         $results = $results->orderBy($sortField, $this->sortDirection);
 
-        $this->withoutPaginatedData = $results->get();
+        if ($this->header || $this->footer) 
+        {
+            $this->withoutPaginatedData = $results->get();
+        }
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
