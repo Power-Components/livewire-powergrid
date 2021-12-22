@@ -32,6 +32,10 @@ class Table
 
     public string $tdBodyStyle = '';
 
+    public string $tdBodyClassTotalColumns;
+    
+    public string $tdBodyStyleTotalColumns;
+
     /**
      * Table constructor.
      * @param string $tableClass
@@ -87,6 +91,14 @@ class Table
     {
         $this->tdBodyClass = $attrClass;
         $this->tdBodyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdBodyTotalColumns(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->tdBodyClassTotalColumns = $attrClass;
+        $this->tdBodyStyleTotalColumns = $attrStyle;
 
         return $this;
     }
