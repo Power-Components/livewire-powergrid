@@ -48,8 +48,6 @@ final class Button
 
     /**
      * Button text in view
-     * @param string $caption
-     * @return $this
      */
     public function caption(string $caption): Button
     {
@@ -73,7 +71,6 @@ final class Button
 
     /**
      * Class string in view: class="bla bla bla"
-     * @param string $class_attr
      * @return $this
      */
     public function class(string $class_attr): Button
@@ -85,7 +82,6 @@ final class Button
 
     /**
      * Method for button
-     * @param string $method
      * @return $this
      */
     public function method(string $method): Button

@@ -96,7 +96,7 @@ final class {{ componentName }} extends PowerGridComponent
      /**
      * PowerGrid Columns.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Column>
+     * @return array<int, Column>
      */
     public function columns(): array
     {
