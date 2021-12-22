@@ -52,7 +52,8 @@ class PowerGridComponent extends Component
 
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
-
+    
+    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $withoutPaginatedData */
     public $withoutPaginatedData;
 
     public bool $toggleColumns = false;
@@ -407,8 +408,7 @@ class PowerGridComponent extends Component
 
         $results = $results->orderBy($sortField, $this->sortDirection);
 
-        if ($this->header || $this->footer) 
-        {
+        if ($this->header || $this->footer) {
             $this->withoutPaginatedData = $results->get();
         }
 

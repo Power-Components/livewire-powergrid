@@ -119,7 +119,7 @@ final class Column
      */
     public function withSum(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
-        $this->sum['label']            = $label;
+        $this->sum['label']             = $label;
         $this->sum['header']            = $header;
         $this->sum['footer']            = $footer;
 
@@ -133,7 +133,7 @@ final class Column
      */
     public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
-        $this->count['label'] = $label;
+        $this->count['label']  = $label;
         $this->count['header'] = $header;
         $this->count['footer'] = $footer;
 
@@ -147,7 +147,7 @@ final class Column
      */
     public function withAvg(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
-        $this->avg['label']            = $label;
+        $this->avg['label']             = $label;
         $this->avg['header']            = $header;
         $this->avg['footer']            = $footer;
 
