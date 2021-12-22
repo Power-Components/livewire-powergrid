@@ -32,15 +32,9 @@ final class Column
 
     public bool $sortable = false;
 
-    public bool $hasSum = false;
-
     public array $sum = [];
 
-    public bool $hasCount = false;
-
     public array $count = [];
-
-    public bool $hasAvg = false;
 
     public array $avg = [];
 
@@ -123,12 +117,11 @@ final class Column
      *
      * @return $this
      */
-    public function withSum($label = 'Sum', $options = ['header' => true, 'footer' =>true] ): Column
+    public function withSum(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
         $this->sum['label']            = $label;
-        $this->sum['header']            = $options['header'];
-        $this->sum['footer']            = $options['footer'];
-        $this->hasSum = true;
+        $this->sum['header']            = $header;
+        $this->sum['footer']            = $footer;
 
         return $this;
     }
@@ -138,12 +131,11 @@ final class Column
      *
      * @return $this
      */
-    public function withCount($label = 'Count', $options = ['header' => true, 'footer' =>true] ): Column
+    public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
-        $this->count['label']            = $label;
-        $this->count['header']            = $options['header'];
-        $this->count['footer']            = $options['footer'];
-        $this->hasCount = true;
+        $this->count['label'] = $label;
+        $this->count['header'] = $header;
+        $this->count['footer'] = $footer;
 
         return $this;
     }
@@ -153,12 +145,11 @@ final class Column
      *
      * @return $this
      */
-    public function withAvg($label = 'Average', $options = ['header' => true, 'footer' =>true] ): Column
+    public function withAvg(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
         $this->avg['label']            = $label;
-        $this->avg['header']            = $options['header'];
-        $this->avg['footer']            = $options['footer'];
-        $this->hasAvg = true;
+        $this->avg['header']            = $header;
+        $this->avg['footer']            = $footer;
 
         return $this;
     }
