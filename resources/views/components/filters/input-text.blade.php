@@ -3,7 +3,8 @@
     'enabledFilters' => [],
     'column' => null,
     'inline' => null,
-    'inputText' => null
+    'inputText' => null,
+    'inputTextOptions' => [],
 ])
 <div>
     @php
@@ -22,30 +23,9 @@
                                 style="{{ data_get($column, 'headerStyle') }}"
                                 wire:model.debounce.800ms="filters.input_option_text.{{ $field }}"
                                 wire:input.debounce.300ms="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
-                            <option
-                                value="contains">{{ trans('livewire-powergrid::datatable.input_text_options.contains') }}</option>
-                            <option
-                                value="contains_not">{{ trans('livewire-powergrid::datatable.input_text_options.contains_not') }}</option>
-                            <option
-                                value="is">{{ trans('livewire-powergrid::datatable.input_text_options.is') }}</option>
-                            <option
-                                value="is_not">{{ trans('livewire-powergrid::datatable.input_text_options.is_not') }}</option>
-                            <option
-                                value="starts_with">{{ trans('livewire-powergrid::datatable.input_text_options.starts_with') }}</option>
-                            <option
-                                value="ends_with">{{ trans('livewire-powergrid::datatable.input_text_options.ends_with') }}</option>
-                            <option
-                                value="is_null">{{ trans('livewire-powergrid::datatable.input_text_options.is_null') }}</option>
-                            <option
-                                value="is_not_null">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_null') }}</option>
-                            <option
-                                value="is_blank">{{ trans('livewire-powergrid::datatable.input_text_options.is_blank') }}</option>
-                            <option
-                                value="is_not_blank">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_blank') }}</option>
-                            <option
-                                value="is_empty">{{ trans('livewire-powergrid::datatable.input_text_options.is_empty') }}</option>
-                            <option
-                                value="is_not_empty">{{ trans('livewire-powergrid::datatable.input_text_options.is_not_empty') }}</option>
+                            @foreach($inputTextOptions as $key => $value)
+                                <option value="{{ $key }}">{{ trans($value) }}</option>
+                            @endforeach
                         </select>
                         <div class="{{ $theme->relativeDivClass }}">
                             <x-livewire-powergrid::icons.down class="w-4 h-4"/>

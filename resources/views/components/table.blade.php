@@ -35,6 +35,8 @@
             :columns="$columns"
             :theme="$theme"
             :enabledFilters="$enabledFilters"
+            :inputTextOptions="$inputTextOptions"
+            :tableName="$tableName"
         />
         @if(is_null($data) || count($data) === 0)
             <th>
@@ -60,6 +62,7 @@
                     @endif
 
                     <x-livewire-powergrid::row
+                        :tableName="$tableName"
                         :currentTable="$currentTable"
                         :primaryKey="$primaryKey"
                         :theme="$theme"

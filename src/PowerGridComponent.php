@@ -61,17 +61,22 @@ class PowerGridComponent extends Component
 
     public bool $showUpdateMessages = false;
 
+    public string $tableName = 'default';
+
     /**
-     * @var string[] $listeners
+     * @return array
      */
-    protected $listeners = [
-        'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventInputChanged'    => 'eventInputChanged',
-        'eventToggleChanged'   => 'eventInputChanged',
-        'eventMultiSelect'     => 'eventMultiSelect',
-        'eventRefresh'         => '$refresh',
-        'eventToggleColumn'    => 'toggleColumn',
-    ];
+    protected function getListeners()
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'eventChangeDatePiker',
+            'pg:editable-' . $this->tableName     => 'eventInputChanged',
+            'pg:toggleable-' . $this->tableName   => 'eventInputChanged',
+            'pg:multiSelect-' . $this->tableName  => 'eventMultiSelect',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'eventRefresh'                        => '$refresh',
+        ];
+    }
 
     /**
      * Apply checkbox, perPage and search view and theme
@@ -238,7 +243,7 @@ class PowerGridComponent extends Component
      */
     private function resolveCollection($datasource = null): BaseCollection
     {
-        if (!powerGridCache()) {
+        if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new BaseCollection($this->datasource());
         }
 

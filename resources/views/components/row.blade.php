@@ -4,8 +4,8 @@
     'primaryKey' => null,
     'columns' => null,
     'currentTable' => null,
+    'tableName' => null,
 ])
-
 @foreach($columns as $column)
     @php
         $content = $row->{$column->field};
@@ -18,6 +18,7 @@
             @if($column->editable === true)
                 <span class="{{ $theme->editable->spanClass }}">
                         <x-livewire-powergrid::editable
+                            :tableName="$tableName"
                             :primaryKey="$primaryKey"
                             :currentTable="$currentTable"
                             :row="$row"
@@ -35,7 +36,7 @@
             @elseif(count($column->toggleable) > 0)
                 @include($theme->toggleable->view)
             @else
-                <span class="flex justify-between">
+                <span class="{{ $theme->row->spanClass }}">
                     <div>
                         {!! $content !!}
                     </div>

@@ -2,7 +2,19 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Table};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    Cols,
+    Editable,
+    FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect,
+    Footer,
+    Row,
+    Table};
 
 class Tailwind extends ThemeBase
 {
@@ -43,6 +55,12 @@ class Tailwind extends ThemeBase
         return Theme::cols()
             ->div('')
             ->clearFilter('', '');
+    }
+
+    public function rows(): Row
+    {
+        return Theme::row()
+            ->span('flex justify-between');
     }
 
     public function editable(): Editable

@@ -36,6 +36,7 @@ class ThemeBase extends AbstractTheme
         $this->table             = $this->table();
         $this->footer            = $this->footer();
         $this->cols              = $this->cols();
+        $this->row               = $this->row();
         $this->editable          = $this->editable();
         $this->layout            = $this->layout();
         $this->toggleable        = $this->toggleable();
