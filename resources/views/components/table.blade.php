@@ -19,8 +19,17 @@
     </x-slot>
 
     <x-slot name="rows">
-        <x-livewire-powergrid::inline-filters :makeFilters="$makeFilters" :checkbox="$checkbox" :actions="$actions"
-            :columns="$columns" :theme="$theme" :enabledFilters="$enabledFilters" />
+
+        <x-livewire-powergrid::inline-filters
+            :makeFilters="$makeFilters"
+            :checkbox="$checkbox"
+            :actions="$actions"
+            :columns="$columns"
+            :theme="$theme"
+            :enabledFilters="$enabledFilters"
+            :inputTextOptions="$inputTextOptions"
+            :tableName="$tableName"
+        />
         @if(is_null($data) || count($data) === 0)
         <th>
             <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
@@ -45,15 +54,27 @@
                 :checkbox="$checkbox" />
             @endif
 
-            <x-livewire-powergrid::row :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme"
-                :row="$row" :columns="$columns" />
+            <x-livewire-powergrid::row
+                :tableName="$tableName"
+                :currentTable="$currentTable"
+                :primaryKey="$primaryKey"
+                :theme="$theme"
+                :row="$row"
+                :columns="$columns" />
 
             <x-livewire-powergrid::actions :theme="$theme" :row="$row" :actions="$actions" />
         </tr>
         @endforeach
         @if($footer)
-        <x-livewire-powergrid::table-footer :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme"
-            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" :withoutPaginatedData="$withoutPaginatedData" />
+        <x-livewire-powergrid::table-footer
+            :currentTable="$currentTable"
+            :primaryKey="$primaryKey"
+            :theme="$theme"
+            :columns="$columns"
+            :checkbox="$checkbox"
+            :data="$data"
+            :actions="$actions"
+            :withoutPaginatedData="$withoutPaginatedData" />
         @endif
         @endif
     </x-slot>

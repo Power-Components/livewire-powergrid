@@ -2,14 +2,24 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Layout, Table, Toggleable};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    Cols,
+    Editable,
+    FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect,
+    Footer,
+    Layout,
+    Row,
+    Table,
+    Toggleable};
 
 abstract class AbstractTheme
 {
-    public static string $scripts = '';
-
-    public static string $styles = '';
-
     public Table $table;
 
     public Checkbox $checkbox;
@@ -37,6 +47,8 @@ abstract class AbstractTheme
     public Footer $footer;
 
     public Cols $cols;
+
+    public Row $row;
 
     public static string $paginationTheme;
 
@@ -68,6 +80,11 @@ abstract class AbstractTheme
     public function cols(): Cols
     {
         return Theme::cols();
+    }
+
+    public function row(): Row
+    {
+        return Theme::row();
     }
 
     public function actions(): Actions
