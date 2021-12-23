@@ -52,6 +52,9 @@ class PowerGridComponent extends Component
 
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
+    
+    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $withoutPaginatedData */
+    public $withoutPaginatedData;
 
     public bool $toggleColumns = false;
 
@@ -60,6 +63,10 @@ class PowerGridComponent extends Component
     public bool $ignoreTablePrefix = true;
 
     public bool $showUpdateMessages = false;
+
+    public bool $footer = false;
+
+    public bool $header = false;
 
     /**
      * @var string[] $listeners
@@ -120,6 +127,28 @@ class PowerGridComponent extends Component
     public function showSearchInput(): PowerGridComponent
     {
         $this->searchInput = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * Show footer row into component
+     */
+    public function showFooter(): PowerGridComponent
+    {
+        $this->footer = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     * Show header row into component
+     */
+    public function showHeader(): PowerGridComponent
+    {
+        $this->header = true;
 
         return $this;
     }
@@ -378,6 +407,10 @@ class PowerGridComponent extends Component
         }
 
         $results = $results->orderBy($sortField, $this->sortDirection);
+
+        if ($this->header || $this->footer) {
+            $this->withoutPaginatedData = $results->get();
+        }
 
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);

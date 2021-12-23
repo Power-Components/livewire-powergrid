@@ -32,6 +32,12 @@ final class Column
 
     public bool $sortable = false;
 
+    public array $sum = [];
+
+    public array $count = [];
+
+    public array $avg = [];
+
     /**
      *
      * @var array<int, string> $inputs
@@ -102,6 +108,48 @@ final class Column
     public function sortable(): Column
     {
         $this->sortable            = true;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total sum
+     *
+     * @return $this
+     */
+    public function withSum(string $label = 'Count', bool $header = true, bool $footer = true): Column
+    {
+        $this->sum['label']             = $label;
+        $this->sum['header']            = $header;
+        $this->sum['footer']            = $footer;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total count
+     *
+     * @return $this
+     */
+    public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
+    {
+        $this->count['label']  = $label;
+        $this->count['header'] = $header;
+        $this->count['footer'] = $footer;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total average
+     *
+     * @return $this
+     */
+    public function withAvg(string $label = 'Count', bool $header = true, bool $footer = true): Column
+    {
+        $this->avg['label']             = $label;
+        $this->avg['header']            = $header;
+        $this->avg['footer']            = $footer;
 
         return $this;
     }
