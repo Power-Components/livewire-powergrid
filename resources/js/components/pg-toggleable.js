@@ -11,7 +11,7 @@ export default (params) => ({
 
         document.getElementsByClassName('message')[0].style.display = "none";
 
-        window.livewire.emit('pg:toggleable-' + this.tableName, {
+        this.$wire.emit('pg:toggleable-' + this.tableName, {
             id: this.id,
             field: this.field,
             value: value

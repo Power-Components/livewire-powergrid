@@ -117,7 +117,7 @@ final class Column
      *
      * @return $this
      */
-    public function withSum(string $label = 'Count', bool $header = true, bool $footer = true): Column
+    public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true): Column
     {
         $this->sum['label']             = $label;
         $this->sum['header']            = $header;
@@ -145,7 +145,7 @@ final class Column
      *
      * @return $this
      */
-    public function withAvg(string $label = 'Count', bool $header = true, bool $footer = true): Column
+    public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true): Column
     {
         $this->avg['label']             = $label;
         $this->avg['header']            = $header;

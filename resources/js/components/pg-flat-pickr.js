@@ -40,8 +40,7 @@ export default (params) => ({
 
     },
     filter(selectedDates) {
-        console.log('pg:eventChangeDatePiker_' + this.tableName)
-        window.livewire.emit('pg:eventChangeDatePiker_' + this.tableName, {
+        this.$wire.emit('pg:eventChangeDatePiker_' + this.tableName, {
             selectedDates: selectedDates,
             field: this.dataField,
             values: this.filterKey,

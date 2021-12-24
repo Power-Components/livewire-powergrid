@@ -3,7 +3,7 @@
     'column' => null,
     'class' => '',
     'inline' => null,
-    'booleanFilter' => null
+    'booleanFilter' => null,
 ])
 <div>
     @if(filled($booleanFilter))

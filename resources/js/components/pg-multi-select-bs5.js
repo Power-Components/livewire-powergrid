@@ -21,7 +21,7 @@ export default (params) => ({
                 arrSelected.push($(this).val());
             });
 
-            window.livewire.emit('pg:multiSelect-' + _this.tableName, {
+            this.$wire.emit('pg:multiSelect-' + _this.tableName, {
                 id: field,
                 values: arrSelected
             })

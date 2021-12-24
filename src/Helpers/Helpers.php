@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\{Button};
 
 class Helpers
 {

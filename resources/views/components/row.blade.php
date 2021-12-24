@@ -5,6 +5,7 @@
     'columns' => null,
     'currentTable' => null,
     'tableName' => null,
+    'totalColumn' => null,
 ])
 @foreach($columns as $column)
     @php
@@ -34,7 +35,7 @@
                     </span>
 
             @elseif(count($column->toggleable) > 0)
-                @include($theme->toggleable->view)
+                @include($theme->toggleable->view, ['tableName' => $tableName])
             @else
                 <span class="{{ $theme->row->spanClass }}">
                     <div>

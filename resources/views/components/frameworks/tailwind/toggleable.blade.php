@@ -6,8 +6,9 @@
 @endphp
 <div x-data="pgToggleable({
             id: '{{ $row->{$primaryKey} }}',
+            tableName: '{{ $tableName }}',
             field: '{{ $column->field }}',
-            toggle: {{ $row->{$column->field} }},
+            toggle: {{ (int)$row->{$column->field} }},
             trueValue: '{{ $column->toggleable['default'][0] }}',
             falseValue:  '{{ $column->toggleable['default'][1] }}',
          })">

@@ -2,11 +2,17 @@
     <x-slot name="header">
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
             @if($checkbox)
-            <x-livewire-powergrid::checkbox-all :checkbox="$checkbox" :theme="$theme->checkbox" />
+                <x-livewire-powergrid::checkbox-all
+                    :checkbox="$checkbox"
+                    :theme="$theme->checkbox" />
             @endif
             @foreach($columns as $column)
-            <x-livewire-powergrid::cols :column="$column" :theme="$theme" :sortField="$sortField"
-                :sortDirection="$sortDirection" :enabledFilters="$enabledFilters" />
+                <x-livewire-powergrid::cols
+                    :column="$column"
+                    :theme="$theme"
+                    :sortField="$sortField"
+                    :sortDirection="$sortDirection"
+                    :enabledFilters="$enabledFilters" />
             @endforeach
 
             @if(isset($actions) && count($actions))
@@ -19,7 +25,6 @@
     </x-slot>
 
     <x-slot name="rows">
-
         <x-livewire-powergrid::inline-filters
             :makeFilters="$makeFilters"
             :checkbox="$checkbox"
@@ -42,40 +47,52 @@
             </tr>
         </th>
         @else
-        @if($header)
-        <x-livewire-powergrid::table-header :currentTable="$currentTable" :primaryKey="$primaryKey" :theme="$theme"
-            :columns="$columns" :checkbox="$checkbox" :data="$data" :actions="$actions" :withoutPaginatedData="$withoutPaginatedData" />
-        @endif
-        @foreach($data as $row)
-        <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}"
-            wire:key="{{ $row->{$primaryKey} ?? $loop->index }}">
-            @if($checkbox)
-            <x-livewire-powergrid::checkbox-row :theme="$theme->checkbox" :attribute="$row->{$checkboxAttribute}"
-                :checkbox="$checkbox" />
-            @endif
-
-            <x-livewire-powergrid::row
-                :tableName="$tableName"
+        @if($headerTotalColumn)
+            <x-livewire-powergrid::table-header
                 :currentTable="$currentTable"
                 :primaryKey="$primaryKey"
                 :theme="$theme"
-                :row="$row"
-                :columns="$columns" />
-
-            <x-livewire-powergrid::actions :theme="$theme" :row="$row" :actions="$actions" />
-        </tr>
-        @endforeach
-        @if($footer)
-        <x-livewire-powergrid::table-footer
-            :currentTable="$currentTable"
-            :primaryKey="$primaryKey"
-            :theme="$theme"
-            :columns="$columns"
-            :checkbox="$checkbox"
-            :data="$data"
-            :actions="$actions"
-            :withoutPaginatedData="$withoutPaginatedData" />
+                :columns="$columns"
+                :checkbox="$checkbox"
+                :data="$data"
+                :actions="$actions"
+                :withoutPaginatedData="$withoutPaginatedData" />
         @endif
+        @foreach($data as $row)
+            <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}"
+                wire:key="{{ $row->{$primaryKey} ?? $loop->index }}">
+                @if($checkbox)
+                    <x-livewire-powergrid::checkbox-row
+                        :theme="$theme->checkbox"
+                        :attribute="$row->{$checkboxAttribute}"
+                        :checkbox="$checkbox" />
+                @endif
+
+                <x-livewire-powergrid::row
+                    :tableName="$tableName"
+                    :currentTable="$currentTable"
+                    :primaryKey="$primaryKey"
+                    :theme="$theme"
+                    :row="$row"
+                    :columns="$columns" />
+
+                <x-livewire-powergrid::actions
+                    :theme="$theme"
+                    :row="$row"
+                    :actions="$actions" />
+            </tr>
+        @endforeach
+        @if($footerTotalColumn)
+            <x-livewire-powergrid::table-footer
+                :currentTable="$currentTable"
+                :primaryKey="$primaryKey"
+                :theme="$theme"
+                :columns="$columns"
+                :checkbox="$checkbox"
+                :data="$data"
+                :actions="$actions"
+                :withoutPaginatedData="$withoutPaginatedData" />
+            @endif
         @endif
     </x-slot>
 </x-livewire-powergrid::table-base>

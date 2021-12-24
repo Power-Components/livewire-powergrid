@@ -7,7 +7,7 @@ export default (params) => ({
     save() {
         document.getElementsByClassName('message')[0].style.display = "none";
 
-        window.livewire.emit('pg:editable-' + this.tableName, {
+        this.$wire.emit('pg:editable-' + this.tableName, {
             id: this.id,
             value: this.$el.value,
             field: this.dataField
