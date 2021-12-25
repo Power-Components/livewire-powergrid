@@ -21,7 +21,7 @@ export default (params) => ({
                 arrSelected.push($(this).val());
             });
 
-            this.$wire.emit('pg:multiSelect-' + _this.tableName, {
+            _this.$wire.emit('pg:multiSelect-' + _this.tableName, {
                 id: field,
                 values: arrSelected
             })
