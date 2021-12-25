@@ -38,6 +38,7 @@ class ThemeBase extends AbstractTheme
         $this->cols              = $this->cols();
         $this->row               = $this->row();
         $this->editable          = $this->editable();
+        $this->clickToCopy       = $this->clickToCopy();
         $this->layout            = $this->layout();
         $this->toggleable        = $this->toggleable();
         $this->actions           = $this->actions();

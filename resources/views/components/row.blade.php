@@ -17,7 +17,7 @@
             style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
         >
             @if($column->editable === true)
-                <span class="{{ $theme->editable->spanClass }}">
+                <span class="{{ $theme->clickToCopy->spanClass }}">
                         <x-livewire-powergrid::editable
                             :tableName="$tableName"
                             :primaryKey="$primaryKey"
@@ -32,12 +32,11 @@
                                 :label="data_get($column->clickToCopy, 'label') ?? null"
                                 :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                         @endif
-                    </span>
-
+                </span>
             @elseif(count($column->toggleable) > 0)
                 @include($theme->toggleable->view, ['tableName' => $tableName])
             @else
-                <span class="{{ $theme->row->spanClass }}">
+                <span class="{{ $theme->clickToCopy->spanClass }}">
                     <div>
                         {!! $content !!}
                     </div>

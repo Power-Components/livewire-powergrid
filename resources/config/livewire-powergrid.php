@@ -77,10 +77,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Frameworks CDN
+    | AlpineJS CDN
     |--------------------------------------------------------------------------
     |
-    | Define here the CDN source for imported JS Framework
+    | Define here the CDN source for imported AlpineJS
     |
     */
 

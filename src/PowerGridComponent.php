@@ -71,32 +71,27 @@ class PowerGridComponent extends Component
     public bool $footerTotalColumn = false;
 
     /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'eventRefresh'                        => '$refresh',
+        ];
+    }
+
+    /**
      * @return $this
      * Show search input into component
      */
     public function showSearchInput(): PowerGridComponent
     {
         $this->searchInput = true;
-
-        return $this;
-    }
-
-    /**
-     * Show footer row into component
-     */
-    public function showFooter(): PowerGridComponent
-    {
-        $this->headerTotalColumn = true;
-
-        return $this;
-    }
-
-    /**
-     * Show header row into component
-     */
-    public function showHeader(): PowerGridComponent
-    {
-        $this->headerTotalColumn = false;
 
         return $this;
     }
@@ -383,7 +378,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    public function eventInputChanged(array $data): void
+    public function inputTextChanged(array $data): void
     {
         $update = $this->update($data);
 
@@ -465,20 +460,5 @@ class PowerGridComponent extends Component
         $this->exportType     = $type;
 
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'eventChangeDatePiker',
-            'pg:editable-' . $this->tableName     => 'eventInputChanged',
-            'pg:toggleable-' . $this->tableName   => 'eventInputChanged',
-            'pg:multiSelect-' . $this->tableName  => 'eventMultiSelect',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'eventRefresh'                        => '$refresh',
-        ];
     }
 }

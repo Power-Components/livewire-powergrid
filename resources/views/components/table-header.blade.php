@@ -35,7 +35,7 @@
                     <br>
                 @endif
                 @if (isset($column->avg['header']) && is_numeric($withoutPaginatedData[0][$field]))
-                    <span>{{ $column->avg['label'] }}: {{ $withoutPaginatedData->collect()->avg($field) }}</span>
+                    <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
                     <br>
                 @endif
             </td>

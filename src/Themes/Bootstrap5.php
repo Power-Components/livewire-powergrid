@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
+    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -83,6 +84,12 @@ class Bootstrap5 extends ThemeBase
             ->span('d-flex justify-content-between')
             ->button('width: 100%;text-align: left;border: 0;padding: 4px;background: none')
             ->input('form-control shadow-none');
+    }
+
+    public function clickToCopy(): ClickToCopy
+    {
+        return Theme::clickToCopy()
+            ->span('d-flex justify-content-between');
     }
 
     public function checkbox(): Checkbox

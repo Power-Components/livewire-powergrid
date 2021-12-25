@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
+    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -58,6 +59,11 @@ class ThemeManager
     public function editable(): Editable
     {
         return new Editable();
+    }
+
+    public function clickToCopy(): ClickToCopy
+    {
+        return new ClickToCopy();
     }
 
     public function layout(): Layout

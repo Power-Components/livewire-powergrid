@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
+    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -29,6 +30,8 @@ abstract class AbstractTheme
     public Actions $actions;
 
     public Editable $editable;
+
+    public ClickToCopy $clickToCopy;
 
     public Toggleable $toggleable;
 

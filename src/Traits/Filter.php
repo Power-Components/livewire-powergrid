@@ -74,7 +74,7 @@ trait Filter
         }
     }
 
-    public function eventChangeDatePiker(array $data): void
+    public function datePikerChanged(array $data): void
     {
         $this->resetPage();
 
@@ -100,7 +100,7 @@ trait Filter
         }
     }
 
-    public function eventMultiSelect(array $data): void
+    public function multiSelectChanged(array $data): void
     {
         $this->resetPage();
 

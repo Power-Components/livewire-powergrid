@@ -145,11 +145,12 @@ final class Column
      *
      * @return $this
      */
-    public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true): Column
+    public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->avg['label']             = $label;
-        $this->avg['header']            = $header;
-        $this->avg['footer']            = $footer;
+        $this->avg['label']      = $label;
+        $this->avg['header']     = $header;
+        $this->avg['footer']     = $footer;
+        $this->avg['rounded']    = $rounded;
 
         return $this;
     }

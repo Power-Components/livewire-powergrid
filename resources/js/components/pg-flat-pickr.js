@@ -40,7 +40,7 @@ export default (params) => ({
 
     },
     filter(selectedDates) {
-        this.$wire.emit('pg:eventChangeDatePiker_' + this.tableName, {
+        this.$wire.emit('pg:datePicker-' + this.tableName, {
             selectedDates: selectedDates,
             field: this.dataField,
             values: this.filterKey,
