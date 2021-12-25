@@ -32,8 +32,10 @@ class PowerGridDemoTable extends PowerGridComponent
 
     protected function getListeners()
     {
-        $this->listeners[] = 'alertEvent';
-        return $this->listeners;
+        return array_merge(
+            parent::getListeners(), [
+                'alertEvent'
+            ]);
     }
 
     public function alertEvent($data)
