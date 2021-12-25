@@ -80,6 +80,11 @@ abstract class AbstractTheme
         return Theme::editable();
     }
 
+    public function clickToCopy(): ClickToCopy
+    {
+        return Theme::clickToCopy();
+    }
+
     public function cols(): Cols
     {
         return Theme::cols();
