@@ -4,7 +4,7 @@
             @if($perPageInput)
                 <div class="d-flex justify-content-center align-items-center">
                     <label class="w-auto">
-                        <select wire:model="perPage" class="form-select pe-3">
+                        <select wire:model="perPage" class="form-select">
                             @foreach($perPageValues as $value)
                                 <option value="{{$value}}">
                                     @if($value == 0)

@@ -21,22 +21,7 @@ class CreateCommand extends Command
      */
     public function handle(): void
     {
-        if (config('livewire-powergrid.check_version') === true) {
-            $ensureLatestVersion = new InteractsWithVersions();
-
-            try {
-                $current = $ensureLatestVersion->ensureLatestVersion();
-
-                if (isset($current['version'])) {
-                    if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
-                        $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
-                        $this->info(" Released Date: <comment>{$current['release']}</comment>");
-                    }
-                }
-            } catch (Exception $e) {
-                Log::debug($e->getMessage());
-            }
-        }
+        $this->checkUpdates();
 
         $fillable  = false;
         $tableName = $this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?');
@@ -80,8 +65,12 @@ class CreateCommand extends Command
         $modelName     = '';
         $modelLastName = '';
 
-        if (strtolower($creationModel) === 'm' && is_string($modelLastName)) {
-            $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment>)');
+        if (strtolower($creationModel) === 'm') {
+            $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment> or <comment>User</comment>)');
+
+            if (empty($modelName)) {
+                $this->error('Could not create, Model path is missing');
+            }
 
             if (!is_string($modelName)) {
                 throw new \Exception('Could not parse table name');
@@ -97,31 +86,29 @@ class CreateCommand extends Command
                 $fillable = true;
             }
 
-            $modelNameArr = [];
-
             $modelNameArr  = explode('\\', $modelName);
             $modelLastName = Arr::last($modelNameArr);
 
-            if (empty($modelName)) {
-                $this->error('Could not create, Model path is missing');
-            }
-
             if (count($modelNameArr) === 1) {
-                $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
+                if (file_exists('app/Models')) {
+                    $modelName = 'App\\Models\\' . $modelName;
+                } else {
+                    $cleanModelName = preg_replace('![^A-Z]+!', '', $modelName);
 
-                if (!is_string($cleanModelName)) {
-                    throw new Exception('Could not parse model name');
-                }
+                    if (!is_string($cleanModelName)) {
+                        throw new Exception('Could not parse model name');
+                    }
 
-                if (strlen($cleanModelName)) {
-                    $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+                    if (strlen($cleanModelName)) {
+                        $this->warn('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+
+                        return;
+                    }
+
+                    $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
 
                     return;
                 }
-
-                $this->error('Error: "' . $modelName . '" Invalid model path.<info> Path must be like: <comment>"\App\Models\User"</comment></info>');
-
-                return;
             }
 
             if ($fillable && is_string($modelLastName)) {
@@ -140,10 +127,6 @@ class CreateCommand extends Command
 
         if (!is_string($componentName)) {
             throw new \Exception('Could not parse component name');
-        }
-
-        if (!is_string($subFolder)) {
-            throw new \Exception('Could not parse subfolder name');
         }
 
         $stub = str_replace('{{ subFolder }}', $subFolder, $stub);
@@ -299,7 +282,7 @@ class CreateCommand extends Command
         return str_replace('{{ columns }}', $columns, $stub);
     }
 
-    protected function checkTailwindForms(): void
+    private function checkTailwindForms(): void
     {
         $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
 
@@ -308,6 +291,26 @@ class CreateCommand extends Command
 
             if (Str::contains($fileContent, "require('@tailwindcss/forms')") === true) {
                 $this->info("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms</comment> for more information.");
+            }
+        }
+    }
+
+    private function checkUpdates(): void
+    {
+        if (config('livewire-powergrid.check_version') === true) {
+            $ensureLatestVersion = new InteractsWithVersions();
+
+            try {
+                $current = $ensureLatestVersion->ensureLatestVersion();
+
+                if (isset($current['version'])) {
+                    if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
+                        $this->info(" You are using an outdated version <comment>{$current['version']}</comment> of PowerGrid ⚡. Please update to <comment>{$remote}</comment>");
+                        $this->info(" Released Date: <comment>{$current['release']}</comment>");
+                    }
+                }
+            } catch (Exception $e) {
+                Log::debug($e->getMessage());
             }
         }
     }
