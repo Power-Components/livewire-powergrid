@@ -11,8 +11,7 @@
         dataField: '{{ $multiSelect['data_field'] }}',
     })">
     @if(filled($multiSelect))
-        <div wire:ignore
-             class="flex @if(!$inline) col-md-6 col-lg-3 @endif"
+        <div class="flex @if(!$inline) col-md-6 col-lg-3 @endif"
              style="max-width: 370px !important;">
 
             @if(!$inline)

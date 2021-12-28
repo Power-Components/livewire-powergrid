@@ -14,7 +14,7 @@
         }
     }
 @endphp
-<div x-data="pgFlatPickr({
+<div wire:ignore x-data="pgFlatPickr({
         dataField: '{{ $date['dataField'] }}',
         tableName: '{{ $tableName }}',
         filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
@@ -38,8 +38,7 @@
                class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-               wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}"
-               wire:ignore>
+               wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}">
     </div>
 </div>
 

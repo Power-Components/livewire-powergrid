@@ -17,6 +17,7 @@
             }
         @endphp
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
+            wire:key="{{ md5($column->field) }}"
             style="width: max-content; @if($column->sortable) cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
             <div class="{{ $theme->cols->divClass }}" @if($column->sortable === true) wire:click="sortBy('{{ $field }}')"@endif>
                 @if($column->sortable === true)

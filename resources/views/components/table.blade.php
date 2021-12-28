@@ -17,7 +17,8 @@
 
             @if(isset($actions) && count($actions))
             <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-                style="{{ $theme->table->thStyle }}" colspan="{{count($actions)}}">
+                style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
+                wire:key="{{ md5('actions') }}">
                 {{ trans('livewire-powergrid::datatable.labels.action') }}
             </th>
             @endif
@@ -59,8 +60,9 @@
                 :withoutPaginatedData="$withoutPaginatedData" />
         @endif
         @foreach($data as $row)
-            <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}"
-                wire:key="{{ $row->{$primaryKey} ?? $loop->index }}">
+            <tr class="{{ $theme->table->trBodyClass }}"
+                style="{{ $theme->table->trBodyStyle }}"
+                wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                 @if($checkbox)
                     <x-livewire-powergrid::checkbox-row
                         :theme="$theme->checkbox"

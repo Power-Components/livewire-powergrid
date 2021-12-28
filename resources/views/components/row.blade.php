@@ -15,8 +15,9 @@
     @if($column->hidden === false)
         <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
             style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
+            wire:key="{{ md5('row') }}"
         >
-            @if($column->editable === true)
+            @if($column->editable === true && !str_contains($column->dataField != '' ? $column->dataField : $column->field, '.'))
                 <span class="{{ $theme->clickToCopy->spanClass }}">
                         <x-livewire-powergrid::editable
                             :tableName="$tableName"

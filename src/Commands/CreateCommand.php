@@ -147,12 +147,14 @@ class CreateCommand extends Command
 
         $savedAt = $livewirePath . $basePath->after($livewirePath);
 
-        $component_name = Str::of($tableName)
+        $namespace = collect(explode('.', str_replace(['/', '\\'], '.', $tableName)))
+            ->map([Str::class, 'kebab'])
+            ->implode('.');
+
+        $componentName = Str::of($namespace)
             ->lower()
-            ->kebab()
             ->replace('/', '-')
             ->replace('\\', '-')
-            ->replace('table', '-table')
             ->prepend('<livewire:')
             ->append('/>');
 
@@ -174,7 +176,7 @@ class CreateCommand extends Command
             $this->checkTailwindForms();
 
             $this->info("\n⚡ <comment>" . $filename . '</comment> was successfully created at [<comment>App/' . $savedAt . '</comment>].');
-            $this->info("\n⚡ Your PowerGrid can be now included with the tag: <comment>" . $component_name . "</comment>\n");
+            $this->info("\n⚡ Your PowerGrid can be now included with the tag: <comment>" . $componentName . "</comment>\n");
         }
     }
 

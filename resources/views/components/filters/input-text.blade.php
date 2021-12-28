@@ -6,7 +6,7 @@
     'inputText' => null,
     'inputTextOptions' => [],
 ])
-<div>
+<div wire:ignore.self>
     @php
         $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
     @endphp
