@@ -26,15 +26,15 @@
                 @endphp
             <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
                 style=" {{ $theme->table->tdBodyStyleTotalColumns .' '.$column->bodyStyle ?? ''  }}">
-                @if (isset($column->count['footer']))
+                @if ($column->count['footer'])
                     <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->count($field) }}</span>
                     <br>
                 @endif
-                @if (isset($column->sum['footer']) && is_numeric($withoutPaginatedData[0][$field]))
+                @if ($column->sum['footer'] && is_numeric($withoutPaginatedData[0][$field]))
                     <span>{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($field) }}</span>
                     <br>
                 @endif
-                @if (isset($column->avg['footer']) && is_numeric($withoutPaginatedData[0][$column->dataField]))
+                @if ($column->avg['footer'] && is_numeric($withoutPaginatedData[0][$column->dataField]))
                     <span>{{ $column->avg['label'] }}: {{ $withoutPaginatedData->collect()->avg($field) }}</span>
                     <br>
                 @endif

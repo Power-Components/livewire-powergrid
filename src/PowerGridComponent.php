@@ -81,7 +81,7 @@ class PowerGridComponent extends Component
             'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'eventRefresh'                        => '$refresh',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
         ];
     }
 
@@ -132,16 +132,21 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
+        $this->resolveTotalRow();
+
+        $this->renderFilter();
+    }
+
+    private function resolveTotalRow(): void
+    {
         collect($this->columns())->each(function (Column $column) {
-            if (isset($column->sum['header']) || isset($column->count['header'])) {
+            if ($column->sum['header'] || $column->count['header']) {
                 $this->headerTotalColumn = true;
             }
-            if (isset($column->sum['footer']) || isset($column->count['footer'])) {
+            if ($column->sum['footer'] || $column->count['footer']) {
                 $this->footerTotalColumn = true;
             }
         });
-
-        $this->renderFilter();
     }
 
     /**

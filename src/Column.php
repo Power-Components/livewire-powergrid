@@ -32,11 +32,20 @@ final class Column
 
     public bool $sortable = false;
 
-    public array $sum = [];
+    public array $sum = [
+        'header' => false,
+        'footer' => false,
+    ];
 
-    public array $count = [];
+    public array $count = [
+        'header' => false,
+        'footer' => false,
+    ];
 
-    public array $avg = [];
+    public array $avg = [
+        'header' => false,
+        'footer' => false,
+    ];
 
     /**
      *

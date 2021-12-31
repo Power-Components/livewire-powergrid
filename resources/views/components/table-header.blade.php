@@ -26,15 +26,15 @@
         @if($column->hidden === false)
             <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
                 style=" {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
-                @if (isset($column->count['header']))
+                @if ($column->count['header'])
                     <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->count($field) }}</span>
                     <br>
                 @endif
-                @if (isset($column->sum['header']) && is_numeric($withoutPaginatedData[0][$field]))
+                @if ($column->sum['header'] && is_numeric($withoutPaginatedData[0][$field]))
                     <span>{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($field) }}</span>
                     <br>
                 @endif
-                @if (isset($column->avg['header']) && is_numeric($withoutPaginatedData[0][$field]))
+                @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))
                     <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
                     <br>
                 @endif
