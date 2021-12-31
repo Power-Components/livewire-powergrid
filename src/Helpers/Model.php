@@ -263,13 +263,12 @@ class Model implements ModelFilterInterface
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
-                    if ($column->searchable) {
-                        if (filled($column->dataField)) {
-                            $field = $column->dataField;
-                        } else {
-                            $field = $column->field;
-                        }
+                    /** @var string $searchable */
+                    $searchable = data_get($column, 'searchable');
+                    /** @var string $field */
+                    $field      = data_get($column, 'dataField', data_get($column, 'field'));
 
+                    if ($searchable) {
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
                             $table = $explodeField->get(0);

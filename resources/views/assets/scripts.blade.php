@@ -16,8 +16,13 @@
     }
 </script>
 
-<script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
-<script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
+@if(filled(config('livewire-powergrid.plugins.flat_piker.js')))
+    <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
+@endif
+
+@if(filled(config('livewire-powergrid.plugins.flat_piker.translate')))
+    <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
+@endif
 
 @if(isBootstrap5())
     <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>

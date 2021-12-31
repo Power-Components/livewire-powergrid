@@ -20,7 +20,6 @@
                 @foreach($columns as $column)
                     @if($column->hidden === false)
                         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}">
-
                             @foreach(data_get($makeFilters, 'date_picker', []) as $index => $date)
                                 @if(data_get($date, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.date-picker

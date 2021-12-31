@@ -55,8 +55,8 @@
         ],
         "check": [
             "@cs-fixer",
-            "@test",
-            "@test:types"
+            "@test:types",
+            "@test"
         ]
     },
     "require-dev": {

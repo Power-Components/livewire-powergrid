@@ -14,7 +14,6 @@ window.pgEditable = pgEditable
 document.addEventListener('alpine:init', () => {
     window.Alpine.data('pgMultiSelect', pgMultiSelect)
     window.Alpine.data('pgToggleable', pgToggleable)
-
     window.Alpine.data('pgMultiSelectBs5', pgMultiSelectBs5)
     window.Alpine.data('pgFlatPickr', pgFlatPickr)
     window.Alpine.data('phEditable', pgEditable)

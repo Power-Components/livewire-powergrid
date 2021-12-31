@@ -1,5 +1,6 @@
 <div x-data="pgToggleable({
             id: '{{ $row->{$primaryKey} }}',
+            tableName: '{{ $tableName }}',
             field: '{{ $column->field }}',
             toggle: {{ $row->{$column->field} }},
             trueValue: '{{ $column->toggleable['default'][0] }}',

@@ -6,6 +6,7 @@
     'tableName' => null,
 ])
 <div x-cloak
+     wire:ignore
      x-data="pgMultiSelectBs5({
         tableName: '{{ $tableName }}',
         dataField: '{{ $multiSelect['data_field'] }}',
@@ -24,7 +25,6 @@
                     x-ref="select_picker_{{ $multiSelect['data_field'] }}"
                     class="power_grid_select form-control shadow-none active"
                     data-live-search="{{ data_get($multiSelect, 'live-search') }}">
-
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
                 @foreach(data_get($multiSelect, 'data_source') as $relation)
                     <option value="{{ data_get($relation, 'id') }}">

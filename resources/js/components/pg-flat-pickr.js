@@ -1,7 +1,7 @@
 export default (params) => ({
-    dataField: params.dataField ?? null,
-    tableName: params.tableName ?? null,
-    filterKey: params.filterKey ?? null,
+    dataField: params.dataField,
+    tableName: params.tableName,
+    filterKey: params.filterKey,
     label: params.label ?? null,
     locale: params.locale ?? 'en',
     onlyFuture: params.onlyFuture ?? false,
@@ -30,21 +30,17 @@ export default (params) => ({
 
         options.onClose = function (selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
-                _this.filter(selectedDates)
+                window.livewire.emit('pg:datePicker-' + _this.tableName, {
+                    selectedDates: selectedDates,
+                    field: _this.dataField,
+                    values: _this.filterKey,
+                    label: _this.label
+                });
             }
         }
 
-        if (this.$refs.rangeInput) {
+        if(this.$refs.rangeInput) {
             flatpickr(this.$refs.rangeInput, options);
         }
-
     },
-    filter(selectedDates) {
-        this.$wire.emit('pg:datePicker-' + this.tableName, {
-            selectedDates: selectedDates,
-            field: this.dataField,
-            values: this.filterKey,
-            label: this.label
-        });
-    }
 })

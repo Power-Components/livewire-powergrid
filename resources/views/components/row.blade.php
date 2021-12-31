@@ -12,7 +12,7 @@
         $content = $row->{$column->field};
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
     @endphp
-    @if($column->hidden === false)
+
         <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
             style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
             wire:key="{{ md5('row') }}"
@@ -51,6 +51,6 @@
                 </span>
             @endif
         </td>
-    @endif
+
 @endforeach
 

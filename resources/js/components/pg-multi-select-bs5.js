@@ -3,28 +3,26 @@ export default (params) => ({
     tableName: params.tableName ?? null,
     init() {
         const _this = this;
-        const field = this.dataField
-        const element = '[x-ref="select_picker_'+field+'"]';
+        const element = '[x-ref="select_picker_'+_this.dataField+'"]';
 
-        $(element).selectpicker();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            Livewire.hook('message.processed', (message, component) => {
-                $(element).selectpicker()
-            })
+        $(function () {
+            $(element).selectpicker();
         })
 
+        $(element).selectpicker();
         $(element).on('change', function () {
             const selected = $(this).find("option:selected");
+            console.log(selected)
             const arrSelected = [];
             selected.each(function () {
                 arrSelected.push($(this).val());
             });
 
-            _this.$wire.emit('pg:multiSelect-' + _this.tableName, {
-                id: field,
+            window.livewire.emit('pg:multiSelect-' + _this.tableName, {
+                id: _this.dataField,
                 values: arrSelected
             })
+
             $(element).selectpicker('refresh');
         });
     },

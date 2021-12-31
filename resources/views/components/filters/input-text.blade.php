@@ -21,14 +21,14 @@
                         <select id="input_text_options"
                                 class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
-                                wire:model.debounce.800ms="filters.input_option_text.{{ $field }}"
-                                wire:input.debounce.300ms="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
+                                wire:model.defer="filters.input_option_text.{{ $field }}"
+                                wire:input.defer="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
                             @foreach($inputTextOptions as $key => $value)
                                 <option value="{{ $key }}">{{ trans($value) }}</option>
                             @endforeach
                         </select>
                         <div class="{{ $theme->relativeDivClass }}">
-                            <x-livewire-powergrid::icons.down class="w-4 h-4"/>
+                            <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
                         </div>
                     </div>
                 </div>

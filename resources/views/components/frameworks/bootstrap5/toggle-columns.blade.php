@@ -11,7 +11,7 @@
             </button>
             <ul class="dropdown-menu">
                 @foreach($columns as $column)
-                    <li wire:click="$emit('pg:toggleColumn-{{ $tableName }}, '{{ $column->field }}')"
+                    <li wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                         wire:key="toggle-column-{{ $column->field }}">
                         <a class="dropdown-item" href="#">
                             @if($column->hidden === false)
@@ -23,7 +23,6 @@
                         </a>
                     </li>
                 @endforeach
-
             </ul>
         </div>
     @endif
