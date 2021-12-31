@@ -142,6 +142,8 @@ class PowerGridDemoTable extends PowerGridComponent
             Column::add()
                 ->title(__('E-mail address'))
                 ->field('email')
+                ->searchable()
+                ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
             Column::add()
