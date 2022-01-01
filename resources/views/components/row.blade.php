@@ -12,7 +12,7 @@
         $content = $row->{$column->field};
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
     @endphp
-
+    @if($column->hidden === false)
         <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
             style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
             wire:key="{{ md5('row') }}"
@@ -27,12 +27,12 @@
                             :theme="$theme->editable"
                             :field="$column->dataField != '' ? $column->dataField : $column->field"/>
                         @if($column->clickToCopy)
-                            <x-livewire-powergrid::click-to-copy
-                                :row="$row"
-                                :field="$content"
-                                :label="data_get($column->clickToCopy, 'label') ?? null"
-                                :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
-                        @endif
+                        <x-livewire-powergrid::click-to-copy
+                            :row="$row"
+                            :field="$content"
+                            :label="data_get($column->clickToCopy, 'label') ?? null"
+                            :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                    @endif
                 </span>
             @elseif(count($column->toggleable) > 0)
                 @include($theme->toggleable->view, ['tableName' => $tableName])
@@ -51,6 +51,6 @@
                 </span>
             @endif
         </td>
-
+    @endif
 @endforeach
 
