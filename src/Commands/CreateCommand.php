@@ -292,7 +292,7 @@ class CreateCommand extends Command
             $fileContent = File::get($tailwindConfigFile);
 
             if (Str::contains($fileContent, "require('@tailwindcss/forms')") === true) {
-                $this->info("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms</comment> for more information.");
+                $this->info("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms</comment> for more information.");
             }
         }
     }
