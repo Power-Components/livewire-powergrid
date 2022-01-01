@@ -1,4 +1,4 @@
-<div class="message">
+<div class="message mt-2">
     @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}

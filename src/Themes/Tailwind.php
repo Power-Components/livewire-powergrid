@@ -2,7 +2,20 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Table};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    ClickToCopy,
+    Cols,
+    Editable,
+    FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect,
+    Footer,
+    Row,
+    Table};
 
 class Tailwind extends ThemeBase
 {
@@ -21,7 +34,8 @@ class Tailwind extends ThemeBase
             ->th('px-2 pr-4 py-3 text-left text-xs font-medium text-gray-500 tracking-wider whitespace-nowrap dark:text-gray-300')
             ->tbody('text-gray-800')
             ->trBody('border border-gray-200 dark:border-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700')
-            ->tdBody('px-3 py-2 whitespace-nowrap dark:text-gray-200');
+            ->tdBody('px-3 py-2 whitespace-nowrap dark:text-gray-200')
+            ->tdBodyTotalColumns('px-3 py-2 whitespace-nowrap dark:text-gray-200 text-sm text-gray-600 text-right space-y-2');
     }
 
     public function footer(): Footer
@@ -45,12 +59,24 @@ class Tailwind extends ThemeBase
             ->clearFilter('', '');
     }
 
+    public function rows(): Row
+    {
+        return Theme::row()
+            ->span('flex justify-between');
+    }
+
     public function editable(): Editable
     {
         return Theme::editable()
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
             ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
+    }
+
+    public function clickToCopy(): ClickToCopy
+    {
+        return Theme::clickToCopy()
+            ->span('flex justify-between');
     }
 
     public function checkbox(): Checkbox

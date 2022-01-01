@@ -36,7 +36,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 7.4, 8.0 ]
+        php: [ 7.4, 8.0, 8.1 ]
         laravel: [ 8.* ]
         dependency-version: [ prefer-stable ]
 
@@ -73,6 +73,9 @@ jobs:
       - name: Cs Fixer
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
+      - name: Larastan
+        run: ./vendor/bin/phpstan analyse --ansi --memory-limit=-1
+
       - name: Testing with SQLite
         run: |
           ./vendor/bin/pest --configuration phpunit.sqlite.xml
@@ -84,6 +87,3 @@ jobs:
       - name: Testing with PostgreSQL
         run: |
             ./vendor/bin/pest --configuration phpunit.pgsql.xml
-
-      - name: Larastan
-        run: ./vendor/bin/phpstan analyse --ansi --memory-limit=-1

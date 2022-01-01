@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->tableCollectionFilePath  = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
     $this->model_name_question      = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
     $this->datasource_question      = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
-    $this->model_path_question      = 'Enter your Model path (E.g., <comment>App\Models\User</comment>)';
+    $this->model_path_question      = 'Enter your Model path (E.g., <comment>App\Models\User</comment> or <comment>User</comment>)';
     $this->use_fillable_question    = 'Create columns based on Model\'s <comment>fillable</comment> property?';
 });
 

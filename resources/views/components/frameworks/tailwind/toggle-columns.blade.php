@@ -1,10 +1,5 @@
 @if($toggleColumns)
-    <div x-data="{
-                open: false,
-                toggleColumn(key) {
-                    window.livewire.emit('eventToggleColumn', key);
-                }
-            }"
+    <div x-data="{open: false}"
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
          @click.away="open = false">
         <button @click.prevent="open = ! open"
@@ -25,7 +20,7 @@
              class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-gray-500">
 
             @foreach($columns as $column)
-                <div wire:click="$emit('eventToggleColumn', '{{ $column->field }}')"
+                <div wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                      wire:key="toggle-column-{{ $column->field }}"
                      class="@if($column->hidden) opacity-40 @endif cursor-pointer flex justify-start block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">
                     @if(!$column->hidden)

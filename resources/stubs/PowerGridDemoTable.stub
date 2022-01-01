@@ -32,8 +32,10 @@ class PowerGridDemoTable extends PowerGridComponent
 
     protected function getListeners()
     {
-        $this->listeners[] = 'alertEvent';
-        return $this->listeners;
+        return array_merge(
+            parent::getListeners(), [
+                'alertEvent'
+            ]);
     }
 
     public function alertEvent($data)
@@ -140,6 +142,8 @@ class PowerGridDemoTable extends PowerGridComponent
             Column::add()
                 ->title(__('E-mail address'))
                 ->field('email')
+                ->searchable()
+                ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
             Column::add()
