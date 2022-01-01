@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
@@ -266,9 +266,9 @@ class Model implements ModelFilterInterface
                     /** @var string $searchable */
                     $searchable = data_get($column, 'searchable');
                     /** @var string $field */
-                    $field      = data_get($column, 'dataField', data_get($column, 'field'));
+                    $field      = data_get($column, 'dataField') ?: data_get($column, 'field');
 
-                    if ($searchable) {
+                    if ($searchable && $field) {
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
                             $table = $explodeField->get(0);
