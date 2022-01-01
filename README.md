@@ -8,7 +8,7 @@
         <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
         <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
     </p>
-    <a href="https://livewire-powergrid.com/" target="_blank">📚 Documentation</a> |
+    <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
     <a href="#features">🔥 Features</a> |
     <a href="#get-started">⌨️ Get started</a>
 </div>
@@ -125,10 +125,10 @@ Verify if your bug/question or feature request has been previously submitted.
 
 ## 5. Credits
 
-Created by: [Luan Freitas](https://github.com/luanfreitasdev)
+Created by: [Luan Freitas](https://twitter.com/luanfreitasdev)
 
 - [Contributors](../../contributors)
-- Logo & artwork by [Caneco](https://github.com/caneco)
+- Logo & artwork by [Caneco](https://twitter.com/caneco)
 
 <br/>
 
