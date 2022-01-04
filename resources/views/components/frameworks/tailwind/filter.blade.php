@@ -4,7 +4,9 @@
     'columns' => null,
     'actions' => null,
     'theme' => null,
+    'tableName' => null,
     'enabledFilters' => null,
+    'inputTextOptions' => [],
 ])
 <div class="w-full my-3 dark:bg-gray-800">
     <div x-data={show:true} class="rounded-sm">
@@ -29,6 +31,7 @@
                             <x-livewire-powergrid::filters.date-picker
                                 :date="$date"
                                 :inline="false"
+                                :tableName="$tableName"
                                 classAttr="w-full"
                                 :theme="$theme->filterDatePicker"/>
                         </div>
@@ -56,6 +59,7 @@
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.input-text
                                     :enabledFilters="$enabledFilters"
+                                    :inputTextOptions="$inputTextOptions"
                                     :inputText="$inputText"
                                     :inline="false"
                                     :theme="$theme->filterInputText"/>
@@ -66,6 +70,7 @@
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             <x-livewire-powergrid::filters.boolean-filter
                                     :booleanFilter="$booleanFilter"
+                                    :tableName="$tableName"
                                     :inline="false"
                                     :theme="$theme->filterBoolean"/>
                         </div>

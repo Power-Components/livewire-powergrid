@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\{AbstractPaginator, LengthAwarePaginator};
+use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model, SqlSupport};
@@ -44,14 +44,13 @@ class PowerGridComponent extends Component
 
     public bool $isCollection = false;
 
-    protected string $paginationTheme = 'tailwind';
-
-    protected ThemeBase $powerGridTheme;
-
     public string $currentTable = '';
 
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
+
+    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $withoutPaginatedData */
+    public $withoutPaginatedData;
 
     public bool $toggleColumns = false;
 
@@ -61,56 +60,29 @@ class PowerGridComponent extends Component
 
     public bool $showUpdateMessages = false;
 
-    /**
-     * @var string[] $listeners
-     */
-    protected $listeners = [
-        'eventChangeDatePiker' => 'eventChangeDatePiker',
-        'eventInputChanged'    => 'eventInputChanged',
-        'eventToggleChanged'   => 'eventInputChanged',
-        'eventMultiSelect'     => 'eventMultiSelect',
-        'eventRefresh'         => '$refresh',
-        'eventToggleColumn'    => 'toggleColumn',
-    ];
+    public string $tableName = 'default';
+
+    protected string $paginationTheme = 'tailwind';
+
+    protected ThemeBase $powerGridTheme;
+
+    public bool $headerTotalColumn = false;
+
+    public bool $footerTotalColumn = false;
 
     /**
-     * Apply checkbox, perPage and search view and theme
-     * @return void
+     * @return array
      */
-    public function setUp()
+    protected function getListeners()
     {
-        $this->showPerPage();
-    }
-
-    public function template(): ?string
-    {
-        return null;
-    }
-
-    public function columns(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return null
-     */
-    public function datasource()
-    {
-        return null;
-    }
-
-    /**
-     * @return null
-     */
-    public function addColumns()
-    {
-        return null;
-    }
-
-    public function relationSearch(): array
-    {
-        return [];
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+        ];
     }
 
     /**
@@ -160,7 +132,30 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
+        $this->resolveTotalRow();
+
         $this->renderFilter();
+    }
+
+    private function resolveTotalRow(): void
+    {
+        collect($this->columns())->each(function (Column $column) {
+            if ($column->sum['header'] || $column->count['header']) {
+                $this->headerTotalColumn = true;
+            }
+            if ($column->sum['footer'] || $column->count['footer']) {
+                $this->footerTotalColumn = true;
+            }
+        });
+    }
+
+    /**
+     * Apply checkbox, perPage and search view and theme
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->showPerPage();
     }
 
     /**
@@ -174,6 +169,11 @@ class PowerGridComponent extends Component
         }
 
         return $this;
+    }
+
+    public function columns(): array
+    {
+        return [];
     }
 
     /**
@@ -205,112 +205,14 @@ class PowerGridComponent extends Component
         return $this->renderView($data);
     }
 
-    /**
-     * @param AbstractPaginator|BaseCollection $data
-     * @return Application|Factory|View
-     */
-    private function renderView($data)
+    public function template(): ?string
     {
-        /** @phpstan-ignore-next-line  */
-        return view($this->powerGridTheme->layout->table, [
-            'data'  => $data,
-            'theme' => $this->powerGridTheme,
-            'table' => 'livewire-powergrid::components.table',
-        ]);
+        return null;
     }
 
-    /**
-     * @param array|BaseCollection|Builder|null $datasource
-     * @return mixed|null
-     */
-    private function resolveModel($datasource = null)
+    public function relationSearch(): array
     {
-        if (blank($datasource)) {
-            return $this->datasource();
-        }
-
-        return $datasource;
-    }
-
-    /**
-     * @param array|BaseCollection|Builder|null $datasource
-     * @throws Exception
-     */
-    private function resolveCollection($datasource = null): BaseCollection
-    {
-        if (!powerGridCache()) {
-            return new BaseCollection($this->datasource());
-        }
-
-        return cache()->rememberForever($this->id, function () use ($datasource) {
-            if (is_array($datasource)) {
-                return new BaseCollection($datasource);
-            }
-            if (is_a((object) $datasource, BaseCollection::class)) {
-                return $datasource;
-            }
-
-            return new BaseCollection($datasource);
-        });
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function eventInputChanged(array $data): void
-    {
-        $update = $this->update($data);
-
-        $this->fillData();
-
-        if (!$this->showUpdateMessages) {
-            return;
-        }
-
-        if (!$update) {
-            session()->flash('error', $this->updateMessages('error', $data['field']));
-
-            return;
-        }
-        session()->flash('success', $this->updateMessages('success', $data['field']));
-    }
-
-    /**
-     * @param array $data
-     * @return bool
-     */
-    public function update(array $data): bool
-    {
-        return false;
-    }
-
-    public function checkedValues(): array
-    {
-        return $this->checkboxValues;
-    }
-
-    public function updatedPage(): void
-    {
-        $this->checkboxAll = false;
-    }
-
-    /**
-     * @return array|null|string
-     */
-    public function updateMessages(string $status, string $field = '_default_message')
-    {
-        $updateMessages = [
-            'success' => [
-                '_default_message' => __('Data has been updated successfully!'),
-                'status'           => __('Custom Field updated successfully!'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
-            ],
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+        return [];
     }
 
     /**
@@ -379,6 +281,10 @@ class PowerGridComponent extends Component
 
         $results = $results->orderBy($sortField, $this->sortDirection);
 
+        if ($this->headerTotalColumn || $this->footerTotalColumn) {
+            $this->withoutPaginatedData = $results->get();
+        }
+
         if ($this->perPage > 0) {
             $results = $results->paginate($this->perPage);
         } else {
@@ -388,6 +294,36 @@ class PowerGridComponent extends Component
         $this->total = $results->total();
 
         return $results->setCollection($this->transform($results->getCollection()));
+    }
+
+    /**
+     * @return null
+     */
+    public function datasource()
+    {
+        return null;
+    }
+
+    /**
+     * @param array|BaseCollection|Builder|null $datasource
+     * @throws Exception
+     */
+    private function resolveCollection($datasource = null): BaseCollection
+    {
+        if (!boolval(config('livewire-powergrid.cached_data', false))) {
+            return new BaseCollection($this->datasource());
+        }
+
+        return cache()->rememberForever($this->id, function () use ($datasource) {
+            if (is_array($datasource)) {
+                return new BaseCollection($datasource);
+            }
+            if (is_a((object) $datasource, BaseCollection::class)) {
+                return $datasource;
+            }
+
+            return new BaseCollection($datasource);
+        });
     }
 
     private function transform(BaseCollection $results): BaseCollection
@@ -407,6 +343,100 @@ class PowerGridComponent extends Component
 
             return $row;
         });
+    }
+
+    /**
+     * @return null
+     */
+    public function addColumns()
+    {
+        return null;
+    }
+
+    /**
+     * @param array|BaseCollection|Builder|null $datasource
+     * @return mixed|null
+     */
+    private function resolveModel($datasource = null)
+    {
+        if (blank($datasource)) {
+            return $this->datasource();
+        }
+
+        return $datasource;
+    }
+
+    /**
+     * @param AbstractPaginator|BaseCollection $data
+     * @return Application|Factory|View
+     */
+    private function renderView($data)
+    {
+        /** @phpstan-ignore-next-line */
+        return view($this->powerGridTheme->layout->table, [
+            'data'  => $data,
+            'theme' => $this->powerGridTheme,
+            'table' => 'livewire-powergrid::components.table',
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function inputTextChanged(array $data): void
+    {
+        $update = $this->update($data);
+
+        $this->fillData();
+
+        if (!$this->showUpdateMessages) {
+            return;
+        }
+
+        if (!$update) {
+            session()->flash('error', $this->updateMessages('error', $data['field']));
+
+            return;
+        }
+        session()->flash('success', $this->updateMessages('success', $data['field']));
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function update(array $data): bool
+    {
+        return false;
+    }
+
+    /**
+     * @return array|null|string
+     */
+    public function updateMessages(string $status, string $field = '_default_message')
+    {
+        $updateMessages = [
+            'success' => [
+                '_default_message' => __('Data has been updated successfully!'),
+                'status'           => __('Custom Field updated successfully!'),
+            ],
+            'error' => [
+                '_default_message' => __('Error updating the data.'),
+                //'custom_field' => __('Error updating custom field.'),
+            ],
+        ];
+
+        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+    }
+
+    public function checkedValues(): array
+    {
+        return $this->checkboxValues;
+    }
+
+    public function updatedPage(): void
+    {
+        $this->checkboxAll = false;
     }
 
     /**

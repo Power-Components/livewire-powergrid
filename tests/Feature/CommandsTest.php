@@ -7,7 +7,7 @@ beforeEach(function () {
     $this->tableCollectionFilePath  = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
     $this->model_name_question      = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
     $this->datasource_question      = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
-    $this->model_path_question      = 'Enter your Model path (E.g., <comment>App\Models\User</comment>)';
+    $this->model_path_question      = 'Enter your Model path (E.g., <comment>App\Models\User</comment> or <comment>User</comment>)';
     $this->use_fillable_question    = 'Create columns based on Model\'s <comment>fillable</comment> property?';
 });
 
@@ -56,7 +56,7 @@ it('notifies about tailwind forms', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
-        ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.docsforge.com/main/configure/#43-tailwind-forms for more information.")
+        ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
 

@@ -5,6 +5,8 @@
     'actions' => null,
     'theme' => null,
     'enabledFilters' => null,
+    'inputTextOptions' => [],
+    'tableName' => null,
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
@@ -18,13 +20,13 @@
                 @foreach($columns as $column)
                     @if($column->hidden === false)
                         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}">
-
                             @foreach(data_get($makeFilters, 'date_picker', []) as $index => $date)
                                 @if(data_get($date, 'field') === $column->field)
                                     <x-livewire-powergrid::filters.date-picker
                                         :date="$date"
                                         :inline="true"
                                         :column="$column"
+                                        :tableName="$tableName"
                                         :theme="$theme->filterDatePicker"/>
                                 @endif
                             @endforeach
@@ -44,7 +46,7 @@
                                     @includeIf($theme->filterMultiSelect->view, [
                                             'inline' => true,
                                             'column' => $column,
-                                            'options' => "[['id' => 'laravel , 'name' => 'Laravel'], ['id' => 'alpineJs', 'name' => 'Alpine JS'], ['id' => 'livewire', 'name' => 'Livewire']]"
+                                            'tableName' => $tableName,
                                     ])
                                 @endif
                             @endforeach
@@ -64,6 +66,7 @@
                                     <x-livewire-powergrid::filters.input-text
                                         :inputText="$inputText"
                                         :enabledFilters="$enabledFilters"
+                                        :inputTextOptions="$inputTextOptions"
                                         :column="$column"
                                         :inline="true"
                                         :theme="$theme->filterInputText"/>

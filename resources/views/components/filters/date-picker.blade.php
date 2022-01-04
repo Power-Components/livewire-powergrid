@@ -3,19 +3,28 @@
     'inline' => null,
     'date' => null,
     'column' => null,
+    'tableName' => null,
 ])
-<div>
-    @php
-        $customConfig = [];
-        if (data_get($date, 'config')) {
-            foreach (data_get($date, 'config') as $key => $value) {
-                $customConfig[$key] = $value;
-            }
+@php
+    $tableName = \Illuminate\Support\Str::kebab($tableName);
+    $customConfig = [];
+    if (data_get($date, 'config')) {
+        foreach (data_get($date, 'config') as $key => $value) {
+            $customConfig[$key] = $value;
         }
-    @endphp
-
+    }
+@endphp
+<div wire:ignore x-data="pgFlatPickr({
+        dataField: '{{ $date['dataField'] }}',
+        tableName: '{{ $tableName }}',
+        filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
+        label: '{{ $date['label'] }}',
+        locale: {{ json_encode(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())) }},
+        onlyFuture: {{ json_encode(data_get($customConfig, 'only_future', false)) }},
+        noWeekEnds: {{ json_encode(data_get($customConfig, 'no_weekends', false)) }},
+        customConfig: {{ json_encode($customConfig) }}
+    })">
     <div class="{{ $theme->divClassNotInline }}" @if($inline)  @endif>
-
         @if(!$inline)
             <label for="input_{{ data_get($date, 'field') }}"
                    class="text-gray-700 dark:text-gray-300">
@@ -23,46 +32,13 @@
             </label>
         @endif
         <input id="input_{{ data_get($date, 'field') }}"
+               x-ref="rangeInput"
                data-field="{{ data_get($date, 'dataField') }}"
                style="{{ data_get($column, 'headerStyle') }}"
-               data-key="enabledFilters.date_picker.{{ data_get($date, 'dataField') }}"
-               class="power_grid range_input_{{ data_get($date, 'dataField') }} {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
+               class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-               wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}"
-               wire:ignore>
+               wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}">
     </div>
-    @push('power_grid_scripts')
-        <script type="application/javascript">
-            flatpickr(document.getElementsByClassName('range_input_{{ data_get($date, 'dataField') }}'), {
-                    mode: 'range',
-                    defaultHour: 0,
-                    ...@json(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())),
-                    @if(data_get($customConfig, 'only_future'))
-                    minDate: 'today',
-                    @endif
-                        @if(data_get($customConfig, 'no_weekends') === true)
-                    disable: [
-                        function (date) {
-                            return (date.getDay() === 0 || date.getDay() === 6);
-                        }
-                    ],
-                    @endif
-                    ...@json($customConfig),
-                    onClose: function (selectedDates, dateStr, instance) {
-                        if (selectedDates.length > 0) {
-                            window.livewire.emit('eventChangeDatePiker', {
-                                selectedDates: selectedDates,
-                                field: instance._input.attributes['data-field'].value,
-                                values: instance._input.attributes['data-key'].value,
-                                label: '{{ data_get($date, 'label') }}'
-                            });
-                        }
-                    }
-                }
-            );
-        </script>
-    @endpush
-
 </div>
 

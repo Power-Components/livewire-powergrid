@@ -1,0 +1,32 @@
+{
+    "name": "livewire-powergrid",
+    "version": "1.0.0",
+    "description": "<div align=\"center\"> \t<p><img src=\"art/header.jpg\" alt=\"PowerGrid Logo\"></p>     <p align=\"center\">         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"Total Downloads\" src=\"https://img.shields.io/packagist/dt/power-components/livewire-powergrid\"></a>         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"Latest Version\" src=\"https://img.shields.io/packagist/v/power-components/livewire-powergrid\"></a>         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"License\" src=\"https://img.shields.io/packagist/l/power-components/livewire-powergrid\"></a>     </p>     <a href=\"https://livewire-powergrid.com/\" target=\"_blank\">📚 Documentation</a> |     <a href=\"#features\">🔥 Features</a> |     <a href=\"#get-started\">⌨️ Get started</a> </div>",
+    "main": "index.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "watch": "mix watch",
+        "build": "mix --production"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Power-Components/livewire-powergrid.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Power-Components/livewire-powergrid/issues"
+    },
+    "homepage": "https://github.com/Power-Components/livewire-powergrid#readme",
+    "dependencies": {
+        "laravel-mix": "^6.0.37",
+        "tailwindcss": "^2.2.19"
+    },
+    "devDependencies": {
+        "resolve-url-loader": "^4.0.0",
+        "sass": "^1.45.0",
+        "sass-loader": "^12.1.0"
+    }
+}

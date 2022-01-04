@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\{Blade, View};
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
@@ -24,6 +24,13 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->packageName);
         $this->createDirectives();
+
+        View::composer('livewire-powergrid::assets.styles', function ($view) {
+            $view->cssPath = __DIR__ . '/../../dist/powergrid.css';
+        });
+        View::composer('livewire-powergrid::assets.scripts', function ($view) {
+            $view->jsPath  = __DIR__ . '/../../dist/powergrid.js';
+        });
     }
 
     public function register(): void
@@ -70,6 +77,10 @@ class PowerGridServiceProvider extends ServiceProvider
 
         Blade::directive('powerGridScripts', function () {
             return "<?php echo view('livewire-powergrid::assets.scripts')->render(); ?>";
+        });
+
+        View::composer('livewire-powergrid::assets.styles', function ($view) {
+            $view->cssPath = __DIR__ . '/../dist/powergrid.css';
         });
     }
 }

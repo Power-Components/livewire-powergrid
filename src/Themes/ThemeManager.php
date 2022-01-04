@@ -2,7 +2,22 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions, Checkbox, Cols, Editable, FilterBoolean, FilterDatePicker, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect, Footer, Layout, Table, Toggleable};
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+    Checkbox,
+    ClickToCopy,
+    Cols,
+    Editable,
+    FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect,
+    Footer,
+    Layout,
+    Row,
+    Table,
+    Toggleable};
 
 class ThemeManager
 {
@@ -19,6 +34,11 @@ class ThemeManager
     public function cols(): Cols
     {
         return new Cols();
+    }
+
+    public function row(): Row
+    {
+        return new Row();
     }
 
     public function footer(): Footer
@@ -39,6 +59,11 @@ class ThemeManager
     public function editable(): Editable
     {
         return new Editable();
+    }
+
+    public function clickToCopy(): ClickToCopy
+    {
+        return new ClickToCopy();
     }
 
     public function layout(): Layout

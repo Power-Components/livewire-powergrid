@@ -17,10 +17,11 @@
             }
         @endphp
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
-            style="width: max-content; @if($column->sortable) cursor:pointer; @endif{{ $theme->table->thStyle.' '. $column->headerStyle }}">
+            wire:key="{{ md5($column->field) }}"
+            style="width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
             <div class="{{ $theme->cols->divClass }}" @if($column->sortable === true) wire:click="sortBy('{{ $field }}')"@endif>
                 @if($column->sortable === true)
-                    <span class="text-base pr-2" style="font-size: 1rem !important;">
+                    <span class="text-md pr-2">
 						@if ($sortField !== $field)
                             &#8597;
                         @elseif ($sortDirection == 'desc')

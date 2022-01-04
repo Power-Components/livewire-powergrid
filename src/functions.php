@@ -1,11 +1,8 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-
-const BOOTSTRAP            = 'bootstrap';
-const TAILWIND             = 'tailwind';
-const JS_FRAMEWORK_ALPINE  = 'alpinejs';
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
+use PowerComponents\LivewirePowerGrid\Traits\Filter;
 
 if (!function_exists('powerGridThemeRoot')) {
     /**
@@ -41,30 +38,25 @@ if (!function_exists('powerGridTheme')) {
     }
 }
 
-if (!function_exists('powerGridJsFramework')) {
-    /**
-     * @throws Exception
-     */
-    function powerGridJsFramework(): ?string
-    {
-        /** @var string|null $powerGridJsFramework */
-        $powerGridJsFramework = config('livewire-powergrid.js_framework');
-
-        return $powerGridJsFramework;
-    }
-}
-if (!function_exists('powerGridCache')) {
-    function powerGridCache(): bool
-    {
-        return boolval(config('livewire-powergrid.cached_data', false));
-    }
-}
 if (!function_exists('validateInputTextOptions')) {
     function validateInputTextOptions(array $filter, string $field): bool
     {
         return isset($filter['input_text_options'][$field]) && in_array(
             strtolower($filter['input_text_options'][$field]),
-            ['is', 'is_not', 'contains', 'contains_not', 'starts_with', 'ends_with', 'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank']
+            Filter::getInputTextOptions()
         );
+    }
+}
+
+if (!function_exists('isBootstrap5')) {
+    function isBootstrap5(): bool
+    {
+        return in_array(config('livewire-powergrid.theme'), ['bootstrap', Bootstrap5::class]);
+    }
+}
+if (!function_exists('isTailwind')) {
+    function isTailwind(): bool
+    {
+        return in_array(config('livewire-powergrid.theme'), ['tailwind', Tailwind::class]);
     }
 }

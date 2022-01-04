@@ -21,9 +21,12 @@ class DishesTable extends PowerGridComponent
 
     protected function getListeners()
     {
-        $this->listeners[] = 'deletedEvent';
-
-        return $this->listeners;
+        return array_merge(
+            parent::getListeners(),
+            [
+                'deletedEvent',
+            ]
+        );
     }
 
     public array $eventId = [];

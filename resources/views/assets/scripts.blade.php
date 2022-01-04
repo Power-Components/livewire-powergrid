@@ -1,38 +1,37 @@
-<script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
-<script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
-
-@includeIf(powerGridThemeRoot().".scripts")
-
 <script>
-    function copyToClipboard(button) {
-        const el = document.createElement('textarea');
-        el.value = button.getAttribute('data-value');
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-    }
-
-    function htmlSpecialChars(string) {
-        const el = document.createElement('div');
-        el.innerText = string;
-        return el.innerHTML;
-    }
-
-    function isV2() {
-        return window.Alpine && window.Alpine.version && /^2\..+\..+$/.test(window.Alpine.version)
-    }
-
-    setTimeout(function () {
-        if (isV2()) {
-            console.warn('⚡️ Powergrid alert ⚡ ️- Alpine 2x will be discontinued soo.')
+    window.onload = function () {
+        if (!window.Alpine) {
+            console.warn('Oops. Could not find Alpine. Are you sure you installed it? See: https://alpinejs.dev/', {
+                alpine: 'https://alpinejs.dev/',
+                powergrid: 'https://github.com/Power-Components/livewire-powergrid',
+            })
+        } else {
+            if (window.Alpine.version && /^2\..+\..+$/.test(window.Alpine.version)) {
+                console.warn('Oops. Powergrid does not support V2.x', {
+                    alpine: 'https://alpinejs.dev/',
+                    powergrid: 'https://github.com/Power-Components/livewire-powergrid',
+                })
+            }
         }
-    }, 1000)
+    }
 </script>
 
-@if(powerGridJsFramework() === JS_FRAMEWORK_ALPINE)
-    <script src="{{ config('livewire-powergrid.js_framework_cdn.alpinejs') }}" defer></script>
+@if(filled(config('livewire-powergrid.plugins.flat_piker.js')))
+    <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
 @endif
 
-@stack('power_grid_scripts')
+@if(filled(config('livewire-powergrid.plugins.flat_piker.translate')))
+    <script src="{{ config('livewire-powergrid.plugins.flat_piker.translate') }}"></script>
+@endif
 
+@if(isBootstrap5())
+    <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
+@endif
+
+@if(filled(config('livewire-powergrid.alpinejs_cdn')))
+    <script src="{{ config('livewire-powergrid.alpinejs_cdn') }}" defer></script>
+@endif
+
+@isset($jsPath)
+    <script>{!! file_get_contents($jsPath) !!}</script>
+@endisset

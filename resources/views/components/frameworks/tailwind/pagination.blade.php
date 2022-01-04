@@ -2,33 +2,33 @@
     <div class="items-center justify-between w-full sm:flex-1 sm:flex">
         @if($recordCount === 'full')
             <div>
-                <p class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300 sm:text-right">
+                <div class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300 sm:text-right">
                     {{ trans('livewire-powergrid::datatable.pagination.showing') }}
-                    <span class="font-semibold">{{ $paginator->firstItem() }}</span>
+                    <span class="font-semibold firstItem">{{ $paginator->firstItem() }}</span>
                     {{ trans('livewire-powergrid::datatable.pagination.to') }}
-                    <span class="font-semibold">{{ $paginator->lastItem() }}</span>
+                    <span class="font-semibold lastItem">{{ $paginator->lastItem() }}</span>
                     {{ trans('livewire-powergrid::datatable.pagination.of') }}
-                    <span class="font-semibold">{{ $paginator->total() }}</span>
+                    <span class="font-semibold total">{{ $paginator->total() }}</span>
                     {{ trans('livewire-powergrid::datatable.pagination.results') }}
-                </p>
+                </div>
             </div>
         @elseif($recordCount === 'short')
             <div>
                 <p class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300">
-                    <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
+                    <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
-                    <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
+                    <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
                     |
-                    <span class="font-semibold"> {{ $paginator->total() }}</span>
+                    <span class="font-semibold total"> {{ $paginator->total() }}</span>
 
                 </p>
             </div>
         @elseif($recordCount === 'min')
             <div>
                 <p class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300">
-                    <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
+                    <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
-                    <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
+                    <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
                 </p>
             </div>
         @endif

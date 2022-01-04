@@ -118,7 +118,7 @@ class SqlSupport
         }
 
         if (!Schema::hasColumn($data[0], $data[1])) {
-            throw new Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.docsforge.com/main/include-columns/#fieldstring-field-string-datafield");
+            throw new Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.com/#/table/include-columns?id=fieldstring-field-string-datafield");
         }
 
         return Schema::getConnection()

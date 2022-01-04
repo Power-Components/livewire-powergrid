@@ -4,7 +4,7 @@
             @if($perPageInput)
                 <div class="d-flex justify-content-center align-items-center">
                     <label class="w-auto">
-                        <select wire:model="perPage" class="form-select pe-3">
+                        <select wire:model="perPage" class="form-select">
                             @foreach($perPageValues as $value)
                                 <option value="{{$value}}">
                                     @if($value == 0)
@@ -15,7 +15,7 @@
                             @endforeach
                         </select>
                     </label>
-                    <small class="ms-50">
+                    <small class="ms-2">
                         {{ trans('livewire-powergrid::datatable.labels.results_per_page') }}
                     </small>
                 </div>

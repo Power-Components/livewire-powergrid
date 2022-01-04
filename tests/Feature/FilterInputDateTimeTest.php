@@ -8,8 +8,6 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->set('filters', filterInputDate('2021-01-01', '2021-03-03'))
         ->assertSeeHtmlInOrder([
             'id="input_produced_at_formatted"',
-            'data-field="produced_at"',
-            'data-key="enabledFilters.date_picker.produced_at"',
             'type="text"',
             'placeholder="Select a period"',
             'wire:model="filters.input_date_picker.produced_at"',

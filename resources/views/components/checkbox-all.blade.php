@@ -2,8 +2,9 @@
     'theme' => null
 ])
 <div>
-
-    <th scope="col" class="{{ $theme->thClass }}" style="{{ $theme->thStyle }}">
+    <th scope="col" class="{{ $theme->thClass }}"
+        style="{{ $theme->thStyle }}"
+        wire:key="{{ md5('checkbox-all') }}">
         <div class="{{ $theme->divClass }}">
             <label class="{{ $theme->labelClass }}">
                 <input class="{{ $theme->inputClass }}"
@@ -13,5 +14,4 @@
             </label>
         </div>
     </th>
-
 </div>

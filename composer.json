@@ -55,8 +55,8 @@
         ],
         "check": [
             "@cs-fixer",
-            "@test",
-            "@test:types"
+            "@test:types",
+            "@test"
         ]
     },
     "require-dev": {
@@ -68,5 +68,11 @@
         "pestphp/pest-plugin-livewire": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.2",
         "nunomaduro/larastan": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "pestphp/pest-plugin": true
+        }
     }
 }
