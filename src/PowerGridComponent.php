@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
@@ -19,6 +20,7 @@ class PowerGridComponent extends Component
     use Exportable;
     use WithSorting;
     use Checkbox;
+    use HasAttributes;
     use Filter;
     use BatchableExport;
 
@@ -176,6 +178,11 @@ class PowerGridComponent extends Component
         return [];
     }
 
+    public function rules(): array
+    {
+        return [];
+    }
+
     /**
      * @return Application|Factory|View
      * @throws Exception
@@ -328,20 +335,28 @@ class PowerGridComponent extends Component
 
     private function transform(BaseCollection $results): BaseCollection
     {
-        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
+        if (
+            !is_a((object) $this->addColumns(), PowerGridEloquent::class)
+        ) {
             return $results;
         }
 
-        return $results->transform(function ($row) {
-            $row = (object) $row;
-            if (!is_null($this->addColumns())) {
-                $columns = $this->addColumns()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
-            }
+        return $results->map(function ($row) {
+            /** @var \stdClass $columns */
+            $columns = $this->addColumns();
 
-            return $row;
+            $columns = $columns->columns;
+
+            /** @phpstan-ignore-next-line */
+            $data = collect($columns)->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
+            /** @phpstan-ignore-next-line */
+            $rules = collect($this->rules())->mapWithKeys(fn ($rule, $index) => (object) [$rule->forAction => $rule->rule['when']((object) $row)]);
+
+            $mergedData = $data->merge($rules);
+
+            return $row instanceof \Illuminate\Database\Eloquent\Model
+            ? tap($row)->forceFill($mergedData->toArray())
+            : (object) $mergedData->toArray();
         });
     }
 
