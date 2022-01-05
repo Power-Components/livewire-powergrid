@@ -3,12 +3,18 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\{Button};
 
 class Helpers
 {
-    public function makeParameters(Button $action, Model $entry): array
+    protected array $actions = [
+        'wire',
+        'setAttribute',
+        'disable',
+    ];
+
+    public function makeActionParameters(Button $action, Model $entry): array
     {
         $parameters = [];
         foreach ($action->param as $param => $value) {
@@ -20,6 +26,42 @@ class Helpers
         }
 
         return $parameters;
+    }
+
+    public function makeParameters(array $params, Model $entry): array
+    {
+        $parameters = [];
+        foreach ($params as $param => $value) {
+            if (!empty($entry->{$value})) {
+                $parameters[$param] = $entry->{$value};
+            } else {
+                $parameters[$param] = $value;
+            }
+        }
+
+        return $parameters;
+    }
+
+    public function makeActionRules(Button $action, Model $entry): array
+    {
+        $actionRules = [];
+
+        $rules = collect(data_get(Arr::undot($entry->toArray()), 'rules'));
+
+        $rules->each(function ($key) use (&$actionRules, $action) {
+            $key = (array) $key;
+            if (isset($key[$action->action])) {
+                $rule = (array) $key[$action->action];
+
+                foreach ($this->actions as $action) {
+                    if (data_get($rule, "action.$action") && $rule['applyRule']) {
+                        $actionRules[$action] = data_get($rule, "action.$action");
+                    }
+                }
+            }
+        });
+
+        return $actionRules;
     }
 
     public function resolveContent(string $currentTable, string $field, Model $entry): ?string

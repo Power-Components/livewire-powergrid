@@ -8,7 +8,7 @@
         @foreach($actions as $action)
             <div class="sm:mr-2 mb-2 w-auto">
                 @php
-                    $parameters = $helperClass->makeParameters($action, $row);
+                    $parameters = $helperClass->makeActionParameters($action, $row);
                 @endphp
                 @if($action->event !== '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'

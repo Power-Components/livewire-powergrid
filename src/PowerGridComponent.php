@@ -345,12 +345,19 @@ class PowerGridComponent extends Component
             /** @var \stdClass $columns */
             $columns = $this->addColumns();
 
-            $columns = $columns->columns;
+            $columns = collect($columns->columns);
+
+            $rules   = collect($this->rules());
 
             /** @phpstan-ignore-next-line */
-            $data = collect($columns)->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
+            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
             /** @phpstan-ignore-next-line */
-            $rules = collect($this->rules())->mapWithKeys(fn ($rule, $index) => (object) [$rule->forAction => $rule->rule['when']((object) $row)]);
+            $rules = $rules->mapWithKeys(function ($rule, $index) use ($row) {
+                return (object) ['rules.' . $index . '.' . $rule->forAction => [
+                    'applyRule' => $rule->rule['when']((object) $row),
+                    'action'    => collect($rule->rule)->forget('when')->toArray(),
+                ]];
+            });
 
             $mergedData = $data->merge($rules);
 

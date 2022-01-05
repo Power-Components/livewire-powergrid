@@ -34,11 +34,12 @@ final class Rule
         return $this;
     }
 
-    public function wire(string $action = 'click', string $event = ''): Rule
+    public function wire(string $action = 'click', string $event = '', array $params = []): Rule
     {
         $this->rule['wire'] = [
             'action' => $action,
             'event'  => $event,
+            'params' => $params,
         ];
 
         return $this;
