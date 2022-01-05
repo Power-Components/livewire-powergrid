@@ -9,9 +9,10 @@ use PowerComponents\LivewirePowerGrid\{Button};
 class Helpers
 {
     protected array $actions = [
-        'wire',
+        'emit',
         'setAttribute',
         'disable',
+        'hide',
     ];
 
     public function makeActionParameters(Button $action, Model $entry): array

@@ -15,12 +15,13 @@
                 $rules            = $helperClass->makeActionRules($action, $row);
 
                 $ruleDisabled     = data_get($rules, 'disable');
+                $ruleHide         = data_get($rules, 'hide', false);
                 $ruleSetAttribute = data_get($rules, 'setAttribute');
-                $ruleWire         = data_get($rules, 'wire');
+                $ruleEmit         = data_get($rules, 'emit');
 
-                if (filled($ruleWire)) {
-                    $event['event']  = $ruleWire['event'];
-                    $event['params'] = $helperClass->makeParameters($ruleWire['params'], $row);
+                if (filled($ruleEmit)) {
+                    $event['event']  = $ruleEmit['event'];
+                    $event['params'] = $helperClass->makeParameters($ruleEmit['params'], $row);
                 } else {
                     $event['event']  = $action->event;
                     $event['params'] = $actionParameters;
@@ -33,7 +34,13 @@
                 }
 
             @endphp
-            <div class="w-full md:w-auto" x-data="{ ruleDisabled: false }">
+            <div x-data="{
+                    ruleDisabled: @json($ruleDisabled),
+                    ruleHide: @json($ruleHide)
+                }"
+                class="w-full md:w-auto"
+                x-show="ruleHide === false"
+            >
                 @if(filled($action->event) || filled($action->view))
                     <button @if($event) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                        @endif
