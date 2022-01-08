@@ -66,7 +66,7 @@ final class Rule
     {
         $this->rule['emit']     = [];
         $this->rule['redirect'] = [
-            'url' => $route,
+            'url'    => $route,
             'target' => $target,
         ];
 
