@@ -24,7 +24,7 @@
                         $field = $column->field;
                     }
                 @endphp
-            <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
+            <td id="footer" class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
                 style=" {{ $theme->table->tdBodyStyleTotalColumns .' '.$column->bodyStyle ?? ''  }}">
                 @if ($column->count['footer'])
                     <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->count($field) }}</span>

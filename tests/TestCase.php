@@ -276,11 +276,11 @@ class TestCase extends BaseTestCase
             }
 
             if (!isset($dish['in_stock'])) {
-                $dish['in_stock'] = $dish['in_stock'] =  $faker->boolean();
+                $dish['in_stock'] = $faker->boolean();
             }
 
             if (!isset($dish['produced_at'])) {
-                $dish['produced_at'] = $dish['produced_at'] =  $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format('Y-m-d');
+                $dish['produced_at'] = $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format('Y-m-d');
             }
 
             if (!isset($dish['stored_at'])) {
@@ -290,7 +290,7 @@ class TestCase extends BaseTestCase
             if (!array_key_exists('chef_name', $dish)) {
                 $dish['chef_name'] = 'Luan';
             }
-            
+
             return $dish;
         })->toArray();
     }
