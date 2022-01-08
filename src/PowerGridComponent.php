@@ -8,9 +8,9 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
 
@@ -347,19 +347,15 @@ class PowerGridComponent extends Component
 
             $columns = collect($columns->columns);
 
-            $rules   = collect($this->rules());
-
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
-            /** @phpstan-ignore-next-line */
-            $rules = $rules->mapWithKeys(function ($rule, $index) use ($row) {
-                return (object) ['rules.' . $index . '.' . $rule->forAction => [
-                    'applyRule' => $rule->rule['when']((object) $row),
-                    'action'    => collect($rule->rule)->forget('when')->toArray(),
-                ]];
-            });
 
-            $mergedData = $data->merge($rules);
+            if (method_exists(get_called_class(), 'actions')) {
+                /** @phpstan-ignore-next-line */
+                $rules = resolve(Helpers::class)->resolveRules($this->rules(), $this->actions(), $row);
+            }
+
+            $mergedData = $data->merge($rules ?? collect());
 
             return $row instanceof \Illuminate\Database\Eloquent\Model
             ? tap($row)->forceFill($mergedData->toArray())

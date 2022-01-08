@@ -13,6 +13,7 @@ class Helpers
         'setAttribute',
         'disable',
         'hide',
+        'redirect',
     ];
 
     public function makeActionParameters(Button $action, Model $entry): array
@@ -84,5 +85,28 @@ class Helpers
         }
 
         return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+    }
+
+    /**
+     * @param array|object $row
+     */
+    public function resolveRules(array $rules, array $actions, $row): \Illuminate\Support\Collection
+    {
+        $rules   = collect($rules);
+
+        $buttons = collect($actions);
+
+        /** @phpstan-ignore-next-line */
+        return $rules->mapWithKeys(function ($rule, $index) use ($row, $buttons) {
+            $hasActionButton = $buttons->filter(fn (Button $button) => $button->action === $rule->forAction)->count() > 0;
+            if (!$hasActionButton) {
+                return [];
+            }
+
+            return (object) ['rules.' . $index . '.' . $rule->forAction => [
+                'applyRule' => $rule->rule['when']((object) $row),
+                'action'    => collect($rule->rule)->forget('when')->toArray(),
+            ]];
+        });
     }
 }

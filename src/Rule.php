@@ -27,16 +27,10 @@ final class Rule
         return $this;
     }
 
-    public function unless(Closure $closure = null): Rule
-    {
-        $this->rule['unless'] = $closure;
-
-        return $this;
-    }
-
     public function emit(string $event = '', array $params = []): Rule
     {
-        $this->rule['emit'] = [
+        $this->rule['redirect'] = [];
+        $this->rule['emit']     = [
             'event'  => $event,
             'params' => $params,
         ];
@@ -64,6 +58,17 @@ final class Rule
     public function disable(): Rule
     {
         $this->rule['disable'] = true;
+
+        return $this;
+    }
+
+    public function redirect(string $route, string $target = '_blank'): Rule
+    {
+        $this->rule['emit']     = [];
+        $this->rule['redirect'] = [
+            'url' => $route,
+            'target' => $target,
+        ];
 
         return $this;
     }
