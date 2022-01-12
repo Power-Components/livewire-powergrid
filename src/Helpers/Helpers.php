@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\{Button};
 
 class Helpers
 {
-    public function makeParameters(Button $action, Model $entry): array
+    public function makeParameters(Button $action, ?Model $entry = null): array
     {
         $parameters = [];
         foreach ($action->param as $param => $value) {
