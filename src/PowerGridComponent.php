@@ -297,7 +297,7 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return null
+     * @return Builder|\Spatie\QueryBuilder\QueryBuilder|null
      */
     public function datasource()
     {
