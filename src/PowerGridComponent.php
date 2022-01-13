@@ -282,7 +282,7 @@ class PowerGridComponent extends Component
         $results = $results->orderBy($sortField, $this->sortDirection);
 
         if ($this->headerTotalColumn || $this->footerTotalColumn) {
-            $this->withoutPaginatedData = $results->get();
+            $this->withoutPaginatedData = $this->transform($results->getCollection());
         }
 
         if ($this->perPage > 0) {
