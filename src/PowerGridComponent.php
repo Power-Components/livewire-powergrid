@@ -456,13 +456,17 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @param string $fileName
      * @param array|string[] $type
+     * @param array $options
+     * @return PowerGridComponent
      */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv']): PowerGridComponent
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], array $options = ['deleteAfterDownload' => true]): PowerGridComponent
     {
-        $this->exportOption   = true;
+        $this->exportActive   = true;
         $this->exportFileName = $fileName;
         $this->exportType     = $type;
+        $this->exportOptions  = $options;
 
         return $this;
     }
