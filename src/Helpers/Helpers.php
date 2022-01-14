@@ -12,7 +12,7 @@ class Helpers
     {
         $parameters = [];
         foreach ($action->param as $param => $value) {
-            if (filled($entry->{$value})) {
+            if ($entry && filled($entry->{$value})) {
                 $parameters[$param] = $entry->{$value};
             } else {
                 $parameters[$param] = $value;
