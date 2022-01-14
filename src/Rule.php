@@ -72,4 +72,11 @@ final class Rule
 
         return $this;
     }
+
+    public function caption(string $caption): Rule
+    {
+        $this->rule['caption'] = $caption;
+
+        return $this;
+    }
 }

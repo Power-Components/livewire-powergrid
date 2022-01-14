@@ -14,12 +14,13 @@ class Helpers
         'disable',
         'hide',
         'redirect',
+        'caption',
     ];
 
-    public function makeParameters(Button $action, ?Model $entry = null): array
+    public function makeActionParameters(array $params = [], ?Model $entry = null): array
     {
         $parameters = [];
-        foreach ($action->param as $param => $value) {
+        foreach ($params as $param => $value) {
             if (!empty($entry->{$value})) {
                 $parameters[$param] = $entry->{$value};
             } else {

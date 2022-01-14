@@ -11,7 +11,7 @@
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
                     $class            = filled($action->class) ? $action->class : $theme->actions->headerBtnClass;
-                    $actionParameters = $helperClass->makeActionParameters($action, $row);
+                    $actionParameters = $helperClass->makeActionParameters($action->param, $row);
                     $rules            = $helperClass->makeActionRules($action, $row);
 
                     $ruleRedirect     = data_get($rules, 'redirect');
@@ -19,10 +19,11 @@
                     $ruleHide         = data_get($rules, 'hide', false);
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
                     $ruleEmit         = data_get($rules, 'emit');
+                    $ruleCaption      = data_get($rules, 'caption');
 
                     if (filled($ruleEmit)) {
                         $event['event']  = $ruleEmit['event'];
-                        $event['params'] = $helperClass->makeParameters($ruleEmit['params'], $row);
+                        $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmit, 'params', []), $row);
                     } else {
                         $event['event']  = $action->event;
                         $event['params'] = $actionParameters;
@@ -50,7 +51,7 @@
                                 @endif
                                 :disabled="ruleDisabled"
                                 class="{{ $class}}">
-                            {!! $action->caption !!}
+                            {!! $ruleCaption ?? $action->caption !!}
                         </button>
                     @endif
 
@@ -59,7 +60,7 @@
                                target="{{ $ruleRedirect['target'] }}"
                                 :disabled="ruleDisabled"
                                 class="{{ $class}}">
-                            {!! $action->caption !!}
+                            {!! $ruleCaption ?? $action->caption !!}
                             </a>
                     @endif
 
@@ -73,14 +74,14 @@
                                 <button type="submit"
                                         :disabled="ruleDisabled"
                                         class="{{ $class }}">
-                                    {!! $action->caption ?? '' !!}
+                                    {!! $ruleCaption ?? $action->caption !!}
                                 </button>
                             </form>
                         @else
                             <a href="{{ route($action->route, $actionParameters) }}"
                                target="{{ $action->target }}"
                                class="{{ $class }}">
-                                {!! $action->caption !!}
+                                {!! $ruleCaption ?? $action->caption !!}
                             </a>
                         @endif
                     @endif
