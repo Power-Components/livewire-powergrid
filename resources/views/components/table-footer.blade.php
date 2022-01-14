@@ -27,7 +27,10 @@
             <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
                 style=" {{ $theme->table->tdBodyStyleTotalColumns .' '.$column->bodyStyle ?? ''  }}">
                 @if ($column->count['footer'])
-                    <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->count($field) }}</span>
+                    <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
+                    ->reject(function($data) use($field) { return empty($data->$field); })
+                    ->count($field) }}
+                    </span>
                     <br>
                 @endif
                 @if ($column->sum['footer'] && is_numeric($withoutPaginatedData[0][$field]))
