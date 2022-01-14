@@ -20,8 +20,9 @@ class Helpers
     public function makeActionParameters(array $params = [], ?Model $entry = null): array
     {
         $parameters = [];
+
         foreach ($params as $param => $value) {
-            if (!empty($entry->{$value})) {
+            if (filled($entry->{$value})) {
                 $parameters[$param] = $entry->{$value};
             } else {
                 $parameters[$param] = $value;
