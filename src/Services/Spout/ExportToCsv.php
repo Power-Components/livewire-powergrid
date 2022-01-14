@@ -16,12 +16,13 @@ class ExportToCsv extends Export implements ExportInterface
      * @throws IOException | WriterNotOpenedException | InvalidArgumentException
      * @throws Exception
      */
-    public function download(): BinaryFileResponse
+    public function download(bool $deleteFileAfterSend): BinaryFileResponse
     {
         $this->build();
 
         return response()
-            ->download(storage_path($this->fileName . '.csv'));
+            ->download(storage_path($this->fileName . '.csv'))
+            ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
     /**

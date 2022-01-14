@@ -17,10 +17,10 @@ return [
         'select' => 'Scegli un periodo',
     ],
     'pagination' => [
-        'showing' => 'Visualizzi',
+        'showing' => 'mostrati da',
         'to'      => 'a',
         'of'      => 'di',
-        'results' => 'Risultati',
+        'results' => 'risultati',
         'all'     => 'Tutti',
     ],
     'multi_select' => [

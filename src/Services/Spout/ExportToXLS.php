@@ -16,12 +16,13 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws IOException | WriterNotOpenedException | InvalidArgumentException
      */
-    public function download(): BinaryFileResponse
+    public function download(bool $deleteFileAfterSend): BinaryFileResponse
     {
         $this->build();
 
         return response()
-            ->download(storage_path($this->fileName . '.xlsx'));
+            ->download(storage_path($this->fileName . '.xlsx'))
+            ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
     /**
