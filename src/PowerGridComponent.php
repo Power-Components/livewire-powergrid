@@ -51,7 +51,7 @@ class PowerGridComponent extends Component
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
 
-    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $withoutPaginatedData */
+    /** @var \Illuminate\Support\Collection $withoutPaginatedData */
     public $withoutPaginatedData;
 
     public bool $toggleColumns = false;
@@ -289,7 +289,7 @@ class PowerGridComponent extends Component
         $results = $results->orderBy($sortField, $this->sortDirection);
 
         if ($this->headerTotalColumn || $this->footerTotalColumn) {
-            $this->withoutPaginatedData = $results->get();
+            $this->withoutPaginatedData = $this->transform($results->get());
         }
 
         if ($this->perPage > 0) {
@@ -474,13 +474,17 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @param string $fileName
      * @param array|string[] $type
+     * @param array $options
+     * @return PowerGridComponent
      */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv']): PowerGridComponent
+    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], array $options = ['deleteAfterDownload' => true]): PowerGridComponent
     {
-        $this->exportOption   = true;
+        $this->exportActive   = true;
         $this->exportFileName = $fileName;
         $this->exportType     = $type;
+        $this->exportOptions  = $options;
 
         return $this;
     }

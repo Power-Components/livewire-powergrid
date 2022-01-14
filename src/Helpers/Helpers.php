@@ -16,24 +16,10 @@ class Helpers
         'redirect',
     ];
 
-    public function makeActionParameters(Button $action, Model $entry): array
+    public function makeParameters(Button $action, ?Model $entry = null): array
     {
         $parameters = [];
         foreach ($action->param as $param => $value) {
-            if (!empty($entry->{$value})) {
-                $parameters[$param] = $entry->{$value};
-            } else {
-                $parameters[$param] = $value;
-            }
-        }
-
-        return $parameters;
-    }
-
-    public function makeParameters(array $params, Model $entry): array
-    {
-        $parameters = [];
-        foreach ($params as $param => $value) {
             if (!empty($entry->{$value})) {
                 $parameters[$param] = $entry->{$value};
             } else {

@@ -2,6 +2,7 @@
 @props([
     'actions' => null,
     'theme' => null,
+    'row' => null,
 ])
 <div class="w-full md:w-auto">
     <div class="sm:flex sm:flex-row">
