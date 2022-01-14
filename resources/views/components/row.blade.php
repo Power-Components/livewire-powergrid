@@ -12,13 +12,12 @@
         $content = $row->{$column->field};
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
     @endphp
-    @if($column->hidden === false)
-        <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
-            style=" {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
-            wire:key="{{ md5('row') }}"
-        >
-            @if($column->editable === true && !str_contains($column->dataField != '' ? $column->dataField : $column->field, '.'))
-                <span class="{{ $theme->clickToCopy->spanClass }}">
+    <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
+        style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
+        wire:key="{{ 'row-'.\Illuminate\Support\Str::kebab($column->field) }}"
+    >
+        @if($column->editable === true && !str_contains($column->dataField != '' ? $column->dataField : $column->field, '.'))
+            <span class="{{ $theme->clickToCopy->spanClass }}">
                         <x-livewire-powergrid::editable
                             :tableName="$tableName"
                             :primaryKey="$primaryKey"
@@ -27,30 +26,29 @@
                             :theme="$theme->editable"
                             :field="$column->dataField != '' ? $column->dataField : $column->field"/>
                         @if($column->clickToCopy)
-                        <x-livewire-powergrid::click-to-copy
-                            :row="$row"
-                            :field="$content"
-                            :label="data_get($column->clickToCopy, 'label') ?? null"
-                            :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
-                    @endif
+                    <x-livewire-powergrid::click-to-copy
+                        :row="$row"
+                        :field="$content"
+                        :label="data_get($column->clickToCopy, 'label') ?? null"
+                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                @endif
                 </span>
-            @elseif(count($column->toggleable) > 0)
-                @include($theme->toggleable->view, ['tableName' => $tableName])
-            @else
-                <span class="{{ $theme->clickToCopy->spanClass }}">
+        @elseif(count($column->toggleable) > 0)
+            @include($theme->toggleable->view, ['tableName' => $tableName])
+        @else
+            <span class="{{ $theme->clickToCopy->spanClass }}">
                     <div>
                         {!! $content !!}
                     </div>
                     @if($column->clickToCopy)
-                        <x-livewire-powergrid::click-to-copy
-                            :row="$row"
-                            :field="$content"
-                            :label="data_get($column->clickToCopy, 'label') ?? null"
-                            :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
-                    @endif
+                    <x-livewire-powergrid::click-to-copy
+                        :row="$row"
+                        :field="$content"
+                        :label="data_get($column->clickToCopy, 'label') ?? null"
+                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                @endif
                 </span>
-            @endif
-        </td>
-    @endif
+        @endif
+    </td>
 @endforeach
 
