@@ -14,7 +14,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 trait Exportable
 {
-    public bool $exportOption = false;
+    public bool $exportActive = false;
+
+    public array $exportOptions = [];
 
     public string $exportFileName = 'download';
 
@@ -52,16 +54,10 @@ trait Exportable
             $sortField = $currentTable . '.' . $this->sortField;
         }
 
-        if ($inClause) {
-            $results = $this->resolveModel()
-                ->orderBy($sortField, $this->sortDirection)
-                ->whereIn($this->primaryKey, $inClause)
-                ->get();
-
-            return $this->transform($results);
-        }
-
         $results = $this->resolveModel()
+            ->when($inClause, function ($query, $inClause) {
+                return $query->whereIn($this->primaryKey, $inClause);
+            })
             ->orderBy($sortField, $this->sortDirection)
             ->get();
 
@@ -74,21 +70,7 @@ trait Exportable
      */
     public function exportToXLS(bool $selected = false)
     {
-        if ($this->queues > 0 && !$selected) {
-            return $this->runOnQueue(ExportToXLS::class);
-        }
-
-        if (count($this->checkboxValues) === 0 && $selected) {
-            return false;
-        }
-
-        $exportable = new ExportToXLS();
-
-        $exportable
-            ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected));
-
-        return $exportable->download();
+        return $this->export(ExportToXLS::class, $selected);
     }
 
     /**
@@ -97,20 +79,31 @@ trait Exportable
      */
     public function exportToCsv(bool $selected = false)
     {
+        return $this->export(ExportToCsv::class, $selected);
+    }
+
+    /**
+     * @throws \Exception | \Throwable
+     * @return BinaryFileResponse | bool
+     */
+    private function export(string $exportableClass, bool $selected)
+    {
         if ($this->queues > 0 && !$selected) {
-            return $this->runOnQueue(ExportToCsv::class);
+            return $this->runOnQueue($exportableClass);
         }
 
         if (count($this->checkboxValues) === 0 && $selected) {
             return false;
         }
-
-        $exportable = new ExportToCsv();
+        /**
+         * @var ExportToCsv|ExportToCsv $exportable
+         */
+        $exportable = new $exportableClass();
 
         $exportable
             ->fileName($this->exportFileName)
             ->setData($this->columns(), $this->prepareToExport($selected));
 
-        return $exportable->download();
+        return $exportable->download($this->exportOptions['deleteAfterDownload']);
     }
 }
