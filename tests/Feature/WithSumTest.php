@@ -13,9 +13,9 @@ beforeEach(
 it('calculate "count" on id field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Count ID: 12</span>')
+        ->assertSee('Count ID: 12')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('<span>Count ID: 1</span>');
+        ->assertSee('Count ID: 1');
 })->with('themes with name field');
 
 it('calculate "sum" on price field', function (string $component, object $params) {
@@ -31,11 +31,11 @@ it('calculate "sum" on price field', function (string $component, object $params
 it('calculate "count" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Count Price: 12</span>')
+        ->assertSeeHtml('Count Price: 12')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('<span>Count Price: 1</span>')
+        ->assertSeeHtml('Count Price: 1')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('<span>Count Price: 1</span>');
+        ->assertSeeHtml('Count Price: 1');
 })->with('themes with name field');
 
 it('calculate "avg" on price field', function (string $component, object $params) {
@@ -66,7 +66,7 @@ function dishesForWithSum(): array
             'category_id' => 7,
             'price'       => 200.10,
             'stored_at'   => '2',
-            'calories'    => 224,
+            'calories'    => '',
             'in_stock'    => true,
             'produced_at' => '2021-10-02',
         ],
