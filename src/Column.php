@@ -47,10 +47,6 @@ final class Column
         'footer' => false,
     ];
 
-    /**
-     *
-     * @var array<int, string> $inputs
-     */
     public array $inputs = [];
 
     /**
