@@ -49,7 +49,7 @@ class PowerGridComponent extends Component
     /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
     public $datasource;
 
-    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $withoutPaginatedData */
+    /** @var \Illuminate\Support\Collection $withoutPaginatedData */
     public $withoutPaginatedData;
 
     public bool $toggleColumns = false;
@@ -282,7 +282,7 @@ class PowerGridComponent extends Component
         $results = $results->orderBy($sortField, $this->sortDirection);
 
         if ($this->headerTotalColumn || $this->footerTotalColumn) {
-            $this->withoutPaginatedData = $results->get();
+            $this->withoutPaginatedData = $this->transform($results->get());
         }
 
         if ($this->perPage > 0) {
