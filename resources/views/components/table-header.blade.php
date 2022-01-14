@@ -13,38 +13,34 @@
         <td></td>
     @endif
     @foreach ($columns as $column)
-            @php
-                if (filled($column->dataField) && str_contains($column->dataField, '.')) {
-                    $field = $column->field;
-                } else
-                if (filled($column->dataField) && !str_contains($column->dataField, '.')) {
-                    $field = $column->dataField;
-                } else {
-                    $field = $column->field;
-                }
-            @endphp
-        @if($column->hidden === false)
-            <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
-                style=" {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
-                @if ($column->count['header'])
-                    <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
+        @php
+            if (filled($column->dataField) && str_contains($column->dataField, '.')) {
+                $field = $column->field;
+            } else
+            if (filled($column->dataField) && !str_contains($column->dataField, '.')) {
+                $field = $column->dataField;
+            } else {
+                $field = $column->field;
+            }
+        @endphp
+        <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
+            style="{{ $column->hidden === true ? 'display:none': '' }}; {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
+            @if ($column->count['header'])
+                <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
                     ->reject(function($data) use($field) { return empty($data->$field); })
                     ->count($field) }}
                     </span>
-                    <br>
-                @endif
-                @if ($column->sum['header'] && is_numeric($withoutPaginatedData[0][$field]))
-                    <span>{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($field) }}</span>
-                    <br>
-                @endif
-                @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))
-                    <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
-                    <br>
-                @endif
-            </td>
-        @else
-            <td></td>
-        @endif
+                <br>
+            @endif
+            @if ($column->sum['header'] && is_numeric($withoutPaginatedData[0][$field]))
+                <span>{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($field) }}</span>
+                <br>
+            @endif
+            @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))
+                <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
+                <br>
+            @endif
+        </td>
     @endforeach
     @if(isset($actions) && count($actions))
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"

@@ -7,7 +7,7 @@
 
 @if(isset($actions) && count($actions) && $row !== '')
     @foreach($actions as $key => $action)
-        <td wire:key="action-{{ $key }}" class="pg-actions {{ $theme->table->tdBodyClass }}"
+        <td wire:key="action-{{ $row->{$primaryKey}.'-'.$key }}" class="pg-actions {{ $theme->table->tdBodyClass }}"
             style="{{ $theme->table->tdBodyStyle }}">
             @php
                 $parameters = $helperClass->makeParameters($action, $row);
