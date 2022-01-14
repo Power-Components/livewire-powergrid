@@ -66,7 +66,7 @@ function dishesForWithSum(): array
             'category_id' => 7,
             'price'       => 200.10,
             'stored_at'   => '2',
-            'calories'    => '',
+            'calories'    => 224,
             'in_stock'    => true,
             'produced_at' => '2021-10-02',
         ],
