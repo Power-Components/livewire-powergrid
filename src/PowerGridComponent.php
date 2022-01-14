@@ -178,7 +178,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    public function rules(): array
+    public function actionRules(): array
     {
         return [];
     }
@@ -352,7 +352,7 @@ class PowerGridComponent extends Component
 
             if (method_exists(get_called_class(), 'actions')) {
                 /** @phpstan-ignore-next-line */
-                $rules = resolve(Helpers::class)->resolveRules($this->rules(), $this->actions(), $row);
+                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $this->actions(), $row);
             }
 
             $mergedData = $data->merge($rules ?? collect());
