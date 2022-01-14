@@ -58,6 +58,8 @@ With PowerGrid you get right out of the box:
 
 - **Column Sorting**
 
+- **Column Sum, Count & Average in Header/Footer**
+
 - **Pagination**
 
 - **Action checkboxes**
