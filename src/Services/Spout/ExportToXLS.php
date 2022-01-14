@@ -16,7 +16,7 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws IOException | WriterNotOpenedException | InvalidArgumentException
      */
-    public function download(bool $deleteFileAfterSend = true): BinaryFileResponse
+    public function download(bool $deleteFileAfterSend): BinaryFileResponse
     {
         $this->build();
 

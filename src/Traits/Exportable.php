@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Bus\Batch;
 
-use Illuminate\Database\Eloquent\{Collection, Model};
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
