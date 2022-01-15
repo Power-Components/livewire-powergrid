@@ -4,7 +4,7 @@
             @if($checkbox)
                 <x-livewire-powergrid::checkbox-all
                     :checkbox="$checkbox"
-                    :theme="$theme->checkbox" />
+                    :theme="$theme->checkbox"/>
             @endif
             @foreach($columns as $column)
                 <x-livewire-powergrid::cols
@@ -12,15 +12,15 @@
                     :theme="$theme"
                     :sortField="$sortField"
                     :sortDirection="$sortDirection"
-                    :enabledFilters="$enabledFilters" />
+                    :enabledFilters="$enabledFilters"/>
             @endforeach
 
             @if(isset($actions) && count($actions))
-            <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-                style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
-                wire:key="{{ md5('actions') }}">
-                {{ trans('livewire-powergrid::datatable.labels.action') }}
-            </th>
+                <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
+                    style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
+                    wire:key="{{ md5('actions') }}">
+                    {{ trans('livewire-powergrid::datatable.labels.action') }}
+                </th>
             @endif
         </tr>
     </x-slot>
@@ -37,63 +37,64 @@
             :tableName="$tableName"
         />
         @if(is_null($data) || count($data) === 0)
-        <th>
-            <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
+            <th>
+                <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
+                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
                                     + ((isset($actions)) ? 1: 0)
                                     + (count($columns))
                                     }}">
-                    <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
-                </td>
-            </tr>
-        </th>
+                        <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
+                    </td>
+                </tr>
+            </th>
         @else
-        @if($headerTotalColumn)
-            <x-livewire-powergrid::table-header
-                :currentTable="$currentTable"
-                :primaryKey="$primaryKey"
-                :theme="$theme"
-                :columns="$columns"
-                :checkbox="$checkbox"
-                :data="$data"
-                :actions="$actions"
-                :withoutPaginatedData="$withoutPaginatedData" />
-        @endif
-        @foreach($data as $row)
-            <tr class="{{ $theme->table->trBodyClass }}"
-                style="{{ $theme->table->trBodyStyle }}"
-                wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
-                @if($checkbox)
-                    <x-livewire-powergrid::checkbox-row
-                        :theme="$theme->checkbox"
-                        :attribute="$row->{$checkboxAttribute}"
-                        :checkbox="$checkbox" />
-                @endif
-
-                <x-livewire-powergrid::row
-                    :tableName="$tableName"
+            @if($headerTotalColumn)
+                <x-livewire-powergrid::table-header
                     :currentTable="$currentTable"
                     :primaryKey="$primaryKey"
                     :theme="$theme"
-                    :row="$row"
-                    :columns="$columns" />
+                    :columns="$columns"
+                    :checkbox="$checkbox"
+                    :data="$data"
+                    :actions="$actions"
+                    :withoutPaginatedData="$withoutPaginatedData"/>
+            @endif
+            @foreach($data as $row)
+                <tr class="{{ $theme->table->trBodyClass }}"
+                    style="{{ $theme->table->trBodyStyle }}"
+                    wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
+                    @if($checkbox)
+                        <x-livewire-powergrid::checkbox-row
+                            :theme="$theme->checkbox"
+                            :attribute="$row->{$checkboxAttribute}"
+                            :checkbox="$checkbox"/>
+                    @endif
 
-                <x-livewire-powergrid::actions
+                    <x-livewire-powergrid::row
+                        :tableName="$tableName"
+                        :currentTable="$currentTable"
+                        :primaryKey="$primaryKey"
+                        :theme="$theme"
+                        :row="$row"
+                        :columns="$columns"/>
+
+                    <x-livewire-powergrid::actions
+                        :primary-key="$primaryKey"
+                        :theme="$theme"
+                        :row="$row"
+                        :actions="$actions"/>
+                </tr>
+            @endforeach
+            @if($footerTotalColumn)
+                <x-livewire-powergrid::table-footer
+                    :currentTable="$currentTable"
+                    :primaryKey="$primaryKey"
                     :theme="$theme"
-                    :row="$row"
-                    :actions="$actions" />
-            </tr>
-        @endforeach
-        @if($footerTotalColumn)
-            <x-livewire-powergrid::table-footer
-                :currentTable="$currentTable"
-                :primaryKey="$primaryKey"
-                :theme="$theme"
-                :columns="$columns"
-                :checkbox="$checkbox"
-                :data="$data"
-                :actions="$actions"
-                :withoutPaginatedData="$withoutPaginatedData" />
+                    :columns="$columns"
+                    :checkbox="$checkbox"
+                    :data="$data"
+                    :actions="$actions"
+                    :withoutPaginatedData="$withoutPaginatedData"/>
             @endif
         @endif
     </x-slot>
