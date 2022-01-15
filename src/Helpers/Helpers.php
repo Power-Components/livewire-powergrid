@@ -36,14 +36,14 @@ class Helpers
 
     /**
      * @param string|Button $action
-     * @param Model|\stdClass $entry
+     * @param \stdClass $entry
      * @return array
      */
-    public function makeActionRules($action, $entry): array
+    public function makeActionRules($action, \stdClass $entry): array
     {
         $actionRules = [];
 
-        $rules = collect(data_get(Arr::undot($entry->toArray()), 'rules'));
+        $rules = collect(data_get(Arr::undot(collect($entry)->toArray()), 'rules'));
 
         $rules->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;
