@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\{Button};
+use PowerComponents\LivewirePowerGrid\{Button, Rule};
 
 class Helpers
 {
@@ -15,6 +15,8 @@ class Helpers
         'hide',
         'redirect',
         'caption',
+        'pg:row',
+        'pg:column',
     ];
 
     public function makeActionParameters(array $params = [], ?Model $entry = null): array
@@ -32,7 +34,12 @@ class Helpers
         return $parameters;
     }
 
-    public function makeActionRules(Button $action, Model $entry): array
+    /**
+     * @param string|Button $action
+     * @param Model $entry
+     * @return array
+     */
+    public function makeActionRules($action, Model $entry): array
     {
         $actionRules = [];
 
@@ -40,12 +47,26 @@ class Helpers
 
         $rules->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;
-            if (isset($key[$action->action])) {
-                $rule = (array) $key[$action->action];
 
-                foreach ($this->actions as $action) {
-                    if (data_get($rule, "action.$action") && $rule['applyRule']) {
-                        $actionRules[$action] = data_get($rule, "action.$action");
+            if ($action instanceof Button) {
+                if (isset($key[$action->action])) {
+                    $rule = (array) $key[$action->action];
+
+                    foreach ($this->actions as $action) {
+                        if (data_get($rule, "action.$action") && $rule['applyRule']) {
+                            $actionRules[$action] = data_get($rule, "action.$action");
+                        }
+                    }
+                }
+            }
+
+            if (is_string($action)) {
+                if (isset($key[$action])) {
+                    $rule = (array) $key[$action];
+                    foreach ($this->actions as $action) {
+                        if (data_get($rule, "action.$action") && $rule['applyRule']) {
+                            $actionRules[$action] = data_get($rule, "action.$action");
+                        }
                     }
                 }
             }
@@ -78,22 +99,19 @@ class Helpers
     /**
      * @param array|object $row
      */
-    public function resolveRules(array $rules, array $actions, $row): \Illuminate\Support\Collection
+    public function resolveRules(array $rules, $row): \Illuminate\Support\Collection
     {
         $rules   = collect($rules);
 
-        $buttons = collect($actions);
-
         /** @phpstan-ignore-next-line */
-        return $rules->mapWithKeys(function ($rule, $index) use ($row, $buttons) {
-            $hasActionButton = $buttons->filter(fn (Button $button) => $button->action === $rule->forAction)->count() > 0;
-            if (!$hasActionButton) {
-                return [];
-            }
-
+        return $rules->mapWithKeys(function ($rule, $index) use ($row) {
             return (object) ['rules.' . $index . '.' . $rule->forAction => [
-                'applyRule' => $rule->rule['when']((object) $row),
-                'action'    => collect($rule->rule)->forget('when')->toArray(),
+                'applyRule'  => $rule->rule['when']((object) $row),
+                'action'     => collect($rule->rule)->forget('when')->toArray(),
+                'attributes' => [
+                    'type'   => $rule->type,
+                    'column' => $rule->column,
+                ],
             ]];
         });
     }

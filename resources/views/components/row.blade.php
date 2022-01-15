@@ -1,3 +1,5 @@
+@inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
+
 @props([
     'theme' => null,
     'row' => null,

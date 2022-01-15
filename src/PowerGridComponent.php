@@ -351,11 +351,10 @@ class PowerGridComponent extends Component
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
             if (method_exists(get_called_class(), 'actions')) {
-                /** @phpstan-ignore-next-line */
-                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $this->actions(), $row);
+                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
             }
 
-            $mergedData = $data->merge($rules ?? collect());
+            $mergedData  = $data->merge($rules ?? collect());
 
             return $row instanceof \Illuminate\Database\Eloquent\Model
             ? tap($row)->forceFill($mergedData->toArray())

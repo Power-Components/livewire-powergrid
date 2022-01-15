@@ -1,3 +1,5 @@
+@inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
+
 <x-livewire-powergrid::table-base :theme="$theme->table">
     <x-slot name="header">
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
@@ -60,7 +62,19 @@
                     :withoutPaginatedData="$withoutPaginatedData"/>
             @endif
             @foreach($data as $row)
-                <tr class="{{ $theme->table->trBodyClass }}"
+                @php
+                    $class            = $theme->table->trBodyClass;
+                    $rules            = $helperClass->makeActionRules('pg:row', $row);
+                    $ruleSetAttribute = data_get($rules, 'setAttribute');
+
+                    if (filled($ruleSetAttribute)) {
+                        if (isset($ruleSetAttribute['attribute'])) {
+                            $class .= ' '.$ruleSetAttribute['value'];
+                        }
+                    }
+
+                @endphp
+                <tr class="{{ $class }}"
                     style="{{ $theme->table->trBodyStyle }}"
                     wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                     @if($checkbox)

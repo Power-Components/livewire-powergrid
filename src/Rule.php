@@ -6,18 +6,40 @@ use Closure;
 
 final class Rule
 {
+    public const TYPE_BUTTON = 'button';
+
+    public const TYPE_ROW = 'row';
+
+    public const TYPE_COLUMN = 'column';
+
     public array $rule = [];
 
     public string $forAction = '';
 
-    public function __construct(string $action)
+    public string $type = '';
+
+    public ?string $column = '';
+
+    public function __construct(string $action, string $type, string $column = null)
     {
         $this->forAction = $action;
+        $this->type      = $type;
+        $this->column    = $column;
     }
 
     public static function for(string $action): Rule
     {
-        return new Rule($action);
+        return new Rule($action, self::TYPE_BUTTON);
+    }
+
+    public static function rows(): Rule
+    {
+        return new Rule('pg:row', self::TYPE_ROW);
+    }
+
+    public static function column(string $column): Rule
+    {
+        return new Rule('pg:column', self::TYPE_COLUMN, $column);
     }
 
     public function when(Closure $closure = null): Rule
