@@ -80,8 +80,13 @@ trait Filter
 
         $input                                   = explode('.', $data['values']);
 
-        data_set($data, 'selectedDates.0', Carbon::parse(data_get($data, 'selectedDates.0'))->setTime(0, 0));
-        data_set($data, 'selectedDates.1', Carbon::parse(data_get($data, 'selectedDates.1'))->setTime(23, 59, 59));
+        /** @var string $startDate */
+        $startDate = data_get($data, 'selectedDates.0');
+        /** @var string $endDate */
+        $endDate   = data_get($data, 'selectedDates.1');
+
+        data_set($data, 'selectedDates.0', Carbon::parse($startDate)->setTime(0, 0));
+        data_set($data, 'selectedDates.1', Carbon::parse($endDate)->setTime(23, 59, 59));
 
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
