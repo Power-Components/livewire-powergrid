@@ -36,10 +36,10 @@ class Helpers
 
     /**
      * @param string|Button $action
-     * @param \stdClass $entry
+     * @param Model|\stdClass $entry
      * @return array
      */
-    public function makeActionRules($action, \stdClass $entry): array
+    public function makeActionRules($action, $entry): array
     {
         $actionRules = [];
 
