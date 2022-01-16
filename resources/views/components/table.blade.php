@@ -72,7 +72,6 @@
                             $class .= ' '.$ruleSetAttribute['value'];
                         }
                     }
-
                 @endphp
                 <tr class="{{ $class }}"
                     style="{{ $theme->table->trBodyStyle }}"

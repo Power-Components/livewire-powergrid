@@ -19,13 +19,13 @@ class Helpers
         'pg:column',
     ];
 
-    public function makeActionParameters(array $params = [], ?Model $entry = null): array
+    public function makeActionParameters(array $params = [], ?Model $row = null): array
     {
         $parameters = [];
 
         foreach ($params as $param => $value) {
-            if ($entry && filled($entry->{$value})) {
-                $parameters[$param] = $entry->{$value};
+            if ($row && filled($row->{$value})) {
+                $parameters[$param] = $row->{$value};
             } else {
                 $parameters[$param] = $value;
             }
@@ -36,16 +36,18 @@ class Helpers
 
     /**
      * @param string|Button $action
-     * @param Model|\stdClass $entry
+     * @param Model|\stdClass $row
      * @return array
      */
-    public function makeActionRules($action, $entry): array
+    public function makeActionRules($action, $row): array
     {
         $actionRules = [];
 
-        $rules = collect(data_get(Arr::undot(collect($entry)->toArray()), 'rules'));
+        $row = Arr::undot(collect($row)->toArray());
 
-        $rules->each(function ($key) use (&$actionRules, $action) {
+        $rules = data_get($row, 'rules');
+
+        collect($rules)->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;
 
             if ($action instanceof Button) {
@@ -53,7 +55,7 @@ class Helpers
                     $rule = (array) $key[$action->action];
 
                     foreach ($this->actions as $action) {
-                        if (data_get($rule, "action.$action") && $rule['applyRule']) {
+                        if (data_get($rule, "action.$action")) {
                             $actionRules[$action] = data_get($rule, "action.$action");
                         }
                     }
@@ -64,7 +66,7 @@ class Helpers
                 if (isset($key[$action])) {
                     $rule = (array) $key[$action];
                     foreach ($this->actions as $action) {
-                        if (data_get($rule, "action.$action") && $rule['applyRule']) {
+                        if (data_get($rule, "action.$action")) {
                             $actionRules[$action] = data_get($rule, "action.$action");
                         }
                     }
@@ -75,7 +77,7 @@ class Helpers
         return $actionRules;
     }
 
-    public function resolveContent(string $currentTable, string $field, Model $entry): ?string
+    public function resolveContent(string $currentTable, string $field, Model $row): ?string
     {
         $currentField = $field;
 
@@ -85,12 +87,12 @@ class Helpers
             $field = $data->get(1);
 
             if ($table === $currentTable) {
-                $content = addslashes($entry->{$field});
+                $content = addslashes($row->{$field});
             } else {
-                $content = addslashes($entry->{$table}->{$field});
+                $content = addslashes($row->{$table}->{$field});
             }
         } else {
-            $content = addslashes($entry->{$field});
+            $content = addslashes($row->{$field});
         }
 
         return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
@@ -105,14 +107,28 @@ class Helpers
 
         /** @phpstan-ignore-next-line */
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
-            return (object) ['rules.' . $index . '.' . $rule->forAction => [
-                'applyRule'  => $rule->rule['when']((object) $row),
-                'action'     => collect($rule->rule)->forget('when')->toArray(),
-                'attributes' => [
+            $prepareRule = [
+                'resolveRule' => $rule->rule['when']((object) $row),
+                'action'      => collect($rule->rule)->toArray(),
+                'attributes'  => [
                     'type'   => $rule->type,
                     'column' => $rule->column,
                 ],
-            ]];
+            ];
+
+            if (data_get($rule->rule, 'redirect') && data_get($prepareRule, 'resolveRule') === true) {
+                data_set($prepareRule, 'action.redirect.url', $rule->rule['redirect']['closure']((object) $row));
+
+                unset($prepareRule['action']['redirect']['closure']);
+            }
+
+            if ((bool) data_get($prepareRule, 'resolveRule') === false) {
+                $prepareRule = [];
+            }
+
+            unset($prepareRule['when']);
+
+            return (object) ['rules.' . $index . '.' . $rule->forAction => $prepareRule];
         });
     }
 }

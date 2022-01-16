@@ -27,21 +27,25 @@ final class Rule
         $this->column    = $column;
     }
 
+    /**
+     * Rules for a specific action button.
+     */
     public static function for(string $action): Rule
     {
         return new Rule($action, self::TYPE_BUTTON);
     }
 
+    /**
+     * Rules to be applied on rows matching the condition.
+     */
     public static function rows(): Rule
     {
         return new Rule('pg:row', self::TYPE_ROW);
     }
 
-    public static function column(string $column): Rule
-    {
-        return new Rule('pg:column', self::TYPE_COLUMN, $column);
-    }
-
+    /**
+     * Disables the button.
+     */
     public function when(Closure $closure = null): Rule
     {
         $this->rule['when'] = $closure;
@@ -49,6 +53,9 @@ final class Rule
         return $this;
     }
 
+    /**
+     * Sets the button's event to be emitted.
+     */
     public function emit(string $event = '', array $params = []): Rule
     {
         $this->rule['redirect'] = [];
@@ -60,6 +67,10 @@ final class Rule
         return $this;
     }
 
+    /**
+     * Sets the button's given attribute to the given value.
+     */
+
     public function setAttribute(string $attribute = null, string $value = null): Rule
     {
         $this->rule['setAttribute'] = [
@@ -70,6 +81,9 @@ final class Rule
         return $this;
     }
 
+    /**
+     * Hides the button.
+     */
     public function hide(): Rule
     {
         $this->rule['hide'] = true;
@@ -77,6 +91,9 @@ final class Rule
         return $this;
     }
 
+    /**
+     * Disables the button.
+     */
     public function disable(): Rule
     {
         $this->rule['disable'] = true;
@@ -84,17 +101,23 @@ final class Rule
         return $this;
     }
 
-    public function redirect(string $route, string $target = '_blank'): Rule
+    /**
+     * Sets button's redirect URL.
+     */
+    public function redirect(Closure $closure = null, string $target = '_blank'): Rule
     {
         $this->rule['emit']     = [];
         $this->rule['redirect'] = [
-            'url'    => $route,
-            'target' => $target,
+            'closure' => $closure,
+            'target'  => $target,
         ];
 
         return $this;
     }
 
+    /**
+     * Sets the button caption value.
+     */
     public function caption(string $caption): Rule
     {
         $this->rule['caption'] = $caption;

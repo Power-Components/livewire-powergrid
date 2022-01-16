@@ -350,9 +350,7 @@ class PowerGridComponent extends Component
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
-            if (method_exists(get_called_class(), 'actions')) {
-                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
-            }
+            $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
 
             $mergedData  = $data->merge($rules ?? collect());
 
