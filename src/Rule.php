@@ -70,7 +70,6 @@ final class Rule
     /**
      * Sets the button's given attribute to the given value.
      */
-
     public function setAttribute(string $attribute = null, string $value = null): Rule
     {
         $this->rule['setAttribute'] = [
