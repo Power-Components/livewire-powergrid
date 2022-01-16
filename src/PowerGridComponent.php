@@ -352,7 +352,7 @@ class PowerGridComponent extends Component
 
             $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
 
-            $mergedData  = $data->merge($rules ?? collect());
+            $mergedData  = $data->merge($rules);
 
             return $row instanceof \Illuminate\Database\Eloquent\Model
             ? tap($row)->forceFill($mergedData->toArray())
