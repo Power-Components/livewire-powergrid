@@ -23,7 +23,7 @@ use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Rule;
+use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
 class PowerGridDemoTable extends PowerGridComponent
 {
@@ -200,7 +200,7 @@ class PowerGridDemoTable extends PowerGridComponent
     | Enable the method below to configure Rules for your Table and Action Buttons.
     |
     */
-    
+
     /**
     * PowerGrid action rules.
     *
@@ -209,22 +209,27 @@ class PowerGridDemoTable extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-            
+
             //Hide "info" button for ID 1
-            Rule::for('info')
+            Rule::action('info')
                 ->when(fn ($user) => $user->id === 1)
                 ->hide(),
 
             //Disable "info" button for ID 2
-            Rule::for('info')
+            Rule::action('info')
                 ->when(fn ($user) => $user->id === 2)
                 ->caption('Click me (disabled)')
                 ->disable(),
-            
+
             //Change "info" button caption for ID 3
-            Rule::for('info')
+            Rule::action('info')
                 ->when(fn ($user) => $user->id === 3)
                 ->caption('Click me! 🤠'),
+
+            //Change "class" for row for ID 4
+            Rule::rows()
+                ->when(fn ($user) => $user->id === 4)
+                ->setAttribute('class','text-sm font-extrabold bg-blue-100 hover:bg-blue-300'),
         ];
     }
 
