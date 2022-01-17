@@ -23,6 +23,7 @@ use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Rule;
 
 class PowerGridDemoTable extends PowerGridComponent
 {
@@ -172,9 +173,15 @@ class PowerGridDemoTable extends PowerGridComponent
     |--------------------------------------------------------------------------
     | Actions Method
     |--------------------------------------------------------------------------
-    | Enable this section only when you have defined routes for these actions.
+    | Enable the method below only if the Routes below are defined in your app.
     |
     */
+
+     /**
+     * PowerGrid action buttons.
+     *
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     */
 
     public function actions(): array
     {
@@ -186,12 +193,46 @@ class PowerGridDemoTable extends PowerGridComponent
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Actions Rules
+    |--------------------------------------------------------------------------
+    | Enable the method below to configure Rules for your Table and Action Buttons.
+    |
+    */
+    
+    /**
+    * PowerGrid action rules.
+    *
+    * @return array<int, \PowerComponents\LivewirePowerGrid\Rule>
+    */
+    public function actionRules(): array
+    {
+        return [
+            
+            //Hide "info" button for ID 1
+            Rule::for('info')
+                ->when(fn ($user) => $user->id === 1)
+                ->hide(),
+
+            //Disable "info" button for ID 2
+            Rule::for('info')
+                ->when(fn ($user) => $user->id === 2)
+                ->caption('Click me (disabled)')
+                ->disable(),
+            
+            //Change "info" button caption for ID 3
+            Rule::for('info')
+                ->when(fn ($user) => $user->id === 3)
+                ->caption('Click me! 🤠'),
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------
     | Edit Method
     |--------------------------------------------------------------------------
-    | Enable this section to use editOnClick() or toggleable() methods
+    | Enable the method below to use editOnClick() or toggleable() methods
     |
     */
 
