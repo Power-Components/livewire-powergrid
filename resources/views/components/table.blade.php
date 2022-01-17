@@ -64,7 +64,7 @@
             @foreach($data as $row)
                 @php
                     $class            = $theme->table->trBodyClass;
-                    $rules            = $helperClass->makeActionRules('pg:row', $row);
+                    $rules            = $helperClass->makeActionRules('pg:rows', $row);
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
@@ -81,8 +81,15 @@
                     style="{{ $theme->table->trBodyStyle }}"
                     wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                     @if($checkbox)
+                        @php
+                            $rules        = $helperClass->makeActionRules('pg:checkbox', $row);
+                            $ruleHide     = data_get($rules, 'hide');
+                            $ruleDisable  = data_get($rules, 'disable');
+                        @endphp
                         <x-livewire-powergrid::checkbox-row
                             :theme="$theme->checkbox"
+                            :hide="$ruleHide"
+                            :disable="$ruleDisable"
                             :attribute="$row->{$checkboxAttribute}"
                             :checkbox="$checkbox"/>
                     @endif

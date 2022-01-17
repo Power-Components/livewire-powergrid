@@ -1,52 +1,24 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Rules;
 
 use Closure;
 
-final class Rule
+class RuleActions
 {
-    public const TYPE_BUTTON = 'button';
-
-    public const TYPE_ROW = 'row';
-
-    public const TYPE_COLUMN = 'column';
-
     public array $rule = [];
 
     public string $forAction = '';
 
-    public string $type = '';
-
-    public ?string $column = '';
-
-    public function __construct(string $action, string $type, string $column = null)
+    public function __construct(string $forAction)
     {
-        $this->forAction = $action;
-        $this->type      = $type;
-        $this->column    = $column;
-    }
-
-    /**
-     * Rules for a specific action button.
-     */
-    public static function for(string $action): Rule
-    {
-        return new Rule($action, self::TYPE_BUTTON);
-    }
-
-    /**
-     * Rules to be applied on rows matching the condition.
-     */
-    public static function rows(): Rule
-    {
-        return new Rule('pg:row', self::TYPE_ROW);
+        $this->forAction = $forAction;
     }
 
     /**
      * Disables the button.
      */
-    public function when(Closure $closure = null): Rule
+    public function when(Closure $closure = null): RuleActions
     {
         $this->rule['when'] = $closure;
 
@@ -56,7 +28,7 @@ final class Rule
     /**
      * Sets the button's event to be emitted.
      */
-    public function emit(string $event = '', array $params = []): Rule
+    public function emit(string $event = '', array $params = []): RuleActions
     {
         $this->rule['redirect'] = [];
         $this->rule['emit']     = [
@@ -70,7 +42,7 @@ final class Rule
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function setAttribute(string $attribute = null, string $value = null): Rule
+    public function setAttribute(string $attribute = null, string $value = null): RuleActions
     {
         $this->rule['setAttribute'] = [
             'attribute' => $attribute,
@@ -83,7 +55,7 @@ final class Rule
     /**
      * Hides the button.
      */
-    public function hide(): Rule
+    public function hide(): RuleActions
     {
         $this->rule['hide'] = true;
 
@@ -93,7 +65,7 @@ final class Rule
     /**
      * Disables the button.
      */
-    public function disable(): Rule
+    public function disable(): RuleActions
     {
         $this->rule['disable'] = true;
 
@@ -103,7 +75,7 @@ final class Rule
     /**
      * Sets button's redirect URL.
      */
-    public function redirect(Closure $closure = null, string $target = '_blank'): Rule
+    public function redirect(Closure $closure = null, string $target = '_blank'): RuleActions
     {
         $this->rule['emit']      = [];
         $this->rule['redirect']  = [
@@ -117,7 +89,7 @@ final class Rule
     /**
      * Sets the button caption value.
      */
-    public function caption(string $caption): Rule
+    public function caption(string $caption): RuleActions
     {
         $this->rule['caption'] = $caption;
 

@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\{Button, Rule};
+use PowerComponents\LivewirePowerGrid\{Button, Rule1};
 
 class Helpers
 {
@@ -15,7 +15,7 @@ class Helpers
         'hide',
         'redirect',
         'caption',
-        'pg:row',
+        'pg:rows',
         'pg:column',
     ];
 
@@ -118,8 +118,7 @@ class Helpers
                 'resolveRule' => $rule->rule['when']((object) $row),
                 'action'      => collect($rule->rule)->forget('when')->toArray(),
                 'attributes'  => [
-                    'type'   => $rule->type,
-                    'column' => $rule->column,
+                    'column' => $rule->column ?? '',
                 ],
             ];
 

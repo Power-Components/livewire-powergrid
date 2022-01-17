@@ -5,11 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent, Rule};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent,
+    Rules\Rule};
 
 class DishesTable extends PowerGridComponent
 {
@@ -198,15 +202,15 @@ class DishesTable extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-            Rule::for('edit-stock')
+            Rule::action('edit-stock')
                 ->when(fn ($dish) => $dish->id == 2)
                 ->hide(),
 
-            Rule::for('edit-stock')
+            Rule::action('edit-stock')
                 ->when(fn ($dish) => $dish->id == 4)
                 ->caption('cation edit for id 4'),
 
-            Rule::for('edit-stock')
+            Rule::action('edit-stock')
                 ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
                 ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
 
@@ -219,11 +223,11 @@ class DishesTable extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 3)
                 ->setAttribute('class', 'bg-blue-100'),
 
-            Rule::for('edit-stock')
+            Rule::action('edit-stock')
                 ->when(fn ($dish) => $dish->id == 5)
                 ->emit('toggleEvent', ['dishId' => 'id']),
 
-            Rule::for('edit-stock')
+            Rule::action('edit-stock')
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
