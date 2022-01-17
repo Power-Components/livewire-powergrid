@@ -9,11 +9,7 @@ use Illuminate\Support\{HtmlString};
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent};
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent, Rule};
 
 class DishesTable extends PowerGridComponent
 {
@@ -187,9 +183,7 @@ class DishesTable extends PowerGridComponent
     {
         return [
             Button::add('edit-stock')
-                ->caption(new HtmlString(
-                    '<div id="edit">Edit</div>'
-                ))
+                ->caption('<div id="edit">Edit</div>')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
 
@@ -198,6 +192,40 @@ class DishesTable extends PowerGridComponent
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
+        ];
+    }
+
+    public function actionRules(): array
+    {
+        return [
+            Rule::for('edit-stock')
+                ->when(fn ($dish) => $dish->id == 2)
+                ->hide(),
+
+            Rule::for('edit-stock')
+                ->when(fn ($dish) => $dish->id == 4)
+                ->caption('cation edit for id 4'),
+
+            Rule::for('edit-stock')
+                ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
+                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
+
+            // Set a row red background for when dish is out of stock
+            Rule::rows()
+                ->when(fn ($dish) => (bool) $dish->in_stock === false)
+                ->setAttribute('class', 'bg-red-100 text-red-800'),
+
+            Rule::rows()
+                ->when(fn ($dish) => $dish->id == 3)
+                ->setAttribute('class', 'bg-blue-100'),
+
+            Rule::for('edit-stock')
+                ->when(fn ($dish) => $dish->id == 5)
+                ->emit('toggleEvent', ['dishId' => 'id']),
+
+            Rule::for('edit-stock')
+                ->when(fn ($dish) => $dish->id == 9)
+                ->disable(),
         ];
     }
 

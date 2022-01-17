@@ -65,12 +65,16 @@
                 @php
                     $class            = $theme->table->trBodyClass;
                     $rules            = $helperClass->makeActionRules('pg:row', $row);
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
                     if (filled($ruleSetAttribute)) {
-                        if (isset($ruleSetAttribute['attribute'])) {
-                            $class .= ' '.$ruleSetAttribute['value'];
+                        foreach ($ruleSetAttribute as $attribute) {
+                           if (isset($attribute['attribute'])) {
+                              $class .= ' '.$attribute['value'];
+                           }
                         }
+
                     }
                 @endphp
                 <tr class="{{ $class }}"

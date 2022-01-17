@@ -19,7 +19,12 @@ class Helpers
         'pg:column',
     ];
 
-    public function makeActionParameters(array $params = [], ?Model $row = null): array
+    /**
+     * @param array $params
+     * @param Model|\stdClass|null $row
+     * @return array
+     */
+    public function makeActionParameters(array $params = [], $row = null): array
     {
         $parameters = [];
 
@@ -67,7 +72,7 @@ class Helpers
                     $rule = (array) $key[$action];
                     foreach ($this->actions as $action) {
                         if (data_get($rule, "action.$action")) {
-                            $actionRules[$action] = data_get($rule, "action.$action");
+                            $actionRules[$action][] = data_get($rule, "action.$action");
                         }
                     }
                 }
@@ -109,7 +114,7 @@ class Helpers
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
             $prepareRule = [
                 'resolveRule' => $rule->rule['when']((object) $row),
-                'action'      => collect($rule->rule)->toArray(),
+                'action'      => collect($rule->rule)->forget('when')->toArray(),
                 'attributes'  => [
                     'type'   => $rule->type,
                     'column' => $rule->column,
@@ -125,8 +130,6 @@ class Helpers
             if ((bool) data_get($prepareRule, 'resolveRule') === false) {
                 $prepareRule = [];
             }
-
-            unset($prepareRule['when']);
 
             return (object) ['rules.' . $index . '.' . $rule->forAction => $prepareRule];
         });

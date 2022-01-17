@@ -36,20 +36,15 @@
                     }
 
                 @endphp
-                <div x-cloak
-                     x-data="{
-                    ruleDisabled: @json($ruleDisabled),
-                    ruleHide: @json($ruleHide)
-                         }"
-                     class="w-full md:w-auto"
-                     x-show="ruleHide === false"
+                <div class="w-full md:w-auto"
+                     style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
                         <button @if($event) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                                 @endif
                                 @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                                 @endif
-                                :disabled="ruleDisabled"
+                                @if($ruleDisabled) disabled @endif
                                 class="{{ $class}}">
                             {!! $ruleCaption ?? $action->caption !!}
                         </button>
@@ -58,7 +53,7 @@
                     @if(filled($ruleRedirect))
                             <a href="{{ $ruleRedirect['url'] }}"
                                target="{{ $ruleRedirect['target'] }}"
-                                :disabled="ruleDisabled"
+                               @if($ruleDisabled) disabled @endif
                                 class="{{ $class}}">
                             {!! $ruleCaption ?? $action->caption !!}
                             </a>
@@ -72,7 +67,7 @@
                                 @method($action->method)
                                 @csrf
                                 <button type="submit"
-                                        :disabled="ruleDisabled"
+                                        @if($ruleDisabled) disabled @endif
                                         class="{{ $class }}">
                                     {!! $ruleCaption ?? $action->caption !!}
                                 </button>

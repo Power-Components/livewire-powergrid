@@ -55,16 +55,16 @@ function filterInputText(string $text, string $type, $field = 'name'): array
 
 dataset('themes', [
     [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
 dataset('themes with name field', [
     [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
     [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+    [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
 ]);
 
 dataset('themes with collection table', [
