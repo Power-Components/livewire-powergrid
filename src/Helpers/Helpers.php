@@ -70,8 +70,10 @@ class Helpers
             if (is_string($action)) {
                 if (isset($key[$action])) {
                     $rule = (array) $key[$action];
+
                     foreach ($this->actions as $action) {
                         if (data_get($rule, "action.$action")) {
+                            /** @phpstan-ignore-next-line  */
                             $actionRules[$action][] = data_get($rule, "action.$action");
                         }
                     }
