@@ -12,9 +12,9 @@ class RuleManager
 
     public const TYPE_COLUMN = 'pg:column';
 
-    public function action(string $action): RuleActions
+    public function button(string $button): RuleActions
     {
-        return new RuleActions($action);
+        return new RuleActions($button);
     }
 
     public function rows(): RuleRows

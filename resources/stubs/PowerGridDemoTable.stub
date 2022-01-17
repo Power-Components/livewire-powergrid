@@ -204,25 +204,25 @@ class PowerGridDemoTable extends PowerGridComponent
     /**
     * PowerGrid action rules.
     *
-    * @return array<int, \PowerComponents\LivewirePowerGrid\Rule>
+    * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\Rule>
     */
     public function actionRules(): array
     {
         return [
 
             //Hide "info" button for ID 1
-            Rule::action('info')
+            Rule::button('info')
                 ->when(fn ($user) => $user->id === 1)
                 ->hide(),
 
             //Disable "info" button for ID 2
-            Rule::action('info')
+            Rule::button('info')
                 ->when(fn ($user) => $user->id === 2)
                 ->caption('Click me (disabled)')
                 ->disable(),
 
             //Change "info" button caption for ID 3
-            Rule::action('info')
+            Rule::button('info')
                 ->when(fn ($user) => $user->id === 3)
                 ->caption('Click me! 🤠'),
 

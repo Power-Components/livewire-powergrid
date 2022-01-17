@@ -10,9 +10,9 @@ class RuleActions
 
     public string $forAction = '';
 
-    public function __construct(string $forAction)
+    public function __construct(string $button)
     {
-        $this->forAction = $forAction;
+        $this->forAction = $button;
     }
 
     /**
