@@ -201,15 +201,15 @@ class DishesTableWithJoin extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-            Rule::action('edit-stock')
+            Rule::button('edit-stock')
                 ->when(fn ($dish) => $dish->id == 2)
                 ->hide(),
 
-            Rule::action('edit-stock')
+            Rule::button('edit-stock')
                 ->when(fn ($dish) => $dish->id == 4)
                 ->caption('cation edit for id 4'),
 
-            Rule::action('edit-stock')
+            Rule::button('edit-stock')
                 ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
                 ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
 
@@ -222,11 +222,11 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 3)
                 ->setAttribute('class', 'bg-blue-100'),
 
-            Rule::action('edit-stock')
+            Rule::button('edit-stock')
                 ->when(fn ($dish) => $dish->id == 5)
                 ->emit('toggleEvent', ['dishId' => 'id']),
 
-            Rule::action('edit-stock')
+            Rule::button('edit-stock')
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
