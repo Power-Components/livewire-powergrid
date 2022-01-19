@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\{Blade, View};
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
+use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 
 class PowerGridServiceProvider extends ServiceProvider
@@ -47,6 +48,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         $this->app->alias(PowerGridManager::class, 'powergrid');
         $this->app->alias(ThemeManager::class, 'theme');
+        $this->app->alias(RuleManager::class, 'rule');
     }
 
     private function publishViews(): void

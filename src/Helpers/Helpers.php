@@ -3,17 +3,34 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\{Button};
+use Illuminate\Support\{Arr, Str};
+use PowerComponents\LivewirePowerGrid\{Button, Rule1};
 
 class Helpers
 {
-    public function makeParameters(Button $action, ?Model $entry = null): array
+    protected array $actions = [
+        'emit',
+        'setAttribute',
+        'disable',
+        'hide',
+        'redirect',
+        'caption',
+        'pg:rows',
+        'pg:column',
+    ];
+
+    /**
+     * @param array $params
+     * @param Model|\stdClass|null $row
+     * @return array
+     */
+    public function makeActionParameters(array $params = [], $row = null): array
     {
         $parameters = [];
-        foreach ($action->param as $param => $value) {
-            if ($entry && filled($entry->{$value})) {
-                $parameters[$param] = $entry->{$value};
+
+        foreach ($params as $param => $value) {
+            if ($row && filled($row->{$value})) {
+                $parameters[$param] = $row->{$value};
             } else {
                 $parameters[$param] = $value;
             }
@@ -22,9 +39,55 @@ class Helpers
         return $parameters;
     }
 
-    public function resolveContent(string $currentTable, string $field, Model $entry): ?string
+    /**
+     * @param string|Button $action
+     * @param Model|\stdClass $row
+     * @return array
+     */
+    public function makeActionRules($action, $row): array
+    {
+        $actionRules = [];
+
+        $row = Arr::undot(collect($row)->toArray());
+
+        $rules = data_get($row, 'rules');
+
+        collect($rules)->each(function ($key) use (&$actionRules, $action) {
+            $key = (array) $key;
+
+            if ($action instanceof Button) {
+                if (isset($key[$action->action])) {
+                    $rule = (array) $key[$action->action];
+
+                    foreach ($this->actions as $action) {
+                        if (data_get($rule, "action.$action")) {
+                            $actionRules[$action] = data_get($rule, "action.$action");
+                        }
+                    }
+                }
+            }
+
+            if (is_string($action)) {
+                if (isset($key[$action])) {
+                    $rule = (array) $key[$action];
+
+                    foreach ($this->actions as $action) {
+                        if (data_get($rule, "action.$action")) {
+                            /** @phpstan-ignore-next-line  */
+                            $actionRules[$action][] = data_get($rule, "action.$action");
+                        }
+                    }
+                }
+            }
+        });
+
+        return $actionRules;
+    }
+
+    public function resolveContent(string $currentTable, string $field, Model $row): ?string
     {
         $currentField = $field;
+        $replace      = fn ($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
 
         if (str_contains($currentField, '.')) {
             $data  = Str::of($field)->explode('.');
@@ -32,14 +95,39 @@ class Helpers
             $field = $data->get(1);
 
             if ($table === $currentTable) {
-                $content = addslashes($entry->{$field});
-            } else {
-                $content = addslashes($entry->{$table}->{$field});
+                return $replace(addslashes($row->{$field}));
             }
-        } else {
-            $content = addslashes($entry->{$field});
+
+            return $replace(addslashes($row->{$table}->{$field}));
         }
 
-        return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        return $replace(addslashes($row->{$field}));
+    }
+
+    /**
+     * @param array|object $row
+     */
+    public function resolveRules(array $rules, $row): \Illuminate\Support\Collection
+    {
+        $rules   = collect($rules);
+
+        /** @phpstan-ignore-next-line */
+        return $rules->mapWithKeys(function ($rule, $index) use ($row) {
+            $resolveRules = (bool) $rule->rule['when']((object) $row);
+
+            $prepareRule = [
+                'action' => collect($rule->rule)->forget(['when', 'action.redirect.closure'])->toArray(),
+            ];
+
+            if (data_get($rule->rule, 'redirect') && $resolveRules === true) {
+                data_set($prepareRule, 'action.redirect.url', $rule->rule['redirect']['closure']((object) $row));
+            }
+
+            if ($resolveRules === false) {
+                $prepareRule = [];
+            }
+
+            return (object) ['rules.' . $index . '.' . $rule->forAction => $prepareRule];
+        });
     }
 }
