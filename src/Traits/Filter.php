@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Illuminate\Support\{Arr, Collection};
+use Illuminate\Support\{Arr, Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait Filter
@@ -79,6 +79,14 @@ trait Filter
         $this->resetPage();
 
         $input                                   = explode('.', $data['values']);
+
+        /** @var string $startDate */
+        $startDate = data_get($data, 'selectedDates.0');
+        /** @var string $endDate */
+        $endDate   = data_get($data, 'selectedDates.1');
+
+        data_set($data, 'selectedDates.0', Carbon::parse($startDate)->setTime(0, 0));
+        data_set($data, 'selectedDates.1', Carbon::parse($endDate)->setTime(23, 59, 59));
 
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];

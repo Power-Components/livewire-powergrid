@@ -62,9 +62,11 @@ With PowerGrid you get right out of the box:
 
 - **Pagination**
 
-- **Action checkboxes**
+- **Action Checkboxes**
 
-- **Action buttons**
+- **Action Buttons**
+
+- **Action Rules for disable, hide and modify Action Buttons, Checkboxes and rows**
 
 - **Toggle button**
 

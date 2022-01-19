@@ -6,12 +6,14 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
+use stdClass;
 
 class PowerGridComponent extends Component
 {
@@ -19,6 +21,7 @@ class PowerGridComponent extends Component
     use Exportable;
     use WithSorting;
     use Checkbox;
+    use HasAttributes;
     use Filter;
     use BatchableExport;
 
@@ -62,28 +65,13 @@ class PowerGridComponent extends Component
 
     public string $tableName = 'default';
 
-    protected string $paginationTheme = 'tailwind';
-
-    protected ThemeBase $powerGridTheme;
-
     public bool $headerTotalColumn = false;
 
     public bool $footerTotalColumn = false;
 
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
-        ];
-    }
+    protected string $paginationTheme = 'tailwind';
+
+    protected ThemeBase $powerGridTheme;
 
     /**
      * @return $this
@@ -137,18 +125,6 @@ class PowerGridComponent extends Component
         $this->renderFilter();
     }
 
-    private function resolveTotalRow(): void
-    {
-        collect($this->columns())->each(function (Column $column) {
-            if ($column->sum['header'] || $column->count['header']) {
-                $this->headerTotalColumn = true;
-            }
-            if ($column->sum['footer'] || $column->count['footer']) {
-                $this->footerTotalColumn = true;
-            }
-        });
-    }
-
     /**
      * Apply checkbox, perPage and search view and theme
      * @return void
@@ -174,6 +150,18 @@ class PowerGridComponent extends Component
     public function columns(): array
     {
         return [];
+    }
+
+    private function resolveTotalRow(): void
+    {
+        collect($this->columns())->each(function (Column $column) {
+            if ($column->sum['header'] || $column->count['header']) {
+                $this->headerTotalColumn = true;
+            }
+            if ($column->sum['footer'] || $column->count['footer']) {
+                $this->footerTotalColumn = true;
+            }
+        });
     }
 
     /**
@@ -328,20 +316,30 @@ class PowerGridComponent extends Component
 
     private function transform(BaseCollection $results): BaseCollection
     {
-        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
+        if (
+            !is_a((object) $this->addColumns(), PowerGridEloquent::class)
+        ) {
             return $results;
         }
 
-        return $results->transform(function ($row) {
-            $row = (object) $row;
-            if (!is_null($this->addColumns())) {
-                $columns = $this->addColumns()->columns;
-                foreach ($columns as $key => $column) {
-                    $row->{$key} = $column($row);
-                }
+        return $results->map(function ($row) {
+            /** @var stdClass $columns */
+            $columns = $this->addColumns();
+
+            $columns = collect($columns->columns);
+
+            /** @phpstan-ignore-next-line */
+            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
+
+            if (count($this->actionRules())) {
+                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
             }
 
-            return $row;
+            $mergedData = $data->merge($rules ?? []);
+
+            return $row instanceof \Illuminate\Database\Eloquent\Model
+                ? tap($row)->forceFill($mergedData->toArray())
+                : (object) $mergedData->toArray();
         });
     }
 
@@ -351,6 +349,11 @@ class PowerGridComponent extends Component
     public function addColumns()
     {
         return null;
+    }
+
+    public function actionRules(): array
+    {
+        return [];
     }
 
     /**
@@ -469,5 +472,20 @@ class PowerGridComponent extends Component
         $this->exportOptions  = $options;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+        ];
     }
 }
