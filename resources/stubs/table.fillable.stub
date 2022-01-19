@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Rule;
+use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
 final class {{ componentName }} extends PowerGridComponent
 {
@@ -141,7 +141,7 @@ final class {{ componentName }} extends PowerGridComponent
      /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Rule>
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\Rule>
      */
 
     /*
@@ -150,7 +150,7 @@ final class {{ componentName }} extends PowerGridComponent
        return [
            
            //Hide button edit for ID 1
-            Rule::for('edit')
+            Rule::button('edit')
                 ->when(fn(${{ modelKebabCase }}) => ${{ modelKebabCase }}->id === 1)
                 ->hide(),
         ];

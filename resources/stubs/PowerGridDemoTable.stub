@@ -209,27 +209,26 @@ class PowerGridDemoTable extends PowerGridComponent
     public function actionRules(): array
     {
         return [
-
-            //Hide "info" button for ID 1
+            //Hide "info" button for row with user ID 1
             Rule::button('info')
-                ->when(fn ($user) => $user->id === 1)
+                ->when(fn($user) => $user->id === 1)
                 ->hide(),
 
-            //Disable "info" button for ID 2
+            //Disable "info" button for row with user ID 2
             Rule::button('info')
-                ->when(fn ($user) => $user->id === 2)
+                ->when(fn($user) => $user->id === 2)
                 ->caption('Click me (disabled)')
                 ->disable(),
 
-            //Change "info" button caption for ID 3
+            //Change "info" button caption for row with user ID 3
             Rule::button('info')
-                ->when(fn ($user) => $user->id === 3)
+                ->when(fn($user) => $user->id === 3)
                 ->caption('Click me! 🤠'),
 
-            //Change "class" for row for ID 4
+            //Change "background" for row with user ID 4
             Rule::rows()
-                ->when(fn ($user) => $user->id === 4)
-                ->setAttribute('class','text-sm font-extrabold bg-blue-100 hover:bg-blue-300'),
+                ->when(fn($user) => $user->id === 4)
+                ->setAttribute('class', 'bg-blue-200'),
         ];
     }
 
