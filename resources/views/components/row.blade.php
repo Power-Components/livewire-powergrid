@@ -13,12 +13,13 @@
     @php
         $content = $row->{$column->field};
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        $field   = $column->dataField != '' ? $column->dataField : $column->field;
     @endphp
     <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
         wire:key="{{ 'row-'.\Illuminate\Support\Str::kebab($column->field) }}"
     >
-        @if($column->editable === true && !str_contains($column->dataField != '' ? $column->dataField : $column->field, '.'))
+        @if($column->editable === true && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">
                         <x-livewire-powergrid::editable
                             :tableName="$tableName"
@@ -26,7 +27,7 @@
                             :currentTable="$currentTable"
                             :row="$row"
                             :theme="$theme->editable"
-                            :field="$column->dataField != '' ? $column->dataField : $column->field"/>
+                            :field="$field"/>
                         @if($column->clickToCopy)
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"

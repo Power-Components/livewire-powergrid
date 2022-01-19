@@ -82,14 +82,16 @@
                     wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                     @if($checkbox)
                         @php
-                            $rules        = $helperClass->makeActionRules('pg:checkbox', $row);
-                            $ruleHide     = data_get($rules, 'hide');
-                            $ruleDisable  = data_get($rules, 'disable');
+                            $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
+                            $ruleHide         = data_get($rules, 'hide');
+                            $ruleDisable      = data_get($rules, 'disable');
+                            $ruleSetAttribute = data_get($rules, 'setAttribute');
                         @endphp
                         <x-livewire-powergrid::checkbox-row
                             :theme="$theme->checkbox"
-                            :hide="$ruleHide"
-                            :disable="$ruleDisable"
+                            :ruleHide="$ruleHide"
+                            :ruleDisable="$ruleDisable"
+                            :ruleSetAttribute="$ruleSetAttribute[0] ?? []"
                             :attribute="$row->{$checkboxAttribute}"
                             :checkbox="$checkbox"/>
                     @endif

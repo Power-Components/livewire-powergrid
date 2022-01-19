@@ -8,11 +8,12 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, WithSorting};
+use stdClass;
 
 class PowerGridComponent extends Component
 {
@@ -64,28 +65,13 @@ class PowerGridComponent extends Component
 
     public string $tableName = 'default';
 
-    protected string $paginationTheme = 'tailwind';
-
-    protected ThemeBase $powerGridTheme;
-
     public bool $headerTotalColumn = false;
 
     public bool $footerTotalColumn = false;
 
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
-        ];
-    }
+    protected string $paginationTheme = 'tailwind';
+
+    protected ThemeBase $powerGridTheme;
 
     /**
      * @return $this
@@ -139,18 +125,6 @@ class PowerGridComponent extends Component
         $this->renderFilter();
     }
 
-    private function resolveTotalRow(): void
-    {
-        collect($this->columns())->each(function (Column $column) {
-            if ($column->sum['header'] || $column->count['header']) {
-                $this->headerTotalColumn = true;
-            }
-            if ($column->sum['footer'] || $column->count['footer']) {
-                $this->footerTotalColumn = true;
-            }
-        });
-    }
-
     /**
      * Apply checkbox, perPage and search view and theme
      * @return void
@@ -178,9 +152,16 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    public function actionRules(): array
+    private function resolveTotalRow(): void
     {
-        return [];
+        collect($this->columns())->each(function (Column $column) {
+            if ($column->sum['header'] || $column->count['header']) {
+                $this->headerTotalColumn = true;
+            }
+            if ($column->sum['footer'] || $column->count['footer']) {
+                $this->footerTotalColumn = true;
+            }
+        });
     }
 
     /**
@@ -342,7 +323,7 @@ class PowerGridComponent extends Component
         }
 
         return $results->map(function ($row) {
-            /** @var \stdClass $columns */
+            /** @var stdClass $columns */
             $columns = $this->addColumns();
 
             $columns = collect($columns->columns);
@@ -350,13 +331,15 @@ class PowerGridComponent extends Component
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
-            $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
+            if (count($this->actionRules())) {
+                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
+            }
 
-            $mergedData  = $data->merge($rules);
+            $mergedData = $data->merge($rules ?? []);
 
             return $row instanceof \Illuminate\Database\Eloquent\Model
-            ? tap($row)->forceFill($mergedData->toArray())
-            : (object) $mergedData->toArray();
+                ? tap($row)->forceFill($mergedData->toArray())
+                : (object) $mergedData->toArray();
         });
     }
 
@@ -366,6 +349,11 @@ class PowerGridComponent extends Component
     public function addColumns()
     {
         return null;
+    }
+
+    public function actionRules(): array
+    {
+        return [];
     }
 
     /**
@@ -484,5 +472,20 @@ class PowerGridComponent extends Component
         $this->exportOptions  = $options;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+        ];
     }
 }

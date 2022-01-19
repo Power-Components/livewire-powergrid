@@ -28,35 +28,40 @@
                         $event['event']  = $action->event;
                         $event['params'] = $actionParameters;
                     }
-
-                    if (filled($ruleSetAttribute)) {
-                        if (isset($ruleSetAttribute['attribute'])) {
-                            $class .= ' '.$ruleSetAttribute['value'];
-                        }
-                    }
-
                 @endphp
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
                         <button @if($event) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
-                                @endif
-                                @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
-                                @endif
-                                @if($ruleDisabled) disabled @endif
-                                class="{{ $class}}">
+                            @endif
+                            @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
+                            @endif
+                            @if($ruleDisabled) disabled @endif
+
+                            @if(isset($ruleSetAttribute['attribute']))
+                                {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
+                            @else
+                                 class="$class"
+                            @endif
+                        >
                             {!! $ruleCaption ?? $action->caption !!}
                         </button>
                     @endif
 
                     @if(filled($ruleRedirect))
-                            <a href="{{ $ruleRedirect['url'] }}"
-                               target="{{ $ruleRedirect['target'] }}"
-                               @if($ruleDisabled) disabled @endif
-                                class="{{ $class}}">
+                        <a href="{{ $ruleRedirect['url'] }}"
+                           target="{{ $ruleRedirect['target'] }}"
+                           @if($ruleDisabled) disabled @endif
+
+                           @if(isset($ruleSetAttribute['attribute']))
+                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
+                           @else
+                           class="{{ $class }}"
+                           @endif
+                        >
                             {!! $ruleCaption ?? $action->caption !!}
-                            </a>
+                        </a>
                     @endif
 
                     @if(filled($action->route))
@@ -67,15 +72,24 @@
                                 @method($action->method)
                                 @csrf
                                 <button type="submit"
-                                        @if($ruleDisabled) disabled @endif
-                                        class="{{ $class }}">
+                                @if($ruleDisabled) disabled @endif
+                                @if(isset($ruleSetAttribute['attribute']))
+                                    {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
+                                    @else
+                                    class="{{ $class }}"
+                                    @endif>
                                     {!! $ruleCaption ?? $action->caption !!}
                                 </button>
                             </form>
                         @else
                             <a href="{{ route($action->route, $actionParameters) }}"
                                target="{{ $action->target }}"
-                               class="{{ $class }}">
+                               @if(isset($ruleSetAttribute['attribute']))
+                               {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
+                               @else
+                               class="{{ $class }}"
+                               @endif
+                            >
                                 {!! $ruleCaption ?? $action->caption !!}
                             </a>
                         @endif

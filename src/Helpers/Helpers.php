@@ -87,6 +87,7 @@ class Helpers
     public function resolveContent(string $currentTable, string $field, Model $row): ?string
     {
         $currentField = $field;
+        $replace      = fn ($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
 
         if (str_contains($currentField, '.')) {
             $data  = Str::of($field)->explode('.');
@@ -94,15 +95,13 @@ class Helpers
             $field = $data->get(1);
 
             if ($table === $currentTable) {
-                $content = addslashes($row->{$field});
-            } else {
-                $content = addslashes($row->{$table}->{$field});
+                return $replace(addslashes($row->{$field}));
             }
-        } else {
-            $content = addslashes($row->{$field});
+
+            return $replace(addslashes($row->{$table}->{$field}));
         }
 
-        return preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        return $replace(addslashes($row->{$field}));
     }
 
     /**
@@ -114,21 +113,17 @@ class Helpers
 
         /** @phpstan-ignore-next-line */
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
+            $resolveRules = (bool) $rule->rule['when']((object) $row);
+
             $prepareRule = [
-                'resolveRule' => $rule->rule['when']((object) $row),
-                'action'      => collect($rule->rule)->forget('when')->toArray(),
-                'attributes'  => [
-                    'column' => $rule->column ?? '',
-                ],
+                'action' => collect($rule->rule)->forget(['when', 'action.redirect.closure'])->toArray(),
             ];
 
-            if (data_get($rule->rule, 'redirect') && data_get($prepareRule, 'resolveRule') === true) {
+            if (data_get($rule->rule, 'redirect') && $resolveRules === true) {
                 data_set($prepareRule, 'action.redirect.url', $rule->rule['redirect']['closure']((object) $row));
-
-                unset($prepareRule['action']['redirect']['closure']);
             }
 
-            if ((bool) data_get($prepareRule, 'resolveRule') === false) {
+            if ($resolveRules === false) {
                 $prepareRule = [];
             }
 
