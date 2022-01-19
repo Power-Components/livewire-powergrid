@@ -42,7 +42,7 @@
                             @if(isset($ruleSetAttribute['attribute']))
                                 {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
                             @else
-                                 class="$class"
+                                 class="{{ $class }}"
                             @endif
                         >
                             {!! $ruleCaption ?? $action->caption !!}
