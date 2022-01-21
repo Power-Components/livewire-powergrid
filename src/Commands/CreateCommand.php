@@ -66,7 +66,7 @@ class CreateCommand extends Command
         $modelLastName = '';
 
         if (strtolower($creationModel) === 'm') {
-            $modelName = $this->ask('Enter your Model path (E.g., <comment>App\Models\User</comment> or <comment>User</comment>)');
+            $modelName = $this->anticipate('Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', $this->listModels());
 
             if (empty($modelName)) {
                 $this->error('Could not create, Model path is missing');
@@ -282,6 +282,20 @@ class CreateCommand extends Command
         $stub = str_replace('{{ datasource }}', $datasource, $stub);
 
         return str_replace('{{ columns }}', $columns, $stub);
+    }
+    
+    /**
+     * List files in Models folder
+     *
+     * @return array
+     */
+    private function listModels(): array
+    {
+        $modelsFolder = app_path('Models');
+
+        return collect(File::allFiles($modelsFolder))
+            ->map(fn ($file) => $file->getFilenameWithoutExtension())
+            ->toArray();
     }
 
     private function checkTailwindForms(): void
