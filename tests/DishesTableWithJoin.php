@@ -18,14 +18,22 @@ class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
+    public array $eventId = [];
+
     protected function getListeners()
     {
-        $this->listeners[] = 'deletedEvent';
-
-        return $this->listeners;
+        return array_merge(
+            parent::getListeners(),
+            [
+                'deletedEvent',
+            ]
+        );
     }
 
-    public array $eventId = [];
+    public function openModal(array $params)
+    {
+        $this->eventId = $params;
+    }
 
     public function deletedEvent(array $params)
     {

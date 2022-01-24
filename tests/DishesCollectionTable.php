@@ -15,6 +15,23 @@ class DishesCollectionTable extends PowerGridComponent
 {
     use ActionButton;
 
+    public array $eventId = [];
+
+    protected function getListeners()
+    {
+        return array_merge(
+            parent::getListeners(),
+            [
+                'deletedEvent',
+            ]
+        );
+    }
+
+    public function openModal(array $params)
+    {
+        $this->eventId = $params;
+    }
+
     public function datasource(): Collection
     {
         return collect([

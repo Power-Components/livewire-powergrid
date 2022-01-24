@@ -19,6 +19,8 @@ class DishesTable extends PowerGridComponent
 {
     use ActionButton;
 
+    public array $eventId = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -29,7 +31,10 @@ class DishesTable extends PowerGridComponent
         );
     }
 
-    public array $eventId = [];
+    public function openModal(array $params)
+    {
+        $this->eventId = $params;
+    }
 
     public function deletedEvent(array $params)
     {
