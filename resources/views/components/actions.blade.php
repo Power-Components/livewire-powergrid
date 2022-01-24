@@ -33,7 +33,7 @@
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
-                        <button @if(isset($event['event'])) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                        <button @if(isset($event['event']) && blank($action->view)) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                             @endif
                             @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                             @endif
