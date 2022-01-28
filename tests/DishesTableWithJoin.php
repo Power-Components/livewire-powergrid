@@ -11,20 +11,29 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
+    Rules\Rule,
     Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
     use ActionButton;
 
+    public array $eventId = [];
+
     protected function getListeners()
     {
-        $this->listeners[] = 'deletedEvent';
-
-        return $this->listeners;
+        return array_merge(
+            parent::getListeners(),
+            [
+                'deletedEvent',
+            ]
+        );
     }
 
-    public array $eventId = [];
+    public function openModal(array $params)
+    {
+        $this->eventId = $params;
+    }
 
     public function deletedEvent(array $params)
     {
@@ -119,6 +128,7 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('ID'))
                 ->field('id')
+                ->withCount('Count ID', false, true)
                 ->searchable()
                 ->sortable(),
 
@@ -141,6 +151,9 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
+                ->withSum('Sum Price', false, true)
+                ->withCount('Count Price', false, true)
+                ->withAvg('Avg Price', false, true)
                 ->editOnClick($canEdit)
                 ->makeInputRange('price', '.', ','),
 
@@ -190,6 +203,40 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
+        ];
+    }
+
+    public function actionRules(): array
+    {
+        return [
+            Rule::button('edit-stock')
+                ->when(fn ($dish) => $dish->id == 2)
+                ->hide(),
+
+            Rule::button('edit-stock')
+                ->when(fn ($dish) => $dish->id == 4)
+                ->caption('cation edit for id 4'),
+
+            Rule::button('edit-stock')
+                ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
+                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
+
+            // Set a row red background for when dish is out of stock
+            Rule::rows()
+                ->when(fn ($dish) => (bool) $dish->in_stock === false)
+                ->setAttribute('class', 'bg-red-100 text-red-800'),
+
+            Rule::rows()
+                ->when(fn ($dish) => $dish->id == 3)
+                ->setAttribute('class', 'bg-blue-100'),
+
+            Rule::button('edit-stock')
+                ->when(fn ($dish) => $dish->id == 5)
+                ->emit('toggleEvent', ['dishId' => 'id']),
+
+            Rule::button('edit-stock')
+                ->when(fn ($dish) => $dish->id == 9)
+                ->disable(),
         ];
     }
 

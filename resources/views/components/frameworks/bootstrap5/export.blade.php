@@ -1,5 +1,5 @@
 <div>
-    @if($exportOption)
+    @if($exportActive)
         <div class="btn-group">
             <button class="btn btn-secondary btn-sm dropdown-toggle"
                     type="button"
