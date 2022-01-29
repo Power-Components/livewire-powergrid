@@ -88,7 +88,7 @@ With PowerGrid you get right out of the box:
 
 <br/>
 
- ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/doc/img/example.gif?raw=true)
+ ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/docs/_media/example.gif?raw=true)
 
 ------
 
