@@ -201,13 +201,13 @@ final class Column
         return $this;
     }
 
-     /**
-     * Hide the column
-     * 
-     * @param bool $isHidden default: true
-     * 
-     * @return Column
-     */
+    /**
+    * Hide the column
+    *
+    * @param bool $isHidden default: true
+    *
+    * @return Column
+    */
     public function hidden(bool $isHidden = true): Column
     {
         $this->hidden = $isHidden;
