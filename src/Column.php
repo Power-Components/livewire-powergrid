@@ -201,9 +201,9 @@ final class Column
         return $this;
     }
 
-    public function hidden(): Column
+    public function hidden($bool = true): Column
     {
-        $this->hidden = true;
+        $this->hidden = $bool;
 
         return $this;
     }
