@@ -11,7 +11,6 @@ it('properly filters by "between date"', function (string $component, object $pa
             'type="text"',
             'placeholder="Select a period"',
             'wire:model="filters.input_date_picker.produced_at"',
-            'wire:ignore',
         ])
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
