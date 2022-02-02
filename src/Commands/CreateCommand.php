@@ -283,7 +283,7 @@ class CreateCommand extends Command
 
         return str_replace('{{ columns }}', $columns, $stub);
     }
-    
+
     /**
      * List files in Models folder
      *
@@ -297,7 +297,7 @@ class CreateCommand extends Command
             ->map(fn ($file) => $file->getFilenameWithoutExtension());
 
         $files->map(function ($file) use (&$files) {
-            $files->push('\\App\\Models\\' . $file);
+            $files->push('App\\Models\\' . $file);
         });
 
         return  $files->toArray();
