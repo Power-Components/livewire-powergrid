@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\{DB, Schema};
+use Illuminate\Support\Facades\{DB, File, Schema};
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use function Pest\Faker\faker;
@@ -13,14 +13,37 @@ use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 
 class TestCase extends BaseTestCase
 {
+    protected static $isRunningTests = false;
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->clearViewsCache();
         $this->migrations();
         $this->seeders();
     }
 
+    /**
+     * Delete PowerGrid cached views
+     *
+     * @return void
+     */
+    protected function clearViewsCache(): void
+    {
+        if (self::$isRunningTests === true) {
+            return;
+        }
+        
+        $viewsFolder = base_path() . '/resources/views/vendor/livewire-powergrid/';
+
+        $viewsFolderPath = str_replace('/', DIRECTORY_SEPARATOR, $viewsFolder);
+            
+        File::deleteDirectory($viewsFolderPath);
+            
+        self::$isRunningTests = true;
+    }
+    
     protected function migrations(): void
     {
         Schema::dropIfExists('dishes');
