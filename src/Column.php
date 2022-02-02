@@ -24,6 +24,8 @@ final class Column
 
     public bool $hidden = false;
 
+    public bool $forceHidden = false;
+
     public bool $visibleInExport = true;
 
     public bool $editable = false;
@@ -210,7 +212,8 @@ final class Column
     */
     public function hidden(bool $isHidden = true): Column
     {
-        $this->hidden = $isHidden;
+        $this->hidden      = $isHidden;
+        $this->forceHidden = $isHidden;
 
         return $this;
     }

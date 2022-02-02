@@ -20,6 +20,7 @@
              class="mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-gray-500">
 
             @foreach($columns as $column)
+                @if($column->forceHidden == false)
                 <div wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                      wire:key="toggle-column-{{ $column->field }}"
                      class="@if($column->hidden) opacity-40 @endif cursor-pointer flex justify-start block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">
@@ -32,6 +33,7 @@
                         {{ $column->title }}
                     </div>
                 </div>
+                @endif
             @endforeach
         </div>
     </div>
