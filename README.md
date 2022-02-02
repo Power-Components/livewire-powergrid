@@ -76,19 +76,19 @@ With PowerGrid you get right out of the box:
 
 - **Link inside a table cell**
 
-- **Livewire Modal Integration ([Livewire UI](https://github.com/livewire-ui/modal))**
+- **Livewire Modal Integration ([Wire Elements Modal](https://github.com/wire-elements/modal))**
 
 - **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
 
 - **Queue Export for large tables**
 
-- **Works with Bootstrap 5 or Tailwind CSS 2**
+- **Works with Bootstrap 5 or Tailwind CSS 2x - 3x**
 
 - **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
 
 <br/>
 
- ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/doc/img/example.gif?raw=true)
+ ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/docs/_media/example.gif?raw=true)
 
 ------
 
@@ -96,10 +96,10 @@ With PowerGrid you get right out of the box:
 
 ## 1. Requirements
 
-- PHP 7.4.1+
+- PHP 7.4.1 +
 - [Laravel 8x](https://laravel.com/docs/8.x/installation)
 - [Livewire 2x](https://laravel-livewire.com)
-- [Tailwind](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+- [Tailwind 2x or 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
