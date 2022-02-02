@@ -7,11 +7,10 @@
     'currentTable' => null,
     'tableName' => null,
 ])
-<div wire:ignore.self
-     x-cloak
+<div x-cloak
      x-data="pgEditable({
        tableName: '{{ $tableName }}',
-       id: '{{ $row->{$primaryKey} ?? $row->id }}',
+       id: '{{ $row->{$primaryKey} }}',
        dataField: '{{ $field }}',
        content: '{{ $helperClass->resolveContent($currentTable, $field, $row) }}'
      })">

@@ -17,7 +17,6 @@
     @endphp
     <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
-        wire:key="{{ 'row-'.\Illuminate\Support\Str::kebab($column->field) }}"
     >
         @if($column->editable === true && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">
