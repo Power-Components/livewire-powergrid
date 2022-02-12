@@ -68,7 +68,13 @@ class PowerGridDemoTable extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
-    public function datasource()
+
+    /**
+    * PowerGrid datasource.
+    *
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\User>|null
+    */
+    public function datasource(): ?Builder
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
@@ -204,7 +210,7 @@ class PowerGridDemoTable extends PowerGridComponent
     /**
     * PowerGrid action rules.
     *
-    * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\Rule>
+    * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
     */
     public function actionRules(): array
     {

@@ -43,6 +43,12 @@ final class {{ componentName }} extends PowerGridComponent
     | Provides data to your Table using a Model or Collection
     |
     */
+
+    /**
+    * PowerGrid datasource.
+    *
+    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\User>|null
+    */
     public function datasource(): ?Builder
     {
         return {{ modelLastName }}::query();
@@ -141,7 +147,7 @@ final class {{ componentName }} extends PowerGridComponent
      /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\Rule>
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
      */
 
     /*
