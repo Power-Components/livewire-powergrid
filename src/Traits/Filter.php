@@ -85,9 +85,14 @@ trait Filter
         /** @var string $endDate */
         $endDate   = data_get($data, 'selectedDates.1');
 
-        data_set($data, 'selectedDates.0', Carbon::parse($startDate)->setTime(0, 0));
-        data_set($data, 'selectedDates.1', Carbon::parse($endDate)->setTime(23, 59, 59));
-
+        $startDateTime = Carbon::parse($startDate)->setTimezone(config('app.timezone'));
+        $endDateTime = Carbon::parse($endDate)->setTimezone(config('app.timezone'));
+        if (!$data['enableTime']) {
+            $startDateTime->startOfDay();
+            $endDateTime->endOfDay();
+        }
+        data_set($data, 'selectedDates.0', $startDateTime);
+        data_set($data, 'selectedDates.1', $endDateTime);
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
 
