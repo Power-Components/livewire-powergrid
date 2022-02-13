@@ -34,7 +34,8 @@ export default (params) => ({
                     selectedDates: selectedDates,
                     field: _this.dataField,
                     values: _this.filterKey,
-                    label: _this.label
+                    label: _this.label,
+                    enableTime: options.enableTime
                 });
             }
         }
