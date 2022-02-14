@@ -206,6 +206,12 @@ class DishesTable extends PowerGridComponent
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
+
+            Button::add('destroy_for_emit_to')
+                ->caption(__('Delete'))
+                ->class('text-center')
+                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id'])
+                ->method('delete'),
         ];
     }
 

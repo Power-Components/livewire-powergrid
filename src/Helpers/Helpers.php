@@ -40,6 +40,25 @@ class Helpers
     }
 
     /**
+     * @param array $params
+     * @param Model|\stdClass|null $row
+     * @return mixed
+     */
+    public function makeActionParameter(array $params = [], $row = null)
+    {
+        $parameters = [];
+
+        foreach ($params as $param => $value) {
+            if ($row && filled($row->{$value})) {
+                $parameters[$param] = $row->{$value};
+            } else {
+                $parameters[$param] = $value;
+            }
+        }
+        return $parameters[0];
+    }
+
+    /**
      * @param string|Button $action
      * @param Model|\stdClass $row
      * @return array
