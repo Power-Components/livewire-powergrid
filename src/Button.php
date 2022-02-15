@@ -68,8 +68,8 @@ final class Button
      */
     public function route(string $route, array $param, bool $singleParam = false): Button
     {
-        $this->route = $route;
-        $this->param = $param;
+        $this->route       = $route;
+        $this->param       = $param;
         $this->singleParam = $singleParam;
 
         return $this;
@@ -106,12 +106,12 @@ final class Button
      */
     public function openModal(string $component, array $param, bool $singleParam = false): Button
     {
-        $this->view   = $component;
-        $this->param  = $param;
+        $this->view        = $component;
+        $this->param       = $param;
         $this->singleParam = $singleParam;
-        $this->method = 'get';
-        $this->route  = '';
-        $this->event  = '';
+        $this->method      = 'get';
+        $this->route       = '';
+        $this->event       = '';
 
         return $this;
     }
@@ -125,10 +125,10 @@ final class Button
      */
     public function emit(string $event, array $param, bool $singleParam = false): Button
     {
-        $this->event   = $event;
-        $this->param   = $param;
+        $this->event       = $event;
+        $this->param       = $param;
         $this->singleParam = $singleParam;
-        $this->route   = '';
+        $this->route       = '';
 
         return $this;
     }
@@ -143,11 +143,11 @@ final class Button
      */
     public function emitTo(string $to, string $event, array $param, bool $singleParam = false): Button
     {
-        $this->to      = $to;
-        $this->event   = $event;
-        $this->param   = $param;
+        $this->to          = $to;
+        $this->event       = $event;
+        $this->param       = $param;
         $this->singleParam = $singleParam;
-        $this->route   = '';
+        $this->route       = '';
 
         return $this;
     }

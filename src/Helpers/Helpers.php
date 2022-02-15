@@ -55,6 +55,7 @@ class Helpers
                 $parameters[$param] = $value;
             }
         }
+
         return $parameters[0];
     }
 
