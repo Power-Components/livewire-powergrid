@@ -12,7 +12,6 @@ export default (params) => ({
         $(element).selectpicker();
         $(element).on('change', function () {
             const selected = $(this).find("option:selected");
-            console.log(selected)
             const arrSelected = [];
             selected.each(function () {
                 arrSelected.push($(this).val());
