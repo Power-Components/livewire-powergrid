@@ -67,7 +67,9 @@ With PowerGrid you get right out of the box:
 
 - **Action Buttons**
 
-- **Action Rules for disable, hide and modify Action Buttons, Checkboxes and rows**
+- **Bulk Actions**
+
+- **Action Rules: Conditionally disable, hide and modify Action Buttons, Checkboxes and rows**
 
 - **Toggle button**
 
