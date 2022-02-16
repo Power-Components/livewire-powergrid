@@ -4,12 +4,13 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\{Button, Rule1};
+use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
 {
     protected array $actions = [
         'emit',
+        'emitTo',
         'setAttribute',
         'disable',
         'hide',

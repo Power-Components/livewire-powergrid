@@ -23,13 +23,19 @@
                     $ruleHide         = data_get($rules, 'hide', false);
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
                     $ruleEmit         = data_get($rules, 'emit');
+                    $ruleEmitTo       = data_get($rules, 'emitTo');
                     $ruleCaption      = data_get($rules, 'caption');
 
-                    if (filled($ruleEmit)) {
+                    if (filled($ruleEmit) ) {
                         $event['event']  = $ruleEmit['event'];
                         $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmit, 'params', []), $row);
+                    } else if (filled($ruleEmitTo) ) {
+                        $event['to']     = $ruleEmitTo['to'] ?? '';
+                        $event['event']  = $ruleEmitTo['event'];
+                        $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmitTo, 'params', []), $row);
                     } else {
                         $event['event']  = $action->event;
+                        $event['to']     = $action->to;
                         $event['params'] = $actionParameters;
                     }
                 @endphp
@@ -37,9 +43,9 @@
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
-                        <button @if(isset($event['event']) && blank($action->view) && blank($action->to)) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                        <button @if(isset($event['event']) && blank($action->view) && blank($event['to'])) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                             @endif
-                            @if(isset($event['event']) && blank($action->view) && filled($action->to)) wire:click='$emitTo("{{ $action->to }}", "{{ $event['event'] }}", @json($event['params']))'
+                            @if(isset($event['event']) && blank($action->view) && filled($event['to'])) wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
                             @endif
                             @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                             @endif
