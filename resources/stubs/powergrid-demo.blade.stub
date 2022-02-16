@@ -40,6 +40,8 @@
         This is a demo table. You can click around and see how things behave.
         <br>
         Data is generated on the fly and changes will NOT be saved in your database.
+        <br>
+        Some features may require you to create a full PowerGrid component.
         <br><br>
         <p class="leading-loose">
         📚 Check our <a href="https://livewire-powergrid.com/" rel="nofollow" target="_blank" class="bg-gradient-to-r from-yellow-200 to-yellow-200 bg-growing-underline">Documentation</a> for more information.
@@ -60,7 +62,7 @@
         <script src="//unpkg.com/alpinejs" defer></script>
         <script>
             window.addEventListener('showAlert', event => {
-                alert('You clicked on User id#' + event.detail.id);
+                alert(event.detail.message);
             })
         </script>
     </body>
