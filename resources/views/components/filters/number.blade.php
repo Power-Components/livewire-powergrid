@@ -16,7 +16,7 @@
                         data-id="{{ data_get($number, 'field') }}"
                         wire:model.debounce.800ms="filters.number_start.{{ data_get($number, 'dataField') }}"
                         wire:input.debounce.800ms="filterNumberStart('{{ data_get($number, 'dataField') }}', $event.target.value,'{{ addslashes(data_get($number, 'thousands')) }}','{{ addslashes(data_get($number, 'decimal')) }}','{{ data_get($number, 'label') }}')"
-                        @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
+                        @if($inline) style="min-width: 50px; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                         placeholder="Min">
@@ -26,7 +26,7 @@
                         data-id="{{ $number['field'] }}"
                         wire:model.debounce.800ms="filters.number_end.{{ data_get($number, 'dataField') }}"
                         wire:input.debounce.800ms="filterNumberEnd('{{ data_get($number, 'dataField') }}',$event.target.value,'{{ addslashes(data_get($number, 'thousands')) }}','{{ addslashes(data_get($number, 'decimal')) }}', '{{ data_get($number, 'label') }}')"
-                        @if($inline) style="min-width: 100px; max-width: 130px !important; {{ data_get($column, 'headerStyle') }}" @endif
+                        @if($inline) style="min-width: 50px; {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                         placeholder="Max">
