@@ -11,7 +11,11 @@
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
                     $class            = filled($action->class) ? $action->class : $theme->actions->headerBtnClass;
-                    $actionParameters = $helperClass->makeActionParameters($action->param, $row);
+                    if($action->singleParam) {
+                        $actionParameters = $helperClass->makeActionParameter($action->param, $row);
+                    } else {
+                        $actionParameters = $helperClass->makeActionParameters($action->param, $row);
+                    }
                     $rules            = $helperClass->makeActionRules($action, $row);
 
                     $ruleRedirect     = data_get($rules, 'redirect');
@@ -33,7 +37,9 @@
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
-                        <button @if(isset($event['event']) && blank($action->view)) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                        <button @if(isset($event['event']) && blank($action->view) && blank($action->to)) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                            @endif
+                            @if(isset($event['event']) && blank($action->view) && filled($action->to)) wire:click='$emitTo("{{ $action->to }}", "{{ $event['event'] }}", @json($event['params']))'
                             @endif
                             @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                             @endif
