@@ -154,11 +154,8 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->withSum('Sum Price', false, true)
-                ->formatSum(fn ($sum) => 'R$ ' . number_format($sum, 2, '.', ','))
                 ->withCount('Count', false, true)
-                ->formatCount(fn ($count) => number_format($count, 2, '.', ''))
                 ->withAvg('Avg Price', false, true)
-                ->formatAvg(fn ($avg) => 'R$ ' . number_format($avg, 2, '.', ','))
                 ->editOnClick($canEdit, 'price')
                 ->makeInputRange('price', '.', ','),
 
