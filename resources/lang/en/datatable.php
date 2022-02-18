@@ -3,6 +3,7 @@
 return [
     'buttons' => [
         'filter' => 'Filter',
+        'clear_all_filters' => 'Clear all',
     ],
     'labels' => [
         'action'           => 'Actions',
