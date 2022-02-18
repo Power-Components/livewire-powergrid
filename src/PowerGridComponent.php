@@ -39,7 +39,7 @@ class PowerGridComponent extends Component
 
     public array $perPageValues = [10, 25, 50, 100, 0];
 
-    public string $recordCount = 'full';
+    public string $recordCount = '';
 
     public array $filtered = [];
 
@@ -88,7 +88,7 @@ class PowerGridComponent extends Component
      * default full. other: short, min
      * @return $this
      */
-    public function showRecordCount(string $mode): PowerGridComponent
+    public function showRecordCount(string $mode = 'full'): PowerGridComponent
     {
         $this->recordCount = $mode;
 
