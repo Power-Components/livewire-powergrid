@@ -18,30 +18,30 @@ it('calculate "count" on id field', function (string $component, object $params)
         ->assertSee('Count ID: 1');
 })->with('themes with name field');
 
-it('calculates and formats "sum" on price field', function (string $component, object $params) {
+it('calculate "sum" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Sum Price: R$ 15,000.60</span>')
+        ->assertSeeHtml('<span>Sum Price: 15000.6</span>')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('<span>Sum Price: R$ 300.50</span>')
+        ->assertSeeHtml('<span>Sum Price: 300.5</span>')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('<span>Sum Price: R$ 600.00</span>');
+        ->assertSeeHtml('<span>Sum Price: 600</span>');
 })->with('themes with name field');
 
-it('calculates and formats "count" on price field', function (string $component, object $params) {
+it('calculate "count" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('Count: 12.00')
+        ->assertSeeHtml('Count Price: 12')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('Count: 1.00')
+        ->assertSeeHtml('Count Price: 1')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('Count: 1.00');
-})->with('themes with name field');
+        ->assertSeeHtml('Count Price: 1');
+})->with('themes with name field')->skip();
 
-it('calculates and formats "avg" on price field', function (string $component, object $params) {
+it('calculate "avg" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Avg Price: R$ 1,250.05</span>');
+        ->assertSeeHtml('<span>Avg Price: 1250.05</span>');
 })->with('themes with name field');
 
 /**
