@@ -25,23 +25,49 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 
-class PowerGridDemoTable extends PowerGridComponent
+final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
-
-    protected $demoUsers = null; // Demo users. Should be removed in a real project.
+    
+    //Messages informing success/error data is updated.
+    public bool $showUpdateMessages = true;
+    
+     // Demo users. Should be removed in a real project.
+    protected $demoUsers = null;
 
     protected function getListeners()
     {
         return array_merge(
             parent::getListeners(), [
-                'alertEvent'
+                'rowActionEvent',
+                'bulkActionEvent',
             ]);
     }
 
-    public function alertEvent($data)
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    public function rowActionEvent(array $data): void
     {
-        $this->dispatchBrowserEvent('showAlert', $data);
+        $message = 'You have clicked #' . $data['id'];
+
+        $this->dispatchBrowserEvent('showAlert', ['message' => $message]);
+    }
+
+    public function bulkActionEvent(): void
+    {
+        if (count($this->checkboxValues) == 0) {
+            $this->dispatchBrowserEvent('showAlert', ['message' => 'You must select at least one item!']);
+
+            return;
+        }
+
+        $ids = implode(', ', $this->checkboxValues);
+
+        $this->dispatchBrowserEvent('showAlert', ['message' => 'You have selected IDs: ' . $ids]);
     }
 
     /*
@@ -52,7 +78,7 @@ class PowerGridDemoTable extends PowerGridComponent
     |
     */
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->showCheckBox() //Adds checkboxes to each table row
             ->showRecordCount() //Display: Showing 1 to 10 of 20 Results
@@ -81,6 +107,12 @@ class PowerGridDemoTable extends PowerGridComponent
     | Configure here relationships to be used by the Search and Table Filters.
     |
     */
+
+    /**
+     * Relationship search.
+     *
+     * @return array<string, array<int, string>>
+     */
     public function relationSearch(): array
     {
         return [];
@@ -110,6 +142,29 @@ class PowerGridDemoTable extends PowerGridComponent
             ->addColumn('laravel_since_formatted', function (User $model) {
                 return Carbon::parse($model->laravel_since)->format('d/m/Y H:i');
             });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    |  Table header
+    |--------------------------------------------------------------------------
+    | Configure Action Buttons for your table header.
+    |
+
+    */
+     /**
+     * PowerGrid Header
+     *
+     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     */
+    public function header(): array
+    {
+        return [
+            Button::add('bulk-demo')
+                ->caption(__('Bulk Action'))
+                ->class('cursor-pointer block bg-indigo-500 text-white border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300')
+                ->emit('bulkActionEvent', [])
+        ];
     }
 
     /*
@@ -189,7 +244,7 @@ class PowerGridDemoTable extends PowerGridComponent
            Button::add('info')
                ->caption(__('Click me'))
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
-               ->emit('alertEvent', ['id' => 'id']),
+               ->emit('rowActionEvent', ['id' => 'id']),
         ];
     }
 
@@ -239,6 +294,12 @@ class PowerGridDemoTable extends PowerGridComponent
     | Enable the method below to use editOnClick() or toggleable() methods
     |
     */
+
+     /**
+     * PowerGrid Update.
+     *
+     * @param array<string,string> $data
+     */
 
     public function update(array $data): bool
     {
