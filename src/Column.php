@@ -49,6 +49,16 @@ final class Column
         'footer' => false,
     ];
 
+    public array $min = [
+        'header' => false,
+        'footer' => false,
+    ];
+
+    public array $max = [
+        'header' => false,
+        'footer' => false,
+    ];
+
     public array $inputs = [];
 
     /**
@@ -124,11 +134,12 @@ final class Column
      *
      * @return $this
      */
-    public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true): Column
+    public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
         $this->sum['label']             = $label;
         $this->sum['header']            = $header;
         $this->sum['footer']            = $footer;
+        $this->sum['rounded']            = $rounded;
 
         return $this;
     }
@@ -158,6 +169,36 @@ final class Column
         $this->avg['header']     = $header;
         $this->avg['footer']     = $footer;
         $this->avg['rounded']    = $rounded;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total minimum
+     *
+     * @return $this
+     */
+    public function withMin(string $label = 'Min', bool $header = true, bool $footer = true, int $rounded = 2): Column
+    {
+        $this->min['label']      = $label;
+        $this->min['header']     = $header;
+        $this->min['footer']     = $footer;
+        $this->min['rounded']    = $rounded;
+
+        return $this;
+    }
+
+    /**
+     * Will enable the column for total maximum
+     *
+     * @return $this
+     */
+    public function withMax(string $label = 'Max', bool $header = true, bool $footer = true, int $rounded = 2): Column
+    {
+        $this->max['label']      = $label;
+        $this->max['header']     = $header;
+        $this->max['footer']     = $footer;
+        $this->max['rounded']    = $rounded;
 
         return $this;
     }
