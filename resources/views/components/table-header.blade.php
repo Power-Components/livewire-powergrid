@@ -27,7 +27,7 @@
             style="{{ $column->hidden === true ? 'display:none': '' }}; {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
             @if ($column->count['header'])
                 <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
-                    ->reject(function($data) use($field) { return empty($data->$field); })
+                    ->reject(function($data) use($field) { return empty($data->$field ?? $data[$field]); })
                     ->count($field) }}
                     </span>
                 <br>
