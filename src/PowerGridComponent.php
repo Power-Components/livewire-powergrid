@@ -73,6 +73,10 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
+    public bool $persistFiltersAndColumns = false;
+
+    private bool $needToInvalidatePersistData = false;
+
     /**
      * @return $this
      * Show search input into component
@@ -110,6 +114,17 @@ class PowerGridComponent extends Component
     {
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
+
+        return $this;
+    }
+
+    /**
+     * default false
+     * @return $this
+     */
+    public function persistFiltersAndColumns(): PowerGridComponent
+    {
+        $this->persistFiltersAndColumns = true;
 
         return $this;
     }
@@ -474,6 +489,52 @@ class PowerGridComponent extends Component
         return $this;
     }
 
+    /**
+     * Check is columns changed after restoring from persistent storage
+     * @param $value
+     * @return void
+     */
+    public function updatingColumns($value){
+        if (! $this->persistFiltersAndColumns) {
+            return;
+        }
+
+        // Are defaults and restored columns has different (two-way comparation)
+        if (collect($this->columns)
+                ->pluck('field')
+                ->diff(collect($value)
+                    ->pluck('field'))
+                ->count() > 0 
+            || collect($value)
+                ->pluck('field')
+                ->diff(collect($this->columns)
+                    ->pluck('field'))
+                ->count() > 0 ) {
+            $this->needToInvalidatePersistData = true;
+        }
+    }
+
+    /**
+     * Call invalidate data when it needed after column changed after restore from persisten storage
+     * @param $value
+     * @return void
+     */
+    public function updatedColumns($value){
+        if ($this->needToInvalidatePersistData) {
+            $this->invalidatePersistData();
+        }
+    }
+
+    /**
+     * Invalidate data stored at persistent storage
+     * @return void
+     */
+    public function invalidatePersistData() {
+        $this->columns = $this->columns();
+        $this->filters = [];
+        $this->enabledFilters = [];
+    }
+    
     /**
      * @return array
      */
