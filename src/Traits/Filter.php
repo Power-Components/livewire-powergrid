@@ -19,8 +19,6 @@ trait Filter
 
     public function clearFilter(string $field = ''): void
     {
-        $this->search = '';
-
         unset($this->enabledFilters[$field]);
         unset($this->filters['number'][$field]);
         unset($this->filters['number_start'][$field]);
