@@ -26,7 +26,7 @@ final class Column
 
     public bool $forceHidden = false;
 
-    public bool $visibleInExport = true;
+    public ?bool $visibleInExport = null;
 
     public bool $editable = false;
 
@@ -218,10 +218,9 @@ final class Column
         return $this;
     }
 
-    public function visibleInExport(bool $visible): Column
+    public function visibleInExport(?bool $visible): Column
     {
         $this->visibleInExport   = $visible;
-        $this->searchable        = false;
 
         return $this;
     }
