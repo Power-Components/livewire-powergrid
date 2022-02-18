@@ -35,18 +35,22 @@ final class Column
     public bool $sortable = false;
 
     public array $sum = [
-        'header' => false,
-        'footer' => false,
+        'header'    => false,
+        'footer'    => false,
+        'formatter' => null,
     ];
 
     public array $count = [
-        'header' => false,
-        'footer' => false,
+        'header'    => false,
+        'footer'    => false,
+        'formatter' => null,
     ];
 
     public array $avg = [
-        'header' => false,
-        'footer' => false,
+        'header'    => false,
+        'footer'    => false,
+        'formatter' => null,
+        'rounded'   => 0,
     ];
 
     public array $inputs = [];
@@ -126,9 +130,23 @@ final class Column
      */
     public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true): Column
     {
-        $this->sum['label']             = $label;
-        $this->sum['header']            = $header;
-        $this->sum['footer']            = $footer;
+        $this->sum['label']                = $label;
+        $this->sum['header']               = $header;
+        $this->sum['footer']               = $footer;
+
+        return $this;
+    }
+
+    /**
+     * Format SUM output
+    *
+    * @param callable $formatFunction
+    *
+     * @return $this
+     */
+    public function formatSum(callable $formatFunction): Column
+    {
+        $this->sum['formatter']            = $formatFunction;
 
         return $this;
     }
@@ -140,9 +158,23 @@ final class Column
      */
     public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
-        $this->count['label']  = $label;
-        $this->count['header'] = $header;
-        $this->count['footer'] = $footer;
+        $this->count['label']                = $label;
+        $this->count['header']               = $header;
+        $this->count['footer']               = $footer;
+        
+        return $this;
+    }
+    
+    /**
+     * Format Count output
+    *
+    * @param callable $formatFunction
+    *
+     * @return $this
+     */
+    public function formatCount(callable $formatFunction): Column
+    {
+        $this->count['formatter']            = $formatFunction;
 
         return $this;
     }
@@ -158,6 +190,20 @@ final class Column
         $this->avg['header']     = $header;
         $this->avg['footer']     = $footer;
         $this->avg['rounded']    = $rounded;
+
+        return $this;
+    }
+    
+    /**
+      * Format Avg output
+     *
+     * @param callable $formatFunction
+     *
+      * @return $this
+      */
+    public function formatAvg(callable $formatFunction): Column
+    {
+        $this->avg['formatter']            = $formatFunction;
 
         return $this;
     }
