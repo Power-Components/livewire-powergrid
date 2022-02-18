@@ -23,11 +23,16 @@ trait Filter
 
         unset($this->enabledFilters[$field]);
         unset($this->filters['number'][$field]);
+        unset($this->filters['number_start'][$field]);
+        unset($this->filters['number_end'][$field]);
         unset($this->filters['input_text'][$field]);
         unset($this->filters['boolean'][$field]);
         unset($this->filters['input_text_options'][$field]);
-
-        $this->filters = [];
+        unset($this->filters['input_date_picker'][$field]);
+        unset($this->filters['date_picker'][$field]);
+        unset($this->filters['select'][$field]);
+        unset($this->filters['multi_select'][$field]);
+        
     }
 
     public static function getInputTextOptions(): array
