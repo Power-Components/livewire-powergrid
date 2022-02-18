@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center justify-content-between">
+<div class="d-flex flex-column flex-lg-row align-items-center justify-content-between">
 @if($recordCount === 'full')
     <small class="text-muted d-block me-2">
         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
