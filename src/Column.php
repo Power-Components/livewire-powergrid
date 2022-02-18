@@ -35,22 +35,18 @@ final class Column
     public bool $sortable = false;
 
     public array $sum = [
-        'header'    => false,
-        'footer'    => false,
-        'formatter' => null,
+        'header' => false,
+        'footer' => false,
     ];
 
     public array $count = [
-        'header'    => false,
-        'footer'    => false,
-        'formatter' => null,
+        'header' => false,
+        'footer' => false,
     ];
 
     public array $avg = [
-        'header'    => false,
-        'footer'    => false,
-        'formatter' => null,
-        'rounded'   => 0,
+        'header' => false,
+        'footer' => false,
     ];
 
     public array $inputs = [];
@@ -138,20 +134,6 @@ final class Column
     }
 
     /**
-     * Format SUM output
-    *
-    * @param callable $formatFunction
-    *
-     * @return $this
-     */
-    public function formatSum(callable $formatFunction): Column
-    {
-        $this->sum['formatter']            = $formatFunction;
-
-        return $this;
-    }
-
-    /**
      * Will enable the column for total count
      *
      * @return $this
@@ -161,20 +143,6 @@ final class Column
         $this->count['label']                = $label;
         $this->count['header']               = $header;
         $this->count['footer']               = $footer;
-        
-        return $this;
-    }
-    
-    /**
-     * Format Count output
-    *
-    * @param callable $formatFunction
-    *
-     * @return $this
-     */
-    public function formatCount(callable $formatFunction): Column
-    {
-        $this->count['formatter']            = $formatFunction;
 
         return $this;
     }
@@ -190,20 +158,6 @@ final class Column
         $this->avg['header']     = $header;
         $this->avg['footer']     = $footer;
         $this->avg['rounded']    = $rounded;
-
-        return $this;
-    }
-    
-    /**
-      * Format Avg output
-     *
-     * @param callable $formatFunction
-     *
-      * @return $this
-      */
-    public function formatAvg(callable $formatFunction): Column
-    {
-        $this->avg['formatter']            = $formatFunction;
 
         return $this;
     }
