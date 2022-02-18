@@ -33,6 +33,12 @@ trait Filter
         
     }
 
+    public function clearAllFilters(): void
+    {
+        $this->enabledFilters = [];
+        $this->filters = [];
+    }
+    
     public static function getInputTextOptions(): array
     {
         return [
