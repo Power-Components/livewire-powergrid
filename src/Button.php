@@ -28,7 +28,7 @@ final class Button
 
     /**
      *
-     * @var array<int, string> $param
+     * @var array<int|string, string> $param
      */
     public array $param = [];
 
@@ -62,8 +62,9 @@ final class Button
 
     /**
      * @param string $route
-     * @param array<int, string> $param
+     * @param array<int|string, string> $param
      * @param boolean $singleParam parameter is single parameter
+
      * @return $this
      */
     public function route(string $route, array $param, bool $singleParam = false): Button
@@ -76,7 +77,7 @@ final class Button
     }
 
     /**
-     * Class string in view: class="bla bla bla"
+     * Class string in view: class="foo"
      * @return $this
      */
     public function class(string $class_attr): Button

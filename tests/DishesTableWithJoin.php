@@ -210,7 +210,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
 
-            Button::add('destroy_for_emit_to')
+            Button::add('destroy-for-emit-to')
                 ->caption(__('Delete'))
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id'])
