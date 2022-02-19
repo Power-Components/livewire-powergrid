@@ -51,7 +51,7 @@ class Export
 
             collect($columns)->each(function ($column) use ($row, $header, $item) {
                 /** @var Column $column */
-                if ($column->visibleInExport || (!$column->hidden && is_null($column->visibleInExport)) ) {
+                if ($column->visibleInExport || (!$column->hidden && is_null($column->visibleInExport))) {
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
                             $item->put($column->title, $value);
