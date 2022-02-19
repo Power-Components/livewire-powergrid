@@ -494,8 +494,9 @@ class PowerGridComponent extends Component
      * @param $value
      * @return void
      */
-    public function updatingColumns($value){
-        if (! $this->persistFiltersAndColumns) {
+    public function updatingColumns($value)
+    {
+        if (!$this->persistFiltersAndColumns) {
             return;
         }
 
@@ -504,12 +505,12 @@ class PowerGridComponent extends Component
                 ->pluck('field')
                 ->diff(collect($value)
                     ->pluck('field'))
-                ->count() > 0 
+                ->count() > 0
             || collect($value)
                 ->pluck('field')
                 ->diff(collect($this->columns)
                     ->pluck('field'))
-                ->count() > 0 ) {
+                ->count() > 0) {
             $this->needToInvalidatePersistData = true;
         }
     }
@@ -519,7 +520,8 @@ class PowerGridComponent extends Component
      * @param $value
      * @return void
      */
-    public function updatedColumns($value){
+    public function updatedColumns($value)
+    {
         if ($this->needToInvalidatePersistData) {
             $this->invalidatePersistData();
         }
@@ -529,9 +531,10 @@ class PowerGridComponent extends Component
      * Invalidate data stored at persistent storage
      * @return void
      */
-    public function invalidatePersistData() {
-        $this->columns = $this->columns();
-        $this->filters = [];
+    public function invalidatePersistData()
+    {
+        $this->columns        = $this->columns();
+        $this->filters        = [];
         $this->enabledFilters = [];
     }
     

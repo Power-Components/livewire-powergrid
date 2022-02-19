@@ -96,7 +96,7 @@ return [
     */
 
     'alpinejs_cdn_plugins' => [
-        'https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js'
+        'https://unpkg.com/@alpinejs/persist@3.x.x/dist/cdn.min.js',
     ],
 
     /*
