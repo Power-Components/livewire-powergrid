@@ -1,6 +1,6 @@
-<div class="d-flex flex-wrap align-items-center justify-content-between">
+<div class="d-flex flex-column flex-lg-row align-items-sm-center justify-content-between">
 @if($recordCount === 'full')
-    <small class="text-muted d-block me-2">
+    <small class="text-muted d-block me-2 ms-3 ms-sm-1">
         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
         <span class="font-semibold">{{ $paginator->firstItem() }}</span>
         {{ trans('livewire-powergrid::datatable.pagination.to') }}
@@ -10,7 +10,7 @@
         {{ trans('livewire-powergrid::datatable.pagination.results') }}
     </small>
 @elseif($recordCount === 'short')
-    <small class="text-muted d-block me-2">
+    <small class="text-muted d-block me-2 ms-3 ms-sm-1">
         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
         -
         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
@@ -18,7 +18,7 @@
         <span class="font-semibold"> {{ $paginator->total() }}</span>
     </small>
 @elseif($recordCount === 'min')
-    <small class="text-muted d-block me-2">
+    <small class="text-muted d-block me-2 ms-3 ms-sm-1">
         <span class="font-semibold"> {{ $paginator->firstItem() }}</span>
         -
         <span class="font-semibold"> {{ $paginator->lastItem() }}</span>
@@ -26,7 +26,7 @@
 @endif
 @if ($paginator->hasPages())
     <nav>
-        <ul class="pagination mb-0 ms-0">
+        <ul class="pagination mb-0 ms-0 ms-sm-1">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
