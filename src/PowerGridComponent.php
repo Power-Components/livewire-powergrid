@@ -500,17 +500,8 @@ class PowerGridComponent extends Component
             return;
         }
 
-        // Are defaults and restored columns has different (two-way comparation)
-        if (collect($this->columns)
-                ->pluck('field')
-                ->diff(collect($value)
-                    ->pluck('field'))
-                ->count() > 0
-            || collect($value)
-                ->pluck('field')
-                ->diff(collect($this->columns)
-                    ->pluck('field'))
-                ->count() > 0) {
+        // Are defaults and restored columns has different
+        if ($value != $this->columns) {
             $this->needToInvalidatePersistData = true;
         }
     }
