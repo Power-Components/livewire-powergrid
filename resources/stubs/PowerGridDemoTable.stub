@@ -98,9 +98,8 @@ final class PowerGridDemoTable extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\User>|null
     */
-    public function datasource(): ?Builder
+    public function datasource(): \Illuminate\Support\Collection
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
