@@ -30,13 +30,12 @@ trait Filter
         unset($this->filters['date_picker'][$field]);
         unset($this->filters['select'][$field]);
         unset($this->filters['multi_select'][$field]);
-        
     }
 
     public function clearAllFilters(): void
     {
         $this->enabledFilters = [];
-        $this->filters = [];
+        $this->filters        = [];
     }
     
     public static function getInputTextOptions(): array
@@ -95,7 +94,7 @@ trait Filter
         $endDate   = data_get($data, 'selectedDates.1');
 
         $startDateTime = Carbon::parse($startDate)->setTimezone(config('app.timezone'));
-        $endDateTime = Carbon::parse($endDate)->setTimezone(config('app.timezone'));
+        $endDateTime   = Carbon::parse($endDate)->setTimezone(config('app.timezone'));
         if (!$data['enableTime']) {
             $startDateTime->startOfDay();
             $endDateTime->endOfDay();
