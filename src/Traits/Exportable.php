@@ -100,9 +100,17 @@ trait Exportable
          */
         $exportable = new $exportableClass();
 
+        $currentHiddenStates = collect($this->columns)
+            ->mapWithKeys(fn ($column) => [$column['field'] => $column['hidden']]);
+        $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
+            $column->hidden = $currentHiddenStates[$column->field];
+
+            return $column;
+        }, $this->columns());
+        
         $exportable
             ->fileName($this->exportFileName)
-            ->setData($this->columns(), $this->prepareToExport($selected));
+            ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
         return $exportable->download($this->exportOptions['deleteAfterDownload']);
     }
