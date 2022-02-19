@@ -100,10 +100,10 @@ trait Exportable
          */
         $exportable = new $exportableClass();
 
-        $current_hidden_states = collect($this->columns)
+        $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [$column['field'] => $column['hidden']]);
-        $columns_with_hidden_state = array_map(function ($column) use ($current_hidden_states) {
-            $column->hidden = $current_hidden_states[$column->field];
+        $columns_with_hidden_state = array_map(function ($column) use ($currentHiddenStates) {
+            $column->hidden = $currentHiddenStates[$column->field];
 
             return $column;
         }, $this->columns());
