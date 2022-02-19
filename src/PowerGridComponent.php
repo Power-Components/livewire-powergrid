@@ -230,7 +230,7 @@ class PowerGridComponent extends Component
 
             if ($this->headerTotalColumn || $this->footerTotalColumn) {
                 $this->withoutPaginatedData = $results->values()
-                    ->map(fn($item) => (array)$item);
+                    ->map(fn ($item) => (array) $item);
             }
 
             if ($results->count()) {

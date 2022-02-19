@@ -136,9 +136,9 @@ final class Column
      */
     public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->sum['label']             = $label;
-        $this->sum['header']            = $header;
-        $this->sum['footer']            = $footer;
+        $this->sum['label']              = $label;
+        $this->sum['header']             = $header;
+        $this->sum['footer']             = $footer;
         $this->sum['rounded']            = $rounded;
 
         return $this;
