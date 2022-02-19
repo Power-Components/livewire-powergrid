@@ -1,8 +1,8 @@
 @if(!is_array($data))
-    <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap">
-        <div class="col-md-3 col-12 me-auto">
+    <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md`1-between">
+        <div class="col-auto overflow-auto mt-1 mt-sm-0 ms-5 ms-sm-0 bs5-per-page">
             @if($perPageInput)
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex flex-column flex-lg-row align-items-center">
                     <label class="w-auto">
                         <select wire:model="perPage" class="form-select">
                             @foreach($perPageValues as $value)
@@ -21,12 +21,17 @@
                 </div>
             @endif
         </div>
-        <div class="col-md-9 col-12 overflow-auto mt-1 mt-sm-0">
+        <div class="col-auto overflow-auto mt-1 mt-sm-0">
             @if(method_exists($data, 'links'))
                 {!! $data->links(powerGridThemeRoot().'.pagination', ['recordCount' => $recordCount]) !!}
             @endif
         </div>
     </footer>
-  
-
+    <style>
+        @media (min-width: 992px) {
+            .bs5-per-page {
+                height: 38px
+            }
+        }
+    </style>
 @endif
