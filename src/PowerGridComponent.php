@@ -500,8 +500,9 @@ class PowerGridComponent extends Component
             return;
         }
 
-        // Are defaults and restored columns has different
-        if ($value != $this->columns) {
+        if (collect($value)->map(fn ($column) => collect($column)->except('hidden'))
+            != collect($this->columns)->map(fn ($column) => collect($column)->except('hidden'))
+        ) {
             $this->needToInvalidatePersistData = true;
         }
     }
