@@ -14,7 +14,8 @@
             }
         }
     }
-    
+
+    @if(isBootstrap5())
     livewire.hook('message.processed', (message, component) => {
         const multi_selects = $("div[wire\\:id='"+component.id+"']").find("select[x-ref^='select_picker_']");
         multi_selects.map(function () {
@@ -28,6 +29,7 @@
             }
         });
     });
+    @endif
 </script>
 
 @if(filled(config('livewire-powergrid.plugins.flat_piker.js')))
