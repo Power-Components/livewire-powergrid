@@ -93,8 +93,8 @@ trait Filter
         /** @var string $endDate */
         $endDate   = data_get($data, 'selectedDates.1');
 
-        $startDateTime = Carbon::parse($startDate)->setTimezone(config('app.timezone'));
-        $endDateTime   = Carbon::parse($endDate)->setTimezone(config('app.timezone'));
+        $startDateTime = Carbon::parse($startDate)->setTimezone(strval(config('app.timezone')));
+        $endDateTime   = Carbon::parse($endDate)->setTimezone(strval(config('app.timezone')));
         if (!$data['enableTime']) {
             $startDateTime->startOfDay();
             $endDateTime->endOfDay();
