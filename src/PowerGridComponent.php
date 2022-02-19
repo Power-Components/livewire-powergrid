@@ -491,10 +491,10 @@ class PowerGridComponent extends Component
 
     /**
      * Check is columns changed after restoring from persistent storage
-     * @param $value
+     * @param array $value
      * @return void
      */
-    public function updatingColumns($value)
+    public function updatingColumns(array $value)
     {
         if (!$this->persistFiltersAndColumns) {
             return;
@@ -517,10 +517,10 @@ class PowerGridComponent extends Component
 
     /**
      * Call invalidate data when it needed after column changed after restore from persisten storage
-     * @param $value
+     * @param array $value
      * @return void
      */
-    public function updatedColumns($value)
+    public function updatedColumns(array $value)
     {
         if ($this->needToInvalidatePersistData) {
             $this->invalidatePersistData();
