@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-lg-row align-items-center justify-content-between">
+<div class="d-flex flex-wrap align-items-center justify-content-between">
 @if($recordCount === 'full')
     <small class="text-muted d-block me-2">
         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
@@ -26,7 +26,7 @@
 @endif
 @if ($paginator->hasPages())
     <nav>
-        <ul class="pagination mb-0 ms-1">
+        <ul class="pagination mb-0 ms-0">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
