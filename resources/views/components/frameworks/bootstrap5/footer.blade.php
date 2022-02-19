@@ -15,7 +15,7 @@
                             @endforeach
                         </select>
                     </label>
-                    <small class="ms-2">
+                    <small class="ms-2 text-muted">
                         {{ trans('livewire-powergrid::datatable.labels.results_per_page') }}
                     </small>
                 </div>
