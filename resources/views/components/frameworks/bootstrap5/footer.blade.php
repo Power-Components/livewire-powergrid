@@ -1,6 +1,6 @@
 @if(!is_array($data))
-    <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-center justify-content-md-between">
-        <div class="col-auto overflow-auto mt-1 mt-sm-0 bs5-per-page">
+    <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between">
+        <div class="col-auto overflow-auto mt-1 mt-sm-0 ms-5 ms-sm-0 bs5-per-page">
             @if($perPageInput)
                 <div class="d-flex flex-column flex-lg-row align-items-center">
                     <label class="w-auto">
