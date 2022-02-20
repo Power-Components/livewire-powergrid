@@ -1,4 +1,5 @@
 <div>
+    <div class="row">
     <div class="col-md-12">
         @include($theme->layout->header, [
                 'enabledFilters' => $enabledFilters
@@ -15,6 +16,6 @@
             @include($theme->footer->view, ['theme' => $theme])
         </div>
     </div>
+    </div>
 </div>
-
 
