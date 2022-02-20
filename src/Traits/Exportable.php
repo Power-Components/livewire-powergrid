@@ -107,7 +107,7 @@ trait Exportable
 
             return $column;
         }, $this->columns());
-        
+
         $exportable
             ->fileName($this->exportFileName)
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
