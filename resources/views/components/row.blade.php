@@ -38,7 +38,7 @@
         @elseif(count($column->toggleable) > 0)
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
-            <span class="{{ $theme->clickToCopy->spanClass }}">
+            <span class="@if($column->clickToCopy) {{ $theme->clickToCopy->spanClass }} @endif">
                     <div>
                         {!! $content !!}
                     </div>
