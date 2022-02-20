@@ -1,11 +1,11 @@
 <div>
-    <div class="col-md-12">
-        @include($theme->layout->header, [
-                'enabledFilters' => $enabledFilters
-        ])
+    <div>
+        <div class="col-md-12">
+            @include($theme->layout->header, [
+                    'enabledFilters' => $enabledFilters
+            ])
 
         @includeIf($theme->layout->message)
-
     </div>
     <div class="table-responsive overflow-visible col-md-12" style="margin: 10px 0 10px;">
         @include($table)
@@ -16,5 +16,4 @@
         </div>
     </div>
 </div>
-
 

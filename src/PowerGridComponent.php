@@ -228,6 +228,11 @@ class PowerGridComponent extends Component
 
             $results = $this->applySorting($filters);
 
+            if ($this->headerTotalColumn || $this->footerTotalColumn) {
+                $this->withoutPaginatedData = $results->values()
+                    ->map(fn ($item) => (array) $item);
+            }
+
             if ($results->count()) {
                 $this->filtered = $results->pluck('id')->toArray();
 

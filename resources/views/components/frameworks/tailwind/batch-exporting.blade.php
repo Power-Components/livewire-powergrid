@@ -2,7 +2,7 @@
 
     @if($batchExporting && !$batchFinished)
         <div wire:poll="updateExportProgress"
-             class="w-full my-3 px-4 rounded py-3 bg-gray-200 shadow-sm dark:bg-gray-500 text-center">
+             class="w-full my-3 px-4 rounded py-3 bg-gray-100 shadow-sm dark:bg-gray-500 text-center">
             <div class="dark:text-gray-300">{{ $batchProgress }}%</div>
             <div class="dark:text-gray-300">{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
         </div>
@@ -11,7 +11,7 @@
     @if($batchFinished)
         <div class="w-full my-3 dark:bg-gray-800">
             <div x-data={show:true} class="rounded-top">
-                <div class="px-4 py-3 rounded-md cursor-pointer bg-gray-200 shadow dark:bg-gray-500"
+                <div class="px-4 py-3 rounded-md cursor-pointer bg-gray-100 shadow dark:bg-gray-500"
                      @click="show=!show">
                     <div class="flex justify-between">
                         <button
