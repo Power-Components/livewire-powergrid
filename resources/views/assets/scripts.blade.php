@@ -28,10 +28,6 @@
     <script src="{{ config('livewire-powergrid.plugins.bootstrap-select.js') }}" crossorigin="anonymous"></script>
 @endif
 
-@foreach(config('livewire-powergrid.alpinejs_cdn_plugins') as $plugin)
-    <script src="{{ $plugin }}" defer></script>
-@endforeach
-
 @if(filled(config('livewire-powergrid.alpinejs_cdn')))
     <script src="{{ config('livewire-powergrid.alpinejs_cdn') }}" defer></script>
 @endif

@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Crypt, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -73,9 +73,7 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
-    public bool $persistFiltersAndColumns = false;
-
-    private bool $needToInvalidatePersistData = false;
+    public array $persist = [];
 
     /**
      * @return $this
@@ -122,9 +120,9 @@ class PowerGridComponent extends Component
      * default false
      * @return $this
      */
-    public function persistFiltersAndColumns(): PowerGridComponent
+    public function persist(array $tableItems): PowerGridComponent
     {
-        $this->persistFiltersAndColumns = true;
+        $this->persist = $tableItems;
 
         return $this;
     }
@@ -138,6 +136,8 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->renderFilter();
+
+        $this->restoreState();
     }
 
     /**
@@ -469,10 +469,60 @@ class PowerGridComponent extends Component
 
             return (object) $column;
         })->toArray();
+        
+        $this->persistState('columns');
 
         $this->fillData();
     }
 
+    private function persistState(string $tableItem):void
+    {
+        $state = [];
+        if (in_array('columns', $this->persist)) {
+            $state['columns'] = collect($this->columns)
+                ->map(fn ($column)         => (object) $column)
+                ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
+                ->toArray();
+        }
+        if (in_array('filters', $this->persist)) {
+            $state['filters']        = $this->filters;
+            $state['enabledFilters'] = $this->enabledFilters;
+        }
+
+        if (!empty($this->persist)) {
+            setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), '/');
+        }
+    }
+
+    private function restoreState():void
+    {
+        if (empty($this->persist)) {
+            return;
+        }
+        
+        $cookie = filter_input(INPUT_COOKIE, 'pg:' . $this->tableName);
+        if (is_null($cookie)) {
+            return;
+        }
+        
+        $state = (array) json_decode(strval($cookie), true);
+
+        if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
+            $this->columns = collect($this->columns)->map(function ($column) use ($state) {
+                if (array_key_exists($column->field, $state['columns'])) {
+                    data_set($column, 'hidden', $state['columns'][$column->field]);
+                }
+
+                return (object) $column;
+            })->toArray();
+        }
+
+        if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
+            $this->filters        = $state['filters'];
+            $this->enabledFilters = $state['enabledFilters'];
+        }
+    }
+    
     /**
      * @param string $fileName
      * @param array|string[] $type
@@ -489,47 +539,6 @@ class PowerGridComponent extends Component
         return $this;
     }
 
-    /**
-     * Check is columns changed after restoring from persistent storage
-     * @param array $value
-     * @return void
-     */
-    public function updatingColumns(array $value)
-    {
-        if (!$this->persistFiltersAndColumns) {
-            return;
-        }
-
-        if (collect($value)->map(fn ($column) => collect($column)->except('hidden'))
-            != collect($this->columns)->map(fn ($column) => collect($column)->except('hidden'))
-        ) {
-            $this->needToInvalidatePersistData = true;
-        }
-    }
-
-    /**
-     * Call invalidate data when it needed after column changed after restore from persisten storage
-     * @param array $value
-     * @return void
-     */
-    public function updatedColumns(array $value)
-    {
-        if ($this->needToInvalidatePersistData) {
-            $this->invalidatePersistData();
-        }
-    }
-
-    /**
-     * Invalidate data stored at persistent storage
-     * @return void
-     */
-    public function invalidatePersistData()
-    {
-        $this->columns        = $this->columns();
-        $this->filters        = [];
-        $this->enabledFilters = [];
-    }
-    
     /**
      * @return array
      */
