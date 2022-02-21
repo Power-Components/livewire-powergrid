@@ -35,7 +35,7 @@ export default (params) => ({
                     field: _this.dataField,
                     values: _this.filterKey,
                     label: _this.label,
-                    enableTime: options.enableTime
+                    enableTime: options.enableTime === undefined ? false : options.enableTime
                 });
             }
         }
