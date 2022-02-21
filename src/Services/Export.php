@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Services;
 use Exception;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Helpers\Helpers;
 
 class Export
 {
@@ -46,12 +47,21 @@ class Export
     {
         $header = collect();
 
-        $data   = $data->map(function ($row) use ($columns, $header) {
+        $helperClass = resolve(Helpers::class);
+
+        $data   = $data->transform(function ($row) use ($columns, $header, $helperClass) {
             $item = collect();
 
-            collect($columns)->each(function ($column) use ($row, $header, $item) {
+            collect($columns)->each(function ($column) use ($row, $header, $item, $helperClass) {
+                $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
+                $isExportable     = false;
+
+                if (isset($rules['hide']) || isset($rules['disable'])) {
+                    $isExportable   = true;
+                }
+
                 /** @var Column $column */
-                if (!$column->hidden || $column->visibleInExport) {
+                if ($column->visibleInExport || (!$column->hidden && is_null($column->visibleInExport)) && !$isExportable) {
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
                             $item->put($column->title, $value);
