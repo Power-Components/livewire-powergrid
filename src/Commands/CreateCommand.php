@@ -283,7 +283,7 @@ class CreateCommand extends Command
 
         return str_replace('{{ columns }}', $columns, $stub);
     }
-    
+
     /**
      * List files in Models folder
      *
@@ -293,9 +293,14 @@ class CreateCommand extends Command
     {
         $modelsFolder = app_path('Models');
 
-        return collect(File::allFiles($modelsFolder))
-            ->map(fn ($file) => $file->getFilenameWithoutExtension())
-            ->toArray();
+        $files = collect(File::allFiles($modelsFolder))
+            ->map(fn ($file) => $file->getFilenameWithoutExtension());
+
+        $files->map(function ($file) use (&$files) {
+            $files->push('App\\Models\\' . $file);
+        });
+
+        return  $files->toArray();
     }
 
     private function checkTailwindForms(): void

@@ -17,7 +17,6 @@
     @endphp
     <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
-        wire:key="{{ 'row-'.\Illuminate\Support\Str::kebab($column->field) }}"
     >
         @if($column->editable === true && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">
@@ -39,7 +38,7 @@
         @elseif(count($column->toggleable) > 0)
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
-            <span class="{{ $theme->clickToCopy->spanClass }}">
+            <span class="@if($column->clickToCopy) {{ $theme->clickToCopy->spanClass }} @endif">
                     <div>
                         {!! $content !!}
                     </div>

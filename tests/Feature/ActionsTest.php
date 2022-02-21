@@ -44,3 +44,23 @@ it('properly displays "deletedEvent" on delete button', function (string $compon
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
 })->with('themes');
+
+it('properly displays "deletedEvent" on delete button from emitTo', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        //page 1
+        ->set('perPage', 5)
+        ->assertSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
+        ->assertDontSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
+        ->assertPayloadNotSet('eventId', ['dishId' => 1])
+        ->call('deletedEvent', ['dishId' => 1])
+        ->assertPayloadSet('eventId', ['dishId' => 1])
+
+        //page 2
+        ->call('setPage', 2)
+        ->assertSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
+        ->assertDontSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
+        ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
+        ->call('deletedEvent', ['dishId' => 6])
+        ->assertPayloadSet('eventId', ['dishId' => 6]);
+})->with('themes');

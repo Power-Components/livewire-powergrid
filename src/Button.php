@@ -22,9 +22,13 @@ final class Button
 
     public string $target = '_blank';
 
+    public string $to = '';
+
+    public bool $singleParam = false;
+
     /**
      *
-     * @var array<int, string> $param
+     * @var array<int|string, string> $param
      */
     public array $param = [];
 
@@ -58,19 +62,22 @@ final class Button
 
     /**
      * @param string $route
-     * @param array<int, string> $param
+     * @param array<int|string, string> $param
+     * @param boolean $singleParam parameter is single parameter
+
      * @return $this
      */
-    public function route(string $route, array $param): Button
+    public function route(string $route, array $param, bool $singleParam = false): Button
     {
-        $this->route = $route;
-        $this->param = $param;
+        $this->route       = $route;
+        $this->param       = $param;
+        $this->singleParam = $singleParam;
 
         return $this;
     }
 
     /**
-     * Class string in view: class="bla bla bla"
+     * Class string in view: class="foo"
      * @return $this
      */
     public function class(string $class_attr): Button
@@ -95,15 +102,17 @@ final class Button
      * openModal
      * @param string $component modal component
      * @param array<int, string> $param modal parameters
+     * @param boolean $singleParam parameter is single parameter
      * @return $this
      */
-    public function openModal(string $component, array $param): Button
+    public function openModal(string $component, array $param, bool $singleParam = false): Button
     {
-        $this->view   = $component;
-        $this->param  = $param;
-        $this->method = 'get';
-        $this->route  = '';
-        $this->event  = '';
+        $this->view        = $component;
+        $this->param       = $param;
+        $this->singleParam = $singleParam;
+        $this->method      = 'get';
+        $this->route       = '';
+        $this->event       = '';
 
         return $this;
     }
@@ -112,13 +121,34 @@ final class Button
      * emit
      * @param string $event event name
      * @param array<int, string> $param parameters
+     * @param boolean $singleParam parameter is single parameter
      * @return $this
      */
-    public function emit(string $event, array $param): Button
+    public function emit(string $event, array $param, bool $singleParam = false): Button
     {
-        $this->event   = $event;
-        $this->param   = $param;
-        $this->route   = '';
+        $this->event       = $event;
+        $this->param       = $param;
+        $this->singleParam = $singleParam;
+        $this->route       = '';
+
+        return $this;
+    }
+
+    /**
+     * emitTo
+     * @param string $to component
+     * @param string $event event name
+     * @param array<int, string> $param parameters
+     * @param boolean $singleParam parameter is single parameter
+     * @return $this
+     */
+    public function emitTo(string $to, string $event, array $param, bool $singleParam = false): Button
+    {
+        $this->to          = $to;
+        $this->event       = $event;
+        $this->param       = $param;
+        $this->singleParam = $singleParam;
+        $this->route       = '';
 
         return $this;
     }

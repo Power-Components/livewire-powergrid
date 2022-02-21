@@ -8,10 +8,20 @@
         @foreach($actions as $action)
             <div class="sm:mr-2 mb-2 w-auto">
                 @php
-                    $parameters = $helperClass->makeActionParameters($action->param);
+                    if($action->singleParam) {
+                        $parameters = $helperClass->makeActionParameter($action->param);
+                    } else {
+                        $parameters = $helperClass->makeActionParameters($action->param);
+                    }
                 @endphp
-                @if($action->event !== '')
+                @if($action->event !== '' && $action->to === '')
                     <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
+                       target="{{ $action->target }}"
+                       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                        {!! $action->caption !!}
+                    </a>
+                @elseif($action->event !== '' && $action->to !== '')
+                    <a wire:click='$emitTo("{{ $action->to }}", "{{ $action->event }}", @json($parameters))'
                        target="{{ $action->target }}"
                        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                         {!! $action->caption !!}

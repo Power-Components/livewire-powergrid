@@ -40,6 +40,21 @@ class RuleActions
     }
 
     /**
+     * Sets the button's eventTo to be emitted.
+     */
+    public function emitTo(string $to = '', string $event = '', array $params = []): RuleActions
+    {
+        $this->rule['redirect'] = [];
+        $this->rule['emitTo']   = [
+            'to'     => $to,
+            'event'  => $event,
+            'params' => $params,
+        ];
+
+        return $this;
+    }
+
+    /**
      * Sets the button's given attribute to the given value.
      */
     public function setAttribute(string $attribute = null, string $value = null): RuleActions

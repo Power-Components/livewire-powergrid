@@ -1,6 +1,7 @@
 <div align="center">
 	<p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
     <p align="center">
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A58.0&color=0078BE&logo=laravel&style=flat-square"></a>
         <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
         <a href="https://github.com/Power-Components/livewire-powergrid/actions">
             <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" />
@@ -66,7 +67,9 @@ With PowerGrid you get right out of the box:
 
 - **Action Buttons**
 
-- **Action Rules for disable, hide and modify Action Buttons, Checkboxes and rows**
+- **Bulk Actions**
+
+- **Action Rules: Conditionally disable, hide and modify Action Buttons, Checkboxes and rows**
 
 - **Toggle button**
 
@@ -76,19 +79,19 @@ With PowerGrid you get right out of the box:
 
 - **Link inside a table cell**
 
-- **Livewire Modal Integration ([Livewire UI](https://github.com/livewire-ui/modal))**
+- **Livewire Modal Integration ([Wire Elements Modal](https://github.com/wire-elements/modal))**
 
 - **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
 
 - **Queue Export for large tables**
 
-- **Works with Bootstrap 5 or Tailwind CSS 2**
+- **Works with Bootstrap 5 or Tailwind CSS 2x - 3x**
 
 - **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
 
 <br/>
 
- ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/doc/img/example.gif?raw=true)
+ ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/docs/_media/example.gif?raw=true)
 
 ------
 
@@ -97,9 +100,9 @@ With PowerGrid you get right out of the box:
 ## 1. Requirements
 
 - PHP 7.4.1+
-- [Laravel 8x](https://laravel.com/docs/8.x/installation)
+- [Laravel 8x+](https://laravel.com/docs/9.x/installation)
 - [Livewire 2x](https://laravel-livewire.com)
-- [Tailwind](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+- [Tailwind 2x or 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
@@ -121,9 +124,9 @@ Verify if your bug/question or feature request has been previously submitted.
 
 ## 4. How to contribute
 
-🇺🇸 [How to contribute to PowerGrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/blob/main/README-EN.md) - Translation by [@DanSysAnalyst](https://github.com/DanSysAnalyst)
+We appreciate your interest in contributing with PowerGrid.
 
-🇧🇷 [Guia para contribuir com o Powergrid](https://github.com/Power-Components/como-contribuir-com-o-powergrid/) - by [Claudio Pereira](https://github.com/cpereiraweb)
+Please read the [Contributing Guide](https://github.com/Power-Components/livewire-powergrid/blob/main/CONTRIBUTING.md).
 
 <br/>
 

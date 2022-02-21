@@ -4,12 +4,13 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\{Button, Rule1};
+use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
 {
     protected array $actions = [
         'emit',
+        'emitTo',
         'setAttribute',
         'disable',
         'hide',
@@ -37,6 +38,26 @@ class Helpers
         }
 
         return $parameters;
+    }
+
+    /**
+     * @param array $params
+     * @param Model|\stdClass|null $row
+     * @return mixed
+     */
+    public function makeActionParameter(array $params = [], $row = null)
+    {
+        $parameters = [];
+
+        foreach ($params as $param => $value) {
+            if ($row && filled($row->{$value})) {
+                $parameters[$param] = $row->{$value};
+            } else {
+                $parameters[$param] = $value;
+            }
+        }
+
+        return $parameters[0];
     }
 
     /**
