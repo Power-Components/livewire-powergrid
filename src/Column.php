@@ -251,10 +251,10 @@ final class Column
     *
     * @return Column
     */
-    public function hidden(bool $isHidden = true): Column
+    public function hidden(bool $isHidden = true, bool $isForceHidden = true): Column
     {
         $this->hidden      = $isHidden;
-        $this->forceHidden = $isHidden;
+        $this->forceHidden = $isForceHidden;
 
         return $this;
     }
