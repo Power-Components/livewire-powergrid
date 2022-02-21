@@ -27,18 +27,26 @@
             style="{{ $column->hidden === true ? 'display:none': '' }}; {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
             @if ($column->count['header'])
                 <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
-                    ->reject(function($data) use($field) { return empty($data->$field); })
+                    ->reject(function($data) use($field) { return empty($data->$field ?? $data[$field]); })
                     ->count($field) }}
                     </span>
                 <br>
             @endif
             @if ($column->sum['header'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->sum['label'] }}: {{ $withoutPaginatedData->collect()->sum($field) }}</span>
+                <span>{{ $column->sum['label'] }}: {{ round($withoutPaginatedData->collect()->sum($field), $column->sum['rounded']) }}</span>
                 <br>
             @endif
             @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))
                 <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
                 <br>
+            @endif
+            @if ($column->min['header'] && is_numeric($withoutPaginatedData[0][$field]))
+                    <span>{{ $column->min['label'] }}: {{ round($withoutPaginatedData->collect()->min($field), $column->min['rounded']) }}</span>
+                    <br>
+            @endif
+            @if ($column->max['header'] && is_numeric($withoutPaginatedData[0][$field]))
+                    <span>{{ $column->max['label'] }}: {{ round($withoutPaginatedData->collect()->max($field), $column->max['rounded']) }}</span>
+                    <br>
             @endif
         </td>
     @endforeach

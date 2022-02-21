@@ -58,8 +58,10 @@ class ExportToXLS extends Export implements ExportInterface
 
         /** @var array<string> $row */
         foreach ($data['rows'] as $row) {
-            $row = WriterEntityFactory::createRowFromArray($row);
-            $writer->addRow($row);
+            if (count($row)) {
+                $row = WriterEntityFactory::createRowFromArray($row);
+                $writer->addRow($row);
+            }
         }
 
         $writer->close();
