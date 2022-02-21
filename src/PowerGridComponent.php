@@ -490,7 +490,9 @@ class PowerGridComponent extends Component
         }
 
         if (!empty($this->persist)) {
-            setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), '/');
+            $url  = parse_url(strval(filter_input(INPUT_SERVER, 'HTTP_REFERER')));
+            $path = $url && array_key_exists('path', $url) ? $url['path'] : '/';
+            setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), $path);
         }
     }
 
