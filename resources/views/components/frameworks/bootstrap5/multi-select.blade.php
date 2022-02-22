@@ -22,6 +22,7 @@
             @endif
             <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
                     multiple
+                    wire:model="filters.multi_select.{{ $multiSelect['data_field'] }}.values"
                     x-ref="select_picker_{{ $multiSelect['data_field'] }}"
                     class="power_grid_select form-control shadow-none active"
                     data-live-search="{{ data_get($multiSelect, 'live-search') }}">

@@ -28,6 +28,8 @@ trait Filter
         unset($this->filters['input_text_options'][$field]);
 
         $this->filters = [];
+
+        $this->persistState('filters');
     }
 
     public static function getInputTextOptions(): array
@@ -88,9 +90,13 @@ trait Filter
         data_set($data, 'selectedDates.0', Carbon::parse($startDate)->setTime(0, 0));
         data_set($data, 'selectedDates.1', Carbon::parse($endDate)->setTime(23, 59, 59));
 
+        $this->filters['input_date_picker'][$data['field']] = $data['dateStr'];
+        
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
 
+        $this->persistState('filters');
+        
         if (count($input) === 3) {
             $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
 
@@ -122,6 +128,8 @@ trait Filter
         if (count($data['values']) === 0) {
             $this->clearFilter($data['id']);
         }
+
+        $this->persistState('filters');
     }
 
     public function filterSelect(string $field, string $label): void
@@ -134,6 +142,8 @@ trait Filter
         if (data_get($this->filters, "select.$field") === '') {
             $this->clearFilter($field);
         }
+
+        $this->persistState('filters');
     }
 
     public function filterNumberStart(string $field, string $value, string $thousands, string $decimal, string $label): void
@@ -150,6 +160,8 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
+        
+        $this->persistState('filters');
     }
 
     public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal, string $label): void
@@ -166,6 +178,8 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
+
+        $this->persistState('filters');
     }
 
     public function filterInputText(string $field, string $value, string $label): void
@@ -178,6 +192,8 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
+
+        $this->persistState('filters');
     }
 
     public function filterBoolean(string $field, string $value, string $label): void
@@ -192,6 +208,8 @@ trait Filter
         if ($value == 'all') {
             $this->clearFilter($field);
         }
+
+        $this->persistState('filters');
     }
 
     public function filterInputTextOptions(string $field, string $value, string $label): void
@@ -213,5 +231,7 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
+
+        $this->persistState('filters');
     }
 }
