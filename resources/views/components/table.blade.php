@@ -34,6 +34,7 @@
             :actions="$actions"
             :columns="$columns"
             :theme="$theme"
+            :filters="$filters"
             :enabledFilters="$enabledFilters"
             :inputTextOptions="$inputTextOptions"
             :tableName="$tableName"
