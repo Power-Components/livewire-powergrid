@@ -7,6 +7,7 @@
     'enabledFilters' => null,
     'inputTextOptions' => [],
     'tableName' => null,
+    'filters' => [],
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
@@ -46,6 +47,7 @@
                                 @includeIf($theme->filterMultiSelect->view, [
                                         'inline' => true,
                                         'column' => $column,
+                                        'selected' => $filters['multi_select'] ?? [],
                                         'tableName' => $tableName,
                                 ])
                             @endif

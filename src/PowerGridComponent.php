@@ -474,7 +474,7 @@ class PowerGridComponent extends Component
 
             return (object) $column;
         })->toArray();
-        
+
         $this->persistState('columns');
 
         $this->fillData();
@@ -506,12 +506,12 @@ class PowerGridComponent extends Component
         if (empty($this->persist)) {
             return;
         }
-        
+
         $cookie = filter_input(INPUT_COOKIE, 'pg:' . $this->tableName);
         if (is_null($cookie)) {
             return;
         }
-        
+
         $state = (array) json_decode(strval($cookie), true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
@@ -529,7 +529,7 @@ class PowerGridComponent extends Component
             $this->enabledFilters = $state['enabledFilters'];
         }
     }
-    
+
     /**
      * @param string $fileName
      * @param array|string[] $type
