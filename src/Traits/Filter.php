@@ -19,16 +19,51 @@ trait Filter
 
     public function clearFilter(string $field = ''): void
     {
+        if (str_contains($field, '.')) {
+            list($table, $column) = explode('.', $field);
+            unset($this->filters['input_text'][$table][$column]);
+            unset($this->filters['input_option_text'][$table][$column]);
+            unset($this->filters['number_start'][$table][$column]);
+            unset($this->filters['number_end'][$table][$column]);
+            unset($this->filters['boolean'][$table][$column]);
+            unset($this->filters['input_date_picker'][$table][$column]);
+            unset($this->filters['select'][$table][$column]);
+            unset($this->filters['multi_select'][$table][$column]);
+            if (empty($this->filters['input_text'][$table])) {
+                unset($this->filters['input_text'][$table]);
+            }
+            if (empty($this->filters['input_option_text'][$table])) {
+                unset($this->filters['input_option_text'][$table]);
+            }
+            if (empty($this->filters['number_start'][$table])) {
+                unset($this->filters['number_start'][$table]);
+            }
+            if (empty($this->filters['number_end'][$table])) {
+                unset($this->filters['number_end'][$table]);
+            }
+            if (empty($this->filters['boolean'][$table])) {
+                unset($this->filters['boolean'][$table]);
+            }
+            if (empty($this->filters['input_date_picker'][$table])) {
+                unset($this->filters['input_date_picker'][$table]);
+            }
+            if (empty($this->filters['select'][$table])) {
+                unset($this->filters['select'][$table]);
+            }
+            if (empty($this->filters['multi_select'][$table])) {
+                unset($this->filters['multi_select'][$table]);
+            }
+        } else {
+            unset($this->filters['input_text'][$field]);
+            unset($this->filters['select'][$field]);
+        }
+
         unset($this->enabledFilters[$field]);
         unset($this->filters['number'][$field]);
-        unset($this->filters['number_start'][$field]);
-        unset($this->filters['number_end'][$field]);
-        unset($this->filters['input_text'][$field]);
         unset($this->filters['boolean'][$field]);
         unset($this->filters['input_text_options'][$field]);
         unset($this->filters['input_date_picker'][$field]);
         unset($this->filters['date_picker'][$field]);
-        unset($this->filters['select'][$field]);
         unset($this->filters['multi_select'][$field]);
     }
 
