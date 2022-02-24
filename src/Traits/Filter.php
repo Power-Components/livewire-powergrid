@@ -59,6 +59,8 @@ trait Filter
         }
 
         unset($this->enabledFilters[$field]);
+        unset($this->filters['number_start'][$field]);
+        unset($this->filters['number_end'][$field]);
         unset($this->filters['number'][$field]);
         unset($this->filters['boolean'][$field]);
         unset($this->filters['input_text_options'][$field]);
@@ -72,7 +74,7 @@ trait Filter
         $this->enabledFilters = [];
         $this->filters        = [];
     }
-    
+
     public static function getInputTextOptions(): array
     {
         return [
