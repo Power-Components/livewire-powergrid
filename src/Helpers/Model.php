@@ -108,12 +108,18 @@ class Model implements ModelFilterInterface
     }
 
     /**
-     * @param string|array $value
+     * @param array $value
      */
-    public function filterMultiSelect(Builder $query, string $field, $value): void
+    public function filterMultiSelect(Builder $query, string $field, array $value): void
     {
         $empty = false;
 
+        if (!(array_key_exists('id', $value) && $value['id'] == $field)) {
+            $field       = $field . '.' . array_key_first($value);
+            $value       = $value[array_key_first($value)];
+            $value['id'] = $field;
+        }
+        
         /** @var array $values */
         $values = collect($value)->get('values');
 

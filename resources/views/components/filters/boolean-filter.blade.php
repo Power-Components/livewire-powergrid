@@ -19,8 +19,7 @@
                         style="{{ data_get($column, 'headerStyle') }}"
                         class="power_grid {{ $theme->inputClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
                         wire:input.lazy="filterBoolean('{{ $booleanFilter['dataField'] }}', $event.target.value, '{{ $booleanFilter['label'] }}')"
-                        wire:model="filters.boolean.{{ $booleanFilter['dataField'] }}"
-                >
+                        wire:model="filters.boolean.{{ $booleanFilter['dataField'] }}">
                     <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
                     <option value="true">{{ data_get($booleanFilter, 'true_label') }}</option>
                     <option value="false">{{ data_get($booleanFilter, 'false_label') }}</option>

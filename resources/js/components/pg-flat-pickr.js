@@ -35,7 +35,8 @@ export default (params) => ({
                     field: _this.dataField,
                     values: _this.filterKey,
                     label: _this.label,
-                    dateStr: dateStr
+                    dateStr: dateStr,
+                    enableTime: options.enableTime === undefined ? false : options.enableTime
                 });
             }
         }

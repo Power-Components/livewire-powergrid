@@ -19,15 +19,62 @@ trait Filter
 
     public function clearFilter(string $field = ''): void
     {
-        $this->search = '';
+        if (str_contains($field, '.')) {
+            list($table, $column) = explode('.', $field);
+            unset($this->filters['input_text'][$table][$column]);
+            unset($this->filters['input_option_text'][$table][$column]);
+            unset($this->filters['number_start'][$table][$column]);
+            unset($this->filters['number_end'][$table][$column]);
+            unset($this->filters['boolean'][$table][$column]);
+            unset($this->filters['input_date_picker'][$table][$column]);
+            unset($this->filters['select'][$table][$column]);
+            unset($this->filters['multi_select'][$table][$column]);
+            if (empty($this->filters['input_text'][$table])) {
+                unset($this->filters['input_text'][$table]);
+            }
+            if (empty($this->filters['input_option_text'][$table])) {
+                unset($this->filters['input_option_text'][$table]);
+            }
+            if (empty($this->filters['number_start'][$table])) {
+                unset($this->filters['number_start'][$table]);
+            }
+            if (empty($this->filters['number_end'][$table])) {
+                unset($this->filters['number_end'][$table]);
+            }
+            if (empty($this->filters['boolean'][$table])) {
+                unset($this->filters['boolean'][$table]);
+            }
+            if (empty($this->filters['input_date_picker'][$table])) {
+                unset($this->filters['input_date_picker'][$table]);
+            }
+            if (empty($this->filters['select'][$table])) {
+                unset($this->filters['select'][$table]);
+            }
+            if (empty($this->filters['multi_select'][$table])) {
+                unset($this->filters['multi_select'][$table]);
+            }
+        } else {
+            unset($this->filters['input_text'][$field]);
+            unset($this->filters['select'][$field]);
+        }
 
         unset($this->enabledFilters[$field]);
+        unset($this->filters['number_start'][$field]);
+        unset($this->filters['number_end'][$field]);
         unset($this->filters['number'][$field]);
-        unset($this->filters['input_text'][$field]);
         unset($this->filters['boolean'][$field]);
         unset($this->filters['input_text_options'][$field]);
+        unset($this->filters['input_date_picker'][$field]);
+        unset($this->filters['date_picker'][$field]);
+        unset($this->filters['multi_select'][$field]);
 
-        $this->filters = [];
+        $this->persistState('filters');
+    }
+
+    public function clearAllFilters(): void
+    {
+        $this->enabledFilters = [];
+        $this->filters        = [];
 
         $this->persistState('filters');
     }
@@ -87,16 +134,21 @@ trait Filter
         /** @var string $endDate */
         $endDate   = data_get($data, 'selectedDates.1');
 
-        data_set($data, 'selectedDates.0', Carbon::parse($startDate)->setTime(0, 0));
-        data_set($data, 'selectedDates.1', Carbon::parse($endDate)->setTime(23, 59, 59));
+        $startDateTime = Carbon::parse($startDate)->setTimezone(strval(config('app.timezone')));
+        $endDateTime   = Carbon::parse($endDate)->setTimezone(strval(config('app.timezone')));
+        if (!$data['enableTime']) {
+            $startDateTime->startOfDay();
+            $endDateTime->endOfDay();
+        }
 
-        $this->filters['input_date_picker'][$data['field']] = $data['dateStr'];
-        
+        data_set($data, 'selectedDates.0', $startDateTime);
+        data_set($data, 'selectedDates.1', $endDateTime);
+
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
 
         $this->persistState('filters');
-        
+
         if (count($input) === 3) {
             $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
 
@@ -160,7 +212,7 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
-        
+
         $this->persistState('filters');
     }
 
