@@ -8,7 +8,7 @@ it('properly filters by "name is"', function (string $component, object $params)
         ->set('filters', filterInputText('Francesinha', 'is', $params->field))
         ->assertSee('Francesinha')
         ->assertDontSee('Francesinha vegana')
-        ->call('clearFilter', 'name')
+        ->call('clearFilter', $params->field)
         ->assertSee('Francesinha vegana');
 })->with('themes with name field');
 
@@ -26,7 +26,7 @@ it('properly filters by "name is not"', function (string $component, object $par
         ->set('filters', filterInputText('Francesinha vegana', 'is_not', $params->field))
         ->assertSee('Francesinha')
         ->assertDontSee('Francesinha vegana')
-        ->call('clearFilter', 'name')
+        ->call('clearFilter', $params->field)
         ->assertSee('Francesinha vegana');
 })->with('themes with name field');
 
@@ -36,8 +36,7 @@ it('properly filters by "name is not" using nonexistent record', function (strin
         ->set('filters', filterInputText('Nonexistent dish', 'is_not', $params->field))
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana')
-        ->call('clearFilter', 'name')
-        ->assertViewHas('filters', []);
+        ->call('clearFilter', $params->field);
 })->with('themes with name field');
 
 it('properly filters by "name contains"', function (string $component, object $params) {
