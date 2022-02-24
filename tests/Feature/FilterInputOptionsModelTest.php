@@ -10,7 +10,7 @@ it('properly filters by "name is"', function (string $component, object $params)
         ->assertDontSee('Francesinha vegana')
         ->call('clearFilter', $params->field)
         ->assertSee('Francesinha vegana');
-})->with('themes with name field')->only();
+})->with('themes with name field');
 
 it('properly filters by "name is" using nonexistent record', function (string $component, object $params) {
     livewire($component)
