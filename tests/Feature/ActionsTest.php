@@ -14,7 +14,7 @@ it('updates data', function (string $component, object $params) {
 })->with('themes');
 
 it('properly displays "openModal" on edit button', function (string $component, object $params) {
-    livewire($component)
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('perPage', 6)
         ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
@@ -23,10 +23,10 @@ it('properly displays "openModal" on edit button', function (string $component, 
         ->call('setPage', 2)
         ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
         ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})');
-})->with('themes');
+})->with('action');
 
 it('properly displays "deletedEvent" on delete button', function (string $component, object $params) {
-    livewire($component)
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('perPage', 5)
@@ -43,10 +43,10 @@ it('properly displays "deletedEvent" on delete button', function (string $compon
         ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
-})->with('themes');
+})->with('action');
 
 it('properly displays "deletedEvent" on delete button from emitTo', function (string $component, object $params) {
-    livewire($component)
+    livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('perPage', 5)
@@ -63,4 +63,4 @@ it('properly displays "deletedEvent" on delete button from emitTo', function (st
         ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
-})->with('themes');
+})->with('action');

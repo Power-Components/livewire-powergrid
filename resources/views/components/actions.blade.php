@@ -7,7 +7,7 @@
 <div>
     @if(isset($actions) && count($actions) && $row !== '')
         @foreach($actions as $key => $action)
-            <td wire:key="action-{{ $key }}" class="pg-actions {{ $theme->table->tdBodyClass }}"
+            <td class="pg-actions {{ $theme->table->tdBodyClass }}"
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
                     $class            = filled($action->class) ? $action->class : $theme->actions->headerBtnClass;
@@ -16,6 +16,7 @@
                     } else {
                         $actionParameters = $helperClass->makeActionParameters($action->param, $row);
                     }
+
                     $rules            = $helperClass->makeActionRules($action, $row);
 
                     $ruleRedirect     = data_get($rules, 'redirect');
@@ -26,52 +27,64 @@
                     $ruleEmitTo       = data_get($rules, 'emitTo');
                     $ruleCaption      = data_get($rules, 'caption');
 
-                    if (filled($ruleEmit) ) {
+                    $action->emit     = false;
+                    $action->emitTo   = false;
+
+                    if(isset($ruleSetAttribute['attribute'])) {
+                         $class = $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class);
+                    }
+
+                    if (filled($ruleEmit)) {
                         $event['event']  = $ruleEmit['event'];
                         $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmit, 'params', []), $row);
+                        $action->emit = true;
                     } else if (filled($ruleEmitTo) ) {
                         $event['to']     = $ruleEmitTo['to'] ?? '';
                         $event['event']  = $ruleEmitTo['event'];
                         $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmitTo, 'params', []), $row);
+                        $action->emitTo = true;
                     } else {
-                        $event['event']  = $action->event;
-                        $event['to']     = $action->to;
-                        $event['params'] = $actionParameters;
-                    }
+
+                        if ($action->action === 'emit') {
+                            $action->emit    = true;
+                            $event['event']  = $action->event;
+                            $event['params'] = $actionParameters;
+                        }
+                        if ($action->action === 'emitTo') {
+                            $action->emitTo = true;
+                            $event['to']     = $action->to;
+                            $event['params'] = $actionParameters;
+                        }
+                     }
                 @endphp
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
-                    @if((filled($action->event) || filled($action->view)) && is_null($ruleRedirect))
-                        <button @if(isset($event['event']) && blank($action->view) && blank($event['to'])) wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                    @if((filled($action->event) || isset($event['event']) || filled($action->view)) && is_null($ruleRedirect))
+                        <button
+                            @if($action->emit)
+                            wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                             @endif
-                            @if(isset($event['event']) && blank($action->view) && filled($event['to'])) wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
+                            @if($action->emitTo)
+                            wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
                             @endif
-                            @if($action->view) wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
+                            @if($action->view)
+                            wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                             @endif
-                            @if($ruleDisabled) disabled @endif
 
-                            @if(isset($ruleSetAttribute['attribute']))
-                                {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
-                            @else
-                                 class="{{ $class }}"
-                            @endif
+                            @if($ruleDisabled) disabled @endif
+                            class="{{ $class }}"
                         >
                             {!! $ruleCaption ?? $action->caption !!}
                         </button>
                     @endif
 
                     @if(filled($ruleRedirect))
-                        <a href="{{ $ruleRedirect['url'] }}"
-                           target="{{ $ruleRedirect['target'] }}"
-                           @if($ruleDisabled) disabled @endif
-
-                           @if(isset($ruleSetAttribute['attribute']))
-                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
+                        <a @if($ruleDisabled) disabled
                            @else
-                           class="{{ $class }}"
+                           href="{{ $ruleRedirect['url'] }}" target="{{ $ruleRedirect['target'] }}"
                            @endif
-                        >
+                           class="{{ $class }}">
                             {!! $ruleCaption ?? $action->caption !!}
                         </a>
                     @endif
@@ -84,23 +97,14 @@
                                 @method($action->method)
                                 @csrf
                                 <button type="submit"
-                                @if($ruleDisabled) disabled @endif
-                                @if(isset($ruleSetAttribute['attribute']))
-                                    {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
-                                    @else
-                                    class="{{ $class }}"
-                                    @endif>
+                                        @if($ruleDisabled) disabled @endif class="{{ $class }}">
                                     {!! $ruleCaption ?? $action->caption !!}
                                 </button>
                             </form>
                         @else
                             <a href="{{ route($action->route, $actionParameters) }}"
                                target="{{ $action->target }}"
-                               @if(isset($ruleSetAttribute['attribute']))
-                               {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($class) }}
-                               @else
                                class="{{ $class }}"
-                               @endif
                             >
                                 {!! $ruleCaption ?? $action->caption !!}
                             </a>
