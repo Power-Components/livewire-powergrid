@@ -152,7 +152,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->withSum('Sum Price', false, true)
-                ->withCount('Count', false, true)
+                ->withCount('Count Price', false, true)
                 ->withAvg('Avg Price', false, true)
                 ->editOnClick($canEdit)
                 ->makeInputRange('price', '.', ','),
@@ -185,33 +185,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->title(__('Data de produção'))
                 ->field('produced_at_formatted')
                 ->makeInputDatePicker('produced_at'),
-        ];
-    }
-
-    public function actions(): array
-    {
-        return [
-            Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
-
-            Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
-
-            Button::add('destroy-for-emit-to')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
         ];
     }
 

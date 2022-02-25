@@ -1,11 +1,15 @@
 <?php
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     PowerGridComponent,
+    Tests\DishesActionRulesTable,
+    Tests\DishesActionTable,
     Tests\DishesCollectionTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin};
+    Tests\DishesTableWithJoin
+};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -54,10 +58,24 @@ function filterInputText(string $text, string $type, $field = 'name'): array
 }
 
 dataset('themes', [
-    [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('action', [
+    'tailwind'       => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('rules', [
+    'tailwind'       => [DishesActionRulesTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesActionRulesTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 
 dataset('themes with name field', [

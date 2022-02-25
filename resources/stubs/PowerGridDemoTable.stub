@@ -28,10 +28,10 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
-    
+
     //Messages informing success/error data is updated.
     public bool $showUpdateMessages = true;
-    
+
      // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
 
@@ -248,7 +248,7 @@ final class PowerGridDemoTable extends PowerGridComponent
        return [
            Button::add('info')
                ->caption(__('Click me'))
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
+               ->class('bg-indigo-500 hover:bg-indigo-600 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
                ->emit('rowActionEvent', ['id' => 'id']),
         ];
     }
@@ -288,7 +288,7 @@ final class PowerGridDemoTable extends PowerGridComponent
             //Change "background" for row with user ID 4
             Rule::rows()
                 ->when(fn($user) => $user->id === 4)
-                ->setAttribute('class', 'bg-blue-200'),
+                ->setAttribute('class', 'bg-blue-200 hover:bg-blue-300'),
         ];
     }
 

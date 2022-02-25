@@ -154,7 +154,7 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->withSum('Sum Price', false, true)
-                ->withCount('Count', false, true)
+                ->withCount('Count Price', false, true)
                 ->withAvg('Avg Price', false, true)
                 ->editOnClick($canEdit, 'price')
                 ->makeInputRange('price', '.', ','),
@@ -196,56 +196,11 @@ class DishesTable extends PowerGridComponent
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
 
-            Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
-
             Button::add('destroy')
                 ->caption(__('Delete'))
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
-
-            Button::add('destroy-for-emit-to')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
-        ];
-    }
-
-    public function actionRules(): array
-    {
-        return [
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 2)
-                ->hide(),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
-                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
-
-            // Set a row red background for when dish is out of stock
-            Rule::rows()
-                ->when(fn ($dish) => (bool) $dish->in_stock === false)
-                ->setAttribute('class', 'bg-red-100 text-red-800'),
-
-            Rule::rows()
-                ->when(fn ($dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-blue-100'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 5)
-                ->emit('toggleEvent', ['dishId' => 'id']),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 9)
-                ->disable(),
         ];
     }
 

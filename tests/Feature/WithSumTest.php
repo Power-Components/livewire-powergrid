@@ -36,7 +36,7 @@ it('calculate "count" on price field', function (string $component, object $para
         ->assertSeeHtml('Count Price: 1')
         ->set('search', 'Dish F')
         ->assertSeeHtml('Count Price: 1');
-})->with('themes with name field')->skip();
+})->with('themes with name field');
 
 it('calculate "avg" on price field', function (string $component, object $params) {
     livewire($component)
