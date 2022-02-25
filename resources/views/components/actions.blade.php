@@ -45,15 +45,15 @@
                         $action->emitTo = true;
                     } else {
 
-                        if ($action->action === 'emit') {
+                        if (filled($action->event)) {
                             $action->emit    = true;
                             $event['event']  = $action->event;
                             $event['params'] = $actionParameters;
-                        }
-                        if ($action->action === 'emitTo') {
-                            $action->emitTo = true;
-                            $event['to']     = $action->to;
-                            $event['params'] = $actionParameters;
+
+                            if (filled($action->to)) {
+                                $action->emitTo  = true;
+                                $event['to']     = $action->to;
+                            }
                         }
                      }
                 @endphp
