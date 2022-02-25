@@ -516,7 +516,7 @@ class PowerGridComponent extends Component
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
             $this->columns = collect($this->columns)->map(function ($column) use ($state) {
-                if (array_key_exists($column->field, $state['columns'])) {
+                if (!$column->forceHidden && array_key_exists($column->field, $state['columns'])) {
                     data_set($column, 'hidden', $state['columns'][$column->field]);
                 }
 
