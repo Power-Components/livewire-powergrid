@@ -21,6 +21,16 @@ trait Filter
     {
         if (str_contains($field, '.')) {
             list($table, $column) = explode('.', $field);
+
+            unset($this->filters['input_text'][$field]);
+            unset($this->filters['input_option_text'][$field]);
+            unset($this->filters['number_start'][$field]);
+            unset($this->filters['number_end'][$field]);
+            unset($this->filters['boolean'][$field]);
+            unset($this->filters['input_date_picker'][$field]);
+            unset($this->filters['select'][$field]);
+            unset($this->filters['multi_select'][$field]);
+
             unset($this->filters['input_text'][$table][$column]);
             unset($this->filters['input_option_text'][$table][$column]);
             unset($this->filters['number_start'][$table][$column]);
