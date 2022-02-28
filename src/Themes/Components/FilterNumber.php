@@ -6,13 +6,17 @@ class FilterNumber
 {
     public string $inputClass = '';
 
+    public string $inputStyle = '';
+
     public string $divClassNotInline = '';
 
     public string $divClassInline = '';
 
-    public function input(string $attrClass = ''): FilterNumber
+    public function input(string $attrClass = '', string $attrStyle = ''): FilterNumber
     {
         $this->inputClass = $attrClass;
+
+        $this->inputStyle = $attrStyle;
 
         return $this;
     }

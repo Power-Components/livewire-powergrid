@@ -6,7 +6,8 @@
     'inputText' => null,
     'inputTextOptions' => [],
 ])
-<div wire:ignore.self>
+<div wire:ignore.self
+    style="min-width: 9.5rem">
     @php
         $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
     @endphp
