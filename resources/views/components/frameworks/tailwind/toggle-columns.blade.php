@@ -3,7 +3,7 @@
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
          @click.away="open = false">
         <button @click.prevent="open = ! open"
-                class="block bg-gray-100 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
+                class="block bg-gray-50 text-gray-700 border border-gray-300 rounded py-1.5 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300">
             <div class="flex">
                 <x-livewire-powergrid::icons.eye-off class="text-gray-500 dark:text-gray-300"/>
             </div>
@@ -23,7 +23,7 @@
                 @if($column->forceHidden == false)
                 <div wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                      wire:key="toggle-column-{{ $column->field }}"
-                     class="@if($column->hidden) opacity-40 @endif cursor-pointer flex justify-start block px-4 py-2 text-gray-800 hover:bg-gray-100 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">
+                     class="@if($column->hidden) opacity-40 @endif cursor-pointer flex justify-start block px-4 py-2 text-gray-800 hover:bg-gray-50 hover:text-black-200 dark:text-gray-200 dark:hover:bg-gray-700">
                     @if(!$column->hidden)
                         <x-livewire-powergrid::icons.eye class="text-gray-500 dark:text-gray-300"/>
                     @else

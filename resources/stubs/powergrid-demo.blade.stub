@@ -33,7 +33,7 @@
         @powerGridStyles
     </head>
     <body class="antialiased px-10 py-8 bg-gray-50">
-        <div class="p-6 bg-gray-100 mb-3 rounded-md shadow-md text-gray-700 border border-gray-400">
+        <div class="p-6 bg-gray-50 mb-3 rounded-md shadow-md text-gray-700 border border-gray-400">
         Welcome to ⚡ PowerGrid ⚡,
         <br>
         <br>
