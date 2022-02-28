@@ -19,7 +19,8 @@
 
         </div>
 
-        @includeIf(!$batchExporting, powerGridThemeRoot().'.loading')
+        <!-- LOADING -->
+        @include(powerGridThemeRoot().'.loading')
 
     </div>
 
