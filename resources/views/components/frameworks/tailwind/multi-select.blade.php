@@ -32,14 +32,14 @@
                              class="text-sm text-gray-500 flex p-1 dark:text-gray-200 items-center justify-center"></div>
                         <template x-for="(option, index) in selected" :key="index">
                             <div
-                                class="flex justify-center items-center m-1 cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-gray-200 text-gray-700 dark:bg-gray-400 dark:text-gray-900">
+                                class="flex justify-center items-center m-1 cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-gray-200 text-gray-700 dark:bg-gray-500 dark:text-gray-900">
                                 <div
                                     class="pl-0 align-middle cursor-pointer hover:text-black hover:text-current dark:text-gray-300 text-left text-xs font-medium text-gray-700 tracking-wider"
                                     x-text="option.text"></div>
 
                                 <button type="button"
                                         x-on:click="remove(option.value)"
-                                        class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-gray-600 dark:text-gray-900 hover:bg-gray-200 hover:text-gray-500 focus:outline-none focus:bg-gray-500 focus:text-gray-200">
+                                        class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 hover:text-gray-500 focus:outline-none focus:bg-gray-500 focus:text-gray-200 dark:hover:bg-gray-300 dark:hover:text-gray-500">
                                     <span class="sr-only"></span>
                                     <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                                         <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"/>
@@ -98,9 +98,9 @@
                                 <div
                                     x-show="option.selected === true"
                                     x-on:click="remove(option.value)"
-                                    class="relative group cursor-pointer hover:bg-gray-50 w-full border-gray-100 rounded-t border-b dark:hover:bg-gray-500 dark:hover:text-gray-300 dark:border-gray-400">
+                                    class="relative group cursor-pointer hover:bg-gray-50 w-full border-gray-100 rounded-t border-b dark:hover:bg-gray-500 dark:bg-gray-600 dark:hover:text-gray-300 dark:border-gray-400">
                                     <div x-bind:class="option.selected ? 'border-gray-600' : ''"
-                                         class="flex w-full items-center p-2 bg-gray-100 border-transparent relative">
+                                         class="flex w-full items-center p-2 bg-gray-200 dark:bg-gray-600 dark:border-gray-500 border-transparent relative">
                                         <div class="w-full items-center flex">
                                             <div
                                                 class="dark:text-gray-200 pl-0 align-middle cursor-pointer hover:text-black hover:text-current text-left text-xs font-medium text-gray-600 tracking-wider leading-6"

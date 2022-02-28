@@ -6,13 +6,17 @@ class FilterDatePicker
 {
     public string $inputClass = '';
 
+    public string $inputStyle = '';
+
     public string $divClassNotInline = '';
 
     public string $divClassInline = '';
 
-    public function input(string $inputClass): FilterDatePicker
+    public function input(string $attrClass, string $attrStyle): FilterDatePicker
     {
-        $this->inputClass = $inputClass;
+        $this->inputClass = $attrClass;
+
+        $this->inputStyle = $attrStyle;
 
         return $this;
     }

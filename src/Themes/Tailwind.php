@@ -70,7 +70,7 @@ class Tailwind extends ThemeBase
         return Theme::editable()
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
-            ->input('block dark:bg-gray-700 bg-green-200 text-black-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
+            ->input('dark:bg-gray-700 bg-gray-200 text-black-700 border border-gray-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500');
     }
 
     public function clickToCopy(): ClickToCopy
@@ -99,7 +99,7 @@ class Tailwind extends ThemeBase
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input('appearance-none flatpickr flatpickr-input block mt-1 mb-1 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500')
+            ->input('flatpickr flatpickr-input block my-1 bg-gray-50 border border-gray-300 text-gray-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 w-full active dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500', 'min-width: 12rem')
             ->divNotInline('pt-2 p-2')
             ->divInline('');
     }

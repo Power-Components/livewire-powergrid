@@ -34,7 +34,7 @@
         <input id="input_{{ data_get($date, 'field') }}"
                x-ref="rangeInput"
                data-field="{{ data_get($date, 'dataField') }}"
-               style="{{ data_get($column, 'headerStyle') }}"
+               style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
                class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                type="text"
                placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
