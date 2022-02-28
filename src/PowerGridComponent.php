@@ -117,7 +117,7 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * default false
+     * filters, columns
      * @return $this
      */
     public function persist(array $tableItems): PowerGridComponent
