@@ -173,7 +173,7 @@ class PowerGridComponent extends Component
             if ($column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header']) {
                 $this->headerTotalColumn = true;
             }
-            if ($column->sum['footer'] || $column->count['footer'] || $column->min['header'] || $column->avg['header'] || $column->max['header']) {
+            if ($column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer']) {
                 $this->footerTotalColumn = true;
             }
         });
