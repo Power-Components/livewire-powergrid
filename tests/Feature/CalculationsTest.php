@@ -16,7 +16,7 @@ it('calculate "count" on id field', function (string $component, object $params)
         ->assertSee('Count ID: 12')
         ->set('search', 'Dish C')
         ->assertSee('Count ID: 1');
-})->with('themes with name field');
+})->with('calculations');
 
 it('calculate "sum" on price field', function (string $component, object $params) {
     livewire($component)
@@ -26,7 +26,7 @@ it('calculate "sum" on price field', function (string $component, object $params
         ->assertSeeHtml('<span>Sum Price: 300.5</span>')
         ->set('search', 'Dish F')
         ->assertSeeHtml('<span>Sum Price: 600</span>');
-})->with('themes with name field');
+})->with('calculations');
 
 it('calculate "count" on price field', function (string $component, object $params) {
     livewire($component)
@@ -36,13 +36,25 @@ it('calculate "count" on price field', function (string $component, object $para
         ->assertSeeHtml('Count Price: 1')
         ->set('search', 'Dish F')
         ->assertSeeHtml('Count Price: 1');
-})->with('themes with name field');
+})->with('calculations');
 
 it('calculate "avg" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtml('<span>Avg Price: 1250.05</span>');
-})->with('themes with name field');
+})->with('calculations');
+
+it('calculate "min" on price field', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->assertSeeHtml('<span>Min Price: 100</span>');
+})->with('calculations');
+
+it('calculate "max" on price field', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->assertSeeHtml('<span>Max Price: 7500</span>');
+})->with('calculations');
 
 /**
  * Small Dish dataset for sorting test

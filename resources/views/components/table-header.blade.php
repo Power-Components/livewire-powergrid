@@ -26,10 +26,7 @@
         <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
             style="{{ $column->hidden === true ? 'display:none': '' }}; {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
             @if ($column->count['header'])
-                <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()
-                    ->reject(function($data) use($field) { return empty($data->$field ?? $data[$field]); })
-                    ->count($field) }}
-                    </span>
+                <span>{{ $column->count['label'] }}: {{ $withoutPaginatedData->collect()->reject(function($data) use($field) { return empty($data->$field ?? $data[$field]); })->count($field) }}</span>
                 <br>
             @endif
             @if ($column->sum['header'] && is_numeric($withoutPaginatedData[0][$field]))

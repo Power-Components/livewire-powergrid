@@ -128,7 +128,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('ID'))
                 ->field('id')
-                ->withCount('Count ID', false, true)
                 ->searchable()
                 ->sortable(),
 
@@ -151,9 +150,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->withSum('Sum Price', false, true)
-                ->withCount('Count Price', false, true)
-                ->withAvg('Avg Price', false, true)
                 ->editOnClick($canEdit)
                 ->makeInputRange('price', '.', ','),
 

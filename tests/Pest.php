@@ -1,15 +1,14 @@
 <?php
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
     Tests\DishesActionTable,
+    Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin
-};
+    Tests\DishesTableWithJoin};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -76,6 +75,13 @@ dataset('rules', [
     'bootstrap'      => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishesActionRulesTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join' => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('calculations', [
+    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 
 dataset('themes with name field', [
