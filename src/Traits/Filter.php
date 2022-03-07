@@ -157,22 +157,23 @@ trait Filter
         $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
         $this->enabledFilters[$data['field']]['label']           = $data['label'];
 
-        $this->persistState('filters');
-
         if (count($input) === 3) {
             $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+            $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 4) {
             $this->filters['date_picker'][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 5) {
             $this->filters['date_picker'][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+            $this->persistState('filters');
         }
     }
 
@@ -184,8 +185,12 @@ trait Filter
 
         $filter = collect($this->makeFilters->get('multi_select'))->where('data_field', $data['id']);
 
+        $filter = $filter->first();
+
+        /** @var array $filter */
+
         $this->enabledFilters[$data['id']]['id']            = $data['id'];
-        $this->enabledFilters[$data['id']]['label']         = $filter->first()['label'];
+        $this->enabledFilters[$data['id']]['label']         = $filter['label'];
 
         if (count($data['values']) === 0) {
             $this->clearFilter($data['id']);

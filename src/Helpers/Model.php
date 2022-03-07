@@ -29,7 +29,7 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      */
-    public static function query($query): Model
+    public static function query($query):Model
     {
         return new Model($query);
     }
@@ -119,7 +119,7 @@ class Model implements ModelFilterInterface
             $value       = $value[array_key_first($value)];
             $value['id'] = $field;
         }
-        
+
         /** @var array $values */
         $values = collect($value)->get('values');
 
@@ -277,8 +277,10 @@ class Model implements ModelFilterInterface
                     if ($searchable && $field) {
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
-                            $table = $explodeField->get(0);
-                            $field = $explodeField->get(1);
+                            /** @var string $table */
+                            $table        = $explodeField->get(0);
+                            /** @var string $field */
+                            $field        = $explodeField->get(1);
                         }
 
                         $hasColumn = Schema::hasColumn($table, $field);
