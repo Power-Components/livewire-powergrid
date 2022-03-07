@@ -29,7 +29,7 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      */
-    public static function query($query): Model
+    public static function query($query):Model
     {
         return new Model($query);
     }
@@ -119,7 +119,7 @@ class Model implements ModelFilterInterface
             $value       = $value[array_key_first($value)];
             $value['id'] = $field;
         }
-        
+
         /** @var array $values */
         $values = collect($value)->get('values');
 
