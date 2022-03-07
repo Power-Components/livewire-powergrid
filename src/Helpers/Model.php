@@ -277,7 +277,9 @@ class Model implements ModelFilterInterface
                     if ($searchable && $field) {
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
+                            /** @var string $table */
                             $table        = $explodeField->get(0);
+                            /** @var string $field */
                             $field        = $explodeField->get(1);
                         }
 

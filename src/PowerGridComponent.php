@@ -352,7 +352,7 @@ class PowerGridComponent extends Component
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
             if (count($this->actionRules())) {
-                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), $row);
+                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), (object) $row);
             }
 
             $mergedData = $data->merge($rules ?? []);

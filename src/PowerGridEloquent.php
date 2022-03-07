@@ -46,6 +46,7 @@ final class PowerGridEloquent
             return null;
         }
 
+        /** @phpstan-ignore-next-line */
         return $this->collection->map(function (Model $model) {
             // We need to generate a set of columns, which are already registered in the object, based on the model.
             // To do this we iterate through each column and then resolve the closure.
