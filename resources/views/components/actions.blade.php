@@ -73,6 +73,7 @@
                             @endif
 
                             @if($ruleDisabled) disabled @endif
+                            title="{{ $action->tooltip }}"
                             class="{{ $class }}"
                         >
                             {!! $ruleCaption ?? $action->caption !!}
@@ -84,6 +85,7 @@
                            @else
                            href="{{ $ruleRedirect['url'] }}" target="{{ $ruleRedirect['target'] }}"
                            @endif
+                           title="{{ $action->tooltip }}"
                            class="{{ $class }}">
                             {!! $ruleCaption ?? $action->caption !!}
                         </a>
@@ -97,6 +99,7 @@
                                 @method($action->method)
                                 @csrf
                                 <button type="submit"
+                                        title="{{ $action->tooltip }}"
                                         @if($ruleDisabled) disabled @endif class="{{ $class }}">
                                     {!! $ruleCaption ?? $action->caption !!}
                                 </button>
@@ -104,6 +107,7 @@
                         @else
                             <a href="{{ route($action->route, $actionParameters) }}"
                                target="{{ $action->target }}"
+                               title="{{ $action->tooltip }}"
                                class="{{ $class }}"
                             >
                                 {!! $ruleCaption ?? $action->caption !!}

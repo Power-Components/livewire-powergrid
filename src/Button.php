@@ -24,6 +24,8 @@ final class Button
 
     public string $to = '';
 
+    public string $tooltip = '';
+
     public bool $singleParam = false;
 
     /**
@@ -173,6 +175,18 @@ final class Button
     public function target(string $target): Button
     {
         $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * tooltip
+     * @param string $tooltip
+     * @return $this
+     */
+    public function tooltip(string $tooltip): Button
+    {
+        $this->tooltip = $tooltip;
 
         return $this;
     }
