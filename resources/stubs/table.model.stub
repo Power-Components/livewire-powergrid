@@ -47,7 +47,7 @@ final class {{ componentName }} extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\App\Models\User>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\{{ modelName }}>|null
     */
     public function datasource(): ?Builder
     {
