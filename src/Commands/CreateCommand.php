@@ -96,13 +96,6 @@ class CreateCommand extends Command
             if (empty($this->model)) {
                 throw new CreateCommandException('Error: You must inform the Model name or file path.');
             }
-            /*
-                        try {
-                            $model = new $this->model;
-                        } catch (\Exception $e) {
-                            throw new CreateCommandException('Invalid model given.');
-                        }
-            */
 
             $this->modelPath  = explode('\\', $this->model);
             $this->modelName  = strval(Arr::last($this->modelPath));
