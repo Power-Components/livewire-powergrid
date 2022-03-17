@@ -20,7 +20,7 @@ it('creates a PowerGrid Model Table', function () {
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
 
     $this->assertFileExists($this->tableModelFilePath);
 
@@ -34,7 +34,7 @@ it('creates a PowerGrid Collection Table', function () {
         ->expectsQuestion($this->model_name_question, 'CollectionTable')
         ->expectsQuestion($this->datasource_question, 'C')
         ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:collection-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>");
 
     $this->assertFileExists($this->tableCollectionFilePath);
 
@@ -58,7 +58,7 @@ it('notifies about tailwind forms', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
 
     File::delete($this->tableModelFilePath);
     File::delete($tailwindConfigFile);
