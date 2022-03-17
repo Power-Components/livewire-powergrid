@@ -11,6 +11,15 @@
                    style="padding-left: 36px !important;"
                    class="block w-full float-right bg-gray-50 text-gray-700 border border-gray-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 pl-10 dark:bg-gray-500 dark:text-gray-200 dark:placeholder-gray-200 dark:border-gray-500"
                    placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}">
+            @if($search)
+                <span class="absolute inset-y-0 right-0 flex items-center pl-1">
+                    <span class="p-1 -mt-1 focus:outline-none focus:shadow-outline cursor-pointer">
+                        <a wire:click.prevent="$set('search','')">
+                            <x-livewire-powergrid::icons.x class="text-gray-300 dark:text-gray-200"/>
+                        </a>
+                    </span>
+                </span>
+            @endif
         </div>
 
     </div>
