@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\{Blade, View};
 use Illuminate\Support\ServiceProvider;
-use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand};
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
@@ -16,9 +16,10 @@ class PowerGridServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([CreateCommand::class]);
             $this->commands([PublishCommand::class]);
+            $this->commands([UpdateCommand::class]);
             $this->commands([DemoCommand::class]);
+            $this->commands([CreateCommand::class]);
         }
 
         $this->publishViews();
