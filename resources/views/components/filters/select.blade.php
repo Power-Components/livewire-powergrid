@@ -21,7 +21,10 @@
                         data-live-search="{{ data_get($select, 'live-search') }}">
                     <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
                     @foreach(data_get($select, 'data_source') as $relation)
-                        <option value="{{ data_get($relation, 'id')  }}">{{ $relation[data_get($select, 'display_field') ] }}</option>
+                        @php $key = isset($relation['id']) ? 'id' : 'value' @endphp
+                        <option value="{{ data_get($relation, $key) }}">
+                            {{ $relation[data_get($select, 'display_field') ] }}
+                        </option>
                     @endforeach
                 </select>
                 <div class="{{ $theme->relativeDivClass }}">
