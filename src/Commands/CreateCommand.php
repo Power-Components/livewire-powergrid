@@ -125,7 +125,7 @@ class CreateCommand extends Command
             }
             
             if ($this->useFilable && is_string($this->model) && is_string($this->modelName)) {
-                $this->stub = FillableTable::create($this->model, $this->modelName);
+                $this->stub = FillableTable::create($this->model, $this->modelName, strval($this->option('template')));
             }
         }
 

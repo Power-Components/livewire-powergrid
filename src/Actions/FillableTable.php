@@ -10,14 +10,18 @@ class FillableTable
     /**
     * @throws \Exception
     */
-    public static function create(string $modelName, string $modelLastName): string
+    public static function create(string $modelName, string $modelLastName, string $template = null): string
     {
 
         /** @var  \Illuminate\Database\Eloquent\Model $model*/
         $model = new $modelName();
 
-        $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
-
+        if (!empty($template)) {
+            $stub =  File::get(base_path($template));
+        } else {
+            $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+        }
+    
         $getFillable = $model->getFillable();
 
         if (filled($model->getKeyName())) {
