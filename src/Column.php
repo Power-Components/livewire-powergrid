@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\{Collection, Str};
 
 final class Column
 {
@@ -245,12 +245,12 @@ final class Column
     }
 
     /**
-    * Hide the column
-    *
-    * @param bool $isHidden default: true
-    *
-    * @return Column
-    */
+     * Hide the column
+     *
+     * @param bool $isHidden default: true
+     *
+     * @return Column
+     */
     public function hidden(bool $isHidden = true, bool $isForceHidden = true): Column
     {
         $this->hidden      = $isHidden;
@@ -311,6 +311,18 @@ final class Column
         }
 
         return $this;
+    }
+
+    /**
+     * @param array<string, bool> $settings
+     * @return Column
+     */
+    public function makeInputEnum(array $enumCases, string $dataField = null, array $settings = []): Column
+    {
+        $dataSource = collect($enumCases)->map(fn ($case) => (array) $case);
+        $dataField ??= Str::snake(class_basename($enumCases[0]));
+
+        return $this->makeInputSelect($dataSource, 'value', $dataField, $settings);
     }
 
     /**
