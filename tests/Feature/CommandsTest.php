@@ -20,7 +20,7 @@ it('creates a PowerGrid Model Table', function () {
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
 
     $this->assertFileExists($this->tableModelFilePath);
 
@@ -34,7 +34,7 @@ it('creates a PowerGrid Collection Table', function () {
         ->expectsQuestion($this->model_name_question, 'CollectionTable')
         ->expectsQuestion($this->datasource_question, 'C')
         ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:collection-table/>\n");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>");
 
     $this->assertFileExists($this->tableCollectionFilePath);
 
@@ -58,7 +58,7 @@ it('notifies about tailwind forms', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid can be now included with the tag: <livewire:demo-table/>\n");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
 
     File::delete($this->tableModelFilePath);
     File::delete($tailwindConfigFile);
@@ -92,7 +92,7 @@ it('does not accept an empty table name', function () {
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, '')
         ->expectsOutput('You must provide a name for your ⚡ PowerGrid Table!')
-        ->assertExitCode(0);
+        ->assertExitCode(1);
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
@@ -103,8 +103,8 @@ it('accepts only [M]odel or [C]ollection', function () {
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'Z')
-        ->expectsOutput('Please enter [M] for Model or [C] for Collection')
-        ->assertExitCode(0);
+        ->expectsOutput('Invalid option. Please enter [M] for model or [C] for Collection.')
+        ->assertExitCode(1);
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
@@ -116,8 +116,8 @@ it('does not create a table with empty model', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '')
-        ->expectsOutput('Error: Model name is required.')
-        ->assertExitCode(0);
+        ->expectsOutput('Error: You must inform the Model name or file path.')
+        ->assertExitCode(1);
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 
@@ -131,9 +131,8 @@ it('does not create a table with invalid model path', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, 'xyz-model')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
-        ->expectsOutput('Error: "xyz-model" Invalid model path. Path must be like: "\App\Models\User"')
-        ->assertExitCode(0);
+        ->expectsOutput('Error: Could not find "xyz-model" class.')
+        ->assertExitCode(1);
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 
