@@ -1,14 +1,17 @@
 <?php
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesEnumTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin};
+    Tests\DishesTableWithJoin
+};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -55,6 +58,11 @@ function filterInputText(string $text, string $type, $field = 'name'): array
         ],
     ];
 }
+
+dataset('enum', [
+    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+]);
 
 dataset('themes', [
     'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
