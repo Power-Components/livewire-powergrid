@@ -6,23 +6,23 @@ it('property displays the results and options', function (string $component, obj
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:input.debounce.500ms="filterSelect(\'dishes.diet\',\'Dieta\')"',
+            'wire:input.debounce.500ms="filterEnumSelect(\'dishes.diet\',\'Dieta\')"',
             'wire:model.debounce.500ms="filters.select.dishes.diet"',
         ])
-        ->assertSeeHtml(htmlOptions());
+        ->assertSeeHtml(htmlSelectOptionsEnum());
 })->with('enum')->onlyFromPhp('8.1');
 
 it('properly filter with diet', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('filters', filterSelect('diet', 1))
+        ->set('filters', filterEnumSelect('diet', 1))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
 })->with('enum')->onlyFromPhp('8.1');
 
-function filterSelect(string $dataField, ?string $value): array
+function filterEnumSelect(string $dataField, ?string $value): array
 {
     return [
         'select' => [
@@ -31,7 +31,7 @@ function filterSelect(string $dataField, ?string $value): array
     ];
 }
 
-function htmlOptions(): string
+function htmlSelectOptionsEnum(): string
 {
     return  <<<HTML
     <option value="">All</option>
