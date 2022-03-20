@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
 use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
 beforeEach(
     function () {
-        DB::table('dishes')->truncate();
-        $this->seeders(dishesForWithSum());
+        TestDatabase::seed(dishesForWithSum());
     }
 );
 
