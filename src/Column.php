@@ -317,12 +317,24 @@ final class Column
      * @param array<string, bool> $settings
      * @return Column
      */
-    public function makeInputEnum(array $enumCases, string $dataField = null, array $settings = []): Column
+    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
     {
-        $dataSource = collect($enumCases)->map(fn ($case) => (array) $case);
+        $displayField = 'value';
+
+        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
+            $option =  (array) $case;
+    
+            if (method_exists($case, 'labelPowergridFilter')) {
+                $option['name']              =  $case->labelPowergridFilter();
+                $displayField                = 'name';
+            }
+
+            return $option;
+        });
+
         $dataField ??= Str::snake(class_basename($enumCases[0]));
 
-        return $this->makeInputSelect($dataSource, 'value', $dataField, $settings);
+        return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
     }
 
     /**

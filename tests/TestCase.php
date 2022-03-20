@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\{DB, File, Schema};
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use function Pest\Faker\faker;
-
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 
 class TestCase extends BaseTestCase
@@ -61,6 +60,7 @@ class TestCase extends BaseTestCase
             $table->string('name');
             $table->double('price');
             $table->integer('calories');
+            $table->integer('diet');
             $table->boolean('in_stock')->default(false);
             $table->string('stored_at');
             $table->boolean('active')->default(true);
@@ -121,6 +121,7 @@ class TestCase extends BaseTestCase
                 'in_stock'    => true,
                 'produced_at' => '2021-01-01 00:00:00',
                 'chef_name'   => null,
+                'diet'        => 2,
             ],
             [
                 'name'        => 'Peixada da chef Nábia',
@@ -129,7 +130,7 @@ class TestCase extends BaseTestCase
                 'in_stock'    => true,
                 'produced_at' => '2021-02-02 00:00:00',
                 'chef_name'   => 'Nábia',
-
+                'diet'        => 1,
             ],
             [
                 'name'        => 'Carne Louca',
@@ -138,7 +139,7 @@ class TestCase extends BaseTestCase
                 'in_stock'    => true,
                 'produced_at' => '2021-03-03 00:00:00',
                 'chef_name'   => '',
-
+                'diet'        => 1,
             ],
             [
                 'name'        => 'Bife à Rolê',
@@ -146,6 +147,7 @@ class TestCase extends BaseTestCase
                 'price'       => 40.50,
                 'in_stock'    => true,
                 'produced_at' => '2021-04-04 00:00:00',
+                'diet'        => 1,
             ],
             [
                 'name'        => 'Francesinha vegana',
@@ -312,6 +314,10 @@ class TestCase extends BaseTestCase
 
             if (!array_key_exists('chef_name', $dish)) {
                 $dish['chef_name'] = 'Luan';
+            }
+
+            if (!array_key_exists('diet', $dish)) {
+                $dish['diet'] = $faker->randomElement([0, 1, 2]); //Diet::cases()
             }
 
             return $dish;
