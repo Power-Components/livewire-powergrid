@@ -58,8 +58,12 @@ class TestDatabase
 
     public static function seed(array $dishes = []): void
     {
+        Schema::disableForeignKeyConstraints();
+        
         DB::table('categories')->truncate();
         DB::table('dishes')->truncate();
+
+        Schema::enableForeignKeyConstraints();
 
         DB::table('categories')->insert([
             ['name' => 'Carnes'],
