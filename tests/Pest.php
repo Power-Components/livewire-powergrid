@@ -111,7 +111,7 @@ dataset('themes with collection table', [
  * @param string $version
  * @return TestCall|PhpUnitTestCase|mixed
  */
-function onlyPhp(string $version)
+function onlyFromPhp(string $version)
 {
     if (version_compare(PHP_VERSION, $version, '<')) {
         test()->markTestSkipped('This test requires PHP ' . $version);
