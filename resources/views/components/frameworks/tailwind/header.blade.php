@@ -1,4 +1,4 @@
-<div class="md:flex md:flex-row w-full justify-between">
+<div class="md:flex md:flex-row w-full justify-between items-center">
 
     <div class="md:flex md:flex-row w-full">
 

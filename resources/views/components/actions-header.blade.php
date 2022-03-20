@@ -6,7 +6,7 @@
 <div class="w-full md:w-auto">
     <div class="sm:flex sm:flex-row">
         @foreach($actions as $action)
-            <div class="sm:mr-2 mb-2 w-auto">
+            <div class="sm:mr-2 w-auto">
                 @php
                     if($action->singleParam) {
                         $parameters = $helperClass->makeActionParameter($action->param);
