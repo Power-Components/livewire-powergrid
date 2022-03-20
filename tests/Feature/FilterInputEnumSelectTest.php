@@ -6,7 +6,7 @@ it('property displays the results and options', function (string $component, obj
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:input.debounce.500ms="filterEnumSelect(\'dishes.diet\',\'Dieta\')"',
+            'wire:input.debounce.500ms="filterSelect(\'dishes.diet\',\'Dieta\')"',
             'wire:model.debounce.500ms="filters.select.dishes.diet"',
         ])
         ->assertSeeHtml(htmlSelectOptionsEnum());
