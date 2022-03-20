@@ -1,4 +1,5 @@
 <?php
+use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\{
@@ -103,3 +104,18 @@ dataset('themes with collection table', [
     [DishesCollectionTable::class, 'tailwind'],
     [DishesCollectionTable::class, 'bootstrap'],
 ]);
+
+/**
+ * Skip tests based on mininum PHP Version
+ *
+ * @param string $version
+ * @return TestCall|PhpUnitTestCase|mixed
+ */
+function onlyPhp(string $version)
+{
+    if (version_compare(PHP_VERSION, $version, '<')) {
+        test()->markTestSkipped('This test requires PHP ' . $version);
+    }
+
+    return test();
+}
