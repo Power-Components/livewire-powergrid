@@ -47,6 +47,7 @@ class TestDatabase
             $table->double('price');
             $table->integer('calories');
             $table->integer('diet');
+            $table->string('serving_at')->default('pool bar');
             $table->boolean('in_stock')->default(false);
             $table->string('stored_at');
             $table->boolean('active')->default(true);
@@ -89,6 +90,7 @@ class TestDatabase
                 'produced_at' => '2021-01-01 00:00:00',
                 'chef_name'   => null,
                 'diet'        => 2,
+                'serving_at'  => 'table',
             ],
             [
                 'name'        => 'Peixada da chef Nábia',
@@ -285,6 +287,10 @@ class TestDatabase
 
             if (!array_key_exists('diet', $dish)) {
                 $dish['diet'] = $faker->randomElement([0, 1, 2]); //Diet::cases()
+            }
+            
+            if (!array_key_exists('serving_at', $dish)) {
+                $dish['serving_at'] = 'pool bar';
             }
 
             return $dish;

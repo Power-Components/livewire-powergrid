@@ -81,6 +81,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 return $dish->name;
             })
             ->addColumn('calories')
+            ->addColumn('serving_at')
             ->addColumn('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
             })
@@ -139,6 +140,12 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
+
+            Column::add()
+                ->title('Serving at')
+                ->field('serving_at')
+                ->sortable()
+                ->makeInputSelect(Dish::all(), 'serving_at', 'serving_at', ['live-search' => true]),
 
             Column::add()
                 ->title(__('Categoria'))
