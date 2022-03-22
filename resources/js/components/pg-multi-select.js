@@ -10,13 +10,15 @@ export default (params) => ({
         const self = this
         const options = this.data
 
-        for (let i = 0; i < options.length; i++) {
+        options.forEach((option) => {
+            let dataField = option.value[this.dataField];
+
             this.options.push({
-                value: options[i].value.id,
-                text: options[i].value.name,
+                value: dataField ?? option.value.id,
+                text: dataField ?? option.value.name,
                 selected: false
             });
-        }
+        }); 
 
         JSON.parse(params.selected).forEach(function (value) {
             self.options.map(function (option) {

@@ -74,6 +74,8 @@ final class Column
     public array $clickToCopy = [];
 
     /**
+     * Adds a new Column
+     *
      * @return self
      */
     public static function add(): self
@@ -82,9 +84,10 @@ final class Column
     }
 
     /**
-     * Column title representing a field
+     * Adds title
      *
-     * @return $this
+     * @param string $title
+     * @return Column
      */
     public function title(string $title): Column
     {
@@ -94,9 +97,10 @@ final class Column
     }
 
     /**
-     * Placeholder
+     * Adds placeholder
      *
-     * @return $this
+     * @param string $placeholder
+     * @return Column
      */
     public function placeholder(string $placeholder): Column
     {
@@ -106,9 +110,9 @@ final class Column
     }
 
     /**
-     * Will enable the column for search
+     * Makes the column serchable
      *
-     * @return $this
+     * @return Column
      */
     public function searchable(): Column
     {
@@ -118,9 +122,9 @@ final class Column
     }
 
     /**
-     * Will enable the column for sort
+     * Adds sort to the column header
      *
-     * @return $this
+     * @return Column
      */
     public function sortable(): Column
     {
@@ -130,9 +134,13 @@ final class Column
     }
 
     /**
-     * Will enable the column for total sum
+     * Display Column Sum Summary
      *
-     * @return $this
+     * @param string $label
+     * @param boolean $header
+     * @param boolean $footer
+     * @param integer $rounded
+     * @return Column
      */
     public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -145,9 +153,12 @@ final class Column
     }
 
     /**
-     * Will enable the column for total count
+     * Display Column Count Summary
      *
-     * @return $this
+     * @param string $label
+     * @param boolean $header
+     * @param boolean $footer
+     * @return Column
      */
     public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
@@ -159,9 +170,13 @@ final class Column
     }
 
     /**
-     * Will enable the column for total average
+     * Display Column Average Summary
      *
-     * @return $this
+     * @param string $label
+     * @param boolean $header
+     * @param boolean $footer
+     * @param integer $rounded
+     * @return Column
      */
     public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -174,9 +189,13 @@ final class Column
     }
 
     /**
-     * Will enable the column for total minimum
+     * Display Column Minimum Summary
      *
-     * @return $this
+     * @param string $label
+     * @param boolean $header
+     * @param boolean $footer
+     * @param integer $rounded
+     * @return Column
      */
     public function withMin(string $label = 'Min', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -189,9 +208,13 @@ final class Column
     }
 
     /**
-     * Will enable the column for total maximum
+     * Display Column Maximum Summary
      *
-     * @return $this
+     * @param string $label
+     * @param boolean $header
+     * @param boolean $footer
+     * @param integer $rounded
+     * @return Column
      */
     public function withMax(string $label = 'Max', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -206,7 +229,9 @@ final class Column
     /**
      * Field in the database
      *
-     * @return $this
+     * @param string $field
+     * @param string $dataField
+     * @return Column
      */
     public function field(string $field, string $dataField = ''): Column
     {
@@ -219,9 +244,11 @@ final class Column
     }
 
     /**
-     * Class html tag header table
+    * Class html tag header table
      *
-     * @return $this
+     * @param string $classAttr
+     * @param string $styleAttr
+     * @return Column
      */
     public function headerAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -232,9 +259,11 @@ final class Column
     }
 
     /**
-     * Class html tag body table
+    * Class html tag body table
      *
-     * @return $this
+     * @param string $classAttr
+     * @param string $styleAttr
+     * @return Column
      */
     public function bodyAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -245,10 +274,10 @@ final class Column
     }
 
     /**
-     * Hide the column
+    * Hide the column
      *
      * @param bool $isHidden default: true
-     *
+     * @param boolean $isForceHidden Keep it hidden
      * @return Column
      */
     public function hidden(bool $isHidden = true, bool $isForceHidden = true): Column
@@ -267,15 +296,20 @@ final class Column
     }
 
     /**
-     * @param array<string, bool> $settings
-     * @return $this
+     * Input Select Filter
+     *
+     * @param Collection $datasource
+     * @param string $displayField
+     * @param string|null $dataField
+     * @param array<string, mixed> $settings
+     * @return Column
      */
-    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
         $this->inputs['select']['display_field'] = $displayField;
-        $this->inputs['select']['data_field']    = $dataField;
+        $this->inputs['select']['data_field']    = $dataField               ?? $displayField;
         $this->inputs['select']['class']         = $settings['class']       ?? '';
         $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
 
@@ -283,24 +317,33 @@ final class Column
     }
 
     /**
-     * @param array<string, bool> $settings
-     * @return $this
+     * Input Multi-Select Filter
+     *
+     * @param Collection $datasource
+     * @param string $displayField
+     * @param string|null $dataField
+     * @param array<string, mixed> $settings
+     * @return Column
      */
-    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
         $this->inputs['multi_select']['display_field'] = $displayField;
-        $this->inputs['multi_select']['data_field']    = $dataField;
+        $this->inputs['multi_select']['data_field']    = $dataField               ?? $displayField;
         $this->inputs['multi_select']['live-search']   = $settings['live-search'] ?? true;
 
         return $this;
     }
 
     /**
-     * @param array<string, bool> $settings [only_future', 'no_weekends']
-     * @return Column
-     */
+     * Filter Datepicker
+     *
+     * @param string $dataField
+    * @param array<string, mixed> $settings [only_future', 'no_weekends']
+    * @param string $classAttr
+    * @return Column
+    */
     public function makeInputDatePicker(string $dataField = '', array $settings = [], string $classAttr = ''): Column
     {
         $this->inputs['date_picker']['enabled'] = true;

@@ -74,6 +74,7 @@ class DishesTable extends PowerGridComponent
             ->addColumn('name')
             ->addColumn('storage_room')
             ->addColumn('chef_name')
+            ->addColumn('serving_at')
             ->addColumn('calories')
             ->addColumn('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
@@ -133,6 +134,12 @@ class DishesTable extends PowerGridComponent
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
+            Column::add()
+                ->title('Serving at')
+                ->field('serving_at')
+                ->sortable()
+                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
+                
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')

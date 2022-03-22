@@ -28,7 +28,11 @@
                     data-live-search="{{ data_get($multiSelect, 'live-search') }}">
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
                 @foreach(data_get($multiSelect, 'data_source') as $relation)
-                    <option value="{{ data_get($relation, 'id') }}">
+                    @php
+                        $key = isset($relation['id']) ? 'id' : 'value';
+                        if (isset($relation[$multiSelect['data_field']])) $key = $multiSelect['data_field']; 
+                    @endphp
+                    <option value="{{ data_get($relation, $key) }}">
                         {{ $relation[data_get($multiSelect, 'display_field')] }}
                     </option>
                 @endforeach
