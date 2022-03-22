@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\File;
 beforeEach(function () {
     $this->tableModelFilePath       = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->tableCollectionFilePath  = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
-    $this->model_name_question      = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
+    $this->model_name_question      = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
     $this->datasource_question      = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
     $this->model_path_question      = 'Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
     $this->use_fillable_question    = 'Create columns based on Model\'s <comment>fillable</comment> property?';
@@ -72,13 +72,13 @@ it('publishes the Demo Table', function () {
     File::delete($viewsFile);
 
     $this->artisan('powergrid:demo')
-        ->expectsOutput('⚡ *** PowerGrid Demo Table is ready! ***')
-        ->expectsOutput("\n⚡ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]")
-        ->expectsOutput("\n⚡ powergrid-demo.blade.php was successfully created at [resources/views/]")
-        ->expectsOutput("\n⚡ *** Usage ***")
-        ->expectsOutput("\n➤ You must include Route::view('/powergrid', 'powergrid-demo'); in routes/web.php file.")
-        ->expectsOutput("\n➤ Visit http://localhost/powergrid. Enjoy it!\n");
-
+        ->expectsOutput("➤ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]\n")
+        ->expectsOutput("➤ powergrid-demo.blade.php was successfully created at [resources/views/]\n")
+        ->expectsOutput("\n1. You must include Route::view('/powergrid', 'powergrid-demo'); in your routes/web.php file.")
+        ->expectsOutput("\n2. Serve your project. For example, run php artisan serve.")
+        ->expectsOutput("\n3. Visit http://localhost/powergrid to view the Demo Table.")
+        ->expectsOutput("\n\n⭐ Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n");
+        
     $this->assertFileExists($tableFile);
     $this->assertFileExists($viewsFile);
 

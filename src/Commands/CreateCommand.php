@@ -6,10 +6,13 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File};
 use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Actions\{FillableTable, Models, Stubs, TailwindForm};
+use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Exceptions\CreateCommandException;
 
 class CreateCommand extends Command
 {
+    use RenderAscii;
+
     /** @var string */
     protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
 
@@ -41,6 +44,8 @@ class CreateCommand extends Command
 
     public function handle(): int
     {
+        $this->renderPowergridAscii();
+
         $this->call('powergrid:update');
 
         try {
@@ -62,7 +67,7 @@ class CreateCommand extends Command
 
     protected function askTableName(): void
     {
-        $this->tableName = strval($this->ask('What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?', ''));
+        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowergridTable'));
 
         if (empty(trim(strval($this->tableName))) || !is_string($this->tableName)) {
             throw new CreateCommandException('You must provide a name for your ⚡ PowerGrid Table!');
@@ -91,7 +96,7 @@ class CreateCommand extends Command
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
 
         if (strtolower($this->datasourceOption) === 'm') {
-            $this->model = strval($this->anticipate('Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', Models::list(), ''));
+            $this->model = strval($this->anticipate('Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', Models::list(), 'User'));
 
             if (empty($this->model)) {
                 throw new CreateCommandException('Error: You must inform the Model name or file path.');
@@ -192,11 +197,13 @@ class CreateCommand extends Command
 
     protected function showCreated(): void
     {
+        $this->output->title('Component is ready!');
+
         $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>App/' . $this->savedAt . '</comment>].');
        
         $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
        
-        $this->info("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment>. ⭐\n");
+        $this->info("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
     }
 
     protected function checkTailwindforms(): void
