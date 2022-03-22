@@ -44,9 +44,9 @@ class CreateCommand extends Command
 
     public function handle(): int
     {
-        $this->call('powergrid:update');
-
         $this->renderPowergridAscii();
+
+        $this->call('powergrid:update');
 
         try {
             $this->askTableName();
