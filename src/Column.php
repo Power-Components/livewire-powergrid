@@ -300,16 +300,16 @@ final class Column
      *
      * @param Collection $datasource
      * @param string $displayField
-     * @param string $dataField
+     * @param string|null $dataField
      * @param array<string, mixed> $settings
      * @return Column
      */
-    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField, array $settings = []): Column
+    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
         $this->inputs['select']['display_field'] = $displayField;
-        $this->inputs['select']['data_field']    = $dataField;
+        $this->inputs['select']['data_field']    = $dataField               ?? $displayField;
         $this->inputs['select']['class']         = $settings['class']       ?? '';
         $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
 
