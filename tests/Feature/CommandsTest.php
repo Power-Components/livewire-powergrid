@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\File;
 beforeEach(function () {
     $this->tableModelFilePath       = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->tableCollectionFilePath  = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
-    $this->model_name_question      = 'What is the name of your new ⚡ PowerGrid Table (E.g., <comment>UserTable</comment>)?';
+    $this->model_name_question      = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
     $this->datasource_question      = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
     $this->model_path_question      = 'Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
     $this->use_fillable_question    = 'Create columns based on Model\'s <comment>fillable</comment> property?';
