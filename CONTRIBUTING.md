@@ -18,22 +18,29 @@ If you have any questions, do not hesitate to reach the community in the reposit
 git clone https://github.com/Power-Components/livewire-powergrid.git && livewire-powergrid
 ```
 
-Install all dependencies with composer.
+Install all dependencies with composer and NPM.
 
 ```shell
 composer install
+```
+
+Then run:
+
+```shell
+npm install
 ```
 
 <br/>
 
 2. **Create a new branch**
 
+Create a new branch specifying `feature`, `fix`, `enhancement`.
+
 ```shell
 git checkout -b feature/my-new-feature
 ```
 
 <br/>
-
 
 3. **Code and check your work**
 
@@ -51,8 +58,17 @@ composer check
 
 <br/>
 
+4. **Build Assets**
 
-4. **Tests**
+If you have updated or added JavaScript code, you need to recompile the assets and include it in your commit.
+
+```Shell
+npm run build
+```
+
+<br/>
+
+5. **Tests**
 
 Including tests is not mandatory, but if you can write tests, please consider doing it.
 
@@ -61,14 +77,14 @@ Besides all technical benefits, tests also help to prove your concept and make t
 <br/>
 
 
-5. **Commit**
+6. **Commit**
 
 Please send clean and descriptive commits.
 
 <br/>
 
 
-6. **Pull Request**
+7. **Pull Request**
 
 Open a Pull Request (PR) detailing your changes and motivations. Please make only one change per Pull Request.
 
