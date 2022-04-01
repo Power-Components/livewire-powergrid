@@ -32,8 +32,10 @@ class Table
 
     public string $tdBodyStyle = '';
 
+    public string $trBodyLoopClass = '';
+
     public string $tdBodyClassTotalColumns;
-    
+
     public string $tdBodyStyleTotalColumns;
 
     /**
@@ -83,6 +85,13 @@ class Table
     {
         $this->trBodyClass = $attrClass;
         $this->trBodyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function trBodyLoopClass(string $attrClass): Table
+    {
+        $this->trBodyLoopClass = $attrClass;
 
         return $this;
     }
