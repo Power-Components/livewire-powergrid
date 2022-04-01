@@ -7,17 +7,32 @@
     'selected' => [],
 ])
 @php
-    $data = collect($multiSelect['data_source'])->transform(function ($entry) {
-        return [
-            'value' => $entry
-        ];
-    });
-    $selected = $selected[$multiSelect['data_field']]['values'] ?? []
+    $data = collect($multiSelect['data_source'])
+         ->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($multiSelect) {
+             if (is_array($entry)) {
+                 $entry = collect($entry);
+             }
+             return [
+                 'value' => $entry->only([
+                     $multiSelect['value'],
+                     $multiSelect['text']
+                 ])
+             ];
+         });
+
+    $selected = $selected[$multiSelect['label']]['values'] ?? []
 
 @endphp
 <div x-cloak
      wire:ignore.self
-     x-data="pgMultiSelect({ data: {{ json_encode($data) }}, tableName: '{{ $tableName }}', dataField: '{{ $multiSelect['data_field'] }}', selected: '{{ json_encode($selected) }}' })">
+     x-data="pgMultiSelect({
+        data: {{ json_encode($data) }},
+        value: '{{ $multiSelect['value'] }}',
+        text: '{{ $multiSelect['text'] }}',
+        tableName: '{{ $tableName }}',
+        dataField: '{{ $multiSelect['dataField'] }}',
+        selected: '{{ json_encode($selected) }}'
+     })">
     <div class="inline-block relative w-full p-2"
          style="min-width: 180px !important;">
         <div class="flex flex-col items-center relative">

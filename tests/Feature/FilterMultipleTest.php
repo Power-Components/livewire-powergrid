@@ -1,11 +1,13 @@
 <?php
 
 use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
     $component = livewire($component)
         ->call($params->theme);
 
+    /** @var PowerGridComponent $component */
     expect($component->filters)
         ->toMatchArray([]);
 
