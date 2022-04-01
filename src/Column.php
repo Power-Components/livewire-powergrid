@@ -86,8 +86,6 @@ final class Column
     /**
      * Adds title
      *
-     * @param string $title
-     * @return Column
      */
     public function title(string $title): Column
     {
@@ -99,8 +97,6 @@ final class Column
     /**
      * Adds placeholder
      *
-     * @param string $placeholder
-     * @return Column
      */
     public function placeholder(string $placeholder): Column
     {
@@ -110,7 +106,7 @@ final class Column
     }
 
     /**
-     * Makes the column serchable
+     * Makes the column searchable
      *
      * @return Column
      */
@@ -136,11 +132,6 @@ final class Column
     /**
      * Display Column Sum Summary
      *
-     * @param string $label
-     * @param boolean $header
-     * @param boolean $footer
-     * @param integer $rounded
-     * @return Column
      */
     public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -155,10 +146,6 @@ final class Column
     /**
      * Display Column Count Summary
      *
-     * @param string $label
-     * @param boolean $header
-     * @param boolean $footer
-     * @return Column
      */
     public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
     {
@@ -172,11 +159,6 @@ final class Column
     /**
      * Display Column Average Summary
      *
-     * @param string $label
-     * @param boolean $header
-     * @param boolean $footer
-     * @param integer $rounded
-     * @return Column
      */
     public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -191,11 +173,6 @@ final class Column
     /**
      * Display Column Minimum Summary
      *
-     * @param string $label
-     * @param boolean $header
-     * @param boolean $footer
-     * @param integer $rounded
-     * @return Column
      */
     public function withMin(string $label = 'Min', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -210,11 +187,6 @@ final class Column
     /**
      * Display Column Maximum Summary
      *
-     * @param string $label
-     * @param boolean $header
-     * @param boolean $footer
-     * @param integer $rounded
-     * @return Column
      */
     public function withMax(string $label = 'Max', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
@@ -229,9 +201,6 @@ final class Column
     /**
      * Field in the database
      *
-     * @param string $field
-     * @param string $dataField
-     * @return Column
      */
     public function field(string $field, string $dataField = ''): Column
     {
@@ -246,9 +215,6 @@ final class Column
     /**
     * Class html tag header table
      *
-     * @param string $classAttr
-     * @param string $styleAttr
-     * @return Column
      */
     public function headerAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -261,9 +227,6 @@ final class Column
     /**
     * Class html tag body table
      *
-     * @param string $classAttr
-     * @param string $styleAttr
-     * @return Column
      */
     public function bodyAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -276,9 +239,6 @@ final class Column
     /**
     * Hide the column
      *
-     * @param bool $isHidden default: true
-     * @param boolean $isForceHidden Keep it hidden
-     * @return Column
      */
     public function hidden(bool $isHidden = true, bool $isForceHidden = true): Column
     {
@@ -298,20 +258,14 @@ final class Column
     /**
      * Input Select Filter
      *
-     * @param Collection $datasource
-     * @param string $displayField
-     * @param string|null $dataField
-     * @param array<string, mixed> $settings
-     * @return Column
      */
     public function makeInputSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
-        $this->inputs['select']['display_field'] = $displayField;
-        $this->inputs['select']['data_field']    = $dataField               ?? $displayField;
-        $this->inputs['select']['class']         = $settings['class']       ?? '';
-        $this->inputs['select']['live-search']   = $settings['live-search'] ?? true;
+        $this->inputs['select']['displayField']  = $displayField;
+        $this->inputs['select']['dataField']     = $dataField           ?? $displayField;
+        $this->inputs['select']['class']         = $settings['class']   ?? '';
 
         return $this;
     }
@@ -319,19 +273,14 @@ final class Column
     /**
      * Input Multi-Select Filter
      *
-     * @param Collection $datasource
-     * @param string $displayField
-     * @param string|null $dataField
-     * @param array<string, mixed> $settings
-     * @return Column
      */
-    public function makeInputMultiSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
+    public function makeInputMultiSelect(Collection $datasource, string $optionText, string $dataField = null, string $optionValue = 'id'): Column
     {
         $this->editable                                = false;
         $this->inputs['multi_select']['data_source']   = $datasource;
-        $this->inputs['multi_select']['display_field'] = $displayField;
-        $this->inputs['multi_select']['data_field']    = $dataField               ?? $displayField;
-        $this->inputs['multi_select']['live-search']   = $settings['live-search'] ?? true;
+        $this->inputs['multi_select']['text']          = $optionText ?: $optionValue;
+        $this->inputs['multi_select']['value']         = $optionValue;
+        $this->inputs['multi_select']['dataField']     = $dataField;
 
         return $this;
     }
@@ -339,10 +288,6 @@ final class Column
     /**
      * Filter Datepicker
      *
-     * @param string $dataField
-    * @param array<string, mixed> $settings [only_future', 'no_weekends']
-    * @param string $classAttr
-    * @return Column
     */
     public function makeInputDatePicker(string $dataField = '', array $settings = [], string $classAttr = ''): Column
     {
@@ -357,8 +302,8 @@ final class Column
     }
 
     /**
-     * @param array<string, bool> $settings
-     * @return Column
+     * Filter Enum - ^php8.1
+     *
      */
     public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
     {
@@ -366,7 +311,7 @@ final class Column
 
         $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
             $option =  (array) $case;
-    
+
             if (method_exists($case, 'labelPowergridFilter')) {
                 $option['name']              =  $case->labelPowergridFilter();
                 $displayField                = 'name';
@@ -383,7 +328,6 @@ final class Column
     /**
      * Adds Edit on click to a column
      *
-     * @return Column
      */
     public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
     {
@@ -398,7 +342,6 @@ final class Column
     /**
      * Adds Toggle to a column
      *
-     * @return Column
      */
     public function toggleable(bool $hasPermission = true, string $trueLabel = 'Yes', string $falseLabel = 'No'): Column
     {
@@ -412,7 +355,7 @@ final class Column
     }
 
     /**
-     * @return $this
+     * Add Input Number Range
      */
     public function makeInputRange(string $dataField = '', string $thousands = '', string $decimal = ''): Column
     {
@@ -427,7 +370,7 @@ final class Column
     }
 
     /**
-     * @return $this
+     * Add Input Text
      */
     public function makeInputText(string $dataField = ''): Column
     {
@@ -453,16 +396,14 @@ final class Column
     }
 
     /**
-     * @param array<string, string> $settings Settings
-     * @return $this
+     * Add Boolean Filter
      */
     public function makeBooleanFilter(string $dataField = '', string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
     {
         $this->inputs['boolean_filter']['enabled']     = true;
         $this->inputs['boolean_filter']['true_label']  = $trueLabel;
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
-        $this->inputs['boolean_filter']['class']       = $settings['class']       ?? '';
-        $this->inputs['boolean_filter']['live-search'] = $settings['live-search'] ?? true;
+        $this->inputs['boolean_filter']['class']       = $settings['class']   ?? '';
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }

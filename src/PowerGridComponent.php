@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
-use Illuminate\Support\{Collection as BaseCollection, Facades\Crypt, Str};
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -99,7 +99,6 @@ class PowerGridComponent extends Component
 
     /**
      * default false
-     * @return $this
      */
     public function showToggleColumns(): PowerGridComponent
     {
@@ -118,7 +117,6 @@ class PowerGridComponent extends Component
 
     /**
      * filters, columns
-     * @return $this
      */
     public function persist(array $tableItems): PowerGridComponent
     {
@@ -149,9 +147,6 @@ class PowerGridComponent extends Component
         $this->showPerPage();
     }
 
-    /**
-     * @return $this
-     */
     public function showPerPage(int $perPage = 10): PowerGridComponent
     {
         if (Str::contains((string) $perPage, $this->perPageValues)) {
@@ -170,10 +165,13 @@ class PowerGridComponent extends Component
     private function resolveTotalRow(): void
     {
         collect($this->columns())->each(function (Column $column) {
-            if ($column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header']) {
+            $hasHeader = $column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header'];
+            $hasFooter = $column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer'];
+
+            if ($hasHeader) {
                 $this->headerTotalColumn = true;
             }
-            if ($column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer']) {
+            if ($hasFooter) {
                 $this->footerTotalColumn = true;
             }
         });
@@ -483,13 +481,13 @@ class PowerGridComponent extends Component
     private function persistState(string $tableItem):void
     {
         $state = [];
-        if (in_array('columns', $this->persist)) {
+        if (in_array('columns', $this->persist) || $tableItem === 'columns') {
             $state['columns'] = collect($this->columns)
                 ->map(fn ($column)         => (object) $column)
                 ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
                 ->toArray();
         }
-        if (in_array('filters', $this->persist)) {
+        if (in_array('filters', $this->persist) || $tableItem === 'filters') {
             $state['filters']        = $this->filters;
             $state['enabledFilters'] = $this->enabledFilters;
         }

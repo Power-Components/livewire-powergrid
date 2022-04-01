@@ -118,12 +118,15 @@ trait Filter
                 continue;
             }
             foreach ($column->inputs as $key => $input) {
-                data_set($input, 'dataField', ($column->dataField != '') ? $column->dataField : $column->field);
+                if (!isset($input['dataField'])) {
+                    data_set($input, 'dataField', $column->dataField ?: $column->field);
+                }
                 data_set($input, 'field', $column->field);
                 data_set($input, 'label', $column->title);
                 $makeFilters[$key][]  = $input;
             }
         }
+
         $this->makeFilters = collect($makeFilters);
 
         $path = 'livewire-powergrid::datatable.input_text_options';
@@ -183,11 +186,8 @@ trait Filter
 
         $this->filters['multi_select'][$data['id']] = $data;
 
-        $filter = collect($this->makeFilters->get('multi_select'))->where('data_field', $data['id']);
-
-        $filter = $filter->first();
-
         /** @var array $filter */
+        $filter = collect($this->makeFilters->get('multi_select'))->where('dataField', $data['id'])->first();
 
         $this->enabledFilters[$data['id']]['id']            = $data['id'];
         $this->enabledFilters[$data['id']]['label']         = $filter['label'];

@@ -1,6 +1,8 @@
 export default (params) => ({
     tableName: params.tableName ?? null,
     columnField: params.columnField ?? null,
+    value: params.value ?? null,
+    text: params.text ?? null,
     dataField: params.dataField ?? null,
     options: [],
     data: params.data,
@@ -11,14 +13,17 @@ export default (params) => ({
         const options = this.data
 
         options.forEach((option) => {
-            let dataField = option.value[this.dataField];
+
+            const value = option.value[self.value];
+            const text = option.value[self.text];
 
             this.options.push({
-                value: dataField ?? option.value.id,
-                text: dataField ?? option.value.name,
+                value: value,
+                text: text,
                 selected: false
             });
-        }); 
+
+        });
 
         JSON.parse(params.selected).forEach(function (value) {
             self.options.map(function (option) {
@@ -47,6 +52,7 @@ export default (params) => ({
 
         this.selected.push(options[0]);
         this.show = false
+
         this.$wire.emit('pg:multiSelect-' + self.tableName, {
             id: this.dataField,
             values: this.selectedValues()
