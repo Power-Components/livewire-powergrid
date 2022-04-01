@@ -263,9 +263,9 @@ final class Column
     {
         $this->editable                          = false;
         $this->inputs['select']['data_source']   = $datasource;
-        $this->inputs['select']['display_field'] = $displayField;
-        $this->inputs['select']['data_field']    = $dataField            ?? $displayField;
-        $this->inputs['select']['class']         = $settings['class']    ?? '';
+        $this->inputs['select']['displayField']  = $displayField;
+        $this->inputs['select']['dataField']     = $dataField           ?? $displayField;
+        $this->inputs['select']['class']         = $settings['class']   ?? '';
 
         return $this;
     }
