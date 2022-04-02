@@ -20,7 +20,7 @@
              ];
          });
 
-    $selected = $selected[$multiSelect['label']]['values'] ?? []
+    $selected = $selected[$multiSelect['dataField']]['values'] ?? []
 
 @endphp
 <div x-cloak

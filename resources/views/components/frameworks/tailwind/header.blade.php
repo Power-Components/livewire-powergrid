@@ -8,7 +8,7 @@
                 :actions="$this->headers"/>
         </div>
 
-        <div class="flex flex-row">
+        <div class="flex flex-row justify-center items-center text-sm">
             @if($exportActive)
                 <div class="mr-2 mt-2 sm:mt-0">
                     @include(powerGridThemeRoot().'.export')

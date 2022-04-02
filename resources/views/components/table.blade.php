@@ -75,7 +75,6 @@
                               $class .= ' '.$attribute['value'];
                            }
                         }
-
                     }
                 @endphp
                 <tr class="{{ $class }}"
