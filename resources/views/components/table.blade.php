@@ -78,7 +78,7 @@
 
                     }
                 @endphp
-                <tr class="{{ $loop->odd ? $theme->table->trBodyLoopClass : 'bg-white' }} {{ $class }}"
+                <tr class="{{ $class }}"
                     style="{{ $theme->table->trBodyStyle }}"
                     wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                     @if($checkbox)
