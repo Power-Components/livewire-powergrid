@@ -32,8 +32,8 @@
     @endif
 </script>
 
-@if(filled(config('livewire-powergrid.plugins.flat_piker.js')))
-    <script src="{{ config('livewire-powergrid.plugins.flat_piker.js') }}"></script>
+@if(filled(config('livewire-powergrid.plugins.flatpickr.js')))
+    <script src="{{ config('livewire-powergrid.plugins.flatpickr.js') }}"></script>
 @endif
 
 @if(isBootstrap5() && filled(config('livewire-powergrid.plugins.bootstrap-select.js')))

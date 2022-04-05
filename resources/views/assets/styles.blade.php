@@ -1,5 +1,5 @@
-@if(filled(config('livewire-powergrid.plugins.flat_piker.css')))
-<link rel="stylesheet" href="{{ config('livewire-powergrid.plugins.flat_piker.css') }}">
+@if(filled(config('livewire-powergrid.plugins.flatpickr.css')))
+<link rel="stylesheet" href="{{ config('livewire-powergrid.plugins.flatpickr.css') }}">
 @endif
 
 @if(isBootstrap5() && filled(config('livewire-powergrid.plugins.bootstrap-select.css')))

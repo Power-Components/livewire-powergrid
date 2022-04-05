@@ -19,7 +19,7 @@
         tableName: '{{ $tableName }}',
         filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
         label: '{{ $date['label'] }}',
-        locale: {{ json_encode(config('livewire-powergrid.plugins.flat_piker.locales.'.app()->getLocale())) }},
+        locale: {{ json_encode(config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale())) }},
         onlyFuture: {{ json_encode(data_get($customConfig, 'only_future', false)) }},
         noWeekEnds: {{ json_encode(data_get($customConfig, 'no_weekends', false)) }},
         customConfig: {{ json_encode($customConfig) }}
