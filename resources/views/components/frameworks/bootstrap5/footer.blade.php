@@ -1,7 +1,7 @@
-@if(!is_array($data))
+@if(!is_array($data) && count($perPageValues) > 1)
     <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between">
         <div class="col-auto overflow-auto my-sm-2 my-md-0 ms-sm-0">
-            @if($perPageInput)
+            @if($perPageInput && count($perPageValues) > 1)
                 <div class="d-flex flex-lg-row align-items-center">
                     <label class="w-auto">
                         <select wire:model="perPage" class="form-select">

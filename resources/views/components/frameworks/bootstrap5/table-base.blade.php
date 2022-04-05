@@ -7,7 +7,7 @@
 
             @includeIf($theme->layout->message)
         </div>
-        <div class="table-responsive col-md-12" style="margin: 10px 0 10px;">
+        <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">
             @include($table)
         </div>
         <div class="row">

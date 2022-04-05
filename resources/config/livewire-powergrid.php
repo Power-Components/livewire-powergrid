@@ -40,7 +40,7 @@ return [
             'translate' => (app()->getLocale() != 'en') ? 'https://npmcdn.com/flatpickr/dist/l10n/' . \Illuminate\Support\Str::substr(app()->getLocale(), 0, 2) . '.js' : '',
             'locales'   => [
                 'pt_BR' => [
-                    'locale'     => 'pt',
+                    'locale'     => 'pt_BR',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
                     'time_24hr'  => true,

@@ -30,6 +30,7 @@ class Bootstrap5 extends ThemeBase
     public function table(): Table
     {
         return Theme::table('table table-bordered table-hover table-striped table-checkable table-highlight-head mb-2')
+            ->div('table-responsive col-md-12', 'margin: 10px 0 10px;')
             ->thead('')
             ->tr('')
             ->th('', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')

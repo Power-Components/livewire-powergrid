@@ -11,8 +11,7 @@
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
-        <tr class="{{ $theme->table->trClass }}" class="{{ $theme->table->trStyle }}">
-
+        <tr class="{{ $theme->table->trClass }} {{ $theme->table->trFiltersClass }}" class="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}">
             @if(count($makeFilters))
                 @if($checkbox)
                     <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>

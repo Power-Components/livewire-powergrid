@@ -24,7 +24,7 @@
                 @include($theme->layout->message)
             </div>
 
-            <div class="overflow-x-auto bg-white shadow overflow-y-auto relative">
+            <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">
                 @include($table)
             </div>
 
