@@ -35,9 +35,9 @@ return [
          * https://flatpickr.js.org
          */
         'flatpickr' => [
-            'js'        => 'https://cdn.jsdelivr.net/npm/flatpickr',
-            'css'       => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-            'locales'   => [
+            'js'      => 'https://cdn.jsdelivr.net/npm/flatpickr',
+            'css'     => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
+            'locales' => [
                 'pt_BR' => [
                     'locale'     => 'pt_BR',
                     'dateFormat' => 'd/m/Y H:i',
