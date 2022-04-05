@@ -8,6 +8,13 @@ export default (params) => ({
     noWeekEnds: params.noWeekEnds ?? false,
     customConfig: params.customConfig ?? null,
     init() {
+
+        const lang = this.locale.locale;
+
+        if (typeof lang !== 'undefined') {
+            this.locale.locale = require("flatpickr/dist/l10n/"+lang+".js").default[lang];
+        }
+
         const _this = this;
         const options = {
             mode: 'range',
