@@ -67,9 +67,7 @@ class PowerGridServiceProvider extends ServiceProvider
             __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path($this->packageName . '.php'),
         ], 'livewire-powergrid-config');
 
-        $this->publishes([
-            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/' . $this->packageName),
-        ], $this->packageName . '-lang');
+        $this->publishes([__DIR__ . '/../../resources/lang' => lang_path('vendor/' . $this->packageName)], $this->packageName . '-lang');
     }
 
     private function createDirectives(): void
