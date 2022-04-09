@@ -12,6 +12,22 @@
             "role": "Developer"
         }
     ],
+    "require": {
+        "php": "^8.0",
+        "livewire/livewire": "^2.10",
+        "box/spout": "^3",
+        "doctrine/dbal": "^3.1|^2.12.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "pestphp/pest": "^1.21",
+        "orchestra/testbench": "^6.17",
+        "composer/composer": "^2.1",
+        "pestphp/pest-plugin-faker": "^1.0",
+        "pestphp/pest-plugin-livewire": "^1.0",
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "nunomaduro/larastan": "^1.0"
+    },
     "autoload": {
         "psr-4": {
             "PowerComponents\\LivewirePowerGrid\\": "src"
@@ -31,12 +47,6 @@
                 "PowerComponents\\LivewirePowerGrid\\Providers\\PowerGridServiceProvider"
             ]
         }
-    },
-    "require": {
-        "php": "^7.4.1 | ^8.0 | ^8.1",
-        "livewire/livewire": "^2.4",
-        "box/spout": "^3",
-        "doctrine/dbal": "^3.1|^2.12.1"
     },
     "scripts": {
         "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
@@ -58,16 +68,6 @@
             "@test:types",
             "@test"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "pestphp/pest": "^1.1",
-        "orchestra/testbench": "^6.17",
-        "composer/composer": "^2.1",
-        "pestphp/pest-plugin-faker": "^1.0",
-        "pestphp/pest-plugin-livewire": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.2",
-        "nunomaduro/larastan": "^1.0"
     },
     "config": {
         "allow-plugins": {

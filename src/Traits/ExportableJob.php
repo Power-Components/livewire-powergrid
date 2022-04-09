@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\{Str, Stringable};
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 trait ExportableJob
 {

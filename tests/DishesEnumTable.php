@@ -101,7 +101,7 @@ class DishesEnumTable extends PowerGridComponent
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
-                
+
             Column::add()
                 ->field('diet', 'dishes.diet')
                 ->makeInputEnumSelect(Diet::cases(), 'dishes.diet')

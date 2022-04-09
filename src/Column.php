@@ -112,7 +112,7 @@ final class Column
      */
     public function searchable(): Column
     {
-        $this->searchable       = true;
+        $this->searchable = true;
 
         return $this;
     }
@@ -124,7 +124,7 @@ final class Column
      */
     public function sortable(): Column
     {
-        $this->sortable            = true;
+        $this->sortable = true;
 
         return $this;
     }
@@ -135,10 +135,10 @@ final class Column
      */
     public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->sum['label']              = $label;
-        $this->sum['header']             = $header;
-        $this->sum['footer']             = $footer;
-        $this->sum['rounded']            = $rounded;
+        $this->sum['label']   = $label;
+        $this->sum['header']  = $header;
+        $this->sum['footer']  = $footer;
+        $this->sum['rounded'] = $rounded;
 
         return $this;
     }
@@ -162,10 +162,10 @@ final class Column
      */
     public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->avg['label']      = $label;
-        $this->avg['header']     = $header;
-        $this->avg['footer']     = $footer;
-        $this->avg['rounded']    = $rounded;
+        $this->avg['label']   = $label;
+        $this->avg['header']  = $header;
+        $this->avg['footer']  = $footer;
+        $this->avg['rounded'] = $rounded;
 
         return $this;
     }
@@ -176,10 +176,10 @@ final class Column
      */
     public function withMin(string $label = 'Min', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->min['label']      = $label;
-        $this->min['header']     = $header;
-        $this->min['footer']     = $footer;
-        $this->min['rounded']    = $rounded;
+        $this->min['label']   = $label;
+        $this->min['header']  = $header;
+        $this->min['footer']  = $footer;
+        $this->min['rounded'] = $rounded;
 
         return $this;
     }
@@ -190,10 +190,10 @@ final class Column
      */
     public function withMax(string $label = 'Max', bool $header = true, bool $footer = true, int $rounded = 2): Column
     {
-        $this->max['label']      = $label;
-        $this->max['header']     = $header;
-        $this->max['footer']     = $footer;
-        $this->max['rounded']    = $rounded;
+        $this->max['label']   = $label;
+        $this->max['header']  = $header;
+        $this->max['footer']  = $footer;
+        $this->max['rounded'] = $rounded;
 
         return $this;
     }
@@ -204,7 +204,7 @@ final class Column
      */
     public function field(string $field, string $dataField = ''): Column
     {
-        $this->field     = $field;
+        $this->field = $field;
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -250,7 +250,7 @@ final class Column
 
     public function visibleInExport(?bool $visible): Column
     {
-        $this->visibleInExport   = $visible;
+        $this->visibleInExport = $visible;
 
         return $this;
     }
@@ -261,11 +261,11 @@ final class Column
      */
     public function makeInputSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
     {
-        $this->editable                          = false;
-        $this->inputs['select']['data_source']   = $datasource;
-        $this->inputs['select']['displayField']  = $displayField;
-        $this->inputs['select']['dataField']     = $dataField           ?? $displayField;
-        $this->inputs['select']['class']         = $settings['class']   ?? '';
+        $this->editable                         = false;
+        $this->inputs['select']['data_source']  = $datasource;
+        $this->inputs['select']['displayField'] = $displayField;
+        $this->inputs['select']['dataField']    = $dataField         ?? $displayField;
+        $this->inputs['select']['class']        = $settings['class'] ?? '';
 
         return $this;
     }
@@ -276,11 +276,11 @@ final class Column
      */
     public function makeInputMultiSelect(Collection $datasource, string $optionText, string $dataField = null, string $optionValue = 'id'): Column
     {
-        $this->editable                                = false;
-        $this->inputs['multi_select']['data_source']   = $datasource;
-        $this->inputs['multi_select']['text']          = $optionText ?: $optionValue;
-        $this->inputs['multi_select']['value']         = $optionValue;
-        $this->inputs['multi_select']['dataField']     = $dataField;
+        $this->editable                              = false;
+        $this->inputs['multi_select']['data_source'] = $datasource;
+        $this->inputs['multi_select']['text']        = $optionText ?: $optionValue;
+        $this->inputs['multi_select']['value']       = $optionValue;
+        $this->inputs['multi_select']['dataField']   = $dataField;
 
         return $this;
     }
@@ -310,11 +310,11 @@ final class Column
         $displayField = 'value';
 
         $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
-            $option =  (array) $case;
+            $option = (array) $case;
 
             if (method_exists($case, 'labelPowergridFilter')) {
-                $option['name']              =  $case->labelPowergridFilter();
-                $displayField                = 'name';
+                $option['name'] = $case->labelPowergridFilter();
+                $displayField   = 'name';
             }
 
             return $option;
@@ -331,7 +331,7 @@ final class Column
      */
     public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
     {
-        $this->editable  = $hasPermission;
+        $this->editable = $hasPermission;
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -403,7 +403,7 @@ final class Column
         $this->inputs['boolean_filter']['enabled']     = true;
         $this->inputs['boolean_filter']['true_label']  = $trueLabel;
         $this->inputs['boolean_filter']['false_label'] = $falseLabel;
-        $this->inputs['boolean_filter']['class']       = $settings['class']   ?? '';
+        $this->inputs['boolean_filter']['class']       = $settings['class'] ?? '';
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }

@@ -21,7 +21,7 @@ class FillableTable
         } else {
             $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
         }
-    
+
         $getFillable = $model->getFillable();
 
         if (filled($model->getKeyName())) {

@@ -21,8 +21,8 @@
     },
     "homepage": "https://github.com/Power-Components/livewire-powergrid#readme",
     "dependencies": {
-        "laravel-mix": "^6.0.37",
-        "tailwindcss": "^2.2.19"
+        "laravel-mix": "^6.0.43",
+        "tailwindcss": "^3.0.23"
     },
     "devDependencies": {
         "resolve-url-loader": "^4.0.0",

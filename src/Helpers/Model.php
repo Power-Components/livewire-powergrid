@@ -29,7 +29,7 @@ class Model implements ModelFilterInterface
     /**
      * @param Builder $query
      */
-    public static function query($query):Model
+    public static function query($query): Model
     {
         return new Model($query);
     }

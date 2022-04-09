@@ -139,7 +139,7 @@ class DishesTable extends PowerGridComponent
                 ->field('serving_at')
                 ->sortable()
                 ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
-                
+
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')

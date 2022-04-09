@@ -31,13 +31,13 @@ class TestCase extends BaseTestCase
         if (self::$isRunningTests === true) {
             return;
         }
-        
+
         $viewsFolder = base_path() . '/resources/views/vendor/livewire-powergrid/';
 
         $viewsFolderPath = str_replace('/', DIRECTORY_SEPARATOR, $viewsFolder);
-            
+
         File::deleteDirectory($viewsFolderPath);
-            
+
         self::$isRunningTests = true;
     }
 

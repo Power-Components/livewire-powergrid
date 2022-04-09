@@ -128,7 +128,7 @@ class CreateCommand extends Command
             if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
                 $this->useFilable = true;
             }
-            
+
             if ($this->useFilable && is_string($this->model) && is_string($this->modelName)) {
                 $this->stub = FillableTable::create($this->model, $this->modelName, strval($this->option('template')));
             }
@@ -200,9 +200,9 @@ class CreateCommand extends Command
         $this->output->title('Component is ready!');
 
         $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>App/' . $this->savedAt . '</comment>].');
-       
+
         $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
-       
+
         $this->info("\n\n⭐ Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
     }
 

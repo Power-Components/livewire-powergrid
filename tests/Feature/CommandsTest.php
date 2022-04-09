@@ -78,7 +78,7 @@ it('publishes the Demo Table', function () {
         ->expectsOutput("\n2. Serve your project. For example, run php artisan serve.")
         ->expectsOutput("\n3. Visit http://localhost/powergrid to view the Demo Table.")
         ->expectsOutput("\n\n⭐ Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n");
-        
+
     $this->assertFileExists($tableFile);
     $this->assertFileExists($viewsFile);
 

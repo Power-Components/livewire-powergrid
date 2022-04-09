@@ -43,10 +43,6 @@ final class Button
         $this->action = $action;
     }
 
-    /**
-     * @param string $action
-     * @return Button
-     */
     public static function add(string $action = ''): Button
     {
         return new Button($action);

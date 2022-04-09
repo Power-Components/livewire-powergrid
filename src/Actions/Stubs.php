@@ -17,7 +17,7 @@ class Stubs
         if (!empty($creationModel) && !empty($template)) {
             return File::get(base_path($template));
         }
-        
+
         if (strtolower(trim($creationModel)) === 'm') {
             return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
         }

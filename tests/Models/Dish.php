@@ -28,7 +28,7 @@ class Dish extends Model
 
     public static function servedAt()
     {
-        return  Self::select('serving_at')->distinct('serving_at')->get();
+        return  self::select('serving_at')->distinct('serving_at')->get();
     }
 
     public function category(): BelongsTo
