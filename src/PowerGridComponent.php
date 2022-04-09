@@ -11,6 +11,7 @@ use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Services\ExportOption;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, PersistData, WithSorting};
 use stdClass;
@@ -454,12 +455,9 @@ class PowerGridComponent extends Component
         $this->fillData();
     }
 
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], array $options = ['deleteAfterDownload' => true]): PowerGridComponent
+    public function showExportOption(?ExportOption $exportOption = null): PowerGridComponent
     {
-        $this->exportActive   = true;
-        $this->exportFileName = $fileName;
-        $this->exportType     = $type;
-        $this->exportOptions  = $options;
+        $this->exportOptions[]  = (array) $exportOption;
 
         return $this;
     }

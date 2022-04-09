@@ -17,9 +17,9 @@
          x-transition:leave-end="opacity-0 scale-90"
          class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-gray-500">
 
-        @if(in_array('excel',$exportType))
+        @if(in_array('excel', $exportOptions[0]['type']))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
-                <span class="w-12">Excel</span>
+                <span class="w-12">@lang('Excel')</span>
                 <a x-on:click="$wire.call('exportToXLS'); open = false"
                    href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-50 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
@@ -34,9 +34,9 @@
                 @endif
             </div>
         @endif
-        @if(in_array('csv',$exportType))
+        @if(in_array('csv', $exportOptions[0]['type']))
             <div class="flex px-4 py-2 text-gray-400 dark:text-gray-300">
-                <span class="w-12">Csv</span>
+                <span class="w-12">@lang('Csv')</span>
                 <a x-on:click="$wire.call('exportToCsv'); open = false" href="#"
                    class="px-2 block text-gray-800 hover:bg-gray-50 hover:text-black-300 dark:text-gray-200 dark:hover:bg-gray-700 rounded">
                     @lang('livewire-powergrid::datatable.labels.all')

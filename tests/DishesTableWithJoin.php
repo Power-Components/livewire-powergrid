@@ -12,6 +12,7 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGridComponent,
     PowerGridEloquent,
     Rules\Rule,
+    Services\ExportOption,
     Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent
@@ -48,10 +49,15 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public function setUp()
     {
+        $exportOption = ExportOption::make('my-dish')
+            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
+            ->striped()
+            ->deleteFileAfterSend(false);
+
         $this->showCheckBox()
             ->showPerPage()
             ->showRecordCount()
-            ->showExportOption('download', ['excel', 'csv'])
+            ->showExportOption($exportOption)
             ->showSearchInput();
     }
 

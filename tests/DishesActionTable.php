@@ -9,7 +9,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridEloquent,
+    Services\ExportOption};
 
 class DishesActionTable extends PowerGridComponent
 {
@@ -41,11 +42,16 @@ class DishesActionTable extends PowerGridComponent
 
     public function setUp()
     {
+        $exportOption = ExportOption::make('my-dish')
+            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
+            ->striped()
+            ->deleteFileAfterSend(false);
+
         $this->showCheckBox()
             ->showPerPage()
             ->showRecordCount()
             ->showToggleColumns()
-            ->showExportOption('download-test', ['excel', 'csv'])
+            ->showExportOption($exportOption)
             ->showSearchInput();
     }
 

@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services;
 
-use Exception;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Helpers\Helpers;
@@ -12,6 +11,8 @@ class Export
     public string $fileName;
 
     public Collection $data;
+
+    public bool $striped = false;
 
     /** @var array<Column> $columns */
     public array $columns;
@@ -39,9 +40,7 @@ class Export
     /**
      * @param Collection $data
      * @param array<Column> $columns
-     * @throws Exception
-     *
-     * @return array<string, array>.
+     * @return array{headers: array, rows: array}.
      */
     public function prepare(Collection $data, array $columns): array
     {

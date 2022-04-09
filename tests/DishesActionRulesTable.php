@@ -5,7 +5,13 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid, PowerGridComponent, PowerGridEloquent, Rules\Rule};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent,
+    Rules\Rule,
+    Services\ExportOption};
 
 class DishesActionRulesTable extends PowerGridComponent
 {
@@ -37,11 +43,16 @@ class DishesActionRulesTable extends PowerGridComponent
 
     public function setUp()
     {
+        $exportOption = ExportOption::make('my-dish')
+            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
+            ->striped()
+            ->deleteFileAfterSend(false);
+
         $this->showCheckBox()
             ->showPerPage()
             ->showRecordCount()
             ->showToggleColumns()
-            ->showExportOption('download-test', ['excel', 'csv'])
+            ->showExportOption($exportOption)
             ->showSearchInput();
     }
 

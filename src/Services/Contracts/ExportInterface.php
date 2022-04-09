@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 interface ExportInterface
 {
-    public function download(bool $deleteFileAfterSend): BinaryFileResponse;
+    public function download(array $exportOptions): BinaryFileResponse;
 
     public function build(): void;
 }

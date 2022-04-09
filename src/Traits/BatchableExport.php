@@ -107,7 +107,7 @@ trait BatchableExport
         $fileExtension       = $this->resolveFileExtension($type);
 
         for ($i = 1; $i < ($this->queues + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) .
+            $fileName = 'powergrid-' . Str::kebab($this->exportOptions[0]['fileName']) .
                 '-' . ($offset + 1) .
                 '-' . $limit .
                 '-' . $this->id .

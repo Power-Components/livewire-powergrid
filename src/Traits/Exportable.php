@@ -14,13 +14,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 trait Exportable
 {
-    public bool $exportActive = false;
-
     public array $exportOptions = [];
-
-    public string $exportFileName = 'download';
-
-    public array $exportType = [];
 
     /**
      * @throws \Exception
@@ -109,9 +103,9 @@ trait Exportable
         }, $this->columns());
 
         $exportable
-            ->fileName($this->exportFileName)
+            ->fileName($this->exportOptions[0]['fileName'])
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
-        return $exportable->download($this->exportOptions['deleteAfterDownload']);
+        return $exportable->download($this->exportOptions);
     }
 }

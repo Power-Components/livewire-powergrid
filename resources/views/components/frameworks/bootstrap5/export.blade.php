@@ -1,5 +1,5 @@
 <div>
-    @if($exportActive)
+    @if(count($exportOptions) > 0)
         <div class="btn-group">
             <button class="btn btn-secondary btn-sm dropdown-toggle"
                     type="button"
@@ -15,10 +15,10 @@
                     </span>
             </button>
             <ul class="dropdown-menu">
-                @if(in_array('excel',$exportType))
+                @if(in_array('excel', $exportOptions[0]['type']))
                     <li class="d-flex">
                         <div class="dropdown-item">
-                            Excel
+                            @lang('Excel')
                             <a class="text-black-50" wire:click="exportToXLS()" href="#">
                                 @lang('livewire-powergrid::datatable.labels.all')
                             </a>
@@ -31,10 +31,10 @@
                         </div>
                     </li>
                 @endif
-                @if(in_array('csv',$exportType))
+                @if(in_array('csv', $exportOptions[0]['type']))
                     <li class="d-flex">
                         <div class="dropdown-item">
-                            Csv
+                            @lang('Csv')
                             <a class="text-black-50" wire:click="exportToCsv()" href="#">
                                 @lang('livewire-powergrid::datatable.labels.all')
                             </a>
