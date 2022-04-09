@@ -219,8 +219,8 @@ it('publishes views file', function () {
     File::delete($dirPath);
 });
 
-it('publishes lang file', function () {
-    $dirPath = getLaravelDir() . 'resources/lang/vendor/livewire-powergrid';
+it('publishes the language file in the lang path', function () {
+    $dirPath = lang_path('vendor/livewire-powergrid');
 
     File::delete($dirPath);
 
