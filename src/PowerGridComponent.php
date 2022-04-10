@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
@@ -60,8 +61,6 @@ class PowerGridComponent extends Component
     public array $relationSearch = [];
 
     public bool $ignoreTablePrefix = true;
-
-    public bool $showUpdateMessages = false;
 
     public string $tableName = 'default';
 
@@ -383,48 +382,7 @@ class PowerGridComponent extends Component
      */
     public function inputTextChanged(array $data): void
     {
-        $update = $this->update($data);
-
-        $this->fillData();
-
-        if (!$this->showUpdateMessages) {
-            return;
-        }
-
-        if (!$update) {
-            session()->flash('error', $this->updateMessages('error', $data['field']));
-
-            return;
-        }
-        session()->flash('success', $this->updateMessages('success', $data['field']));
-    }
-
-    /**
-     * @param array $data
-     * @return bool
-     */
-    public function update(array $data): bool
-    {
-        return false;
-    }
-
-    /**
-     * @return array|null|string
-     */
-    public function updateMessages(string $status, string $field = '_default_message')
-    {
-        $updateMessages = [
-            'success' => [
-                '_default_message' => __('Data has been updated successfully!'),
-                'status'           => __('Custom Field updated successfully!'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
-            ],
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
+        $this->update($data);
     }
 
     public function checkedValues(): array

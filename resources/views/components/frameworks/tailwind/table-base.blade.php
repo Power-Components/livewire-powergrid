@@ -21,7 +21,7 @@
             @endif
 
             <div class="my-3">
-                @include($theme->layout->message)
+                <!-- CUSTOM VIEW HERE -->
             </div>
 
             <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">

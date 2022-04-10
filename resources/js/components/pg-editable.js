@@ -5,8 +5,6 @@ export default (params) => ({
     dataField: params.dataField ?? null,
     content: params.content,
     save() {
-        document.getElementsByClassName('message')[0].style.display = "none";
-
         this.$wire.emit('pg:editable-' + this.tableName, {
             id: this.id,
             value: this.$el.value,

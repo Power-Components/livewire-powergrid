@@ -26,6 +26,9 @@ class DemoCommand extends Command
 
     protected string $link = 'https://github.com/Power-Components/livewire-powergrid';
 
+    /**
+     * @throws \Exception
+     */
     public function handle(): int
     {
         $this->tableFileName = 'PowerGridDemoTable';
