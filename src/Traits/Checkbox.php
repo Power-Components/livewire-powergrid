@@ -26,6 +26,10 @@ trait Checkbox
             return;
         }
 
+        if (count($this->checkboxValues) > 0) {
+            $this->checkboxValues = [];
+        }
+
         /** @var AbstractPaginator $data */
         $data = $this->fillData();
 
