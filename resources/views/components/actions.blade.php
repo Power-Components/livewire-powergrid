@@ -11,6 +11,7 @@
                 style="{{ $theme->table->tdBodyStyle }}">
                 @php
                     $class            = filled($action->class) ? $action->class : $theme->actions->headerBtnClass;
+                    $class            = $attributes->class($class);
                     if($action->singleParam) {
                         $actionParameters = $helperClass->makeActionParameter($action->param, $row);
                     } else {
