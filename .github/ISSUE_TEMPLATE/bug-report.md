@@ -1,55 +1,88 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: Create a report to help us improve
+about: Report bugs or unexpected software behavior
+title: 'Bug Report:'
 labels: bug
 assignees: luanfreitasdev
 
 ---
 
-First of all, did you see if your problem has happened to other people before?
-- [ ] Yes - I did not find it 
+# PowerGrid Bug Report
+
+
+Thank you for reporting a bug and helping us to make PowerGrid better!
+
+Please use the Issue system strictly to report bugs or unexpected software behavior. 
+
+For questions on "How to...", "how can I..."  please use the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.
+
+
+## Information
+
+### Pre-steps
+
+#### Have you searched through other issues to see if your problem is already reported or has been fixed?
+- [ ] Yes - I did not find it.
 - [ ] No
 
-Did you read the [documentation](https://livewire-powergrid.com/) ?
-- [ ] Yes - I did not find it
+#### Did you read the [documentation](https://livewire-powergrid.com/)?
+- [ ] Yes - I did not find it.
 - [ ] No
 
-Is there an error in the console?
-- [ ] Yes - I'll put a screenshot
+#### Have you tried to publish the views?
+
+You can publish the views to make sure there is no "old code" trapped in views which are not up-to-date.
+
+To publish, run: `php artisan vendor:publish --tag=livewire-powergrid-views`
+
+- [ ] Yes - I didn't work.
+- [ ] No, this error is not related to views.
+
+#### Is there an error in the console?
+- [ ] Yes - I'll add a screenshot or report it here.
 - [ ] No
 
+### Software Version
 
-**Describe the bug**
+You can run `composer show -i` and `npm list`
 
-* 
+| Software  | Version (exactly) |
+|-----------|-------------------|
+| PowerGrid |                   |
+| Laravel   |                   |
+| Livewire  |                   |
+| Alpine JS  |                   |
 
-**To Reproduce**
-* Got to ..
-
-**Laravel version (exactly)** 
-
-*
-
-**Livewire version (exactly)**
-
-*
-
-**AlpineJS:** 
-
-*
-
-**Theme:**
+### Theme
 - [ ] Tailwind 2.x
 - [ ] Tailwind 3.x
   - [ ] With tailwind/forms
 - [ ] Bootstrap - Version:        
 
+---
+## Describe the bug
 
-**Screenshots** (***This helps to understand better***)
+### What happened?
+
+I did FOO expecting BAR as a result. However, I received BAZ...
+
+### To Reproduce...
+
+First click on "FOO" then....
+
+### Suggestions
+
+(Do you have any idea how we can fix it?)
 
 
-**Do you have any idea how we can fix it?**
+## Extra information
 
+**Screenshots**
 
-**Put part of your code, an html screenshot of the problem element:**
+**Code snippet**
+
+```php 
+<?php
+
+//...
+```
