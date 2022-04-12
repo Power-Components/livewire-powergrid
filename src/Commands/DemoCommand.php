@@ -76,7 +76,12 @@ class DemoCommand extends Command
         $this->info("\n<comment>1.</comment> You must include <comment>Route::view('/powergrid', 'powergrid-demo');</comment> in your <comment>routes/web.php</comment> file.");
         $this->info("\n<comment>2.</comment> Serve your project. For example, run <comment>php artisan serve</comment>.");
         $this->info("\n<comment>3.</comment> Visit <comment>" . config('app.url') . '/powergrid</comment> to view the Demo Table.');
-        $this->info("\n\n⭐ Please consider <comment>starring</comment> our repository at <href={$this->link}>{$this->link}</> ⭐\n");
+        $this->info("\n\n⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <href={$this->link}>{$this->link}</> ⭐\n");
+    }
+
+    protected function thanks(): string
+    {
+        return strval(str_replace(',', '!', strval(__('Thanks,'))));
     }
 
     protected function welcomeBox(): void

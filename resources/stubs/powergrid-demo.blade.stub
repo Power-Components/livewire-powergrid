@@ -29,6 +29,9 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr" defer></script>
+
         @livewireStyles
         @powerGridStyles
     </head>
