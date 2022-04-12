@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report bugs or unexpected software behavior
-title: 'Bug Report: ** short & meaningfultitle describing the bug ***'
+title: 'Bug Report: ** short & meaningful title describing the bug ***'
 labels: bug
 assignees: luanfreitasdev
 
