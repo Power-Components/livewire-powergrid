@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report bugs or unexpected software behavior
-title: 'Bug Report:'
+title: 'Bug Report: ** short & meaningfultitle describing the bug ***'
 labels: bug
 assignees: luanfreitasdev
 
@@ -14,11 +14,13 @@ Thank you for reporting a bug and helping us to improve PowerGrid!
 
 ## Guidelines
 
-Please use the Issue system strictly to report bugs or unexpected software behavior. 
+`   🐛 `   We use GitHub Issues exclusively for tracking bugs and unexpected software behavior. 
 
 `   🙏 `  Please use the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab for questions like _"How to...",_ "_how can I..."_ .
 
-`   ⚠️ `  Issues that do not follow this template will be automatically closed.
+`   ✍️ `  Give this report a short but meaningful title. Make it easy to spot for others who might be facing the same issue.
+
+`   ⚠️ `  Issues that do not describe a bug or do not follow the template will be closed.
 
 ## Information
 
