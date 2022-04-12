@@ -10,12 +10,15 @@ assignees: luanfreitasdev
 # PowerGrid Bug Report
 
 
-Thank you for reporting a bug and helping us to make PowerGrid better!
+Thank you for reporting a bug and helping us to improve PowerGrid!
+
+## Guidelines
 
 Please use the Issue system strictly to report bugs or unexpected software behavior. 
 
-For questions on "How to...", "how can I..."  please use the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.
+`   🙏 `  Please use the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab for questions like _"How to...",_ "_how can I..."_ .
 
+`   ⚠️ `  Issues that do not follow this template will be automatically closed.
 
 ## Information
 
@@ -39,12 +42,12 @@ To publish, run: `php artisan vendor:publish --tag=livewire-powergrid-views`
 - [ ] No, this error is not related to views.
 
 #### Is there an error in the console?
-- [ ] Yes - I'll add a screenshot or report it here.
+- [ ] Yes - I'll add a screenshot or report it below.
 - [ ] No
 
 ### Software Version
 
-You can run `composer show -i` and `npm list`
+You can run `composer show -i` and `npm list` to list installed package with their versions.
 
 | Software  | Version (exactly) |
 |-----------|-------------------|
