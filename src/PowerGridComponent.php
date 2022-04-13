@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
