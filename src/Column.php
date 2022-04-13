@@ -34,6 +34,10 @@ final class Column
 
     public bool $sortable = false;
 
+    public array $editableOptions = [];
+
+    public string $editableType = 'input';
+
     public array $sum = [
         'header' => false,
         'footer' => false,
@@ -335,6 +339,18 @@ final class Column
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
+
+        return $this;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function editableDropdown(array $options = []): Column
+    {
+        $this->editableType = 'dropdown';
+
+        $this->editableOptions = $options;
 
         return $this;
     }
