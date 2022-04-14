@@ -378,10 +378,11 @@ class PowerGridComponent extends Component
 
     /**
      * @throws Exception
+     * @return null
      */
-    public function inputTextChanged(array $data): void
+    public function inputTextChanged(array $data = [])
     {
-        $this->update($data);
+        return null;
     }
 
     public function checkedValues(): array
