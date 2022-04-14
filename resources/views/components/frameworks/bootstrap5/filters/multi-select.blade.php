@@ -12,14 +12,7 @@
         dataField: '{{ $multiSelect['dataField'] }}',
     })">
     @if(filled($multiSelect))
-        <div class="flex @if(!$inline) col-md-6 col-lg-3 @endif"
-             style="max-width: 370px !important;">
-
-            @if(!$inline)
-                <label for="input_{{ data_get($multiSelect, 'dataField') }}">
-                    {{ data_get($multiSelect, 'label') }}
-                </label>
-            @endif
+        <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
             <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
                     multiple
                     wire:model="filters.multi_select.{{ $multiSelect['dataField'] }}.values"

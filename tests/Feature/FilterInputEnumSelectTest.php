@@ -34,7 +34,7 @@ function filterEnumSelect(string $dataField, ?string $value): array
 function htmlSelectOptionsEnum(): string
 {
     return  <<<HTML
-    <option value="">All</option>
+    <option>All</option>
                                                                         <option value="0">
                                 🍽️ All diets
                             </option>

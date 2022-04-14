@@ -48,6 +48,7 @@
                                     'column'    => $column,
                                     'selected'  => $filters['multi_select'] ?? [],
                                     'tableName' => $tableName,
+                                    'theme'     => $theme->filterMultiSelect,
                                 ])
                             @endif
                         @endforeach
