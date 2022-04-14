@@ -17,7 +17,6 @@
                     multiple
                     wire:model="filters.multi_select.{{ $multiSelect['dataField'] }}.values"
                     x-ref="select_picker_{{ $multiSelect['dataField'] }}"
-                    class="power_grid_select form-control shadow-none active"
                     data-live-search="true">
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
                 @foreach(data_get($multiSelect, 'data_source') as $relation)

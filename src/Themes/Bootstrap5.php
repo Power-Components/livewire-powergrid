@@ -106,7 +106,7 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::filterBoolean()
             ->view($this->root() . '.filters.boolean')
-            ->input('form-control shadow-none');
+            ->input('form-control form-select shadow-none');
     }
 
     public function filterDatePicker(): FilterDatePicker
@@ -125,6 +125,7 @@ class Bootstrap5 extends ThemeBase
     public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
+            ->base(attrStyle: 'min-width: 85px !important')
             ->view($this->root() . '.filters.number')
             ->input('form-control shadow-none');
     }
@@ -133,14 +134,15 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::filterSelect()
             ->view($this->root() . '.filters.select')
-            ->input('form-control shadow-none');
+            ->input('form-control form-select shadow-none');
     }
 
     public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
+            ->base(attrStyle: 'min-width: 165px !important')
             ->view($this->root() . '.filters.input-text')
-            ->select('form-control mb-1 shadow-none')
+            ->select('form-control mb-1 shadow-none form-select')
             ->input('form-control shadow-none');
     }
 }

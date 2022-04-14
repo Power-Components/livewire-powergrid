@@ -13,8 +13,7 @@
     @if(filled($inputText))
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
             <div class="relative">
-                <select id="input_text_options"
-                        class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
+                <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                         style="{{ data_get($column, 'headerStyle') }}"
                         wire:model.defer="filters.input_option_text.{{ $field }}"
                         wire:input.defer="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
@@ -22,9 +21,6 @@
                         <option value="{{ $key }}">{{ trans($value) }}</option>
                     @endforeach
                 </select>
-                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
-                    <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
-                </div>
             </div>
             <div class="mt-1">
                 <input
