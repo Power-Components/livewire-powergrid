@@ -6,40 +6,35 @@ class FilterBoolean
 {
     public string $inputClass = '';
 
-    public string $divClassNotInline = '';
+    public string $inputStyle = '';
 
-    public string $divClassInline = '';
+    public string $view = '';
 
-    public string $divStyle = '';
+    public string $baseClass = '';
 
-    public string $relativeDivClass = '';
+    public string $baseStyle = '';
 
-    public function input(string $attrClass, string $divStyle = ''): FilterBoolean
+    public function base(string $attrClass = '', string $attrStyle = ''): FilterBoolean
+    {
+        $this->baseClass = $attrClass;
+
+        $this->baseStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function view(string $view): FilterBoolean
+    {
+        $this->view    = $view;
+
+        return $this;
+    }
+
+    public function input(string $attrClass, string $attrStyle = ''): FilterBoolean
     {
         $this->inputClass = $attrClass;
 
-        $this->divStyle = $divStyle;
-
-        return $this;
-    }
-
-    public function relativeDiv(string $attrClass): FilterBoolean
-    {
-        $this->relativeDivClass = $attrClass;
-
-        return $this;
-    }
-
-    public function divNotInline(string $divClassNotInline): FilterBoolean
-    {
-        $this->divClassNotInline = $divClassNotInline;
-
-        return $this;
-    }
-
-    public function divInline(string $divClassInline): FilterBoolean
-    {
-        $this->divClassInline = $divClassInline;
+        $this->inputStyle = $attrStyle;
 
         return $this;
     }

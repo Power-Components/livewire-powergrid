@@ -24,7 +24,7 @@
         noWeekEnds: {{ json_encode(data_get($customConfig, 'no_weekends', false)) }},
         customConfig: {{ json_encode($customConfig) }}
     })">
-    <div class="{{ $theme->divClassNotInline }}" @if($inline)  @endif>
+    <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
             <label for="input_{{ data_get($date, 'field') }}"
                    class="text-gray-700 dark:text-gray-300">
@@ -34,6 +34,7 @@
         <form autocomplete="off">
             <input id="input_{{ data_get($date, 'field') }}"
                    x-ref="rangeInput"
+                   autocomplete="off"
                    data-field="{{ data_get($date, 'dataField') }}"
                    style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
                    class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"

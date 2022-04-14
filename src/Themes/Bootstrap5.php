@@ -105,52 +105,42 @@ class Bootstrap5 extends ThemeBase
     public function filterBoolean(): FilterBoolean
     {
         return Theme::filterBoolean()
-            ->input('form-control shadow-none')
-            ->relativeDiv('d-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.boolean')
+            ->input('form-control shadow-none');
     }
 
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input('form-control shadow-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.date-picker')
+            ->input('form-control shadow-none');
     }
 
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view($this->root() . '.multi-select')
-            ->input('shadow-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.multi-select');
     }
 
     public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
-            ->input('form-control shadow-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.number')
+            ->input('form-control shadow-none');
     }
 
     public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
-            ->input('form-control shadow-none')
-            ->relativeDiv('d-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.select')
+            ->input('form-control shadow-none');
     }
 
     public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
-            ->select('form-control mb-1 shadow-none', 'd-none')
-            ->input('form-control shadow-none')
-            ->divNotInline('')
-            ->divInline('');
+            ->view($this->root() . '.filters.input-text')
+            ->select('form-control mb-1 shadow-none')
+            ->input('form-control shadow-none');
     }
 }

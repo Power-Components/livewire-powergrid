@@ -8,29 +8,33 @@ class FilterDatePicker
 
     public string $inputStyle = '';
 
-    public string $divClassNotInline = '';
+    public string $view = '';
 
-    public string $divClassInline = '';
+    public string $baseClass = '';
+
+    public string $baseStyle = '';
+
+    public function base(string $attrClass = '', string $attrStyle = ''): FilterDatePicker
+    {
+        $this->baseClass = $attrClass;
+
+        $this->baseStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function view(string $view): FilterDatePicker
+    {
+        $this->view    = $view;
+
+        return $this;
+    }
 
     public function input(string $attrClass, string $attrStyle = ''): FilterDatePicker
     {
         $this->inputClass = $attrClass;
 
         $this->inputStyle = $attrStyle;
-
-        return $this;
-    }
-
-    public function divNotInline(string $divClassNotInline): FilterDatePicker
-    {
-        $this->divClassNotInline = $divClassNotInline;
-
-        return $this;
-    }
-
-    public function divInline(string $divClassInline): FilterDatePicker
-    {
-        $this->divClassInline = $divClassInline;
 
         return $this;
     }

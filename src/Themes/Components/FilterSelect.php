@@ -6,11 +6,18 @@ class FilterSelect
 {
     public string $inputClass = '';
 
-    public string $divClassNotInline = '';
+    public string $baseClass = '';
 
-    public string $divClassInline = '';
+    public string $baseStyle = '';
 
-    public string $relativeDivClass = '';
+    public string $view = '';
+
+    public function view(string $view): FilterSelect
+    {
+        $this->view    = $view;
+
+        return $this;
+    }
 
     public function input(string $attrClass = ''): FilterSelect
     {
@@ -19,23 +26,11 @@ class FilterSelect
         return $this;
     }
 
-    public function divNotInline(string $attrClass = ''): FilterSelect
+    public function base(string $attrClass = '', string $attrStyle = ''): FilterSelect
     {
-        $this->divClassNotInline = $attrClass;
+        $this->baseClass = $attrClass;
 
-        return $this;
-    }
-
-    public function divInline(string $attrClass = ''): FilterSelect
-    {
-        $this->divClassInline = $attrClass;
-
-        return $this;
-    }
-
-    public function relativeDiv(string $attrClass = ''): FilterSelect
-    {
-        $this->relativeDivClass = $attrClass;
+        $this->baseStyle = $attrStyle;
 
         return $this;
     }

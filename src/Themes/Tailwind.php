@@ -28,9 +28,9 @@ class Tailwind extends ThemeBase
 
     public function table(): Table
     {
-        return Theme::table('rounded-lg min-w-full border border-slate-200 dark:bg-slate-600 border-slate-100')
+        return Theme::table('rounded-lg min-w-full border border-slate-200 dark:bg-slate-600 border-slate-200')
             ->div('overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative transition-height ease-out duration-300 max-h-[29rem]')
-            ->thead('shadow-sm bg-slate-100 dark:bg-slate-700')
+            ->thead('shadow-sm bg-slate-100 dark:bg-slate-700 border border-b-slate-200')
             ->tr('')
             ->trFilters('bg-white shadow-sm')
             ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-medium text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
@@ -50,7 +50,7 @@ class Tailwind extends ThemeBase
     public function actions(): Actions
     {
         return Theme::actions()
-            ->headerBtn('block w-full bg-slate-50 text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-600 dark:border-slate-500 dark:bg-slate-500 2xl:dark:placeholder-slate-300 dark:text-slate-200 dark:text-slate-300')
+            ->headerBtn('block w-full bg-slate-50 text-slate-700 border border-slate-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-600 dark:border-slate-500 dark:bg-slate-500 2xl:dark:placeholder-slate-300 dark:text-slate-200 dark:text-slate-300')
             ->rowsBtn('focus:outline-none text-sm py-2.5 px-5 rounded border');
     }
 
@@ -92,52 +92,43 @@ class Tailwind extends ThemeBase
     public function filterBoolean(): FilterBoolean
     {
         return Theme::filterBoolean()
-            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'max-width: 370px')
-            ->divNotInline('pt-2 p-2')
-            ->relativeDiv('pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->divInline('');
+            ->view($this->root() . '.filters.boolean')
+            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'max-width: 370px');
     }
 
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->input('flatpickr flatpickr-input block my-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 12rem')
-            ->divNotInline('pt-2 p-2')
-            ->divInline('');
+            ->view($this->root() . '.filters.date-picker')
+            ->input('flatpickr flatpickr-input block my-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 12rem');
     }
 
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->view($this->root() . '.multi-select')
-            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->divNotInline('pt-2 p-2')
-            ->divInline('pr-6');
+            ->view($this->root() . '.filters.multi-select');
     }
 
     public function filterNumber(): FilterNumber
     {
         return Theme::filterNumber()
-            ->input('block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 4rem')
-            ->divNotInline('pt-2 p-2')
-            ->divInline('pr-6');
+            ->view($this->root() . '.filters.number')
+            ->input('block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 4rem');
     }
 
     public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
-            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->divNotInline('pt-2 ml-2 p-2')
-            ->relativeDiv('pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->divInline('pr-6');
+            ->view($this->root() . '.filters.select')
+            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 
     public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText()
-            ->select('appearance-none block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700')
-            ->input('w-full block bg-slate-50 text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->divNotInline('mt-1')
-            ->divInline('pr-6');
+            ->view($this->root() . '.filters.input-text')
+            ->base('min-w-[9.5rem]')
+            ->select('appearance-none block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
+            ->input('w-full block bg-slate-50 text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 }

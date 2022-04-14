@@ -6,18 +6,25 @@
     'inputText' => null,
     'inputTextOptions' => [],
 ])
-<div wire:ignore.self
-    style="min-width: 9.5rem">
+<div wire:ignore.self>
     @php
         $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
     @endphp
     @if(filled($inputText))
-        <div class="@if(!$inline) pt-2 p-2 @endif">
+        <div @class([
+            'pt-2 p-2' => !$inline,
+            $theme->baseClass,
+        ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
                 <label class="text-gray-700 dark:text-gray-300">{{ data_get($inputText, 'label') }}</label>
             @endif
-            <div class="@if($inline) flex flex-col @else flex flex-row justify-between @endif">
-                <div class="@if(!$inline) pl-0 pt-1 pr-3 @endif">
+            <div @class([
+                'flex flex-row justify-between' => !$inline,
+                'flex flex-col' => $inline,
+        ])>
+                <div @class([
+                        'pl-0 pt-1 pr-3' => !$inline,
+                    ])>
                     <div class="relative">
                         <select id="input_text_options"
                                 class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
@@ -28,7 +35,7 @@
                                 <option value="{{ $key }}">{{ trans($value) }}</option>
                             @endforeach
                         </select>
-                        <div class="{{ $theme->relativeDivClass }}">
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
                             <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
                         </div>
                     </div>
@@ -42,7 +49,7 @@
                         @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"
-                        placeholder="{{ empty($column)?data_get($inputText, 'label'):($column->placeholder?:$column->title) }}">
+                        placeholder="{{ empty($column)?data_get($inputText, 'label'):($column->placeholder?:$column->title) }}" />
                 </div>
             </div>
         </div>
