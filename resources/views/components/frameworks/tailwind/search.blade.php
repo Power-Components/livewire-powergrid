@@ -8,7 +8,7 @@
               </span>
             <input wire:model.debounce.600ms="search" type="text"
                    style="padding-left: 36px !important;"
-                   class="placeholder-slate-400 block w-full float-right bg-slate-50 text-slate-700 border border-slate-300 rounded-full py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 pl-10 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
+                   class="placeholder-slate-400 block w-full float-right bg-white text-slate-700 border border-slate-300 rounded-full py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 pl-10 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
                    placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}">
             @if($search)
                 <span class="absolute inset-y-0 right-0 flex items-center pl-1">

@@ -67,13 +67,13 @@
                             <input readonly
                                    x-ref="multi_select"
                                    placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
-                                   class="w-full block bg-slate-50 text-slate-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400"
+                                   class="w-full block bg-white text-slate-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400"
                                    x-bind:value="selectedValues()"
                             >
                         </div>
                     </div>
                     <div
-                        class="text-slate-300 w-8 py-1 pl-2 pr-1 border-l flex bg-slate-50 items-center border-slate-200 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400">
+                        class="text-slate-300 w-8 py-1 pl-2 pr-1 border-l flex bg-white items-center border-slate-200 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400">
 
                         <button type="button" x-show="show" x-on:click="show = true"
                                 class="cursor-pointer w-6 h-6 text-slate-600 outline-none focus:outline-none dark:text-slate-200">

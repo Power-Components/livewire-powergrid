@@ -4,8 +4,6 @@ namespace PowerComponents\LivewirePowerGrid;
 
 final class Button
 {
-    public string $action = '';
-
     public string $caption = '';
 
     public string $route = '';
@@ -38,9 +36,8 @@ final class Button
      * Button constructor.
      * @param string $action
      */
-    public function __construct(string $action)
+    public function __construct(public string $action)
     {
-        $this->action = $action;
     }
 
     public static function add(string $action = ''): Button
@@ -59,11 +56,7 @@ final class Button
     }
 
     /**
-     * @param string $route
-     * @param array<int|string, string> $param
-     * @param boolean $singleParam parameter is single parameter
-
-     * @return $this
+     * Route string
      */
     public function route(string $route, array $param, bool $singleParam = false): Button
     {
@@ -76,11 +69,10 @@ final class Button
 
     /**
      * Class string in view: class="foo"
-     * @return $this
      */
-    public function class(string $class_attr): Button
+    public function class(string $classAttr): Button
     {
-        $this->class = $class_attr;
+        $this->class = $classAttr;
 
         return $this;
     }

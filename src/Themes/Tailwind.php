@@ -93,14 +93,15 @@ class Tailwind extends ThemeBase
     {
         return Theme::filterBoolean()
             ->view($this->root() . '.filters.boolean')
-            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'max-width: 370px');
+            ->base('min-w-[5rem]')
+            ->input('appearance-none block mt-1 mb-1 bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'max-width: 370px');
     }
 
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
             ->view($this->root() . '.filters.date-picker')
-            ->input('flatpickr flatpickr-input block my-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 12rem');
+            ->input('flatpickr flatpickr-input block my-1 bg-white border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 12rem');
     }
 
     public function filterMultiSelect(): FilterMultiSelect
@@ -113,14 +114,15 @@ class Tailwind extends ThemeBase
     {
         return Theme::filterNumber()
             ->view($this->root() . '.filters.number')
-            ->input('block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 4rem');
+            ->input('block bg-white border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 4rem');
     }
 
     public function filterSelect(): FilterSelect
     {
         return Theme::filterSelect()
             ->view($this->root() . '.filters.select')
-            ->input('appearance-none block mt-1 mb-1 bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+            ->base('min-w-[9.5rem]')
+            ->input('appearance-none block mt-1 mb-1 bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 
     public function filterInputText(): FilterInputText
@@ -128,7 +130,7 @@ class Tailwind extends ThemeBase
         return Theme::filterInputText()
             ->view($this->root() . '.filters.input-text')
             ->base('min-w-[9.5rem]')
-            ->select('appearance-none block bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
-            ->input('w-full block bg-slate-50 text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+            ->select('appearance-none block bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
+            ->input('w-full block bg-white text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 }
