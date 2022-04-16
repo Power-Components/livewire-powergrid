@@ -24,7 +24,7 @@
             type="text"
             x-on:keydown.enter="save()"
             :class="{'cursor-pointer': !editable}"
-            class="{{ $theme->inputClass }} p-2"
+            class="{{ $theme->editable->inputClass }} p-2"
             x-ref="editable"
             x-text="content"
             :value="$root.firstElementChild.innerText">

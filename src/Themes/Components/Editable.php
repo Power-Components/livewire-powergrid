@@ -12,9 +12,22 @@ class Editable
 
     public string $inputClass = '';
 
+    public string $baseClass = '';
+
+    public string $baseStyle = '';
+
     public function view(string $view): Editable
     {
         $this->view    = $view;
+
+        return $this;
+    }
+
+    public function base(string $attrClass = '', string $attrStyle = ''): Editable
+    {
+        $this->baseClass = $attrClass;
+
+        $this->baseStyle = $attrStyle;
 
         return $this;
     }

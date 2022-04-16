@@ -29,11 +29,11 @@ class Tailwind extends ThemeBase
     public function table(): Table
     {
         return Theme::table('rounded-lg min-w-full border border-slate-200 dark:bg-slate-600 border-slate-200')
-            ->div('overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative transition-height ease-out duration-300 max-h-[29rem]')
+            ->div('overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative')
             ->thead('shadow-sm bg-slate-100 dark:bg-slate-700 border border-b-slate-200')
             ->tr('')
             ->trFilters('bg-white shadow-sm')
-            ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-medium text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
+            ->th('font-semibold px-2 pr-4 py-3 text-left text-sm font-semebold text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
             ->tbody('text-slate-800')
             ->trBody('odd:bg-slate-100 hover:odd:bg-slate-200 border-slate-200 dark:border-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700')
             ->tdBody('px-3 py-2 whitespace-nowrap dark:text-slate-200')
@@ -122,7 +122,7 @@ class Tailwind extends ThemeBase
         return Theme::filterSelect()
             ->view($this->root() . '.filters.select')
             ->base('min-w-[9.5rem]')
-            ->input('appearance-none block mt-1 mb-1 bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+            ->input('appearance-none block mt-1 mb-1 bg-white border border-slate-300 h-[38px] text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 
     public function filterInputText(): FilterInputText
@@ -130,7 +130,7 @@ class Tailwind extends ThemeBase
         return Theme::filterInputText()
             ->view($this->root() . '.filters.input-text')
             ->base('min-w-[9.5rem]')
-            ->select('appearance-none block bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
+            ->select('appearance-none block bg-white border border-slate-300 h-[38px] text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
             ->input('w-full block bg-white text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 }

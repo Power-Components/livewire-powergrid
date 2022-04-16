@@ -20,21 +20,15 @@
     >
         @if($column->editable === true && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">
-                        <x-livewire-powergrid::editable
-                            :tableName="$tableName"
-                            :primaryKey="$primaryKey"
-                            :currentTable="$currentTable"
-                            :row="$row"
-                            :theme="$theme->editable"
-                            :field="$field"/>
-                        @if($column->clickToCopy)
+                @include($theme->editable->view)
+                @if($column->clickToCopy)
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
                         :field="$content"
                         :label="data_get($column->clickToCopy, 'label') ?? null"
                         :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                 @endif
-                </span>
+            </span>
         @elseif(count($column->toggleable) > 0)
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
@@ -48,8 +42,8 @@
                         :field="$content"
                         :label="data_get($column->clickToCopy, 'label') ?? null"
                         :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
-                @endif
-                </span>
+                    @endif
+            </span>
         @endif
     </td>
 @endforeach
