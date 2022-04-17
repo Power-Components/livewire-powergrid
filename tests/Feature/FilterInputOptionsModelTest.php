@@ -294,7 +294,7 @@ it('properly filters by "chef name is blank"', function (string $component, obje
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
@@ -325,7 +325,7 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
         ->assertSee('Pastel de Nata')
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Carne Louca')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Pastel de Nata')
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Carne Louca');
@@ -356,7 +356,7 @@ it('properly filters by "chef name is null"', function (string $component, objec
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
         ->assertDontSee('Carne Louca')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
         ->assertDontSee('Carne Louca');
@@ -387,7 +387,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, o
         ->assertSee('Francesinha vegana')
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Francesinha vegana')
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata');
@@ -415,7 +415,7 @@ it('properly filters by "chef name is empty"', function (string $component, obje
         ->assertSee('Pastel de Nata')
         ->assertSee('Carne Louca')
         ->assertDontSee('Francesinha vegana')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Pastel de Nata')
         ->assertSee('Carne Louca')
         ->assertDontSee('Francesinha vegana');

@@ -8,21 +8,21 @@ it('properly displays "full" showRecordCount')
 
 it('properly displays "short" showRecordCount')
     ->livewire(DishesTable::class)
-    ->set('recordCount', 'short')
+    ->set('setUp.footer.recordCount', 'short')
     ->assertSeeTextInOrder(['1', '-', '10', '|', '102']);
 
 it('properly displays "min" showRecordCount')
     ->livewire(DishesTable::class)
-    ->set('recordCount', 'min')
+    ->set('setUp.footer.recordCount', 'min')
     ->assertSeeTextInOrder(['1', '10']);
 
 it('properly changes records and displays per page')
     ->livewire(DishesTable::class)
-    ->set('perPage', '25')
+    ->set('setUp.footer.perPage', '25')
     ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results'])
-    ->set('perPage', '50')
+    ->set('setUp.footer.perPage', '50')
     ->assertSeeTextInOrder(['Showing', '1', 'to', '50', 'of', '102', 'Results'])
-    ->set('perPage', '0') //All items
+    ->set('setUp.footer.perPage', '0') //All items
     ->assertSeeTextInOrder(['Showing', '1', 'to', '102', 'of', '102', 'Results'])
     ->assertSeeHtml('Sopa Creme de Ervilha')
     ->assertSeeHtml('Pastel de Nata');
@@ -82,7 +82,10 @@ it('searches for something that is not on the current page')
 
 it('properly paginates', function () {
     $component          = powergrid();
-    $component->perPage = 5;
+
+    $component->setUp   = [
+        'footer' => ['perPage' => 5],
+    ];
     $pagination         = $component->fillData();
 
     expect($pagination->items())->toHaveCount(5);

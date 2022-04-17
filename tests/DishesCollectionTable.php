@@ -6,6 +6,9 @@ use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
@@ -79,17 +82,23 @@ class DishesCollectionTable extends PowerGridComponent
         ]);
     }
 
-    public function setUp()
+    public function setUp(): array
     {
-        $exportOption = ExportOption::make('my-dish')
-            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
-            ->striped()
-            ->deleteFileAfterSend(false);
+        $this->showCheckBox();
 
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showExportOption($exportOption)
-            ->showSearchInput();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function addColumns(): PowerGridEloquent

@@ -5,7 +5,7 @@ use function Pest\Livewire\livewire;
 it('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', 10)
+        ->set('setUp.footer.perPage', 10)
         ->assertSeeHtml('$emit("toggleEvent", {"dishId":5})')
         ->assertSeeHtmlInOrder(['<a ', 'href="https://www.dish.test/sorry-out-of-stock?dish=6'])
         ->assertSeeHtmlInOrder(['<a ', 'href="https://www.dish.test/sorry-out-of-stock?dish=7'])
@@ -48,7 +48,7 @@ it('add rule \'caption\' when dish out of stock', function (string $component, o
 it('add rule \'emit\' when dishId == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
-        ->set('perPage', 10)
+        ->set('setUp.footer.perPage', 10)
         ->set('search', 'Francesinha vegana')
         ->assertSeeHtml('$emit("toggleEvent", {"dishId":5})');
 })->with('rules');

@@ -8,6 +8,9 @@ use Illuminate\Support\{Carbon, HtmlString};
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
@@ -47,18 +50,23 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public bool $withSortStringNumber = true;
 
-    public function setUp()
+    public function setUp(): array
     {
-        $exportOption = ExportOption::make('my-dish')
-            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
-            ->striped()
-            ->deleteFileAfterSend(false);
+        $this->showCheckBox();
 
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showRecordCount()
-            ->showExportOption($exportOption)
-            ->showSearchInput();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function dataSource(): Builder

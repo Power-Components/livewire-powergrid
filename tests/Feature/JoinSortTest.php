@@ -6,7 +6,7 @@ use PowerComponents\LivewirePowerGrid\Tests\DishesTableWithJoin;
 
 it('properly sorts ASC/DESC with: string join column', function () {
     livewire(DishesTableWithJoin::class)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'dishes.id')
         ->set('sortDirection', 'desc')
         ->assertSee('Sopas')

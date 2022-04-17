@@ -15,7 +15,7 @@
                     </span>
             </button>
             <ul class="dropdown-menu">
-                @if(in_array('excel', $exportOptions[0]['type']))
+                @if(in_array('excel', data_get($setUp, 'exportable.type')))
                     <li class="d-flex">
                         <div class="dropdown-item">
                             @lang('Excel')
@@ -31,11 +31,11 @@
                         </div>
                     </li>
                 @endif
-                @if(in_array('csv', $exportOptions[0]['type']))
+                @if(in_array('csv', data_get($setUp, 'exportable.type')))
                     <li class="d-flex">
                         <div class="dropdown-item">
                             @lang('Csv')
-                            <a class="text-black-50" wire:click="exportToCsv()" href="#">
+                            <a class="text-black-50" wire:click="exportToCsv" href="#">
                                 @lang('livewire-powergrid::datatable.labels.all')
                             </a>
                             @if($checkbox)

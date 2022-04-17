@@ -16,7 +16,7 @@ it('updates data', function (string $component, object $params) {
 it('properly displays "openModal" on edit button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
-        ->set('perPage', 6)
+        ->set('setUp.footer.perPage', 6)
         ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
         ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":2})')
         ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":7})')
@@ -29,7 +29,7 @@ it('properly displays "deletedEvent" on delete button', function (string $compon
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
-        ->set('perPage', 5)
+        ->set('setUp.footer.perPage', 5)
         ->assertSeeHtml('$emit("deletedEvent", {"dishId":1})')
         ->assertDontSeeHtml('$emit("deletedEvent", {"dishId":6})')
         ->assertPayloadNotSet('eventId', ['dishId' => 1])
@@ -49,7 +49,7 @@ it('properly displays "deletedEvent" on delete button from emitTo', function (st
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
-        ->set('perPage', 5)
+        ->set('setUp.footer.perPage', 5)
         ->assertSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
         ->assertDontSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
         ->assertPayloadNotSet('eventId', ['dishId' => 1])

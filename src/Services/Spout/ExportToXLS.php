@@ -8,7 +8,7 @@ use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\Writer;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
-use PowerComponents\LivewirePowerGrid\Services\{Export, ExportOption};
+use PowerComponents\LivewirePowerGrid\Services\{Export};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExportToXLS extends Export implements ExportInterface
@@ -18,7 +18,6 @@ class ExportToXLS extends Export implements ExportInterface
      */
     public function download(array $exportOptions = []): BinaryFileResponse
     {
-        $exportOptions       = $exportOptions[0];
         $deleteFileAfterSend = $exportOptions['deleteFileAfterSend'];
         $this->striped       = $exportOptions['striped'];
         $this->build();

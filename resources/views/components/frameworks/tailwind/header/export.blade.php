@@ -17,7 +17,7 @@
          x-transition:leave-end="opacity-0 scale-90"
          class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-slate-500">
 
-        @if(in_array('excel', $exportOptions[0]['type']))
+        @if(in_array('excel', data_get($setUp, 'exportable.type')))
             <div class="flex px-4 py-2 text-slate-400 dark:text-slate-300">
                 <span class="w-12">@lang('Excel')</span>
                 <a x-on:click="$wire.call('exportToXLS'); open = false"
@@ -34,7 +34,7 @@
                 @endif
             </div>
         @endif
-        @if(in_array('csv', $exportOptions[0]['type']))
+        @if(in_array('csv', data_get($setUp, 'exportable.type')))
             <div class="flex px-4 py-2 text-slate-400 dark:text-slate-300">
                 <span class="w-12">@lang('Csv')</span>
                 <a x-on:click="$wire.call('exportToCsv'); open = false" href="#"

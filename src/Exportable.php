@@ -1,11 +1,13 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Services;
+namespace PowerComponents\LivewirePowerGrid;
 
-final class ExportOption
+final class Exportable
 {
     public const TYPE_XLS = 'excel';
     public const TYPE_CSV = 'csv';
+
+    public string $name = 'exportable';
 
     public array $type = [];
 
@@ -19,7 +21,7 @@ final class ExportOption
 
     public static function make(string $fileName): self
     {
-        return new ExportOption($fileName);
+        return new Exportable($fileName);
     }
 
     public function type(string ...$types): self

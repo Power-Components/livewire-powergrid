@@ -11,7 +11,6 @@ use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
-use PowerComponents\LivewirePowerGrid\Services\ExportOption;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, PersistData, WithSorting};
 use stdClass;
@@ -29,19 +28,9 @@ class PowerGridComponent extends Component
 
     public array $headers = [];
 
-    public bool $searchInput = false;
-
     public string $search = '';
 
-    public bool $perPageInput = false;
-
-    public int $perPage = 10;
-
     public array $columns = [];
-
-    public array $perPageValues = [10, 25, 50, 100, 0];
-
-    public string $recordCount = '';
 
     public array $filtered = [];
 
@@ -55,8 +44,6 @@ class PowerGridComponent extends Component
 
     public Support\Collection $withoutPaginatedData;
 
-    public bool $toggleColumns = false;
-
     public array $relationSearch = [];
 
     public bool $ignoreTablePrefix = true;
@@ -67,41 +54,9 @@ class PowerGridComponent extends Component
 
     public bool $footerTotalColumn = false;
 
-    protected string $paginationTheme = 'tailwind';
+    public array $setUp = [];
 
     protected ThemeBase $powerGridTheme;
-
-    /**
-     * @return $this
-     * Show search input into component
-     */
-    public function showSearchInput(): PowerGridComponent
-    {
-        $this->searchInput = true;
-
-        return $this;
-    }
-
-    /**
-     * default full. other: short, min
-     * @return $this
-     */
-    public function showRecordCount(string $mode = 'full'): PowerGridComponent
-    {
-        $this->recordCount = $mode;
-
-        return $this;
-    }
-
-    /**
-     * default false
-     */
-    public function showToggleColumns(): PowerGridComponent
-    {
-        $this->toggleColumns = true;
-
-        return $this;
-    }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -113,7 +68,9 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
-        $this->setUp();
+        foreach ($this->setUp() as $setUp) {
+            $this->setUp[$setUp->name] = $setUp;
+        }
 
         $this->columns = $this->columns();
 
@@ -126,21 +83,11 @@ class PowerGridComponent extends Component
 
     /**
      * Apply checkbox, perPage and search view and theme
-     * @return void
+     * @return array
      */
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showPerPage();
-    }
-
-    public function showPerPage(int $perPage = 10): PowerGridComponent
-    {
-        if (Support\Str::contains((string) $perPage, $this->perPageValues)) {
-            $this->perPageInput = true;
-            $this->perPage      = $perPage;
-        }
-
-        return $this;
+        return [];
     }
 
     public function columns(): array
@@ -233,7 +180,7 @@ class PowerGridComponent extends Component
             if ($results->count()) {
                 $this->filtered = $results->pluck('id')->toArray();
 
-                $paginated = Collection::paginate($results, $this->perPage);
+                $paginated = Collection::paginate($results, intval(data_get($this->setUp, 'footer.perPage')));
                 $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
@@ -243,11 +190,8 @@ class PowerGridComponent extends Component
         /** @phpstan-ignore-next-line */
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix) {
-            $sortField = $this->sortField;
-        } else {
-            $sortField = $this->currentTable . '.' . $this->sortField;
-        }
+        $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
+            ? $this->sortField : $this->currentTable . '.' . $this->sortField;
 
         /** @var Eloquent\Builder $results */
         $results = $this->resolveModel($datasource)
@@ -275,8 +219,8 @@ class PowerGridComponent extends Component
             $this->withoutPaginatedData = $this->transform($results->get());
         }
 
-        if ($this->perPage > 0) {
-            $results = $results->paginate($this->perPage);
+        if (data_get($this->setUp, 'footer.perPage') > 0) {
+            $results = $results->paginate(intval(data_get($this->setUp, 'footer.perPage')));
         } else {
             $results = $results->paginate($results->count());
         }
@@ -357,7 +301,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    private function resolveModel(array | Support\Collection | Eloquent\Builder | null  $datasource = null): mixed
+    private function resolveModel(array | Support\Collection | Eloquent\Builder | null  $datasource = null): Support\Collection|array|null|Eloquent\Builder
     {
         if (blank($datasource)) {
             return $this->datasource();
@@ -411,13 +355,6 @@ class PowerGridComponent extends Component
         $this->persistState('columns');
 
         $this->fillData();
-    }
-
-    public function showExportOption(?ExportOption $exportOption = null): PowerGridComponent
-    {
-        $this->exportOptions[]  = (array) $exportOption;
-
-        return $this;
     }
 
     /**

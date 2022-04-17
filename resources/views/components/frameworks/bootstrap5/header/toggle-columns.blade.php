@@ -1,17 +1,16 @@
-<div>
-    @if($toggleColumns)
-        <div class="btn-group ps-2">
-            <button class="btn btn-secondary btn-sm dropdown-toggle"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
+@if(data_get($setUp, 'header.toggleColumns'))
+    <div class="btn-group ps-2">
+        <button class="btn btn-secondary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
                     <span>
                    <x-livewire-powergrid::icons.eye-off width="20"/>
                 </span>
-            </button>
-            <ul class="dropdown-menu">
-                @foreach($columns as $column)
-                    @if($column->forceHidden == false)
+        </button>
+        <ul class="dropdown-menu">
+            @foreach($columns as $column)
+                @if($column->forceHidden == false)
                     <li wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                         wire:key="toggle-column-{{ $column->field }}">
                         <a class="dropdown-item" href="#">
@@ -23,9 +22,8 @@
                             {{ $column->title }}
                         </a>
                     </li>
-                    @endif
-                @endforeach
-            </ul>
-        </div>
-    @endif
-</div>
+                @endif
+            @endforeach
+        </ul>
+    </div>
+@endif

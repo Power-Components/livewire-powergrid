@@ -12,7 +12,7 @@ beforeEach(
 it('properly sorts ASC/DESC with: date', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'produced_at')
         ->set('sortDirection', 'desc')
         ->assertSeeHtml('Dish J')
@@ -43,7 +43,7 @@ it('properly sorts ASC/DESC with: date', function (string $component, object $pa
 it('properly sorts ASC/DESC with: int', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'id')
         ->set('sortDirection', 'desc')
         ->assertSeeHtml('Dish L')
@@ -60,7 +60,7 @@ it('properly sorts ASC/DESC with: int', function (string $component, object $par
 it('properly sorts ASC/DESC with: string', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'name')
         ->set('sortDirection', 'desc')
         ->assertSeeHtml('Zebra Dish H')
@@ -77,7 +77,7 @@ it('properly sorts ASC/DESC with: string', function (string $component, object $
 it('properly sorts ASC/DESC with: float', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'price')
         ->set('sortDirection', 'desc')
         ->assertSeeHtml('Zebra Dish H')
@@ -94,7 +94,7 @@ it('properly sorts ASC/DESC with: float', function (string $component, object $p
 it('properly sorts ASC/DESC with: boolean', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'in_stock')
         ->set('sortDirection', 'asc')
         ->assertSeeHtml('Dish L')
@@ -107,7 +107,7 @@ it('properly sorts ASC/DESC with: boolean', function (string $component, object 
 it('properly sorts ASC/DESC with: string-number', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', '10')
+        ->set('setUp.footer.perPage', '10')
         ->set('withSortStringNumber', true)
         ->set('ignoreTablePrefix', false)
         ->call('sortBy', 'stored_at')

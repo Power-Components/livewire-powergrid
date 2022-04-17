@@ -10,7 +10,7 @@ it('property displays the results and options', function (string $component, obj
             'wire:model.debounce.500ms="filters.select.dishes.diet"',
         ])
         ->assertSeeHtml(htmlSelectOptionsEnum());
-})->with('enum')->onlyFromPhp('8.1');
+})->with('enum')->skip()->onlyFromPhp('8.1');
 
 it('properly filter with diet', function (string $component, object $params) {
     livewire($component)

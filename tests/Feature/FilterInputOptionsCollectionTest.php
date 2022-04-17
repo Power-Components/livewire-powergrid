@@ -115,7 +115,7 @@ it('properly filters by "chef name is blank"', function (string $component, stri
         ->assertSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3');
@@ -128,7 +128,7 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
         ->assertSee('Name 2')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 2')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1');
@@ -141,7 +141,7 @@ it('properly filters by "chef name is null"', function (string $component, strin
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3');
@@ -154,7 +154,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, s
         ->assertSee('Name 1')
         ->assertSee('Name 3')
         ->assertDontSee('Name 2')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
@@ -167,7 +167,7 @@ it('properly filters by "chef name is empty"', function (string $component, stri
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3');
@@ -180,7 +180,7 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2');

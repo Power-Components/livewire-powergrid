@@ -102,10 +102,12 @@ trait Exportable
             return $column;
         }, $this->columns());
 
+        /** @var string $fileName */
+        $fileName = data_get($this->setUp, 'exportable.fileName');
         $exportable
-            ->fileName($this->exportOptions[0]['fileName'])
+            ->fileName($fileName)
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
-        return $exportable->download($this->exportOptions);
+        return $exportable->download($this->setUp['exportable']);
     }
 }

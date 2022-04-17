@@ -7,6 +7,9 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
@@ -41,19 +44,23 @@ class DishesActionRulesTable extends PowerGridComponent
         $this->eventId = $params;
     }
 
-    public function setUp()
+    public function setUp(): array
     {
-        $exportOption = ExportOption::make('my-dish')
-            ->type(ExportOption::TYPE_CSV, ExportOption::TYPE_XLS)
-            ->striped()
-            ->deleteFileAfterSend(false);
+        $this->showCheckBox();
 
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showRecordCount()
-            ->showToggleColumns()
-            ->showExportOption($exportOption)
-            ->showSearchInput();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function datasource(): Builder

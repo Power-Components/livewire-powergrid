@@ -1,4 +1,4 @@
-@if($toggleColumns)
+@if(data_get($setUp, 'header.toggleColumns'))
     <div x-data="{open: false}"
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
          @click.away="open = false">
