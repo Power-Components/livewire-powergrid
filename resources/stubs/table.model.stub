@@ -7,6 +7,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
@@ -28,6 +31,7 @@ final class {{ componentName }} extends PowerGridComponent
     public function setUp(): array
     {
         $this->showCheckBox();
+
         return [
             Exportable::make('export')
                 ->striped()
@@ -36,6 +40,7 @@ final class {{ componentName }} extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+        ];
     }
 
     /*

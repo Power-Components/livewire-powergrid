@@ -77,6 +77,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     public function setUp(): array
     {
         $this->showCheckBox();
+
         return [
             Exportable::make('export')
                 ->striped()
@@ -85,6 +86,7 @@ final class PowerGridDemoTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+        ];
     }
 
     /*

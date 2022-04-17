@@ -5,6 +5,9 @@ namespace App\Http\Livewire{{ subFolder }};
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -42,6 +45,7 @@ final class {{ componentName }} extends PowerGridComponent
     public function setUp(): array
     {
         $this->showCheckBox();
+
         return [
             Exportable::make('export')
                 ->striped()
@@ -50,6 +54,7 @@ final class {{ componentName }} extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+        ];
     }
 
     /*

@@ -70,7 +70,7 @@ class CreateCommand extends Command
      */
     protected function askTableName(): void
     {
-        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowergridTable'));
+        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowerGridTable'));
 
         if (empty(trim(strval($this->tableName)))) {
             throw new CreateCommandException('You must provide a name for your ⚡ PowerGrid Table!');
