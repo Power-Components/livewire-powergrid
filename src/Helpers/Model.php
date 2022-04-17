@@ -11,8 +11,6 @@ use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
 class Model implements ModelFilterInterface
 {
-    private Builder $query;
-
     private array $columns;
 
     private string $search;
@@ -21,9 +19,8 @@ class Model implements ModelFilterInterface
 
     private array $filters;
 
-    public function __construct(Builder $query)
+    public function __construct(private Builder $query)
     {
-        $this->query = $query;
     }
 
     public static function query(Builder $query): Model
@@ -64,32 +61,14 @@ class Model implements ModelFilterInterface
         foreach ($this->filters as $key => $type) {
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
-                    switch ($key) {
-                        case 'date_picker':
-                            $this->filterDatePicker($query, $field, $value);
-
-                            break;
-                        case 'multi_select':
-                            $this->filterMultiSelect($query, $field, $value);
-
-                            break;
-                        case 'select':
-                            $this->filterSelect($query, $field, $value);
-
-                            break;
-                        case 'boolean':
-                            $this->filterBoolean($query, $field, $value);
-
-                            break;
-                        case 'input_text':
-                            $this->filterInputText($query, $field, $value);
-
-                            break;
-                        case 'number':
-                            $this->filterNumber($query, $field, $value);
-
-                            break;
-                    }
+                    match ($key) {
+                        'date_picker'  => $this->filterDatePicker($query, $field, $value),
+                        'multi_select' => $this->filterMultiSelect($query, $field, $value),
+                        'select'       => $this->filterSelect($query, $field, $value),
+                        'boolean'      => $this->filterBoolean($query, $field, $value),
+                        'input_text'   => $this->filterInputText($query, $field, $value),
+                        'number'       => $this->filterNumber($query, $field, $value),
+                    };
                 }
             });
         }
@@ -132,10 +111,7 @@ class Model implements ModelFilterInterface
         }
     }
 
-    /**
-     * @param string|array $value
-     */
-    public function filterSelect(Builder $query, string $field, $value): void
+    public function filterSelect(Builder $query, string $field, string|array $value): void
     {
         if (is_array($value)) {
             $field = $field . '.' . key($value);
@@ -148,10 +124,7 @@ class Model implements ModelFilterInterface
         }
     }
 
-    /**
-     * @param string|array $value
-     */
-    public function filterBoolean(Builder $query, string $field, $value): void
+    public function filterBoolean(Builder $query, string $field, string|array $value): void
     {
         if (is_array($value)) {
             $field = $field . '.' . key($value);
@@ -165,10 +138,7 @@ class Model implements ModelFilterInterface
         }
     }
 
-    /**
-     * @param string|array $value
-     */
-    public function filterInputText(Builder $query, string $field, $value): void
+    public function filterInputText(Builder $query, string $field, string|array $value): void
     {
         if (is_array($value)) {
             $field = $field . '.' . key($value);
@@ -176,56 +146,21 @@ class Model implements ModelFilterInterface
         }
 
         $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
-        switch ($textFieldOperator) {
-            case 'is':
-                $query->where($field, '=', $value);
 
-                break;
-            case 'is_not':
-                $query->where($field, '!=', $value);
-
-                break;
-            case 'starts_with':
-                $query->where($field, SqlSupport::like(), $value . '%');
-
-                break;
-            case 'ends_with':
-                $query->where($field, SqlSupport::like(), '%' . $value);
-
-                break;
-            case 'contains':
-                $query->where($field, SqlSupport::like(), '%' . $value . '%');
-
-                break;
-            case 'contains_not':
-                $query->where($field, 'NOT ' . SqlSupport::like(), '%' . $value . '%');
-
-                break;
-            case 'is_empty':
-                $query->where($field, '=', '')->orWhereNull($field);
-
-                break;
-            case 'is_not_empty':
-                $query->where($field, '!=', '')->whereNotNull($field);
-
-                break;
-            case 'is_null':
-                $query->whereNull($field);
-
-                break;
-            case 'is_not_null':
-                $query->whereNotNull($field);
-
-                break;
-            case 'is_blank':
-                $query->where($field, '=', '');
-
-                break;
-            case 'is_not_blank':
-                $query->where($field, '!=', '')->orWhereNull($field);
-
-                break;
-        }
+        match ($textFieldOperator) {
+            'is'           => $query->where($field, '=', $value),
+            'is_not'       => $query->where($field, '!=', $value),
+            'starts_with'  => $query->where($field, SqlSupport::like(), $value . '%'),
+            'ends_with'    => $query->where($field, SqlSupport::like(), '%' . $value),
+            'contains'     => $query->where($field, SqlSupport::like(), '%' . $value . '%'),
+            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like(), '%' . $value . '%'),
+            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
+            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
+            'is_null'      => $query->whereNull($field),
+            'is_not_null'  => $query->whereNotNull($field),
+            'is_blank'     => $query->where($field, '=', ''),
+            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
+        };
     }
 
     /**
