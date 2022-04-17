@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
@@ -77,10 +76,8 @@ class DishesEnumTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
-        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
-
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')

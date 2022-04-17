@@ -97,6 +97,7 @@
                     @endif
 
                     <x-livewire-powergrid::row
+                        :showIndex="$showIndex"
                         :tableName="$tableName"
                         :currentTable="$currentTable"
                         :primaryKey="$primaryKey"

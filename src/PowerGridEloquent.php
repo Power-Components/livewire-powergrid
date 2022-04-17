@@ -14,7 +14,7 @@ final class PowerGridEloquent
 
     public function __construct()
     {
-        $this->collection = collect();
+        $this->collection = collect([]);
     }
 
     /**

@@ -13,7 +13,6 @@ use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, PersistData, WithSorting};
-use stdClass;
 
 class PowerGridComponent extends Component
 {
@@ -57,15 +56,6 @@ class PowerGridComponent extends Component
     public array $setUp = [];
 
     protected ThemeBase $powerGridTheme;
-
-    public bool $showIndex;
-
-    public function showIndex(): PowerGridComponent
-    {
-        $this->showIndex  = true;
-
-        return $this;
-    }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -250,7 +240,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function resolveCollection(array | Support\Collection | Eloquent\Builder | null $datasource = null): Support\Collection
+    private function resolveCollection(array | Support\Collection | Eloquent\Builder| null $datasource = null): Support\Collection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new Support\Collection($this->datasource());
@@ -264,6 +254,7 @@ class PowerGridComponent extends Component
                 return $datasource;
             }
 
+            /** @var array $datasource */
             return new Support\Collection($datasource);
         });
     }
@@ -277,10 +268,11 @@ class PowerGridComponent extends Component
         }
 
         return $results->map(function ($row) {
-            /** @var stdClass $columns */
-            $columns = $this->addColumns();
+            $addColumns = $this->addColumns();
 
-            $columns = collect($columns->columns);
+            $columns    = $addColumns->columns;
+
+            $columns = collect($columns);
 
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
@@ -297,12 +289,9 @@ class PowerGridComponent extends Component
         });
     }
 
-    /**
-     * @return null
-     */
-    public function addColumns()
+    public function addColumns(): PowerGridEloquent
     {
-        return null;
+        return PowerGrid::eloquent();
     }
 
     public function actionRules(): array

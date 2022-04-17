@@ -87,7 +87,7 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')

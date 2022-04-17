@@ -100,7 +100,7 @@ trait BatchableExport
     private function putQueuesToBus(string $type): Collection
     {
         $this->exportedFiles = [];
-        $queues              = collect();
+        $queues              = collect([]);
         $perPage             = $this->total / $this->queues;
         $offset              = 0;
         $limit               = $perPage;

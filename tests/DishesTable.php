@@ -78,7 +78,7 @@ class DishesTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
 

@@ -26,10 +26,7 @@ class Model implements ModelFilterInterface
         $this->query = $query;
     }
 
-    /**
-     * @param Builder $query
-     */
-    public static function query($query): Model
+    public static function query(Builder $query): Model
     {
         return new Model($query);
     }
@@ -107,9 +104,6 @@ class Model implements ModelFilterInterface
         }
     }
 
-    /**
-     * @param array $value
-     */
     public function filterMultiSelect(Builder $query, string $field, array $value): void
     {
         $empty = false;
@@ -121,6 +115,7 @@ class Model implements ModelFilterInterface
         }
 
         /** @var array $values */
+        /** @phpstan-ignore-next-line */
         $values = collect($value)->get('values');
 
         if (is_array($values) && count($values) === 0) {

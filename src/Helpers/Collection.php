@@ -205,7 +205,7 @@ class Collection implements CollectionFilterInterface
             case 'is_blank':
                 $this->query = $this->query->whereNotNull($field)->where($field, '=', '');
 
-            break;
+                break;
 
             case 'is_not_blank':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -214,17 +214,17 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} != '' || is_null($row->{$field});
                 });
 
-            break;
+                break;
 
             case 'is_null':
                 $this->query = $this->query->whereNull($field);
 
-            break;
+                break;
 
             case 'is_not_null':
                 $this->query = $this->query->whereNotNull($field);
 
-            break;
+                break;
 
             case 'is_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -233,7 +233,7 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} == '' || is_null($row->{$field});
                 });
 
-            break;
+                break;
 
             case 'is_not_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -242,7 +242,7 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} !== '' && !is_null($row->{$field});
                 });
 
-            break;
+                break;
         }
     }
 
@@ -262,10 +262,7 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * @param string | null | array $value
-     */
-    public function filterMultiSelect(string $field, $value): void
+    public function filterMultiSelect(string $field, array|BaseCollection $value): void
     {
         $empty = false;
         /** @var array|null $values */

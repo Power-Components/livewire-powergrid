@@ -20,12 +20,7 @@ class Helpers
         'pg:column',
     ];
 
-    /**
-     * @param array $params
-     * @param Model|\stdClass|null $row
-     * @return array
-     */
-    public function makeActionParameters(array $params = [], $row = null): array
+    public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
     {
         $parameters = [];
 
@@ -40,12 +35,7 @@ class Helpers
         return $parameters;
     }
 
-    /**
-     * @param array $params
-     * @param Model|\stdClass|null $row
-     * @return mixed
-     */
-    public function makeActionParameter(array $params = [], $row = null)
+    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): mixed
     {
         $parameters = [];
 
@@ -60,19 +50,16 @@ class Helpers
         return $parameters[0];
     }
 
-    /**
-     * @param string|Button $action
-     * @param Model|\stdClass $row
-     * @return array
-     */
-    public function makeActionRules($action, $row): array
+    public function makeActionRules(string|Button $action, Model|\stdClass|array $row): array
     {
         $actionRules = [];
 
+        /** @phpstan-ignore-next-line */
         $row = Arr::undot(collect($row)->toArray());
 
         $rules = data_get($row, 'rules');
 
+        /** @phpstan-ignore-next-line */
         collect($rules)->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;
 
@@ -137,6 +124,7 @@ class Helpers
             $resolveRules = (bool) $rule->rule['when']((object) $row);
 
             $prepareRule = [
+                /** @phpstan-ignore-next-line */
                 'action' => collect($rule->rule)->forget(['when', 'action.redirect.closure'])->toArray(),
             ];
 

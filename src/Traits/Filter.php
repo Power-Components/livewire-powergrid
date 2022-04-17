@@ -186,8 +186,11 @@ trait Filter
 
         $this->filters['multi_select'][$data['id']] = $data;
 
+        /** @var array $multiSelect */
+        $multiSelect = $this->makeFilters->get('multi_select');
+
         /** @var array $filter */
-        $filter = collect($this->makeFilters->get('multi_select'))->where('dataField', $data['id'])->first();
+        $filter = collect($multiSelect)->where('dataField', $data['id'])->first();
 
         $this->enabledFilters[$data['id']]['id']            = $data['id'];
         $this->enabledFilters[$data['id']]['label']         = $filter['label'];
