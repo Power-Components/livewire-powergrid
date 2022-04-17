@@ -57,6 +57,8 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
+    public bool $showIndex = false;
+
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
         $this->checkbox          = true;
