@@ -8,6 +8,7 @@
     'currentTable' => null,
     'tableName' => null,
     'totalColumn' => null,
+    'showErrorBag' => null,
 ])
 @foreach($columns as $column)
     @php

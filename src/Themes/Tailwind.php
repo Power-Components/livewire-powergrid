@@ -29,7 +29,7 @@ class Tailwind extends ThemeBase
     public function table(): Table
     {
         return Theme::table('rounded-lg min-w-full border border-slate-200 dark:bg-slate-600 border-slate-200')
-            ->div('overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative')
+            ->div('my-3 overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative')
             ->thead('shadow-sm bg-slate-100 dark:bg-slate-700 border border-b-slate-200')
             ->tr('')
             ->trFilters('bg-white shadow-sm')
@@ -72,7 +72,7 @@ class Tailwind extends ThemeBase
         return Theme::editable()
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
-            ->input('dark:bg-slate-700 bg-slate-200 text-black-700 border border-slate-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+            ->input('dark:bg-slate-700 bg-slate-50 text-black-700 border border-slate-400 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500 p-2');
     }
 
     public function clickToCopy(): ClickToCopy

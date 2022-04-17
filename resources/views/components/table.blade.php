@@ -98,6 +98,7 @@
 
                     <x-livewire-powergrid::row
                         :tableName="$tableName"
+                        :showErrorBag="$showErrorBag"
                         :currentTable="$currentTable"
                         :primaryKey="$primaryKey"
                         :theme="$theme"

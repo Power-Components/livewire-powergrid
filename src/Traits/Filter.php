@@ -184,6 +184,9 @@ trait Filter
     {
         $this->resetPage();
 
+        $field      = $data['id'];
+        $values     = $data['values'];
+
         $this->filters['multi_select'][$data['id']] = $data;
 
         /** @var array $multiSelect */
@@ -200,6 +203,8 @@ trait Filter
         }
 
         $this->persistState('filters');
+
+        $this->onUpdatedMultiSelect($field, $values);
     }
 
     public function filterSelect(string $field, string $label): void

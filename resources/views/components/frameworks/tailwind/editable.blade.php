@@ -24,9 +24,16 @@
             type="text"
             x-on:keydown.enter="save()"
             :class="{'cursor-pointer': !editable}"
-            class="{{ $theme->editable->inputClass }} p-2"
+            class="{{ $theme->editable->inputClass }}"
             x-ref="editable"
             x-text="content"
             :value="$root.firstElementChild.innerText">
     </div>
+    @if($showErrorBag)
+        @error($field.".".$row->{$primaryKey})
+        <div class="text-sm text-red-800 p-1 transition transition-all duration-200">
+            {{ str($message)->replace($field.".".$row->{$primaryKey}, $field) }}
+        </div>
+        @enderror
+    @endif
 </div>

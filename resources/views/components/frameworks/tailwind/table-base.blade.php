@@ -20,10 +20,6 @@
                 @endif
             @endif
 
-            <div class="my-3">
-                <!-- CUSTOM VIEW HERE -->
-            </div>
-
             <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">
                 @include($table)
             </div>

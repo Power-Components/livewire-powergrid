@@ -12,7 +12,13 @@ use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, PersistData, WithSorting};
+use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
+    Checkbox,
+    Exportable,
+    Filter,
+    Listeners,
+    PersistData,
+    WithSorting};
 
 class PowerGridComponent extends Component
 {
@@ -24,6 +30,7 @@ class PowerGridComponent extends Component
     use Filter;
     use BatchableExport;
     use PersistData;
+    use Listeners;
 
     public array $headers = [];
 
@@ -54,6 +61,8 @@ class PowerGridComponent extends Component
     public bool $footerTotalColumn = false;
 
     public array $setUp = [];
+
+    public bool $showErrorBag = false;
 
     protected ThemeBase $powerGridTheme;
 
@@ -318,15 +327,6 @@ class PowerGridComponent extends Component
         ]);
     }
 
-    /**
-     * @throws Exception
-     * @return null
-     */
-    public function inputTextChanged(array $data = [])
-    {
-        return null;
-    }
-
     public function checkedValues(): array
     {
         return $this->checkboxValues;
@@ -363,7 +363,7 @@ class PowerGridComponent extends Component
         return [
             'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
             'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
             'pg:eventRefresh-' . $this->tableName => '$refresh',
