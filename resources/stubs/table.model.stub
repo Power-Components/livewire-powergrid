@@ -25,12 +25,17 @@ final class {{ componentName }} extends PowerGridComponent
     | Setup Table's general features
     |
     */
-    public function setUp(): void
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showSearchInput()
-            ->showExportOption('download', ['excel', 'csv']);
+        $this->showCheckBox();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            Header::make()->showSearchInput(),
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
     }
 
     /*
@@ -44,9 +49,9 @@ final class {{ componentName }} extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\{{ modelName }}>|null
+    * @return  \Illuminate\Database\Eloquent\Builder<\{{ modelName }}>
     */
-    public function datasource(): ?Builder
+    public function datasource(): Builder
     {
         return {{ modelLastName }}::query();
     }
@@ -77,7 +82,7 @@ final class {{ componentName }} extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')

@@ -74,14 +74,17 @@ final class PowerGridDemoTable extends PowerGridComponent
     | Setup Table's general features
     |
     */
-
-    public function setUp(): void
+    public function setUp(): array
     {
-        $this->showCheckBox() //Adds checkboxes to each table row
-            ->showRecordCount() //Display: Showing 1 to 10 of 20 Results
-            ->showPerPage() //Shows per page option
-            ->showSearchInput() //Show search input on page top.
-            ->showExportOption('download', ['excel', 'csv']); //Enables export feature and show button on page top.
+        $this->showCheckBox();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            Header::make()->showSearchInput(),
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
     }
 
     /*
@@ -128,7 +131,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')

@@ -39,12 +39,17 @@ final class {{ componentName }} extends PowerGridComponent
     | Configure here relationships to be used by the Search and Table Filters.
     |
     */
-    public function setUp(): void
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showExportOption('download', ['excel', 'csv'])
-            ->showSearchInput();
+        $this->showCheckBox();
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            Header::make()->showSearchInput(),
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
     }
 
     /*
@@ -55,7 +60,7 @@ final class {{ componentName }} extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
