@@ -24,6 +24,8 @@ final class Button
 
     public string $tooltip = '';
 
+    public bool $toggleDetail = false;
+
     public bool $singleParam = false;
 
     /**
@@ -175,6 +177,17 @@ final class Button
     public function tooltip(string $tooltip): Button
     {
         $this->tooltip = $tooltip;
+
+        return $this;
+    }
+
+    /**
+     * tooltip
+     * @return $this
+     */
+    public function toggleDetail(): Button
+    {
+        $this->toggleDetail = true;
 
         return $this;
     }
