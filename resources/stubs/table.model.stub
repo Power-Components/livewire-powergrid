@@ -6,16 +6,10 @@ use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Footer;
-use PowerComponents\LivewirePowerGrid\Header;
-use PowerComponents\LivewirePowerGrid\Exportable;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Illuminate\Support\Carbon;
+use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class {{ componentName }} extends PowerGridComponent
 {
@@ -54,7 +48,7 @@ final class {{ componentName }} extends PowerGridComponent
     /**
     * PowerGrid datasource.
     *
-    * @return  \Illuminate\Database\Eloquent\Builder<\{{ modelName }}>
+    * @return Builder<\{{ modelName }}>
     */
     public function datasource(): Builder
     {
@@ -93,9 +87,7 @@ final class {{ componentName }} extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', function({{ modelLastName }} $model) {
-                return Carbon::parse($model->created_at)->format('d/m/Y H:i:s');
-            });
+            ->addColumn('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -152,7 +144,7 @@ final class {{ componentName }} extends PowerGridComponent
      /**
      * PowerGrid {{ modelLastName }} Action Buttons.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     * @return array<int, Button>
      */
 
     /*
@@ -184,7 +176,7 @@ final class {{ componentName }} extends PowerGridComponent
      /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
+     * @return array<int, RuleActions>
      */
 
     /*
