@@ -20,7 +20,18 @@
              ];
          });
 
-    $selected = $selected[$multiSelect['dataField']]['values'] ?? []
+    $pluralField = \Illuminate\Support\Str::plural($multiSelect['dataField']);
+
+    if (isset($selected[$multiSelect['dataField']])) {
+        $selected = collect($selected[$multiSelect['dataField']])
+                ->map(fn ($value) => intval($value))
+                ->toArray();
+    } else {
+        $selected  = collect(request()->get($tableName.'_'.$pluralField))
+        ->map(fn ($value) => intval($value))
+        ->toArray();
+    }
+
 
 @endphp
 <div x-cloak
