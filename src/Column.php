@@ -133,8 +133,12 @@ final class Column
      * Display Column Sum Summary
      *
      */
-    public function withSum(string $label = 'Sum', bool $header = true, bool $footer = true, int $rounded = 2): Column
-    {
+    public function withSum(
+        string $label = 'Sum',
+        bool $header = true,
+        bool $footer = true,
+        int $rounded = 2
+    ): Column {
         $this->sum['label']   = $label;
         $this->sum['header']  = $header;
         $this->sum['footer']  = $footer;
@@ -147,8 +151,11 @@ final class Column
      * Display Column Count Summary
      *
      */
-    public function withCount(string $label = 'Count', bool $header = true, bool $footer = true): Column
-    {
+    public function withCount(
+        string $label = 'Count',
+        bool $header = true,
+        bool $footer = true
+    ): Column {
         $this->count['label']  = $label;
         $this->count['header'] = $header;
         $this->count['footer'] = $footer;
@@ -160,8 +167,12 @@ final class Column
      * Display Column Average Summary
      *
      */
-    public function withAvg(string $label = 'Avg', bool $header = true, bool $footer = true, int $rounded = 2): Column
-    {
+    public function withAvg(
+        string $label = 'Avg',
+        bool $header = true,
+        bool $footer = true,
+        int $rounded = 2
+    ): Column {
         $this->avg['label']   = $label;
         $this->avg['header']  = $header;
         $this->avg['footer']  = $footer;
@@ -174,8 +185,12 @@ final class Column
      * Display Column Minimum Summary
      *
      */
-    public function withMin(string $label = 'Min', bool $header = true, bool $footer = true, int $rounded = 2): Column
-    {
+    public function withMin(
+        string $label = 'Min',
+        bool $header = true,
+        bool $footer = true,
+        int $rounded = 2
+    ): Column {
         $this->min['label']   = $label;
         $this->min['header']  = $header;
         $this->min['footer']  = $footer;
@@ -188,8 +203,12 @@ final class Column
      * Display Column Maximum Summary
      *
      */
-    public function withMax(string $label = 'Max', bool $header = true, bool $footer = true, int $rounded = 2): Column
-    {
+    public function withMax(
+        string $label = 'Max',
+        bool $header = true,
+        bool $footer = true,
+        int $rounded = 2
+    ): Column {
         $this->max['label']   = $label;
         $this->max['header']  = $header;
         $this->max['footer']  = $footer;
@@ -259,8 +278,12 @@ final class Column
      * Input Select Filter
      *
      */
-    public function makeInputSelect(Collection $datasource, string $displayField, string $dataField = null, array $settings = []): Column
-    {
+    public function makeInputSelect(
+        Collection $datasource,
+        string $displayField,
+        string $dataField = null,
+        array $settings = []
+    ): Column {
         $this->editable                         = false;
         $this->inputs['select']['data_source']  = $datasource;
         $this->inputs['select']['displayField'] = $displayField;
@@ -274,8 +297,12 @@ final class Column
      * Input Multi-Select Filter
      *
      */
-    public function makeInputMultiSelect(Collection $datasource, string $optionText, string $dataField = null, string $optionValue = 'id'): Column
-    {
+    public function makeInputMultiSelect(
+        Collection $datasource,
+        string $optionText,
+        string $dataField = null,
+        string $optionValue = 'id'
+    ): Column {
         $this->editable                              = false;
         $this->inputs['multi_select']['data_source'] = $datasource;
         $this->inputs['multi_select']['text']        = $optionText ?: $optionValue;
@@ -289,8 +316,11 @@ final class Column
      * Filter Datepicker
      *
     */
-    public function makeInputDatePicker(string $dataField = '', array $settings = [], string $classAttr = ''): Column
-    {
+    public function makeInputDatePicker(
+        string $dataField = '',
+        array $settings = [],
+        string $classAttr = ''
+    ): Column {
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class']   = $classAttr;
         $this->inputs['date_picker']['config']  = $settings;
@@ -343,8 +373,11 @@ final class Column
      * Adds Toggle to a column
      *
      */
-    public function toggleable(bool $hasPermission = true, string $trueLabel = 'Yes', string $falseLabel = 'No'): Column
-    {
+    public function toggleable(
+        bool $hasPermission = true,
+        string $trueLabel = 'Yes',
+        string $falseLabel = 'No'
+    ): Column {
         $this->editable   = false;
         $this->toggleable = [
             'enabled' => $hasPermission,
@@ -357,11 +390,10 @@ final class Column
     /**
      * Add Input Number Range
      */
-    public function makeInputRange(string $dataField = '', string $thousands = '', string $decimal = ''): Column
-    {
+    public function makeInputRange(
+        string $dataField = '',
+    ): Column {
         $this->inputs['number']['enabled']   = true;
-        $this->inputs['number']['decimal']   = $decimal;
-        $this->inputs['number']['thousands'] = $thousands;
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -398,12 +430,16 @@ final class Column
     /**
      * Add Boolean Filter
      */
-    public function makeBooleanFilter(string $dataField = '', string $trueLabel = 'Yes', string $falseLabel = 'No', array $settings = []): Column
-    {
-        $this->inputs['boolean_filter']['enabled']     = true;
-        $this->inputs['boolean_filter']['true_label']  = $trueLabel;
-        $this->inputs['boolean_filter']['false_label'] = $falseLabel;
-        $this->inputs['boolean_filter']['class']       = $settings['class'] ?? '';
+    public function makeBooleanFilter(
+        string $dataField = '',
+        string $trueLabel = 'Yes',
+        string $falseLabel = 'No',
+        array $settings = []
+    ): Column {
+        $this->inputs['boolean']['enabled']     = true;
+        $this->inputs['boolean']['true_label']  = $trueLabel;
+        $this->inputs['boolean']['false_label'] = $falseLabel;
+        $this->inputs['boolean']['class']       = $settings['class'] ?? '';
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
