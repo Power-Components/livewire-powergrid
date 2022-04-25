@@ -33,8 +33,6 @@ trait Listeners
         $id         = $data['id'];
         $field      = $data['field'];
 
-        $this->{$field}[$id] = $data['value'];
-
         $this->onUpdatedToggleable($id, $field, $data['value']);
 
         $this->fillData();
