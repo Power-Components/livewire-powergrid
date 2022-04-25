@@ -14,28 +14,32 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use Faker\Factory as FakerFactory;
-use Illuminate\Database\QueryException;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    Exportable,
+    Footer,
+    Header,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent,
+    Rules\RuleActions};
 
 final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
 
-     // Demo users. Should be removed in a real project.
+    // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
 
     protected function getListeners()
     {
         return array_merge(
-            parent::getListeners(), [
+            parent::getListeners(),
+            [
                 'rowActionEvent',
                 'bulkActionEvent',
             ]);
@@ -46,7 +50,6 @@ final class PowerGridDemoTable extends PowerGridComponent
     | Events
     |--------------------------------------------------------------------------
     */
-
     public function rowActionEvent(array $data): void
     {
         $message = 'You have clicked #' . $data['id'];
@@ -101,7 +104,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     * PowerGrid datasource.
     *
     */
-    public function datasource(): \Illuminate\Support\Collection
+    public function datasource(): Collection
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
@@ -162,7 +165,7 @@ final class PowerGridDemoTable extends PowerGridComponent
      /**
      * PowerGrid Header
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     * @return array<int, Button>
      */
     public function header(): array
     {
@@ -242,7 +245,7 @@ final class PowerGridDemoTable extends PowerGridComponent
      /**
      * PowerGrid action buttons.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     * @return array<int, Button>
      */
 
     public function actions(): array
@@ -266,7 +269,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     /**
     * PowerGrid action rules.
     *
-    * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
+    * @return array<int, RuleActions>
     */
     public function actionRules(): array
     {
@@ -305,9 +308,9 @@ final class PowerGridDemoTable extends PowerGridComponent
     /**
      * Generate demo users
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    protected function demoUsers(): \Illuminate\Support\Collection
+    protected function demoUsers(): Collection
     {
         if (!is_null($this->demoUsers)) {
             return $this->demoUsers;
