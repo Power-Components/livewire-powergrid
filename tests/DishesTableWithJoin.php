@@ -87,6 +87,13 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
+    public function inputRangeConfig(): array
+    {
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ','],
+        ];
+    }
+
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -172,7 +179,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->editOnClick($canEdit)
-                ->makeInputRange('price', '.', ','),
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('Preço de Venda'))
