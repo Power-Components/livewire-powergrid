@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Support\Str;
 use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
@@ -50,6 +52,25 @@ function powergrid(): PowerGridComponent
 
 function filterInputText(string $text, string $type, $field = 'name'): array
 {
+    if (str_contains($field, '.')) {
+        $data  = Str::of($field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        return [
+            'input_text' => [
+                $table => [
+                    $field => $text,
+                ],
+            ],
+            'input_text_options' => [
+                $table => [
+                    $field => $type,
+                ],
+            ],
+        ];
+    }
+
     return [
         'input_text' => [
             $field => $text,
@@ -58,6 +79,39 @@ function filterInputText(string $text, string $type, $field = 'name'): array
             $field => $type,
         ],
     ];
+}
+
+function expectInputText(object $params, mixed $component, string $value, string $type): void
+{
+    if (str_contains($params->field, '.')) {
+        $data  = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $table => [
+                        $field => $value,
+                    ],
+                ],
+                'input_text_options' => [
+                    $table => [
+                        $field => $type,
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $params->field => $value,
+                ],
+                'input_text_options' => [
+                    $params->field => $type,
+                ],
+            ]);
+    }
 }
 
 dataset('enum', [
