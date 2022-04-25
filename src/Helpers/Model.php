@@ -19,6 +19,8 @@ class Model implements ModelFilterInterface
 
     private array $filters;
 
+    private array $inputRangeConfig;
+
     public function __construct(private Builder $query)
     {
     }
@@ -31,6 +33,13 @@ class Model implements ModelFilterInterface
     public function setColumns(array $columns): Model
     {
         $this->columns = $columns;
+
+        return $this;
+    }
+
+    public function setInputRangeConfig(array $config): Model
+    {
+        $this->inputRangeConfig = $config;
 
         return $this;
     }
@@ -101,21 +110,11 @@ class Model implements ModelFilterInterface
         }
     }
 
-    public function filterMultiSelect(Builder $query, string $field, array $value): void
+    public function filterMultiSelect(Builder $query, string $field, array $values): void
     {
         $empty = false;
 
-        if (!(array_key_exists('id', $value) && $value['id'] == $field)) {
-            $field       = $field . '.' . array_key_first($value);
-            $value       = $value[array_key_first($value)];
-            $value['id'] = $field;
-        }
-
-        /** @var array $values */
-        /** @phpstan-ignore-next-line */
-        $values = collect($value)->get('values');
-
-        if (is_array($values) && count($values) === 0) {
+        if (count($values) === 0) {
             return;
         }
 
@@ -129,16 +128,16 @@ class Model implements ModelFilterInterface
         }
     }
 
-    public function filterSelect(Builder $query, string $field, string|array $value): void
+    public function filterSelect(Builder $query, string $field, string|array $values): void
     {
-        if (is_array($value)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
+        if (is_array($values)) {
+            $field  = $field . '.' . key($values);
+            $values = $values[key($values)];
         }
 
         /** @var Builder $query */
-        if (filled($value)) {
-            $query->where($field, $value);
+        if (filled($values)) {
+            $query->where($field, $values);
         }
     }
 
@@ -151,7 +150,7 @@ class Model implements ModelFilterInterface
 
         /** @var Builder $query */
         if ($value != 'all') {
-            $value = ($value == 'true');
+            $value = ($value == 'true' || $value == '1');
             $query->where($field, '=', $value);
         }
     }
@@ -163,7 +162,8 @@ class Model implements ModelFilterInterface
             $value = $value[key($value)];
         }
 
-        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower(strval(data_get($this->filters, "input_text_options.$field"))) : 'contains');
+
         switch ($textFieldOperator) {
             case 'is':
                 $query->where($field, '=', $value);
@@ -222,23 +222,34 @@ class Model implements ModelFilterInterface
     public function filterNumber(Builder $query, string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
-            $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float) str_replace($value['decimal'], '.', $start);
+            $start = $value['start'];
+            if (isset($this->inputRangeConfig[$field])) {
+                $start = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['start']);
+                $start = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $start);
+            }
 
             $query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
-            $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float) str_replace($value['decimal'], '.', $end);
+            $end = $value['end'];
+            if (isset($this->inputRangeConfig[$field])) {
+                $end = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['end']);
+                $end = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $end);
+            }
 
             $query->where($field, '<=', $end);
         }
         if (isset($value['start']) && isset($value['end'])) {
-            $start = str_replace($value['thousands'], '', $value['start']);
-            $start = str_replace($value['decimal'], '.', $start);
+            $start = $value['start'];
+            $end   = $value['end'];
 
-            $end = str_replace($value['thousands'], '', $value['end']);
-            $end = str_replace($value['decimal'], '.', $end);
+            if (isset($this->inputRangeConfig[$field])) {
+                $start = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['start']);
+                $start = str_replace($this->inputRangeConfig[$field]['decimal'], '.', $start);
+
+                $end = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['end']);
+                $end = str_replace($this->inputRangeConfig[$field]['decimal'], '.', $end);
+            }
 
             $query->whereBetween($field, [$start, $end]);
         }
