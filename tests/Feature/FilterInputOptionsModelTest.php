@@ -27,15 +27,7 @@ it('properly filters by "name is not"', function (string $component, object $par
         ->assertSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Francesinha vegana',
-            ],
-            'input_text_options' => [
-                $params->field => 'is_not',
-            ],
-        ]);
+    expectInputText($params, $component, 'Francesinha vegana', 'is_not');
 
     $component->call('clearFilter', $params->field)
         ->assertSee('Francesinha vegana');
@@ -54,15 +46,7 @@ it('properly filters by "name is not" using nonexistent record', function (strin
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Nonexistent dish',
-            ],
-            'input_text_options' => [
-                $params->field => 'is_not',
-            ],
-        ]);
+    expectInputText($params, $component, 'Nonexistent dish', 'is_not');
 
     $component->call('clearFilter', $params->field);
 
@@ -80,15 +64,7 @@ it('properly filters by "name contains"', function (string $component, object $p
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'francesinha',
-            ],
-            'input_text_options' => [
-                $params->field => 'contains',
-            ],
-        ]);
+    expectInputText($params, $component, 'francesinha', 'contains');
 
     $component->call('clearFilter', $params->field);
 
@@ -107,15 +83,7 @@ it('properly filters by "name contains" using nonexistent record', function (str
         ->assertDontSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Nonexistent dish',
-            ],
-            'input_text_options' => [
-                $params->field => 'contains',
-            ],
-        ]);
+    expectInputText($params, $component, 'Nonexistent dish', 'contains');
 
     $component->call('clearFilter', $params->field);
 
@@ -133,15 +101,7 @@ it('properly filters by "name contains not"', function (string $component, objec
         ->assertDontSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'francesinha',
-            ],
-            'input_text_options' => [
-                $params->field => 'contains_not',
-            ],
-        ]);
+    expectInputText($params, $component, 'francesinha', 'contains_not');
 
     $component->call('clearFilter', $params->field);
 
@@ -159,15 +119,7 @@ it('properly filters by "name contains not" using nonexistent record', function 
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Nonexistent dish',
-            ],
-            'input_text_options' => [
-                $params->field => 'contains_not',
-            ],
-        ]);
+    expectInputText($params, $component, 'Nonexistent dish', 'contains_not');
 
     $component->call('clearFilter', $params->field);
 
@@ -186,15 +138,7 @@ it('properly filters by "name starts with"', function (string $component, object
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'fran',
-            ],
-            'input_text_options' => [
-                $params->field => 'starts_with',
-            ],
-        ]);
+    expectInputText($params, $component, 'fran', 'starts_with');
 
     $component->call('clearFilter', $params->field);
 
@@ -214,15 +158,7 @@ it('properly filters by "name starts with" using nonexistent record', function (
         ->assertDontSee('Francesinha vegana')
         ->assertDontSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Nonexistent',
-            ],
-            'input_text_options' => [
-                $params->field => 'starts_with',
-            ],
-        ]);
+    expectInputText($params, $component, 'Nonexistent', 'starts_with');
 
     $component->call('clearFilter', $params->field);
 
@@ -240,15 +176,7 @@ it('properly filters by "name ends with"', function (string $component, object $
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'vegana',
-            ],
-            'input_text_options' => [
-                $params->field => 'ends_with',
-            ],
-        ]);
+    expectInputText($params, $component, 'vegana', 'ends_with');
 
     $component->call('clearFilter', $params->field);
 
@@ -268,15 +196,7 @@ it('properly filters by "name ends with" using nonexistent record', function (st
         ->assertDontSee('Francesinha vegana')
         ->assertDontSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'Nonexistent',
-            ],
-            'input_text_options' => [
-                $params->field => 'ends_with',
-            ],
-        ]);
+    expectInputText($params, $component, 'Nonexistent', 'ends_with');
 
     $component->call('clearFilter', $params->field);
 

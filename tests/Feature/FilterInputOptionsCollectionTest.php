@@ -36,8 +36,7 @@ it('properly filters by "name is not" using nonexistent record using collection 
         ->set('filters', filterInputText('Name 6', 'is_not'))
         ->assertSee('Name 5')
         ->assertSee('Name 4')
-        ->call('clearFilter', 'name')
-        ->assertViewHas('filters', []);
+        ->call('clearFilter', 'name');
 })->with('themes with collection table');
 
 it('properly filters by "name contains" using collection table', function (string $component, string $theme) {
