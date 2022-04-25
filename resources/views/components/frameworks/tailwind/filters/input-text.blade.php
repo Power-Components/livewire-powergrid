@@ -26,11 +26,10 @@
                         'pl-0 pt-1 pr-3' => !$inline,
                     ])>
                     <div class="relative">
-                        <select id="input_text_options"
-                                class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
+                        <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
-                                wire:model.defer="filters.input_option_text.{{ $field }}"
-                                wire:input.defer="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
+                                wire:model.lazy="filters.input_text_options.{{ $field }}"
+                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
                             @foreach($inputTextOptions as $key => $value)
                                 <option value="{{ $key }}">{{ trans($value) }}</option>
                             @endforeach

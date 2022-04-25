@@ -12,7 +12,6 @@ class FillableTable
     */
     public static function create(string $modelName, string $modelLastName, string $template = null): string
     {
-
         /** @var  \Illuminate\Database\Eloquent\Model $model*/
         $model = new $modelName();
 

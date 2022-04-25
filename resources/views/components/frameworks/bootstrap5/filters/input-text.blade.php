@@ -15,7 +15,7 @@
             <div class="relative">
                 <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                         style="{{ data_get($column, 'headerStyle') }}"
-                        wire:model.defer="filters.input_option_text.{{ $field }}"
+                        wire:model.defer="filters.input_text_options.{{ $field }}"
                         wire:input.defer="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
                     @foreach($inputTextOptions as $key => $value)
                         <option value="{{ $key }}">{{ trans($value) }}</option>

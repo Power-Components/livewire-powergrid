@@ -73,7 +73,7 @@
                                 ])
                             @endif
                         @endforeach
-                        @foreach(data_get($makeFilters, 'boolean_filter', []) as $index => $booleanFilter)
+                        @foreach(data_get($makeFilters, 'boolean', []) as $index => $booleanFilter)
                             @if(data_get($booleanFilter, 'field') === $column->field)
                                 @includeIf($theme->filterBoolean->view, [
                                     'inline'         => true,

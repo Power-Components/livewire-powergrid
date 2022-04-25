@@ -65,7 +65,7 @@
                             ])
                         </div>
                     @endforeach
-                    @foreach(data_get($makeFilters, 'boolean_filter', []) as $field => $booleanFilter)
+                    @foreach(data_get($makeFilters, 'boolean', []) as $field => $booleanFilter)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
                             @includeIf($theme->filterBoolean->view, [
                                  'inline'         => false,
