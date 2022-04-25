@@ -13,7 +13,7 @@ class Export
 
     public Collection $data;
 
-    public bool $striped = false;
+    public string $striped = '';
 
     /** @var array<Column> $columns */
     public array $columns;

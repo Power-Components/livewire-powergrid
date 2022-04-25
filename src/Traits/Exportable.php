@@ -2,12 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Exception;
 use Illuminate\Bus\Batch;
-
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Database\Eloquent as Eloquent;
+use Illuminate\Support as Support;
 use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
 
 /**
  * @property ?Batch $exportBatch
@@ -17,10 +18,9 @@ trait Exportable
     public array $exportOptions = [];
 
     /**
-     * @throws \Exception
-     * @return Collection|BaseCollection
+     * @throws Exception
      */
-    public function prepareToExport(bool $selected = false)
+    public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
     {
         $inClause = $this->filtered;
 
@@ -42,11 +42,7 @@ trait Exportable
         /** @phpstan-ignore-next-line */
         $currentTable = $model->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains('.')) {
-            $sortField = $this->sortField;
-        } else {
-            $sortField = $currentTable . '.' . $this->sortField;
-        }
+        $sortField = Support\Str::of($this->sortField)->contains('.') ? $this->sortField : $currentTable . '.' . $this->sortField;
 
         $results = $this->resolveModel()
             ->when($inClause, function ($query, $inClause) {
@@ -59,28 +55,25 @@ trait Exportable
     }
 
     /**
-     * @throws \Exception | \Throwable
-     * @return BinaryFileResponse | bool
+     * @throws Throwable
      */
-    public function exportToXLS(bool $selected = false)
+    public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
     {
         return $this->export(ExportToXLS::class, $selected);
     }
 
     /**
-     * @throws \Exception | \Throwable
-     * @return BinaryFileResponse | bool
+     * @throws Throwable
      */
-    public function exportToCsv(bool $selected = false)
+    public function exportToCsv(bool $selected = false): BinaryFileResponse|bool
     {
         return $this->export(ExportToCsv::class, $selected);
     }
 
     /**
-     * @throws \Exception | \Throwable
-     * @return BinaryFileResponse | bool
+     * @throws Exception | Throwable
      */
-    private function export(string $exportableClass, bool $selected)
+    private function export(string $exportableClass, bool $selected): BinaryFileResponse|bool
     {
         if ($this->queues > 0 && !$selected) {
             return $this->runOnQueue($exportableClass);

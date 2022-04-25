@@ -65,7 +65,7 @@ class ExportToXLS extends Export implements ExportInterface
         $gray = (new Style())
             ->setFontName('Arial')
             ->setFontSize(12)
-            ->setBackgroundColor('d0d3d8');
+            ->setBackgroundColor($this->striped);
 
         /** @var array<string> $row */
         foreach ($data['rows'] as $key => $row) {

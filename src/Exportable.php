@@ -11,7 +11,7 @@ final class Exportable
 
     public array $type = [];
 
-    public bool $striped = false;
+    public string $striped = '';
 
     public bool $deleteFileAfterSend = true;
 
@@ -33,9 +33,9 @@ final class Exportable
         return $this;
     }
 
-    public function striped(bool $striped = true): self
+    public function striped(string $color = 'd0d3d8'): self
     {
-        $this->striped = $striped;
+        $this->striped = $color;
 
         return $this;
     }
