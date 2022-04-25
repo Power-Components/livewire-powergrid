@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Support\Facades\{Blade, View};
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\{Facades\Blade, Facades\View, ServiceProvider, Str};
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
@@ -78,6 +77,20 @@ class PowerGridServiceProvider extends ServiceProvider
 
         Blade::directive('powerGridScripts', function () {
             return "<?php echo view('livewire-powergrid::assets.scripts')->render(); ?>";
+        });
+
+        Blade::directive('entangleWhen', function ($expression) {
+            $expression  = Blade::stripParentheses($expression);
+
+            $expression  = Str::of($expression)->explode(',');
+            /** @var bool $conditional */
+            $conditional = $expression->get(0);
+            $default     = trim(strval($expression->get(2)));
+            $expression  = trim(strval($expression->get(1)));
+
+            return <<<EOT
+<?php if (!$conditional) { ?>$default<?php } if ((object) ({$expression}) instanceof \Livewire\WireDirective && $conditional) : ?>window.Livewire.find('{{ \$_instance->id }}').entangle('{{ {$expression}->value() }}'){{ {$expression}->hasModifier('defer') ? '.defer' : '' }}<?php elseif($conditional) : ?>window.Livewire.find('{{ \$_instance->id }}').entangle('{{ {$expression} }}')<?php endif; ?>
+EOT;
         });
 
         View::composer('livewire-powergrid::assets.styles', function ($view) {
