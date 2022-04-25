@@ -12,6 +12,13 @@ export default (params) => ({
         const self = this
         const options = this.data
 
+        window.addEventListener('pg:clear_multi_select::' + this.tableName, () => {
+            self.options.map(function (option) {
+                option.selected = false
+            })
+            self.selected = []
+        });
+
         options.forEach((option) => {
 
             const value = option.value[self.value];
