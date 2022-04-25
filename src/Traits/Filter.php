@@ -22,19 +22,14 @@ trait Filter
         if (str_contains($field, '.')) {
             list($table, $column) = explode('.', $field);
 
-            unset($this->filters['input_text'][$field]);
-            unset($this->filters['input_option_text'][$field]);
-            unset($this->filters['number_start'][$field]);
-            unset($this->filters['number_end'][$field]);
-            unset($this->filters['boolean'][$field]);
-            unset($this->filters['input_date_picker'][$field]);
-            unset($this->filters['select'][$field]);
-            unset($this->filters['multi_select'][$field]);
+            if (isset($this->filters['multi_select'][$table][$column])) {
+                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+            }
 
             unset($this->filters['input_text'][$table][$column]);
-            unset($this->filters['input_option_text'][$table][$column]);
-            unset($this->filters['number_start'][$table][$column]);
-            unset($this->filters['number_end'][$table][$column]);
+            unset($this->filters['input_text_options'][$table][$column]);
+            unset($this->filters['number'][$table][$column]['start']);
+            unset($this->filters['number'][$table][$column]['end']);
             unset($this->filters['boolean'][$table][$column]);
             unset($this->filters['input_date_picker'][$table][$column]);
             unset($this->filters['select'][$table][$column]);
@@ -42,14 +37,14 @@ trait Filter
             if (empty($this->filters['input_text'][$table])) {
                 unset($this->filters['input_text'][$table]);
             }
-            if (empty($this->filters['input_option_text'][$table])) {
-                unset($this->filters['input_option_text'][$table]);
+            if (empty($this->filters['input_text_options'][$table])) {
+                unset($this->filters['input_text_options'][$table]);
             }
             if (empty($this->filters['number_start'][$table])) {
                 unset($this->filters['number_start'][$table]);
             }
-            if (empty($this->filters['number_end'][$table])) {
-                unset($this->filters['number_end'][$table]);
+            if (empty($this->filters['number'][$table]['end'])) {
+                unset($this->filters['number'][$table]['end']);
             }
             if (empty($this->filters['boolean'][$table])) {
                 unset($this->filters['boolean'][$table]);
@@ -64,19 +59,22 @@ trait Filter
                 unset($this->filters['multi_select'][$table]);
             }
         } else {
+            if (isset($this->filters['multi_select'][$field])) {
+                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+            }
+
             unset($this->filters['input_text'][$field]);
+            unset($this->filters['input_text_options'][$field]);
+            unset($this->filters['number'][$field]['start']);
+            unset($this->filters['number'][$field]['end']);
+            unset($this->filters['boolean'][$field]);
+            unset($this->filters['input_date_picker'][$field]);
             unset($this->filters['select'][$field]);
+            unset($this->filters['multi_select'][$field]);
+            unset($this->filters['date_picker'][$field]);
         }
 
         unset($this->enabledFilters[$field]);
-        unset($this->filters['number_start'][$field]);
-        unset($this->filters['number_end'][$field]);
-        unset($this->filters['number'][$field]);
-        unset($this->filters['boolean'][$field]);
-        unset($this->filters['input_text_options'][$field]);
-        unset($this->filters['input_date_picker'][$field]);
-        unset($this->filters['date_picker'][$field]);
-        unset($this->filters['multi_select'][$field]);
 
         $this->persistState('filters');
     }
@@ -107,9 +105,8 @@ trait Filter
         ];
     }
 
-    private function renderFilter(): void
+    private function resolveFilters(): void
     {
-        $this->filters = [];
         $makeFilters   = [];
 
         /** @var Column $column */
@@ -187,19 +184,22 @@ trait Filter
         $field      = $data['id'];
         $values     = $data['values'];
 
-        $this->filters['multi_select'][$data['id']] = $data;
+        unset($data['id']);
+        unset($data['values']);
+
+        $this->filters['multi_select'][$field] = $values;
 
         /** @var array $multiSelect */
         $multiSelect = $this->makeFilters->get('multi_select');
 
         /** @var array $filter */
-        $filter = collect($multiSelect)->where('dataField', $data['id'])->first();
+        $filter = collect($multiSelect)->where('dataField', $field)->first();
 
-        $this->enabledFilters[$data['id']]['id']            = $data['id'];
-        $this->enabledFilters[$data['id']]['label']         = $filter['label'];
+        $this->enabledFilters[$field]['id']            = $field;
+        $this->enabledFilters[$field]['label']         = $filter['label'];
 
-        if (count($data['values']) === 0) {
-            $this->clearFilter($data['id']);
+        if (count($values) === 0) {
+            $this->clearFilter($field);
         }
 
         $this->persistState('filters');
@@ -221,13 +221,11 @@ trait Filter
         $this->persistState('filters');
     }
 
-    public function filterNumberStart(string $field, string $value, string $thousands, string $decimal, string $label): void
+    public function filterNumberStart(string $field, string $value, string $label): void
     {
         $this->resetPage();
 
         $this->filters['number'][$field]['start']     = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
@@ -239,13 +237,11 @@ trait Filter
         $this->persistState('filters');
     }
 
-    public function filterNumberEnd(string $field, string $value, string $thousands, string $decimal, string $label): void
+    public function filterNumberEnd(string $field, string $value, string $label): void
     {
         $this->resetPage();
 
         $this->filters['number'][$field]['end']       = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
@@ -289,7 +285,8 @@ trait Filter
 
     public function filterInputTextOptions(string $field, string $value, string $label): void
     {
-        $this->filters['input_text_options'][$field] = $value;
+        data_set($this->filters, 'input_text_options.' . $field, $value);
+        // $this->filters['input_text_options'][$field] = $value;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
