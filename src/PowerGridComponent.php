@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
@@ -62,6 +63,8 @@ class PowerGridComponent extends Component
 
     public array $setUp = [];
 
+    public array $inputRangeConfig = [];
+
     public bool $showErrorBag = false;
 
     protected ThemeBase $powerGridTheme;
@@ -80,11 +83,15 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
+        foreach ($this->inputRangeConfig() as $field => $config) {
+            $this->inputRangeConfig[$field] = $config;
+        }
+
         $this->columns = $this->columns();
 
         $this->resolveTotalRow();
 
-        $this->renderFilter();
+        $this->resolveFilters();
 
         $this->restoreState();
     }
@@ -94,6 +101,11 @@ class PowerGridComponent extends Component
      * @return array
      */
     public function setUp(): array
+    {
+        return [];
+    }
+
+    public function inputRangeConfig(): array
     {
         return [];
     }
@@ -156,6 +168,11 @@ class PowerGridComponent extends Component
         return [];
     }
 
+    public function updatedSearch(): void
+    {
+        $this->gotoPage(1);
+    }
+
     /**
      * @throws Exception
      */
@@ -165,10 +182,6 @@ class PowerGridComponent extends Component
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         $this->isCollection = is_a((object) $datasource, Support\Collection::class);
-
-        if (filled($this->search)) {
-            $this->gotoPage(1);
-        }
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
@@ -186,7 +199,7 @@ class PowerGridComponent extends Component
             }
 
             if ($results->count()) {
-                $this->filtered = $results->pluck('id')->toArray();
+                $this->filtered = $results->pluck($this->primaryKey)->toArray();
 
                 $paginated = Collection::paginate($results, intval(data_get($this->setUp, 'footer.perPage')));
                 $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
@@ -205,6 +218,7 @@ class PowerGridComponent extends Component
         $results = $this->resolveModel($datasource)
             ->where(function (Eloquent\Builder $query) {
                 Model::query($query)
+                    ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
@@ -213,29 +227,67 @@ class PowerGridComponent extends Component
                     ->filter();
             });
 
-        if ($this->withSortStringNumber) {
-            $sortFieldType = SqlSupport::getSortFieldType($sortField);
-
-            if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
-            }
-        }
+        $results = self::applyWithSortStringNumber($results, $sortField);
 
         $results = $results->orderBy($sortField, $this->sortDirection);
 
-        if ($this->headerTotalColumn || $this->footerTotalColumn) {
-            $this->withoutPaginatedData = $this->transform($results->get());
-        }
+        self::applyTotalColumn($results);
 
-        if (data_get($this->setUp, 'footer.perPage') > 0) {
-            $results = $results->paginate(intval(data_get($this->setUp, 'footer.perPage')));
-        } else {
-            $results = $results->paginate($results->count());
-        }
+        $results = self::applyPerPage($results);
+
+        self::resolveDetailRow($results);
 
         $this->total = $results->total();
 
         return $results->setCollection($this->transform($results->getCollection()));
+    }
+
+    private function applyTotalColumn(Eloquent\Builder $results): void
+    {
+        if ($this->headerTotalColumn || $this->footerTotalColumn) {
+            $this->withoutPaginatedData = $this->transform($results->get());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    {
+        if (!$this->withSortStringNumber) {
+            return $results;
+        }
+
+        $sortFieldType = SqlSupport::getSortFieldType($sortField);
+
+        if (SqlSupport::isValidSortFieldType($sortFieldType)) {
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+        }
+
+        return $results;
+    }
+
+    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator
+    {
+        $perPage = intval(data_get($this->setUp, 'footer.perPage'));
+        if ($perPage > 0) {
+            return $results->paginate($perPage);
+        }
+
+        return $results->paginate($results->count());
+    }
+
+    private function resolveDetailRow(LengthAwarePaginator $results): void
+    {
+        if (!isset($this->setUp['detail'])) {
+            return;
+        }
+
+        collect($results->items())
+            ->each(function ($model) {
+                $state = data_get($this->setUp, 'detail.state.' . $model->id, false);
+                data_set($this->setUp, 'detail.state.' . $model->id, $state);
+            });
     }
 
     /**
@@ -270,9 +322,7 @@ class PowerGridComponent extends Component
 
     private function transform(Support\Collection $results): Support\Collection
     {
-        if (
-            !is_a((object) $this->addColumns(), PowerGridEloquent::class)
-        ) {
+        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
         }
 
@@ -353,6 +403,11 @@ class PowerGridComponent extends Component
         $this->persistState('columns');
 
         $this->fillData();
+    }
+
+    public function toggleDetail(string $id): void
+    {
+        data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
     /**

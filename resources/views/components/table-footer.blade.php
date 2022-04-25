@@ -1,12 +1,12 @@
 @props([
-'theme' => null,
-'data' => null,
-'actions' => null,
-'checkbox' => null,
-'primaryKey' => null,
-'columns' => null,
-'currentTable' => null,
-'withoutPaginatedData' => null,
+    'theme' => null,
+    'data' => null,
+    'actions' => null,
+    'checkbox' => null,
+    'primaryKey' => null,
+    'columns' => null,
+    'currentTable' => null,
+    'withoutPaginatedData' => null,
 ])
 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
     @if($checkbox)
@@ -50,7 +50,7 @@
     @endforeach
     @if(isset($actions) && count($actions))
         <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-            style="{{ $theme->table->thStyle }}" colspan="{{count($actions)}}">
+            style="{{ $theme->table->thStyle }}" colspan="{{ count($actions) }}">
         </th>
     @endif
 </tr>
