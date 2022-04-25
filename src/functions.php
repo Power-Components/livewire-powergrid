@@ -41,8 +41,8 @@ if (!function_exists('powerGridTheme')) {
 if (!function_exists('validateInputTextOptions')) {
     function validateInputTextOptions(array $filter, string $field): bool
     {
-        return isset($filter['input_text_options'][$field]) && in_array(
-            strtolower($filter['input_text_options'][$field]),
+        return data_get($filter, "input_text_options.$field") !== null && in_array(
+            strtolower(strval(data_get($filter, "input_text_options.$field"))),
             Filter::getInputTextOptions()
         );
     }

@@ -38,11 +38,11 @@
                         {!! $content !!}
                     </div>
                     @if($column->clickToCopy)
-                    <x-livewire-powergrid::click-to-copy
-                        :row="$row"
-                        :field="$content"
-                        :label="data_get($column->clickToCopy, 'label') ?? null"
-                        :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
+                        <x-livewire-powergrid::click-to-copy
+                            :row="$row"
+                            :field="$content"
+                            :label="data_get($column->clickToCopy, 'label') ?? null"
+                            :enabled="data_get($column->clickToCopy, 'enabled') ?? false"/>
                     @endif
             </span>
         @endif

@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
 {
-    protected array $actions = [
+    protected array $actionRules = [
         'emit',
         'emitTo',
         'setAttribute',
@@ -18,6 +18,7 @@ class Helpers
         'caption',
         'pg:rows',
         'pg:column',
+        'detailView',
     ];
 
     public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
@@ -67,7 +68,7 @@ class Helpers
                 if (isset($key[$action->action])) {
                     $rule = (array) $key[$action->action];
 
-                    foreach ($this->actions as $action) {
+                    foreach ($this->actionRules as $action) {
                         if (data_get($rule, "action.$action")) {
                             $actionRules[$action] = data_get($rule, "action.$action");
                         }
@@ -78,8 +79,7 @@ class Helpers
             if (is_string($action)) {
                 if (isset($key[$action])) {
                     $rule = (array) $key[$action];
-
-                    foreach ($this->actions as $action) {
+                    foreach ($this->actionRules as $action) {
                         if (data_get($rule, "action.$action")) {
                             /** @phpstan-ignore-next-line  */
                             $actionRules[$action][] = data_get($rule, "action.$action");
