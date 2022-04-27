@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class FilterBoolean
 {
-    public string $inputClass = '';
+    public string $selectClass = '';
 
-    public string $inputStyle = '';
+    public string $selectStyle = '';
 
     public string $view = '';
 
@@ -30,11 +30,11 @@ class FilterBoolean
         return $this;
     }
 
-    public function input(string $attrClass, string $attrStyle = ''): FilterBoolean
+    public function select(string $attrClass, string $attrStyle = ''): FilterBoolean
     {
-        $this->inputClass = $attrClass;
+        $this->selectClass = $attrClass;
 
-        $this->inputStyle = $attrStyle;
+        $this->selectStyle = $attrStyle;
 
         return $this;
     }

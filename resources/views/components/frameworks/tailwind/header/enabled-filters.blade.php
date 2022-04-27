@@ -2,7 +2,7 @@
     <div class="w-full pt-3 mb-3">
         @if(count($enabledFilters) > 1)
             <span
-                class="cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 mr-1 text-sm font-medium bg-slate-500 text-white dark:bg-slate-500 dark:text-slate-200">
+                class="cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 mr-1 text-sm font-medium bg-slate-500 text-white dark:bg-slate-600 dark:text-slate-200">
               {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
               <button type="button"
                       wire:click.prevent="clearAllFilters"
@@ -15,7 +15,7 @@
         @endif
         @foreach($enabledFilters as $field => $filter)
             <span
-                class="cursor-pointer border border-slate-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-500 dark:text-slate-300">
+                class="cursor-pointer border border-slate-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-slate-100 text-slate-700 dark:bg-slate-600 dark:text-slate-300">
               {{ $filter['label'] }}
               <button type="button"
                       wire:click.prevent="clearFilter('{{ $field }}')"

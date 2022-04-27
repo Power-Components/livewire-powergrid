@@ -10,7 +10,7 @@
 ])
 <div class="w-full my-3 dark:bg-slate-800">
     <div x-data={show:true} class="rounded-full">
-        <div class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-500"
+        <div class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-600"
              @click="show=!show">
             <button
                 class="appearance-none text-left text-base font-medium text-slate-500 focus:outline-none dark:text-slate-300"

@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class FilterSelect
 {
-    public string $inputClass = '';
+    public string $selectClass = '';
 
     public string $baseClass = '';
 
@@ -19,9 +19,9 @@ class FilterSelect
         return $this;
     }
 
-    public function input(string $attrClass = ''): FilterSelect
+    public function select(string $attrClass = ''): FilterSelect
     {
-        $this->inputClass = $attrClass;
+        $this->selectClass = $attrClass;
 
         return $this;
     }

@@ -9,7 +9,7 @@
             <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
                 <div class="relative h-10">
                     <select wire:model.lazy="setUp.footer.perPage"
-                            class="block appearance-none bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500  dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500">
+                            class="block appearance-none bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500  dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500">
                         @foreach(data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{$value}}">
                                 @if($value == 0)

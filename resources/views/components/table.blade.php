@@ -46,6 +46,7 @@
             :enabledFilters="$enabledFilters"
             :inputTextOptions="$inputTextOptions"
             :tableName="$tableName"
+            :setUp="$setUp"
         />
         @if(is_null($data) || count($data) === 0)
             <th>
@@ -68,7 +69,8 @@
                     :checkbox="$checkbox"
                     :data="$data"
                     :actions="$actions"
-                    :withoutPaginatedData="$withoutPaginatedData"/>
+                    :withoutPaginatedData="$withoutPaginatedData"
+                    :setUp="$setUp"/>
             @endif
             @foreach($data as $row)
                 @php
@@ -86,12 +88,16 @@
                     }
                 @endphp
 
+                @if(isset($setUp['detail']))
                 <tbody class="{{ $class }}"
-                       x-data="{ detailState: @entangleWhen(isset($setUp['detail']), 'setUp.detail.state.'.$row->{$primaryKey}, false) }"
+                       x-data="{ detailState: @entangle('setUp.detail.state.'.$row->{$primaryKey}) }"
+                       wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
                 >
-                    <tr
-                        style="{{ $theme->table->trBodyStyle }}"
+                @else
+                    <tr style="{{ $theme->table->trBodyStyle }}"
+                        class="{{ $class }}"
                         wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
+                        @endif
 
                         @php
                             $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
@@ -133,6 +139,7 @@
                             :row="$row"
                             :actions="$actions"/>
                     </tr>
+                @if(isset($setUp['detail']))
                     <template x-cloak
                               x-if="detailState">
                         <tr>
@@ -156,6 +163,7 @@
                         </tr>
                     </template>
                 </tbody>
+                @endif
 
             @endforeach
             @if($footerTotalColumn)
@@ -167,7 +175,8 @@
                     :checkbox="$checkbox"
                     :data="$data"
                     :actions="$actions"
-                    :withoutPaginatedData="$withoutPaginatedData"/>
+                    :withoutPaginatedData="$withoutPaginatedData"
+                    :setUp="$setUp"/>
             @endif
         @endif
     </x-slot>

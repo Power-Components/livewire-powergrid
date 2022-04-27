@@ -1,6 +1,6 @@
 <div class="col-12" style="text-align: right;">
     <label class="col-12 col-sm-8">
-        @if(boolval(data_get($setUp, 'header.searchInput')))
+        @if(data_get($setUp, 'header.searchInput'))
             <div class="input-group w-100">
               <span class="input-group-text">
                 <svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">

@@ -83,6 +83,10 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
+        if (isBootstrap5()) {
+            unset($this->setUp['detail']);
+        }
+
         foreach ($this->inputRangeConfig() as $field => $config) {
             $this->inputRangeConfig[$field] = $config;
         }

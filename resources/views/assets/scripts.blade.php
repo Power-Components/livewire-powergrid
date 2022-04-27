@@ -15,7 +15,7 @@
             let field_id = $(this).attr('x-ref').replace('select_picker_','');
             if ('multi_select' in message.response.serverMemo.data.filters) {
                 if (field_id in message.response.serverMemo.data.filters.multi_select) {
-                    $(this).selectpicker('val', message.response.serverMemo.data.filters.multi_select[field_id].values);
+                    $(this).selectpicker('val', message.response.serverMemo.data.filters.multi_select[field_id]);
                 } else {
                     $(this).selectpicker('val', []);
                 }

@@ -1,5 +1,5 @@
 @if(data_get($setUp, 'header.toggleColumns'))
-    <div class="btn-group ps-2">
+    <div class="btn-group">
         <button class="btn btn-secondary btn-sm dropdown-toggle"
                 type="button"
                 data-bs-toggle="dropdown"
@@ -10,7 +10,7 @@
         </button>
         <ul class="dropdown-menu">
             @foreach($columns as $column)
-                @if($column->forceHidden == false)
+                @if(!$column->forceHidden)
                     <li wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
                         wire:key="toggle-column-{{ $column->field }}">
                         <a class="dropdown-item" href="#">

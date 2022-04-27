@@ -58,7 +58,7 @@
                              class="text-sm text-slate-500 flex p-1 dark:text-slate-200 items-center justify-center"></div>
                         <template x-for="(option, index) in selected" :key="index">
                             <div
-                                class="flex justify-center items-center m-1 cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-slate-200 text-slate-700 dark:bg-slate-500 dark:text-slate-900">
+                                class="flex justify-center items-center m-1 cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-slate-200 text-slate-700 dark:bg-slate-600 dark:text-slate-900">
                                 <div
                                     class="pl-0 align-middle cursor-pointer hover:text-black hover:text-current dark:text-slate-300 text-left text-xs font-medium text-slate-700 tracking-wider"
                                     x-text="option.text"></div>
@@ -78,13 +78,14 @@
                             <input readonly
                                    x-ref="multi_select"
                                    placeholder="{{ trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') }}"
-                                   class="w-full block bg-white text-slate-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400"
+                                   class="w-full block bg-white text-slate-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500"
                                    x-bind:value="selectedValues()"
                             >
                         </div>
                     </div>
                     <div
-                        class="text-slate-300 w-8 py-1 pl-2 pr-1 border-l flex bg-white items-center border-slate-200 dark:bg-slate-500 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-400">
+                        class="text-slate-300 w-8 py-1 pl-2 pr-1 border-l flex bg-white items-center border-slate-200
+                                dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500">
 
                         <button type="button" x-show="show" x-on:click="show = true"
                                 class="cursor-pointer w-6 h-6 text-slate-600 outline-none focus:outline-none dark:text-slate-200">
@@ -103,20 +104,24 @@
                 <div x-show="show"
                      x-cloak
                      x-transition.origin.top
-                     class="absolute rounded-lg overflow-hidden z-100 shadow-md top-100 border border-slate-300 bg-white z-50 w-full left-0 rounded max-h-select overflow-y-auto dark:bg-slate-700 dark:border-slate-400"
+                     class="absolute rounded-lg overflow-hidden z-100 shadow-md top-100 border border-slate-300
+                            bg-white z-50 w-full left-0 rounded max-h-select overflow-y-auto dark:bg-slate-700
+                            dark:border-slate-500"
                      x-on:click.away="show = false">
                     <div class="flex flex-col w-full">
                         <template x-for="(option,index) in options" :key="index">
                             <div>
                                 <div
                                     x-show="option.selected === false"
-                                    class="relative group cursor-pointer hover:bg-slate-50 w-full border-slate-100 rounded-t border-b dark:hover:bg-slate-500 dark:hover:text-slate-300 dark:border-slate-400"
+                                    class="relative group cursor-pointer hover:bg-slate-50 w-full border-slate-100 rounded-t border-b
+                                            dark:hover:bg-slate-500 dark:hover:text-slate-300 dark:border-slate-500"
                                     x-on:click="select(option.value)">
                                     <div x-bind:class="option.selected ? 'border-slate-600' : ''"
                                          class="flex w-full items-center p-2 pl-2 border-transparent border-l-2 relative">
                                         <div class="w-full items-center flex">
                                             <div
-                                                class="dark:text-slate-200 pl-0 align-middle cursor-pointer hover:text-black hover:text-current text-left text-xs font-medium text-slate-600 tracking-wider leading-6"
+                                                class="dark:text-slate-200 pl-0 align-middle cursor-pointer hover:text-black hover:text-current
+                                                       text-left text-xs font-medium text-slate-600 tracking-wider leading-6"
                                                 x-model="option" x-text="option.text"></div>
                                         </div>
                                     </div>
@@ -124,7 +129,8 @@
                                 <div
                                     x-show="option.selected === true"
                                     x-on:click="remove(option.value)"
-                                    class="relative group cursor-pointer hover:bg-slate-50 w-full border-slate-100 rounded-t border-b dark:hover:bg-slate-500 dark:bg-slate-600 dark:hover:text-slate-300 dark:border-slate-400">
+                                    class="relative group cursor-pointer hover:bg-slate-50 w-full border-slate-100 rounded-t border-b
+                                           dark:hover:bg-slate-500 dark:bg-slate-600 dark:hover:text-slate-300 dark:border-slate-500">
                                     <div x-bind:class="option.selected ? 'border-slate-600' : ''"
                                          class="flex w-full items-center p-2 bg-slate-200 dark:bg-slate-600 dark:border-slate-500 border-transparent relative">
                                         <div class="w-full items-center flex">

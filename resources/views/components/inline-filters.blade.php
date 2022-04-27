@@ -8,12 +8,16 @@
     'inputTextOptions' => [],
     'tableName' => null,
     'filters' => [],
+    'setUp' => null
 ])
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
         <tr class="{{ $theme->table->trClass }} {{ $theme->table->trFiltersClass }}"
             style="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}">
             @if(count($makeFilters))
+                @if(data_get($setUp, 'detail.showCollapseIcon'))
+                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+                @endif
                 @if($checkbox)
                     <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
                 @endif

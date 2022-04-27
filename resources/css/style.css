@@ -101,3 +101,51 @@ table {
     }
 }
 
+
+table thead {
+    padding-left: 15px;
+    text-transform: uppercase;
+    font-size: .75rem;
+    color: #6b6a6a;
+    padding-top: 8px;
+    padding-bottom: 8px
+}
+
+.dropdown-toggle {
+    background: #fff !important;
+    padding-left: 10px !important;
+    color: #7a7e82 !important
+}
+
+select, .power_grid {
+    opacity: 1 !important;
+    font-size: 0.85rem !important;
+    padding-left: 10px !important;
+}
+
+.badge {
+    font-size: 0.77em;
+}
+
+.form-control, .btn {
+    box-shadow: none!important;
+}
+
+.dropdown-toggle, .dropdown-item {
+    padding-left: 15px;
+    font-size: 0.85rem;
+    color: #454444;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}
+.bootstrap-select {
+    padding-left: 0 !important;
+}
+.btn-group-vertical>.btn, .btn-group>.btn {
+    position: relative;
+    flex: 1 1 auto;
+    border-color: #ced4da !important;
+}
