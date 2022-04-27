@@ -84,6 +84,16 @@ final class Column
     }
 
     /**
+     * Make a new Column
+     */
+    public static function make(string $title, string $field, string $dataField = ''): self
+    {
+        return (new static())
+            ->title($title)
+            ->field($field, $dataField);
+    }
+
+    /**
      * Adds title
      *
      */
