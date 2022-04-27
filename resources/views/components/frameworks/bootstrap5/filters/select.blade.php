@@ -9,7 +9,7 @@
     @if(filled($select))
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
             <select id="input_{!! data_get($select, 'displayField') !!}"
-                    class="power_grid {{ $theme->inputClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                    class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
                     style="{{ data_get($column, 'headerStyle') }}"
                     wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
                     wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">

@@ -106,7 +106,7 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::filterBoolean()
             ->view($this->root() . '.filters.boolean')
-            ->input('form-control form-select shadow-none');
+            ->select('form-control form-select shadow-none');
     }
 
     public function filterDatePicker(): FilterDatePicker
@@ -134,7 +134,7 @@ class Bootstrap5 extends ThemeBase
     {
         return Theme::filterSelect()
             ->view($this->root() . '.filters.select')
-            ->input('form-control form-select shadow-none');
+            ->select('form-control form-select shadow-none');
     }
 
     public function filterInputText(): FilterInputText
