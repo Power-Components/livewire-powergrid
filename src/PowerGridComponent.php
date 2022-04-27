@@ -205,6 +205,11 @@ class PowerGridComponent extends Component
         return [];
     }
 
+    public function updatedSearch(): void
+    {
+        $this->gotoPage(1);
+    }
+
     /**
      * @return AbstractPaginator|BaseCollection
      * @throws Exception
@@ -215,10 +220,6 @@ class PowerGridComponent extends Component
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         $this->isCollection = is_a((object) $datasource, BaseCollection::class);
-
-        if (filled($this->search)) {
-            $this->gotoPage(1);
-        }
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
