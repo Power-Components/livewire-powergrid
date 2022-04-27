@@ -1,14 +1,3 @@
-@props([
-    'theme' => null,
-    'data' => null,
-    'actions' => null,
-    'checkbox' => null,
-    'primaryKey' => null,
-    'columns' => null,
-    'currentTable' => null,
-    'withoutPaginatedData' => null,
-    'setUp' => null,
-])
 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
     @if(data_get($setUp, 'detail.showCollapseIcon'))
         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>

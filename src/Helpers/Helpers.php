@@ -60,6 +60,10 @@ class Helpers
 
         $rules = data_get($row, 'rules');
 
+        if (blank($rules)) {
+            return [];
+        }
+
         /** @phpstan-ignore-next-line */
         collect($rules)->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;

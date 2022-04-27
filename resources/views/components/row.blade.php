@@ -1,15 +1,5 @@
 @inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
 
-@props([
-    'theme' => null,
-    'row' => null,
-    'primaryKey' => null,
-    'columns' => null,
-    'currentTable' => null,
-    'tableName' => null,
-    'totalColumn' => null,
-    'showErrorBag' => null,
-])
 @foreach($columns as $column)
     @php
         $content = $row->{$column->field};
