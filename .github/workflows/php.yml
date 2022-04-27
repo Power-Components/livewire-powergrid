@@ -79,7 +79,7 @@ jobs:
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
-        run: git update-index --chmod=+x ./larastan.sh && sh ./larastan.sh
+        run: git update-index --chmod=+x ./larastan.sh && bash ./larastan.sh
 
       - name: Testing with SQLite
         run: |
