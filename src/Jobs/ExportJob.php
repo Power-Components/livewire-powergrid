@@ -42,8 +42,7 @@ class ExportJob implements ShouldQueue
     public function handle(): void
     {
         /** @var Builder $query */
-        $query = $this->componentTable
-            ->datasource();
+        $query = $this->componentTable->datasource();
 
         $query = $query->offset($this->offset)
             ->limit($this->limit)

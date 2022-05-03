@@ -1,5 +1,5 @@
 <div>
-    @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
+    @includeIf(data_get($setUp, 'header.includeViewOnTop'))
     <div class="md:flex md:flex-row w-full justify-between items-center">
         <div class="md:flex md:flex-row w-full">
             <div>
@@ -21,9 +21,11 @@
     </div>
 
     @include(powerGridThemeRoot().'.header.batch-exporting')
+
+
     @include(powerGridThemeRoot().'.header.enabled-filters')
 
-    @includeIf(data_get($setUp, 'footer.includeViewOnBottom'))
+    @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
 </div>
 
 

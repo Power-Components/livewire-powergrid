@@ -2,10 +2,11 @@
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
     <div @class([
         'justify-between' => data_get($setUp, 'footer.perPage'),
-        'justify-end'  => data_get($setUp, 'footer.perPage') === null,
-        'md:flex md:flex-row w-full items-center pt-3 bg-white overflow-y-auto pl-2 pr-2 pb-1 relative dark:bg-slate-700'
+        'justify-end'  => blank(data_get($setUp, 'footer.perPage')),
+        'md:flex md:flex-row w-full items-center pt-3 bg-white overflow-y-auto pl-2 pr-2 pb-1 relative
+         dark:bg-slate-700' => blank(data_get($setUp, 'footer.pagination')),
 ])>
-        @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1)
+        @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1 && blank(data_get($setUp, 'footer.pagination')))
             <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
                 <div class="relative h-10">
                     <select wire:model.lazy="setUp.footer.perPage"
@@ -35,7 +36,9 @@
             <div>
                 @if(method_exists($data, 'links'))
                     {!! $data->links(data_get($setUp, 'footer.pagination') ?: powerGridThemeRoot().'.pagination', [
-                        'recordCount' => data_get($setUp, 'footer.recordCount')
+                            'recordCount' => data_get($setUp, 'footer.recordCount'),
+                            'perPage' => data_get($setUp, 'footer.perPage'),
+                            'perPageValues' => data_get($setUp, 'footer.perPageValues'),
                         ])
                     !!}
                 @endif
