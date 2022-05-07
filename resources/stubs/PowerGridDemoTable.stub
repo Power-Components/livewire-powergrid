@@ -192,42 +192,30 @@ final class PowerGridDemoTable extends PowerGridComponent
         $canCopy = true;
 
         return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
+            Column::make('ID', 'id')
                 ->makeInputRange(), //Filter for min-max Range
 
-            Column::add()
-                ->title(__('Full name')) //Colummn header title
-                ->field('name') //Reads datasource field 'name'
+            Column::make('Full name', 'name')
                 ->sortable() //Adds sorting button to the header
                 ->searchable() //Includes column in search option (top page)
                 ->makeInputText()//Filter for searching text
                 ->editOnClick($canEdit), //Allows user to edit information on click
 
-            Column::add()
-                ->title(__('E-mail address'))
-                ->field('email')
+            Column::make('Email address', 'email')
                 ->searchable()
                 ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
-            Column::add()
-                ->title(__('US State'))
-                ->field('state_in_usa')
+            Column::make('US State', 'state_in_usa')
                 ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
-            Column::add()
-                ->title(__('Laracon visitor?'))
-                ->field('laracon')
+            Column::make('Laracon visitor?', 'laracon')
                 ->searchable()
                 ->sortable()
                 ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
 
 
-            Column::add()
-                ->title(__('Laravel user since'))
-                ->field('laravel_since_formatted')
+            Column::make('Laravel user since', 'laravel_since_formatted')
                 ->searchable()
                 ->sortable()
                 ->makeInputDatePicker('laravel_since') //Date filter
@@ -251,8 +239,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     public function actions(): array
     {
        return [
-           Button::add('info')
-               ->caption(__('Click me'))
+           Button::make('info', 'Click me')
                ->class('bg-indigo-500 hover:bg-indigo-600 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
                ->emit('rowActionEvent', ['id' => 'id']),
         ];

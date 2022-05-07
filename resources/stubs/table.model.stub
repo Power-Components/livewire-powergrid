@@ -107,27 +107,19 @@ final class {{ componentName }} extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
+            Column::make('ID', 'id')
                 ->searchable()
                 ->sortable(),
 
-            Column::add()
-                ->title('Name')
-                ->field('name')
+            Column::make('Name', 'name')
                 ->searchable()
                 ->makeInputText('name')
                 ->sortable(),
 
-            Column::add()
-                ->title('Created at')
-                ->field('created_at')
+            Column::make('Created at', 'created_at')
                 ->hidden(),
 
-            Column::add()
-                ->title('Created at')
-                ->field('created_at_formatted')
+            Column::make('Created at', 'created_at_formatted')
                 ->makeInputDatePicker('created_at')
                 ->searchable()
         ];
@@ -151,13 +143,11 @@ final class {{ componentName }} extends PowerGridComponent
     public function actions(): array
     {
        return [
-           Button::add('edit')
-               ->caption('Edit')
+           Button::make('edit', 'Edit')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
                ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
 
-           Button::add('destroy')
-               ->caption('Delete')
+           Button::make('destroy', 'Delete')
                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
                ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
                ->method('delete')

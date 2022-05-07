@@ -93,28 +93,20 @@ final class {{ componentName }} extends PowerGridComponent
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title('ID')
-                ->field('id')
+            Column::make('ID', 'id')
                 ->searchable()
                 ->sortable(),
 
-            Column::add()
-                ->title('Name')
-                ->field('name')
+            Column::make('Name', 'name')
                 ->searchable()
                 ->makeInputText('name')
                 ->sortable(),
 
-            Column::add()
-                ->title('Price')
-                ->field('price')
+            Column::make('Price', 'price')
                 ->sortable()
                 ->makeInputRange('price', '.', ''),
 
-            Column::add()
-                ->title('Created At')
-                ->field('created_at_formatted')
+            Column::make('Created', 'created_at_formatted')
                 ->makeInputDatePicker('created_at'),
         ];
     }

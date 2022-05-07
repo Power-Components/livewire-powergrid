@@ -48,6 +48,15 @@ final class Button
     }
 
     /**
+     * Make a new Column
+     */
+    public static function make(string $action, string $caption): self
+    {
+        return (new static($action))
+            ->caption($caption);
+    }
+
+    /**
      * Button text in view
      */
     public function caption(string $caption): Button

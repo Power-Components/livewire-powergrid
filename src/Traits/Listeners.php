@@ -19,8 +19,6 @@ trait Listeners
         $this->{$field}[$id] = $data['value'];
 
         $this->onUpdatedEditable($id, $field, $data['value']);
-
-        $this->fillData();
     }
 
     /**
@@ -34,8 +32,6 @@ trait Listeners
         $field      = $data['field'];
 
         $this->onUpdatedToggleable($id, $field, $data['value']);
-
-        $this->fillData();
     }
 
     public function onUpdatedEditable(string $id, string $field, string $value): void
