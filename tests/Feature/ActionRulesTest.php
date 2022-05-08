@@ -65,7 +65,7 @@ it('add rule \'disable\' when dishId == 9', function (string $component, object 
         ]);
 })->with('rules');
 
-it('add rule \'toggleDetail\' when dishId == 2', function () {
+it('add rule \'toggleDetail\' when dishId == 3', function () {
     livewire(DishesDetailRowTable::class)
         ->assertSee('Pastel de Nata')
         ->assertDontSeeHtml([
@@ -91,17 +91,17 @@ it('add rule \'toggleDetail\' when dishId == 2', function () {
             4 => false,
             5 => false,
         ])
-        ->call('toggleDetail', 2)
+        ->call('toggleDetail', 3)
         ->assertSeeHtmlInOrder([
             '<div>Id 1</div>',
             '<div>Options {"name":"Luan"}</div>',
-            '<div>Id 2</div>',
+            '<div>Id 3</div>',
             '<div>Options {"name":"Luan","fromActionRule":true}</div>',
         ])
         ->assertSet('setUp.detail.state', [
             1 => true,
-            2 => true,
-            3 => false,
+            2 => false,
+            3 => true,
             4 => false,
             5 => false,
         ]);

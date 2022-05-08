@@ -102,7 +102,7 @@ class DishesDetailRowTable extends PowerGridComponent
     {
         return [
             Rule::rows()
-                ->when(fn (Dish $dish) => $dish->id == 2)
+                ->when(fn (Dish $dish) => $dish->id == 3)
                 ->detailView('livewire-powergrid::tests.detail-rules', ['fromActionRule' => true]),
         ];
     }
