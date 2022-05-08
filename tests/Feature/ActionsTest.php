@@ -2,17 +2,6 @@
 
 use function Pest\Livewire\livewire;
 
-it('updates data', function (string $component, object $params) {
-    livewire($component)
-        ->call($params->theme)
-        ->call('gotoPage', '11')
-        ->assertDontSeeHtml('Calçots')
-        ->call('gotoPage', '1')
-        ->call('update', ['id' => '101', 'field' => 'name', 'value' => 'Calçots'])
-        ->call('gotoPage', '11')
-        ->assertSeeHtml('Calçots');
-})->with('themes');
-
 it('properly displays "openModal" on edit button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)

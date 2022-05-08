@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\{Carbon, HtmlString};
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\{Button,
@@ -243,34 +242,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
-    }
-
-    public function update(array $data): bool
-    {
-        try {
-            $updated = Dish::query()->find($data['id'])->update([
-                $data['field'] => $data['value'],
-            ]);
-        } catch (QueryException $exception) {
-            $updated = false;
-        }
-
-        return $updated;
-    }
-
-    public function updateMessages(string $status, string $field = '_default_message'): string
-    {
-        $updateMessages = [
-            'success' => [
-                '_default_message' => __('Data has been updated successfully!'),
-                'price_BRL'        => __('Preço alterado'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-            ],
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 
     public function bootstrap()

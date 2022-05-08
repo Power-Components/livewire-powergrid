@@ -88,7 +88,7 @@ trait Exportable
         $exportable = new $exportableClass();
 
         $currentHiddenStates = collect($this->columns)
-            ->mapWithKeys(fn ($column) => [$column['field'] => $column['hidden']]);
+            ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
             $column->hidden = $currentHiddenStates[$column->field];
 

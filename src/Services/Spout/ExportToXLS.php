@@ -7,6 +7,7 @@ use OpenSpout\Common\Entity\Style\{Color, Style};
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\Writer;
+use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\{Export};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -16,10 +17,10 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws \Exception
      */
-    public function download(array $exportOptions = []): BinaryFileResponse
+    public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
-        $deleteFileAfterSend = $exportOptions['deleteFileAfterSend'];
-        $this->striped       = $exportOptions['striped'];
+        $deleteFileAfterSend = data_get($exportOptions, 'deleteFileAfterSend');
+        $this->striped       = data_get($exportOptions, 'striped');
         $this->build();
 
         return response()
@@ -78,6 +79,7 @@ class ExportToXLS extends Export implements ExportInterface
                 $writer->addRow($row);
             }
         }
+
         $writer->close();
     }
 }

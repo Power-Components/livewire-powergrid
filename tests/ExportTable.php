@@ -16,31 +16,9 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGridComponent,
     PowerGridEloquent};
 
-class DishesTable extends PowerGridComponent
+class ExportTable extends PowerGridComponent
 {
     use ActionButton;
-
-    public array $eventId = [];
-
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
 
     public function setUp(): array
     {
@@ -52,7 +30,6 @@ class DishesTable extends PowerGridComponent
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
             Header::make()
-                ->showToggleColumns()
                 ->showSearchInput(),
 
             Footer::make()
@@ -64,15 +41,6 @@ class DishesTable extends PowerGridComponent
     public function datasource(): Builder
     {
         return Dish::with('category');
-    }
-
-    public function relationSearch(): array
-    {
-        return [
-            'category' => [
-                'name',
-            ],
-        ];
     }
 
     public function inputRangeConfig(): array
