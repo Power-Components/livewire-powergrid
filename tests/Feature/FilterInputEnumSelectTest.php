@@ -9,8 +9,16 @@ it('property displays the results and options', function (string $component, obj
             'wire:input.debounce.500ms="filterSelect(\'dishes.diet\',\'Dieta\')"',
             'wire:model.debounce.500ms="filters.select.dishes.diet"',
         ])
-        ->assertSeeHtml(htmlSelectOptionsEnum());
-})->with('enum')->skip()->onlyFromPhp('8.1');
+        ->assertSeeHtmlInOrder([
+            'All',
+            '<option value="0">',
+            '🍽️ All diets',
+            '<option value="1">',
+            '🌱 Suitable for Vegans',
+            '<option value="2">',
+            '🥜 Suitable for Celiacs',
+        ]);
+})->with('enum')->only();
 
 it('properly filter with diet', function (string $component, object $params) {
     livewire($component)
@@ -29,21 +37,4 @@ function filterEnumSelect(string $dataField, ?string $value): array
             $dataField => $value,
         ],
     ];
-}
-
-function htmlSelectOptionsEnum(): string
-{
-    return  <<<HTML
-    <option>All</option>
-                                                                        <option value="0">
-                                🍽️ All diets
-                            </option>
-                                                                        <option value="1">
-                                🌱 Suitable for Vegans
-                            </option>
-                                                                        <option value="2">
-                                🥜 Suitable for Celiacs
-                            </option>
-                                        </select>
-    HTML;
 }
