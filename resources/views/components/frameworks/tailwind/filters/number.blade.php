@@ -6,7 +6,7 @@
 ])
 <div>
     @if(filled($number))
-        <div class="@if(!$inline) pt-2 p-2 @endif">
+        <div class="@if(!$inline) p-2 @endif">
             @if(!$inline)
                 <label class="text-gray-700 dark:text-gray-300">{{ data_get($number, 'label') }}</label>
             @endif

@@ -8,7 +8,7 @@
 <div>
     @if(filled($select))
         <div @class([
-            'pt-2 p-2' => !$inline,
+            'p-2' => !$inline,
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)

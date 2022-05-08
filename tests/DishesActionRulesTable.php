@@ -13,8 +13,7 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
-    Rules\Rule,
-    Services\ExportOption};
+    Rules\Rule};
 
 class DishesActionRulesTable extends PowerGridComponent
 {

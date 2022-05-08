@@ -8,7 +8,7 @@
 <div>
     @if(filled($booleanFilter))
         <div @class([
-            'pt-2 p-2' => !$inline,
+            'p-2' => !$inline,
             $theme->baseClass,
             $booleanFilter['class'] => $booleanFilter['class'] != ''
         ]) style="{{ $theme->baseStyle }}">

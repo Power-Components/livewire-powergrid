@@ -33,9 +33,9 @@ class Tailwind extends ThemeBase
             ->thead('shadow-sm bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-500')
             ->tr('')
             ->trFilters('bg-white shadow-sm dark:bg-slate-700')
-            ->th('font-semibold px-2 pr-4 py-3 text-left text-sm font-semebold text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
+            ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semebold text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
             ->tbody('text-slate-800')
-            ->trBody('odd:bg-slate-100 hover:odd:bg-slate-200 border-slate-200 dark:border-slate-400 hover:bg-slate-50 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700')
+            ->trBody('border border-slate-100 dark:border-slate-400 hover:bg-slate-50 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700')
             ->tdBody('px-3 py-2 whitespace-nowrap dark:text-slate-200')
             ->tdBodyTotalColumns('px-3 py-2 whitespace-nowrap dark:text-slate-200 text-sm text-slate-600 text-right space-y-2');
     }
@@ -100,6 +100,7 @@ class Tailwind extends ThemeBase
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
+            ->base('p-2')
             ->view($this->root() . '.filters.date-picker')
             ->input('flatpickr flatpickr-input block my-1 bg-white border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 12rem');
     }
