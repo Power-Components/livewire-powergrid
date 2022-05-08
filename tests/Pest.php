@@ -4,17 +4,16 @@ use Illuminate\Support\Str;
 use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesDetailRowTable,
     Tests\DishesEnumTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin
-};
+    Tests\DishesTableWithJoin};
 
 uses(TestCase::class)->in(__DIR__);
 

@@ -1,5 +1,6 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesDetailRowTable;
 use function Pest\Livewire\livewire;
 
 it('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
@@ -63,3 +64,45 @@ it('add rule \'disable\' when dishId == 9', function (string $component, object 
             'class="text-center"',
         ]);
 })->with('rules');
+
+it('add rule \'toggleDetail\' when dishId == 2', function () {
+    livewire(DishesDetailRowTable::class)
+        ->assertSee('Pastel de Nata')
+        ->assertDontSeeHtml([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => false,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+        ]) // show detail row #1
+        ->call('toggleDetail', 1)
+        ->assertSeeHtmlInOrder([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => true,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+        ])
+        ->call('toggleDetail', 2)
+        ->assertSeeHtmlInOrder([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+            '<div>Id 2</div>',
+            '<div>Options {"name":"Luan","fromActionRule":true}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => true,
+            2 => true,
+            3 => false,
+            4 => false,
+            5 => false,
+        ]);
+});

@@ -7,6 +7,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Detail,
     Exportable,
     Footer,
     Header,
@@ -48,17 +49,19 @@ class DishesActionRulesTable extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
             Header::make()
-                ->showToggleColumns()
                 ->showSearchInput(),
 
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
+
+            Detail::make()
+                ->view('livewire-powergrid::tests.detail-rules')
+                ->options([
+                    'name' => 'Luan Freitas',
+                ])
+                ->showCollapseIcon(),
         ];
     }
 
@@ -124,32 +127,32 @@ class DishesActionRulesTable extends PowerGridComponent
     {
         return [
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 2)
+                ->when(fn (Dish $dish) => $dish->id == 2)
                 ->hide(),
 
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 4)
+                ->when(fn (Dish $dish) => $dish->id == 4)
                 ->caption('cation edit for id 4'),
 
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8 && $dish->id !== 5)
-                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
+                ->when(fn (Dish $dish)     => (bool) $dish->in_stock === false && $dish->id !== 8 && $dish->id !== 5)
+                ->redirect(fn (Dish $dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
 
             // Set a row red background for when dish is out of stock
             Rule::rows()
-                ->when(fn ($dish) => (bool) $dish->in_stock === false)
+                ->when(fn (Dish $dish) => (bool) $dish->in_stock === false)
                 ->setAttribute('class', 'bg-red-100 text-red-800'),
 
             Rule::rows()
-                ->when(fn ($dish) => $dish->id == 3)
+                ->when(fn (Dish $dish) => $dish->id == 3)
                 ->setAttribute('class', 'bg-blue-100'),
 
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 5)
+                ->when(fn (Dish $dish) => $dish->id == 5)
                 ->emit('toggleEvent', ['dishId' => 'id']),
 
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 9)
+                ->when(fn (Dish $dish) => $dish->id == 9)
                 ->disable(),
         ];
     }
