@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesDetailRowTable;
 use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesDetailRowTable;
 
 it('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
     livewire($component)

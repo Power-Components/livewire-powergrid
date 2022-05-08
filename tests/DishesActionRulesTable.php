@@ -55,13 +55,6 @@ class DishesActionRulesTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
-
-            Detail::make()
-                ->view('livewire-powergrid::tests.detail-rules')
-                ->options([
-                    'name' => 'Luan Freitas',
-                ])
-                ->showCollapseIcon(),
         ];
     }
 
