@@ -31,15 +31,6 @@ class ExportToCsv extends Export implements ExportInterface
      * @throws WriterNotOpenedException
      * @throws IOException
      */
-    public function store(): void
-    {
-        $this->build();
-    }
-
-    /**
-     * @throws WriterNotOpenedException
-     * @throws IOException
-     */
     public function build(): void
     {
         $data = $this->prepare($this->data, $this->columns);

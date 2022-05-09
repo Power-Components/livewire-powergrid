@@ -175,6 +175,12 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->makeInputSelect(Category::all(), 'name', 'category_id'),
 
             Column::add()
+                ->title(__('Multiple'))
+                ->field('category_name')
+                ->placeholder('Categoria')
+                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+
+            Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->editOnClick($canEdit)

@@ -29,14 +29,6 @@ class ExportToXLS extends Export implements ExportInterface
     }
 
     /**
-     * @throws \Exception
-     */
-    public function store(): void
-    {
-        $this->build();
-    }
-
-    /**
      * @throws WriterNotOpenedException
      * @throws IOException
      */
