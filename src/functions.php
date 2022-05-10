@@ -10,13 +10,8 @@ if (!function_exists('powerGridThemeRoot')) {
      */
     function powerGridThemeRoot(): string
     {
-        $configTheme = config('livewire-powergrid.theme');
-
-        if (!is_string($configTheme)) {
-            throw new \Exception('Theme not found!');
-        }
         /** @var ThemeBase $theme */
-        $theme = PowerGrid::theme($configTheme);
+        $theme = PowerGrid::theme(strval(config('livewire-powergrid.theme')));
 
         return $theme->root();
     }
@@ -28,13 +23,7 @@ if (!function_exists('powerGridTheme')) {
      */
     function powerGridTheme(): string
     {
-        $powerGridTheme = config('livewire-powergrid.theme');
-
-        if (!is_string($powerGridTheme)) {
-            throw new \Exception('PowerGrid theme not found!');
-        }
-
-        return $powerGridTheme;
+        return strval(config('livewire-powergrid.theme'));
     }
 }
 

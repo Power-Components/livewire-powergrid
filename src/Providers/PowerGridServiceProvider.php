@@ -8,6 +8,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 
+/** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
 {
     private string $packageName = 'livewire-powergrid';

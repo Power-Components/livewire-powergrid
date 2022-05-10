@@ -44,8 +44,7 @@
         dataField: '{{ $multiSelect['dataField'] }}',
         selected: '{{ json_encode($selected) }}'
      })">
-    <div class="inline-block relative w-full p-2"
-         style="min-width: 180px !important;">
+    <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         <div class="flex flex-col items-center relative">
             <div x-on:click="show = true" class="w-full"
                  style="min-width: 160px !important;">

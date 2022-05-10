@@ -19,7 +19,7 @@ class ExportToCsv extends Export implements ExportInterface
      */
     public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
-        $deleteFileAfterSend = data_get($exportOptions, 'deleteFileAfterSend');
+        $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
         $this->build();
 
         return response()

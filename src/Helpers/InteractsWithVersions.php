@@ -8,6 +8,7 @@ use Composer\Repository\InstalledRepositoryInterface;
 use Exception;
 use Illuminate\Support\Carbon;
 
+/** @codeCoverageIgnore */
 class InteractsWithVersions
 {
     /**

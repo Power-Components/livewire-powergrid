@@ -19,8 +19,8 @@ class ExportToXLS extends Export implements ExportInterface
      */
     public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
-        $deleteFileAfterSend = data_get($exportOptions, 'deleteFileAfterSend');
-        $this->striped       = data_get($exportOptions, 'striped');
+        $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
+        $this->striped       = strval(data_get($exportOptions, 'striped'));
         $this->build();
 
         return response()

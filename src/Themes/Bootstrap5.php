@@ -14,18 +14,12 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Footer,
-    Row,
     Table,
     Toggleable};
 
 class Bootstrap5 extends ThemeBase
 {
     public string $name = 'bootstrap5';
-
-    public static function paginationTheme(): string
-    {
-        return 'bootstrap';
-    }
 
     public function table(): Table
     {
@@ -47,12 +41,6 @@ class Bootstrap5 extends ThemeBase
             ->clearFilter('', 'color: #c30707; cursor:pointer; float: right;');
     }
 
-    public function rows(): Row
-    {
-        return Theme::row()
-            ->span('d-flex justify-content-between');
-    }
-
     public function footer(): Footer
     {
         return Theme::footer()
@@ -65,11 +53,6 @@ class Bootstrap5 extends ThemeBase
         return Theme::actions()
             ->tdBody('text-center')
             ->rowsBtn('');
-    }
-
-    public static function styles(): string
-    {
-        return 'bootstrap';
     }
 
     public function toggleable(): Toggleable

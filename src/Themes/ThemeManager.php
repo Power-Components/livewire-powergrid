@@ -15,7 +15,6 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
-    Row,
     Table,
     Toggleable};
 
@@ -34,11 +33,6 @@ class ThemeManager
     public function cols(): Cols
     {
         return new Cols();
-    }
-
-    public function row(): Row
-    {
-        return new Row();
     }
 
     public function footer(): Footer

@@ -14,17 +14,11 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Footer,
-    Row,
     Table};
 
 class Tailwind extends ThemeBase
 {
     public string $name = 'tailwind';
-
-    public static function paginationTheme(): string
-    {
-        return 'tailwind';
-    }
 
     public function table(): Table
     {
@@ -59,12 +53,6 @@ class Tailwind extends ThemeBase
         return Theme::cols()
             ->div('')
             ->clearFilter('', '');
-    }
-
-    public function rows(): Row
-    {
-        return Theme::row()
-            ->span('flex justify-between');
     }
 
     public function editable(): Editable
@@ -108,6 +96,7 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
+            ->base('inline-block relative w-full p-2 min-w-[180px]')
             ->view($this->root() . '.filters.multi-select');
     }
 

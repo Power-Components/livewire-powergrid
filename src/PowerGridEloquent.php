@@ -18,14 +18,6 @@ final class PowerGridEloquent
     }
 
     /**
-     * @return static
-     */
-    public static function eloquent(): PowerGridEloquent
-    {
-        return new PowerGridEloquent();
-    }
-
-    /**
      * @param string $field
      * @param Closure|null $closure
      * @return $this
