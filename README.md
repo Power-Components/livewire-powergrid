@@ -99,10 +99,10 @@ With PowerGrid you get right out of the box:
 
 ## 1. Requirements
 
-- PHP 7.4.1+
+- PHP 8.0+
 - [Laravel 8x+](https://laravel.com/docs/9.x/installation)
-- [Livewire 2x](https://laravel-livewire.com)
-- [Tailwind 2x or 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+- [Livewire 2.10x](https://laravel-livewire.com)
+- [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
