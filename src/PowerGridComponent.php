@@ -405,8 +405,6 @@ class PowerGridComponent extends Component
         })->toArray();
 
         $this->persistState('columns');
-
-        $this->fillData();
     }
 
     public function toggleDetail(string $id): void
