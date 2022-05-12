@@ -53,6 +53,7 @@
                             $event['params'] = $actionParameters;
 
                             if (filled($action->to)) {
+                                $action->emit    = false;
                                 $action->emitTo  = true;
                                 $event['to']     = $action->to;
                             }
