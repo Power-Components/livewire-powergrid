@@ -3,9 +3,7 @@
     <div class="md:flex md:flex-row w-full justify-between items-center">
         <div class="md:flex md:flex-row w-full">
             <div>
-                <x-livewire-powergrid::actions-header
-                    :theme="$theme"
-                    :actions="$headers"/>
+                @include(powerGridThemeRoot().'.header.actions')
             </div>
             <div class="flex flex-row justify-center items-center text-sm">
                 @if(data_get($setUp, 'exportable'))
@@ -21,10 +19,7 @@
     </div>
 
     @include(powerGridThemeRoot().'.header.batch-exporting')
-
-
     @include(powerGridThemeRoot().'.header.enabled-filters')
-
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
 </div>
 
