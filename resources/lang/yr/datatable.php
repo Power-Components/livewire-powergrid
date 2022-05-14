@@ -2,7 +2,8 @@
 
 return [
     'buttons' => [
-        'filter' => 'àlẹmọ',
+        'filter'            => 'àlẹmọ',
+        'clear_all_filters' => 'Clear all',
     ],
     'labels' => [
         'action'           => 'Awọn Igbese',
