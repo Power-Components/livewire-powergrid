@@ -17,9 +17,9 @@ class Stubs
         }
 
         if (strtolower(trim($creationModel)) === 'm') {
-            return File::get(__DIR__ . '/../../resources/stubs/table.model.stub');
+            return File::get(__DIR__ . '/../../../resources/stubs/table.model.stub');
         }
 
-        return File::get(__DIR__ . '/../../resources/stubs/table.collection.stub');
+        return File::get(__DIR__ . '/../../../resources/stubs/table.collection.stub');
     }
 }
