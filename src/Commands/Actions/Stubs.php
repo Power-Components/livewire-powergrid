@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Actions;
+namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Support\Facades\File;
 
@@ -9,8 +9,6 @@ class Stubs
     /**
      * Load stub
      *
-     * @param string $creationModel
-     * @param string|null $template
      */
     public static function load(string $creationModel, string $template = null): string
     {

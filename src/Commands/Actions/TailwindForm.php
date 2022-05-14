@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Actions;
+namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -10,9 +10,8 @@ class TailwindForm
     /**
      * Check if Tailwindform is installed
      *
-     * @return string|null
      */
-    public static function check()
+    public static function check(): ?string
     {
         $tailwindConfigFile = base_path() . '/' . 'tailwind.config.js';
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Actions;
+namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Support\Facades\File;
 
@@ -9,7 +9,6 @@ class Models
     /**
      * List files in Models folder
      *
-     * @return array
      */
     public static function list(): array
     {

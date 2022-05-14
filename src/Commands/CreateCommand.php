@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File};
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\Actions\{FillableTable, Models, Stubs, TailwindForm};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Exceptions\CreateCommandException;
 
