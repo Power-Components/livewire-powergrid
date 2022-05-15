@@ -121,7 +121,7 @@ class PowerGridComponent extends Component
 
     private function resolveTotalRow(): void
     {
-        collect($this->columns())->each(function (Column $column) {
+        collect($this->columns)->each(function (Column $column) {
             $hasHeader = $column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header'];
             $hasFooter = $column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer'];
 

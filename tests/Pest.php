@@ -10,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesMakeTable,
     Tests\DishesDetailRowTable,
     Tests\DishesEnumTable,
     Tests\DishesTable,
@@ -147,10 +148,12 @@ dataset('calculations', [
 ]);
 
 dataset('themes with name field', [
-    [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+    'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind make'  => [DishesMakeTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap make' => [DishesMakeTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+    'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
 ]);
 
 dataset('themes with collection table', [

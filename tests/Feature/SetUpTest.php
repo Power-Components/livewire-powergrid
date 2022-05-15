@@ -3,7 +3,7 @@
 use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Tests\DishesSetUpTable;
 
-it('show includeViewOnTop Header', function () {
+it('show includeViewOnTop/Bottom - Header', function () {
     livewire(DishesSetUpTable::class, ['testHeader' => true])
         ->assertSeeHtmlInOrder([
             '<div>Included By Header Top</div>',
@@ -14,7 +14,7 @@ it('show includeViewOnTop Header', function () {
         ->assertDontSeeHtml('<div>Included By Footer Bottom</div>');
 });
 
-it('show includeViewOnTop Footer', function () {
+it('show includeViewOnTop/Bottom - Footer', function () {
     livewire(DishesSetUpTable::class, ['testFooter' => true])
         ->assertSeeHtmlInOrder([
             'Pastel de Nata',
