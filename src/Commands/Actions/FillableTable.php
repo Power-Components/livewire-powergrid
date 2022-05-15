@@ -18,7 +18,7 @@ class FillableTable
         if (!empty($template)) {
             $stub =  File::get(base_path($template));
         } else {
-            $stub = File::get(__DIR__ . '/../../resources/stubs/table.fillable.stub');
+            $stub = File::get(__DIR__ . '/../../../resources/stubs/table.fillable.stub');
         }
 
         $getFillable = $model->getFillable();
