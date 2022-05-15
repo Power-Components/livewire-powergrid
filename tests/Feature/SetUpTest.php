@@ -8,8 +8,8 @@ it('show includeViewOnTop Header', function () {
         ->assertSeeHtmlInOrder([
             '<div>Included By Header Top</div>',
             'Pastel de Nata',
-            '<div>Included By Header Bottom</div>',
         ])
+        ->assertSeeHtml('<div>Included By Header Bottom</div>')
         ->assertDontSeeHtml('<div>Included By Footer Top</div>')
         ->assertDontSeeHtml('<div>Included By Footer Bottom</div>');
 });
