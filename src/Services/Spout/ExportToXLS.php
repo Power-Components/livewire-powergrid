@@ -6,6 +6,7 @@ use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\{Color, Style};
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use OpenSpout\Writer\XLSX\Options;
 use OpenSpout\Writer\XLSX\Writer;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
@@ -21,6 +22,8 @@ class ExportToXLS extends Export implements ExportInterface
     {
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
         $this->striped       = strval(data_get($exportOptions, 'striped'));
+        $this->width         = data_get($exportOptions, 'width');
+
         $this->build();
 
         return response()
@@ -36,7 +39,9 @@ class ExportToXLS extends Export implements ExportInterface
     {
         $data = $this->prepare($this->data, $this->columns);
 
-        $writer  = new Writer();
+        $options = new Options();
+
+        $writer  = new Writer($options);
         $writer->openToFile(storage_path($this->fileName . '.xlsx'));
 
         $style = (new Style())
@@ -50,6 +55,10 @@ class ExportToXLS extends Export implements ExportInterface
         $row = Row::fromValues($data['headers'], $style);
 
         $writer->addRow($row);
+
+        foreach ($this->width as $key => $width) {
+            $options->setColumnWidth($width, $key);
+        }
 
         $default = (new Style())
             ->setFontName('Arial')

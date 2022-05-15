@@ -13,6 +13,8 @@ final class Exportable
 
     public string $striped = '';
 
+    public array $width = [];
+
     public bool $deleteFileAfterSend = true;
 
     public function __construct(public string $fileName = 'export')
@@ -36,6 +38,13 @@ final class Exportable
     public function striped(string $color = 'd0d3d8'): self
     {
         $this->striped = $color;
+
+        return $this;
+    }
+
+    public function width(array $width): self
+    {
+        $this->width = $width;
 
         return $this;
     }

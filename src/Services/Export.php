@@ -15,6 +15,8 @@ class Export
 
     public string $striped = '';
 
+    public array $width = [];
+
     /** @var array<Column> $columns */
     public array $columns;
 

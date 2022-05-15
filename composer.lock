@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b4ced7544ae3fb19e91e3a07847c498",
+    "content-hash": "5105b3c5fd4f80ee63e2ff11574614c4",
     "packages": [
         {
             "name": "brick/math",
@@ -1906,16 +1906,16 @@
         },
         {
             "name": "openspout/openspout",
-            "version": "v4.4.1",
+            "version": "v4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openspout/openspout.git",
-                "reference": "587e99286fbe61ce32619af0843255642547415f"
+                "reference": "8ca7394b810c8af96a07fb7598dfeb4027e3382b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openspout/openspout/zipball/587e99286fbe61ce32619af0843255642547415f",
-                "reference": "587e99286fbe61ce32619af0843255642547415f",
+                "url": "https://api.github.com/repos/openspout/openspout/zipball/8ca7394b810c8af96a07fb7598dfeb4027e3382b",
+                "reference": "8ca7394b810c8af96a07fb7598dfeb4027e3382b",
                 "shasum": ""
             },
             "require": {
@@ -1928,13 +1928,13 @@
             },
             "require-dev": {
                 "ext-zlib": "*",
-                "friendsofphp/php-cs-fixer": "^3.7.0",
-                "infection/infection": "^0.26.6",
-                "phpbench/phpbench": "^1.2",
-                "phpstan/phpstan": "^1.5.0",
-                "phpstan/phpstan-phpunit": "^1.0.0",
-                "phpstan/phpstan-strict-rules": "^1.1.0",
-                "phpunit/phpunit": "^9.5.19"
+                "friendsofphp/php-cs-fixer": "^3.8.0",
+                "infection/infection": "^0.26.10",
+                "phpbench/phpbench": "^1.2.5",
+                "phpstan/phpstan": "^1.6.8",
+                "phpstan/phpstan-phpunit": "^1.1.1",
+                "phpstan/phpstan-strict-rules": "^1.2.3",
+                "phpunit/phpunit": "^9.5.20"
             },
             "suggest": {
                 "ext-iconv": "To handle non UTF-8 CSV files (if \"php-intl\" is not already installed or is too limited)",
@@ -1982,7 +1982,7 @@
             ],
             "support": {
                 "issues": "https://github.com/openspout/openspout/issues",
-                "source": "https://github.com/openspout/openspout/tree/v4.4.1"
+                "source": "https://github.com/openspout/openspout/tree/v4.6.0"
             },
             "funding": [
                 {
@@ -1994,7 +1994,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-31T07:31:47+00:00"
+            "time": "2022-05-12T10:06:23+00:00"
         },
         {
             "name": "phpoption/phpoption",
