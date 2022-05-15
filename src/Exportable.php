@@ -13,7 +13,7 @@ final class Exportable
 
     public string $striped = '';
 
-    public array $width = [];
+    public array $columnWidth = [];
 
     public bool $deleteFileAfterSend = true;
 
@@ -42,9 +42,9 @@ final class Exportable
         return $this;
     }
 
-    public function width(array $width): self
+    public function columnWidth(array $columnWidth): self
     {
-        $this->width = $width;
+        $this->columnWidth = $columnWidth;
 
         return $this;
     }

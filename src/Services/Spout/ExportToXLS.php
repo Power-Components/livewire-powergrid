@@ -22,9 +22,9 @@ class ExportToXLS extends Export implements ExportInterface
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
         $this->striped       = strval(data_get($exportOptions, 'striped'));
 
-        /** @var array $width */
-        $width               =  data_get($exportOptions, 'width');
-        $this->width         = $width;
+        /** @var array $columnWidth */
+        $columnWidth         = data_get($exportOptions, 'columnWidth', []);
+        $this->columnWidth   = $columnWidth;
 
         $this->build();
 
@@ -42,8 +42,8 @@ class ExportToXLS extends Export implements ExportInterface
         $data = $this->prepare($this->data, $this->columns);
 
         $options = new Options();
-
         $writer  = new Writer($options);
+
         $writer->openToFile(storage_path($this->fileName . '.xlsx'));
 
         $style = (new Style())
@@ -62,7 +62,7 @@ class ExportToXLS extends Export implements ExportInterface
          * @var int<1, max> $column
          * @var float $width
          */
-        foreach ($this->width as $column => $width) {
+        foreach ($this->columnWidth as $column => $width) {
             $options->setColumnWidth($width, $column);
         }
 
