@@ -18,7 +18,7 @@ it('property displays the results and options', function (string $component, obj
             '<option value="2">',
             '🥜 Suitable for Celiacs',
         ]);
-})->with('enum');
+})->with('enum')->onlyFromPhp('8.1');
 
 it('properly filter with diet', function (string $component, object $params) {
     livewire($component)
