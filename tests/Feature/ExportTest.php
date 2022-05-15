@@ -13,6 +13,12 @@ it('properly export xls data with selected data', function () {
         ->assertFileDownloaded('export.xlsx');
 });
 
+it('properly export xls - all data', function () {
+    livewire(ExportTable::class)
+        ->call('exportToXLS', false)
+        ->assertFileDownloaded('export.xlsx');
+});
+
 it('properly does not export xls data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToXLS', true);
@@ -27,6 +33,12 @@ it('properly export csv data with selected data', function () {
             1 => '2',
         ])
         ->call('exportToCsv', true)
+        ->assertFileDownloaded('export.csv');
+});
+
+it('properly export csv - all data', function () {
+    livewire(ExportTable::class)
+        ->call('exportToCsv', false)
         ->assertFileDownloaded('export.csv');
 });
 
