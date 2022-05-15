@@ -20,6 +20,7 @@
 
     @include(powerGridThemeRoot().'.header.batch-exporting')
     @include(powerGridThemeRoot().'.header.enabled-filters')
+
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
 </div>
 

@@ -10,6 +10,7 @@ use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
+/** @codeCoverageIgnore */
 class ExportJob implements ShouldQueue
 {
     use Batchable;

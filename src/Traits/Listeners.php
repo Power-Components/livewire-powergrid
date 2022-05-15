@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
 
+/** @codeCoverageIgnore  */
 trait Listeners
 {
     /**
