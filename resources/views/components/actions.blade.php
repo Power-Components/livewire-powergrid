@@ -46,7 +46,6 @@
                         $event['params'] = $helperClass->makeActionParameters(data_get($ruleEmitTo, 'params', []), $row);
                         $action->emitTo = true;
                     } else {
-
                         if (filled($action->event)) {
                             $action->emit    = true;
                             $event['event']  = $action->event;

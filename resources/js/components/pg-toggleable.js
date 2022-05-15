@@ -7,7 +7,8 @@ export default (params) => ({
     falseValue: params.falseValue,
     toggle: params.toggle,
     save() {
-        const value = (this.toggle === 0 ? this.toggle = 1 : this.toggle = 0)
+        const value = this.toggle;
+        this.toggle = (this.toggle === 0 ?  1 :  0);
 
         this.$wire.emit('pg:toggleable-' + this.tableName, {
             id: this.id,
