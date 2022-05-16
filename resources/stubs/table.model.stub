@@ -6,7 +6,6 @@ use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
@@ -119,8 +118,7 @@ final class {{ componentName }} extends PowerGridComponent
             Column::make('Created at', 'created_at')
                 ->hidden(),
 
-            Column::make('Created at', 'created_at_formatted')
-                ->makeInputDatePicker('created_at')
+            Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->searchable()
         ];
     }
