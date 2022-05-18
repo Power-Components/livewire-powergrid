@@ -7,7 +7,6 @@ export default (params) => ({
     falseValue: params.falseValue,
     toggle: params.toggle,
     save() {
-        const value = this.toggle;
         this.toggle = (this.toggle === 0 ?  1 :  0);
 
         document.getElementsByClassName('message')[0].style.display = "none";
@@ -15,7 +14,7 @@ export default (params) => ({
         this.$wire.emit('pg:toggleable-' + this.tableName, {
             id: this.id,
             field: this.field,
-            value: value
+            value: this.toggle
         })
     }
 })
