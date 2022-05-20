@@ -413,6 +413,8 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @deprecated
+     * @see https://github.com/Power-Components/livewire-powergrid/discussions/406
      * @param array $data
      * @return bool
      */
@@ -422,6 +424,8 @@ class PowerGridComponent extends Component
     }
 
     /**
+     * @deprecated
+     * @see https://github.com/Power-Components/livewire-powergrid/discussions/406
      * @return array|null|string
      */
     public function updateMessages(string $status, string $field = '_default_message')
