@@ -62,7 +62,8 @@
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
-                    @if((filled($action->event) || isset($event['event']) || filled($action->view || $action->toggleDetail)) && is_null($ruleRedirect))
+                    @if((filled($action->event) || isset($event['event']) || filled($action->view || $action->toggleDetail))
+                        && is_null($ruleRedirect) && !filled($action->route))
                         <button
                             @if($action->toggleDetail)
                             wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
