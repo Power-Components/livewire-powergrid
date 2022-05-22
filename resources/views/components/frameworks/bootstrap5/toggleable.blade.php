@@ -2,9 +2,9 @@
             id: '{{ $row->{$primaryKey} }}',
             tableName: '{{ $tableName }}',
             field: '{{ $column->field }}',
-            toggle: {{ $row->{$column->field} }},
+            toggle: {{ (int) $row->{$column->field} }},
             trueValue: '{{ $column->toggleable['default'][0] }}',
-            falseValue:  '{{ $column->toggleable['default'][1] }}',
+            falseValue:  '{{ $column->toggleable['default'][1] }}'
          })">
     @if($column->toggleable['enabled'])
         <div class="form-check form-switch">
