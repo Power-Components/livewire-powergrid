@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
 
+/** @codeCoverageIgnore */
 class PublishCommand extends Command
 {
     protected $signature = 'powergrid:publish {--type=job} {--force=}';

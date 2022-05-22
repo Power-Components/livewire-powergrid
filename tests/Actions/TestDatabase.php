@@ -60,7 +60,7 @@ class TestDatabase
     public static function seed(array $dishes = []): void
     {
         Schema::disableForeignKeyConstraints();
-        
+
         DB::table('categories')->truncate();
         DB::table('dishes')->truncate();
 
@@ -292,7 +292,7 @@ class TestDatabase
             if (!array_key_exists('diet', $dish)) {
                 $dish['diet'] = $faker->randomElement([0, 1, 2]); //Diet::cases()
             }
-            
+
             if (!array_key_exists('serving_at', $dish)) {
                 $dish['serving_at'] = 'pool bar';
             }

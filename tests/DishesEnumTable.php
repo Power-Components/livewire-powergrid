@@ -3,16 +3,19 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
-    Rules\Rule};
+    Rules\Rule,
+    Services\ExportOption};
 
 class DishesEnumTable extends PowerGridComponent
 {
@@ -40,14 +43,23 @@ class DishesEnumTable extends PowerGridComponent
         $this->eventId = $params;
     }
 
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showRecordCount()
-            ->showToggleColumns()
-            ->showExportOption('download-test', ['excel', 'csv'])
-            ->showSearchInput();
+        $this->showCheckBox();
+
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function datasource(): Builder
@@ -64,10 +76,8 @@ class DishesEnumTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
-        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
-
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
@@ -101,7 +111,7 @@ class DishesEnumTable extends PowerGridComponent
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
-                
+
             Column::add()
                 ->field('diet', 'dishes.diet')
                 ->makeInputEnumSelect(Diet::cases(), 'dishes.diet')

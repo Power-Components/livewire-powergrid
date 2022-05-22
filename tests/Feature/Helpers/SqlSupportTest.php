@@ -12,7 +12,7 @@ it('finds database version', function () {
 
 it('returns the proper "LIKE" syntax', function () {
     $driver = SqlSupport::getDatabaseDriverName();
-        
+
     expect(SqlSupport::like())
         ->when(
             $driver === 'mysql',

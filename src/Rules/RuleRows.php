@@ -34,4 +34,17 @@ class RuleRows
 
         return $this;
     }
+
+    /**
+     * Sets the button's given attribute to the given value.
+     */
+    public function detailView(string $detailView = null, array $options = []): RuleRows
+    {
+        $this->rule['detailView'] = [
+            'detailView' => $detailView,
+            'options'    => $options,
+        ];
+
+        return $this;
+    }
 }

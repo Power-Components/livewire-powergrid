@@ -2,7 +2,7 @@
     <div class="items-center justify-between w-full sm:flex-1 sm:flex">
         @if($recordCount === 'full')
             <div>
-                <div class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300 sm:text-right">
+                <div class="mr-2 leading-5 text-center text-slate-700 text-md dark:text-slate-300 sm:text-right">
                     {{ trans('livewire-powergrid::datatable.pagination.showing') }}
                     <span class="font-semibold firstItem">{{ $paginator->firstItem() }}</span>
                     {{ trans('livewire-powergrid::datatable.pagination.to') }}
@@ -14,7 +14,7 @@
             </div>
         @elseif($recordCount === 'short')
             <div>
-                <p class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300">
+                <p class="mr-2 leading-5 text-center text-slate-700 text-md dark:text-slate-300">
                     <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
                     <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
@@ -25,7 +25,7 @@
             </div>
         @elseif($recordCount === 'min')
             <div>
-                <p class="mr-2 leading-5 text-center text-gray-700 text-md dark:text-gray-300">
+                <p class="mr-2 leading-5 text-center text-slate-700 text-md dark:text-slate-300">
                     <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
                     <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
@@ -40,7 +40,7 @@
                     @if(!$paginator->onFirstPage())
 
                         <a
-                            class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                            class="px-2 py-1 pt-2 m-1 text-center text-white bg-slate-500 border-slate-400 rounded cursor-pointer border-1 hover:bg-slate-600 hover:border-slate-800 dark:text-slate-300"
                             wire:click="gotoPage(1)"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16">
@@ -49,7 +49,7 @@
                             </svg>
                         </a>
 
-                        <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                        <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-slate-500 border-slate-400 rounded cursor-pointer border-1 hover:bg-slate-600 hover:border-slate-800 dark:text-slate-300"
                            wire:click="previousPage"
                            rel="next">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-left" viewBox="0 0 16 16">
@@ -64,7 +64,7 @@
 
                             @foreach ($element as $page => $url)
                                 @if ($paginator->currentPage() > 3 && $page === 2)
-                                    <div class="mx-1 mt-1 text-gray-800 dark:text-gray-300">
+                                    <div class="mx-1 mt-1 text-slate-800 dark:text-slate-300">
                                         <span class="font-bold">.</span>
                                         <span class="font-bold">.</span>
                                         <span class="font-bold">.</span>
@@ -73,14 +73,15 @@
 
                                 @if ($page == $paginator->currentPage())
                                     <span
-                                        class="px-2 py-1 m-1 text-center border-gray-400 rounded cursor-pointer border-1 dark:bg-gray-700 dark:text-white dark:text-gray-300">{{ $page }}</span>
+                                        class="px-2 py-1 m-1 text-center border-slate-400 rounded cursor-pointer border-1 dark:bg-slate-700 dark:text-white dark:text-slate-300">{{ $page }}</span>
                                 @elseif ($page === $paginator->currentPage() + 1 || $page === $paginator->currentPage() + 2 || $page === $paginator->currentPage() - 1 || $page === $paginator->currentPage() - 2)
-                                    <a class="px-2 py-1 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                                    <a class="px-2 py-1 m-1 text-center text-white bg-slate-500 border-slate-400 rounded cursor-pointer border-1 hover:bg-slate-600 hover:border-slate-800 dark:text-slate-300"
+
                                        wire:click="gotoPage({{$page}})">{{ $page }}</a>
                                 @endif
 
                                 @if ($paginator->currentPage() < $paginator->lastPage() - 2  && $page === $paginator->lastPage() - 1)
-                                    <div class="mx-1 mt-1 text-gray-600 dark:text-gray-300">
+                                    <div class="mx-1 mt-1 text-slate-600 dark:text-slate-300">
                                         <span>.</span>
                                         <span>.</span>
                                         <span>.</span>
@@ -93,7 +94,7 @@
 
                     @if ($paginator->hasMorePages())
                         @if($paginator->lastPage() - $paginator->currentPage() >= 2)
-                            <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                            <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-slate-500 border-slate-400 rounded cursor-pointer border-1 hover:bg-slate-600 hover:border-slate-800 dark:text-slate-300"
                                wire:click="nextPage"
                                rel="next">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-compact-right" viewBox="0 0 16 16">
@@ -101,8 +102,7 @@
                                 </svg>
                             </a>
                         @endif
-                        <a
-                            class="px-2 py-1 pt-2 m-1 text-center text-white bg-gray-500 border-gray-400 rounded cursor-pointer border-1 hover:bg-gray-600 hover:border-gray-800 dark:text-gray-300"
+                        <a class="px-2 py-1 pt-2 m-1 text-center text-white bg-slate-500 border-slate-400 rounded cursor-pointer border-1 hover:bg-slate-600 hover:border-slate-800 dark:text-slate-300"
                             wire:click="gotoPage({{ $paginator->lastPage() }})"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">

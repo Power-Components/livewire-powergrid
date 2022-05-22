@@ -4,38 +4,33 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class FilterSelect
 {
-    public string $inputClass = '';
+    public string $selectClass = '';
 
-    public string $divClassNotInline = '';
+    public string $baseClass = '';
 
-    public string $divClassInline = '';
+    public string $baseStyle = '';
 
-    public string $relativeDivClass = '';
+    public string $view = '';
 
-    public function input(string $attrClass = ''): FilterSelect
+    public function view(string $view): FilterSelect
     {
-        $this->inputClass = $attrClass;
+        $this->view    = $view;
 
         return $this;
     }
 
-    public function divNotInline(string $attrClass = ''): FilterSelect
+    public function select(string $attrClass = ''): FilterSelect
     {
-        $this->divClassNotInline = $attrClass;
+        $this->selectClass = $attrClass;
 
         return $this;
     }
 
-    public function divInline(string $attrClass = ''): FilterSelect
+    public function base(string $attrClass = '', string $attrStyle = ''): FilterSelect
     {
-        $this->divClassInline = $attrClass;
+        $this->baseClass = $attrClass;
 
-        return $this;
-    }
-
-    public function relativeDiv(string $attrClass = ''): FilterSelect
-    {
-        $this->relativeDivClass = $attrClass;
+        $this->baseStyle = $attrStyle;
 
         return $this;
     }

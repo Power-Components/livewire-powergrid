@@ -3,6 +3,7 @@
     'actions' => null,
     'theme' => null,
     'row' => null,
+    'tableName' => null,
 ])
 <div>
     @if(isset($actions) && count($actions) && $row !== '')
@@ -61,8 +62,11 @@
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
-                    @if((filled($action->event) || isset($event['event']) || filled($action->view)) && is_null($ruleRedirect))
+                    @if((filled($action->event) || isset($event['event']) || filled($action->view || $action->toggleDetail)) && is_null($ruleRedirect))
                         <button
+                            @if($action->toggleDetail)
+                            wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
+                            @endif
                             @if($action->emit)
                             wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                             @endif

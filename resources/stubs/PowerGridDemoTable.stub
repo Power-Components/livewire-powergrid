@@ -14,31 +14,32 @@
 namespace App\Http\Livewire;
 
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use Faker\Factory as FakerFactory;
-use Illuminate\Database\QueryException;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\PowerGridEloquent;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    Exportable,
+    Footer,
+    Header,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridEloquent,
+    Rules\RuleActions};
 
 final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
 
-    //Messages informing success/error data is updated.
-    public bool $showUpdateMessages = true;
-
-     // Demo users. Should be removed in a real project.
+    // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
 
     protected function getListeners()
     {
         return array_merge(
-            parent::getListeners(), [
+            parent::getListeners(),
+            [
                 'rowActionEvent',
                 'bulkActionEvent',
             ]);
@@ -49,7 +50,6 @@ final class PowerGridDemoTable extends PowerGridComponent
     | Events
     |--------------------------------------------------------------------------
     */
-
     public function rowActionEvent(array $data): void
     {
         $message = 'You have clicked #' . $data['id'];
@@ -77,14 +77,19 @@ final class PowerGridDemoTable extends PowerGridComponent
     | Setup Table's general features
     |
     */
-
-    public function setUp(): void
+    public function setUp(): array
     {
-        $this->showCheckBox() //Adds checkboxes to each table row
-            ->showRecordCount() //Display: Showing 1 to 10 of 20 Results
-            ->showPerPage() //Shows per page option
-            ->showSearchInput() //Show search input on page top.
-            ->showExportOption('download', ['excel', 'csv']); //Enables export feature and show button on page top.
+        $this->showCheckBox();
+
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+            Header::make()->showSearchInput(),
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     /*
@@ -99,7 +104,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     * PowerGrid datasource.
     *
     */
-    public function datasource(): \Illuminate\Support\Collection
+    public function datasource(): Collection
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
@@ -131,7 +136,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     | You can pass a closure to transform/modify the data.
     |
     */
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
@@ -160,7 +165,7 @@ final class PowerGridDemoTable extends PowerGridComponent
      /**
      * PowerGrid Header
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     * @return array<int, Button>
      */
     public function header(): array
     {
@@ -187,42 +192,30 @@ final class PowerGridDemoTable extends PowerGridComponent
         $canCopy = true;
 
         return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
+            Column::make('ID', 'id')
                 ->makeInputRange(), //Filter for min-max Range
 
-            Column::add()
-                ->title(__('Full name')) //Colummn header title
-                ->field('name') //Reads datasource field 'name'
+            Column::make('Full name', 'name')
                 ->sortable() //Adds sorting button to the header
                 ->searchable() //Includes column in search option (top page)
                 ->makeInputText()//Filter for searching text
                 ->editOnClick($canEdit), //Allows user to edit information on click
 
-            Column::add()
-                ->title(__('E-mail address'))
-                ->field('email')
+            Column::make('Email address', 'email')
                 ->searchable()
                 ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
-            Column::add()
-                ->title(__('US State'))
-                ->field('state_in_usa')
+            Column::make('US State', 'state_in_usa')
                 ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
-            Column::add()
-                ->title(__('Laracon visitor?'))
-                ->field('laracon')
+            Column::make('Laracon visitor?', 'laracon')
                 ->searchable()
                 ->sortable()
                 ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
 
 
-            Column::add()
-                ->title(__('Laravel user since'))
-                ->field('laravel_since_formatted')
+            Column::make('Laravel user since', 'laravel_since_formatted')
                 ->searchable()
                 ->sortable()
                 ->makeInputDatePicker('laravel_since') //Date filter
@@ -240,14 +233,13 @@ final class PowerGridDemoTable extends PowerGridComponent
      /**
      * PowerGrid action buttons.
      *
-     * @return array<int, \PowerComponents\LivewirePowerGrid\Button>
+     * @return array<int, Button>
      */
 
     public function actions(): array
     {
        return [
-           Button::add('info')
-               ->caption(__('Click me'))
+           Button::make('info', 'Click me')
                ->class('bg-indigo-500 hover:bg-indigo-600 cursor-pointer text-white px-3 py-2 text-sm rounded-md')
                ->emit('rowActionEvent', ['id' => 'id']),
         ];
@@ -264,7 +256,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     /**
     * PowerGrid action rules.
     *
-    * @return array<int, \PowerComponents\LivewirePowerGrid\Rules\RuleActions>
+    * @return array<int, RuleActions>
     */
     public function actionRules(): array
     {
@@ -294,59 +286,6 @@ final class PowerGridDemoTable extends PowerGridComponent
 
     /*
     |--------------------------------------------------------------------------
-    | Edit Method
-    |--------------------------------------------------------------------------
-    | Enable the method below to use editOnClick() or toggleable() methods
-    |
-    */
-
-     /**
-     * PowerGrid Update.
-     *
-     * @param array<string,string> $data
-     */
-
-    public function update(array $data): bool
-    {
-        /*
-        |--------------------------------------------------------------------------
-        | ❗ Forcing update to fail ❗
-        |--------------------------------------------------------------------------
-        | Update will not be performed in order to protect your data.
-        */
-        return false;
-        //--------------------------------------------------------------------------
-
-        try {
-            $updated = user::query()->find($data['id'])->update([
-                $data['field'] => $data['value']
-           ]);
-        } catch (QueryException $exception) {
-            $updated = false;
-        }
-
-        return $updated;
-    }
-
-    public function updateMessages(string $status, string $field = '_default_message'): string
-    {
-        $updateMessages = [
-            'success'   => [
-                '_default_message' => __('Data has been updated successfully!'),
-                //'custom_field' => __('Custom Field updated successfully!'),
-            ],
-            'error' => [
-                '_default_message' => __('Update is blocked in Demo table!'),
-                'name' => __('The update of "name" field is blocked in Demo table!'),
-                //'custom_field' => __('Error updating custom field.'),
-            ]
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
-    }
-
-    /*
-    |--------------------------------------------------------------------------
     | ❗ Demo Users (Should be removed in a real project)
     |--------------------------------------------------------------------------
     | Generate random  users for demo purpose.
@@ -356,9 +295,9 @@ final class PowerGridDemoTable extends PowerGridComponent
     /**
      * Generate demo users
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
-    protected function demoUsers(): \Illuminate\Support\Collection
+    protected function demoUsers(): Collection
     {
         if (!is_null($this->demoUsers)) {
             return $this->demoUsers;

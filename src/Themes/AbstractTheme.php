@@ -15,10 +15,10 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
-    Row,
     Table,
     Toggleable};
 
+/** @codeCoverageIgnore */
 abstract class AbstractTheme
 {
     public Table $table;
@@ -51,15 +51,6 @@ abstract class AbstractTheme
 
     public Cols $cols;
 
-    public Row $row;
-
-    public static string $paginationTheme;
-
-    public static function paginationTheme(): string
-    {
-        return self::$paginationTheme;
-    }
-
     public function table(): Table
     {
         return Theme::table('');
@@ -88,11 +79,6 @@ abstract class AbstractTheme
     public function cols(): Cols
     {
         return Theme::cols();
-    }
-
-    public function row(): Row
-    {
-        return Theme::row();
     }
 
     public function actions(): Actions

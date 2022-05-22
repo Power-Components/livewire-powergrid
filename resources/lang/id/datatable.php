@@ -2,7 +2,8 @@
 
 return [
     'buttons' => [
-        'filter' => 'Filter',
+        'filter'            => 'Filter',
+        'clear_all_filters' => 'Clear all',
     ],
     'labels' => [
         'action'           => 'Aksi',

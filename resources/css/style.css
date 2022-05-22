@@ -3,7 +3,34 @@
 }
 
 table {
-    width: 100%
+    width: 100%;
+}
+
+.power-grid-table input, select, .bootstrap-select, .dropdown-menu {
+    font-size: 0.85rem !important;
+}
+
+.btn-light {
+    color: #000;
+    background-color: white;
+    border-color: #d7dbdf;
+    font-size: 0.85rem;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: white !important;
+    opacity: 1;
+}
+
+.btn-light:hover {
+    color: #000;
+    background-color: white;
+    border-color: #d7dbdf;
+    font-size: 0.85rem;
+}
+
+.btn-light, .has-search .form-control {
+    padding-left: 10px !important;
 }
 
 .table .checkbox-column {
@@ -18,28 +45,6 @@ table {
 
 .btn-light, .has-search .form-control {
     padding-left: 2.375rem
-}
-
-.has-search .form-control-feedback {
-    position: absolute;
-    z-index: 2;
-    display: block;
-    width: 2.375rem;
-    height: 2.375rem;
-    line-height: 2.375rem;
-    text-align: center;
-    pointer-events: none;
-    color: #aaa
-}
-
-.new-control {
-    position: relative;
-    display: -ms-inline-flexbox;
-    display: inline-flex;
-    padding-left: 1.5rem;
-    margin-right: 1rem;
-    font-weight: 100;
-    font-size: 14px
 }
 
 .page-link {
@@ -60,13 +65,6 @@ table {
 
 .page-item.disabled .page-link {
     @apply bg-white text-gray-300 border-gray-200
-}
-
-.livewire-powergrid {
-    background-color: #e5e7eb;
-    border-color: #f3f4f6;
-    color: #374151;
-    border-radius: 4px
 }
 
 .page-link {
@@ -102,6 +100,7 @@ table {
         transform: rotate(360deg)
     }
 }
+
 
 table thead {
     padding-left: 15px;
@@ -144,4 +143,9 @@ select, .power_grid {
 }
 .bootstrap-select {
     padding-left: 0 !important;
+}
+.btn-group-vertical>.btn, .btn-group>.btn {
+    position: relative;
+    flex: 1 1 auto;
+    border-color: #ced4da !important;
 }

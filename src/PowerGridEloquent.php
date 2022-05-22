@@ -14,15 +14,7 @@ final class PowerGridEloquent
 
     public function __construct()
     {
-        $this->collection = collect();
-    }
-
-    /**
-     * @return static
-     */
-    public static function eloquent(): PowerGridEloquent
-    {
-        return new PowerGridEloquent();
+        $this->collection = collect([]);
     }
 
     /**

@@ -7,9 +7,13 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridEloquent,
+    Services\ExportOption};
 
 class DishesActionTable extends PowerGridComponent
 {
@@ -39,14 +43,23 @@ class DishesActionTable extends PowerGridComponent
         $this->eventId = $params;
     }
 
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showRecordCount()
-            ->showToggleColumns()
-            ->showExportOption('download-test', ['excel', 'csv'])
-            ->showSearchInput();
+        $this->showCheckBox();
+
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function datasource(): Builder
@@ -72,7 +85,7 @@ class DishesActionTable extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')

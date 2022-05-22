@@ -1,26 +1,16 @@
-@props([
-    'theme' => null,
-    'checkbox' => null,
-    'ruleHide'=> false,
-    'ruleDisable' => false,
-    'ruleSetAttribute' => null,
-    'attribute' => null
-])
 @if($checkbox)
     @if($ruleHide)
-        <td class="{{ $theme->thClass }}"
-            style="{{ $theme->thStyle }}">
-            <div class="{{ $theme->divClass }}">
-            </div>
+        <td class="{{ $theme->checkbox->thClass }}"
+            style="{{ $theme->checkbox->thStyle }}">
         </td>
     @elseif($ruleDisable)
-        <td class="{{ $theme->thClass }}" style="{{ $theme->thStyle }}">
-            <div class="{{ $theme->divClass }}">
-                <label class="{{ $theme->labelClass }}">
+        <td class="{{ $theme->checkbox->thClass }}" style="{{ $theme->thStyle }}">
+            <div class="{{ $theme->checkbox->divClass }}">
+                <label class="{{ $theme->checkbox->labelClass }}">
                     <input @if(isset($ruleSetAttribute['attribute']))
-                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->inputClass) }}
+                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
                            @else
-                           class="{{ $theme->inputClass }}"
+                           class="{{ $theme->checkbox->inputClass }}"
                            @endif
                            disabled
                            type="checkbox">
@@ -28,14 +18,14 @@
             </div>
         </td>
     @else
-        <td class="{{ $theme->thClass }}"
-            style="{{ $theme->thStyle }}">
-            <div class="{{ $theme->divClass }}">
-                <label class="{{ $theme->labelClass }}">
+        <td class="{{ $theme->checkbox->thClass }}"
+            style="{{ $theme->checkbox->thStyle }}">
+            <div class="{{ $theme->checkbox->divClass }}">
+                <label class="{{ $theme->checkbox->labelClass }}">
                     <input @if(isset($ruleSetAttribute['attribute']))
-                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->inputClass) }}
+                           {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
                            @else
-                           class="{{ $theme->inputClass }}"
+                           class="{{ $theme->checkbox->inputClass }}"
                            @endif
                            type="checkbox"
                            wire:model.defer="checkboxValues"
@@ -44,4 +34,4 @@
             </div>
         </td>
     @endif
-    @endif
+@endif

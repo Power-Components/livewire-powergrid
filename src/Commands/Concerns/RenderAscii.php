@@ -10,7 +10,7 @@ trait RenderAscii
     public function renderPowergridAscii(): void
     {
         $this->newLine();
-        
+
         $this->line(<<<EOT
 
             <fg=yellow> __</>     <fg=green>____                          ______     _     __</>

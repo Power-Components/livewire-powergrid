@@ -4,31 +4,17 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class FilterMultiSelect
 {
-    public string $inputClass = '';
-
-    public string $divClassNotInline = '';
-
-    public string $divClassInline = '';
-
     public string $view = '';
 
-    public function input(string $attrClass = ''): FilterMultiSelect
+    public string $baseClass = '';
+
+    public string $baseStyle = '';
+
+    public function base(string $attrClass = '', string $attrStyle = ''): FilterMultiSelect
     {
-        $this->inputClass = $attrClass;
+        $this->baseClass = $attrClass;
 
-        return $this;
-    }
-
-    public function divNotInline(string $attrClass = ''): FilterMultiSelect
-    {
-        $this->divClassNotInline = $attrClass;
-
-        return $this;
-    }
-
-    public function divInline(string $attrClass = ''): FilterMultiSelect
-    {
-        $this->divClassInline = $attrClass;
+        $this->baseStyle = $attrStyle;
 
         return $this;
     }

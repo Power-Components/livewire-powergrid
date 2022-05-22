@@ -1,4 +1,5 @@
 <?php
+
 namespace PowerComponents\LivewirePowerGrid\Exceptions;
 
 use Exception;

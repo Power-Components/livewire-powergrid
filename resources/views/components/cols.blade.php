@@ -18,10 +18,10 @@
     wire:key="{{ md5($column->field) }}"
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
     <div class="{{ $theme->cols->divClass }}"
-         @if($column->sortable === true) wire:click="sortBy('{{ $field }}')"@endif>
+        @if($column->sortable === true) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable === true)
             <span class="text-md pr-2">
-						@if ($sortField !== $field)
+				@if ($sortField !== $field)
                     &#8597;
                 @elseif ($sortDirection == 'desc')
                     &#8593;
@@ -30,8 +30,6 @@
                 @endif
 					</span>
         @endif
-        <span>
-                    {{$column->title}}
-                </span>
+        <span>{{ $column->title }}</span>
     </div>
 </th>

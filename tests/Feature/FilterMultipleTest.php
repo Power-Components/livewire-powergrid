@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Str;
 use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -13,19 +14,39 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
 
     $component->set('filters', filterInputText('ba', 'contains', $params->field));
 
-    expect($component->filters)
-        ->toMatchArray([
-            'input_text' => [
-                $params->field => 'ba',
-            ],
-            'input_text_options' => [
-                $params->field => 'contains',
-            ],
-        ]);
+    if (str_contains($params->field, '.')) {
+        $data  = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $table => [
+                        $field => 'ba',
+                    ],
+                ],
+                'input_text_options' => [
+                    $table => [
+                        $field => 'contains',
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $params->field => 'ba',
+                ],
+                'input_text_options' => [
+                    $params->field => 'contains',
+                ],
+            ]);
+    }
 
     $component->assertSee('Barco-Sushi da Sueli');
 
-    $filters = array_merge($component->filters, filterNumber('price', '80.00', '100'));
+    $filters = array_merge($component->filters, filterNumber('price', '80,00', '100'));
 
     $component->set('filters', $filters)
         ->assertDontSee('Barco-Sushi da Sueli')
@@ -51,7 +72,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
             'input_text'         => [],
             'input_text_options' => [],
         ],
-        filterNumber('price', '80.00', '100'),
+        filterNumber('price', '80,00', '100'),
         filterBoolean('in_stock', 'true')
     );
     expect($component->filters)

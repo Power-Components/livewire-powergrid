@@ -23,9 +23,12 @@ class DemoCommand extends Command
     protected string $fullLivewirePath;
 
     protected string $viewFolder;
-    
+
     protected string $link = 'https://github.com/Power-Components/livewire-powergrid';
 
+    /**
+     * @throws \Exception
+     */
     public function handle(): int
     {
         $this->tableFileName = 'PowerGridDemoTable';
@@ -41,11 +44,11 @@ class DemoCommand extends Command
         }
 
         $url = config('app.url');
-        
+
         if (!is_string($url) || empty($url)) {
             throw new \Exception('Config URL invalid or not set.');
         }
-        
+
         $stub = str_replace('{{ url }}', $url, $this->stubPath);
 
         file_put_contents($this->fullLivewirePath . $this->tableFileName . '.php', file_get_contents($stub . $this->tableFileName . '.stub'));
@@ -63,9 +66,9 @@ class DemoCommand extends Command
         $this->info(
             "<comment>➤</comment> <comment>{$this->tableFileName}.php</comment> was successfully created at [<comment>App/{$this->livewirePath }</comment>]\n"
         );
-            
+
         $this->info("<comment>➤</comment> <comment>{$this->viewFileName}.php</comment> was successfully created at [<comment>{$this->viewFolder }/</comment>]\n");
-        
+
         $this->output->newLine();
 
         $this->output->title('<info>Next steps</info>');
@@ -86,9 +89,9 @@ class DemoCommand extends Command
         $this->output->newLine();
 
         $infoStyle = new OutputFormatterStyle('black', 'green');
-        
+
         $this->output->getFormatter()->setStyle('msg', $infoStyle);
-    
+
         $message =  $this->getHelper('formatter')->formatBlock(['', '⚡ Welcome to PowerGrid! ⚡', ''], 'msg', true);
         $this->output->writeln($message);
 

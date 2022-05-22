@@ -36,11 +36,16 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.1, 8.0, 7.4 ]
-        laravel: [ 8.* ]
+        php: [ 8.1, 8.0 ]
+        laravel: [ 9.*, ^8.75 ]
         dependency-version: [ prefer-stable ]
+        include:
+          - laravel: 9.*
+            testbench: 7.*
+          - laravel: ^8.75
+            testbench: 6.*
 
-    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }}(${{ matrix.dependency-version }})
+    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
 
     steps:
       - name: Checkout
@@ -67,14 +72,14 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update --dev
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Cs Fixer
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
-        run: ./vendor/bin/phpstan analyse --ansi --memory-limit=-1
+        run: git update-index --chmod=+x ./larastan.sh && bash ./larastan.sh
 
       - name: Testing with SQLite
         run: |

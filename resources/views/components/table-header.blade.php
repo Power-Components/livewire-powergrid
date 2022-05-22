@@ -1,16 +1,9 @@
-@props([
-'theme' => null,
-'data' => null,
-'actions' => null,
-'checkbox' => null,
-'primaryKey' => null,
-'columns' => null,
-'currentTable' => null,
-'withoutPaginatedData' => null,
-])
 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
+    @if(data_get($setUp, 'detail.showCollapseIcon'))
+        <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+    @endif
     @if($checkbox)
-        <td></td>
+        <td  class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
     @foreach ($columns as $column)
         @php
@@ -33,8 +26,7 @@
                 <span>{{ $column->sum['label'] }}: {{ round($withoutPaginatedData->collect()->sum($field), $column->sum['rounded']) }}</span>
                 <br>
             @endif
-            @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
+            @if ($column->avg['header'] && is_numeric($withoutPaginatedData[0][$field]))<span>{{ $column->avg['label'] }}: {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
                 <br>
             @endif
             @if ($column->min['header'] && is_numeric($withoutPaginatedData[0][$field]))

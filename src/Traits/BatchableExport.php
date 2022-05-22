@@ -50,9 +50,9 @@ trait BatchableExport
     public function updateExportProgress(): void
     {
         if (!is_null($this->exportBatch)) {
-            $this->batchFinished     = $this->exportBatch->finished();
-            $this->batchProgress     = $this->exportBatch->progress();
-            $this->batchErrors       = $this->exportBatch->hasFailures();
+            $this->batchFinished = $this->exportBatch->finished();
+            $this->batchProgress = $this->exportBatch->progress();
+            $this->batchErrors   = $this->exportBatch->hasFailures();
 
             if ($this->batchFinished) {
                 $this->batchExporting = false;
@@ -77,7 +77,7 @@ trait BatchableExport
 
         $queues = $this->putQueuesToBus($exportFileType);
 
-        $batch  = Bus::batch([
+        $batch = Bus::batch([
             $queues->toArray(),
         ])
             ->name($this->batchName)
@@ -100,14 +100,14 @@ trait BatchableExport
     private function putQueuesToBus(string $type): Collection
     {
         $this->exportedFiles = [];
-        $queues              = collect();
+        $queues              = collect([]);
         $perPage             = $this->total / $this->queues;
         $offset              = 0;
         $limit               = $perPage;
         $fileExtension       = $this->resolveFileExtension($type);
 
         for ($i = 1; $i < ($this->queues + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab($this->exportFileName) .
+            $fileName = 'powergrid-' . Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
                 '-' . ($offset + 1) .
                 '-' . $limit .
                 '-' . $this->id .
@@ -137,17 +137,11 @@ trait BatchableExport
 
     private function resolveFileExtension(string $class): string
     {
-        $extension = '';
-        switch ($class) {
-            case ExportToCsv::class:
-                $extension = 'csv';
-
-                break;
-            case ExportToXLS::class:
-                $extension = 'xlsx';
-        }
-
-        return $extension;
+        return match ($class) {
+            ExportToCsv::class => 'csv',
+            ExportToXLS::class => 'xlsx',
+            default            => '',
+        };
     }
 
     protected function onBatchExecuting(Batch $batch): void

@@ -17,6 +17,8 @@ class Collection implements CollectionFilterInterface
 
     private array $filters;
 
+    private array $inputRangeConfig = [];
+
     public function __construct(BaseCollection $query)
     {
         $this->query = $query;
@@ -205,7 +207,7 @@ class Collection implements CollectionFilterInterface
             case 'is_blank':
                 $this->query = $this->query->whereNotNull($field)->where($field, '=', '');
 
-            break;
+                break;
 
             case 'is_not_blank':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -214,17 +216,17 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} != '' || is_null($row->{$field});
                 });
 
-            break;
+                break;
 
             case 'is_null':
                 $this->query = $this->query->whereNull($field);
 
-            break;
+                break;
 
             case 'is_not_null':
                 $this->query = $this->query->whereNotNull($field);
 
-            break;
+                break;
 
             case 'is_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -233,7 +235,7 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} == '' || is_null($row->{$field});
                 });
 
-            break;
+                break;
 
             case 'is_not_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
@@ -242,7 +244,7 @@ class Collection implements CollectionFilterInterface
                     return $row->{$field} !== '' && !is_null($row->{$field});
                 });
 
-            break;
+                break;
         }
     }
 
@@ -262,10 +264,7 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    /**
-     * @param string | null | array $value
-     */
-    public function filterMultiSelect(string $field, $value): void
+    public function filterMultiSelect(string $field, array|BaseCollection $value): void
     {
         $empty = false;
         /** @var array|null $values */
@@ -288,23 +287,33 @@ class Collection implements CollectionFilterInterface
     public function filterNumber(string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
-            $start = str_replace($value['thousands'], '', $value['start']);
-            $start = (float) str_replace($value['decimal'], '.', $start);
+            $start = $value['start'];
+            if (isset($this->inputRangeConfig[$field])) {
+                $start = str_replace($value['thousands'], '', $value['start']);
+                $start = (float) str_replace($value['decimal'], '.', $start);
+            }
 
             $this->query = $this->query->where($field, '>=', $start);
         }
         if (!isset($value['start']) && isset($value['end'])) {
-            $end = str_replace($value['thousands'], '', $value['end']);
-            $end = (float) str_replace($value['decimal'], '.', $end);
-
+            $end = $value['end'];
+            if (isset($this->inputRangeConfig[$field])) {
+                $end = str_replace($value['thousands'], '', $value['end']);
+                $end = (float) str_replace($value['decimal'], '.', $end);
+            }
             $this->query = $this->query->where($field, '<=', $end);
         }
         if (isset($value['start']) && isset($value['end'])) {
-            $start = str_replace($value['thousands'], '', $value['start']);
-            $start = str_replace($value['decimal'], '.', $start);
+            $start = $value['start'];
+            $end   = $value['end'];
 
-            $end = str_replace($value['thousands'], '', $value['end']);
-            $end = str_replace($value['decimal'], '.', $end);
+            if (isset($this->inputRangeConfig[$field])) {
+                $start = str_replace($value['thousands'], '', $value['start']);
+                $start = str_replace($value['decimal'], '.', $start);
+
+                $end = str_replace($value['thousands'], '', $value['end']);
+                $end = str_replace($value['decimal'], '.', $end);
+            }
 
             $this->query = $this->query->whereBetween($field, [$start, $end]);
         }

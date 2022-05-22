@@ -1,4 +1,6 @@
 <?php
+
+use Illuminate\Support\Str;
 use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
@@ -9,7 +11,9 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesDetailRowTable,
     Tests\DishesEnumTable,
+    Tests\DishesMakeTable,
     Tests\DishesTable,
     Tests\DishesTableWithJoin
 };
@@ -50,6 +54,25 @@ function powergrid(): PowerGridComponent
 
 function filterInputText(string $text, string $type, $field = 'name'): array
 {
+    if (str_contains($field, '.')) {
+        $data  = Str::of($field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        return [
+            'input_text' => [
+                $table => [
+                    $field => $text,
+                ],
+            ],
+            'input_text_options' => [
+                $table => [
+                    $field => $type,
+                ],
+            ],
+        ];
+    }
+
     return [
         'input_text' => [
             $field => $text,
@@ -58,6 +81,39 @@ function filterInputText(string $text, string $type, $field = 'name'): array
             $field => $type,
         ],
     ];
+}
+
+function expectInputText(object $params, mixed $component, string $value, string $type): void
+{
+    if (str_contains($params->field, '.')) {
+        $data  = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $table => [
+                        $field => $value,
+                    ],
+                ],
+                'input_text_options' => [
+                    $table => [
+                        $field => $type,
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $params->field => $value,
+                ],
+                'input_text_options' => [
+                    $params->field => $type,
+                ],
+            ]);
+    }
 }
 
 dataset('enum', [
@@ -94,10 +150,12 @@ dataset('calculations', [
 ]);
 
 dataset('themes with name field', [
-    [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
-    [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+    'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind make'  => [DishesMakeTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap make' => [DishesMakeTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+    'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
 ]);
 
 dataset('themes with collection table', [
@@ -119,3 +177,9 @@ function onlyFromPhp(string $version): mixed
 
     return test();
 }
+
+expect()->extend('notToBeFileDownloaded', function ($component) {
+    $downloadEffect = data_get($component->lastResponse, 'original.effects.download');
+
+    expect($downloadEffect)->toBeNull();
+});

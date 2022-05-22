@@ -4,16 +4,22 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Pagination\{AbstractPaginator};
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport, Checkbox, Exportable, Filter, PersistData, WithSorting};
-use stdClass;
+use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
+    Checkbox,
+    Exportable,
+    Filter,
+    Listeners,
+    PersistData,
+    WithSorting};
 
 class PowerGridComponent extends Component
 {
@@ -25,22 +31,13 @@ class PowerGridComponent extends Component
     use Filter;
     use BatchableExport;
     use PersistData;
+    use Listeners;
 
     public array $headers = [];
 
-    public bool $searchInput = false;
-
     public string $search = '';
 
-    public bool $perPageInput = false;
-
-    public int $perPage = 10;
-
     public array $columns = [];
-
-    public array $perPageValues = [10, 25, 50, 100, 0];
-
-    public string $recordCount = '';
 
     public array $filtered = [];
 
@@ -50,19 +47,13 @@ class PowerGridComponent extends Component
 
     public string $currentTable = '';
 
-    /** @var \Illuminate\Database\Eloquent\Collection|array|Builder $datasource */
-    public $datasource;
+    public Eloquent\Collection | array | Eloquent\Builder $datasource;
 
-    /** @var \Illuminate\Support\Collection $withoutPaginatedData */
-    public $withoutPaginatedData;
-
-    public bool $toggleColumns = false;
+    public Support\Collection $withoutPaginatedData;
 
     public array $relationSearch = [];
 
     public bool $ignoreTablePrefix = true;
-
-    public bool $showUpdateMessages = false;
 
     public string $tableName = 'default';
 
@@ -70,41 +61,13 @@ class PowerGridComponent extends Component
 
     public bool $footerTotalColumn = false;
 
-    protected string $paginationTheme = 'tailwind';
+    public array $setUp = [];
+
+    public array $inputRangeConfig = [];
+
+    public bool $showErrorBag = false;
 
     protected ThemeBase $powerGridTheme;
-
-    /**
-     * @return $this
-     * Show search input into component
-     */
-    public function showSearchInput(): PowerGridComponent
-    {
-        $this->searchInput = true;
-
-        return $this;
-    }
-
-    /**
-     * default full. other: short, min
-     * @return $this
-     */
-    public function showRecordCount(string $mode = 'full'): PowerGridComponent
-    {
-        $this->recordCount = $mode;
-
-        return $this;
-    }
-
-    /**
-     * default false
-     */
-    public function showToggleColumns(): PowerGridComponent
-    {
-        $this->toggleColumns = true;
-
-        return $this;
-    }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -116,34 +79,39 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
-        $this->setUp();
+        foreach ($this->setUp() as $setUp) {
+            $this->setUp[$setUp->name] = $setUp;
+        }
+
+        if (isBootstrap5()) {
+            unset($this->setUp['detail']);
+        }
+
+        foreach ($this->inputRangeConfig() as $field => $config) {
+            $this->inputRangeConfig[$field] = $config;
+        }
 
         $this->columns = $this->columns();
 
         $this->resolveTotalRow();
 
-        $this->renderFilter();
+        $this->resolveFilters();
 
         $this->restoreState();
     }
 
     /**
      * Apply checkbox, perPage and search view and theme
-     * @return void
+     * @return array
      */
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showPerPage();
+        return [];
     }
 
-    public function showPerPage(int $perPage = 10): PowerGridComponent
+    public function inputRangeConfig(): array
     {
-        if (Str::contains((string) $perPage, $this->perPageValues)) {
-            $this->perPageInput = true;
-            $this->perPage      = $perPage;
-        }
-
-        return $this;
+        return [];
     }
 
     public function columns(): array
@@ -153,7 +121,7 @@ class PowerGridComponent extends Component
 
     private function resolveTotalRow(): void
     {
-        collect($this->columns())->each(function (Column $column) {
+        collect($this->columns)->each(function (Column $column) {
             $hasHeader = $column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header'];
             $hasFooter = $column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer'];
 
@@ -167,10 +135,9 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return Application|Factory|View
      * @throws Exception
      */
-    public function render()
+    public function render(): Application|Factory|View
     {
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
@@ -211,15 +178,14 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return AbstractPaginator|BaseCollection
      * @throws Exception
      */
-    public function fillData()
+    public function fillData(): AbstractPaginator | Support\Collection
     {
-        /** @var Builder|BaseCollection|\Illuminate\Database\Eloquent\Collection $datasource */
+        /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
-        $this->isCollection = is_a((object) $datasource, BaseCollection::class);
+        $this->isCollection = is_a((object) $datasource, Support\Collection::class);
 
         if ($this->isCollection) {
             $filters = Collection::query($this->resolveCollection($datasource))
@@ -237,9 +203,9 @@ class PowerGridComponent extends Component
             }
 
             if ($results->count()) {
-                $this->filtered = $results->pluck('id')->toArray();
+                $this->filtered = $results->pluck($this->primaryKey)->toArray();
 
-                $paginated = Collection::paginate($results, $this->perPage);
+                $paginated = Collection::paginate($results, intval(data_get($this->setUp, 'footer.perPage')));
                 $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
@@ -249,16 +215,14 @@ class PowerGridComponent extends Component
         /** @phpstan-ignore-next-line */
         $this->currentTable = $datasource->getModel()->getTable();
 
-        if (Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix) {
-            $sortField = $this->sortField;
-        } else {
-            $sortField = $this->currentTable . '.' . $this->sortField;
-        }
+        $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
+            ? $this->sortField : $this->currentTable . '.' . $this->sortField;
 
-        /** @var Builder $results */
+        /** @var Eloquent\Builder $results */
         $results = $this->resolveModel($datasource)
-            ->where(function (Builder $query) {
+            ->where(function (Eloquent\Builder $query) {
                 Model::query($query)
+                    ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
@@ -267,29 +231,67 @@ class PowerGridComponent extends Component
                     ->filter();
             });
 
-        if ($this->withSortStringNumber) {
-            $sortFieldType = SqlSupport::getSortFieldType($sortField);
-
-            if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
-            }
-        }
+        $results = self::applyWithSortStringNumber($results, $sortField);
 
         $results = $results->orderBy($sortField, $this->sortDirection);
 
-        if ($this->headerTotalColumn || $this->footerTotalColumn) {
-            $this->withoutPaginatedData = $this->transform($results->get());
-        }
+        self::applyTotalColumn($results);
 
-        if ($this->perPage > 0) {
-            $results = $results->paginate($this->perPage);
-        } else {
-            $results = $results->paginate($results->count());
-        }
+        $results = self::applyPerPage($results);
+
+        self::resolveDetailRow($results);
 
         $this->total = $results->total();
 
         return $results->setCollection($this->transform($results->getCollection()));
+    }
+
+    private function applyTotalColumn(Eloquent\Builder $results): void
+    {
+        if ($this->headerTotalColumn || $this->footerTotalColumn) {
+            $this->withoutPaginatedData = $this->transform($results->get());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    {
+        if (!$this->withSortStringNumber) {
+            return $results;
+        }
+
+        $sortFieldType = SqlSupport::getSortFieldType($sortField);
+
+        if (SqlSupport::isValidSortFieldType($sortFieldType)) {
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+        }
+
+        return $results;
+    }
+
+    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator
+    {
+        $perPage = intval(data_get($this->setUp, 'footer.perPage'));
+        if ($perPage > 0) {
+            return $results->paginate($perPage);
+        }
+
+        return $results->paginate($results->count());
+    }
+
+    private function resolveDetailRow(LengthAwarePaginator $results): void
+    {
+        if (!isset($this->setUp['detail'])) {
+            return;
+        }
+
+        collect($results->items())
+            ->each(function ($model) {
+                $state = data_get($this->setUp, 'detail.state.' . $model->id, false);
+                data_set($this->setUp, 'detail.state.' . $model->id, $state);
+            });
     }
 
     /**
@@ -301,40 +303,39 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param array|BaseCollection|Builder|null $datasource
      * @throws Exception
      */
-    private function resolveCollection($datasource = null): BaseCollection
+    private function resolveCollection(array | Support\Collection | Eloquent\Builder| null $datasource = null): Support\Collection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
-            return new BaseCollection($this->datasource());
+            return new Support\Collection($this->datasource());
         }
 
         return cache()->rememberForever($this->id, function () use ($datasource) {
             if (is_array($datasource)) {
-                return new BaseCollection($datasource);
+                return new Support\Collection($datasource);
             }
-            if (is_a((object) $datasource, BaseCollection::class)) {
+            if (is_a((object) $datasource, Support\Collection::class)) {
                 return $datasource;
             }
 
-            return new BaseCollection($datasource);
+            /** @var array $datasource */
+            return new Support\Collection($datasource);
         });
     }
 
-    private function transform(BaseCollection $results): BaseCollection
+    private function transform(Support\Collection $results): Support\Collection
     {
-        if (
-            !is_a((object) $this->addColumns(), PowerGridEloquent::class)
-        ) {
+        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
         }
 
         return $results->map(function ($row) {
-            /** @var stdClass $columns */
-            $columns = $this->addColumns();
+            $addColumns = $this->addColumns();
 
-            $columns = collect($columns->columns);
+            $columns    = $addColumns->columns;
+
+            $columns = collect($columns);
 
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
@@ -345,18 +346,15 @@ class PowerGridComponent extends Component
 
             $mergedData = $data->merge($rules ?? []);
 
-            return $row instanceof \Illuminate\Database\Eloquent\Model
+            return $row instanceof Eloquent\Model
                 ? tap($row)->forceFill($mergedData->toArray())
                 : (object) $mergedData->toArray();
         });
     }
 
-    /**
-     * @return null
-     */
-    public function addColumns()
+    public function addColumns(): PowerGridEloquent
     {
-        return null;
+        return PowerGrid::eloquent();
     }
 
     public function actionRules(): array
@@ -364,11 +362,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    /**
-     * @param array|BaseCollection|Builder|null $datasource
-     * @return mixed|null
-     */
-    private function resolveModel($datasource = null)
+    private function resolveModel(array | Support\Collection | Eloquent\Builder | null  $datasource = null): Support\Collection|array|null|Eloquent\Builder
     {
         if (blank($datasource)) {
             return $this->datasource();
@@ -377,11 +371,7 @@ class PowerGridComponent extends Component
         return $datasource;
     }
 
-    /**
-     * @param AbstractPaginator|BaseCollection $data
-     * @return Application|Factory|View
-     */
-    private function renderView($data)
+    private function renderView(AbstractPaginator|Support\Collection $data): Application|Factory|View
     {
         /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
@@ -389,59 +379,6 @@ class PowerGridComponent extends Component
             'theme' => $this->powerGridTheme,
             'table' => 'livewire-powergrid::components.table',
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function inputTextChanged(array $data): void
-    {
-        $update = $this->update($data);
-
-        $this->fillData();
-
-        if (!$this->showUpdateMessages) {
-            return;
-        }
-
-        if (!$update) {
-            session()->flash('error', $this->updateMessages('error', $data['field']));
-
-            return;
-        }
-        session()->flash('success', $this->updateMessages('success', $data['field']));
-    }
-
-    /**
-     * @deprecated
-     * @see https://github.com/Power-Components/livewire-powergrid/discussions/406
-     * @param array $data
-     * @return bool
-     */
-    public function update(array $data): bool
-    {
-        return false;
-    }
-
-    /**
-     * @deprecated
-     * @see https://github.com/Power-Components/livewire-powergrid/discussions/406
-     * @return array|null|string
-     */
-    public function updateMessages(string $status, string $field = '_default_message')
-    {
-        $updateMessages = [
-            'success' => [
-                '_default_message' => __('Data has been updated successfully!'),
-                'status'           => __('Custom Field updated successfully!'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-                //'custom_field' => __('Error updating custom field.'),
-            ],
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 
     public function checkedValues(): array
@@ -470,20 +407,9 @@ class PowerGridComponent extends Component
         $this->persistState('columns');
     }
 
-    /**
-     * @param string $fileName
-     * @param array|string[] $type
-     * @param array $options
-     * @return PowerGridComponent
-     */
-    public function showExportOption(string $fileName, array $type = ['excel', 'csv'], array $options = ['deleteAfterDownload' => true]): PowerGridComponent
+    public function toggleDetail(string $id): void
     {
-        $this->exportActive   = true;
-        $this->exportFileName = $fileName;
-        $this->exportType     = $type;
-        $this->exportOptions  = $options;
-
-        return $this;
+        data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
     /**
@@ -494,7 +420,7 @@ class PowerGridComponent extends Component
         return [
             'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
             'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
             'pg:eventRefresh-' . $this->tableName => '$refresh',

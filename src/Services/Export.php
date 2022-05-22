@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services;
 
-use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Helpers\Helpers;
@@ -12,6 +12,10 @@ class Export
     public string $fileName;
 
     public Collection $data;
+
+    public string $striped = '';
+
+    public array $columnWidth = [];
 
     /** @var array<Column> $columns */
     public array $columns;
@@ -39,20 +43,19 @@ class Export
     /**
      * @param Collection $data
      * @param array<Column> $columns
-     * @throws Exception
-     *
-     * @return array<string, array>.
+     * @return array{headers: array, rows: array}.
      */
     public function prepare(Collection $data, array $columns): array
     {
-        $header = collect();
+        $header = collect([]);
 
         $helperClass = resolve(Helpers::class);
 
         $data   = $data->transform(function ($row) use ($columns, $header, $helperClass) {
-            $item = collect();
+            $item = collect([]);
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $helperClass) {
+                /** @var Model|\stdClass $row */
                 $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
                 $isExportable     = false;
 
@@ -62,6 +65,7 @@ class Export
 
                 /** @var Column $column */
                 if ($column->visibleInExport || (!$column->hidden && is_null($column->visibleInExport)) && !$isExportable) {
+                    /** @var array $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
                             $item->put($column->title, $value);

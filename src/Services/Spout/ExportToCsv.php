@@ -2,10 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Services\Spout;
 
-use Box\Spout\Common\Exception\{IOException, InvalidArgumentException};
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-use Box\Spout\Writer\Exception\WriterNotOpenedException;
-use Exception;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Writer\CSV\Writer;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -13,11 +14,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class ExportToCsv extends Export implements ExportInterface
 {
     /**
-     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
-     * @throws Exception
+     * @throws WriterNotOpenedException
+     * @throws IOException
      */
-    public function download(bool $deleteFileAfterSend): BinaryFileResponse
+    public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
+        $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
         $this->build();
 
         return response()
@@ -26,32 +28,23 @@ class ExportToCsv extends Export implements ExportInterface
     }
 
     /**
-     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
-     * @throws Exception
-     */
-    public function store(): void
-    {
-        $this->build();
-    }
-
-    /**
-     * @throws IOException | WriterNotOpenedException | InvalidArgumentException
-     * @throws Exception
+     * @throws WriterNotOpenedException
+     * @throws IOException
      */
     public function build(): void
     {
         $data = $this->prepare($this->data, $this->columns);
 
-        $writer = WriterEntityFactory::createCSVWriter();
+        $writer = new Writer();
         $writer->openToFile(storage_path($this->fileName . '.csv'));
 
-        $row = WriterEntityFactory::createRowFromArray($data['headers']);
+        $row = Row::fromValues($data['headers']);
 
         $writer->addRow($row);
 
         /** @var array<string> $row */
         foreach ($data['rows'] as $row) {
-            $row = WriterEntityFactory::createRowFromArray($row);
+            $row = Row::fromValues($row);
             $writer->addRow($row);
         }
 

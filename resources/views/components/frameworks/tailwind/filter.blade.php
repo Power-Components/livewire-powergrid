@@ -8,71 +8,81 @@
     'enabledFilters' => null,
     'inputTextOptions' => [],
 ])
-<div class="w-full my-3 dark:bg-gray-800">
-    <div x-data={show:true} class="rounded-sm">
-        <div class="px-4 py-3 cursor-pointer bg-gray-50 border border-gray-200 dark:border-gray-600 dark:bg-gray-500"
+<div class="w-full my-3 dark:bg-slate-800">
+    <div x-data={show:true} class="rounded-full">
+        <div class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-600"
              @click="show=!show">
             <button
-                class="appearance-none text-left text-base font-medium text-gray-500 focus:outline-none dark:text-gray-300"
+                class="appearance-none text-left text-base font-medium text-slate-500 focus:outline-none dark:text-slate-300"
                 type="button">
                 {{ trans('livewire-powergrid::datatable.buttons.filter') }}
             </button>
         </div>
         <div x-show="show"
-             class="border-l border-b border-r border-gray-200 dark:border-gray-600 px-2 py-4 dark:border-0 dark:bg-gray-700">
+             class="border-l rounded-b-md border-b border-r border-slate-200 dark:border-slate-600 px-2 py-4 dark:border-0 dark:bg-slate-700">
             <div>
                 @php
                     $customConfig = [];
                 @endphp
                 <div class="md:flex md:flex-wrap">
-
                     @foreach(data_get($makeFilters, 'date_picker', []) as $field => $date)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.date-picker
-                                :date="$date"
-                                :inline="false"
-                                :tableName="$tableName"
-                                classAttr="w-full"
-                                :theme="$theme->filterDatePicker"/>
+                            @includeIf($theme->filterDatePicker->view, [
+                                 'inline'    => false,
+                                 'date'      => $date,
+                                 'tableName' => $tableName,
+                                 'classAttr' => 'w-full',
+                                 'theme'     => $theme->filterDatePicker,
+                            ])
                         </div>
                     @endforeach
-
                     @foreach(data_get($makeFilters, 'select', []) as $field => $select)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.select
-                                :select="$select"
-                                :inline="false"
-                                :theme="$theme->filterSelect"/>
+                            @includeIf($theme->filterSelect->view, [
+                                 'inline' => false,
+                                 'select' => $select,
+                                 'theme'  => $theme->filterSelect,
+                            ])
                         </div>
                     @endforeach
-
                     @foreach(data_get($makeFilters, 'number', []) as $field => $number)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.number
-                                :number="$number"
-                                :inline="false"
-                                :theme="$theme->filterNumber"/>
+                            @includeIf($theme->filterNumber->view, [
+                                'inline' => false,
+                                'number' => $number,
+                                'theme'  => $theme->filterNumber,
+                            ])
                         </div>
                     @endforeach
-
                     @foreach(data_get($makeFilters, 'input_text', []) as $field => $inputText)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.input-text
-                                    :enabledFilters="$enabledFilters"
-                                    :inputTextOptions="$inputTextOptions"
-                                    :inputText="$inputText"
-                                    :inline="false"
-                                    :theme="$theme->filterInputText"/>
+                            @includeIf($theme->filterInputText->view, [
+                                 'inline'           => false,
+                                 'enabledFilters'   => $enabledFilters,
+                                 'inputTextOptions' => $inputTextOptions,
+                                 'enabledFilters'   => $enabledFilters,
+                                 'theme'            => $theme->filterInputText,
+                            ])
                         </div>
                     @endforeach
-
-                    @foreach(data_get($makeFilters, 'boolean_filter', []) as $field => $booleanFilter)
+                    @foreach(data_get($makeFilters, 'boolean', []) as $field => $booleanFilter)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            <x-livewire-powergrid::filters.boolean-filter
-                                    :booleanFilter="$booleanFilter"
-                                    :tableName="$tableName"
-                                    :inline="false"
-                                    :theme="$theme->filterBoolean"/>
+                            @includeIf($theme->filterBoolean->view, [
+                                 'inline'         => false,
+                                 'booleanFilter'  => $booleanFilter,
+                                 'tableName'      => $tableName,
+                                 'theme'          => $theme->filterBoolean,
+                            ])
+                        </div>
+                    @endforeach
+                    @foreach(data_get($makeFilters, 'multi_select', []) as $field => $multiSelect)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            @includeIf($theme->filterMultiSelect->view, [
+                                'inline'         => false,
+                                'multiSelect'    => $multiSelect,
+                                'tableName'      => $tableName,
+                                'theme'          => $theme->filterBoolean,
+                            ])
                         </div>
                     @endforeach
                 </div>

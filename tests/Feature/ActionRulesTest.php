@@ -1,11 +1,12 @@
 <?php
 
 use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesDetailRowTable;
 
 it('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('perPage', 10)
+        ->set('setUp.footer.perPage', 10)
         ->assertSeeHtml('$emit("toggleEvent", {"dishId":5})')
         ->assertSeeHtmlInOrder(['<a ', 'href="https://www.dish.test/sorry-out-of-stock?dish=6'])
         ->assertSeeHtmlInOrder(['<a ', 'href="https://www.dish.test/sorry-out-of-stock?dish=7'])
@@ -48,7 +49,7 @@ it('add rule \'caption\' when dish out of stock', function (string $component, o
 it('add rule \'emit\' when dishId == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
-        ->set('perPage', 10)
+        ->set('setUp.footer.perPage', 10)
         ->set('search', 'Francesinha vegana')
         ->assertSeeHtml('$emit("toggleEvent", {"dishId":5})');
 })->with('rules');
@@ -63,3 +64,45 @@ it('add rule \'disable\' when dishId == 9', function (string $component, object 
             'class="text-center"',
         ]);
 })->with('rules');
+
+it('add rule \'toggleDetail\' when dishId == 3', function () {
+    livewire(DishesDetailRowTable::class)
+        ->assertSee('Pastel de Nata')
+        ->assertDontSeeHtml([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => false,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+        ]) // show detail row #1
+        ->call('toggleDetail', 1)
+        ->assertSeeHtmlInOrder([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => true,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+        ])
+        ->call('toggleDetail', 3)
+        ->assertSeeHtmlInOrder([
+            '<div>Id 1</div>',
+            '<div>Options {"name":"Luan"}</div>',
+            '<div>Id 3</div>',
+            '<div>Options {"name":"Luan","fromActionRule":true}</div>',
+        ])
+        ->assertSet('setUp.detail.state', [
+            1 => true,
+            2 => false,
+            3 => true,
+            4 => false,
+            5 => false,
+        ]);
+});

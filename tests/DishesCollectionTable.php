@@ -6,10 +6,14 @@ use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
-    Rules\Rule};
+    Rules\Rule,
+    Services\ExportOption};
 
 class DishesCollectionTable extends PowerGridComponent
 {
@@ -78,12 +82,30 @@ class DishesCollectionTable extends PowerGridComponent
         ]);
     }
 
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showExportOption('download', ['excel', 'csv'])
-            ->showSearchInput();
+        $this->showCheckBox();
+
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
+    }
+
+    public function inputRangeConfig(): array
+    {
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ''],
+        ];
     }
 
     public function addColumns(): PowerGridEloquent
@@ -129,7 +151,7 @@ class DishesCollectionTable extends PowerGridComponent
                 ->title(__('Price'))
                 ->field('price')
                 ->sortable()
-                ->makeInputRange('price', '.', ''),
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('In Stock'))

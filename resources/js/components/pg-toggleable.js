@@ -9,8 +9,6 @@ export default (params) => ({
     save() {
         this.toggle = (this.toggle === 0 ?  1 :  0);
 
-        document.getElementsByClassName('message')[0].style.display = "none";
-
         this.$wire.emit('pg:toggleable-' + this.tableName, {
             id: this.id,
             field: this.field,

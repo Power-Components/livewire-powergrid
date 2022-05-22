@@ -3,15 +3,18 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\{Carbon, HtmlString};
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Exportable,
+    Footer,
+    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
     Rules\Rule,
+    Services\ExportOption,
     Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent
@@ -46,13 +49,23 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public bool $withSortStringNumber = true;
 
-    public function setUp()
+    public function setUp(): array
     {
-        $this->showCheckBox()
-            ->showPerPage()
-            ->showRecordCount()
-            ->showExportOption('download', ['excel', 'csv'])
-            ->showSearchInput();
+        $this->showCheckBox();
+
+        return [
+            Exportable::make('export')
+                ->striped()
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
+
+            Header::make()
+                ->showToggleColumns()
+                ->showSearchInput(),
+
+            Footer::make()
+                ->showPerPage()
+                ->showRecordCount(),
+        ];
     }
 
     public function dataSource(): Builder
@@ -73,7 +86,14 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): ?PowerGridEloquent
+    public function inputRangeConfig(): array
+    {
+        return [
+            'price' => ['thousands' => '.', 'decimal' => ','],
+        ];
+    }
+
+    public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
@@ -155,10 +175,16 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->makeInputSelect(Category::all(), 'name', 'category_id'),
 
             Column::add()
+                ->title(__('Multiple'))
+                ->field('category_name')
+                ->placeholder('Categoria')
+                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+
+            Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
                 ->editOnClick($canEdit)
-                ->makeInputRange('price', '.', ','),
+                ->makeInputRange('price'),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -173,7 +199,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
-                ->headerAttribute('', 'width: 100px;')
                 ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->sortable()
                 ->field('in_stock'),
@@ -223,34 +248,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
-    }
-
-    public function update(array $data): bool
-    {
-        try {
-            $updated = Dish::query()->find($data['id'])->update([
-                $data['field'] => $data['value'],
-            ]);
-        } catch (QueryException $exception) {
-            $updated = false;
-        }
-
-        return $updated;
-    }
-
-    public function updateMessages(string $status, string $field = '_default_message'): string
-    {
-        $updateMessages = [
-            'success' => [
-                '_default_message' => __('Data has been updated successfully!'),
-                'price_BRL'        => __('Preço alterado'),
-            ],
-            'error' => [
-                '_default_message' => __('Error updating the data.'),
-            ],
-        ];
-
-        return ($updateMessages[$status][$field] ?? $updateMessages[$status]['_default_message']);
     }
 
     public function bootstrap()

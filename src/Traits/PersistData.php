@@ -8,7 +8,7 @@ trait PersistData
 {
     public array $persist = [];
 
-    private function persistState(string $tableItem):void
+    private function persistState(string $tableItem): void
     {
         $state = [];
         if (in_array('columns', $this->persist) || $tableItem === 'columns') {
@@ -29,7 +29,7 @@ trait PersistData
         }
     }
 
-    private function restoreState():void
+    private function restoreState(): void
     {
         if (empty($this->persist)) {
             return;

@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File};
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\Actions\{FillableTable, Models, Stubs, TailwindForm};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Exceptions\CreateCommandException;
 
@@ -65,11 +65,14 @@ class CreateCommand extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * @throws CreateCommandException
+     */
     protected function askTableName(): void
     {
-        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowergridTable'));
+        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowerGridTable'));
 
-        if (empty(trim(strval($this->tableName))) || !is_string($this->tableName)) {
+        if (empty(trim(strval($this->tableName)))) {
             throw new CreateCommandException('You must provide a name for your ⚡ PowerGrid Table!');
         }
 
@@ -82,6 +85,9 @@ class CreateCommand extends Command
         }
     }
 
+    /**
+     * @throws CreateCommandException
+     */
     protected function askDatasource(): void
     {
         $this->datasourceOption =  strval($this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)', 'M'));
@@ -91,6 +97,9 @@ class CreateCommand extends Command
         }
     }
 
+    /**
+     * @throws CreateCommandException
+     */
     protected function askModel(): void
     {
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
@@ -111,10 +120,6 @@ class CreateCommand extends Command
                 } else {
                     $this->cleanModelName = strval(preg_replace('![^A-Z]+!', '', $this->model));
 
-                    if (!is_string($this->cleanModelName)) {
-                        throw new CreateCommandException('Could not parse model name');
-                    }
-
                     if (strlen($this->cleanModelName)) {
                         throw new CreateCommandException('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
                     }
@@ -128,8 +133,8 @@ class CreateCommand extends Command
             if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
                 $this->useFilable = true;
             }
-            
-            if ($this->useFilable && is_string($this->model) && is_string($this->modelName)) {
+
+            if ($this->useFilable) {
                 $this->stub = FillableTable::create($this->model, $this->modelName, strval($this->option('template')));
             }
         }
@@ -145,14 +150,10 @@ class CreateCommand extends Command
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
 
-        if (!is_string($this->componentName)) {
-            throw new CreateCommandException('Could not parse component name');
-        }
-
         $this->stub = str_replace('{{ subFolder }}', $subFolder, $this->stub);
         $this->stub = str_replace('{{ componentName }}', $this->componentName, $this->stub);
 
-        if (strtolower($this->datasourceOption) === 'm' && is_string($this->modelName)) {
+        if (strtolower($this->datasourceOption) === 'm') {
             $this->stub = str_replace('{{ modelName }}', $this->model, $this->stub);
             $this->stub = str_replace('{{ modelLastName }}', $this->modelName, $this->stub);
             $this->stub = str_replace('{{ modelLowerCase }}', Str::lower($this->modelName), $this->stub);
@@ -190,7 +191,7 @@ class CreateCommand extends Command
             }
         }
 
-        if ($createTable && is_string($this->stub)) {
+        if ($createTable) {
             File::put($path, $this->stub);
         }
     }
@@ -200,9 +201,9 @@ class CreateCommand extends Command
         $this->output->title('Component is ready!');
 
         $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>App/' . $this->savedAt . '</comment>].');
-       
+
         $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
-       
+
         $this->info("\n\n⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
     }
 
@@ -211,7 +212,7 @@ class CreateCommand extends Command
         return strval(str_replace(',', '!', strval(__('Thanks,'))));
     }
 
-    protected function checkTailwindforms(): void
+    protected function checkTailwindForms(): void
     {
         $tailwind = TailwindForm::check();
 

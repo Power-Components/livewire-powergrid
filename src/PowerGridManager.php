@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
+use PowerComponents\LivewirePowerGrid\Themes as Themes;
 
 class PowerGridManager
 {
@@ -13,15 +13,15 @@ class PowerGridManager
 
     /**
      * @param string $class
-     * @return object|ThemeBase
+     * @return object|Themes\ThemeBase
      */
     public static function theme(string $class)
     {
         if ($class === 'tailwind') {
-            $class = Tailwind::class;
+            $class = Themes\Tailwind::class;
         }
         if ($class === 'bootstrap') {
-            $class = Bootstrap5::class;
+            $class = Themes\Bootstrap5::class;
         }
 
         return new $class();

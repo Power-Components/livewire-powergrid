@@ -10,6 +10,7 @@ use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
+/** @codeCoverageIgnore */
 class ExportJob implements ShouldQueue
 {
     use Batchable;
@@ -42,8 +43,7 @@ class ExportJob implements ShouldQueue
     public function handle(): void
     {
         /** @var Builder $query */
-        $query = $this->componentTable
-            ->datasource();
+        $query = $this->componentTable->datasource();
 
         $query = $query->offset($this->offset)
             ->limit($this->limit)

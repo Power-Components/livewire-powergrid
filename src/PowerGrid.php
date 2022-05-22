@@ -13,7 +13,7 @@ use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
  */
 class PowerGrid extends Facade
 {
-    public static function getFacadeAccessor()
+    public static function getFacadeAccessor(): string
     {
         return 'powergrid';
     }

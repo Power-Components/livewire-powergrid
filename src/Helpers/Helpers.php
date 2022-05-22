@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
 {
-    protected array $actions = [
+    protected array $actionRules = [
         'emit',
         'emitTo',
         'setAttribute',
@@ -18,14 +18,10 @@ class Helpers
         'caption',
         'pg:rows',
         'pg:column',
+        'detailView',
     ];
 
-    /**
-     * @param array $params
-     * @param Model|\stdClass|null $row
-     * @return array
-     */
-    public function makeActionParameters(array $params = [], $row = null): array
+    public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
     {
         $parameters = [];
 
@@ -40,12 +36,7 @@ class Helpers
         return $parameters;
     }
 
-    /**
-     * @param array $params
-     * @param Model|\stdClass|null $row
-     * @return mixed
-     */
-    public function makeActionParameter(array $params = [], $row = null)
+    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): mixed
     {
         $parameters = [];
 
@@ -60,19 +51,20 @@ class Helpers
         return $parameters[0];
     }
 
-    /**
-     * @param string|Button $action
-     * @param Model|\stdClass $row
-     * @return array
-     */
-    public function makeActionRules($action, $row): array
+    public function makeActionRules(string|Button $action, Model|\stdClass|array $row): array
     {
         $actionRules = [];
 
+        /** @phpstan-ignore-next-line */
         $row = Arr::undot(collect($row)->toArray());
 
         $rules = data_get($row, 'rules');
 
+        if (blank($rules)) {
+            return [];
+        }
+
+        /** @phpstan-ignore-next-line */
         collect($rules)->each(function ($key) use (&$actionRules, $action) {
             $key = (array) $key;
 
@@ -80,7 +72,7 @@ class Helpers
                 if (isset($key[$action->action])) {
                     $rule = (array) $key[$action->action];
 
-                    foreach ($this->actions as $action) {
+                    foreach ($this->actionRules as $action) {
                         if (data_get($rule, "action.$action")) {
                             $actionRules[$action] = data_get($rule, "action.$action");
                         }
@@ -91,8 +83,7 @@ class Helpers
             if (is_string($action)) {
                 if (isset($key[$action])) {
                     $rule = (array) $key[$action];
-
-                    foreach ($this->actions as $action) {
+                    foreach ($this->actionRules as $action) {
                         if (data_get($rule, "action.$action")) {
                             /** @phpstan-ignore-next-line  */
                             $actionRules[$action][] = data_get($rule, "action.$action");
@@ -137,6 +128,7 @@ class Helpers
             $resolveRules = (bool) $rule->rule['when']((object) $row);
 
             $prepareRule = [
+                /** @phpstan-ignore-next-line */
                 'action' => collect($rule->rule)->forget(['when', 'action.redirect.closure'])->toArray(),
             ];
 

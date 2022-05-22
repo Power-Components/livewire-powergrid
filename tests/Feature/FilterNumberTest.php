@@ -64,6 +64,8 @@ it('properly filters by "min & max" - using collection', function (string $compo
 it('properly filters by "min & max" currency', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('inputRangeConfig.price.thousands', '')
+        ->set('inputRangeConfig.price.decimal', '')
         ->set('filters', filterNumber('price', '60.49', '100'))
         ->assertSee('Francesinha')
         ->assertSee('Barco-Sushi da Sueli')
@@ -111,21 +113,19 @@ it('displays "No records found" with non-existent min - using collection', funct
 it('properly filters by "min & max" formatted', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('filters', filterNumber('price', '1,50', '20,51', '.', ','))
+        ->set('filters', filterNumber('price', '1,50', '20,51'))
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca');
 })->with('themes');
 
-function filterNumber(string $field, ?string $min, ?string $max, ?string $thousands = '', ?string $decimal = ''): array
+function filterNumber(string $field, ?string $min, ?string $max): array
 {
     return [
         'number' => [
             $field => [
-                'start'     => $min,
-                'end'       => $max,
-                'thousands' => $thousands,
-                'decimal'   => $decimal,
+                'start' => $min,
+                'end'   => $max,
             ],
         ],
     ];

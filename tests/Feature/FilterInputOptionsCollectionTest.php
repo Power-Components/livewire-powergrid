@@ -36,8 +36,7 @@ it('properly filters by "name is not" using nonexistent record using collection 
         ->set('filters', filterInputText('Name 6', 'is_not'))
         ->assertSee('Name 5')
         ->assertSee('Name 4')
-        ->call('clearFilter', 'name')
-        ->assertViewHas('filters', []);
+        ->call('clearFilter', 'name');
 })->with('themes with collection table');
 
 it('properly filters by "name contains" using collection table', function (string $component, string $theme) {
@@ -115,7 +114,7 @@ it('properly filters by "chef name is blank"', function (string $component, stri
         ->assertSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3');
@@ -128,7 +127,7 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
         ->assertSee('Name 2')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 2')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1');
@@ -141,7 +140,7 @@ it('properly filters by "chef name is null"', function (string $component, strin
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3');
@@ -154,7 +153,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, s
         ->assertSee('Name 1')
         ->assertSee('Name 3')
         ->assertDontSee('Name 2')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
@@ -167,7 +166,7 @@ it('properly filters by "chef name is empty"', function (string $component, stri
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3');
@@ -180,7 +179,7 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
-        ->set('perPage', '50')
+        ->set('setUp.footer.perPage', '50')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2');
