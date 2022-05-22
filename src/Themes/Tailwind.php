@@ -27,7 +27,7 @@ class Tailwind extends ThemeBase
             ->thead('shadow-sm bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-500')
             ->tr('')
             ->trFilters('bg-white shadow-sm dark:bg-slate-700')
-            ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semebold text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
+            ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semibold text-slate-700 tracking-wider whitespace-nowrap dark:text-slate-300')
             ->tbody('text-slate-800')
             ->trBody('border border-slate-100 dark:border-slate-400 hover:bg-slate-50 dark:bg-slate-700 dark:odd:bg-slate-800 dark:odd:hover:bg-slate-900 dark:hover:bg-slate-700')
             ->tdBody('px-3 py-2 whitespace-nowrap dark:text-slate-200')
@@ -104,7 +104,7 @@ class Tailwind extends ThemeBase
     {
         return Theme::filterNumber()
             ->view($this->root() . '.filters.number')
-            ->input('block bg-white border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500', 'min-width: 4rem');
+            ->input('block bg-white border border-slate-300 text-slate-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500 min-w-[5rem]');
     }
 
     public function filterSelect(): FilterSelect
@@ -112,7 +112,7 @@ class Tailwind extends ThemeBase
         return Theme::filterSelect()
             ->view($this->root() . '.filters.select')
             ->base('min-w-[9.5rem]')
-            ->select('appearance-none block bg-white border border-slate-300 h-[38px] text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+            ->select('appearance-none block bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 
     public function filterInputText(): FilterInputText
@@ -120,7 +120,7 @@ class Tailwind extends ThemeBase
         return Theme::filterInputText()
             ->view($this->root() . '.filters.input-text')
             ->base('min-w-[9.5rem]')
-            ->select('appearance-none block bg-white border border-slate-300 h-[38px] text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
+            ->select('appearance-none block bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
             ->input('w-full block bg-white text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
     }
 }

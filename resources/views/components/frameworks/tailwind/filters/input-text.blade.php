@@ -19,11 +19,11 @@
                 <label class="text-gray-700 dark:text-gray-300">{{ data_get($inputText, 'label') }}</label>
             @endif
             <div @class([
-                'flex flex-row justify-between' => !$inline,
+                'sm:flex w-full' => !$inline,
                 'flex flex-col' => $inline,
-        ])>
+                ])>
                 <div @class([
-                        'pl-0 pt-1 pr-3' => !$inline,
+                        'pl-0 pt-1 w-full sm:pr-3 sm:w-1/2' => !$inline,
                     ])>
                     <div class="relative">
                         <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
@@ -39,7 +39,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-1">
+                <div @class([
+                        'pl-0 pt-1 w-full sm:w-1/2' => !$inline,
+                        'mt-1' => $inline,
+                    ])>
                     <input
                         data-id="{{ $field }}"
                         @if(isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled @else

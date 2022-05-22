@@ -75,6 +75,16 @@
                             ])
                         </div>
                     @endforeach
+                    @foreach(data_get($makeFilters, 'multi_select', []) as $field => $multiSelect)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            @includeIf($theme->filterMultiSelect->view, [
+                                'inline'         => false,
+                                'multiSelect'    => $multiSelect,
+                                'tableName'      => $tableName,
+                                'theme'          => $theme->filterBoolean,
+                            ])
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
