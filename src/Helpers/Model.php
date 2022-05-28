@@ -263,10 +263,8 @@ class Model implements ModelFilterInterface
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
-                    /** @var string $searchable */
-                    $searchable = data_get($column, 'searchable');
-                    /** @var string $field */
-                    $field      = data_get($column, 'dataField') ?: data_get($column, 'field');
+                    $searchable = strval(data_get($column, 'searchable'));
+                    $field      = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
 
                     if ($searchable && $field) {
                         if (str_contains($field, '.')) {
@@ -281,6 +279,10 @@ class Model implements ModelFilterInterface
 
                         if ($hasColumn) {
                             $query->orWhere($table . '.' . $field, SqlSupport::like(), '%' . $this->search . '%');
+                        }
+
+                        if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like() . ' "%' . $this->search . '%"');
                         }
                     }
                 }

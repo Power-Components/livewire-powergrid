@@ -32,6 +32,8 @@ final class Column
 
     public bool $searchable = false;
 
+    public string $searchableRaw = '';
+
     public bool $sortable = false;
 
     public array $sum = [
@@ -118,11 +120,23 @@ final class Column
     /**
      * Makes the column searchable
      *
-     * @return Column
      */
     public function searchable(): Column
     {
         $this->searchable = true;
+
+        return $this;
+    }
+
+    /**
+     * Makes the column searchable with SQL Raw
+     *
+    */
+    public function searchableRaw(string $sql): Column
+    {
+        $this->searchable();
+
+        $this->searchableRaw = $sql;
 
         return $this;
     }
