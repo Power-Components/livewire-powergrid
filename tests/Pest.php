@@ -1,22 +1,21 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
-    Tests\DishesDetailRowTable,
     Tests\DishesEnumTable,
     Tests\DishesMakeTable,
+    Tests\DishesSearchableRawTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin
-};
+    Tests\DishesTableWithJoin};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -47,7 +46,6 @@ function powergrid(): PowerGridComponent
     $component             = new PowerGridComponent(1);
     $component->datasource = Dish::query();
     $component->columns    = $columns;
-    $component->perPage    = 10;
 
     return $component;
 }
@@ -163,6 +161,11 @@ dataset('themes with collection table', [
     [DishesCollectionTable::class, 'bootstrap'],
 ]);
 
+dataset('searchable-raw', [
+    'tailwind'  => [DishesSearchableRawTable::class, (object) ['theme' => 'tailwind']],
+    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => 'bootstrap']],
+]);
+
 /**
  * Skip tests based on minimum PHP Version
  *
@@ -173,6 +176,33 @@ function onlyFromPhp(string $version): mixed
 {
     if (version_compare(PHP_VERSION, $version, '<')) {
         test()->markTestSkipped('This test requires PHP ' . $version);
+    }
+
+    return test();
+}
+
+function requiresMySQL()
+{
+    if (DB::getDriverName() !== 'mysql') {
+        test()->markTestSkipped('This test requires MySQL database');
+    }
+
+    return test();
+}
+
+function requiresSQLite()
+{
+    if (DB::getDriverName() !== 'sqlite') {
+        test()->markTestSkipped('This test requires SQLite database');
+    }
+
+    return test();
+}
+
+function requiresPostgreSQL()
+{
+    if (DB::getDriverName() !== 'pgsql') {
+        test()->markTestSkipped('This test requires PostgreSQL database');
     }
 
     return test();

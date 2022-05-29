@@ -282,7 +282,7 @@ class Model implements ModelFilterInterface
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like() . ' "%' . $this->search . '%"');
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like() . ' \'%' . $this->search . '%\'');
                         }
                     }
                 }
