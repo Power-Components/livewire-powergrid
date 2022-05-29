@@ -155,7 +155,7 @@ class Model implements ModelFilterInterface
         }
     }
 
-    public function filterInputText(Builder $query, string $field, string|array $value): void
+    public function filterInputText(Builder $query, string $field, string|array|null $value): void
     {
         if (is_array($value)) {
             $field = $field . '.' . key($value);
