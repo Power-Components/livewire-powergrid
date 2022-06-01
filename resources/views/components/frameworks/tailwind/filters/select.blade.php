@@ -19,7 +19,9 @@
                             style="{{ data_get($column, 'headerStyle') }}"
                             wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
                             wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">
-                        <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                        @if(!boolval(data_get($select, 'isEnum')))
+                            <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                        @endif
                         @foreach(data_get($select, 'data_source') as $relation)
                             @php
                                 $key = isset($relation['id']) ? 'id' : 'value';
