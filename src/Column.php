@@ -297,9 +297,8 @@ final class Column
         $this->editable                         = false;
         $this->inputs['select']['data_source']  = $datasource;
         $this->inputs['select']['displayField'] = $displayField;
-        $this->inputs['select']['dataField']    = $dataField          ?? $displayField;
-        $this->inputs['select']['class']        = $settings['class']  ?? '';
-        $this->inputs['select']['isEnum']       = $settings['isEnum'] ?? false;
+        $this->inputs['select']['dataField']    = $dataField         ?? $displayField;
+        $this->inputs['select']['class']        = $settings['class'] ?? '';
 
         return $this;
     }
@@ -362,8 +361,6 @@ final class Column
         });
 
         $dataField ??= Str::snake(class_basename($enumCases[0]));
-
-        $settings['isEnum'] = true;
 
         return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
     }
