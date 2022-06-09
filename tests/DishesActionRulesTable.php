@@ -14,7 +14,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
-    Rules\Rule};
+    Rules\Rule
+};
 
 class DishesActionRulesTable extends PowerGridComponent
 {
@@ -147,6 +148,10 @@ class DishesActionRulesTable extends PowerGridComponent
             Rule::button('edit-stock-for-rules')
                 ->when(fn (Dish $dish) => $dish->id == 9)
                 ->disable(),
+
+            Rule::button('edit-stock-for-rules')
+                ->when(fn (Dish $dish) => $dish->id == 10)
+                ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
         ];
     }
 

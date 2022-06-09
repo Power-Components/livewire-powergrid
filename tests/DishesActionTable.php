@@ -127,6 +127,9 @@ class DishesActionTable extends PowerGridComponent
                 ->caption(__('emit'))
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
+
+            Button::add('bladeComponent')
+            ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
         ];
     }
 
