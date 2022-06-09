@@ -106,3 +106,12 @@ it('add rule \'toggleDetail\' when dishId == 3', function () {
             5 => false,
         ]);
 });
+
+it('add rule \'bladeComponent\' when dish-id == 10', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
+        ->set('setUp.footer.perPage', 20)
+        ->assertSeeHtml('<svg dish-id="10"')
+        ->assertSeeHtml('<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />')
+        ->assertDontSeeHtml('<svg dish-id="1"');
+})->with('rules');
