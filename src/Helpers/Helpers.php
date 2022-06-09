@@ -20,7 +20,7 @@ class Helpers
         'pg:rows',
         'pg:column',
         'detailView',
-        'bladeComponent'
+        'bladeComponent',
     ];
 
     public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array

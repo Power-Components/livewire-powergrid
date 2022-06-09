@@ -206,7 +206,7 @@ final class Button
     public function bladeComponent(string $component, array $params): Button
     {
         $this->bladeComponent = $component;
-        $this->param = $params;
+        $this->param          = $params;
 
         return $this;
     }

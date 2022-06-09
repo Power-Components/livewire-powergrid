@@ -113,7 +113,6 @@ class RuleActions
 
     public function bladeComponent(string $component, array $params): RuleActions
     {
-
         $this->rule['bladeComponent'] = [
             'component' => $component,
             'params'    => $params,
