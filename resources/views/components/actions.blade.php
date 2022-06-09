@@ -60,15 +60,15 @@
                         }
                      }
 
-                    if (filled($action->bladeComponent)) {
+                    if (filled($action->bladeComponent) || filled($ruleSetBladeComponent)) {
                         if (filled($ruleSetBladeComponent)){
                             $ruleBladeComponent = $ruleSetBladeComponent['component'];
-                            $attributesBag = $helperClass->makeAttributesBag($ruleSetBladeComponent['params']);
-
-                        } else {
-                            $attributesBag = $helperClass->makeAttributesBag($actionParameters);
+                            $ruleBladeParams = $helperClass->makeActionParameters(data_get($ruleSetBladeComponent, 'params', []), $row);
 
                         }
+
+                            $attributesBag = $helperClass->makeAttributesBag($ruleBladeParams ?? $actionParameters);
+
                     }
                 @endphp
                 <div class="w-full md:w-auto"
@@ -133,7 +133,7 @@
                         @endif
                     @endif
 
-                    @if(filled($action->bladeComponent))
+                    @if(filled($action->bladeComponent) || filled($ruleSetBladeComponent))
                         <x-dynamic-component :component="$ruleBladeComponent ?? $action->bladeComponent"
                                              :attributes="$attributesBag"/>
                     @endif
