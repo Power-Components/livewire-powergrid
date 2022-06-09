@@ -19,15 +19,16 @@
                         $actionParameters = $helperClass->makeActionParameters($action->param, $row);
                     }
 
-                    $rules            = $helperClass->makeActionRules($action, $row);
+                    $rules                 = $helperClass->makeActionRules($action, $row);
 
-                    $ruleRedirect     = data_get($rules, 'redirect');
-                    $ruleDisabled     = data_get($rules, 'disable');
-                    $ruleHide         = data_get($rules, 'hide', false);
-                    $ruleSetAttribute = data_get($rules, 'setAttribute');
-                    $ruleEmit         = data_get($rules, 'emit');
-                    $ruleEmitTo       = data_get($rules, 'emitTo');
-                    $ruleCaption      = data_get($rules, 'caption');
+                    $ruleRedirect          = data_get($rules, 'redirect');
+                    $ruleDisabled          = data_get($rules, 'disable');
+                    $ruleHide              = data_get($rules, 'hide', false);
+                    $ruleSetAttribute      = data_get($rules, 'setAttribute');
+                    $ruleEmit              = data_get($rules, 'emit');
+                    $ruleEmitTo            = data_get($rules, 'emitTo');
+                    $ruleCaption           = data_get($rules, 'caption');
+                    $ruleSetBladeComponent = data_get($rules, 'bladeComponent');
 
                     $action->emit     = false;
                     $action->emitTo   = false;
@@ -58,29 +59,40 @@
                             }
                         }
                      }
+
+                    if (filled($action->bladeComponent)) {
+                        if (filled($ruleSetBladeComponent)){
+                            $ruleBladeComponent = $ruleSetBladeComponent['component'];
+                            $attributesBag = $helperClass->makeAttributesBag($ruleSetBladeComponent['params']);
+
+                        } else {
+                            $attributesBag = $helperClass->makeAttributesBag($actionParameters);
+
+                        }
+                    }
                 @endphp
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || isset($event['event']) || filled($action->view || $action->toggleDetail))
-                        && is_null($ruleRedirect) && !filled($action->route))
+                        && is_null($ruleRedirect) && !filled($action->route)  && !filled($action->bladeComponent))
                         <button
-                            @if($action->toggleDetail)
-                            wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
-                            @endif
-                            @if($action->emit)
-                            wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
-                            @endif
-                            @if($action->emitTo)
-                            wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
-                            @endif
-                            @if($action->view)
-                            wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
-                            @endif
+                                @if($action->toggleDetail)
+                                    wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
+                                @endif
+                                @if($action->emit)
+                                    wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                                @endif
+                                @if($action->emitTo)
+                                    wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
+                                @endif
+                                @if($action->view)
+                                    wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
+                                @endif
 
-                            @if($ruleDisabled) disabled @endif
-                            title="{{ $action->tooltip }}"
-                            {{ $class }}
+                                @if($ruleDisabled) disabled @endif
+                                title="{{ $action->tooltip }}"
+                                {{ $class }}
                         >
                             {!! $ruleCaption ?? $action->caption !!}
                         </button>
@@ -89,10 +101,10 @@
                     @if(filled($ruleRedirect))
                         <a @if($ruleDisabled) disabled
                            @else
-                           href="{{ $ruleRedirect['url'] }}" target="{{ $ruleRedirect['target'] }}"
+                               href="{{ $ruleRedirect['url'] }}" target="{{ $ruleRedirect['target'] }}"
                            @endif
                            title="{{ $action->tooltip }}"
-                           {{ $class }}>
+                                {{ $class }}>
                             {!! $ruleCaption ?? $action->caption !!}
                         </a>
                     @endif
@@ -114,11 +126,16 @@
                             <a href="{{ route($action->route, $actionParameters) }}"
                                target="{{ $action->target }}"
                                title="{{ $action->tooltip }}"
-                               {{ $class }}
+                                    {{ $class }}
                             >
                                 {!! $ruleCaption ?? $action->caption !!}
                             </a>
                         @endif
+                    @endif
+
+                    @if(filled($action->bladeComponent))
+                        <x-dynamic-component :component="$ruleBladeComponent ?? $action->bladeComponent"
+                                             :attributes="$attributesBag"/>
                     @endif
                 </div>
             </td>

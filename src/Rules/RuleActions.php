@@ -110,4 +110,15 @@ class RuleActions
 
         return $this;
     }
+
+    public function bladeComponent(string $component, array $params): RuleActions
+    {
+
+        $this->rule['bladeComponent'] = [
+            'component' => $component,
+            'params'    => $params,
+        ];
+
+        return $this;
+    }
 }
