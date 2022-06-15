@@ -1,5 +1,5 @@
 @if($softDeletes === 'withTrashed' || $softDeletes === 'onlyTrashed' && data_get($setUp, 'header.showMessageSoftDeletes'))
-    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-2 my-2">
         <div class="flex">
             <div class="ml-3">
                 <p class="text-sm text-yellow-700">
