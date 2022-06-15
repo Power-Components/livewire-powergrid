@@ -12,6 +12,7 @@
                     </div>
                 @endif
                 @includeIf(powerGridThemeRoot().'.header.toggle-columns')
+                @includeIf(powerGridThemeRoot().'.header.soft-deletes')
             </div>
             @include(powerGridThemeRoot().'.header.loading')
         </div>
@@ -22,6 +23,7 @@
     @include(powerGridThemeRoot().'.header.enabled-filters')
 
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
+    @includeIf(powerGridThemeRoot().'.header.message-soft-deletes')
 </div>
 
 

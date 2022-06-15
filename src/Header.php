@@ -10,6 +10,8 @@ final class Header
 
     public bool $toggleColumns = false;
 
+    public bool $softDeletes = false;
+
     public string $includeViewOnTop = '';
 
     public string $includeViewOnBottom = '';
@@ -26,6 +28,13 @@ final class Header
     public function showSearchInput(): Header
     {
         $this->searchInput = true;
+
+        return $this;
+    }
+
+    public function showSoftDeletes(): Header
+    {
+        $this->softDeletes = true;
 
         return $this;
     }
