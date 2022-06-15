@@ -12,6 +12,8 @@ final class Header
 
     public bool $softDeletes = false;
 
+    public bool $showMessageSoftDeletes = false;
+
     public string $includeViewOnTop = '';
 
     public string $includeViewOnBottom = '';
@@ -32,9 +34,10 @@ final class Header
         return $this;
     }
 
-    public function showSoftDeletes(): Header
+    public function showSoftDeletes(bool $showMessage = true): Header
     {
-        $this->softDeletes = true;
+        $this->softDeletes            = true;
+        $this->showMessageSoftDeletes = $showMessage;
 
         return $this;
     }
