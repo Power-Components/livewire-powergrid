@@ -68,7 +68,7 @@ class PowerGridComponent extends Component
 
     public bool $showErrorBag = false;
 
-    public string $softDeletes = 'withTrashed';
+    public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
 
@@ -424,13 +424,11 @@ class PowerGridComponent extends Component
 
     private function applySoftDeletes(Eloquent\Builder $results): Eloquent\Builder
     {
-        if ($this->softDeletes === 'withTrashed') {
-            return $results->withTrashed();
-        } elseif ($this->softDeletes === 'onlyTrashed') {
-            return $results->onlyTrashed();
-        }
-
-        return $results;
+        return match ($this->softDeletes) {
+            'withTrashed' => $results->withTrashed(), /** @phpstan-ignore-line */
+            'onlyTrashed' => $results->onlyTrashed(), /** @phpstan-ignore-line */
+            default       => $results
+        };
     }
 
     /**

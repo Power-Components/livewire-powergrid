@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
 beforeEach(
     function () {
-        TestDatabase::seed(dishesDeleted());
         TestDatabase::seed(dishesUndeleted());
+        DB::table('dishes')->insert(dishesDeleted());
     }
 );
 
@@ -41,6 +42,7 @@ it('should list all records including excluded', function (string $component, st
     livewire($component)
         ->call($theme)
         ->set('setUp.footer.perPage', '20')
+        ->set('softDeletes', 'withTrashed')
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B')
         ->assertSeeHtml('Dish E')
@@ -64,6 +66,27 @@ it('should list only deleted records', function (string $component, string $them
         ->assertDontSeeHtml('Dish I')
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B');
+})->with('themes with softDeletes');
+
+it('should be able to see a warning message when showMessageSoftDeletes is true and softDeletes === withTrashed or onlyTrashed', function (string $component, string $theme) {
+    livewire($component)
+        ->call($theme)
+        ->set('setUp.footer.perPage', '10')
+        ->set('setUp.header.showMessageSoftDeletes', true)
+        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->assertDontSeeHtml(trans('Exibindo apenas os registros excluídos.'))
+        ->set('softDeletes', 'withTrashed')
+        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'))
+        ->assertSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->set('softDeletes', 'onlyTrashed')
+        ->assertSee(trans('Exibindo apenas os registros excluídos.'))
+        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->set('setUp.header.showMessageSoftDeletes', false)
+        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'))
+        ->set('softDeletes', 'withTrashed')
+        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'));
 })->with('themes with softDeletes');
 
 /**
