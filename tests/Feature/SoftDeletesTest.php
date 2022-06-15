@@ -73,20 +73,20 @@ it('should be able to see a warning message when showMessageSoftDeletes is true 
         ->call($theme)
         ->set('setUp.footer.perPage', '10')
         ->set('setUp.header.showMessageSoftDeletes', true)
-        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
-        ->assertDontSeeHtml(trans('Exibindo apenas os registros excluídos.'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
+        ->assertDontSeeHtml(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
         ->set('softDeletes', 'withTrashed')
-        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'))
-        ->assertSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
+        ->assertSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->set('softDeletes', 'onlyTrashed')
-        ->assertSee(trans('Exibindo apenas os registros excluídos.'))
-        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
+        ->assertSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->set('setUp.header.showMessageSoftDeletes', false)
-        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
-        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
         ->set('softDeletes', 'withTrashed')
-        ->assertDontSee(trans('Exibindo todos registros, incluindo os excluídos.'))
-        ->assertDontSee(trans('Exibindo apenas os registros excluídos.'));
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
+        ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'));
 })->with('themes with softDeletes');
 
 /**

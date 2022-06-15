@@ -11,17 +11,17 @@
         <ul class="dropdown-menu">
             <li wire:click="$emit('pg:softDeletes-{{ $tableName }}', '')">
                 <a class="dropdown-item" href="#">
-                    {{ __('--') }}
+                    @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
                 </a>
             </li>
             <li wire:click="$emit('pg:softDeletes-{{ $tableName }}', 'withTrashed')">
                 <a class="dropdown-item" href="#">
-                    {{ __('Com excluídos') }}
+                    @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
                 </a>
             </li>
             <li wire:click="$emit('pg:softDeletes-{{ $tableName }}', 'onlyTrashed')">
                 <a class="dropdown-item" href="#">
-                    {{ __('Apenas excluídos') }}
+                    @lang('livewire-powergrid::datatable.soft_deletes.only_trashed')
                 </a>
             </li>
         </ul>

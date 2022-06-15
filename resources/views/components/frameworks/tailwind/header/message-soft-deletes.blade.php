@@ -4,9 +4,9 @@
             <div class="ml-3">
                 <p class="text-sm text-yellow-700">
                     @if($softDeletes === 'withTrashed')
-                        {{ trans('Exibindo todos registros, incluindo os excluídos.') }}
+                        @lang('livewire-powergrid::datatable.soft_deletes.message_with_trashed')
                     @else
-                        {{ trans('Exibindo apenas os registros excluídos.') }}
+                        @lang('livewire-powergrid::datatable.soft_deletes.message_only_trashed')
                     @endif
                 </p>
             </div>
