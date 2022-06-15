@@ -39,7 +39,7 @@ return [
             'css'     => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
             'locales' => [
                 'pt_BR' => [
-                    'locale'     => 'pt_BR',
+                    'locale'     => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
                     'time_24hr'  => true,
