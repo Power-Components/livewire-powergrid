@@ -107,7 +107,7 @@ function dishesDeleted(): array
             'diet'        => 1,
             'in_stock'    => true,
             'produced_at' => '2021-10-03',
-            'deleted_at'  => now()->timestamp,
+            'deleted_at'  => '2021-10-03',
         ],
         [
             'name'        => 'Dish B',
@@ -119,7 +119,7 @@ function dishesDeleted(): array
             'diet'        => 1,
             'in_stock'    => true,
             'produced_at' => '2021-10-03',
-            'deleted_at'  => now()->timestamp,
+            'deleted_at'  => '2021-10-03',
         ],
     ];
 }
