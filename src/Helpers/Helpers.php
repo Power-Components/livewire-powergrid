@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
+use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
@@ -19,6 +20,7 @@ class Helpers
         'pg:rows',
         'pg:column',
         'detailView',
+        'bladeComponent',
     ];
 
     public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
@@ -142,5 +144,10 @@ class Helpers
 
             return (object) ['rules.' . $index . '.' . $rule->forAction => $prepareRule];
         });
+    }
+
+    public function makeAttributesBag(array $attributes): ComponentAttributeBag
+    {
+        return new ComponentAttributeBag($attributes);
     }
 }

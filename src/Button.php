@@ -28,6 +28,8 @@ final class Button
 
     public bool $singleParam = false;
 
+    public string $bladeComponent = '';
+
     /**
      *
      * @var array<int|string, string> $param
@@ -197,6 +199,14 @@ final class Button
     public function toggleDetail(): Button
     {
         $this->toggleDetail = true;
+
+        return $this;
+    }
+
+    public function bladeComponent(string $component, array $params): Button
+    {
+        $this->bladeComponent = $component;
+        $this->param          = $params;
 
         return $this;
     }
