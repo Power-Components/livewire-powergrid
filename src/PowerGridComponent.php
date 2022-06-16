@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
@@ -21,6 +22,7 @@ use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
     PersistData,
     WithSorting
 };
+use Throwable;
 
 class PowerGridComponent extends Component
 {
@@ -422,8 +424,16 @@ class PowerGridComponent extends Component
         $this->softDeletes = $softDeletes;
     }
 
+    /**
+     * @throws Throwable
+     */
     private function applySoftDeletes(Eloquent\Builder $results): Eloquent\Builder
     {
+        throw_if(
+            !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true), /** @phpstan-ignore-line */
+            new Exception(get_class($results->getModel()) . ' is not using the \Illuminate\Database\Eloquent\SoftDeletes trait')
+        );
+
         return match ($this->softDeletes) {
             'withTrashed' => $results->withTrashed(), /** @phpstan-ignore-line */
             'onlyTrashed' => $results->onlyTrashed(), /** @phpstan-ignore-line */
