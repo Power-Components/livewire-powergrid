@@ -430,7 +430,7 @@ class PowerGridComponent extends Component
     private function applySoftDeletes(Eloquent\Builder $results): Eloquent\Builder
     {
         throw_if(
-            !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true), /** @phpstan-ignore-line */
+            $this->softDeletes && !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true), /** @phpstan-ignore-line */
             new Exception(get_class($results->getModel()) . ' is not using the \Illuminate\Database\Eloquent\SoftDeletes trait')
         );
 
