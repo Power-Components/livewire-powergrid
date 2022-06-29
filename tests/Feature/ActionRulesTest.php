@@ -122,5 +122,5 @@ it('add many \'setAttributes\' when dish-id == 11', function (string $component,
         ->set('search', 'Bife à Parmegiana')
         ->assertSee('class="text-center bg-custom-300"', false)
         ->assertSee('title="Title changed by setAttributes"', false)
-        ->assertSee('wire:click="test({&quot;dishId&quot;:11})', false);
-})->with('rules')->only();
+        ->assertSee('wire:click="test({&quot;param1&quot;:1,&quot;dishId&quot;:11})"', false);
+})->with('rules');
