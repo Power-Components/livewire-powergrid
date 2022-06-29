@@ -53,4 +53,11 @@ return [
         'exporting' => 'Espereu, si us plau!',
         'completed' => 'S\'ha completat l\'exportació. Els vostres fitxers estan a punt per descarregar-se',
     ],
+    'soft_deletes' => [
+        'message_with_trashed' => 'Displaying all records, including deleted ones.',
+        'message_only_trashed' => 'Displaying only deleted records.',
+        'without_trashed'      => 'Without deleted',
+        'with_trashed'         => 'With deleted',
+        'only_trashed'         => 'Only deleted',
+    ],
 ];
