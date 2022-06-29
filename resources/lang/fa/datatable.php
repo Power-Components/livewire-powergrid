@@ -53,4 +53,11 @@ return [
         'exporting' => 'لطفا صبر کنید!',
         'completed' => 'صادرات به پایان رسید! فایل های شما آماده بارگیری هستند',
     ],
+    'soft_deletes' => [
+        'message_with_trashed' => 'Displaying all records, including deleted ones.',
+        'message_only_trashed' => 'Displaying only deleted records.',
+        'without_trashed'      => 'Without deleted',
+        'with_trashed'         => 'With deleted',
+        'only_trashed'         => 'Only deleted',
+    ],
 ];

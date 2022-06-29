@@ -54,7 +54,7 @@ return [
         'completed' => 'Exportação concluída! Seus arquivos estão prontos para download',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Exibindo todos registros, incluindo os excluídos.',
+        'message_with_trashed' => 'Exibindo todos os registros, incluindo os excluídos.',
         'message_only_trashed' => 'Exibindo apenas os registros excluídos.',
         'without_trashed'      => 'Sem excluídos',
         'with_trashed'         => 'Com excluídos',
