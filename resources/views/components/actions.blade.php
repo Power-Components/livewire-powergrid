@@ -18,22 +18,19 @@
                     } else {
                         $actionParameters = $helperClass->makeActionParameters($action->param, $row);
                     }
-
                     $rules                 = $helperClass->makeActionRules($action, $row);
-
                     $ruleRedirect          = data_get($rules, 'redirect');
                     $ruleDisabled          = data_get($rules, 'disable');
                     $ruleHide              = data_get($rules, 'hide', false);
                     $ruleSetAttribute      = data_get($rules, 'setAttribute');
+                    $ruleSetBladeComponent = data_get($rules, 'bladeComponent');
                     $ruleEmit              = data_get($rules, 'emit');
                     $ruleEmitTo            = data_get($rules, 'emitTo');
                     $ruleCaption           = data_get($rules, 'caption');
-                    $ruleSetBladeComponent = data_get($rules, 'bladeComponent');
+                    $action->emit          = false;
+                    $action->emitTo        = false;
 
-                    $action->emit     = false;
-                    $action->emitTo   = false;
-
-                    if(isset($ruleSetAttribute)) {
+                      if(isset($ruleSetAttribute)) {
                         $ruleAttributes = $helperClass->makeAttributesBag([]);
 
                         foreach ($ruleSetAttribute as $attribute) {
@@ -69,7 +66,6 @@
                             $action->emit    = true;
                             $event['event']  = $action->event;
                             $event['params'] = $actionParameters;
-
                             if (filled($action->to)) {
                                 $action->emit    = false;
                                 $action->emitTo  = true;
@@ -78,41 +74,42 @@
                         }
                      }
 
-                    if (filled($action->bladeComponent) || filled($ruleSetBladeComponent)) {
+                     if (filled($action->bladeComponent) || filled($ruleSetBladeComponent)) {
                         if (filled($ruleSetBladeComponent)){
                             $ruleBladeComponent = $ruleSetBladeComponent['component'];
                             $ruleBladeParams = $helperClass->makeActionParameters(data_get($ruleSetBladeComponent, 'params', []), $row);
                         }
                         $attributesBag = $helperClass->makeAttributesBag($ruleBladeParams ?? $actionParameters);
-                    }
+                     }
                 @endphp
                 <div class="w-full md:w-auto"
                      style="display: {{ $ruleHide ? 'none': 'block' }}"
                 >
                     @if((filled($action->event) || isset($event['event']) || filled($action->view || $action->toggleDetail))
-                        && is_null($ruleRedirect) && !filled($action->route)  && !filled($action->bladeComponent))
+                        && is_null($ruleRedirect) && !filled($action->route) && !filled($action->bladeComponent))
                         <button
                             @if($action->toggleDetail)
                                 wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
                             @endif
-                            @if($action->emit && !isset($ruleAttributes))
+                            @if($action->emit)
                                 wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
                             @endif
-                            @if($action->emitTo && !isset($ruleAttributes))
+                            @if($action->emitTo)
                                 wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
                             @endif
                             @if($action->view)
                                 wire:click='$emit("openModal", "{{$action->view}}", @json($actionParameters))'
                             @endif
 
-                            @if($ruleDisabled) disabled @endif
                             @if(isset($ruleAttributes))
-                                @if(!$ruleAttributes->has('title'))title="{{ $action->tooltip }}" @endif
-                                @if(!$ruleAttributes->has('class'))class="{{ $attributes->get('class') }}" @endif
+                                @if(!$ruleAttributes->has('title')) title="{{ $action->tooltip }}" @endif
+                                @if(!$ruleAttributes->has('class')) class="{{ $attributes->get('class') }}" @endif
+                                @if(!$ruleAttributes->has('disabled') && $ruleDisabled) disabled @endif
                                 {!! $ruleAttributes !!}
                             @else
                                 class="{{ $attributes->get('class') }}"
                                 title="{{ $action->tooltip }}"
+                                @if($ruleDisabled) disabled @endif
                             @endif
                         >
                             {!! $ruleCaption ?? $action->caption !!}
@@ -144,7 +141,6 @@
                                 @method($action->method)
                                 @csrf
                                 <button type="submit"
-                                        @if($ruleDisabled) disabled @endif
                                         @if(isset($ruleAttributes))
                                             @if(!$ruleAttributes->has('title'))title="{{ $action->tooltip }}" @endif
                                         @if(!$ruleAttributes->has('class'))class="{{ $attributes->get('class') }}" @endif
@@ -152,7 +148,8 @@
                                         @else
                                             class="{{ $attributes->get('class') }}"
                                         title="{{ $action->tooltip }}"
-                                    @endif>
+                                        @endif
+                                        @if($ruleDisabled) disabled @endif>
                                     {!! $ruleCaption ?? $action->caption !!}
                                 </button>
                             </form>
@@ -161,21 +158,22 @@
                                target="{{ $action->target }}"
                                @if(isset($ruleAttributes))
                                    @if(!$ruleAttributes->has('title'))title="{{ $action->tooltip }}" @endif
-                                    @if(!$ruleAttributes->has('class'))class="{{ $attributes->get('class') }}" @endif
-                                    {!! $ruleAttributes !!}
+                               @if(!$ruleAttributes->has('class'))class="{{ $attributes->get('class') }}" @endif
+                               {!! $ruleAttributes !!}
                                @else
                                    class="{{ $attributes->get('class') }}"
                                title="{{ $action->tooltip }}"
-                                @endif>
+                                @endif
+                            >
                                 {!! $ruleCaption ?? $action->caption !!}
                             </a>
                         @endif
                     @endif
 
-                    @if(filled($action->bladeComponent) || filled($ruleSetBladeComponent))
-                        <x-dynamic-component :component="$ruleBladeComponent ?? $action->bladeComponent"
-                                             :attributes="$attributesBag"/>
-                    @endif
+                        @if(filled($action->bladeComponent) || filled($ruleSetBladeComponent))
+                            <x-dynamic-component :component="$ruleBladeComponent ?? $action->bladeComponent"
+                                                 :attributes="$attributesBag"/>
+                        @endif
                 </div>
             </td>
         @endforeach

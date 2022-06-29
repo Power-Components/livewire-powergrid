@@ -61,7 +61,7 @@ it('add rule \'disable\' when dishId == 9', function (string $component, object 
         ->assertSeeHtmlInOrder([
             '<a',
             'disabled',
-            'class="text-center"',
+            'class="text-center bg-custom-300"',
         ]);
 })->with('rules');
 
