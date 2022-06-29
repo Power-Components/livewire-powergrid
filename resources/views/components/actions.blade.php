@@ -91,9 +91,6 @@
                             @if($action->toggleDetail)
                                 wire:click.prevent="toggleDetail({{ $row->{$primaryKey} }})"
                             @endif
-                            @if($action->emit)
-                                wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
-                            @endif
                             @if($action->emitTo)
                                 wire:click='$emitTo("{{ $event['to'] }}", "{{ $event['event'] }}", @json($event['params']))'
                             @endif
@@ -110,6 +107,9 @@
                                 class="{{ $attributes->get('class') }}"
                                 title="{{ $action->tooltip }}"
                                 @if($ruleDisabled) disabled @endif
+                                @if($action->emit)
+                                    wire:click='$emit("{{ $event['event'] }}", @json($event['params']))'
+                                @endif
                             @endif
                         >
                             {!! $ruleCaption ?? $action->caption !!}
