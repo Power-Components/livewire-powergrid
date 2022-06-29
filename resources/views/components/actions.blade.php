@@ -101,8 +101,8 @@
                             @if(isset($ruleAttributes))
                                 @if(!$ruleAttributes->has('title')) title="{{ $action->tooltip }}" @endif
                                 @if(!$ruleAttributes->has('class')) class="{{ $attributes->get('class') }}" @endif
-                                @if(!$ruleAttributes->has('disabled') && $ruleDisabled) disabled @endif
-                                {!! $ruleAttributes !!}
+                                @if(!$ruleAttributes->has('class')) class="{{ $attributes->get('class') }}" @endif
+                            {!! $ruleAttributes !!}
                             @else
                                 class="{{ $attributes->get('class') }}"
                                 title="{{ $action->tooltip }}"
