@@ -28,10 +28,12 @@ class Helpers
         $parameters = [];
 
         foreach ($params as $param => $value) {
-            if ($row && filled($row->{$value})) {
-                $parameters[$param] = $row->{$value};
-            } else {
-                $parameters[$param] = $value;
+            if (is_string($value)) {
+                if ($row && filled($row->{$value})) {
+                    $parameters[$param] = $row->{$value};
+                } else {
+                    $parameters[$param] = $value;
+                }
             }
         }
 

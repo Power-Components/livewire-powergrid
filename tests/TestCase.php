@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
+use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
@@ -68,6 +69,7 @@ class TestCase extends BaseTestCase
         return [
             LivewireServiceProvider::class,
             PowerGridServiceProvider::class,
+            LaraDumpsServiceProvider::class,
         ];
     }
 }

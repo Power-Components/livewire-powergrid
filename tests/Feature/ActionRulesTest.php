@@ -115,3 +115,12 @@ it('add rule \'bladeComponent\' when dish-id == 10', function (string $component
         ->assertSeeHtml('<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />')
         ->assertDontSeeHtml('<svg dish-id="1"');
 })->with('rules');
+
+it('add many \'setAttributes\' when dish-id == 11', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
+        ->set('search', 'Bife à Parmegiana')
+        ->assertSee('class="text-center bg-custom-300"', false)
+        ->assertSee('title="Title changed by setAttributes"', false)
+        ->assertSee('wire:click="test({&quot;dishId&quot;:11})', false);
+})->with('rules')->only();
