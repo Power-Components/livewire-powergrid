@@ -61,7 +61,7 @@ it('add rule \'disable\' when dishId == 9', function (string $component, object 
         ->assertSeeHtmlInOrder([
             '<a',
             'disabled',
-            'class="text-center"',
+            'class="text-center bg-custom-300"',
         ]);
 })->with('rules');
 
@@ -114,4 +114,13 @@ it('add rule \'bladeComponent\' when dish-id == 10', function (string $component
         ->assertSeeHtml('<svg dish-id="10"')
         ->assertSeeHtml('<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />')
         ->assertDontSeeHtml('<svg dish-id="1"');
+})->with('rules');
+
+it('add many \'setAttributes\' when dish-id == 11', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
+        ->set('search', 'Bife à Parmegiana')
+        ->assertSee('class="text-center bg-custom-300"', false)
+        ->assertSee('title="Title changed by setAttributes"', false)
+        ->assertSee('wire:click="test({&quot;param1&quot;:1,&quot;dishId&quot;:11})"', false);
 })->with('rules');

@@ -152,6 +152,12 @@ class DishesActionRulesTable extends PowerGridComponent
             Rule::button('edit-stock-for-rules')
                 ->when(fn (Dish $dish) => $dish->id == 10)
                 ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
+
+            Rule::button('edit-stock-for-rules')
+                ->when(fn (Dish $dish) => (bool) $dish->id == 11)
+                ->setAttribute('class', 'bg-custom-300')
+                ->setAttribute('title', 'Title changed by setAttributes')
+                ->setAttribute('wire:click', ['test', ['param1' => 1, 'dishId' => 'id']]),
         ];
     }
 
