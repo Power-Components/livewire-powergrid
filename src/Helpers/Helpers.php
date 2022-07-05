@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Str};
-use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
 
 class Helpers
@@ -38,22 +37,12 @@ class Helpers
         return $parameters;
     }
 
-    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): mixed
+    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): array
     {
-        $parameters = [];
-
-        foreach ($params as $param => $value) {
-            if ($row && filled($row->{$value})) {
-                $parameters[$param] = $row->{$value};
-            } else {
-                $parameters[$param] = $value;
-            }
-        }
-
-        return $parameters[0];
+        return $this->makeActionParameters($params, $row)[0];
     }
 
-    public function makeActionRules(string|Button $action, Model|\stdClass|array $row): array
+    public function makeActionRules(string|Button $action, Model|\stdClass|null|array $row): array
     {
         $actionRules = [];
 
@@ -127,7 +116,7 @@ class Helpers
 
         /** @phpstan-ignore-next-line */
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
-            $resolveRules = (bool) $rule->rule['when']((object) $row);
+            $resolveRules = $rule->rule['when']((object) $row);
 
             $prepareRule = [
                 /** @phpstan-ignore-next-line */
@@ -144,10 +133,5 @@ class Helpers
 
             return (object) ['rules.' . $index . '.' . $rule->forAction => $prepareRule];
         });
-    }
-
-    public function makeAttributesBag(array $attributes): ComponentAttributeBag
-    {
-        return new ComponentAttributeBag($attributes);
     }
 }
