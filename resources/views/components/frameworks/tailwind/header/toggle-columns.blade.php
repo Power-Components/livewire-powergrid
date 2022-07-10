@@ -1,7 +1,7 @@
 @if(data_get($setUp, 'header.toggleColumns'))
     <div x-data="{open: false}"
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
-         @click.away="open = false">
+         @click.outside="open = false">
         <button @click.prevent="open = ! open"
                 class="block bg-slate-50 text-slate-700 border border-slate-300 rounded py-1.5 px-3 leading-tight
                        focus:outline-none focus:bg-white focus:border-slate-600 dark:border-slate-500 dark:bg-slate-700
