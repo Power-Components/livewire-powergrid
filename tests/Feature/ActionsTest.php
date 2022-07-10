@@ -1,58 +1,59 @@
 <?php
 
 use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesActionTable;
 
 it('properly displays "openModal" on edit button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})')
-        ->assertSeeHtml('$emit("openModal", "edit-stock", {"dishId":2})')
-        ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":7})')
+        ->assertSee('$emit("openModal", "edit-stock", {"dishId":1})')
+        ->assertSee('$emit("openModal", "edit-stock", {"dishId":2})')
+        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":7})')
         ->call('setPage', 2)
-        ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":6})')
-        ->assertDontSeeHtml('$emit("openModal", "edit-stock", {"dishId":1})');
-})->with('action');
+        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":6})')
+        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":1})');
+})->with('action')->group('action');
 
 it('properly displays "deletedEvent" on delete button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('setUp.footer.perPage', 5)
-        ->assertSeeHtml('$emit("deletedEvent", {"dishId":1})')
-        ->assertDontSeeHtml('$emit("deletedEvent", {"dishId":6})')
+        ->assertSee('$emit("deletedEvent", {"dishId":1})')
+        ->assertDontSee('$emit("deletedEvent", {"dishId":6})')
         ->assertPayloadNotSet('eventId', ['dishId' => 1])
         ->call('deletedEvent', ['dishId' => 1])
         ->assertPayloadSet('eventId', ['dishId' => 1])
 
         //page 2
         ->call('setPage', 2)
-        ->assertSeeHtml('$emit("deletedEvent", {"dishId":6})')
-        ->assertDontSeeHtml('$emit("deletedEvent", {"dishId":1})')
+        ->assertSee('$emit("deletedEvent", {"dishId":6})')
+        ->assertDontSee('$emit("deletedEvent", {"dishId":1})')
         ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
-})->with('action');
+})->with('action')->group('action');
 
 it('properly displays "deletedEvent" on delete button from emitTo', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         //page 1
         ->set('setUp.footer.perPage', 5)
-        ->assertSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
-        ->assertDontSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
+        ->assertSee('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
+        ->assertDontSee('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
         ->assertPayloadNotSet('eventId', ['dishId' => 1])
         ->call('deletedEvent', ['dishId' => 1])
         ->assertPayloadSet('eventId', ['dishId' => 1])
 
         //page 2
         ->call('setPage', 2)
-        ->assertSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
-        ->assertDontSeeHtml('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
+        ->assertSee('$emitTo("dishes-table", "deletedEvent", {"dishId":6})')
+        ->assertDontSee('$emitTo("dishes-table", "deletedEvent", {"dishId":1})')
         ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
-})->with('action');
+})->with('action')->group('action');
 
 it('properly displays "bladeComponent" on bladeComponent button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -65,4 +66,11 @@ it('properly displays "bladeComponent" on bladeComponent button', function (stri
         ->call('setPage', 2)
         ->assertDontSeeHtml('<svg dish-id="6"')
         ->assertDontSeeHtml('<svg dish-id="1"');
-})->with('action');
+})->with('action')->group('action');
+
+dataset('action', [
+    'tailwind'       => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);

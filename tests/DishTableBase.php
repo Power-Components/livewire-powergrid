@@ -7,19 +7,32 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
-    Detail,
     Footer,
     Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridEloquent,
-    Rules\Rule};
+};
 
-class DishesDetailRowTable extends PowerGridComponent
+class DishTableBase extends PowerGridComponent
 {
     use ActionButton;
 
     public bool $join = false;
+
+    public array $testActions = [];
+
+    public array $testActionRules = [];
+
+    public function actions(): array
+    {
+        return $this->testActions;
+    }
+
+    public function actionRules(): array
+    {
+        return $this->testActionRules;
+    }
 
     public function setUp(): array
     {
@@ -30,15 +43,8 @@ class DishesDetailRowTable extends PowerGridComponent
                 ->showSearchInput(),
 
             Footer::make()
-                ->showPerPage(5)
+                ->showPerPage()
                 ->showRecordCount(),
-
-            Detail::make()
-                ->view('livewire-powergrid::tests.detail')
-                ->options([
-                    'name' => 'Luan',
-                ])
-                ->showCollapseIcon(),
         ];
     }
 
@@ -82,28 +88,21 @@ class DishesDetailRowTable extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Prato'))
+                ->title(__('Name'))
                 ->field('name')
                 ->searchable()
+                ->makeInputText('name')
                 ->sortable(),
         ];
     }
 
-    public function actions(): array
+    public function bootstrap()
     {
-        return [
-            Button::make('toggleDetail', 'Toggle Detail')
-                ->class('text-center')
-                ->toggleDetail(),
-        ];
+        config(['livewire-powergrid.theme' => 'bootstrap']);
     }
 
-    public function actionRules(): array
+    public function tailwind()
     {
-        return [
-            Rule::rows()
-                ->when(fn (Dish $dish) => $dish->id == 3)
-                ->detailView('livewire-powergrid::tests.detail-rules', ['fromActionRule' => true]),
-        ];
+        config(['livewire-powergrid.theme' => 'tailwind']);
     }
 }

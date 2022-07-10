@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Helpers\Helpers;
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
 
 trait Checkbox
 {
@@ -30,10 +30,10 @@ trait Checkbox
         /** @var AbstractPaginator $data */
         $data      = $this->fillData();
 
-        $helperClass = resolve(Helpers::class);
+        $actionRulesClass = resolve(ActionRules::class);
 
-        collect($data->items())->each(function ($model) use ($helperClass) {
-            $rules    = $helperClass->makeActionRules('pg:checkbox', $model);
+        collect($data->items())->each(function ($model) use ($actionRulesClass) {
+            $rules    = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
             if (isset($rules['hide'])) {
                 return;
             }

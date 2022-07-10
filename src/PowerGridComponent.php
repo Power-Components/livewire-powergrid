@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
     Checkbox,
@@ -348,7 +348,7 @@ class PowerGridComponent extends Component
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
             if (count($this->actionRules())) {
-                $rules = resolve(Helpers::class)->resolveRules($this->actionRules(), (object) $row);
+                $rules = resolve(ActionRules::class)->resolveRules($this->actionRules(), (object) $row);
             }
 
             $mergedData = $data->merge($rules ?? []);

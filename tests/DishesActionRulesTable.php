@@ -121,43 +121,8 @@ class DishesActionRulesTable extends PowerGridComponent
     {
         return [
             Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => $dish->id == 2)
-                ->hide(),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish)     => (bool) $dish->in_stock === false && $dish->id !== 8 && $dish->id !== 5)
-                ->redirect(fn (Dish $dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
-
-            // Set a row red background for when dish is out of stock
-            Rule::rows()
-                ->when(fn (Dish $dish) => (bool) $dish->in_stock === false)
-                ->setAttribute('class', 'bg-red-100 text-red-800'),
-
-            Rule::rows()
-                ->when(fn (Dish $dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-blue-100'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => $dish->id == 5)
-                ->emit('toggleEvent', ['dishId' => 'id']),
-
-            Rule::button('edit-stock-for-rules')
                 ->when(fn (Dish $dish) => $dish->id == 9)
                 ->disable(),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => $dish->id == 10)
-                ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => (bool) $dish->id == 11)
-                ->setAttribute('class', 'bg-custom-300')
-                ->setAttribute('title', 'Title changed by setAttributes')
-                ->setAttribute('wire:click', ['test', ['param1' => 1, 'dishId' => 'id']]),
         ];
     }
 

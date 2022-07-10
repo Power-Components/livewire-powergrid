@@ -2,20 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Exportable,
-    Footer,
-    Header,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent,
-    Services\ExportOption};
 
-class DishesActionTable extends PowerGridComponent
+class DishesActionTable extends DishTableBase
 {
     use ActionButton;
 
@@ -23,7 +13,7 @@ class DishesActionTable extends PowerGridComponent
 
     public bool $join = false;
 
-    protected function getListeners()
+    protected function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),
@@ -33,81 +23,14 @@ class DishesActionTable extends PowerGridComponent
         );
     }
 
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
     public function deletedEvent(array $params)
     {
         $this->eventId = $params;
     }
 
-    public function setUp(): array
+    public function openModal(array $params)
     {
-        $this->showCheckBox();
-
-        return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
-            Header::make()
-                ->showToggleColumns()
-                ->showSearchInput(),
-
-            Footer::make()
-                ->showPerPage()
-                ->showRecordCount(),
-        ];
-    }
-
-    public function datasource(): Builder
-    {
-        if ($this->join) {
-            return $this->join();
-        }
-
-        return $this->query();
-    }
-
-    public function query(): Builder
-    {
-        return Dish::with('category');
-    }
-
-    public function join(): Builder
-    {
-        return Dish::query()
-            ->join('categories', function ($categories) {
-                $categories->on('dishes.category_id', '=', 'categories.id');
-            })
-            ->select('dishes.*', 'categories.name as category_name');
-    }
-
-    public function addColumns(): PowerGridEloquent
-    {
-        return PowerGrid::eloquent()
-            ->addColumn('id')
-            ->addColumn('name');
-    }
-
-    public function columns(): array
-    {
-        return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
-                ->searchable()
-                ->sortable(),
-
-            Column::add()
-                ->title(__('Prato'))
-                ->field('name')
-                ->searchable()
-                ->makeInputText('name')
-                ->sortable(),
-        ];
+        $this->eventId = $params;
     }
 
     public function actions(): array
@@ -124,22 +47,12 @@ class DishesActionTable extends PowerGridComponent
                 ->emit('deletedEvent', ['dishId' => 'id']),
 
             Button::add('emitTo')
-                ->caption(__('emit'))
+                ->caption(__('EmitTo'))
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
 
             Button::add('bladeComponent')
             ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
         ];
-    }
-
-    public function bootstrap()
-    {
-        config(['livewire-powergrid.theme' => 'bootstrap']);
-    }
-
-    public function tailwind()
-    {
-        config(['livewire-powergrid.theme' => 'tailwind']);
     }
 }

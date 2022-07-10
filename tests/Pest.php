@@ -17,7 +17,9 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin
+    Tests\DishesTableWithJoin,
+    Tests\RulesAttributesTable,
+    Tests\RulesEmitTable
 };
 
 uses(TestCase::class)->in(__DIR__);
@@ -127,13 +129,6 @@ dataset('themes', [
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
-]);
-
-dataset('action', [
-    'tailwind'       => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 
 dataset('rules', [
