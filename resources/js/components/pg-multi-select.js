@@ -13,10 +13,10 @@ export default (params) => ({
         const options = this.data
 
         window.addEventListener('pg:clear_multi_select::' + this.tableName, () => {
-            self.options.map(function (option) {
+            this.options.map(function (option) {
                 option.selected = false
             })
-            self.selected = []
+            this.$nextTick(() => (this.selected = []))
         });
 
         options.forEach((option) => {
@@ -32,7 +32,7 @@ export default (params) => ({
 
         });
 
-        JSON.parse(params.selected).forEach(function (value) {
+        params.selected.forEach(function (value) {
             self.options.map(function (option) {
                 if (option.value === value) {
                     option.selected = true
@@ -42,11 +42,7 @@ export default (params) => ({
         })
     },
     selectedValues() {
-        let selected = []
-        this.selected.forEach(function (item) {
-             selected.push(item.value)
-        })
-        return selected
+        return this.selected.map(item => item.value)
     },
     select(value) {
         const self = this
@@ -66,9 +62,7 @@ export default (params) => ({
         });
     },
     remove(value) {
-        this.selected = this.selected.filter(function(item){
-            return item.value !== value;
-        });
+        this.selected = this.selected.filter(item => item.value !== value)
 
         this.options = this.options.map(function (option) {
             if (option.value === value) {

@@ -37,12 +37,12 @@
 <div x-cloak
      wire:ignore.self
      x-data="pgMultiSelect({
-        data: {{ json_encode($data) }},
+        data: @js($data),
         value: '{{ $multiSelect['value'] }}',
         text: '{{ $multiSelect['text'] }}',
         tableName: '{{ $tableName }}',
         dataField: '{{ $multiSelect['dataField'] }}',
-        selected: '{{ json_encode($selected) }}'
+        selected: @js($selected)
      })">
     <div @class([
             'p-2' => !$inline,
