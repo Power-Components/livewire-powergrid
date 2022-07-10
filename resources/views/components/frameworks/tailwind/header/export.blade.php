@@ -1,5 +1,5 @@
 <div x-data="{ open: false }"
-     @click.away="open = false">
+     @click.outside="open = false">
     <button @click.prevent="open = ! open"
             class="block bg-slate-50 text-slate-700 border border-slate-300 rounded py-1.5 px-3 leading-tight
                    focus:outline-none focus:bg-white focus:border-slate-600 dark:border-slate-500 dark:bg-slate-700
