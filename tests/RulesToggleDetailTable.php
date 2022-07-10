@@ -2,14 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
     Detail,
     Footer,
-    Header,
-    Rules\Rule};
+    Header};
 
-class RulesToggleDetailTable extends DishesTable
+class RulesToggleDetailTable extends DishTableBase
 {
     public function setUp(): array
     {
@@ -29,24 +27,6 @@ class RulesToggleDetailTable extends DishesTable
                     'name' => 'Luan',
                 ])
                 ->showCollapseIcon(),
-        ];
-    }
-
-    public function actions(): array
-    {
-        return [
-            Button::make('toggleDetail', 'Toggle Detail')
-                ->class('text-center')
-                ->toggleDetail(),
-        ];
-    }
-
-    public function actionRules(): array
-    {
-        return [
-            Rule::rows()
-                ->when(fn (Dish $dish) => $dish->id == 3)
-                ->detailView('livewire-powergrid::tests.detail-rules', ['fromActionRule' => true]),
         ];
     }
 }

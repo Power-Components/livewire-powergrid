@@ -20,6 +20,20 @@ class DishTableBase extends PowerGridComponent
 
     public bool $join = false;
 
+    public array $testActions = [];
+
+    public array $testActionRules = [];
+
+    public function actions(): array
+    {
+        return $this->testActions;
+    }
+
+    public function actionRules(): array
+    {
+        return $this->testActionRules;
+    }
+
     public function setUp(): array
     {
         $this->showCheckBox();

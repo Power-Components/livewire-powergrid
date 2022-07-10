@@ -6,8 +6,9 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
 
-it('add rule \'toggleDetail\' when dishId == 3', function () {
-    livewire(RulesToggleDetailTable::class)
+it('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
         ->set('testActions', [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
@@ -18,7 +19,6 @@ it('add rule \'toggleDetail\' when dishId == 3', function () {
                 ->when(fn (Dish $dish) => $dish->id == 3)
                 ->detailView('livewire-powergrid::tests.detail-rules', ['newParameter' => 1]),
         ])
-        ->assertSee('Pastel de Nata')
         ->assertDontSeeHtml([
             '<div>Id 1</div>',
             '<div>Options {"name":"Luan"}</div>',
@@ -29,7 +29,8 @@ it('add rule \'toggleDetail\' when dishId == 3', function () {
             3 => false,
             4 => false,
             5 => false,
-        ]) // show detail row #1
+        ])
+        // show detail row #1
         ->call('toggleDetail', 1)
         ->assertSeeHtmlInOrder([
             '<div>Id 1</div>',
@@ -42,32 +43,35 @@ it('add rule \'toggleDetail\' when dishId == 3', function () {
             4 => false,
             5 => false,
         ])
+        //
+        ->assertSet('setUp.detail.state', [
+            1 => true,
+            2 => false,
+            3 => false,
+            4 => false,
+            5 => false,
+        ])
+        ->call('toggleDetail', 1)
+        // show detail row #1
         ->call('toggleDetail', 3)
-        ->assertSeeHtmlInOrder([
+        ->assertDontSeeHtml([
             '<div>Id 1</div>',
             '<div>Options {"name":"Luan"}</div>',
+        ])
+        ->assertSeeHtmlInOrder([
             '<div>Id 3</div>',
             '<div>Options {"name":"Luan","newParameter":1}</div>',
         ])
         ->assertSet('setUp.detail.state', [
-            1 => true,
+            1 => false,
             2 => false,
             3 => true,
             4 => false,
             5 => false,
-        ])
-        ->call('toggleDetail', 4)
-        ->assertSeeHtmlInOrder([
-            '<div>Id 1</div>',
-            '<div>Options {"name":"Luan"}</div>',
-            '<div>Id 3</div>',
-            '<div>Options {"name":"Luan"}</div>',
-        ])
-        ->assertSet('setUp.detail.state', [
-            1 => true,
-            2 => false,
-            3 => true,
-            4 => true,
-            5 => false,
         ]);
-})->group('actionRules');
+})->with('detailRow')->group('actionRules');
+
+dataset('detailRow', [
+    'tailwind'      => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind join' => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+]);

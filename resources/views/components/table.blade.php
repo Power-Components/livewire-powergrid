@@ -1,4 +1,4 @@
-@inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
+@inject('actionRulesClass','PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
 
 <x-livewire-powergrid::table-base :theme="$theme->table">
     <x-slot name="header">
@@ -65,7 +65,7 @@
             @foreach($data as $row)
                 @php
                     $class            = $theme->table->trBodyClass;
-                    $rules            = $helperClass->makeActionRules('pg:rows', $row);
+                    $rules            = $actionRulesClass->recoverFromAction('pg:rows', $row);
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
@@ -90,7 +90,7 @@
                         @endif
 
                         @php
-                            $ruleRows         = $helperClass->makeActionRules('pg:rows', $row);
+                            $ruleRows         = $actionRulesClass->recoverFromAction('pg:rows', $row);
                             $ruleDetailView   = data_get($ruleRows, 'detailView');
                         @endphp
 
@@ -101,7 +101,7 @@
 
                         @if($checkbox)
                             @php
-                                $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
+                                $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
                                 $ruleHide         = data_get($rules, 'hide');
                                 $ruleDisable      = data_get($rules, 'disable');
                                 $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];

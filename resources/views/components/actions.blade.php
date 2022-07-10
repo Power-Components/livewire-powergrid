@@ -38,7 +38,7 @@
                         </a>
                     @endif
 
-                    @if(filled($action->route))
+                    @if(filled($action->route) && !$actionClass->isButton)
                         @if(strtolower($action->method) !== 'get')
                             <form target="{{ $action->target }}"
                                   action="{{ route($action->route, $actionClass->parameters) }}"

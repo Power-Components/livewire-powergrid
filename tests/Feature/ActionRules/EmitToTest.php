@@ -1,11 +1,23 @@
 <?php
 
 use function Pest\Livewire\livewire;
-use PowerComponents\LivewirePowerGrid\Tests\{RulesEmitTable, RulesEmitToTable};
+use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Tests\{Models\Dish, RulesEmitToTable};
 
 it('add rule \'emitTo\' when dishId == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
+        ->set('testActions', [
+            Button::add('edit')
+                ->caption('Edit')
+                ->class('text-center'),
+        ])
+        ->set('testActionRules', [
+            Rule::button('edit')
+                ->when(fn (Dish $dish) => $dish->id == 5 || $dish->id == 6)
+                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
+        ])
         //page 1
         ->set('setUp.footer.perPage', 5)
         ->assertSee('$emitTo("dishes-table", "deletedEvent", {"dishId":5})')

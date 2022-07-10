@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Helpers\Helpers;
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
 
 class Export
 {
@@ -49,14 +49,14 @@ class Export
     {
         $header = collect([]);
 
-        $helperClass = resolve(Helpers::class);
+        $actionRulesClass = resolve(ActionRules::class);
 
-        $data   = $data->transform(function ($row) use ($columns, $header, $helperClass) {
+        $data   = $data->transform(function ($row) use ($columns, $header, $actionRulesClass) {
             $item = collect([]);
 
-            collect($columns)->each(function ($column) use ($row, $header, $item, $helperClass) {
+            collect($columns)->each(function ($column) use ($row, $header, $item, $actionRulesClass) {
                 /** @var Model|\stdClass $row */
-                $rules            = $helperClass->makeActionRules('pg:checkbox', $row);
+                $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
                 $isExportable     = false;
 
                 if (isset($rules['hide']) || isset($rules['disable'])) {

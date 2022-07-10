@@ -45,7 +45,7 @@ class Actions
 
     public function __construct(
         public Button $action,
-        public \Illuminate\Database\Eloquent\Model|\stdClass|null $row,
+        public \Illuminate\Database\Eloquent\Model|\stdClass $row,
         public string|int $primaryKey,
         public ThemeBase $theme,
     ) {
@@ -68,8 +68,6 @@ class Actions
 
         $this->title();
 
-        $this->caption();
-
         $this->bladeComponent();
 
         $this->disabled();
@@ -83,15 +81,18 @@ class Actions
         if ($this->hasAttributesInComponentBag('wire:click')
             || $this->action->caption
             && blank($this->action->route)
-            && blank($this->ruleRedirect)
         ) {
             $this->isButton = true;
+        }
+
+        if (filled($this->ruleRedirect)) {
+            $this->isLinkeable = true;
         }
     }
 
     public function actionRules(): static
     {
-        $rules = $this->helperClass->makeActionRules($this->action, $this->row);
+        $rules = resolve(ActionRules::class)->recoverFromButton($this->action, $this->row);
 
         $this->ruleRedirect          = (array) data_get($rules, 'redirect', []);
         $this->ruleDisabled          = boolval(data_get($rules, 'disable', false));
@@ -109,6 +110,13 @@ class Actions
     {
         $class = filled($this->action->class) ? $this->action->class : $this->theme->actions->headerBtnClass;
 
+        $this->resolveManyAttributes();
+
+        $this->componentBag = $this->componentBag->class($class);
+    }
+
+    private function resolveManyAttributes(): void
+    {
         if (filled($this->ruleAttributes)) {
             $value = null;
 
@@ -128,8 +136,6 @@ class Actions
                 $this->componentBag = $this->componentBag->merge([$attribute['attribute'] => $value]);
             }
         }
-
-        $this->componentBag = $this->componentBag->class($class);
     }
 
     private function hasAttributesInComponentBag(string $attribute): bool
@@ -154,9 +160,6 @@ class Actions
             'href'   => $this->ruleRedirect['url'],
             'target' => $this->ruleRedirect['target'],
         ]);
-
-        $this->isLinkeable = true;
-        $this->isButton    = false;
     }
 
     public function emit(): void
@@ -256,8 +259,6 @@ class Actions
 
     public function caption(): string
     {
-        $this->isButton = true;
-
         return $this->ruleCaption ?: $this->action->caption;
     }
 
