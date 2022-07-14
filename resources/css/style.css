@@ -139,8 +139,8 @@ select, .power_grid {
     padding-bottom: 8px;
     display: inline-block;
     vertical-align: middle;
-    line-height: normal;
 }
+
 .bootstrap-select {
     padding-left: 0 !important;
 }
