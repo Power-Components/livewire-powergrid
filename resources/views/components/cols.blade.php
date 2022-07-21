@@ -30,6 +30,6 @@
                 @endif
 					</span>
         @endif
-        <span>{{ $column->title }}</span>
+        <span>{!! $column->title !!}</span>
     </div>
 </th>
