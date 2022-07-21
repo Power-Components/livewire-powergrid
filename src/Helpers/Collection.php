@@ -172,7 +172,7 @@ class Collection implements CollectionFilterInterface
                 break;
             case 'starts_with':
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
@@ -180,7 +180,7 @@ class Collection implements CollectionFilterInterface
                 break;
             case 'ends_with':
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
@@ -188,7 +188,7 @@ class Collection implements CollectionFilterInterface
                 break;
             case 'contains':
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return false !== stristr($row->{$field}, strtolower((string) $value));
                 });
@@ -197,7 +197,7 @@ class Collection implements CollectionFilterInterface
             case 'contains_not':
 
                 $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
                 });
@@ -211,7 +211,7 @@ class Collection implements CollectionFilterInterface
 
             case 'is_not_blank':
                 $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return $row->{$field} != '' || is_null($row->{$field});
                 });
@@ -230,7 +230,7 @@ class Collection implements CollectionFilterInterface
 
             case 'is_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return $row->{$field} == '' || is_null($row->{$field});
                 });
@@ -239,7 +239,7 @@ class Collection implements CollectionFilterInterface
 
             case 'is_not_empty':
                 $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row = (object) $row;
+                    $row     = (object) $row;
 
                     return $row->{$field} !== '' && !is_null($row->{$field});
                 });
@@ -323,7 +323,7 @@ class Collection implements CollectionFilterInterface
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
-                $row = (object) $row;
+                $row     = (object) $row;
 
                 foreach ($this->columns as $column) {
                     if ($column->searchable) {

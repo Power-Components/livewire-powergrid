@@ -199,7 +199,7 @@ it('publishes config file', function () {
     File::delete($configFilePath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-config')
-        ->expectsOutput('Publishing complete.');
+        ->assertExitCode(0);
 
     $this->assertFileExists($configFilePath);
 
@@ -212,7 +212,7 @@ it('publishes views file', function () {
     File::delete($dirPath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-views')
-        ->expectsOutput('Publishing complete.');
+        ->assertExitCode(0);
 
     $this->assertDirectoryExists($dirPath);
 
@@ -225,7 +225,7 @@ it('publishes the language file in the lang path', function () {
     File::delete($dirPath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-lang')
-        ->expectsOutput('Publishing complete.');
+        ->assertExitCode(0);
 
     $this->assertDirectoryExists($dirPath);
 

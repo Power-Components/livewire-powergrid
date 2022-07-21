@@ -1,6 +1,7 @@
 <?php
 
 use function Pest\Livewire\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
 beforeEach(
