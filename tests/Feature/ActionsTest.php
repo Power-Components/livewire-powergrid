@@ -1,6 +1,7 @@
 <?php
 
 use function Pest\Livewire\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\DishesActionTable;
 
 it('properly displays "openModal" on edit button', function (string $component, object $params) {

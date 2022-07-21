@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Actions;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
+
 use function Pest\Faker\faker;
 
 class TestDatabase

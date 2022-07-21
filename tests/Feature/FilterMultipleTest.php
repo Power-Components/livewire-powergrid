@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Str;
+
 use function Pest\Livewire\livewire;
+
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {

@@ -1,6 +1,7 @@
 <?php
 
 use function Pest\Livewire\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\ExportTable;
 
 it('properly export xls data with selected data', function () {

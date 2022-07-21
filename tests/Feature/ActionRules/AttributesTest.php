@@ -1,6 +1,7 @@
 <?php
 
 use function Pest\Livewire\livewire;
+
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
@@ -105,7 +106,7 @@ it('check if there is no rule when dish-id == 5', function (string $component, o
             'wire:click="test(' . e('{"param1":5,"dishId":5}') . ')"',
             'title="Title changed by setAttributes when id 5"',
         ]);
-})->with('buttonAttributes')->group('actionRules')->only();
+})->with('buttonAttributes')->group('actionRules');
 
 dataset('buttonAttributes', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],

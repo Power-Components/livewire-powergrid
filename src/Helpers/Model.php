@@ -259,7 +259,7 @@ class Model implements ModelFilterInterface
     {
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
-                $table = $query->getModel()->getTable();
+                $table   = $query->getModel()->getTable();
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {

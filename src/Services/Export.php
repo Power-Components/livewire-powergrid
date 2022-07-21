@@ -51,7 +51,7 @@ class Export
 
         $actionRulesClass = resolve(ActionRules::class);
 
-        $data   = $data->transform(function ($row) use ($columns, $header, $actionRulesClass) {
+        $data     = $data->transform(function ($row) use ($columns, $header, $actionRulesClass) {
             $item = collect([]);
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $actionRulesClass) {
