@@ -210,13 +210,11 @@ final class PowerGridDemoTable extends PowerGridComponent
                 ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
             Column::make('Laracon visitor?', 'laracon')
-                ->searchable()
                 ->sortable()
                 ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
 
 
             Column::make('Laravel user since', 'laravel_since_formatted')
-                ->searchable()
                 ->sortable()
                 ->makeInputDatePicker('laravel_since') //Date filter
             ];
