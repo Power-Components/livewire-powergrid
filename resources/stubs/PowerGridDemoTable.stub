@@ -35,6 +35,13 @@ final class PowerGridDemoTable extends PowerGridComponent
     // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
 
+    /**
+     * User name
+     *
+     * @var array<int, string> $name
+     */
+    public array $name;
+
     protected function getListeners()
     {
         return array_merge(
@@ -210,13 +217,11 @@ final class PowerGridDemoTable extends PowerGridComponent
                 ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
 
             Column::make('Laracon visitor?', 'laracon')
-                ->searchable()
                 ->sortable()
                 ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
 
 
             Column::make('Laravel user since', 'laravel_since_formatted')
-                ->searchable()
                 ->sortable()
                 ->makeInputDatePicker('laravel_since') //Date filter
             ];
@@ -282,6 +287,18 @@ final class PowerGridDemoTable extends PowerGridComponent
                 ->when(fn($user) => $user->id === 4)
                 ->setAttribute('class', 'bg-blue-200 hover:bg-blue-300'),
         ];
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | ❗ Blocked update
+    |--------------------------------------------------------------------------
+    | Data update is blocked on demo to protect your database.
+
+    */
+    public function onUpdatedEditable(string $id, string $field, string $value): void
+    {
+        throw new \Exception(' Data update is blocked on demo to protect your database!');
     }
 
     /*
