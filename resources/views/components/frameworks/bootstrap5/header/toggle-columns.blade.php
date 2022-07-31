@@ -19,7 +19,7 @@
                             @else
                                 <x-livewire-powergrid::icons.eye-off width="20"/>
                             @endif
-                            {{ $column->title }}
+                            {!! $column->title !!}
                         </a>
                     </li>
                 @endif

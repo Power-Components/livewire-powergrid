@@ -32,7 +32,7 @@
                         <x-livewire-powergrid::icons.eye-off class="text-slate-500 dark:text-slate-300"/>
                     @endif
                     <div class="ml-2">
-                        {{ $column->title }}
+                        {!! $column->title !!}
                     </div>
                 </div>
                 @endif
