@@ -258,8 +258,8 @@ class Model implements ModelFilterInterface
     public function filterContains(): Model
     {
         if ($this->search != '') {
-            $this->query = $this->query->where(function (Builder $query) {
-                $table   = $query->getModel()->getTable();
+            $this->query    = $this->query->where(function (Builder $query) {
+                $table      = $query->getModel()->getTable();
                 $columnList = Cache::remember('powergrid_columns_in_' . $table, 600, function () use ($table) {
                     return Schema::getColumnListing($table);
                 });
