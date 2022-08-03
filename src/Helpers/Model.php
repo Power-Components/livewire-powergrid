@@ -4,8 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
@@ -261,7 +260,9 @@ class Model implements ModelFilterInterface
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
                 $table   = $query->getModel()->getTable();
-                $columnList = Cache::remember('powergrid_columns_in_' . $table, 600, fn () => Schema::getColumnListing($table));
+                $columnList = Cache::remember('powergrid_columns_in_' . $table, 600, function () {
+                    return Schema::getColumnListing($table);
+                });
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
