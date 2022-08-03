@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -260,6 +261,7 @@ class Model implements ModelFilterInterface
         if ($this->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
                 $table   = $query->getModel()->getTable();
+                $columnList = Cache::remember('columns_in_' . $table, 600, fn() => Schema::getColumnListing($table));
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
@@ -275,7 +277,7 @@ class Model implements ModelFilterInterface
                             $field        = $explodeField->get(1);
                         }
 
-                        $hasColumn = Schema::hasColumn($table, $field);
+                        $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
                             $query->orWhere($table . '.' . $field, SqlSupport::like(), '%' . $this->search . '%');
