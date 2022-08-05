@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator};
+use Illuminate\Pagination\{AbstractPaginator, Paginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
@@ -184,8 +184,9 @@ class PowerGridComponent extends Component
 
     /**
      * @throws Exception
+     * @throws Throwable
      */
-    public function fillData(): AbstractPaginator|Support\Collection
+    public function fillData(): mixed
     {
         /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
@@ -248,7 +249,9 @@ class PowerGridComponent extends Component
 
         self::resolveDetailRow($results);
 
-        $this->total = $results->total();
+        if (method_exists($results, 'total')) {
+            $this->total = $results->total();
+        }
 
         return $results->setCollection($this->transform($results->getCollection()));
     }
@@ -278,17 +281,24 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator
+    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator|Paginator
     {
-        $perPage = intval(data_get($this->setUp, 'footer.perPage'));
+        $perPage     = intval(data_get($this->setUp, 'footer.perPage'));
+        $recordCount = strval(data_get($this->setUp, 'footer.recordCount'));
+
+        $paginate = match ($recordCount) {
+            'min'   => 'simplePaginate',
+            default => 'paginate',
+        };
+
         if ($perPage > 0) {
-            return $results->paginate($perPage);
+            return $results->$paginate($perPage);
         }
 
-        return $results->paginate($results->count());
+        return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(LengthAwarePaginator $results): void
+    private function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
@@ -378,7 +388,7 @@ class PowerGridComponent extends Component
         return $datasource;
     }
 
-    private function renderView(AbstractPaginator|Support\Collection $data): Application|Factory|View
+    private function renderView(mixed $data): Application|Factory|View
     {
         /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
