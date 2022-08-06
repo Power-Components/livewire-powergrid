@@ -41,11 +41,13 @@
             </button>
         </form>
     @else
+        @if(data_get($action, 'route'))
         <a href="{{ route($action->route, $parameters) }}"
            title="{{ $action->tooltip }}"
            target="{{ $action->target }}"
            class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
             {!! $action->caption !!}
         </a>
+        @endif
     @endif
 @endif
