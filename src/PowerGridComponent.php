@@ -9,7 +9,7 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator, Paginator};
+use Illuminate\Pagination\{AbstractPaginator};
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
@@ -184,9 +184,8 @@ class PowerGridComponent extends Component
 
     /**
      * @throws Exception
-     * @throws Throwable
      */
-    public function fillData(): mixed
+    public function fillData(): AbstractPaginator|Support\Collection
     {
         /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
@@ -218,49 +217,39 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        /** @phpstan-ignore-next-line */
-        $this->currentTable = $datasource->getModel()->getTable();
-
-        $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
-            ? $this->sortField : $this->currentTable . '.' . $this->sortField;
-
         /** @var Eloquent\Builder $results */
         $results = $this->resolveModel($datasource)
-            ->where(function (Eloquent\Builder $query) {
-                Model::query($query)
-                    ->setInputRangeConfig($this->inputRangeConfig)
-                    ->setColumns($this->columns)
-                    ->setSearch($this->search)
-                    ->setRelationSearch($this->relationSearch)
-                    ->setFilters($this->filters)
-                    ->filterContains()
-                    ->filter();
-            });
+         ->where(function (Eloquent\Builder $query) {
+             Model::query($query)
+                 ->setInputRangeConfig($this->inputRangeConfig)
+                 ->setColumns($this->columns)
+                 ->setSearch($this->search)
+                 ->setRelationSearch($this->relationSearch)
+                 ->setFilters($this->filters)
+                 ->filterContains()
+                 ->filter();
+         });
 
-        $results = self::applySoftDeletes($results);
+        /** @phpstan-ignore-next-line */
+        $this->currentTable = $datasource->getModel()->getTable();
+        $results            = self::applySoftDeletes($results);
 
-         /* MULTISORT */
+        /* MULTISORT */
 
-         if($this->multiSort){
-
-            foreach($this->sortArray as $sortField => $direction){
+        if ($this->multiSort) {
+            foreach ($this->sortArray as $sortField => $direction) {
                 $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
                 if ($this->withSortStringNumber) {
                     $results = self::applyWithSortStringNumber($results, $sortField, $direction);
                 }
                 $results = $results->orderBy($sortField, $direction);
-
             }
-
-        }else{
+        } else {
             /* Original */
             $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix ? $this->sortField : $this->currentTable . '.' . $this->sortField;
-            $results = self::applyWithSortStringNumber($results, $sortField);
-            $results = $results->orderBy($sortField, $this->sortDirection);
+            $results   = self::applyWithSortStringNumber($results, $sortField);
+            $results   = $results->orderBy($sortField, $this->sortDirection);
         }
-
-
-
 
         self::applyTotalColumn($results);
 
@@ -268,9 +257,7 @@ class PowerGridComponent extends Component
 
         self::resolveDetailRow($results);
 
-        if (method_exists($results, 'total')) {
-            $this->total = $results->total();
-        }
+        $this->total = $results->total();
 
         return $results->setCollection($this->transform($results->getCollection()));
     }
@@ -285,7 +272,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField, string $multiSortDirection = null): Eloquent\Builder
     {
         if (!$this->withSortStringNumber) {
             return $results;
@@ -294,30 +281,27 @@ class PowerGridComponent extends Component
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            if ($multiSortDirection) {
+                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $multiSortDirection);
+            } else {
+                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            }
         }
 
         return $results;
     }
 
-    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator|Paginator
+    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator
     {
-        $perPage     = intval(data_get($this->setUp, 'footer.perPage'));
-        $recordCount = strval(data_get($this->setUp, 'footer.recordCount'));
-
-        $paginate = match ($recordCount) {
-            'min'   => 'simplePaginate',
-            default => 'paginate',
-        };
-
+        $perPage = intval(data_get($this->setUp, 'footer.perPage'));
         if ($perPage > 0) {
-            return $results->$paginate($perPage);
+            return $results->paginate($perPage);
         }
 
-        return $results->$paginate($results->count());
+        return $results->paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
+    private function resolveDetailRow(LengthAwarePaginator $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
@@ -407,7 +391,7 @@ class PowerGridComponent extends Component
         return $datasource;
     }
 
-    private function renderView(mixed $data): Application|Factory|View
+    private function renderView(AbstractPaginator|Support\Collection $data): Application|Factory|View
     {
         /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
