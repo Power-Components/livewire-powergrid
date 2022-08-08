@@ -174,19 +174,19 @@ class Model implements ModelFilterInterface
 
                 break;
             case 'starts_with':
-                $query->where($field, SqlSupport::like(), $value . '%');
+                $query->where($field, SqlSupport::like($query), $value . '%');
 
                 break;
             case 'ends_with':
-                $query->where($field, SqlSupport::like(), '%' . $value);
+                $query->where($field, SqlSupport::like($query), '%' . $value);
 
                 break;
             case 'contains':
-                $query->where($field, SqlSupport::like(), '%' . $value . '%');
+                $query->where($field, SqlSupport::like($query), '%' . $value . '%');
 
                 break;
             case 'contains_not':
-                $query->where($field, 'NOT ' . SqlSupport::like(), '%' . $value . '%');
+                $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%');
 
                 break;
             case 'is_empty':
@@ -281,11 +281,11 @@ class Model implements ModelFilterInterface
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, SqlSupport::like(), '%' . $this->search . '%');
+                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->search . '%');
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like() . ' \'%' . $this->search . '%\'');
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->search . '%\'');
                         }
                     }
                 }
@@ -316,13 +316,13 @@ class Model implements ModelFilterInterface
                     if ($query->getRelation($nestedTable) != '') {
                         foreach ($column as $nestedColumn) {
                             $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                $query->where($nestedColumn, SqlSupport::like(), '%' . $this->search . '%');
+                                $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%');
                             });
                         }
                     }
                 } else {
                     $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                        $query->where($column, SqlSupport::like(), '%' . $this->search . '%');
+                        $query->where($column, SqlSupport::like($query), '%' . $this->search . '%');
                     });
                 }
             }
