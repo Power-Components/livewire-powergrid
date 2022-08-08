@@ -239,9 +239,28 @@ class PowerGridComponent extends Component
 
         $results = self::applySoftDeletes($results);
 
-        $results = self::applyWithSortStringNumber($results, $sortField);
+         /* MULTISORT */
 
-        $results = $results->orderBy($sortField, $this->sortDirection);
+         if($this->multiSort){
+
+            foreach($this->sortArray as $sortField => $direction){
+                $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
+                if ($this->withSortStringNumber) {
+                    $results = self::applyWithSortStringNumber($results, $sortField, $direction);
+                }
+                $results = $results->orderBy($sortField, $direction);
+
+            }
+
+        }else{
+            /* Original */
+            $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix ? $this->sortField : $this->currentTable . '.' . $this->sortField;
+            $results = self::applyWithSortStringNumber($results, $sortField);
+            $results = $results->orderBy($sortField, $this->sortDirection);
+        }
+
+
+
 
         self::applyTotalColumn($results);
 

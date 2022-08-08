@@ -1,6 +1,8 @@
 @props([
     'column' => null,
     'theme' => null,
+    'multiSort' => false,
+    'sortArray' => [],
     'sortField' => null,
     'sortDirection' => null,
     'enabledFilters' => null,
@@ -21,15 +23,25 @@
         @if($column->sortable === true) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable === true)
             <span class="text-md pr-2">
-				@if ($sortField !== $field)
+                @if($multiSort && array_key_exists($field,$sortArray))
+                    @if ($sortArray[$field] == 'desc')
+                        &#8595;
+                    @else
+                        &#8593;
+                    @endif
+                @elseif($multiSort)
                     &#8597;
-                @elseif ($sortDirection == 'desc')
-                    &#8593;
                 @else
-                    &#8595;
+                    @if ($sortField !== $field)
+                        &#8597;
+                    @elseif ($sortDirection == 'desc')
+                        &#8593;
+                    @else
+                        &#8595;
+                    @endif
                 @endif
-					</span>
+			</span>
         @endif
-        <span>{!! $column->title !!}</span>
+        <span>{{ $column->title }}</span>
     </div>
 </th>
