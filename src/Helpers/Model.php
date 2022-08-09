@@ -260,7 +260,7 @@ class Model implements ModelFilterInterface
         if ($this->search != '') {
             $this->query    = $this->query->where(function (Builder $query) {
                 $modelTable = $query->getModel()->getTable();
-                $columnList = (array) Cache::remember('powergrid_columns_in_' . $table, 600, function () use ($modelTable) {
+                $columnList = (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, function () use ($modelTable) {
                     return Schema::getColumnListing($modelTable);
                 });
 
