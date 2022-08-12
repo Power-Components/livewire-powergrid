@@ -64,19 +64,16 @@ trait WithSorting
 
     public function applySortingArray(Collection $query): Collection
     {
-
         if (is_a($query, Collection::class)) {
             $formattedSortingArray = [];
             foreach ($this->sortArray as $sortField => $sortDirection) {
                 /* Put Sort Array in SortByMany Format */
-                array_push($formattedSortingArray, [ $sortField , $sortDirection]);
+                array_push($formattedSortingArray, [$sortField , $sortDirection]);
             }
             $query =  $query->sortBy($formattedSortingArray);
-        }else{
+        } else {
             foreach ($this->sortArray as $sortField => $sortDirection) {
-            
                 $query = $query->orderBy($sortField, $sortDirection);
-                
             }
         }
 
