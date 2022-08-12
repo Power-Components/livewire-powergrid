@@ -249,7 +249,7 @@ class PowerGridComponent extends Component
                 $results = $results->orderBy($sortField, $direction);
             }
         } else {
-            $results   = self::applyWithSortStringNumber($results, $sortField);
+            $results   = self::applyWithSortStringNumber($results, $sortField, null);
             $results   = $results->orderBy($sortField, $this->sortDirection);
         }
 
