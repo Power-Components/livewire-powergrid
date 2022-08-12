@@ -278,7 +278,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField, string $multiSortDirection = null): Eloquent\Builder
     {
         if (!$this->withSortStringNumber) {
             return $results;
@@ -287,7 +287,11 @@ class PowerGridComponent extends Component
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            if ($multiSortDirection) {
+                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $multiSortDirection);
+            } else {
+                $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            }
         }
 
         return $results;
