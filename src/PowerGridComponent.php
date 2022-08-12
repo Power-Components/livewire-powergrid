@@ -249,7 +249,7 @@ class PowerGridComponent extends Component
                 $results = $results->orderBy($sortField, $direction);
             }
         } else {
-            $results   = self::applyWithSortStringNumber($results, $sortField, null);
+            $results   = self::applyWithSortStringNumber($results, $sortField);
             $results   = $results->orderBy($sortField, $this->sortDirection);
         }
 
@@ -282,10 +282,16 @@ class PowerGridComponent extends Component
             return $results;
         }
 
+        $direction = $this->sortDirection;
+
+        if ($multiSortDirection) {
+            $direction = $multiSortDirection;
+        }
+
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $multiSortDirection ?: $this->sortDirection);
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $direction);
         }
 
         return $results;
