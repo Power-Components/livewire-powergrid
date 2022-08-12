@@ -20,13 +20,13 @@ trait WithSorting
     {
         if ($this->multiSort) {
             $this->sortByArray($field);
+
             return;
-        } 
+        }
 
         $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : $direction;
 
         $this->sortField = $field;
-        
     }
 
     public function reverseSort(): string
@@ -67,14 +67,16 @@ trait WithSorting
         if (is_a($query, Collection::class)) {
             $formattedSortingArray = [];
             foreach ($this->sortArray as $sortField => $sortDirection) {
-                    array_push($formattedSortingArray, [$sortField , $sortDirection]);
+                array_push($formattedSortingArray, [$sortField , $sortDirection]);
             }
+
             return  $query->sortBy($formattedSortingArray);
-       }
-       
-       foreach ($this->sortArray as $sortField => $sortDirection) {
-             $query = $query->orderBy($sortField, $sortDirection);
-       }
-       return $query;
+        }
+
+        foreach ($this->sortArray as $sortField => $sortDirection) {
+            $query = $query->orderBy($sortField, $sortDirection);
+        }
+
+        return $query;
     }
 }

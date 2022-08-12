@@ -285,9 +285,8 @@ class PowerGridComponent extends Component
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $multiSortDirection ?:  $this->sortDirection);
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $multiSortDirection ?: $this->sortDirection);
         }
-
 
         return $results;
     }
