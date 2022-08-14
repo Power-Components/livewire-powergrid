@@ -50,10 +50,14 @@
                                 @includeIf($theme->filterMultiSelect->view, [
                                     'inline'    => true,
                                     'column'    => $column,
-                                    'selected'  => $filters['multi_select'] ?? [],
                                     'tableName' => $tableName,
                                     'theme'     => $theme->filterMultiSelect,
                                 ])
+                            @endif
+                        @endforeach
+                        @foreach(data_get($makeFilters, 'dynamic', []) as $index => $multiSelect)
+                            @if(data_get($multiSelect, 'field') === $column->field)
+                                @include(powerGridThemeRoot().'.filters.dynamic')
                             @endif
                         @endforeach
                         @foreach(data_get($makeFilters, 'number', []) as $index => $number)

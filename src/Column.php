@@ -470,4 +470,23 @@ final class Column
 
         return $this;
     }
+
+    /**
+     * Add Dynamic Input Component
+     *
+     */
+    public function makeDynamicInput(
+        string $filter = '',
+        string $dataField = '',
+        string $component = '',
+        array $attributes = [],
+    ): Column {
+        $this->editable                           = false;
+        $this->inputs['dynamic']['filterType']    = $filter;
+        $this->inputs['dynamic']['dataField']     = $dataField;
+        $this->inputs['dynamic']['component']     = $component;
+        $this->inputs['dynamic']['attributes']    = $attributes;
+
+        return $this;
+    }
 }

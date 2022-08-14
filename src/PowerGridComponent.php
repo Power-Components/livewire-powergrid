@@ -98,6 +98,8 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
+        $this->initializePropertiesFromDynamicFilters();
+
         $this->resolveTotalRow();
 
         $this->resolveFilters();
@@ -137,6 +139,39 @@ class PowerGridComponent extends Component
                 $this->footerTotalColumn = true;
             }
         });
+    }
+
+    private function initializePropertiesFromDynamicFilters(): void
+    {
+        $this->columns = collect($this->columns)->transform(function (Column $column) {
+            if (Support\Arr::has($column->inputs, 'dynamic')) {
+                $filterType = strval(data_get($column->inputs, 'dynamic.filterType'));
+                $dataField  = strval(data_get($column->inputs, 'dynamic.dataField'));
+
+                if (!in_array($filterType, DynamicInput::DYNAMIC_FILTERS)) {
+                    throw new Exception('Available options must be included by: \PowerComponents\LivewirePowerGrid\DynamicInput::class');
+                }
+
+                $filter     = strval(Support\Str::of($filterType)->explode(',')->get(0));
+                $type       = strval(Support\Str::of($filterType)->explode(',')->get(1));
+
+                /** @phpstan-ignore-next-line */
+                $initial = match ($type) {
+                    'array'   => [],
+                    'string'  => '',
+                    'boolean' => null,
+                };
+
+                $this->filters[$filter][$dataField] = $initial;
+
+                data_set($column->inputs, 'dynamic.attributes', [
+                    ...(array) data_get($column->inputs, 'dynamic.attributes'),
+                    'wire:model.debounce.500ms' => 'filters.' . $filter . '.' . $dataField,
+                ]);
+            }
+
+            return $column;
+        })->toArray();
     }
 
     /**

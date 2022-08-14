@@ -91,6 +91,10 @@ class Model implements ModelFilterInterface
                             $this->filterInputText($query, $field, $value);
 
                             break;
+                        case 'input_text_contains':
+                            $this->filterInputTextContains($query, $field, $value);
+
+                            break;
                         case 'number':
                             $this->filterNumber($query, $field, $value);
 
@@ -153,6 +157,11 @@ class Model implements ModelFilterInterface
             $value = ($value == 'true' || $value == '1');
             $query->where($field, '=', $value);
         }
+    }
+
+    public function filterInputTextContains(Builder $query, string $field, ?string $value): void
+    {
+        $query->where($field, SqlSupport::like(), '%' . $value . '%');
     }
 
     public function filterInputText(Builder $query, string $field, string|array|null $value): void
