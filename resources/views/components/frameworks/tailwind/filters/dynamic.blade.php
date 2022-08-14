@@ -1,7 +1,6 @@
 @inject('componentAttributeBag','\Illuminate\View\ComponentAttributeBag')
 @props([
     'theme' => '',
-    'inline' => null,
     'input' => null,
 ])
 @php
