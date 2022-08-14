@@ -55,9 +55,11 @@
                                 ])
                             @endif
                         @endforeach
-                        @foreach(data_get($makeFilters, 'dynamic', []) as $index => $multiSelect)
-                            @if(data_get($multiSelect, 'field') === $column->field)
-                                @include(powerGridThemeRoot().'.filters.dynamic')
+                        @foreach(data_get($makeFilters, 'dynamic', []) as $index => $input)
+                            @if(data_get($input, 'field') === $column->field)
+                                @include(powerGridThemeRoot().'.filters.dynamic', [
+                                    'input' => $input,
+                                ])
                             @endif
                         @endforeach
                         @foreach(data_get($makeFilters, 'number', []) as $index => $number)

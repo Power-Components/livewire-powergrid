@@ -86,9 +86,11 @@
                             ])
                         </div>
                     @endforeach
-                    @foreach(data_get($makeFilters, 'dynamic', []) as $field => $multiSelect)
+                    @foreach(data_get($makeFilters, 'dynamic', []) as $field => $input)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
-                            @include(powerGridThemeRoot().'.filters.dynamic')
+                            @include(powerGridThemeRoot().'.filters.dynamic', [
+                                'input' => $input,
+                            ])
                         </div>
                     @endforeach
                 </div>

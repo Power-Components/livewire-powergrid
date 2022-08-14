@@ -2,11 +2,11 @@
 @props([
     'theme' => '',
     'inline' => null,
-    'multiSelect' => null,
+    'input' => null,
 ])
 @php
-    $attributes = new $componentAttributeBag($multiSelect['attributes']);
+    $attributes = new $componentAttributeBag($input['attributes']);
 @endphp
-<div wire:key="pg-dynamic-{{ md5(json_encode($multiSelect)) }}">
-    <x-dynamic-component :component="$multiSelect['component']" :attributes="$attributes" />
+<div wire:key="pg-dynamic-{{ md5(json_encode($input)) }}">
+    <x-dynamic-component :component="$input['component']" :attributes="$attributes" />
 </div>
