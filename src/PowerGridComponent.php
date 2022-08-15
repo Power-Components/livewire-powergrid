@@ -194,6 +194,7 @@ class PowerGridComponent extends Component
         $this->isCollection = is_a((object) $datasource, Support\Collection::class);
 
         if ($this->isCollection) {
+            cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
                 ->setSearch($this->search)
