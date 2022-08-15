@@ -259,14 +259,15 @@ class Model implements ModelFilterInterface
     {
         if ($this->search != '') {
             $this->query    = $this->query->where(function (Builder $query) {
-                $table      = $query->getModel()->getTable();
-                $columnList = (array) Cache::remember('powergrid_columns_in_' . $table, 600, function () use ($table) {
-                    return Schema::getColumnListing($table);
+                $modelTable = $query->getModel()->getTable();
+                $columnList = (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, function () use ($modelTable) {
+                    return Schema::getColumnListing($modelTable);
                 });
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
                     $searchable = strval(data_get($column, 'searchable'));
+                    $table      = $modelTable;
                     $field      = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
 
                     if ($searchable && $field) {
