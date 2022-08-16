@@ -8,7 +8,7 @@ final class DynamicInput
 
     public const FILTER_MULTI_SELECT = 'multi_select,array';
 
-    public const FILTER_BOOLEAN = 'boolean,null';
+    public const FILTER_BOOLEAN = 'boolean,bool';
 
     public const FILTER_INPUT_TEXT_CONTAINS = 'input_text_contains,string';
 

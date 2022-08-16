@@ -145,8 +145,12 @@ class Model implements ModelFilterInterface
         }
     }
 
-    public function filterBoolean(Builder $query, string $field, string|array $value): void
+    public function filterBoolean(Builder $query, string $field, string|array|null $value): void
     {
+        if (is_null($value)) {
+            $value = 'all';
+        }
+
         if (is_array($value)) {
             $field = $field . '.' . key($value);
             $value = $value[key($value)];
