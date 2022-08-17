@@ -12,6 +12,7 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesActionTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesArrayTable,
     Tests\DishesEnumTable,
     Tests\DishesMakeTable,
     Tests\DishesSearchableRawTable,
@@ -152,6 +153,11 @@ dataset('themes with name field', [
     'bootstrap make' => [DishesMakeTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
     'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
     'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+]);
+
+dataset('themes with array table', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
 ]);
 
 dataset('themes with collection table', [
