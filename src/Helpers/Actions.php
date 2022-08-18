@@ -211,7 +211,7 @@ class Actions
     {
         if ($this->hasAttributesInComponentBag('wire:click')
            || blank($this->action->view)
-        || filled($this->ruleRedirect)) {
+           || filled($this->ruleRedirect)) {
             return;
         }
 

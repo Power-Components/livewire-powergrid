@@ -18,7 +18,7 @@ it('add rule \'redirect\' when out of stock and dishId !== 8', function (string 
         ])
         ->set('testActionRules', [
             Rule::button('edit')
-                ->when(fn (Dish $dish)     => (bool) $dish->in_stock === false)
+                ->when(fn (Dish $dish) => (bool) $dish->in_stock === false)
                 ->redirect(fn (Dish $dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
         ])
         ->set('setUp.footer.perPage', 10)
