@@ -199,7 +199,7 @@ class DishesArrayTable extends PowerGridComponent
                 ->caption('cation edit for id 4'),
 
             Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish)     => (bool) $dish->in_stock === false && $dish->id !== 8)
+                ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)
                 ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
 
             // Set a row red background for when dish is out of stock
