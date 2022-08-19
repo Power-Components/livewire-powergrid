@@ -1,26 +1,22 @@
----
-name: Bug report
-about: Report bugs or unexpected software behavior
-title: 'Bug Report: ** short & meaningful title describing the bug ***'
-labels: bug
-assignees: luanfreitasdev
+<!-- ===================================================================================================== -->
+<!-- ====== YOU *MUST* READ THE GUIDELINES & USE THIS TEMPLATE OR YOUR ISSUE WILL BE CLOSED ============== -->
+<!-- ===================================================================================================== -->
 
----
+# ⚡ PowerGrid ⚡ Bug Report
 
-# PowerGrid Bug Report
+<table><tr><td>❗ You <b>MUST</b> use this template to submit an issue or it will be CLOSED. ❗</td></tr></table><br/>
 
-
-Thank you for reporting a bug and helping us to improve PowerGrid!
+Thank you for reporting a bug and helping us to improve our software!
 
 ## Guidelines
 
-`   🐛 `   We use GitHub Issues exclusively for tracking bugs and unexpected software behavior. 
+`   🐛 `   We use GitHub Issues **EXCLUSIVELY** for tracking bugs and unexpected software behavior.
 
-`   🙏 `  Please use the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab for questions like _"How to...",_ "_how can I..."_ .
+`   🙏 `  Questions like _"How to...",_ "_how can I..."_, _"I would like to..."_ should be posted in the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.
 
 `   ✍️ `  Give this report a short but meaningful title. Make it easy to spot for others who might be facing the same issue.
 
-`   ⚠️ `  Issues that do not describe a bug or do not follow the template will be closed.
+`   ⚠️ `  Issues that do not describe a bug will be closed.
 
 ## Information
 

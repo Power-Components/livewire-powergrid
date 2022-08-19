@@ -4,7 +4,7 @@
 
 ------
 
-# How to contribute with PowerGrid
+# How to contribute with ⚡ PowerGrid ⚡
 
 Thank you for your interesting in contributing with PowerGrid.
 
@@ -86,7 +86,7 @@ Please send clean and descriptive commits.
 
 7. **Pull Request**
 
-Open a Pull Request (PR) detailing your changes and motivations. Please make only one change per Pull Request.
+Open a Pull Request (PR) and use the template for detailing your changes and motivations. Please make only one change per Pull Request.
 
 If you never wrote a PR before, see this excellent [example](https://github.com/Power-Components/livewire-powergrid/pull/149) by [@vs0uz4](https://github.com/vs0uz4) for inspiration.
 
