@@ -1,3 +1,12 @@
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
 # ⚡ PowerGrid ⚡ Feature Request
 
 ## Summary
