@@ -1,0 +1,135 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "# ⚡ PowerGrid ⚡ Bug Report"
+  - type: markdown
+    attributes:
+      value: "<table><tr><td>❗ You <b>MUST</b> use this template to submit an issue or it will be CLOSED. ❗</td></tr></table><br/>"
+  - type: markdown
+    attributes:
+      value: "Thank you for reporting a bug and helping us to improve our software!"
+  - type: markdown
+    attributes:
+      value: "## Guidelines"
+  - type: markdown
+    attributes:
+      value: "`   🐛 `   We use GitHub Issues **EXCLUSIVELY** for tracking bugs and unexpected software behavior."
+  - type: markdown
+    attributes:
+      value: "`   🙏 `  Questions like _\"How to...\",_ \"_how can I...\"_, _\"I would like to...\"_ should be posted in the [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab."
+  - type: markdown
+    attributes:
+      value: "`   ✍️ `  Give this report a short but meaningful title. Make it easy to spot for others who might be facing the same issue."
+  - type: markdown
+    attributes:
+      value: "`   ⚠️ `  Issues that do not describe a bug will be closed."
+  - type: markdown
+    attributes:
+      value: "## Information"
+  - type: markdown
+    attributes:
+      value: "### Pre-steps"
+  - type: dropdown
+    attributes:
+      label: "Have you searched through other issues to see if your problem is already reported or has been fixed?"
+      options:
+        - Yes, I did not find it.
+        - "No"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "[documentation](https://livewire-powergrid.com/)"
+  - type: dropdown
+    attributes:
+      label: "Did you read the documentation?"
+      options:
+        - Yes, I did not find it.
+        - "No"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "#### Have you tried to publish the views?"
+  - type: markdown
+    attributes:
+      value: "You can publish the views to make sure there is no \"old code\" trapped in views which are not up-to-date."
+  - type: markdown
+    attributes:
+      value: "To publish, run: `php artisan vendor:publish --tag=livewire-powergrid-views`"
+  - type: dropdown
+    attributes:
+      label: "Have you tried to publish the views?"
+      options:
+        - Yes - I didn't work.
+        - No, this error is not related to views.
+    validations:
+      required: true
+  - type: textarea
+    id: error-console
+    attributes:
+      label: Is there an error in the console?
+      description: Yes - I'll add a screenshot or report it below.
+      placeholder: Yes - I'll add a screenshot or report it below.
+      value: "No"
+  - type: markdown
+    attributes:
+      value: "### Software Version"
+  - type: markdown
+    attributes:
+      value: "You can run `composer show -i` and `npm list` to list installed package with their versions."
+  - type: input
+    id: PowerGrid
+    attributes:
+      label: PowerGrid
+      placeholder: ex. 0.0.1
+  - type: input
+    id: Laravel
+    attributes:
+      label: Laravel
+      placeholder: ex. 0.0.1
+  - type: input
+    id: Livewire
+    attributes:
+      label: Livewire
+      placeholder: ex. 0.0.1
+  - type: input
+    id: Alpine-JS
+    attributes:
+      label: Alpine JS
+      placeholder: ex. 0.0.1
+  - type: dropdown
+    attributes:
+      label: Theme
+      multiple: true
+      options:
+        - Tailwind 2.x
+        - Tailwind 3.x
+        - Tailwind 3.x with tailwind/forms
+        - Bootstrap
+    validations:
+      required: true
+  - type: textarea
+    id: bug
+    attributes:
+      label: Describe the bug.
+      description: What happened?
+      placeholder: "I did FOO expecting BAR as a result. However, I received BAZ..."
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce...
+      value: "First click on \"FOO\" then...."
+  - type: textarea
+    id: extra-information
+    attributes:
+      label: Extra information
+      placeholder: Screenshots and code snippet
+      value: "```php \n
+          <?php\n
+            //...\n
+      ```"
+      render: markdown
