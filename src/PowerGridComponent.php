@@ -239,7 +239,6 @@ class PowerGridComponent extends Component
 
         $results = self::applySoftDeletes($results);
 
-        /* MULTISORT */
         if ($this->multiSort) {
             foreach ($this->sortArray as $sortField => $direction) {
                 $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
