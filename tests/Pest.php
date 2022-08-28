@@ -9,7 +9,6 @@ use PowerComponents\LivewirePowerGrid\{
     Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
-    Tests\DishesActionTable,
     Tests\DishesArrayTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
@@ -18,9 +17,7 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin,
-    Tests\RulesAttributesTable,
-    Tests\RulesEmitTable
+    Tests\DishesTableWithJoin
 };
 
 uses(TestCase::class)->in(__DIR__);

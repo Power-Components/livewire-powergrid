@@ -42,6 +42,41 @@ it('properly filters by bool true', function (string $component, object $params)
         ->assertSee('борщ');
 })->with('themes');
 
+it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
+    $component = livewire($component)
+        ->call($theme)
+        ->assertSee('In Stock')
+        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+
+    expect($component->filters)
+        ->toBeEmpty();
+
+    $component ->set('filters', filterBoolean('in_stock', 'true'))
+        ->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 4')
+        ->assertDontSee('Name 3')
+        ->assertDontSee('Name 5');
+
+    expect($component->filters)
+        ->toMatchArray([
+            'boolean' => [
+                'in_stock' => 'true',
+            ],
+        ]);
+
+    $component->call('clearFilter', 'in_stock');
+
+    $component->assertSee('Name 1')
+        ->assertSee('Name 2')
+        ->assertSee('Name 3')
+        ->assertSee('Name 4')
+        ->assertSee('Name 5');
+
+    expect($component->filters)
+        ->toMatchArray([]);
+})->with('themes with collection table', 'themes with array table');
+
 it('properly filters by bool true - using collection', function (string $component, string $theme) {
     $component = livewire($component)
         ->call($theme)
@@ -75,7 +110,7 @@ it('properly filters by bool true - using collection', function (string $compone
 
     expect($component->filters)
         ->toMatchArray([]);
-})->with('themes with collection table');
+})->with('themes with array table');
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component)
@@ -114,7 +149,7 @@ it('properly filters by bool false', function (string $component, object $params
         ->toMatchArray([]);
 })->with('themes');
 
-it('properly filters by bool false - using collection', function (string $component, string $theme) {
+it('properly filters by bool false - using collection & array', function (string $component, string $theme) {
     $component = livewire($component)
         ->call($theme)
         ->assertSee('In Stock')
@@ -146,7 +181,7 @@ it('properly filters by bool false - using collection', function (string $compon
 
     expect($component->filters)
         ->toMatchArray([]);
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filters by bool "all"', function (string $component, object $params) {
     $component = livewire($component)
@@ -175,7 +210,7 @@ it('properly filters by bool "all"', function (string $component, object $params
         ]);
 })->with('themes');
 
-it('properly filters by bool "all" - using collection', function (string $component, string $theme) {
+it('properly filters by bool "all" - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component)
         ->call($theme);
 
@@ -195,7 +230,7 @@ it('properly filters by bool "all" - using collection', function (string $compon
                 'in_stock' => 'all',
             ],
         ]);
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 function filterBoolean(string $field, ?string $value): array
 {
