@@ -9,7 +9,7 @@ use PowerComponents\LivewirePowerGrid\{
     Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
-    Tests\DishesActionTable,
+    Tests\DishesArrayTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
     Tests\DishesEnumTable,
@@ -17,9 +17,7 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin,
-    Tests\RulesAttributesTable,
-    Tests\RulesEmitTable
+    Tests\DishesTableWithJoin
 };
 
 uses(TestCase::class)->in(__DIR__);
@@ -152,6 +150,11 @@ dataset('themes with name field', [
     'bootstrap make' => [DishesMakeTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
     'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
     'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+]);
+
+dataset('themes with array table', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
 ]);
 
 dataset('themes with collection table', [

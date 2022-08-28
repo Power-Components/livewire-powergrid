@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use Illuminate\Support\{Carbon, Collection};
+use Illuminate\Support\{Carbon};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
@@ -11,10 +11,9 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-    Rules\Rule};
+    PowerGridEloquent};
 
-class DishesCollectionTable extends PowerGridComponent
+class DishesArrayTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -35,9 +34,9 @@ class DishesCollectionTable extends PowerGridComponent
         $this->eventId = $params;
     }
 
-    public function datasource(): Collection
+    public function datasource(): array
     {
-        return collect([
+        return [
             [
                 'id'         => 1,
                 'name'       => 'Name 1',
@@ -78,7 +77,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'created_at' => '2021-05-05 00:00:00',
                 'chef_name'  => 'Luan',
             ],
-        ]);
+        ];
     }
 
     public function setUp(): array
