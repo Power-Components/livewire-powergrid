@@ -89,6 +89,6 @@ trait WithSorting
         )->map(fn ($column) => (array) $column)
             ->first();
 
-        return data_get($filter, 'title');
+        return strval(data_get($filter, 'title'));
     }
 }
