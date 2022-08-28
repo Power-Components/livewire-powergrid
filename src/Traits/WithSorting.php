@@ -57,9 +57,11 @@ trait WithSorting
             } elseif ($prevDirection == 'desc') {
                 unset($this->sortArray[$field]);
             }
-        } else {
-            $this->sortArray[$field] = 'asc';
+
+            return;
         }
+
+        $this->sortArray[$field] = 'asc';
     }
 
     public function applySortingArray(Collection $query): Collection
@@ -67,10 +69,10 @@ trait WithSorting
         if (is_a($query, Collection::class)) {
             $formattedSortingArray = [];
             foreach ($this->sortArray as $sortField => $sortDirection) {
-                array_push($formattedSortingArray, [$sortField , $sortDirection]);
+                $formattedSortingArray[] = [$sortField, $sortDirection];
             }
 
-            return  $query->sortBy($formattedSortingArray);
+            return $query->sortBy($formattedSortingArray);
         }
 
         foreach ($this->sortArray as $sortField => $sortDirection) {
@@ -78,5 +80,15 @@ trait WithSorting
         }
 
         return $query;
+    }
+
+    public function getLabelFromColumn(string $field): string
+    {
+        $filter = collect($this->columns)->filter(
+            fn ($column) => $column->dataField == $field
+        )->map(fn ($column) => (array) $column)
+            ->first();
+
+        return data_get($filter, 'title');
     }
 }

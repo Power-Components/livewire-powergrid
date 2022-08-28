@@ -13,7 +13,7 @@ trait PersistData
         $state = [];
         if (in_array('columns', $this->persist) || $tableItem === 'columns') {
             $state['columns'] = collect($this->columns)
-                ->map(fn ($column)         => (object) $column)
+                ->map(fn ($column) => (object) $column)
                 ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
                 ->toArray();
         }
