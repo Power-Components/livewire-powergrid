@@ -7,26 +7,23 @@
     }
 @endphp
 @if($action->event !== '' && $action->to === '')
-    <a wire:click='$emit("{{ $action->event }}", @json($parameters))'
-       target="{{ $action->target }}"
+    <button wire:click='$emit("{{ $action->event }}", @json($parameters))'
        title="{{ $action->tooltip }}"
        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
-    </a>
+    </button>
 @elseif($action->event !== '' && $action->to !== '')
-    <a wire:click='$emitTo("{{ $action->to }}", "{{ $action->event }}", @json($parameters))'
-       target="{{ $action->target }}"
+    <button wire:click='$emitTo("{{ $action->to }}", "{{ $action->event }}", @json($parameters))'
        title="{{ $action->tooltip }}"
        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
-    </a>
+    </button>
 @elseif($action->view !== '')
-    <a wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
-       target="{{ $action->target }}"
+    <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
        title="{{ $action->tooltip }}"
        class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
-    </a>
+    </button>
 @else
     @if(strtolower($action->method) !== 'get')
         <form target="{{ $action->target }}"
