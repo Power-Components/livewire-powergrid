@@ -61,4 +61,7 @@ return [
         'with_trashed'         => 'Avec les lignes supprimées',
         'only_trashed'         => 'Uniquement les lignes supprimées',
     ],
+    'multi_sort' => [
+        'message' => 'Multiple sort is active',
+    ],
 ];
