@@ -102,21 +102,13 @@ it('displays "No records found" with non-existent min', function (string $compon
         ->assertDontSee('Pastel de Nata');
 })->with('themes');
 
-it('displays "No records found" with non-existent min - using collection', function (string $component, string $theme) {
+it('displays "No records found" with non-existent min - using collection & array table', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
         ->set('filters', filterNumber('price', '1000000', null))
         ->assertSee('No records found')
         ->assertDontSee('Name 1');
 })->with('themes with collection table', 'themes with array table');
-
-it('displays "No records found" with non-existent min - using array', function (string $component, string $theme) {
-    livewire($component)
-        ->call($theme)
-        ->set('filters', filterNumber('price', '1000000', null))
-        ->assertSee('No records found')
-        ->assertDontSee('Name 1');
-})->with('themes with array table');
 
 it('properly filters by "min & max" formatted', function (string $component, object $params) {
     livewire($component)
