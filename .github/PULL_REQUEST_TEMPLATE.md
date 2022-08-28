@@ -1,12 +1,10 @@
-<!-- ===================================================================================================== -->
-<!-- ====== YOU *MUST* READ THE GUIDELINES & USE THIS TEMPLATE OR YOUR PR WILL NOT BE ACCEPTED  ========== -->
-<!-- ===================================================================================================== -->
+<!-- Please read the guidelines and use the template below. Thanks. -->
 
 # ⚡ PowerGrid ⚡ Pull Request
 
-<br/><table><tr><td>❗ You <b>MUST</b> use this template to submit a Pull Request or it will NOT be accepted. ❗</td></tr></table><br/>
+Welcome and thank you for your interest in contributing to our project!
 
-Welcome and thank you for your interest in contributing to our project.
+💡 Please complete this template to submit a Pull Request, we cannot accept incomplete Pull Requests.
 
 ## Guidelines
 
