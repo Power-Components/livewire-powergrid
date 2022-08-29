@@ -2,7 +2,8 @@
 
 # ⚡ PowerGrid ⚡ Pull Request
 
-Welcome and thank you for your interest in contributing to our project!
+Welcome and thank you for your interest in contributing to our project!. You must use this template to submit a Pull Request or it will not be accepted.
+
 
 💡 Please complete this template to submit a Pull Request, we cannot accept incomplete Pull Requests.
 
