@@ -15,7 +15,7 @@ it('properly filter the produced_at field between two dates', function (string $
         ]);
 })->with('themes');
 
-it('properly filter the created_at field between two dates using collection table', function (string $component, string $theme) {
+it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
         ->set('filters', filterDateTime('created_at', ['2021-01-01 00:00:00', '2021-04-04 00:00:00']))
@@ -27,7 +27,7 @@ it('properly filter the created_at field between two dates using collection tabl
         ->assertSeeHtmlInOrder([
             'wire:model="filters.input_date_picker.created_at"',
         ]);
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filter the produced_at field between another two dates', function (string $component, object $params) {
     livewire($component)

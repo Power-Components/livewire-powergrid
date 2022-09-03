@@ -194,9 +194,16 @@ class PowerGridComponent extends Component
         /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
+        /** @phpstan-ignore-next-line */
+        if (is_array($this->datasource())) {
+            /** @phpstan-ignore-next-line */
+            $datasource = collect($this->datasource());
+        }
+
         $this->isCollection = is_a((object) $datasource, Support\Collection::class);
 
         if ($this->isCollection) {
+            cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
                 ->setSearch($this->search)

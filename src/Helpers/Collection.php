@@ -117,7 +117,7 @@ class Collection implements CollectionFilterInterface
         }
 
         foreach ($this->filters as $key => $type) {
-            foreach ($type as $field => $value) {
+            foreach ($type as $field    => $value) {
                 switch ($key) {
                     case 'date_picker':
                         $this->filterDatePicker($field, $value);

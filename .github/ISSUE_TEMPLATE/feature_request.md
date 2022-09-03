@@ -1,15 +1,15 @@
 ---
 name: Feature request
-about: Submit an idea to make an Livewire Powergrid even better
+about: Suggest an idea for this project
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-## Feature Request
+# ⚡ PowerGrid ⚡ Feature Request
 
-### Summary
+## Summary
 
 Brief description of what is at stake.
 

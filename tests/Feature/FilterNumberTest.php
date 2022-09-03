@@ -20,7 +20,7 @@ it('properly filters by "min" - using collection', function (string $component, 
         ->assertSee('Name 3')
         ->assertSee('Name 4')
         ->assertDontSee('Name 1');
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filters by "max"', function (string $component, object $params) {
     livewire($component)
@@ -32,14 +32,14 @@ it('properly filters by "max"', function (string $component, object $params) {
         ->assertDontSee('Bife à Rolê');
 })->with('themes');
 
-it('properly filters by "max" - using collection', function (string $component, string $theme) {
+it('properly filters by "max" - using collection & array table', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
         ->set('filters', filterNumber('price', null, 1.68))
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3');
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filters by "min & max"', function (string $component, object $params) {
     livewire($component)
@@ -50,7 +50,7 @@ it('properly filters by "min & max"', function (string $component, object $param
         ->assertDontSee('Carne Louca');
 })->with('themes');
 
-it('properly filters by "min & max" - using collection', function (string $component, string $theme) {
+it('properly filters by "min & max" - using collection & array', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
         ->set('filters', filterNumber('price', 1.68, 1.78))
@@ -59,7 +59,7 @@ it('properly filters by "min & max" - using collection', function (string $compo
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 4')
         ->assertDontSee('Name 5');
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filters by "min & max" currency', function (string $component, object $params) {
     livewire($component)
@@ -92,7 +92,7 @@ it('ignores null "min & max" - using collection', function (string $component, s
         ->assertSee('Name 3')
         ->assertSee('Name 4')
         ->assertSee('Name 5');
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('displays "No records found" with non-existent min', function (string $component, object $params) {
     livewire($component)
@@ -102,13 +102,13 @@ it('displays "No records found" with non-existent min', function (string $compon
         ->assertDontSee('Pastel de Nata');
 })->with('themes');
 
-it('displays "No records found" with non-existent min - using collection', function (string $component, string $theme) {
+it('displays "No records found" with non-existent min - using collection & array table', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
         ->set('filters', filterNumber('price', '1000000', null))
         ->assertSee('No records found')
         ->assertDontSee('Name 1');
-})->with('themes with collection table');
+})->with('themes with collection table', 'themes with array table');
 
 it('properly filters by "min & max" formatted', function (string $component, object $params) {
     livewire($component)
