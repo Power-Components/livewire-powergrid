@@ -15,6 +15,6 @@ class PowerGrid extends Facade
 {
     public static function getFacadeAccessor(): string
     {
-        return 'powergrid';
+        return PowerGridManager::class;
     }
 }

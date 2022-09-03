@@ -41,6 +41,6 @@ class Theme extends Facade
 {
     public static function getFacadeAccessor(): string
     {
-        return 'theme';
+        return ThemeManager::class;
     }
 }
