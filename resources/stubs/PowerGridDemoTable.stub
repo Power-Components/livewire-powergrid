@@ -142,6 +142,9 @@ final class PowerGridDemoTable extends PowerGridComponent
     | Make Datasource fields available to be used as columns.
     | You can pass a closure to transform/modify the data.
     |
+    | ❗ IMPORTANT: When using closures, you must escape any value coming from
+    |    the database using the `e()` Laravel Helper function.
+    |
     */
     public function addColumns(): PowerGridEloquent
     {
@@ -149,6 +152,11 @@ final class PowerGridDemoTable extends PowerGridComponent
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('email')
+
+            // Create a custom column with name in lower case.
+            ->addColumn('name_lower', function (User $model) {
+                return strtolower(e($model->name));
+            })
 
             // Create a custom column "laracon" based on "has_laracon_ticket" boolean field
             ->addColumn('laracon', function (User $model) {

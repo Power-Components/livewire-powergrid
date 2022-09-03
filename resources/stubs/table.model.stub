@@ -79,12 +79,16 @@ final class {{ componentName }} extends PowerGridComponent
     | Make Datasource fields available to be used as columns.
     | You can pass a closure to transform/modify the data.
     |
+    | ❗ IMPORTANT: When using closures, you must escape any value coming from
+    |    the database using the `e()` Laravel Helper function.
+    |
     */
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)));
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
