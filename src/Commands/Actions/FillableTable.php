@@ -7,16 +7,24 @@ use Illuminate\Support\Str;
 
 class FillableTable
 {
+    private static bool $hasEscapeExample = false;
+
     /**
-    * @throws \Exception
-    */
-    public static function create(string $modelName, string $modelLastName, string $template = null): string
+     * Creates PowerGrid columns based on Model's fillable property
+     *
+     * @param string $modelQualifiedName App\Models\User
+     * @param string $modelUnqualifiedName User
+     * @param string|null $stubFile
+     * @return string
+     * @throws \Exception
+     */
+    public static function create(string $modelQualifiedName, string $modelUnqualifiedName, string $stubFile = null): string
     {
         /** @var  \Illuminate\Database\Eloquent\Model $model*/
-        $model = new $modelName();
+        $model = new $modelQualifiedName();
 
-        if (!empty($template)) {
-            $stub =  File::get(base_path($template));
+        if (!empty($stubFile)) {
+            $stub =  File::get(base_path($stubFile));
         } else {
             $stub = File::get(__DIR__ . '/../../../resources/stubs/table.fillable.stub');
         }
@@ -56,13 +64,13 @@ class FillableTable
                 }
 
                 if ($column->getType()->getName() === 'datetime') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelLastName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
 
                     continue;
                 }
 
                 if ($column->getType()->getName() === 'date') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelLastName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
+                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
 
                     continue;
                 }
@@ -84,6 +92,13 @@ class FillableTable
                 if ($column->getType()->getName() === 'string') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                     $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+
+                    if (!self::$hasEscapeExample) {
+                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', function (' . $modelUnqualifiedName . ' $model) {
+                return strtolower(e($model->' . $field . '));
+            })' . "\n";
+                        self::$hasEscapeExample = true;
+                    }
 
                     continue;
                 }
