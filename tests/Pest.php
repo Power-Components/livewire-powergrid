@@ -8,6 +8,7 @@ use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\{
     Column,
     PowerGridComponent,
+    Tests\DishTableAllowedFilters,
     Tests\DishesActionRulesTable,
     Tests\DishesArrayTable,
     Tests\DishesCalculationsTable,
@@ -127,6 +128,16 @@ dataset('themes', [
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('DishTableAllowedFilters', [
+    'tailwind -> id'  => [DishTableAllowedFilters::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id' => [DishTableAllowedFilters::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+]);
+
+dataset('dishTableAllowedFilters', [
+    'tailwind -> id'  => [DishTableAllowedFilters::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id' => [DishTableAllowedFilters::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 dataset('rules', [
