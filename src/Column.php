@@ -427,10 +427,15 @@ final class Column
 
     /**
      * Add Input Text
+     *
+     * @param string $dataField
+     * @param array<mixed,mixed> $options
+     * @return Column
      */
-    public function makeInputText(string $dataField = ''): Column
+    public function makeInputText(string $dataField = '', array $options = []): Column
     {
         $this->inputs['input_text']['enabled'] = true;
+        $this->inputs['input_text']['filters'] = $options['filters'] ?? [];
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }

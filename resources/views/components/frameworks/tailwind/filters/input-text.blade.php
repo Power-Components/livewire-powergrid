@@ -8,7 +8,13 @@
 ])
 <div>
     @php
-        $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
+    $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
+
+    $AllowedFilters = data_get($inputText, 'filters') ?? [];
+
+    if (!empty($AllowedFilters)) {
+        $inputTextOptions = \Illuminate\Support\Arr::only($inputTextOptions, $AllowedFilters);
+    }
     @endphp
     @if(filled($inputText))
         <div @class([
