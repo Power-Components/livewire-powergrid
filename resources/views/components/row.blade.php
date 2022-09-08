@@ -21,6 +21,11 @@
                 @endif
             </span>
         @elseif(count($column->toggleable) > 0)
+            @php
+                $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                $toggleableRules =  collect(data_get($rules, 'showHideToggleable', []));
+                $showToggleable = ($toggleableRules->isEmpty() || $toggleableRules->last() == 'show');
+            @endphp
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
             <span class="@if($column->clickToCopy) {{ $theme->clickToCopy->spanClass }} @endif">
