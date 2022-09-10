@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support as Support;
-use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
+use PowerComponents\LivewirePowerGrid\Services\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -15,8 +15,6 @@ use Throwable;
  */
 trait Exportable
 {
-    public array $exportOptions = [];
-
     /**
      * @throws Exception
      */
@@ -59,7 +57,7 @@ trait Exportable
      */
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
     {
-        return $this->export(ExportToXLS::class, $selected);
+        return $this->export(Export::TYPE_XLS, $selected);
     }
 
     /**
@@ -67,14 +65,17 @@ trait Exportable
      */
     public function exportToCsv(bool $selected = false): BinaryFileResponse|bool
     {
-        return $this->export(ExportToCsv::class, $selected);
+        return $this->export(Export::TYPE_CSV, $selected);
     }
 
     /**
      * @throws Exception | Throwable
+     *
      */
-    private function export(string $exportableClass, bool $selected): BinaryFileResponse|bool
+    private function export(string $exportType, bool $selected): BinaryFileResponse|bool
     {
+        $exportableClass = $this->getExportableClassFromConfig($exportType);
+
         if ($this->queues > 0 && !$selected) {
             return $this->runOnQueue($exportableClass);
         }
@@ -82,11 +83,9 @@ trait Exportable
         if (count($this->checkboxValues) === 0 && $selected) {
             return false;
         }
-        /**
-         * @var ExportToCsv|ExportToCsv $exportable
-         */
-        $exportable = new $exportableClass();
 
+        /** @var Export $exportable */
+        $exportable          = new $exportableClass();
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
@@ -98,9 +97,17 @@ trait Exportable
         /** @var string $fileName */
         $fileName = data_get($this->setUp, 'exportable.fileName');
         $exportable
-            ->fileName($fileName)
+            ->fileName($fileName) /** @phpstan-ignore-next-line  */
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
+        /** @phpstan-ignore-next-line  */
         return $exportable->download($this->setUp['exportable']);
+    }
+
+    private function getExportableClassFromConfig(string $exportType): string
+    {
+        $defaultExportable      = strval(config('livewire-powergrid.exportable.default'));
+
+        return strval(data_get(config('livewire-powergrid.exportable'), $defaultExportable . '.' . $exportType));
     }
 }

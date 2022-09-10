@@ -6,7 +6,7 @@ use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
-use PowerComponents\LivewirePowerGrid\Services\Spout\{ExportToCsv, ExportToXLS};
+use PowerComponents\LivewirePowerGrid\Services\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -135,12 +135,12 @@ trait BatchableExport
         return $queues;
     }
 
-    private function resolveFileExtension(string $class): string
+    private function resolveFileExtension(string $exportType): string
     {
-        return match ($class) {
-            ExportToCsv::class => 'csv',
-            ExportToXLS::class => 'xlsx',
-            default            => '',
+        return match ($exportType) {
+            Export::TYPE_CSV => 'csv',
+            Export::TYPE_XLS => 'xlsx',
+            default          => '',
         };
     }
 

@@ -4,11 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Services;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
+use PowerComponents\LivewirePowerGrid\{Column, Exportable};
 
 class Export
 {
+    public const TYPE_CSV = 'csv';
+
+    public const TYPE_XLS = 'xls';
+
     public string $fileName;
 
     public Collection $data;

@@ -99,4 +99,24 @@ return [
 
     'check_version' => false,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Exportable class
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    'exportable' => [
+        'default'      => 'openspout_v3',
+        'openspout_v4' => [
+            'xls' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToXLS::class,
+            'csv' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToCsv::class,
+        ],
+        'openspout_v3' => [
+            'xls' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v3\ExportToXLS::class,
+            'csv' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v3\ExportToCsv::class,
+        ],
+    ],
+
 ];
