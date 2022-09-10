@@ -47,4 +47,24 @@ class RuleRows
 
         return $this;
     }
+
+    /**
+     * Show the toggleable in current row.
+     */
+    public function showToggleable(): RuleRows
+    {
+        $this->rule['showHideToggleable'] = 'show';
+
+        return $this;
+    }
+
+    /**
+     * Hide the toggleable in current row.
+     */
+    public function hideToggleable(): RuleRows
+    {
+        $this->rule['showHideToggleable'] = 'hide';
+
+        return $this;
+    }
 }
