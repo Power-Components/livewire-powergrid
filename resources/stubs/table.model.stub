@@ -88,7 +88,7 @@ final class {{ componentName }} extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name')
-            ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)));
+            ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)))
             ->addColumn('created_at')
             ->addColumn('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
