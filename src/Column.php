@@ -109,7 +109,7 @@ final class Column
     }
 
     /**
-     * Adds title
+     * Adds index ($loop->index)
      *
      */
     public function index(): Column
