@@ -68,7 +68,7 @@ class PowerGridComponent extends Component
     /**
      * @return array
      */
-    protected function getListeners(): array
+    protected function getListeners()
     {
         return [
             'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
