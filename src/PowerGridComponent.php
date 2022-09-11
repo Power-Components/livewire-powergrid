@@ -9,30 +9,21 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator, Paginator};
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
-    Checkbox,
-    Exportable,
-    Filter,
-    Listeners,
-    PersistData,
-    WithSorting
-};
+use PowerComponents\LivewirePowerGrid\Traits\{HasFilter, Listeners, PersistData, WithCheckbox, WithExport, WithSorting};
 use Throwable;
 
 class PowerGridComponent extends Component
 {
     use WithPagination;
-    use Exportable;
     use WithSorting;
-    use Checkbox;
+    use WithCheckbox;
     use HasAttributes;
-    use Filter;
-    use BatchableExport;
+    use HasFilter;
     use PersistData;
     use Listeners;
 
@@ -73,6 +64,22 @@ class PowerGridComponent extends Component
     public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
+
+    /**
+     * @return array
+     */
+    protected function getListeners(): array
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
+        ];
+    }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -137,34 +144,6 @@ class PowerGridComponent extends Component
                 $this->footerTotalColumn = true;
             }
         });
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function render(): Application|Factory|View
-    {
-        /** @var ThemeBase $themeBase */
-        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
-
-        $this->powerGridTheme = $themeBase->apply();
-
-        $this->columns = collect($this->columns)->map(function ($column) {
-            return (object) $column;
-        })->toArray();
-
-        $this->relationSearch = $this->relationSearch();
-
-        $data = $this->fillData();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-            if (method_exists($this, 'header')) {
-                $this->headers = $this->header();
-            }
-        }
-
-        return $this->renderView($data);
     }
 
     public function template(): ?string
@@ -257,6 +236,7 @@ class PowerGridComponent extends Component
         self::resolveDetailRow($results);
 
         if (method_exists($results, 'total')) {
+            /** @phpstan-ignore-next-line  */
             $this->total = $results->total();
         }
 
@@ -459,18 +439,30 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return array
+     * @throws Exception
      */
-    protected function getListeners()
+    public function render(): Application|Factory|View
     {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
-            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
-        ];
+        /** @var ThemeBase $themeBase */
+        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+
+        $this->powerGridTheme = $themeBase->apply();
+
+        $this->columns = collect($this->columns)->map(function ($column) {
+            return (object) $column;
+        })->toArray();
+
+        $this->relationSearch = $this->relationSearch();
+
+        $data = $this->fillData();
+
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
+            if (method_exists($this, 'header')) {
+                $this->headers = $this->header();
+            }
+        }
+
+        return $this->renderView($data);
     }
 }

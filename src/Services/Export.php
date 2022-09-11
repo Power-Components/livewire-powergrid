@@ -9,10 +9,6 @@ use PowerComponents\LivewirePowerGrid\{Column, Exportable};
 
 class Export
 {
-    public const TYPE_CSV = 'csv';
-
-    public const TYPE_XLS = 'xls';
-
     public string $fileName;
 
     public Collection $data;

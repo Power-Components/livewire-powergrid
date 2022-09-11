@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 final class Exportable
 {
-    public const TYPE_XLS = 'excel';
+    public const TYPE_XLS = 'xlsx';
     public const TYPE_CSV = 'csv';
 
     public string $name = 'exportable';
@@ -16,6 +16,8 @@ final class Exportable
     public array $columnWidth = [];
 
     public bool $deleteFileAfterSend = true;
+
+    public array $batchExport = [];
 
     public function __construct(public string $fileName = 'export')
     {
@@ -52,6 +54,27 @@ final class Exportable
     public function deleteFileAfterSend(bool $deleteFileAfterSend = true): self
     {
         $this->deleteFileAfterSend = $deleteFileAfterSend;
+
+        return $this;
+    }
+
+    public function queues(string $queues): self
+    {
+        data_set($this->batchExport, 'queues', $queues);
+
+        return $this;
+    }
+
+    public function onQueue(string $onQueue): self
+    {
+        data_set($this->batchExport, 'onQueue', $onQueue);
+
+        return $this;
+    }
+
+    public function onConnection(string $connection): self
+    {
+        data_set($this->batchExport, 'onConnection', $connection);
 
         return $this;
     }

@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Illuminate\Support\{Arr, Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Column;
 
-trait Filter
+trait HasFilter
 {
     public Collection $makeFilters;
 
