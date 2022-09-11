@@ -111,7 +111,7 @@
                             ])
                         @endif
 
-                        @include('livewire-powergrid::components.row')
+                        @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
 
                         <x-livewire-powergrid::actions
                             :primary-key="$primaryKey"
