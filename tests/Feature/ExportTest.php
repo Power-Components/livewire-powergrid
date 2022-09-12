@@ -28,23 +28,24 @@ it('properly does not export xls data without selected data', function () {
 });
 
 it('properly export csv data with selected data', function () {
-    livewire(ExportTable::class)
-        ->set('checkboxValues', [
-            0 => '1',
-            1 => '2',
-        ])
-        ->call('exportToCsv', true)
-        ->assertFileDownloaded('export.csv');
+    $downloadedFile =  livewire(ExportTable::class)
+         ->set('checkboxValues', [
+             0 => '1',
+             1 => '2',
+         ])
+         ->call('exportToCsv', true);
+
+    expect($downloadedFile)->toBeCsvWithContent('export.csv', 'ID,Prato1,"Pastel de Nata"2,"Peixada da chef Nábia"');
 });
 
 it('properly sets CSV separator and delimiter', function () {
-    $component = livewire(ExportTable::class, ['separator' => '|', 'delimiter' => '@'])
+    $downloadedFile = livewire(ExportTable::class, ['separator' => '|', 'delimiter' => '@'])
        ->set('checkboxValues', [
            0 => '1',
        ])
        ->call('exportToCsv', true);
 
-    expect($component)->toBeCsvWithContent('export.csv', 'ID|Prato1|@Pastel de Nata@');
+    expect($downloadedFile)->toBeCsvWithContent('export.csv', 'ID|Prato1|@Pastel de Nata@');
 });
 
 it('properly export csv - all data', function () {
@@ -81,8 +82,10 @@ expect()->extend('toBeCsvWithContent', function (string $filename, $content) {
         data_get($downloadEffect, 'name')
     );
 
+    $regex = '/[^A-Za-z0-9.!?|@,á" ]/';
+
     test()->assertEquals(
-        preg_replace('/[^A-Za-z0-9.!?|@]/', '', $content),
-        preg_replace('/[^A-Za-z0-9.!?|@]/', '', base64_decode(data_get($downloadEffect, 'content'))),
+        preg_replace($regex, '', $content),
+        preg_replace($regex, '', base64_decode(data_get($downloadEffect, 'content'))),
     );
 });
