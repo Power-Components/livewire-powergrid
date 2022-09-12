@@ -26,7 +26,7 @@ class ExportToXLS extends Export implements ExportInterface
         $columnWidth         = data_get($exportOptions, 'columnWidth', []);
         $this->columnWidth   = $columnWidth;
 
-        $this->build();
+        $this->build($exportOptions);
 
         return response()
             ->download(storage_path($this->fileName . '.xlsx'))
@@ -37,7 +37,7 @@ class ExportToXLS extends Export implements ExportInterface
      * @throws WriterNotOpenedException
      * @throws IOException
      */
-    public function build(): void
+    public function build(Exportable|array $exportOptions): void
     {
         $data = $this->prepare($this->data, $this->columns);
 
