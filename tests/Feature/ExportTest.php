@@ -12,20 +12,20 @@ it('properly export xls data with selected data', function () {
         ])
         ->call('exportToXLS', true)
         ->assertFileDownloaded('export.xlsx');
-})->skip('refactoring in progress');
+});
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
         ->call('exportToXLS', false)
         ->assertFileDownloaded('export.xlsx');
-})->skip('refactoring in progress');
+});
 
 it('properly does not export xls data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToXLS', true);
 
     expect(null)->notToBeFileDownloaded($component);
-})->skip('refactoring in progress');
+});
 
 it('properly export csv data with selected data', function () {
     livewire(ExportTable::class)
@@ -35,17 +35,17 @@ it('properly export csv data with selected data', function () {
         ])
         ->call('exportToCsv', true)
         ->assertFileDownloaded('export.csv');
-})->skip('refactoring in progress');
+});
 
 it('properly export csv - all data', function () {
     livewire(ExportTable::class)
         ->call('exportToCsv', false)
         ->assertFileDownloaded('export.csv');
-})->skip('refactoring in progress');
+});
 
 it('properly does not export csv data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToCsv', true);
 
     expect(null)->notToBeFileDownloaded($component);
-})->skip('refactoring in progress');
+});
