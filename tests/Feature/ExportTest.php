@@ -12,7 +12,7 @@ it('properly export xls data with selected data', function () {
         ])
         ->call('exportToXLS', true)
         ->assertFileDownloaded('export.xlsx');
-})->only();
+});
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
