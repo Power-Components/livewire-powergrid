@@ -285,7 +285,7 @@ class PowerGridComponent extends Component
         return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
+    protected function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
@@ -309,7 +309,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
+    protected function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new Support\Collection($this->datasource());
@@ -328,7 +328,7 @@ class PowerGridComponent extends Component
         });
     }
 
-    private function transform(Support\Collection $results): Support\Collection
+    protected function transform(Support\Collection $results): Support\Collection
     {
         if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
@@ -366,7 +366,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    private function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
+    public function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
     {
         if (blank($datasource)) {
             return $this->datasource();
