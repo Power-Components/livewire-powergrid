@@ -62,6 +62,8 @@ class TestCase extends BaseTestCase
             'database' => env('DB_DATABASE'),
             'prefix'   => '',
         ]);
+
+        $app['config']->set('livewire-powergrid.exportable.default', 'openspout_v4');
     }
 
     protected function getPackageProviders($app)
