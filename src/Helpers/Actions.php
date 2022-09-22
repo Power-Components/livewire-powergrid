@@ -11,25 +11,25 @@ class Actions
 {
     protected ComponentAttributeBag $componentBag;
 
-    public array $parameters;
+    private array $parameters;
 
     protected Helpers $helperClass;
 
-    public array $ruleRedirect = [];
+    private array $ruleRedirect = [];
 
-    public bool $ruleDisabled;
+    private bool $ruleDisabled;
 
     public bool $ruleHide;
 
-    public array $ruleAttributes;
+    private array $ruleAttributes;
 
-    public array $ruleEmit;
+    private array $ruleEmit;
 
-    public array $ruleEmitTo;
+    private array $ruleEmitTo;
 
-    public string $ruleCaption;
+    private string $ruleCaption;
 
-    public array $ruleBladeComponent;
+    private array $ruleBladeComponent;
 
     public bool $isButton = false;
 
@@ -52,31 +52,20 @@ class Actions
         $this->componentBag = new ComponentAttributeBag();
         $this->helperClass  = new Helpers();
 
-        if ($this->action->singleParam) {
-            $this->parameters = $this->helperClass->makeActionParameter($this->action->param, $this->row);
-        } else {
-            $this->parameters = $this->helperClass->makeActionParameters($this->action->param, $this->row);
-        }
+        $this->initializeParameters();
 
         $this->actionRules();
-
         $this->emit();
-
+        $this->dispatch();
         $this->emitTo();
-
         $this->openModal();
-
         $this->title();
-
         $this->bladeComponent();
-
         $this->disabled();
-
         $this->redirect();
-
         $this->toggleDetail();
-
         $this->attributes();
+        $this->route();
 
         if ($this->hasAttributesInComponentBag('wire:click')
             || $this->action->caption
@@ -90,7 +79,24 @@ class Actions
         }
     }
 
-    public function actionRules(): static
+    private function initializeParameters(): void
+    {
+        if ($this->action->singleParam) {
+            $this->parameters = $this->helperClass->makeActionParameter($this->action->param, $this->row);
+
+            return;
+        }
+
+        if (filled($this->action->browserEvent)) {
+            $this->parameters = $this->helperClass->makeActionParameters($this->action->browserEventParam, $this->row);
+
+            return;
+        }
+
+        $this->parameters = $this->helperClass->makeActionParameters($this->action->param, $this->row);
+    }
+
+    private function actionRules(): void
     {
         $rules = resolve(ActionRules::class)->recoverFromButton($this->action, $this->row);
 
@@ -102,11 +108,9 @@ class Actions
         $this->ruleEmit              = (array) data_get($rules, 'emit', []);
         $this->ruleEmitTo            = (array) data_get($rules, 'emitTo', []);
         $this->ruleCaption           = strval(data_get($rules, 'caption'));
-
-        return $this;
     }
 
-    public function attributes(): void
+    private function attributes(): void
     {
         $class = filled($this->action->class) ? $this->action->class : $this->theme->actions->headerBtnClass;
 
@@ -150,7 +154,7 @@ class Actions
         return count($ruleExist) > 0 || $this->componentBag->has($attribute);
     }
 
-    public function redirect(): void
+    private function redirect(): void
     {
         if (blank($this->ruleRedirect)) {
             return;
@@ -162,7 +166,7 @@ class Actions
         ]);
     }
 
-    public function emit(): void
+    private function emit(): void
     {
         if ((
             $this->hasAttributesInComponentBag('wire:click')
@@ -185,7 +189,7 @@ class Actions
         ]);
     }
 
-    public function emitTo(): void
+    private function emitTo(): void
     {
         if (($this->hasAttributesInComponentBag('wire:click')
             || blank($this->action->to)) && blank($this->ruleEmitTo)) {
@@ -207,7 +211,7 @@ class Actions
         ]);
     }
 
-    public function openModal(): void
+    private function openModal(): void
     {
         if ($this->hasAttributesInComponentBag('wire:click')
            || blank($this->action->view)
@@ -220,7 +224,29 @@ class Actions
         ]);
     }
 
-    public function toggleDetail(): void
+    private function dispatch(): void
+    {
+        if ((
+            $this->hasAttributesInComponentBag('wire:click')
+            || blank($this->action->browserEvent)
+        ) && blank($this->ruleEmit)) {
+            return;
+        }
+
+        $event = $this->ruleEmit['event'] ?? $this->action->browserEvent;
+
+        $parameters = $this->parameters;
+
+        if (isset($this->ruleEmit['params'])) {
+            $parameters = $this->helperClass->makeActionParameters($this->ruleEmit['params'], $this->row);
+        }
+
+        $this->componentBag = $this->componentBag->merge([
+            'x-on:click' => '$dispatch("' . $event . '", ' . json_encode($parameters) . ')',
+        ]);
+    }
+
+    private function toggleDetail(): void
     {
         if (!$this->action->toggleDetail) {
             return;
@@ -231,7 +257,7 @@ class Actions
         ]);
     }
 
-    public function disabled(): void
+    private function disabled(): void
     {
         if ($this->hasAttributesInComponentBag('disabled')) {
             return;
@@ -246,7 +272,7 @@ class Actions
         ]);
     }
 
-    public function title(): void
+    private function title(): void
     {
         if ($this->hasAttributesInComponentBag('title')) {
             return;
@@ -262,7 +288,7 @@ class Actions
         return $this->ruleCaption ?: $this->action->caption;
     }
 
-    public function bladeComponent(): void
+    private function bladeComponent(): void
     {
         $component = $this->action->bladeComponent;
 
@@ -276,7 +302,7 @@ class Actions
         $this->bladeComponent = $component;
     }
 
-    public function route(): void
+    private function route(): void
     {
         if (!$this->action->route) {
             return;

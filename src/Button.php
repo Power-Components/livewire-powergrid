@@ -30,11 +30,15 @@ final class Button
 
     public string $bladeComponent = '';
 
+    public string $browserEvent = '';
+
     /**
      *
      * @var array<int|string, string> $param
      */
     public array $param = [];
+
+    public array $browserEventParam = [];
 
     /**
      * Button constructor.
@@ -181,9 +185,7 @@ final class Button
     }
 
     /**
-     * tooltip
-     * @param string $tooltip
-     * @return $this
+     * Add tooltip
      */
     public function tooltip(string $tooltip): Button
     {
@@ -193,8 +195,7 @@ final class Button
     }
 
     /**
-     * tooltip
-     * @return $this
+     * Add toggleDetail
      */
     public function toggleDetail(): Button
     {
@@ -203,10 +204,25 @@ final class Button
         return $this;
     }
 
+    /**
+     * add Blade Component
+     */
     public function bladeComponent(string $component, array $params): Button
     {
         $this->bladeComponent = $component;
         $this->param          = $params;
+
+        return $this;
+    }
+
+    /**
+     * Dispatch Browser Events
+     */
+    public function dispatch(string $event, array $param): Button
+    {
+        $this->browserEvent         = $event;
+        $this->browserEventParam    = $param;
+        $this->route                = '';
 
         return $this;
     }
