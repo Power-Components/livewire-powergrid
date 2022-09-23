@@ -86,6 +86,8 @@ final class PowerGridDemoTable extends PowerGridComponent
     */
     public function setUp(): array
     {
+        $this->tableName = 'powergrid_demo_table';
+
         $this->showCheckBox();
 
         return [
