@@ -16,6 +16,18 @@ it('properly displays "openModal" on edit button', function (string $component, 
         ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":1})');
 })->with('action')->group('action');
 
+it('properly displays "$dispatch" on edit button', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
+        ->set('setUp.footer.perPage', 6)
+        ->assertSee('$dispatch("browserEvent", {"dishId":1})')
+        ->assertSee('$dispatch("browserEvent", {"dishId":2})')
+        ->assertDontSee('$dispatch("browserEvent", {"dishId":7})')
+        ->call('setPage', 2)
+        ->assertDontSee('$dispatch("browserEvent", {"dishId":6})')
+        ->assertDontSee('$dispatch("browserEvent", {"dishId":1})');
+})->with('action')->group('action');
+
 it('properly displays "deletedEvent" on delete button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)

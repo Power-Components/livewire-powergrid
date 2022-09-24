@@ -51,6 +51,11 @@ class DishesActionTable extends DishTableBase
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
 
+            Button::add('dispatch')
+                ->caption(__('Dispatch'))
+                ->class('text-center')
+                ->dispatch('browserEvent', ['dishId' => 'id']),
+
             Button::add('bladeComponent')
             ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => 'id']),
         ];
