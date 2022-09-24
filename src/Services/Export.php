@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Services;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
+use PowerComponents\LivewirePowerGrid\Helpers\ActionRules;
 
 class Export
 {
