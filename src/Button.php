@@ -32,13 +32,7 @@ final class Button
 
     public string $browserEvent = '';
 
-    /**
-     *
-     * @var array<int|string, string> $param
-     */
-    public array $param = [];
-
-    public array $browserEventParam = [];
+    public array $params = [];
 
     /**
      * Button constructor.
@@ -75,10 +69,10 @@ final class Button
     /**
      * Route string
      */
-    public function route(string $route, array $param, bool $singleParam = false): Button
+    public function route(string $route, array $params, bool $singleParam = false): Button
     {
         $this->route       = $route;
-        $this->param       = $param;
+        $this->params      = $params;
         $this->singleParam = $singleParam;
 
         return $this;
@@ -96,7 +90,6 @@ final class Button
 
     /**
      * Method for button
-     * @return $this
      */
     public function method(string $method): Button
     {
@@ -106,16 +99,13 @@ final class Button
     }
 
     /**
-     * openModal
-     * @param string $component modal component
-     * @param array<int, string> $param modal parameters
-     * @param boolean $singleParam parameter is single parameter
-     * @return $this
+     * openModal using wire-elements
+     * @see https://github.com/wire-elements/modal
      */
-    public function openModal(string $component, array $param, bool $singleParam = false): Button
+    public function openModal(string $component, array $params, bool $singleParam = false): Button
     {
         $this->view        = $component;
-        $this->param       = $param;
+        $this->params      = $params;
         $this->singleParam = $singleParam;
         $this->method      = 'get';
         $this->route       = '';
@@ -125,16 +115,12 @@ final class Button
     }
 
     /**
-     * emit
-     * @param string $event event name
-     * @param array<int, string> $param parameters
-     * @param boolean $singleParam parameter is single parameter
-     * @return $this
+     * Livewire emit
      */
-    public function emit(string $event, array $param, bool $singleParam = false): Button
+    public function emit(string $event, array $params, bool $singleParam = false): Button
     {
         $this->event       = $event;
-        $this->param       = $param;
+        $this->params      = $params;
         $this->singleParam = $singleParam;
         $this->route       = '';
 
@@ -142,18 +128,14 @@ final class Button
     }
 
     /**
-     * emitTo
-     * @param string $to component
-     * @param string $event event name
-     * @param array<int, string> $param parameters
-     * @param boolean $singleParam parameter is single parameter
-     * @return $this
+     * Add Livewire emitTo
+     *
      */
     public function emitTo(string $to, string $event, array $param, bool $singleParam = false): Button
     {
         $this->to          = $to;
         $this->event       = $event;
-        $this->param       = $param;
+        $this->params      = $param;
         $this->singleParam = $singleParam;
         $this->route       = '';
 
@@ -161,9 +143,8 @@ final class Button
     }
 
     /**
-     * can
-     * @param bool $can can
-     * @return $this
+     * Can
+     *
      */
     public function can(bool $can = true): Button
     {
@@ -174,8 +155,7 @@ final class Button
 
     /**
      * target _blank, _self, _top, _parent, null
-     * @param string $target
-     * @return $this
+     *
      */
     public function target(string $target): Button
     {
@@ -195,7 +175,7 @@ final class Button
     }
 
     /**
-     * Add toggleDetail
+     * toggleDetail
      */
     public function toggleDetail(): Button
     {
@@ -205,24 +185,24 @@ final class Button
     }
 
     /**
-     * add Blade Component
+     * Add Blade Component
      */
     public function bladeComponent(string $component, array $params): Button
     {
-        $this->bladeComponent = $component;
-        $this->param          = $params;
+        $this->bladeComponent  = $component;
+        $this->params          = $params;
 
         return $this;
     }
 
     /**
-     * Dispatch Browser Events
+     * Alpine Dispatch Browser Events
      */
-    public function dispatch(string $event, array $param): Button
+    public function dispatch(string $event, array $params): Button
     {
-        $this->browserEvent         = $event;
-        $this->browserEventParam    = $param;
-        $this->route                = '';
+        $this->browserEvent  = $event;
+        $this->params        = $params;
+        $this->route         = '';
 
         return $this;
     }

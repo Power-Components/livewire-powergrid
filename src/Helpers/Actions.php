@@ -82,18 +82,12 @@ class Actions
     private function initializeParameters(): void
     {
         if ($this->action->singleParam) {
-            $this->parameters = $this->helperClass->makeActionParameter($this->action->param, $this->row);
+            $this->parameters = $this->helperClass->makeActionParameter($this->action->params, $this->row);
 
             return;
         }
 
-        if (filled($this->action->browserEvent)) {
-            $this->parameters = $this->helperClass->makeActionParameters($this->action->browserEventParam, $this->row);
-
-            return;
-        }
-
-        $this->parameters = $this->helperClass->makeActionParameters($this->action->param, $this->row);
+        $this->parameters = $this->helperClass->makeActionParameters($this->action->params, $this->row);
     }
 
     private function actionRules(): void
