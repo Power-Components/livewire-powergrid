@@ -11,25 +11,25 @@ class Actions
 {
     protected ComponentAttributeBag $componentBag;
 
-    private array $parameters;
+    public array $parameters;
 
     protected Helpers $helperClass;
 
-    private array $ruleRedirect = [];
+    public array $ruleRedirect = [];
 
-    private bool $ruleDisabled;
+    public bool $ruleDisabled;
 
     public bool $ruleHide;
 
-    private array $ruleAttributes;
+    public array $ruleAttributes;
 
-    private array $ruleEmit;
+    public array $ruleEmit;
 
-    private array $ruleEmitTo;
+    public array $ruleEmitTo;
 
-    private string $ruleCaption;
+    public string $ruleCaption;
 
-    private array $ruleBladeComponent;
+    public array $ruleBladeComponent;
 
     public bool $isButton = false;
 
