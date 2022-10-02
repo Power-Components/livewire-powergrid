@@ -15,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
+    SearchBox,
     Table,
     Toggleable};
 
@@ -50,6 +51,8 @@ abstract class AbstractTheme
     public Footer $footer;
 
     public Cols $cols;
+
+    public SearchBox $searchBox;
 
     public function table(): Table
     {
@@ -124,5 +127,10 @@ abstract class AbstractTheme
     public function filterInputText(): FilterInputText
     {
         return Theme::filterInputText();
+    }
+
+    public function searchBox(): SearchBox
+    {
+        return Theme::searchBox();
     }
 }
