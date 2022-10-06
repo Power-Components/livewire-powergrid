@@ -13,6 +13,7 @@
             x-on:keydown.enter="save()"
             :class="{'cursor-pointer': !editable}"
             class="{{ $theme->editable->inputClass }}"
+            style="width: 100%"
             x-ref="editable"
             x-text="content"
             :value="$root.firstElementChild.innerText">
