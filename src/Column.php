@@ -383,12 +383,12 @@ final class Column
      * Adds Edit on click to a column
      *
      */
-    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOutSide = false): Column
+    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
     {
         $this->editable = [
-            'hasPermission'      => $hasPermission,
-            'fallback'           => $fallback,
-            'saveOnMouseOutSide' => $saveOnMouseOutSide,
+            'hasPermission'  => $hasPermission,
+            'fallback'       => $fallback,
+            'saveOnMouseOut' => $saveOnMouseOut,
         ];
 
         if (filled($dataField)) {
