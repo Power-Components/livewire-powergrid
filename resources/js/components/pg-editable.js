@@ -15,16 +15,18 @@ export default (params) => ({
         this.$watch('editable', (value) => {
             if(value) {
                 this.oldContent = this.content;
-                this.$nextTick(() => setTimeout(this.$refs.editable.focus(), 200))
+                this.$nextTick(() => setTimeout(this.$refs.editable.focus(), 50))
             }
         })
     },
     save() {
-        this.$wire.emit('pg:editable-' + this.tableName, {
-            id: this.id,
-            value: this.$el.value,
-            field: this.dataField
-        })
+        setTimeout(() => {
+            this.$wire.emit('pg:editable-' + this.tableName, {
+                id: this.id,
+                value: this.$el.value,
+                field: this.dataField
+            })
+        }, 200)
 
         this.editable = false;
         this.content  = this.htmlSpecialChars(this.$el.value)
