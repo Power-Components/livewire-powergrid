@@ -486,7 +486,7 @@ final class Column
         string $component = '',
         array $attributes = [],
     ): Column {
-        $this->editable                           = false;
+        $this->editable                           = [];
         $this->inputs['dynamic']['filterType']    = $filter;
         $this->inputs['dynamic']['dataField']     = $dataField;
         $this->inputs['dynamic']['component']     = $component;
