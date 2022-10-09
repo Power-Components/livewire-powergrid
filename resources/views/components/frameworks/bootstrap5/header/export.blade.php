@@ -13,10 +13,10 @@
                     </span>
     </button>
     <ul class="dropdown-menu">
-        @if(in_array('excel', data_get($setUp, 'exportable.type')))
+        @if(in_array('xlsx', data_get($setUp, 'exportable.type')))
             <li class="d-flex">
                 <div class="dropdown-item">
-                    @lang('Excel')
+                    @lang('XLSX')
                     <a class="text-black-50" wire:click="exportToXLS()" href="#">
                         @lang('livewire-powergrid::datatable.labels.all')
                     </a>
