@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
@@ -21,6 +20,10 @@ class ExportTable extends PowerGridComponent
     use ActionButton;
     use WithExport;
 
+    public string $separator = ',';
+
+    public string $delimiter = '"';
+
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -28,6 +31,8 @@ class ExportTable extends PowerGridComponent
         return [
             Exportable::make('export')
                 ->striped()
+                ->csvSeparator($this->separator)
+                ->csvDelimiter($this->delimiter)
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
             Header::make()
@@ -57,41 +62,7 @@ class ExportTable extends PowerGridComponent
 
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('storage_room')
-            ->addColumn('chef_name')
-            ->addColumn('serving_at')
-            ->addColumn('calories')
-            ->addColumn('calories', function (Dish $dish) {
-                return $dish->calories . ' kcal';
-            })
-            ->addColumn('category_id', function (Dish $dish) {
-                return $dish->category_id;
-            })
-            ->addColumn('category_name', function (Dish $dish) {
-                return $dish->category->name;
-            })
-            ->addColumn('price')
-            ->addColumn('price_EUR', function (Dish $dish) use ($fmt) {
-                return $fmt->formatCurrency($dish->price, 'EUR');
-            })
-            ->addColumn('price_BRL', function (Dish $dish) {
-                return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
-            })
-            ->addColumn('sales_price')
-            ->addColumn('sales_price_BRL', function (Dish $dish) {
-                $sales_price = $dish->price + ($dish->price * 0.15);
-
-                return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
-            })
-            ->addColumn('in_stock')
-            ->addColumn('in_stock_label', function (Dish $dish) {
-                return ($dish->in_stock ? 'sim' : 'não');
-            })
-            ->addColumn('produced_at')
-            ->addColumn('produced_at_formatted', function (Dish $dish) {
-                return Carbon::parse($dish->produced_at)->format('d/m/Y');
-            });
+            ->addColumn('name');
     }
 
     public function columns(): array
@@ -106,11 +77,6 @@ class ExportTable extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Stored at'))
-                ->field('storage_room')
-                ->sortable(),
-
-            Column::add()
                 ->title(__('Prato'))
                 ->field('name')
                 ->searchable()
@@ -118,61 +84,6 @@ class ExportTable extends PowerGridComponent
                 ->clickToCopy(true)
                 ->makeInputText('name')
                 ->placeholder('Prato placeholder')
-                ->sortable(),
-
-            Column::add()
-                ->title('Serving at')
-                ->field('serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
-
-            Column::add()
-                ->title(__('Chef'))
-                ->field('chef_name')
-                ->searchable()
-                ->editOnClick($canEdit)
-                ->clickToCopy(true)
-                ->makeInputText('chef_name')
-                ->placeholder('Chef placeholder')
-                ->sortable(),
-
-            Column::add()
-                ->title(__('Categoria'))
-                ->field('category_name')
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
-
-            Column::add()
-                ->title(__('Preço'))
-                ->field('price_BRL')
-                ->editOnClick($canEdit, 'price')
-                ->makeInputRange('price'),
-
-            Column::add()
-                ->title(__('Preço de Venda'))
-                ->field('sales_price_BRL'),
-
-            Column::add()
-                ->title(__('Calorias'))
-                ->field('calories')
-                ->makeInputRange('calories')
-                ->sortable(),
-
-            Column::add()
-                ->title(__('Em Estoque'))
-                ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
-                ->field('in_stock'),
-
-            Column::add()
-                ->title(__('Data de produção'))
-                ->field('produced_at_formatted')
-                ->makeInputDatePicker('produced_at'),
-
-            Column::add()
-                ->title(__('Data'))
-                ->field('produced_at')
-                ->makeInputDatePicker('produced_at')
                 ->sortable(),
         ];
     }

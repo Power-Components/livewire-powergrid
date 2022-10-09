@@ -20,7 +20,7 @@ class ExportToCsv extends Export implements ExportInterface
     public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
-        $this->build();
+        $this->build($exportOptions);
 
         return response()
             ->download(storage_path($this->fileName . '.csv'))
@@ -30,11 +30,18 @@ class ExportToCsv extends Export implements ExportInterface
     /**
      * @throws WriterNotOpenedException|IOException
      */
-    public function build(): void
+    public function build(Exportable|array $exportOptions): void
     {
         $data = $this->prepare($this->data, $this->columns);
 
-        $writer = new Writer();
+        $csvSeparator     = strval(data_get($exportOptions, 'csvSeparator', ','));
+        $csvDelimiter     = strval(data_get($exportOptions, 'csvDelimiter', '"'));
+
+        $csvOptions                   = new \OpenSpout\Writer\CSV\Options();
+        $csvOptions->FIELD_DELIMITER  = $csvSeparator;
+        $csvOptions->FIELD_ENCLOSURE  = $csvDelimiter;
+
+        $writer = new Writer($csvOptions);
         $writer->openToFile(storage_path($this->fileName . '.csv'));
 
         $row = Row::fromValues($data['headers']);

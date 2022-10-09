@@ -9,6 +9,10 @@ final class Exportable
 
     public string $name = 'exportable';
 
+    public string $csvSeparator = ',';
+
+    public string $csvDelimiter = '"';
+
     public array $type = [];
 
     public string $striped = '';
@@ -33,6 +37,20 @@ final class Exportable
         foreach ($types as $type) {
             $this->type[] = $type;
         }
+
+        return $this;
+    }
+
+    public function csvSeparator(string $separator): self
+    {
+        $this->csvSeparator = $separator;
+
+        return $this;
+    }
+
+    public function csvDelimiter(string $delimiter): self
+    {
+        $this->csvDelimiter = $delimiter;
 
         return $this;
     }
