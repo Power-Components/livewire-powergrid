@@ -75,6 +75,8 @@ final class Column
      */
     public array $clickToCopy = [];
 
+    public bool $index = false;
+
     /**
      * Adds a new Column
      *
@@ -102,6 +104,17 @@ final class Column
     public function title(string $title): Column
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Adds index ($loop->index)
+     *
+     */
+    public function index(): Column
+    {
+        $this->index = true;
 
         return $this;
     }

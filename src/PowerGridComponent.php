@@ -71,6 +71,8 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
+    public bool $rowIndex = true;
+
     /**
      * @return array
      */

@@ -5,8 +5,7 @@ use Illuminate\Support\Str;
 use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     PowerGridComponent,
     Tests\DishesActionRulesTable,
     Tests\DishesArrayTable,
@@ -14,11 +13,11 @@ use PowerComponents\LivewirePowerGrid\{
     Tests\DishesCollectionTable,
     Tests\DishesEnumTable,
     Tests\DishesMakeTable,
+    Tests\DishesRowIndex,
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
     Tests\DishesTable,
-    Tests\DishesTableWithJoin
-};
+    Tests\DishesTableWithJoin};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -170,6 +169,11 @@ dataset('searchable-raw', [
 dataset('themes with softDeletes', [
     [DishesSoftDeletesTable::class, 'tailwind'],
     [DishesSoftDeletesTable::class, 'bootstrap'],
+]);
+
+dataset('row index', [
+    'tailwind'  => [DishesRowIndex::class, 'tailwind'],
+    'bootstrap' => [DishesRowIndex::class, 'bootstrap'],
 ]);
 
 /**
