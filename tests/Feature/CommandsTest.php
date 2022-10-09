@@ -20,7 +20,8 @@ it('creates a PowerGrid Model Table', function () {
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
+        ->assertSuccessful();
 
     $this->assertFileExists($this->tableModelFilePath);
 
@@ -34,7 +35,8 @@ it('creates a PowerGrid Collection Table', function () {
         ->expectsQuestion($this->model_name_question, 'CollectionTable')
         ->expectsQuestion($this->datasource_question, 'C')
         ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>")
+        ->assertSuccessful();
 
     $this->assertFileExists($this->tableCollectionFilePath);
 
@@ -58,7 +60,8 @@ it('notifies about tailwind forms', function () {
         ->expectsQuestion($this->use_fillable_question, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
-        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>");
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
+        ->assertSuccessful();
 
     File::delete($this->tableModelFilePath);
     File::delete($tailwindConfigFile);
@@ -77,7 +80,8 @@ it('publishes the Demo Table', function () {
         ->expectsOutput("\n1. You must include Route::view('/powergrid', 'powergrid-demo'); in your routes/web.php file.")
         ->expectsOutput("\n2. Serve your project. For example, run php artisan serve.")
         ->expectsOutput("\n3. Visit http://localhost/powergrid to view the Demo Table.")
-        ->expectsOutput("\n\n⭐ Thanks! Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n");
+        ->expectsOutput("\n\n⭐ Thanks! Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n")
+        ->assertSuccessful();
 
     $this->assertFileExists($tableFile);
     $this->assertFileExists($viewsFile);
@@ -92,7 +96,7 @@ it('does not accept an empty table name', function () {
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->model_name_question, '')
         ->expectsOutput('You must provide a name for your ⚡ PowerGrid Table!')
-        ->assertExitCode(1);
+        ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
@@ -104,7 +108,7 @@ it('accepts only [M]odel or [C]ollection', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'Z')
         ->expectsOutput('Invalid option. Please enter [M] for model or [C] for Collection.')
-        ->assertExitCode(1);
+        ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 });
@@ -117,7 +121,7 @@ it('does not create a table with empty model', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '')
         ->expectsOutput('Error: You must inform the Model name or file path.')
-        ->assertExitCode(1);
+        ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 
@@ -132,7 +136,7 @@ it('does not create a table with invalid model path', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, 'xyz-model')
         ->expectsOutput('Error: Could not find "xyz-model" class.')
-        ->assertExitCode(1);
+        ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
 
@@ -146,7 +150,8 @@ it('does overwrite the existing table file w/ YES', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes');
+        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->assertSuccessful();
 
     $this->assertFileExists($this->tableModelFilePath);
 
@@ -159,7 +164,8 @@ it('does overwrite the existing table file w/ YES', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
-        ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes');
+        ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes')
+        ->assertSuccessful();
 
     expect(file_get_contents($this->tableModelFilePath))->not->toContain('x0007');
 
@@ -173,7 +179,8 @@ it('does NOT overwride the existing table file', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes');
+        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->assertSuccessful();
 
     $this->assertFileExists($this->tableModelFilePath);
 
@@ -186,7 +193,8 @@ it('does NOT overwride the existing table file', function () {
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
-        ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', '');
+        ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', '')
+        ->assertSuccessful();
 
     expect(file_get_contents($this->tableModelFilePath))->toContain('x0007');
 
@@ -199,7 +207,7 @@ it('publishes config file', function () {
     File::delete($configFilePath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-config')
-        ->assertExitCode(0);
+        ->assertSuccessful();
 
     $this->assertFileExists($configFilePath);
 
@@ -212,7 +220,7 @@ it('publishes views file', function () {
     File::delete($dirPath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-views')
-        ->assertExitCode(0);
+        ->assertSuccessful();
 
     $this->assertDirectoryExists($dirPath);
 
@@ -225,7 +233,7 @@ it('publishes the language file in the lang path', function () {
     File::delete($dirPath);
 
     $this->artisan('vendor:publish --tag=livewire-powergrid-lang')
-        ->assertExitCode(0);
+        ->assertSuccessful();
 
     $this->assertDirectoryExists($dirPath);
 

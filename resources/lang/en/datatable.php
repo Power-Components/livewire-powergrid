@@ -48,7 +48,6 @@ return [
         'is_not_null'  => 'Is not null',
         'is_blank'     => 'Is blank',
         'is_not_blank' => 'Is not blank',
-
     ],
     'export' => [
         'exporting' => 'Please wait!',
@@ -60,5 +59,8 @@ return [
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
+    ],
+    'multi_sort' => [
+        'message' => 'Multiple sort is active',
     ],
 ];

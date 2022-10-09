@@ -11,3 +11,6 @@ parameters:
     level: max
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+
+    excludePaths:
+        - './src/Services/OpenSpout/'

@@ -19,9 +19,9 @@
          x-transition:leave-end="opacity-0 scale-90"
          class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-slate-600">
 
-        @if(in_array('excel', data_get($setUp, 'exportable.type')))
+        @if(in_array('xlsx', data_get($setUp, 'exportable.type')))
             <div class="flex px-4 py-2 text-slate-400 dark:text-slate-300">
-                <span class="w-12">@lang('Excel')</span>
+                <span class="w-12">@lang('XLSX')</span>
                 <a x-on:click="$wire.call('exportToXLS'); open = false"
                    href="#"
                    class="px-2 block text-slate-800 hover:bg-slate-50 hover:text-black-300 dark:text-slate-200 dark:hover:bg-slate-700 rounded">
