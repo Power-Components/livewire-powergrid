@@ -62,6 +62,15 @@ class TestCase extends BaseTestCase
             'database' => env('DB_DATABASE'),
             'prefix'   => '',
         ]);
+
+        $app['config']->set('livewire-powergrid.exportable.default', 'openspout_v4');
+        $app['config']->set(
+            'livewire-powergrid.exportable.openspout_v4',
+            [
+                'xlsx' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToXLS::class,
+                'csv'  => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToCsv::class,
+            ]
+        );
     }
 
     protected function getPackageProviders($app)

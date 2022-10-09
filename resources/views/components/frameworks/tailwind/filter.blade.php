@@ -10,8 +10,9 @@
 ])
 <div class="w-full my-3 dark:bg-slate-800">
     <div x-data={show:true} class="rounded-full">
-        <div class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-600"
-             @click="show=!show">
+        <div
+            class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-600"
+            @click="show=!show">
             <button
                 class="appearance-none text-left text-base font-medium text-slate-500 focus:outline-none dark:text-slate-300"
                 type="button">
@@ -81,7 +82,14 @@
                                 'inline'         => false,
                                 'multiSelect'    => $multiSelect,
                                 'tableName'      => $tableName,
-                                'theme'          => $theme->filterBoolean,
+                                'theme'          => $theme->filterMultiSelect,
+                            ])
+                        </div>
+                    @endforeach
+                    @foreach(data_get($makeFilters, 'dynamic', []) as $field => $input)
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                            @include(powerGridThemeRoot().'.filters.dynamic', [
+                                'input' => $input,
                             ])
                         </div>
                     @endforeach
