@@ -217,9 +217,3 @@ function requiresPostgreSQL()
 
     return test();
 }
-
-expect()->extend('notToBeFileDownloaded', function ($component) {
-    $downloadEffect = data_get($component->lastResponse, 'original.effects.download');
-
-    expect($downloadEffect)->toBeNull();
-});

@@ -248,8 +248,12 @@ class Collection implements CollectionFilterInterface
         }
     }
 
-    public function filterBoolean(string $field, string $value): void
+    public function filterBoolean(string $field, ?string $value): void
     {
+        if (is_null($value)) {
+            $value = 'all';
+        }
+
         if ($value != 'all') {
             $value = ($value == 'true');
 

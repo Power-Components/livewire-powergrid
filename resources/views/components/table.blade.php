@@ -20,6 +20,8 @@
                 <x-livewire-powergrid::cols
                     :column="$column"
                     :theme="$theme"
+                    :multiSort="$multiSort"
+                    :sortArray="$sortArray"
                     :sortField="$sortField"
                     :sortDirection="$sortDirection"
                     :enabledFilters="$enabledFilters"/>

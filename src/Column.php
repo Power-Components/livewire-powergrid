@@ -28,7 +28,7 @@ final class Column
 
     public ?bool $visibleInExport = null;
 
-    public bool $editable = false;
+    public array $editable = [];
 
     public bool $searchable = false;
 
@@ -321,7 +321,7 @@ final class Column
         string $dataField = null,
         array $settings = []
     ): Column {
-        $this->editable                         = false;
+        $this->editable                         = [];
         $this->inputs['select']['data_source']  = $datasource;
         $this->inputs['select']['displayField'] = $displayField;
         $this->inputs['select']['dataField']    = $dataField         ?? $displayField;
@@ -340,7 +340,7 @@ final class Column
         string $dataField = null,
         string $optionValue = 'id'
     ): Column {
-        $this->editable                              = false;
+        $this->editable                              = [];
         $this->inputs['multi_select']['data_source'] = $datasource;
         $this->inputs['multi_select']['text']        = $optionText ?: $optionValue;
         $this->inputs['multi_select']['value']       = $optionValue;
@@ -396,9 +396,14 @@ final class Column
      * Adds Edit on click to a column
      *
      */
-    public function editOnClick(bool $hasPermission = true, string $dataField = ''): Column
+    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
     {
-        $this->editable = $hasPermission;
+        $this->editable = [
+            'hasPermission'  => $hasPermission,
+            'fallback'       => $fallback,
+            'saveOnMouseOut' => $saveOnMouseOut,
+        ];
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -415,7 +420,7 @@ final class Column
         string $trueLabel = 'Yes',
         string $falseLabel = 'No'
     ): Column {
-        $this->editable   = false;
+        $this->editable   = [];
         $this->toggleable = [
             'enabled' => $hasPermission,
             'default' => [$trueLabel,  $falseLabel],
@@ -480,6 +485,25 @@ final class Column
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
+
+        return $this;
+    }
+
+    /**
+     * Add Dynamic Input Component
+     *
+     */
+    public function makeDynamicInput(
+        string $filter = '',
+        string $dataField = '',
+        string $component = '',
+        array $attributes = [],
+    ): Column {
+        $this->editable                           = [];
+        $this->inputs['dynamic']['filterType']    = $filter;
+        $this->inputs['dynamic']['dataField']     = $dataField;
+        $this->inputs['dynamic']['component']     = $component;
+        $this->inputs['dynamic']['attributes']    = $attributes;
 
         return $this;
     }

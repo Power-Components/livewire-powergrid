@@ -60,4 +60,7 @@ return [
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
+    'multi_sort' => [
+        'message' => 'Multiple sort is active',
+    ],
 ];

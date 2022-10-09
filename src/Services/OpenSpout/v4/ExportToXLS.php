@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Services\Spout;
+namespace PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4;
 
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Entity\Style\{Color, Style};
@@ -12,6 +12,7 @@ use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\{Export};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
+/** @codeCoverageIgnore */
 class ExportToXLS extends Export implements ExportInterface
 {
     /**
@@ -26,7 +27,7 @@ class ExportToXLS extends Export implements ExportInterface
         $columnWidth         = data_get($exportOptions, 'columnWidth', []);
         $this->columnWidth   = $columnWidth;
 
-        $this->build();
+        $this->build($exportOptions);
 
         return response()
             ->download(storage_path($this->fileName . '.xlsx'))
@@ -34,10 +35,9 @@ class ExportToXLS extends Export implements ExportInterface
     }
 
     /**
-     * @throws WriterNotOpenedException
-     * @throws IOException
+     * @throws WriterNotOpenedException|IOException
      */
-    public function build(): void
+    public function build(Exportable|array $exportOptions): void
     {
         $data = $this->prepare($this->data, $this->columns);
 

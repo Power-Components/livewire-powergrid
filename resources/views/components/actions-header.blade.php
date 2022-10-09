@@ -1,9 +1,9 @@
 @inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
 @php
     if($action->singleParam) {
-        $parameters = $helperClass->makeActionParameter($action->param);
+        $parameters = $helperClass->makeActionParameter($action->params);
     } else {
-        $parameters = $helperClass->makeActionParameters($action->param);
+        $parameters = $helperClass->makeActionParameters($action->params);
     }
 @endphp
 @if($action->event !== '' && $action->to === '')
