@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{
+    Actions,
     Checkbox,
     ClickToCopy,
     Cols,
@@ -14,7 +15,9 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Footer,
-    Table};
+    SearchBox,
+    Table,
+};
 
 class Tailwind extends ThemeBase
 {
@@ -122,5 +125,13 @@ class Tailwind extends ThemeBase
             ->base('min-w-[9.5rem]')
             ->select('appearance-none block bg-white border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500 w-full active dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
             ->input('w-full block bg-white text-slate-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500');
+    }
+
+    public function searchBox(): SearchBox
+    {
+        return Theme::searchBox()
+            ->input('placeholder-slate-400 pl-[36px] block w-full float-right bg-white text-slate-700 border border-slate-300 rounded-full py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 pl-10 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500')
+            ->iconClose('text-slate-300 dark:text-slate-200')
+            ->iconSearch('text-slate-300 mr-2 w-5 h-5 dark:text-slate-200');
     }
 }

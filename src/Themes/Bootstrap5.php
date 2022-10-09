@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{
+    Actions,
     Checkbox,
     ClickToCopy,
     Cols,
@@ -14,8 +15,10 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterNumber,
     FilterSelect,
     Footer,
+    SearchBox,
     Table,
-    Toggleable};
+    Toggleable,
+};
 
 class Bootstrap5 extends ThemeBase
 {
@@ -127,5 +130,13 @@ class Bootstrap5 extends ThemeBase
             ->view($this->root() . '.filters.input-text')
             ->select('form-control mb-1 shadow-none form-select')
             ->input('form-control shadow-none');
+    }
+
+    public function searchBox(): SearchBox
+    {
+        return Theme::searchBox()
+            ->input('col-12 col-sm-8 form-control')
+            ->iconSearch('bi bi-search')
+            ->iconClose('');
     }
 }

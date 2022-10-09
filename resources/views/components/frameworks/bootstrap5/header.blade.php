@@ -15,7 +15,7 @@
                 @include(powerGridThemeRoot().'.header.loading')
             </div>
             <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
-                @include(powerGridThemeRoot().'.header.filter')
+                @include(powerGridThemeRoot().'.header.search')
             </div>
         </div>
     </div>
