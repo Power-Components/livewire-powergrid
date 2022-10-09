@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use Illuminate\Support\{Carbon, Collection};
+use Illuminate\Support\{Carbon};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
@@ -11,10 +11,9 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-    Rules\Rule};
+    PowerGridEloquent};
 
-class DishesCollectionTable extends PowerGridComponent
+class DishesArrayTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -35,9 +34,9 @@ class DishesCollectionTable extends PowerGridComponent
         $this->eventId = $params;
     }
 
-    public function datasource(): Collection
+    public function datasource(): array
     {
-        return collect([
+        return [
             [
                 'id'         => 1,
                 'name'       => 'Name 1',
@@ -78,7 +77,7 @@ class DishesCollectionTable extends PowerGridComponent
                 'created_at' => '2021-05-05 00:00:00',
                 'chef_name'  => 'Luan',
             ],
-        ]);
+        ];
     }
 
     public function setUp(): array
@@ -172,51 +171,6 @@ class DishesCollectionTable extends PowerGridComponent
                 ->caption('<div id="edit">Edit</div>')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
-
-            Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
-        ];
-    }
-
-    public function actionRules(): array
-    {
-        return [
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 2)
-                ->hide(),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)
-                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
-
-            // Set a row red background for when dish is out of stock
-            Rule::rows()
-                ->when(fn ($dish) => (bool) $dish->in_stock === false)
-                ->setAttribute('class', 'bg-red-100 text-red-800'),
-
-            Rule::rows()
-                ->when(fn ($dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-blue-100'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 5)
-                ->emit('toggleEvent', ['dishId' => 'id']),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => $dish->id == 9)
-                ->disable(),
         ];
     }
 

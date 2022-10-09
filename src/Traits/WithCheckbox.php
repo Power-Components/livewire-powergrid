@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Pagination\AbstractPaginator;
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
 
-trait Checkbox
+trait WithCheckbox
 {
     public bool $checkbox = false;
 

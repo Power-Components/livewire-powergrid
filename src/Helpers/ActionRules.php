@@ -19,6 +19,7 @@ class ActionRules
         'pg:column',
         'detailView',
         'bladeComponent',
+        'showHideToggleable',
     ];
 
     public function resolveRules(array $rules, object|array $row): Collection

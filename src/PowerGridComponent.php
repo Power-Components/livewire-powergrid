@@ -9,30 +9,21 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator, Paginator};
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
-    Checkbox,
-    Exportable,
-    Filter,
-    Listeners,
-    PersistData,
-    WithSorting
-};
+use PowerComponents\LivewirePowerGrid\Traits\{HasFilter, Listeners, PersistData, WithCheckbox, WithExport, WithSorting};
 use Throwable;
 
 class PowerGridComponent extends Component
 {
     use WithPagination;
-    use Exportable;
     use WithSorting;
-    use Checkbox;
+    use WithCheckbox;
     use HasAttributes;
-    use Filter;
-    use BatchableExport;
+    use HasFilter;
     use PersistData;
     use Listeners;
 
@@ -73,6 +64,22 @@ class PowerGridComponent extends Component
     public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
+
+    /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
+        ];
+    }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -139,34 +146,6 @@ class PowerGridComponent extends Component
         });
     }
 
-    /**
-     * @throws Exception
-     */
-    public function render(): Application|Factory|View
-    {
-        /** @var ThemeBase $themeBase */
-        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
-
-        $this->powerGridTheme = $themeBase->apply();
-
-        $this->columns = collect($this->columns)->map(function ($column) {
-            return (object) $column;
-        })->toArray();
-
-        $this->relationSearch = $this->relationSearch();
-
-        $data = $this->fillData();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-            if (method_exists($this, 'header')) {
-                $this->headers = $this->header();
-            }
-        }
-
-        return $this->renderView($data);
-    }
-
     public function template(): ?string
     {
         return null;
@@ -191,9 +170,16 @@ class PowerGridComponent extends Component
         /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
+        /** @phpstan-ignore-next-line */
+        if (is_array($this->datasource())) {
+            /** @phpstan-ignore-next-line */
+            $datasource = collect($this->datasource());
+        }
+
         $this->isCollection = is_a((object) $datasource, Support\Collection::class);
 
         if ($this->isCollection) {
+            cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
                 ->setSearch($this->search)
@@ -259,6 +245,7 @@ class PowerGridComponent extends Component
         self::resolveDetailRow($results);
 
         if (method_exists($results, 'total')) {
+            /** @phpstan-ignore-next-line  */
             $this->total = $results->total();
         }
 
@@ -313,7 +300,7 @@ class PowerGridComponent extends Component
         return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
+    protected function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
@@ -337,7 +324,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
+    protected function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new Support\Collection($this->datasource());
@@ -356,7 +343,7 @@ class PowerGridComponent extends Component
         });
     }
 
-    private function transform(Support\Collection $results): Support\Collection
+    protected function transform(Support\Collection $results): Support\Collection
     {
         if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
@@ -394,7 +381,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    private function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
+    public function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
     {
         if (blank($datasource)) {
             return $this->datasource();
@@ -467,18 +454,30 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return array
+     * @throws Exception
      */
-    protected function getListeners()
+    public function render(): Application|Factory|View
     {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
-            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
-        ];
+        /** @var ThemeBase $themeBase */
+        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+
+        $this->powerGridTheme = $themeBase->apply();
+
+        $this->columns = collect($this->columns)->map(function ($column) {
+            return (object) $column;
+        })->toArray();
+
+        $this->relationSearch = $this->relationSearch();
+
+        $data = $this->fillData();
+
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
+            if (method_exists($this, 'header')) {
+                $this->headers = $this->header();
+            }
+        }
+
+        return $this->renderView($data);
     }
 }

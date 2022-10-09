@@ -9,8 +9,8 @@ it('searches data using whereRaw on sqlite', function (string $component, object
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
         ->assertDontSee('No records found')
-        # 09/09/2022
-        ->set('search', '09/09/2022')
+        # 09/09/2046
+        ->set('search', '09/09/2046') //No dishes in this date
         ->assertSee('No records found')
         # 06/2026
         ->set('search', '06/2026')
@@ -26,8 +26,8 @@ it('searches data using whereRaw on mysql', function (string $component, object 
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
         ->assertDontSee('No records found')
-        # 09/09/2022
-        ->set('search', '09/09/2022')
+        # 09/09/2046
+        ->set('search', '09/09/2046') //No dishes in this date
         ->assertSee('No records found')
         # 06/2026
         ->set('search', '06/2026')
@@ -42,8 +42,8 @@ it('searches data using whereRaw on pgsql', function (string $component, object 
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
         ->assertDontSee('No records found')
-        # 09/09/2022
-        ->set('search', '09/09/2022')
+        # 09/09/2046
+        ->set('search', '09/09/2046') //No dishes in this date
         ->assertSee('No records found')
         # 06/2026
         ->set('search', '06/2026')

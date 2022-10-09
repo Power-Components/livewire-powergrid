@@ -1,12 +1,13 @@
 <div x-data="pgToggleable({
             id: '{{ $row->{$primaryKey} }}',
+            isHidden: {{ !$showToggleable ? 'true' : 'false' }},
             tableName: '{{ $tableName }}',
             field: '{{ $column->field }}',
             toggle: {{ (int) $row->{$column->field} }},
             trueValue: '{{ $column->toggleable['default'][0] }}',
             falseValue:  '{{ $column->toggleable['default'][1] }}'
          })">
-    @if($column->toggleable['enabled'])
+    @if($column->toggleable['enabled'] && $showToggleable === true)
         <div class="form-check form-switch">
             <label>
                 <input x-on:click="save()"

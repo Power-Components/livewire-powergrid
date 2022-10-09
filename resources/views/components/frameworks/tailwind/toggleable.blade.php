@@ -6,13 +6,14 @@
 @endphp
 <div x-data="pgToggleable({
             id: '{{ $row->{$primaryKey} }}',
+            isHidden: {{ !$showToggleable ? 'true' : 'false' }},
             tableName: '{{ $tableName }}',
             field: '{{ $column->field }}',
             toggle: {{ (int)$row->{$column->field} }},
             trueValue: '{{ $column->toggleable['default'][0] }}',
             falseValue:  '{{ $column->toggleable['default'][1] }}',
          })">
-    @if($column->toggleable['enabled'] && !$showDefaultToggle)
+    @if($column->toggleable['enabled'] && !$showDefaultToggle && $showToggleable === true)
         <div class="flex justify-center">
             <div class="relative rounded-full w-12 h-6 transition duration-200 ease-linear"
                  :class="[toggle === 1 ? 'bg-blue-400 dark:bg-blue-500' : 'bg-slate-400']">

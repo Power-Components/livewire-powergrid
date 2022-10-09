@@ -9,9 +9,9 @@
     <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
     >
-        @if($column->editable === true && !str_contains($field, '.'))
+        @if(data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
             <span class="{{ $theme->clickToCopy->spanClass }}">
-                @include($theme->editable->view)
+                @include($theme->editable->view, ['editable' => $column->editable])
                 @if($column->clickToCopy)
                     <x-livewire-powergrid::click-to-copy
                         :row="$row"
@@ -21,6 +21,11 @@
                 @endif
             </span>
         @elseif(count($column->toggleable) > 0)
+            @php
+                $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                $toggleableRules =  collect(data_get($rules, 'showHideToggleable', []));
+                $showToggleable = ($toggleableRules->isEmpty() || $toggleableRules->last() == 'show');
+            @endphp
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
             <span class="@if($column->clickToCopy) {{ $theme->clickToCopy->spanClass }} @endif">

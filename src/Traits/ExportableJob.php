@@ -14,7 +14,7 @@ trait ExportableJob
 
     private array $columns;
 
-    private string $type;
+    private string $exportableClass;
 
     private int $offset;
 
