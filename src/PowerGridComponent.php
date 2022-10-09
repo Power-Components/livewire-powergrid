@@ -225,9 +225,18 @@ class PowerGridComponent extends Component
 
         $results = self::applySoftDeletes($results);
 
-        $results = self::applyWithSortStringNumber($results, $sortField);
-
-        $results = $results->orderBy($sortField, $this->sortDirection);
+        if ($this->multiSort) {
+            foreach ($this->sortArray as $sortField => $direction) {
+                $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
+                if ($this->withSortStringNumber) {
+                    $results = self::applyWithSortStringNumber($results, $sortField, $direction);
+                }
+                $results = $results->orderBy($sortField, $direction);
+            }
+        } else {
+            $results   = self::applyWithSortStringNumber($results, $sortField);
+            $results   = $results->orderBy($sortField, $this->sortDirection);
+        }
 
         self::applyTotalColumn($results);
 
@@ -253,16 +262,22 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField, string $multiSortDirection = null): Eloquent\Builder
     {
         if (!$this->withSortStringNumber) {
             return $results;
         }
 
+        $direction = $this->sortDirection;
+
+        if ($multiSortDirection) {
+            $direction = $multiSortDirection;
+        }
+
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $direction);
         }
 
         return $results;
