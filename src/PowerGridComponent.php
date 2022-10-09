@@ -14,7 +14,12 @@ use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{HasFilter, Listeners, PersistData, WithCheckbox, WithExport, WithSorting};
+use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
+    Listeners,
+    PersistData,
+    WithCheckbox,
+    WithDynamicFilters,
+    WithSorting};
 use Throwable;
 
 class PowerGridComponent extends Component
@@ -26,6 +31,7 @@ class PowerGridComponent extends Component
     use HasFilter;
     use PersistData;
     use Listeners;
+    use WithDynamicFilters;
 
     public array $headers = [];
 
@@ -104,6 +110,8 @@ class PowerGridComponent extends Component
         }
 
         $this->columns = $this->columns();
+
+        $this->initializePropertiesFromDynamicFilters();
 
         $this->resolveTotalRow();
 
