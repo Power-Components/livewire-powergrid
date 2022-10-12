@@ -22,18 +22,19 @@
        content: '{{ $content }}',
        fallback: '{{ data_get($editable, 'fallback') }}'
      })">
-    <div x-html="content"
-         style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
+    <span style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
          x-bind:class="{
             'p-3' : content == '' && theme == 'tailwind',
             'p-4' : content == '' && theme == 'bootstrap5',
          }"
          x-show="!editable"
          x-on:click="editable = true; $refs.editable.focus()"
-    ></div>
-    <div x-show="editable">
+    >
+        {{ stripcslashes($content) }}
+    </span>
+    <span x-show="editable">
         {{ $input }}
-    </div>
+    </span>
     @if($showErrorBag)
         @error($field.".".$row->{$primaryKey})
         <div class="text-sm text-red-800 p-1 transition transition-all duration-200">

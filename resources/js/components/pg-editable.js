@@ -9,7 +9,7 @@ export default (params) => ({
     fallback: params.fallback,
     init() {
         if(this.content.length === 0 && this.fallback) {
-            this.content = this.fallback
+            this.content = this.fallback;
         }
 
         this.$watch('editable', (value) => {
@@ -20,6 +20,12 @@ export default (params) => ({
         })
     },
     save() {
+        if(this.$el.value == this.oldContent) {
+            this.editable = false;
+
+            return;
+        }
+
         setTimeout(() => {
             this.$wire.emit('pg:editable-' + this.tableName, {
                 id: this.id,

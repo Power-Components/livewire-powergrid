@@ -16,10 +16,9 @@
             @if(data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             :class="{'cursor-pointer': !editable}"
             class="{{ $theme->editable->inputClass }}"
-            style="width: 100%"
+            style="width: auto"
             x-ref="editable"
-            :id="`editable_`+id"
             x-text="content"
-            :value="$root.firstElementChild.innerText">
+            value="{{ $row->{$field} }}">
     </x-slot>
 </x-livewire-powergrid::editable>
