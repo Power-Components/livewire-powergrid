@@ -15,7 +15,15 @@ export default (params) => ({
         this.$watch('editable', (value) => {
             if(value) {
                 this.oldContent = this.content;
-                this.$nextTick(() => setTimeout(this.$refs.editable.focus(), 50))
+                this.$nextTick(() => setTimeout(() => {
+                    const selection = window.getSelection();
+                    const range = document.createRange();
+                    selection.removeAllRanges();
+                    range.selectNodeContents(this.$refs.editable);
+                    range.collapse(false);
+                    selection.addRange(range);
+                    this.$refs.editable.focus();
+                }, 50))
             }
         })
     },

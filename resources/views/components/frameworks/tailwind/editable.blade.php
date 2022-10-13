@@ -17,6 +17,7 @@
             class="{{ $theme->editable->inputClass }}"
             @if(data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             x-on:keydown.enter="save()"
+            :id="`editable-`+dataField+`-`+id"
             x-on:keydown.esc="cancel">
         </div>
     </x-slot>
