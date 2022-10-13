@@ -22,7 +22,7 @@
        content: '{{ $content }}',
        fallback: '{{ data_get($editable, 'fallback') }}'
      })">
-    <span style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
+    <div style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
          x-bind:class="{
             'p-3' : content == '' && theme == 'tailwind',
             'p-4' : content == '' && theme == 'bootstrap5',
@@ -31,7 +31,7 @@
          x-on:click="editable = true; $refs.editable.focus()"
     >
         {{ stripcslashes($content) }}
-    </span>
+    </div>
     <span x-show="editable">
         {{ $input }}
     </span>
