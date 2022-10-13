@@ -60,7 +60,7 @@ class Tailwind extends ThemeBase
         return Theme::editable()
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
-            ->input('dark:bg-slate-700 bg-slate-50 text-black-700 border border-slate-400 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-500 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500 p-2');
+            ->input('dark:bg-slate-700 bg-slate-50 text-black-700 border border-slate-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-slate-200 dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-300 shadow-md');
     }
 
     public function clickToCopy(): ClickToCopy

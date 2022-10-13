@@ -20,7 +20,7 @@ export default (params) => ({
         })
     },
     save() {
-        if(this.$el.value == this.oldContent) {
+        if(this.$el.textContent == this.oldContent) {
             this.editable = false;
 
             return;
@@ -29,17 +29,17 @@ export default (params) => ({
         setTimeout(() => {
             this.$wire.emit('pg:editable-' + this.tableName, {
                 id: this.id,
-                value: this.$el.value,
+                value: this.$el.textContent,
                 field: this.dataField
             })
         }, 200)
 
         this.editable = false;
-        this.content  = this.htmlSpecialChars(this.$el.value)
+        this.content  = this.htmlSpecialChars(this.$el.textContent)
     },
     cancel()
     {
-        this.$refs.editable.value = this.oldContent;
+        this.$refs.editable.textContent = this.oldContent;
         this.content = this.oldContent;
         this.editable = false;
     },
