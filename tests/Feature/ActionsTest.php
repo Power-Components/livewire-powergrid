@@ -81,6 +81,17 @@ it('properly displays "bladeComponent" on bladeComponent button', function (stri
         ->assertDontSeeHtml('<svg dish-id="1"');
 })->with('action')->group('action');
 
+it('properly displays "id" on button', function (string $component, object $params) {
+    livewire($component, ['join' => $params->join])
+        ->call($params->theme)
+        ->set('search', 'Pastel de Nata')
+        ->assertSeeHtml('id="open-modal-1"')
+        ->assertDontSeeHtml('id="open-modal-2"')
+        ->set('search', 'Peixada da chef Nábia')
+        ->assertSeeHtml('id="open-modal-2"')
+        ->assertDontSeeHtml('id="open-modal-1"');
+})->with('action')->group('action');
+
 dataset('action', [
     'tailwind'       => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
