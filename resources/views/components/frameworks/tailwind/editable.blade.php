@@ -11,7 +11,7 @@
     <x-slot name="input">
         <div
             x-ref="editable"
-            x-text="content"
+            x-text="'{{ $row->{$field} }}'"
             value="{{ $row->{$field} }}"
             contenteditable
             class="{{ $theme->editable->inputClass }}"

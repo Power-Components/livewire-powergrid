@@ -10,7 +10,8 @@
     'editable' => null,
 ])
 @php
-    $content =  $helperClass->resolveContent($currentTable, $field, $row);
+    $default = data_get($editable, 'fallback');
+    $content = $helperClass->resolveContent($currentTable, $field, $row) ?: $default;
 @endphp
 <div x-cloak
      style="width: 100% !important; height: 100% !important;"
