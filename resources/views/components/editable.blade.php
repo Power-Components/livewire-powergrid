@@ -25,13 +25,13 @@
      })">
     <div style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
          x-bind:class="{
-            'p-3' : content == '' && theme == 'tailwind',
-            'p-4' : content == '' && theme == 'bootstrap5',
+            'py-2 px-3' : theme == 'tailwind',
+            'p-1' : theme == 'bootstrap5',
          }"
          x-show="!editable"
          x-on:click="editable = true; $refs.editable.focus()"
     >
-        {{ stripcslashes($content) }}
+        {{ $content }}
     </div>
     <div x-show="editable" style="margin-bottom: 4px">
         {{ $input }}

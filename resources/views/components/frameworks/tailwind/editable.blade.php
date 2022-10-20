@@ -14,7 +14,7 @@
             x-text="'{{ $row->{$field} }}'"
             value="{{ $row->{$field} }}"
             contenteditable
-            class="{{ $theme->editable->inputClass }}"
+            class="pg-single-line {{ $theme->editable->inputClass }}"
             @if(data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             x-on:keydown.enter="save()"
             :id="`editable-`+dataField+`-`+id"
