@@ -66,6 +66,7 @@ class Actions
         $this->toggleDetail();
         $this->attributes();
         $this->route();
+        $this->id();
 
         if ($this->hasAttributesInComponentBag('wire:click')
             || $this->action->caption
@@ -308,5 +309,14 @@ class Actions
     public function getAttributes(): ComponentAttributeBag
     {
         return $this->componentBag;
+    }
+
+    private function id(): void
+    {
+        if (filled($this->action->id)) {
+            $this->componentBag = $this->componentBag->merge([
+                'id' => $this->action->id . '-' . $this->row->{$this->primaryKey},
+            ]);
+        }
     }
 }

@@ -34,6 +34,8 @@ final class Button
 
     public array $params = [];
 
+    public ?string $id = null;
+
     /**
      * Button constructor.
      * @param string $action
@@ -203,6 +205,16 @@ final class Button
         $this->browserEvent  = $event;
         $this->params        = $params;
         $this->route         = '';
+
+        return $this;
+    }
+
+    /**
+     * Add custom id
+     */
+    public function id(string $value = null): Button
+    {
+        $this->id     = $value;
 
         return $this;
     }
