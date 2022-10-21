@@ -12,6 +12,7 @@
 @php
     $default = data_get($editable, 'fallback');
     $content = $helperClass->resolveContent($currentTable, $field, $row) ?: $default;
+    $content = html_entity_decode($content, ENT_QUOTES, 'utf-8');
 @endphp
 <div x-cloak
      style="width: 100% !important; height: 100% !important;"
@@ -20,7 +21,7 @@
        tableName: '{{ $tableName }}',
        id: '{{ $row->{$primaryKey} }}',
        dataField: '{{ $field }}',
-       content: '{{ $content }}',
+       content: '{{ addslashes($content) }}',
        fallback: '{{ data_get($editable, 'fallback') }}'
      })">
     <div style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
