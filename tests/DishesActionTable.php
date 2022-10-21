@@ -37,21 +37,25 @@ class DishesActionTable extends DishTableBase
     {
         return [
             Button::add('openModal')
+                ->id('open-modal')
                 ->caption('openModal')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
 
             Button::add('emit')
+                ->id('emit')
                 ->caption(__('delete'))
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id']),
 
             Button::add('emitTo')
+                ->id('emit-to')
                 ->caption(__('EmitTo'))
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
 
             Button::add('dispatch')
+                ->id('dispatch')
                 ->caption(__('Dispatch'))
                 ->class('text-center')
                 ->dispatch('browserEvent', ['dishId' => 'id']),
