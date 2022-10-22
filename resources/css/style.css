@@ -149,3 +149,16 @@ select, .power_grid {
     flex: 1 1 auto;
     border-color: #ced4da !important;
 }
+
+[x-ref="editable"].pg-single-line {
+    white-space: nowrap;
+    overflow: hidden;
+}
+[x-ref="editable"].pg-single-line br {
+    display:none;
+
+}
+[x-ref="editable"].pg-single-line * {
+    display:inline;
+    white-space:nowrap;
+}

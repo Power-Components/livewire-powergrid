@@ -27,7 +27,7 @@
         "pestphp/pest-plugin-faker": "^1.0",
         "pestphp/pest-plugin-livewire": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "nunomaduro/larastan": "^1.0 | ^2.1",
+        "nunomaduro/larastan": "^1.0 | 2.1.12",
         "laradumps/laradumps": "^1.1"
     },
     "autoload": {
