@@ -7,7 +7,6 @@ export default (params) => ({
     content: params.content,
     oldContent: null,
     fallback: params.fallback,
-    errorBag: params.errorBag,
     init() {
         if (this.content.length === 0 && this.fallback) {
             this.content = this.htmlSpecialChars(this.fallback);
@@ -15,7 +14,7 @@ export default (params) => ({
 
         this.$watch('editable', (value) => {
             if (value) {
-                this.oldContent = this.content;
+                this.oldContent = this.$refs.editable.textContent;
                 this.$nextTick(() => setTimeout(() => this.focus(), 50))
             }
         })
@@ -23,12 +22,11 @@ export default (params) => ({
         this.content = this.htmlSpecialChars(this.fallback);
     },
     save() {
-        if (this.$el.textContent === this.oldContent.toString()) {
+        if(this.$el.textContent == this.oldContent) {
             this.editable = false;
 
             return;
         }
-
         setTimeout(() => {
             this.$wire.emit('pg:editable-' + this.tableName, {
                 id: this.id,
