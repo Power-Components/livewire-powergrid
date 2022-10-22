@@ -1,4 +1,14 @@
 @inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
+@props([
+    'primaryKey' => null,
+    'row' => null,
+    'field' => null,
+    'theme' => null,
+    'currentTable' => null,
+    'tableName' => null,
+    'showErrorBag' => null,
+    'editable' => null,
+])
 
 @php
     $fallback = html_entity_decode(data_get($editable, 'fallback'), ENT_QUOTES, 'utf-8');
