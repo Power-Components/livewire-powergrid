@@ -10,21 +10,21 @@
     <button wire:click='$emit("{{ $action->event }}", @json($parameters))'
        title="{{ $action->tooltip }}"
        id="{{ $action->id }}"
-       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+       class="power-grid-button {{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
     </button>
 @elseif($action->event !== '' && $action->to !== '')
     <button wire:click='$emitTo("{{ $action->to }}", "{{ $action->event }}", @json($parameters))'
        title="{{ $action->tooltip }}"
        id="{{ $action->id }}"
-       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+       class="power-grid-button {{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
     </button>
 @elseif($action->view !== '')
     <button wire:click='$emit("openModal", "{{$action->view}}", @json($parameters))'
        title="{{ $action->tooltip }}"
        id="{{ $action->id }}"
-       class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+       class="power-grid-button {{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
         {!! $action->caption !!}
     </button>
 @else
@@ -37,7 +37,7 @@
             <button type="submit"
                     id="{{ $action->id }}"
                     title="{{ $action->tooltip }}"
-                    class="{{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+                    class="power-grid-button {{ filled( $action->class) ? $action->class : $theme->actions->headerBtnClass }}">
                 {!! $action->caption ?? '' !!}
             </button>
         </form>
@@ -47,7 +47,7 @@
            id="{{ $action->id }}"
            title="{{ $action->tooltip }}"
            target="{{ $action->target }}"
-           class="{{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
+           class="power-grid-button {{ filled($action->class) ? $action->class : $theme->actions->headerBtnClass }}">
             {!! $action->caption !!}
         </a>
         @endif
