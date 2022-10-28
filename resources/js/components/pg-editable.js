@@ -17,14 +17,14 @@ export default (params) => ({
 
         this.$watch('editable', (value) => {
             if (value) {
-                const editablePending = window.editablePending.notContains(this.dataField+'-'+this.id)
+                const editablePending = window.editablePending.notContains(this.hash)
 
                 if(editablePending) {
                     const hashError = window.editablePending.pending[0]
                     document.getElementById('clickable-' + hashError).click()
                 }
 
-                if(window.editablePending.notContains(this.dataField+'-'+this.id)) {
+                if(window.editablePending.notContains(this.hash)) {
                     this.editable = false
                 }
 
