@@ -20,7 +20,7 @@
         'id' => $row->{$primaryKey},
         'dataField' => $field,
         'content' => addslashes($content),
-        'fallback' => $fallback,
+        'fallback' => $fallback
     ];
 @endphp
 <div x-cloak
@@ -33,6 +33,7 @@
          }"
          x-show="!editable"
          x-on:click="editable = true;"
+         :id="`clickable-`+dataField+'-'+id"
     >
         {{ $content }}
     </div>

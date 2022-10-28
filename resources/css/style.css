@@ -162,3 +162,7 @@ select, .power_grid {
     display:inline;
     white-space:nowrap;
 }
+
+.power-grid-button {
+    width: 100%;
+}
