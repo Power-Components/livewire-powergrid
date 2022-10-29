@@ -35,10 +35,11 @@ export default (params) => ({
             }
         })
 
-        this.content = this.htmlSpecialChars(this.fallback);
+        this.content = this.htmlSpecialChars(this.content);
     },
     save() {
         if(this.$el.textContent == this.oldContent) {
+            window.editablePending.clear()
             this.editable = false;
 
             return;

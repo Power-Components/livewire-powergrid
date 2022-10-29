@@ -38,12 +38,12 @@ class Helpers
             $field = $data->get(1);
 
             if ($table === $currentTable) {
-                return $replace(addslashes($row->{$field}));
+                return $replace($row->{$field});
             }
 
-            return $replace(addslashes($row->{$table}->{$field}));
+            return $replace($row->{$table}->{$field});
         }
 
-        return $replace(addslashes($row->{$field}));
+        return $replace($row->{$field});
     }
 }
