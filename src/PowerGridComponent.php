@@ -222,6 +222,8 @@ class PowerGridComponent extends Component
                 $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
             }
 
+            self::resolveDetailRow($results);
+
             return $results;
         }
 
