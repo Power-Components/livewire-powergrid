@@ -39,7 +39,6 @@ export default (params) => ({
     },
     save() {
         if(this.$el.textContent == this.oldContent) {
-            window.editablePending.clear()
             this.editable = false;
 
             return;
