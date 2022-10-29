@@ -7,7 +7,7 @@
             </div>
             <div class="flex flex-row justify-center items-center text-sm">
                 @if(data_get($setUp, 'exportable'))
-                    <div class="mr-2 mt-2 sm:mt-0">
+                    <div class="mr-2 mt-2 sm:mt-0" id="pg-header-export">
                         @include(powerGridThemeRoot().'.header.export')
                     </div>
                 @endif
