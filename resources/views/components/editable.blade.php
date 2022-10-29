@@ -37,7 +37,7 @@
     >
         {{ $content }}
     </div>
-    <div x-show="editable" style="margin-bottom: 4px">
+    <div x-show="editable && !hashError" style="margin-bottom: 4px">
         {{ $input }}
     </div>
     @if($showErrorBag)

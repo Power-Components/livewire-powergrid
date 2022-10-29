@@ -8,6 +8,7 @@ export default (params) => ({
     oldContent: null,
     fallback: params.fallback,
     hash: null,
+    hashError: true,
     init() {
         this.hash = this.dataField + '-' + this.id
 
@@ -19,9 +20,10 @@ export default (params) => ({
             if (value) {
                 const editablePending = window.editablePending.notContains(this.hash)
 
+                this.hashError = editablePending
                 if(editablePending) {
-                    const hashError = window.editablePending.pending[0]
-                    document.getElementById('clickable-' + hashError).click()
+                    const pendingHash = window.editablePending.pending[0]
+                    document.getElementById('clickable-' + pendingHash).click()
                 }
 
                 if(window.editablePending.notContains(this.hash)) {
