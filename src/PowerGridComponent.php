@@ -307,17 +307,23 @@ class PowerGridComponent extends Component
         return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator $results): void
+    private function resolveDetailRow(Paginator|LengthAwarePaginator|Support\Collection $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
         }
 
-        collect($results->items())
-            ->each(function ($model) {
-                $state = data_get($this->setUp, 'detail.state.' . $model->id, false);
-                data_set($this->setUp, 'detail.state.' . $model->id, $state);
-            });
+        $collection = $results;
+
+        if (!$results instanceof Support\Collection) {
+            $collection = collect($results->items());
+        }
+
+        $collection->each(function ($model) {
+            $id    = intval($model->{$this->primaryKey});
+            $state = data_get($this->setUp, 'detail.state.' . $id, false);
+            data_set($this->setUp, 'detail.state.' . $id, $state);
+        });
     }
 
     /**
