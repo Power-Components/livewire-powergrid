@@ -12,6 +12,7 @@
             x-ref="editable"
             x-text="'{{ addslashes(html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8')) }}'"
             value="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
+            placeholder="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
             contenteditable
             class="pg-single-line {{ $theme->editable->inputClass }}"
             @if(data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif

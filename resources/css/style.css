@@ -163,6 +163,13 @@ select, .power_grid {
     white-space:nowrap;
 }
 
+[x-ref="editable"][placeholder]:empty:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+}
+
 .power-grid-button {
     width: 100%;
 }

@@ -1,2 +1,2 @@
+import './stores'
 import './components'
-
