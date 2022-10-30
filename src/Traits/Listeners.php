@@ -20,6 +20,8 @@ trait Listeners
         $this->{$field}[$id] = $data['value'];
 
         $this->onUpdatedEditable($id, $field, $data['value']);
+
+        $this->dispatchBrowserEvent('pg:editable-close-' . $id);
     }
 
     /**

@@ -31,7 +31,7 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws WriterNotOpenedException|IOException
      */
-    public function build(): void
+    public function build(Exportable|array $exportOptions): void
     {
         $data = $this->prepare($this->data, $this->columns);
 

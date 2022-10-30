@@ -13,4 +13,4 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
 
     excludePaths:
-        - './src/Services/OpenSpout/'
+        - './src/Services/OpenSpout/*'
