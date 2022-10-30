@@ -1,18 +1,10 @@
 <?php
 
+use OpenSpout\Reader\XLSX\Reader;
+
 use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\ExportTable;
-
-it('properly export xls data with selected data', function () {
-    livewire(ExportTable::class)
-        ->set('checkboxValues', [
-            0 => '1',
-            1 => '2',
-        ])
-        ->call('exportToXLS', true)
-        ->assertFileDownloaded('export.xlsx');
-});
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
@@ -35,7 +27,34 @@ it('properly export csv data with selected data', function () {
          ])
          ->call('exportToCsv', true);
 
-    expect($downloadedFile)->toBeCsvWithContent('export.csv', 'ID,Prato1,"Pastel de Nata"2,"Peixada da chef Nábia"');
+    $headings = ['ID', 'Prato'];
+
+    $rows = [
+        ['1', 'Pastel de Nata'],
+        ['2', 'Peixada da chef Nábia'],
+    ];
+
+    expect($downloadedFile)->toBeCsvDownload($headings, $rows);
+});
+
+it('properly export xls data with selected data', function () {
+    $downloadedFile =  livewire(ExportTable::class)
+        ->set('checkboxValues', [
+            0 => '1',
+            1 => '2',
+            2 => '5',
+        ])
+        ->call('exportToXLS', true);
+
+    $headings = ['ID', 'Prato'];
+
+    $rows = [
+        ['1', 'Pastel de Nata'],
+        ['2', 'Peixada da chef Nábia'],
+        ['5', 'Francesinha vegana'],
+    ];
+
+    expect($downloadedFile)->toBeXLSDownload($headings, $rows);
 });
 
 it('properly sets CSV separator and delimiter', function () {
@@ -45,7 +64,13 @@ it('properly sets CSV separator and delimiter', function () {
        ])
        ->call('exportToCsv', true);
 
-    expect($downloadedFile)->toBeCsvWithContent('export.csv', 'ID|Prato1|@Pastel de Nata@');
+    $headings = ['ID', 'Prato'];
+
+    $rows = [
+        ['1', 'Pastel de Nata'],
+    ];
+
+    expect($downloadedFile)->toBeCsvDownload($headings, $rows);
 });
 
 it('properly export csv - all data', function () {
@@ -74,18 +99,99 @@ expect()->extend('notToBeFileDownloaded', function ($component) {
     expect($downloadEffect)->toBeNull();
 });
 
-expect()->extend('toBeCsvWithContent', function (string $filename, $content) {
+expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
     $downloadEffect = data_get($this->value->lastResponse, 'original.effects.download');
+
+    $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.csv';
+    $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
+    $delimiter = data_get($this->value->setUp, 'exportable.csvDelimiter', '"');
 
     test()->assertEquals(
         $filename,
         data_get($downloadEffect, 'name')
     );
 
-    $regex = '/[^A-Za-z0-9.!?|@,á" ]/';
+    $content = str_replace(PHP_EOL, '<csv-divider>', base64_decode(data_get($downloadEffect, 'content')));
+
+    $expected = collect(array_merge([$headings], $rows))
+        ->transform(function ($heading) use ($delimiter, $separator) {
+            $heading = collect($heading)->transform(fn ($heading) => trim($heading, $delimiter))->toArray();
+
+            return implode($separator, $heading);
+        });
+
+    $actual = collect(explode('<csv-divider>', $content))
+        ->filter(fn ($heading) => strlen($heading) > 0)
+        ->transform(function ($line) use ($delimiter, $separator) {
+            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line));
+
+            $rows = collect($arrayLine)
+                ->transform(fn ($row) => trim($row, $delimiter))
+                ->toArray();
+
+            return implode($separator, $rows);
+        });
 
     test()->assertEquals(
-        preg_replace($regex, '', $content),
-        preg_replace($regex, '', base64_decode(data_get($downloadEffect, 'content'))),
+        $expected,
+        $actual
+    );
+});
+
+expect()->extend('toBeXLSDownload', function (array $headings, array $rows) {
+    $downloadEffect = data_get($this->value->lastResponse, 'original.effects.download');
+
+    $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.xlsx';
+    $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
+    $delimiter = data_get($this->value->setUp, 'exportable.csvDelimiter', '"');
+
+    test()->assertEquals(
+        $filename,
+        data_get($downloadEffect, 'name')
+    );
+
+    $content = base64_decode(data_get($downloadEffect, 'content'));
+
+    file_put_contents(base_path($filename), $content);
+
+    $reader = new Reader();
+    $reader->open(base_path($filename));
+
+    $testableRows = [];
+
+    foreach ($reader->getSheetIterator() as $sheet) {
+        foreach ($sheet->getRowIterator() as $row) {
+            foreach ($row->getCells() as $cell) {
+                $testableRows[] = $cell->getValue();
+            }
+        }
+    }
+
+    $reader->close();
+
+    $content = implode(',', $testableRows);
+
+    $expected = collect(array_merge([$headings], $rows))
+        ->transform(function ($heading) use ($delimiter, $separator) {
+            $heading = collect($heading)->transform(fn ($heading) => trim($heading, $delimiter))->toArray();
+
+            return implode($separator, $heading);
+        });
+
+    $actual = collect($content)
+        ->filter(fn ($heading) => strlen($heading) > 0)
+        ->transform(function ($line) use ($delimiter, $separator) {
+            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line));
+
+            $rows = collect($arrayLine)
+                ->transform(fn ($row) => trim($row, $delimiter))
+                ->toArray();
+
+            return implode($separator, $rows);
+        });
+
+    test()->assertEquals(
+        implode(',', $expected->toArray()),
+        implode(',', $actual->toArray())
     );
 });
