@@ -8,19 +8,19 @@
     'enabledFilters' => null,
     'inputTextOptions' => [],
 ])
-<div class="w-full my-3 dark:bg-slate-800">
+<div class="w-full my-3 dark:bg-pg-primary-800">
     <div x-data={show:true} class="rounded-full">
         <div
-            class="px-4 py-3 rounded-t-md cursor-pointer bg-slate-100 border border-slate-200 dark:border-slate-600 dark:bg-slate-600"
+            class="px-4 py-3 rounded-t-md cursor-pointer bg-pg-primary-100 border border-pg-primary-200 dark:border-pg-primary-600 dark:bg-pg-primary-600"
             @click="show=!show">
             <button
-                class="appearance-none text-left text-base font-medium text-slate-500 focus:outline-none dark:text-slate-300"
+                class="appearance-none text-left text-base font-medium text-pg-primary-500 focus:outline-none dark:text-pg-primary-300"
                 type="button">
                 {{ trans('livewire-powergrid::datatable.buttons.filter') }}
             </button>
         </div>
         <div x-show="show"
-             class="border-l rounded-b-md border-b border-r border-slate-200 dark:border-slate-600 px-2 py-4 dark:border-0 dark:bg-slate-700">
+             class="border-l rounded-b-md border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-700">
             <div>
                 @php
                     $customConfig = [];

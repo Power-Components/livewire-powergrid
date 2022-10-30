@@ -208,7 +208,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Rule::rows()
                 ->when(fn ($dish) => $dish->id == 3)
-                ->setAttribute('class', 'bg-blue-100'),
+                ->setAttribute('class', 'bg-pg-secondary-100'),
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 5)

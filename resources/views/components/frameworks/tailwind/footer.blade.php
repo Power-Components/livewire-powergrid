@@ -4,13 +4,13 @@
         'justify-between' => data_get($setUp, 'footer.perPage'),
         'justify-end'  => blank(data_get($setUp, 'footer.perPage')),
         'md:flex md:flex-row w-full items-center pt-3 bg-white overflow-y-auto pl-2 pr-2 pb-1 relative
-         dark:bg-slate-700' => blank(data_get($setUp, 'footer.pagination')),
+         dark:bg-pg-primary-700' => blank(data_get($setUp, 'footer.pagination')),
 ])>
         @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1 && blank(data_get($setUp, 'footer.pagination')))
             <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
                 <div class="relative h-10">
                     <select wire:model.lazy="setUp.footer.perPage"
-                            class="block appearance-none bg-slate-50 border border-slate-300 text-slate-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-slate-500  dark:bg-slate-600 dark:text-slate-200 dark:placeholder-slate-200 dark:border-slate-500">
+                            class="block appearance-none bg-pg-primary-50 border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500  dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500">
                         @foreach(data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{$value}}">
                                 @if($value == 0)
@@ -22,7 +22,7 @@
                         @endforeach
                     </select>
 
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
                         <x-livewire-powergrid::icons.down class="w-4 h-4"/>
                     </div>
                 </div>
