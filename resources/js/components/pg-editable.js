@@ -16,7 +16,7 @@ export default (params) => ({
             this.content = this.htmlSpecialChars(this.fallback);
         }
 
-        this.$watch('editable', async (value) => {
+        this.$watch('editable', (value) => {
             if (value) {
                 this.content = this.htmlSpecialChars(this.content);
                 const editablePending = window.editablePending.notContains(this.hash)
