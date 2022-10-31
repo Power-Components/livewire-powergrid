@@ -16,17 +16,18 @@ export default (params) => ({
             this.content = this.htmlSpecialChars(this.fallback);
         }
 
-        this.$watch('editable', (value) => {
+        this.$watch('editable', async (value) => {
             if (value) {
+                this.content = this.htmlSpecialChars(this.content);
                 const editablePending = window.editablePending.notContains(this.hash)
 
                 this.hashError = editablePending
-                if(editablePending) {
+                if (editablePending) {
                     const pendingHash = window.editablePending.pending[0]
                     document.getElementById('clickable-' + pendingHash).click()
                 }
 
-                if(window.editablePending.notContains(this.hash)) {
+                if (window.editablePending.notContains(this.hash)) {
                     this.editable = false
                 }
 
@@ -59,6 +60,11 @@ export default (params) => ({
                 value: this.$el.textContent,
                 field: this.dataField
             })
+
+            this.$nextTick(() => setTimeout(() => {
+                this.focus()
+                setTimeout(() => this.$refs.editable.value = '', 200)
+            }, 100))
 
             this.$nextTick(() => setTimeout(() => this.focus(), 50))
 
