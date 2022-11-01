@@ -19,6 +19,7 @@ export default (params) => ({
         this.$watch('editable', (value) => {
             if (value) {
                 this.content = this.htmlSpecialChars(this.content);
+
                 const editablePending = window.editablePending.notContains(this.hash)
 
                 this.hashError = editablePending
@@ -31,7 +32,6 @@ export default (params) => ({
                     this.editable = false
                 }
 
-                this.oldContent = this.$refs.editable.textContent;
                 this.$nextTick(() => setTimeout(() => this.focus(), 50))
             }
         })
