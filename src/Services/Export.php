@@ -35,7 +35,7 @@ class Export
     public function setData(array $columns, Collection $data): Export
     {
         $this->columns    = $columns;
-        $this->data       = collect($data->toArray());
+        $this->data       = collect($data);
 
         return $this;
     }
@@ -56,6 +56,7 @@ class Export
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $actionRulesClass) {
                 /** @var Model|\stdClass $row */
+                $row              = $row->withoutRelations()->toArray();
                 $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
                 $isExportable     = false;
 
@@ -68,7 +69,7 @@ class Export
                     /** @var array $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
-                            $item->put($column->title, $value);
+                            $item->put($column->title, html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                         }
                     }
                     if (!$header->contains($column->title)) {

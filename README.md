@@ -81,11 +81,11 @@ With PowerGrid you get right out of the box:
 
 - **Livewire Modal Integration ([Wire Elements Modal](https://github.com/wire-elements/modal))**
 
-- **Data Export to XLSX/CSV ([Spout](https://github.com/box/spout))**
+- **Data Export to XLSX/CSV ([OpenSpout](https://github.com/openspout/openspout))**
 
 - **Queue Export for large tables**
 
-- **Works with Bootstrap 5 or Tailwind CSS 2x - 3x**
+- **Works with Bootstrap 5 or Tailwind CSS 3x**
 
 - **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
 

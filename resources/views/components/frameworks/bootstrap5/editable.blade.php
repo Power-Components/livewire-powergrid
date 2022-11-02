@@ -10,7 +10,7 @@
     <x-slot name="input">
         <div
             x-ref="editable"
-            x-text="'{{ addslashes(html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8')) }}'"
+            x-text="content"
             value="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
             placeholder="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
             contenteditable
