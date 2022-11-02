@@ -19,24 +19,15 @@ return [
     | Plugins
     |--------------------------------------------------------------------------
     |
-    | Plugins used: bootstrap-select when bootstrap, flatpicker.js to datepicker.
+    | Plugins used: flatpickr.js to datepicker.
     |
     */
 
     'plugins' => [
         /*
-         * https://github.com/snapappointments/bootstrap-select
-         */
-        'bootstrap-select' => [
-            'js'  => 'https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js',
-            'css' => 'https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css',
-        ],
-        /*
          * https://flatpickr.js.org
          */
         'flatpickr' => [
-            'js'      => 'https://cdn.jsdelivr.net/npm/flatpickr',
-            'css'     => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
             'locales' => [
                 'pt_BR' => [
                     'locale'     => 'pt',
@@ -73,17 +64,6 @@ return [
     */
 
     'cached_data' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | AlpineJS CDN
-    |--------------------------------------------------------------------------
-    |
-    | Define here the CDN source for imported AlpineJS
-    |
-    */
-
-    'alpinejs_cdn' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
 
     /*
     |--------------------------------------------------------------------------
