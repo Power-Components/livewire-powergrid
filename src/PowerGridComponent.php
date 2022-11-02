@@ -78,15 +78,7 @@ class PowerGridComponent extends Component
      */
     protected function getListeners()
     {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
-            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
-        ];
+        return $this->powerGridListeners();
     }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
@@ -497,5 +489,18 @@ class PowerGridComponent extends Component
         }
 
         return $this->renderView($data);
+    }
+
+    protected function powerGridListeners(): array
+    {
+        return [
+            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:editable-' . $this->tableName     => 'inputTextChanged',
+            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
+            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
+            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
+            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
+        ];
     }
 }

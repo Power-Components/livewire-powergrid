@@ -85,7 +85,7 @@
                                 <input readonly
                                        x-ref="multi_select"
                                        placeholder="{{ $column ? trans($column->placeholder) ?: trans('livewire-powergrid::datatable.multi_select.select') : '' }}"
-                                       class="w-full block bg-white text-pg-primary-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500"
+                                       class="w-full block bg-white text-pg-primary-700 py-2 text-sm px-3 leading-tight focus:outline-none dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500 placeholder-pg-primary-400"
                                        x-bind:value="selectedValues()"
                                 >
                             </div>

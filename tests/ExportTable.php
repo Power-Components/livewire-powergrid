@@ -3,7 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
+use NumberFormatter;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
@@ -58,7 +59,7 @@ class ExportTable extends PowerGridComponent
 
     public function addColumns(): PowerGridEloquent
     {
-        $fmt = new \NumberFormatter('ca_ES', \NumberFormatter::CURRENCY);
+        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
 
         return PowerGrid::eloquent()
             ->addColumn('id')

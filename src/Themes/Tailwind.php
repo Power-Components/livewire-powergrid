@@ -93,7 +93,7 @@ class Tailwind extends ThemeBase
         return Theme::filterDatePicker()
             ->base('p-2')
             ->view($this->root() . '.filters.date-picker')
-            ->input('flatpickr flatpickr-input block my-1 bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500', 'min-width: 12rem');
+            ->input('flatpickr flatpickr-input block my-1 bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 placeholder-pg-primary-400 dark:placeholder-pg-primary-200 dark:border-pg-primary-500', 'min-width: 12rem');
     }
 
     public function filterMultiSelect(): FilterMultiSelect
@@ -107,7 +107,7 @@ class Tailwind extends ThemeBase
     {
         return Theme::filterNumber()
             ->view($this->root() . '.filters.number')
-            ->input('block bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500 min-w-[5rem]');
+            ->input('block bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500 min-w-[5rem] placeholder-pg-primary-400');
     }
 
     public function filterSelect(): FilterSelect
@@ -123,8 +123,8 @@ class Tailwind extends ThemeBase
         return Theme::filterInputText()
             ->view($this->root() . '.filters.input-text')
             ->base('min-w-[9.5rem]')
-            ->select('appearance-none block bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500')
-            ->input('w-full block bg-white text-pg-primary-700 border border-pg-primary-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500');
+            ->select('appearance-none block bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 placeholder-pg-primary-400 dark:placeholder-pg-primary-200 dark:border-pg-primary-500')
+            ->input('w-full block bg-white text-pg-primary-700 border border-pg-primary-300 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500 placeholder-pg-primary-400');
     }
 
     public function searchBox(): SearchBox
