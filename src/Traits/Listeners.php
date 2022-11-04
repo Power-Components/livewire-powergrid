@@ -48,4 +48,24 @@ trait Listeners
     public function onUpdatedMultiSelect(string $field, array $values): void
     {
     }
+
+    public function onUpdatedSelect(string $field, string $label): void
+    {
+    }
+
+    public function onUpdatedInputText(string $field, string $label): void
+    {
+    }
+
+    public function onUpdatedBoolean(string $field, string $label): void
+    {
+    }
+
+    public function onUpdatedNumberStart(string $field, string $value, string $label): void
+    {
+    }
+
+    public function onUpdatedNumberEnd(string $field, string $value, string $label): void
+    {
+    }
 }

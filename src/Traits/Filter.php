@@ -76,6 +76,8 @@ trait Filter
 
         unset($this->enabledFilters[$field]);
 
+        $this->emit('pg:events', ['event' => 'clearFilters', 'params' => $field, 'tableName' => $this->tableName]);
+
         $this->persistState('filters');
     }
 
@@ -83,6 +85,8 @@ trait Filter
     {
         $this->enabledFilters = [];
         $this->filters        = [];
+
+        $this->emit('pg:events', ['event' => 'clearAllFilters', 'tableName' => $this->tableName]);
 
         $this->persistState('filters');
     }
@@ -202,9 +206,9 @@ trait Filter
             $this->clearFilter($field);
         }
 
-        $this->persistState('filters');
-
         $this->onUpdatedMultiSelect($field, $values);
+
+        $this->persistState('filters');
     }
 
     public function filterSelect(string $field, string $label): void
@@ -217,6 +221,8 @@ trait Filter
         if (data_get($this->filters, "select.$field") === '') {
             $this->clearFilter($field);
         }
+
+        $this->onUpdatedSelect($field, $label);
 
         $this->persistState('filters');
     }
@@ -234,6 +240,8 @@ trait Filter
             $this->clearFilter($field);
         }
 
+        $this->onUpdatedNumberStart($field, $value, $label);
+
         $this->persistState('filters');
     }
 
@@ -250,6 +258,8 @@ trait Filter
             $this->clearFilter($field);
         }
 
+        $this->onUpdatedNumberEnd($field, $value, $label);
+
         $this->persistState('filters');
     }
 
@@ -263,6 +273,8 @@ trait Filter
         if ($value == '') {
             $this->clearFilter($field);
         }
+
+        $this->onUpdatedInputText($field, $value, $label);
 
         $this->persistState('filters');
     }
@@ -280,24 +292,25 @@ trait Filter
             $this->clearFilter($field);
         }
 
+        $this->onUpdatedBoolean($field, $value, $label);
+
         $this->persistState('filters');
     }
 
     public function filterInputTextOptions(string $field, string $value, string $label): void
     {
         data_set($this->filters, 'input_text_options.' . $field, $value);
-        // $this->filters['input_text_options'][$field] = $value;
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 
         $this->resetPage();
 
+        $this->enabledFilters[$field]['disabled']       = false;
+
         if (in_array($value, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'])) {
             $this->enabledFilters[$field]['disabled']       = true;
             $this->filters['input_text'][$field]            = null;
-        } else {
-            $this->enabledFilters[$field]['disabled']       = false;
         }
 
         if ($value == '') {
