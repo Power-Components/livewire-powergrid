@@ -56,7 +56,10 @@ class Export
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $actionRulesClass) {
                 /** @var Model|\stdClass $row */
-                $row              = $row->withoutRelations()->toArray();
+                if (method_exists($row, 'withoutRelations')) {
+                    $row              = $row->withoutRelations()->toArray();
+                }
+
                 $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
                 $isExportable     = false;
 
