@@ -45,27 +45,27 @@ trait Listeners
     {
     }
 
-    public function onUpdatedMultiSelect(string $field, array $values): void
+    public function afterChangedMultiSelectFilter(string $field, array $values): void
     {
     }
 
-    public function onUpdatedSelect(string $field, string $label): void
+    public function afterChangedSelectFilter(string $field, string $label, mixed $value): void
     {
     }
 
-    public function onUpdatedInputText(string $field, string $label): void
+    public function afterChangedInputTextFilter(string $field, string $label, string $value): void
     {
     }
 
-    public function onUpdatedBoolean(string $field, string $label): void
+    public function afterChangedBooleanFilter(string $field, string $label, string $value): void
     {
     }
 
-    public function onUpdatedNumberStart(string $field, string $value, string $label): void
+    public function afterChangedNumberStartFilter(string $field, string $label, string $value): void
     {
     }
 
-    public function onUpdatedNumberEnd(string $field, string $value, string $label): void
+    public function afterChangedNumberEndFilter(string $field, string $label, string $value): void
     {
     }
 }

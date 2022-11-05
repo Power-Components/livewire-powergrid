@@ -31,7 +31,7 @@
                     ])>
                     <input
                         wire:model.debounce.800ms="filters.number.{{ data_get($number, 'dataField') }}.end"
-                        wire:input.debounce.800ms="filterNumberEnd('{{ data_get($number, 'dataField') }}',$event.target.value, '{{ data_get($number, 'label') }}')"
+                        wire:input.debounce.800ms="filterNumberEnd('{{ data_get($number, 'dataField') }}',$event.target.value)"
                         @if($inline) style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}" @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"

@@ -17,7 +17,7 @@ trait Filter
 
     public array $inputTextOptions = [];
 
-    public function clearFilter(string $field = ''): void
+    public function clearFilter(string $field = '', bool $emit = true): void
     {
         if (str_contains($field, '.')) {
             list($table, $column) = explode('.', $field);
@@ -76,7 +76,9 @@ trait Filter
 
         unset($this->enabledFilters[$field]);
 
-        $this->emit('pg:events', ['event' => 'clearFilters', 'params' => $field, 'tableName' => $this->tableName]);
+        if ($emit) {
+            $this->emit('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
+        }
 
         $this->persistState('filters');
     }
@@ -137,19 +139,34 @@ trait Filter
         }
     }
 
+    public function getLabelFromMakeFilters(string $filterType, string $field): string
+    {
+        /** @var array $makeFilter */
+        $makeFilter = $this->makeFilters->toArray()[$filterType];
+
+        $filter = collect($makeFilter)
+            ->filter(
+                fn ($filter) => strval(data_get($filter, 'dataField', strval(data_get($filter, 'field')))) === $field
+            )
+                ->first();
+
+        return $filter['label'];
+    }
+
     public function datePikerChanged(array $data): void
     {
         $this->resetPage();
 
-        $input                                   = explode('.', $data['values']);
+        $input          = explode('.', $data['values']);
 
-        /** @var string $startDate */
-        $startDate = data_get($data, 'selectedDates.0');
-        /** @var string $endDate */
-        $endDate   = data_get($data, 'selectedDates.1');
+        $startDate      = strval(data_get($data, 'selectedDates.0'));
+        $endDate        = strval(data_get($data, 'selectedDates.1'));
 
-        $startDateTime = Carbon::parse($startDate)->setTimezone(strval(config('app.timezone')));
-        $endDateTime   = Carbon::parse($endDate)->setTimezone(strval(config('app.timezone')));
+        $timeZone       = strval(config('app.timezone'));
+
+        $startDateTime  = Carbon::parse($startDate)->setTimezone($timeZone);
+        $endDateTime    = Carbon::parse($endDate)->setTimezone($timeZone);
+
         if (!$data['enableTime']) {
             $startDateTime->startOfDay();
             $endDateTime->endOfDay();
@@ -203,32 +220,38 @@ trait Filter
         $this->enabledFilters[$field]['label']         = $filter['label'];
 
         if (count($values) === 0) {
-            $this->clearFilter($field);
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedMultiSelect($field, $values);
+        $this->afterChangedMultiSelectFilter($field, $values);
 
         $this->persistState('filters');
     }
 
-    public function filterSelect(string $field, string $label): void
+    public function filterSelect(string $field): void
     {
+        $label = $this->getLabelFromMakeFilters('select', $field);
+
         $this->resetPage();
 
         $this->enabledFilters[$field]['id']         = $field;
         $this->enabledFilters[$field]['label']      = $label;
 
-        if (data_get($this->filters, "select.$field") === '') {
-            $this->clearFilter($field);
+        $value = data_get($this->filters, "select.$field");
+
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedSelect($field, $label);
+        $this->afterChangedSelectFilter($field, $label, $value);
 
         $this->persistState('filters');
     }
 
-    public function filterNumberStart(string $field, string $value, string $label): void
+    public function filterNumberStart(string $field, string $value): void
     {
+        $label = $this->getLabelFromMakeFilters('number', $field);
+
         $this->resetPage();
 
         $this->filters['number'][$field]['start']     = $value;
@@ -236,17 +259,19 @@ trait Filter
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 
-        if ($value == '') {
-            $this->clearFilter($field);
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedNumberStart($field, $value, $label);
+        $this->afterChangedNumberStartFilter($field, $label, $value);
 
         $this->persistState('filters');
     }
 
-    public function filterNumberEnd(string $field, string $value, string $label): void
+    public function filterNumberEnd(string $field, string $value): void
     {
+        $label = $this->getLabelFromMakeFilters('number', $field);
+
         $this->resetPage();
 
         $this->filters['number'][$field]['end']       = $value;
@@ -254,33 +279,37 @@ trait Filter
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 
-        if ($value == '') {
-            $this->clearFilter($field);
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedNumberEnd($field, $value, $label);
+        $this->afterChangedNumberEndFilter($field, $value, $label);
 
         $this->persistState('filters');
     }
 
-    public function filterInputText(string $field, string $value, string $label): void
+    public function filterInputText(string $field, string $value): void
     {
+        $label = $this->getLabelFromMakeFilters('input_text', $field);
+
         $this->resetPage();
 
         $this->enabledFilters[$field]['id']          = $field;
         $this->enabledFilters[$field]['label']       = $label;
 
-        if ($value == '') {
-            $this->clearFilter($field);
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedInputText($field, $value, $label);
+        $this->afterChangedInputTextFilter($field, $label, $value);
 
         $this->persistState('filters');
     }
 
-    public function filterBoolean(string $field, string $value, string $label): void
+    public function filterBoolean(string $field, string $value): void
     {
+        $label = $this->getLabelFromMakeFilters('boolean', $field);
+
         $this->resetPage();
 
         $this->filters['boolean'][$field] = $value;
@@ -289,16 +318,18 @@ trait Filter
         $this->enabledFilters[$field]['label']       = $label;
 
         if ($value == 'all') {
-            $this->clearFilter($field);
+            $this->clearFilter($field, emit: false);
         }
 
-        $this->onUpdatedBoolean($field, $value, $label);
+        $this->afterChangedBooleanFilter($field, $label, $value);
 
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value, string $label): void
+    public function filterInputTextOptions(string $field, string $value): void
     {
+        $label = $this->getLabelFromMakeFilters('input_text_options', $field);
+
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
         $this->enabledFilters[$field]['id']          = $field;
@@ -313,8 +344,8 @@ trait Filter
             $this->filters['input_text'][$field]            = null;
         }
 
-        if ($value == '') {
-            $this->clearFilter($field);
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
         }
 
         $this->persistState('filters');
