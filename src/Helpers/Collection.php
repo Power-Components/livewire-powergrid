@@ -5,9 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Facades\Schema, Str};
-use PowerComponents\LivewirePowerGrid\Services\Contracts\CollectionFilterInterface;
 
-class Collection implements CollectionFilterInterface
+class Collection
 {
     private BaseCollection $query;
 
@@ -118,32 +117,16 @@ class Collection implements CollectionFilterInterface
 
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
-                switch ($key) {
-                    case 'date_picker':
-                        $this->filterDatePicker($field, $value);
-
-                        break;
-                    case 'multi_select':
-                        $this->filterMultiSelect($field, $value);
-
-                        break;
-                    case 'select':
-                        $this->filterSelect($field, $value);
-
-                        break;
-                    case 'boolean':
-                        $this->filterBoolean($field, $value);
-
-                        break;
-                    case 'input_text':
-                        $this->filterInputText($field, $value);
-
-                        break;
-                    case 'number':
-                        $this->filterNumber($field, $value);
-
-                        break;
-                }
+                match ($key) {
+                    'date_picker'         => $this->filterDatePicker($field, $value),
+                    'multi_select'        => $this->filterMultiSelect($field, $value),
+                    'select'              => $this->filterSelect($field, $value),
+                    'boolean'             => $this->filterBoolean($field, $value),
+                    'input_text_contains' => $this->filterInputTextContains($field, $value),
+                    'number'              => $this->filterNumber($field, $value),
+                    'input_text'          => $this->filterInputText($field, $value),
+                    default               => null
+                };
             }
         }
 
@@ -157,95 +140,62 @@ class Collection implements CollectionFilterInterface
         }
     }
 
+    public function filterInputTextContains(string $field, ?string $value): void
+    {
+        $this->query = $this->query->filter(function ($row) use ($field, $value) {
+            $row     = (object) $row;
+
+            return false !== stristr($row->{$field}, strtolower((string) $value));
+        });
+    }
+
     public function filterInputText(string $field, ?string $value): void
     {
         $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
 
-        switch ($textFieldOperator) {
-            case 'is':
-                $this->query = $this->query->where($field, '=', $value);
+        match ($textFieldOperator) {
+            'is'          => $this->query->where($field, '=', $value),
+            'is_not'      => $this->query->where($field, '!=', $value),
+            'starts_with' => $this->query->filter(function ($row) use ($field, $value) {
+                $row     = (object) $row;
 
-                break;
-            case 'is_not':
-                $this->query = $this->query->where($field, '!=', $value);
+                return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
+            }),
+            'ends_with' => $this->query->filter(function ($row) use ($field, $value) {
+                $row     = (object) $row;
 
-                break;
-            case 'starts_with':
-                $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row     = (object) $row;
+                return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
+            }),
+            'contains' => $this->query->filter(function ($row) use ($field, $value) {
+                $row     = (object) $row;
 
-                    return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
-                });
+                return false !== stristr($row->{$field}, strtolower((string) $value));
+            }),
+            'contains_not' => $this->query->filter(function ($row) use ($field, $value) {
+                $row     = (object) $row;
 
-                break;
-            case 'ends_with':
-                $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row     = (object) $row;
+                return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
+            }),
+            'is_empty' => $this->query->filter(function ($row) use ($field) {
+                $row     = (object) $row;
 
-                    return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
-                });
+                return $row->{$field} == '' || is_null($row->{$field});
+            }),
+            'is_not_empty' => $this->query->whereNotNull($field),
+            'is_null'      => $this->query->whereNull($field),
+            'is_not_null'  => $this->query->filter(function ($row) use ($field) {
+                $row     = (object) $row;
 
-                break;
-            case 'contains':
-                $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row     = (object) $row;
+                return $row->{$field} !== '' && !is_null($row->{$field});
+            }),
+            'is_blank'     => $this->query->whereNotNull($field)->where($field, '=', ''),
+            'is_not_blank' => $this->query->filter(function ($row) use ($field) {
+                $row     = (object) $row;
 
-                    return false !== stristr($row->{$field}, strtolower((string) $value));
-                });
-
-                break;
-            case 'contains_not':
-
-                $this->query = $this->query->filter(function ($row) use ($field, $value) {
-                    $row     = (object) $row;
-
-                    return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
-                });
-
-                break;
-
-            case 'is_blank':
-                $this->query = $this->query->whereNotNull($field)->where($field, '=', '');
-
-                break;
-
-            case 'is_not_blank':
-                $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row     = (object) $row;
-
-                    return $row->{$field} != '' || is_null($row->{$field});
-                });
-
-                break;
-
-            case 'is_null':
-                $this->query = $this->query->whereNull($field);
-
-                break;
-
-            case 'is_not_null':
-                $this->query = $this->query->whereNotNull($field);
-
-                break;
-
-            case 'is_empty':
-                $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row     = (object) $row;
-
-                    return $row->{$field} == '' || is_null($row->{$field});
-                });
-
-                break;
-
-            case 'is_not_empty':
-                $this->query = $this->query->filter(function ($row) use ($field) {
-                    $row     = (object) $row;
-
-                    return $row->{$field} !== '' && !is_null($row->{$field});
-                });
-
-                break;
-        }
+                return $row->{$field} != '' || is_null($row->{$field});
+            }),
+            default => null,
+        };
     }
 
     public function filterBoolean(string $field, ?string $value): void
