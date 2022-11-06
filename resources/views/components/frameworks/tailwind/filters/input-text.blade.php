@@ -29,7 +29,7 @@
                         <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
                                 wire:model.lazy="filters.input_text_options.{{ $field }}"
-                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')">
+                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value) }}')">
                             @foreach($inputTextOptions as $key => $value)
                                 <option value="{{ $key }}">{{ trans($value) }}</option>
                             @endforeach
