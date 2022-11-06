@@ -293,7 +293,7 @@ final class PowerGridDemoTable extends PowerGridComponent
             //Change "background" for row with user ID 4
             Rule::rows()
                 ->when(fn($user) => $user->id === 4)
-                ->setAttribute('class', 'bg-blue-200 hover:bg-blue-300'),
+                ->setAttribute('class', 'bg-pg-secondary-200 hover:bg-pg-secondary-300'),
         ];
     }
 

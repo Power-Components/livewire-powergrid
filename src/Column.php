@@ -75,6 +75,8 @@ final class Column
      */
     public array $clickToCopy = [];
 
+    public bool $index = false;
+
     /**
      * Adds a new Column
      *
@@ -102,6 +104,17 @@ final class Column
     public function title(string $title): Column
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Adds index ($loop->index)
+     *
+     */
+    public function index(): Column
+    {
+        $this->index = true;
 
         return $this;
     }
@@ -472,6 +485,25 @@ final class Column
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
+
+        return $this;
+    }
+
+    /**
+     * Add Dynamic Input Component
+     *
+     */
+    public function makeDynamicInput(
+        string $filter = '',
+        string $dataField = '',
+        string $component = '',
+        array $attributes = [],
+    ): Column {
+        $this->editable                           = [];
+        $this->inputs['dynamic']['filterType']    = $filter;
+        $this->inputs['dynamic']['dataField']     = $dataField;
+        $this->inputs['dynamic']['component']     = $component;
+        $this->inputs['dynamic']['attributes']    = $attributes;
 
         return $this;
     }

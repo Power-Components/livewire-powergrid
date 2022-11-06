@@ -9,32 +9,29 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator, Paginator};
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
-    Checkbox,
-    Exportable,
-    Filter,
+use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
-    WithSorting
-};
+    WithCheckbox,
+    WithDynamicFilters,
+    WithSorting};
 use Throwable;
 
 class PowerGridComponent extends Component
 {
     use WithPagination;
-    use Exportable;
     use WithSorting;
-    use Checkbox;
+    use WithCheckbox;
     use HasAttributes;
-    use Filter;
-    use BatchableExport;
+    use HasFilter;
     use PersistData;
     use Listeners;
+    use WithDynamicFilters;
 
     public array $headers = [];
 
@@ -74,6 +71,16 @@ class PowerGridComponent extends Component
 
     protected ThemeBase $powerGridTheme;
 
+    public bool $rowIndex = true;
+
+    /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return $this->powerGridListeners();
+    }
+
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
         $this->checkbox          = true;
@@ -97,6 +104,8 @@ class PowerGridComponent extends Component
         }
 
         $this->columns = $this->columns();
+
+        $this->initializePropertiesFromDynamicFilters();
 
         $this->resolveTotalRow();
 
@@ -137,34 +146,6 @@ class PowerGridComponent extends Component
                 $this->footerTotalColumn = true;
             }
         });
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function render(): Application|Factory|View
-    {
-        /** @var ThemeBase $themeBase */
-        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
-
-        $this->powerGridTheme = $themeBase->apply();
-
-        $this->columns = collect($this->columns)->map(function ($column) {
-            return (object) $column;
-        })->toArray();
-
-        $this->relationSearch = $this->relationSearch();
-
-        $data = $this->fillData();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-            if (method_exists($this, 'header')) {
-                $this->headers = $this->header();
-            }
-        }
-
-        return $this->renderView($data);
     }
 
     public function template(): ?string
@@ -248,9 +229,18 @@ class PowerGridComponent extends Component
 
         $results = self::applySoftDeletes($results);
 
-        $results = self::applyWithSortStringNumber($results, $sortField);
-
-        $results = $results->orderBy($sortField, $this->sortDirection);
+        if ($this->multiSort) {
+            foreach ($this->sortArray as $sortField => $direction) {
+                $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
+                if ($this->withSortStringNumber) {
+                    $results = self::applyWithSortStringNumber($results, $sortField, $direction);
+                }
+                $results = $results->orderBy($sortField, $direction);
+            }
+        } else {
+            $results   = self::applyWithSortStringNumber($results, $sortField);
+            $results   = $results->orderBy($sortField, $this->sortDirection);
+        }
 
         self::applyTotalColumn($results);
 
@@ -259,6 +249,7 @@ class PowerGridComponent extends Component
         self::resolveDetailRow($results);
 
         if (method_exists($results, 'total')) {
+            /** @phpstan-ignore-next-line  */
             $this->total = $results->total();
         }
 
@@ -275,16 +266,22 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField): Eloquent\Builder
+    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField, string $multiSortDirection = null): Eloquent\Builder
     {
         if (!$this->withSortStringNumber) {
             return $results;
         }
 
+        $direction = $this->sortDirection;
+
+        if ($multiSortDirection) {
+            $direction = $multiSortDirection;
+        }
+
         $sortFieldType = SqlSupport::getSortFieldType($sortField);
 
         if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $this->sortDirection);
+            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $direction);
         }
 
         return $results;
@@ -337,7 +334,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
+    protected function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new Support\Collection($this->datasource());
@@ -356,7 +353,7 @@ class PowerGridComponent extends Component
         });
     }
 
-    private function transform(Support\Collection $results): Support\Collection
+    protected function transform(Support\Collection $results): Support\Collection
     {
         if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
@@ -394,7 +391,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    private function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
+    public function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
     {
         if (blank($datasource)) {
             return $this->datasource();
@@ -467,11 +464,31 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @return array
+     * @throws Exception
      */
-    protected function getListeners()
+    public function render(): Application|Factory|View
     {
-        return $this->powerGridListeners();
+        /** @var ThemeBase $themeBase */
+        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+
+        $this->powerGridTheme = $themeBase->apply();
+
+        $this->columns = collect($this->columns)->map(function ($column) {
+            return (object) $column;
+        })->toArray();
+
+        $this->relationSearch = $this->relationSearch();
+
+        $data = $this->fillData();
+
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
+            if (method_exists($this, 'header')) {
+                $this->headers = $this->header();
+            }
+        }
+
+        return $this->renderView($data);
     }
 
     protected function powerGridListeners(): array

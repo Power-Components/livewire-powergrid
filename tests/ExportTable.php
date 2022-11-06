@@ -13,11 +13,13 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridEloquent,
+    Traits\WithExport};
 
 class ExportTable extends PowerGridComponent
 {
     use ActionButton;
+    use WithExport;
 
     public string $separator = ',';
 

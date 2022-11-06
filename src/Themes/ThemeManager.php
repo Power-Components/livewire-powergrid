@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{
+    Actions,
     Checkbox,
     ClickToCopy,
     Cols,
@@ -15,8 +16,10 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
+    SearchBox,
     Table,
-    Toggleable};
+    Toggleable,
+};
 
 class ThemeManager
 {
@@ -93,5 +96,10 @@ class ThemeManager
     public function filterInputText(): FilterInputText
     {
         return new FilterInputText();
+    }
+
+    public function searchBox(): SearchBox
+    {
+        return new SearchBox();
     }
 }

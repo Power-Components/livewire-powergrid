@@ -29,9 +29,7 @@
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
             <span class="@if($column->clickToCopy) {{ $theme->clickToCopy->spanClass }} @endif">
-                    <div>
-                        {!! $content !!}
-                    </div>
+                    <div>{!! $column->index ? $rowIndex : $content !!}</div>
                     @if($column->clickToCopy)
                         <x-livewire-powergrid::click-to-copy
                             :row="$row"

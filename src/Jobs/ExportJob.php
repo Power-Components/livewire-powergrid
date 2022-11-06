@@ -30,11 +30,11 @@ class ExportJob implements ShouldQueue
         array  $columns,
         array  $params
     ) {
-        $this->columns  = $columns;
-        $this->type     = $params['type'];
-        $this->fileName = $params['fileName'];
-        $this->offset   = $params['offset'];
-        $this->limit    = $params['limit'];
+        $this->columns          = $columns;
+        $this->exportableClass  = $params['exportableClass'];
+        $this->fileName         = $params['fileName'];
+        $this->offset           = $params['offset'];
+        $this->limit            = $params['limit'];
 
         /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
@@ -50,9 +50,9 @@ class ExportJob implements ShouldQueue
             ->get();
 
         /** @phpstan-ignore-next-line  */
-        (new $this->type())
+        (new $this->exportableClass())
             ->fileName($this->getFilename())
             ->setData($this->columns, $this->transform($query))
-            ->store();
+            ->download([]);
     }
 }

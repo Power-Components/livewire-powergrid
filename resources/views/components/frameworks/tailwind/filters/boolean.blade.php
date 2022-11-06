@@ -28,7 +28,7 @@
                         <option value="true">{{ data_get($booleanFilter, 'true_label') }}</option>
                         <option value="false">{{ data_get($booleanFilter, 'false_label') }}</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-700">
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
                         <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
                     </div>
                 </div>

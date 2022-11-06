@@ -15,12 +15,13 @@
                 @include(powerGridThemeRoot().'.header.loading')
             </div>
             <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
-                @include(powerGridThemeRoot().'.header.filter')
+                @include(powerGridThemeRoot().'.header.search')
             </div>
         </div>
     </div>
     @include(powerGridThemeRoot().'.header.batch-exporting')
     @include(powerGridThemeRoot().'.header.enabled-filters')
+    @include(powerGridThemeRoot().'.header.multi-sort')
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
     @includeIf(powerGridThemeRoot().'.header.message-soft-deletes')
 </div>
