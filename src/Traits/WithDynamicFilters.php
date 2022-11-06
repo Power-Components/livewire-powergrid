@@ -19,8 +19,10 @@ trait WithDynamicFilters
                     throw new Exception('Available options must be included by: \PowerComponents\LivewirePowerGrid\DynamicInput::class');
                 }
 
-                $filter     = strval(Str::of($filterType)->explode(',')->get(0));
-                $type       = strval(Str::of($filterType)->explode(',')->get(1));
+                $explodeFilterType = Str::of($filterType)->explode(',');
+
+                $filter     = strval($explodeFilterType->get(0));
+                $type       = strval($explodeFilterType->get(1));
 
                 /** @phpstan-ignore-next-line */
                 $initial = match ($type) {
@@ -31,9 +33,13 @@ trait WithDynamicFilters
 
                 $this->filters[$filter][$dataField] = $initial;
 
+                if (config('livewire-powergrid.filter') === 'inline') {
+                    unset($column->inputs['dynamic']['attributes']['label']);
+                }
+
                 data_set($column->inputs, 'dynamic.attributes', [
                     ...(array) data_get($column->inputs, 'dynamic.attributes'),
-                    'wire:model.debounce.500ms' => 'filters.' . $filter . '.' . $dataField,
+                    'wire:model.debounce.600ms' => 'filters.' . $filter . '.' . $dataField,
                 ]);
             }
 

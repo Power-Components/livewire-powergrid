@@ -312,6 +312,53 @@ final class Column
     }
 
     /**
+     * Adds Edit on click to a column
+     *
+     */
+    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
+    {
+        $this->editable = [
+            'hasPermission'  => $hasPermission,
+            'fallback'       => $fallback,
+            'saveOnMouseOut' => $saveOnMouseOut,
+        ];
+
+        if (filled($dataField)) {
+            $this->dataField = $dataField;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Adds Toggle to a column
+     *
+     */
+    public function toggleable(
+        bool $hasPermission = true,
+        string $trueLabel = 'Yes',
+        string $falseLabel = 'No'
+    ): Column {
+        $this->editable   = [];
+        $this->toggleable = [
+            'enabled' => $hasPermission,
+            'default' => [$trueLabel,  $falseLabel],
+        ];
+
+        return $this;
+    }
+
+    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
+    {
+        $this->clickToCopy = [
+            'enabled' => $hasPermission,
+            'label'   => $label,
+        ];
+
+        return $this;
+    }
+
+    /**
      * Input Select Filter
      *
      */
@@ -352,7 +399,7 @@ final class Column
     /**
      * Filter Datepicker
      *
-    */
+     */
     public function makeInputDatePicker(
         string $dataField = '',
         array $settings = [],
@@ -393,43 +440,6 @@ final class Column
     }
 
     /**
-     * Adds Edit on click to a column
-     *
-     */
-    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
-    {
-        $this->editable = [
-            'hasPermission'  => $hasPermission,
-            'fallback'       => $fallback,
-            'saveOnMouseOut' => $saveOnMouseOut,
-        ];
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Adds Toggle to a column
-     *
-     */
-    public function toggleable(
-        bool $hasPermission = true,
-        string $trueLabel = 'Yes',
-        string $falseLabel = 'No'
-    ): Column {
-        $this->editable   = [];
-        $this->toggleable = [
-            'enabled' => $hasPermission,
-            'default' => [$trueLabel,  $falseLabel],
-        ];
-
-        return $this;
-    }
-
-    /**
      * Add Input Number Range
      */
     public function makeInputRange(
@@ -457,31 +467,20 @@ final class Column
     }
 
     /**
-     * @return $this
-     */
-    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
-    {
-        $this->clickToCopy = [
-            'enabled' => $hasPermission,
-            'label'   => $label,
-        ];
-
-        return $this;
-    }
-
-    /**
      * Add Boolean Filter
      */
     public function makeBooleanFilter(
         string $dataField = '',
         string $trueLabel = 'Yes',
         string $falseLabel = 'No',
-        array $settings = []
+        string $baseClass = '',
+        string $inputClass = '',
     ): Column {
         $this->inputs['boolean']['enabled']     = true;
         $this->inputs['boolean']['true_label']  = $trueLabel;
         $this->inputs['boolean']['false_label'] = $falseLabel;
-        $this->inputs['boolean']['class']       = $settings['class'] ?? '';
+        $this->inputs['boolean']['baseClass']   = $baseClass;
+        $this->inputs['boolean']['class']       = $inputClass;
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -498,12 +497,14 @@ final class Column
         string $dataField = '',
         string $component = '',
         array $attributes = [],
+        string $baseClass = '',
     ): Column {
-        $this->editable                           = [];
-        $this->inputs['dynamic']['filterType']    = $filter;
-        $this->inputs['dynamic']['dataField']     = $dataField;
-        $this->inputs['dynamic']['component']     = $component;
-        $this->inputs['dynamic']['attributes']    = $attributes;
+        $this->editable                          = [];
+        $this->inputs['dynamic']['filterType']   = $filter;
+        $this->inputs['dynamic']['dataField']    = $dataField;
+        $this->inputs['dynamic']['component']    = $component;
+        $this->inputs['dynamic']['attributes']   = $attributes;
+        $this->inputs['dynamic']['baseClass']    = $baseClass;
 
         return $this;
     }

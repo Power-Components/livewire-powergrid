@@ -27,7 +27,7 @@
                 @endphp
                 <div class="md:flex md:flex-wrap">
                     @foreach(data_get($makeFilters, 'date_picker', []) as $field => $date)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($date, 'baseClass') }}">
                             @includeIf($theme->filterDatePicker->view, [
                                  'inline'    => false,
                                  'date'      => $date,
@@ -38,7 +38,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'select', []) as $field => $select)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($select, 'baseClass') }}">
                             @includeIf($theme->filterSelect->view, [
                                  'inline' => false,
                                  'select' => $select,
@@ -47,7 +47,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'number', []) as $field => $number)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($number, 'baseClass') }}">
                             @includeIf($theme->filterNumber->view, [
                                 'inline' => false,
                                 'number' => $number,
@@ -56,7 +56,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'input_text', []) as $field => $inputText)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($inputText, 'baseClass') }}">
                             @includeIf($theme->filterInputText->view, [
                                  'inline'           => false,
                                  'enabledFilters'   => $enabledFilters,
@@ -67,7 +67,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'boolean', []) as $field => $booleanFilter)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($booleanFilter, 'baseClass') }}">
                             @includeIf($theme->filterBoolean->view, [
                                  'inline'         => false,
                                  'booleanFilter'  => $booleanFilter,
@@ -77,7 +77,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'multi_select', []) as $field => $multiSelect)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($booleanFilter, 'baseClass') }}">
                             @includeIf($theme->filterMultiSelect->view, [
                                 'inline'         => false,
                                 'multiSelect'    => $multiSelect,
@@ -87,7 +87,7 @@
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'dynamic', []) as $field => $input)
-                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4">
+                        <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($input, 'baseClass') }}">
                             @include(powerGridThemeRoot().'.filters.dynamic', [
                                 'input' => $input,
                             ])

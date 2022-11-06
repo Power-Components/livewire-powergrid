@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
-class Model implements ModelFilterInterface
+class Model
 {
     private array $columns;
 
@@ -70,36 +69,16 @@ class Model implements ModelFilterInterface
         foreach ($this->filters as $key => $type) {
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
-                    switch ($key) {
-                        case 'date_picker':
-                            $this->filterDatePicker($query, $field, $value);
-
-                            break;
-                        case 'multi_select':
-                            $this->filterMultiSelect($query, $field, $value);
-
-                            break;
-                        case 'select':
-                            $this->filterSelect($query, $field, $value);
-
-                            break;
-                        case 'boolean':
-                            $this->filterBoolean($query, $field, $value);
-
-                            break;
-                        case 'input_text':
-                            $this->filterInputText($query, $field, $value);
-
-                            break;
-                        case 'input_text_contains':
-                            $this->filterInputTextContains($query, $field, $value);
-
-                            break;
-                        case 'number':
-                            $this->filterNumber($query, $field, $value);
-
-                            break;
-                    }
+                    match ($key) {
+                        'date_picker'         => $this->filterDatePicker($query, $field, $value),
+                        'multi_select'        => $this->filterMultiSelect($query, $field, $value),
+                        'select'              => $this->filterSelect($query, $field, $value),
+                        'boolean'             => $this->filterBoolean($query, $field, $value),
+                        'input_text_contains' => $this->filterInputTextContains($query, $field, $value),
+                        'number'              => $this->filterNumber($query, $field, $value),
+                        'input_text'          => $this->filterInputText($query, $field, $value),
+                        default               => null
+                    };
                 }
             });
         }
@@ -132,7 +111,7 @@ class Model implements ModelFilterInterface
         }
     }
 
-    public function filterSelect(Builder $query, string $field, string|array $values): void
+    public function filterSelect(Builder $query, string $field, string|array|null $values): void
     {
         if (is_array($values)) {
             $field  = $field . '.' . key($values);
@@ -177,56 +156,21 @@ class Model implements ModelFilterInterface
 
         $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower(strval(data_get($this->filters, "input_text_options.$field"))) : 'contains');
 
-        switch ($textFieldOperator) {
-            case 'is':
-                $query->where($field, '=', $value);
-
-                break;
-            case 'is_not':
-                $query->where($field, '!=', $value);
-
-                break;
-            case 'starts_with':
-                $query->where($field, SqlSupport::like($query), $value . '%');
-
-                break;
-            case 'ends_with':
-                $query->where($field, SqlSupport::like($query), '%' . $value);
-
-                break;
-            case 'contains':
-                $query->where($field, SqlSupport::like($query), '%' . $value . '%');
-
-                break;
-            case 'contains_not':
-                $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%');
-
-                break;
-            case 'is_empty':
-                $query->where($field, '=', '')->orWhereNull($field);
-
-                break;
-            case 'is_not_empty':
-                $query->where($field, '!=', '')->whereNotNull($field);
-
-                break;
-            case 'is_null':
-                $query->whereNull($field);
-
-                break;
-            case 'is_not_null':
-                $query->whereNotNull($field);
-
-                break;
-            case 'is_blank':
-                $query->where($field, '=', '');
-
-                break;
-            case 'is_not_blank':
-                $query->where($field, '!=', '')->orWhereNull($field);
-
-                break;
-        }
+        match ($textFieldOperator) {
+            'is'           => $query->where($field, '=', $value),
+            'is_not'       => $query->where($field, '!=', $value),
+            'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
+            'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
+            'contains'     => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
+            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
+            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
+            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
+            'is_null'      => $query->whereNull($field),
+            'is_not_null'  => $query->whereNotNull($field),
+            'is_blank'     => $query->where($field, '=', ''),
+            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
+            default        => null,
+        };
     }
 
     /**
@@ -268,14 +212,22 @@ class Model implements ModelFilterInterface
         }
     }
 
+    private function getColumnList(string $modelTable): array
+    {
+        try {
+            return (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, fn () => Schema::getColumnListing($modelTable));
+        } catch (\Exception) {
+            return Schema::getColumnListing($modelTable);
+        }
+    }
+
     public function filterContains(): Model
     {
         if ($this->search != '') {
             $this->query    = $this->query->where(function (Builder $query) {
                 $modelTable = $query->getModel()->getTable();
-                $columnList = (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, function () use ($modelTable) {
-                    return Schema::getColumnListing($modelTable);
-                });
+
+                $columnList = $this->getColumnList($modelTable);
 
                 /** @var Column $column */
                 foreach ($this->columns as $column) {
@@ -329,15 +281,17 @@ class Model implements ModelFilterInterface
 
                     if ($query->getRelation($nestedTable) != '') {
                         foreach ($column as $nestedColumn) {
-                            $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%');
-                            });
+                            $this->query = $this->query->orWhereHas(
+                                $table . '.' . $nestedTable,
+                                fn (Builder $query) => $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%')
+                            );
                         }
                     }
                 } else {
-                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                        $query->where($column, SqlSupport::like($query), '%' . $this->search . '%');
-                    });
+                    $this->query = $this->query->orWhereHas(
+                        $table,
+                        fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
+                    );
                 }
             }
         }
