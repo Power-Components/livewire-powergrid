@@ -457,7 +457,6 @@ class PowerGridComponent extends Component
                 );
         }
 
-        ds(data_get($this->setUp, "detail.state.$id"));
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
