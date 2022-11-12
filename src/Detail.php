@@ -16,6 +16,8 @@ final class Detail
 
     public string $viewIcon = '';
 
+    public bool $collapseOthers = false;
+
     public static function make(): self
     {
         return new Detail();
@@ -28,9 +30,17 @@ final class Detail
         return $this;
     }
 
+    /** @deprecated - use params instead of options, it will deprecate in version 4 */
     public function options(array $options = []): Detail
     {
         $this->options   = $options;
+
+        return $this;
+    }
+
+    public function params(array $params = []): Detail
+    {
+        $this->options   = $params;
 
         return $this;
     }
@@ -39,6 +49,13 @@ final class Detail
     {
         $this->showCollapseIcon = true;
         $this->viewIcon         = $viewIcon;
+
+        return $this;
+    }
+
+    public function collapseOthers(): Detail
+    {
+        $this->collapseOthers   = true;
 
         return $this;
     }
