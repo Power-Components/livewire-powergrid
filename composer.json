@@ -30,7 +30,8 @@
         "pestphp/pest-plugin-livewire": "^1.0",
         "friendsofphp/php-cs-fixer": "^3.11",
         "nunomaduro/larastan": "^1.0 | 2.1.12",
-        "laradumps/laradumps": "^1.1"
+        "laradumps/laradumps": "^1.1",
+        "phpstan/phpstan": "1.8.1"
     },
     "autoload": {
         "psr-4": {

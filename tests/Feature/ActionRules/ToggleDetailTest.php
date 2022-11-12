@@ -2,13 +2,26 @@
 
 use function Pest\Livewire\livewire;
 
-use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
+use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
 
 it('add rule \'toggleDetail\' when dishId == 3', function () {
-    livewire(RulesToggleDetailTable::class)
+    livewire(RulesToggleDetailTable::class, [
+        'setUpTest' => [
+            Footer::make()
+                ->showPerPage(5),
+
+            Detail::make()
+                ->view('livewire-powergrid::tests.detail')
+                ->params([
+                    'name' => 'Luan',
+                ])
+                ->showCollapseIcon(),
+        ],
+    ])
         ->set('testActions', [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
