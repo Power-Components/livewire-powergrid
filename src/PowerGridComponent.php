@@ -320,8 +320,12 @@ class PowerGridComponent extends Component
         }
 
         $collection->each(function ($model) {
-            $id    = intval($model->{$this->primaryKey});
+            $id    = strval($model->{$this->primaryKey});
+
+            data_set($this->setUp, 'detail', (array) $this->setUp['detail']);
+
             $state = data_get($this->setUp, 'detail.state.' . $id, false);
+
             data_set($this->setUp, 'detail.state.' . $id, $state);
         });
     }
@@ -441,6 +445,18 @@ class PowerGridComponent extends Component
 
     public function toggleDetail(string $id): void
     {
+        $detailStates = (array) data_get($this->setUp, 'detail.state');
+
+        if (boolval(data_get($this->setUp, 'detail.collapseOthers'))) {
+            /** @var Support\Enumerable<(int|string), (int|string)> $except */
+            $except = $id;
+            collect($detailStates)->except($except)
+                ->filter(fn ($state) => $state)->keys()
+                ->each(
+                    fn ($key) => data_set($this->setUp, "detail.state.$key", false)
+                );
+        }
+
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
