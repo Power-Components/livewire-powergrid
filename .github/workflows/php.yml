@@ -40,7 +40,7 @@ jobs:
         laravel: [ 10.x-dev, 9.* ]
         dependency-version: [ prefer-stable ]
         include:
-          - laravel: --dev
+          - laravel: 10.x-dev
             testbench: 7.*
           - laravel: 9.*
             testbench: 7.*
