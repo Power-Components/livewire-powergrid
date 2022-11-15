@@ -37,9 +37,11 @@ jobs:
     strategy:
       matrix:
         php: [ 8.1, 8.0 ]
-        laravel: [ 9.*, ^8.75 ]
+        laravel: [ --dev, 9.*, ^8.75 ]
         dependency-version: [ prefer-stable ]
         include:
+          - laravel: --dev
+            testbench: 7.*
           - laravel: 9.*
             testbench: 7.*
           - laravel: ^8.75
