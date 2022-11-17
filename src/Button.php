@@ -2,8 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Traits\Macroable;
+
 final class Button
 {
+    use Macroable;
+
     public string $caption = '';
 
     public string $route = '';
@@ -35,6 +39,8 @@ final class Button
     public array $params = [];
 
     public ?string $id = null;
+
+    public array $dynamicProperties = [];
 
     /**
      * Button constructor.
