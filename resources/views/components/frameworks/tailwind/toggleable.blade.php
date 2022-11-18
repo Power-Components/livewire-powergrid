@@ -3,23 +3,35 @@
     if (str_contains($primaryKey, '.')) {
         $showDefaultToggle = true;
     }
+
+    $value = (int)$row->{$column->field};
+
+    $trueValue  = $column->toggleable['default'][0];
+    $falseValue = $column->toggleable['default'][1];
+
+    $params = [
+        'id' => $row->{$primaryKey},
+        'isHidden' => !$showToggleable ? 'true' : 'false',
+        'tableName' => $tableName,
+        'field' => $column->field,
+        'toggle' => $value,
+        'trueValue' => $trueValue,
+        'falseValue' => $falseValue,
+    ];
 @endphp
-<div x-data="pgToggleable({
-            id: '{{ $row->{$primaryKey} }}',
-            isHidden: {{ !$showToggleable ? 'true' : 'false' }},
-            tableName: '{{ $tableName }}',
-            field: '{{ $column->field }}',
-            toggle: {{ (int)$row->{$column->field} }},
-            trueValue: '{{ $column->toggleable['default'][0] }}',
-            falseValue:  '{{ $column->toggleable['default'][1] }}',
-         })">
+<div x-data="pgToggleable(@js($params))">
     @if($column->toggleable['enabled'] && !$showDefaultToggle && $showToggleable === true)
-        <div class="flex justify-center">
-            <div class="relative rounded-full w-12 h-6 transition duration-200 ease-linear"
-                 :class="[toggle === 1 ? 'bg-pg-secondary-400 dark:bg-pg-secondary-500' : 'bg-pg-primary-400']">
-                <label
-                    class="absolute left-0 bg-white border-2 mb-2 w-6 h-6 rounded-full transition transform duration-100 ease-linear cursor-pointer"
-                    :class="[toggle === 1 ? 'translate-x-full border-pg-secondary-400' : 'translate-x-0 border-pg-primary-400']"></label>
+        <div class="flex">
+            <div @class([
+                    'relative rounded-full w-8 h-4 transition duration-200 ease-linear',
+                    'bg-pg-secondary-600 dark:pg-secondary-500' => $value === 1,
+                    'bg-pg-primary-200' => $value === 0,
+                 ])>
+                <label @class([
+                         'absolute left-0 bg-white border-2 mb-2 w-4 h-4 rounded-full transition transform duration-100 ease-linear cursor-pointer',
+                         'translate-x-full border-pg-secondary-600' => $value === 1,
+                         'translate-x-0 border-pg-primary-200' => $value === 0,
+                    ]) x-on:click="save"></label>
                 <input type="checkbox"
                        class="appearance-none w-full h-full active:outline-none focus:outline-none"
                        x-on:click="save">
@@ -27,15 +39,13 @@
         </div>
     @else
         <div class="flex flex-row justify-center">
-            @if($row->{$column->field} == 0)
-                <div x-text="falseValue"
-                     class="text-xs px-4 w-auto py-1 text-center bg-red-200 text-red-800 rounded-md">
-                </div>
-            @else
-                <div x-text="trueValue"
-                     class="text-xs px-4 w-auto py-1 text-center bg-pg-secondary-200 text-pg-secondary-800 rounded-md">
-                </div>
-            @endif
+            <div @class([
+                'text-xs px-4 w-auto py-1 text-center rounded-md',
+                'bg-red-200 text-red-800' => $value === 0,
+                'bg-blue-200 text-blue-800' => $value === 0,
+            ])>
+                {{ $value === 0 ? $falseValue : $trueValue }}
+            </div>
         </div>
     @endif
 </div>
