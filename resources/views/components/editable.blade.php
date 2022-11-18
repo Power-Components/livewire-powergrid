@@ -30,14 +30,14 @@
             'py-2 px-3' : theme == 'tailwind',
             'p-1' : theme == 'bootstrap5',
          }"
-         x-show="!editable"
+         x-show="!showEditable"
          x-on:click="editable = true;"
          :id="`clickable-`+dataField+'-'+id"
          style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
     >
         {{ $content }}
     </div>
-    <div x-show="editable && !hashError" style="margin-bottom: 4px">
+    <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
         {{ $input }}
     </div>
     @if($showErrorBag)
