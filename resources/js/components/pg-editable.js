@@ -9,6 +9,7 @@ export default (params) => ({
     fallback: params.fallback,
     hash: null,
     hashError: true,
+    showEditable: false,
     init() {
         this.hash = this.dataField + '-' + this.id
 
@@ -18,18 +19,23 @@ export default (params) => ({
 
         this.$watch('editable', (value) => {
             if (value) {
+                this.showEditable = false
+
+                this.hash = this.dataField + '-' + this.id
+
                 this.content = this.htmlSpecialChars(this.content);
+
+                this.oldContent = this.content;
 
                 const editablePending = window.editablePending.notContains(this.hash)
 
                 this.hashError = editablePending
+
                 if (editablePending) {
                     const pendingHash = window.editablePending.pending[0]
                     document.getElementById('clickable-' + pendingHash).click()
-                }
-
-                if (window.editablePending.notContains(this.hash)) {
-                    this.editable = false
+                } else {
+                    this.showEditable = true
                 }
 
                 this.$nextTick(() => setTimeout(() => this.focus(), 50))
@@ -41,6 +47,7 @@ export default (params) => ({
     save() {
         if(this.$el.textContent == this.oldContent) {
             this.editable = false;
+            this.showEditable = false;
 
             return;
         }
@@ -49,6 +56,7 @@ export default (params) => ({
             window.addEventListener('pg:editable-close-'+this.id, () => {
                 window.editablePending.clear()
                 this.editable = false;
+                this.showEditable = false;
             })
 
             if(!window.editablePending.has(this.hash)) {
@@ -85,6 +93,7 @@ export default (params) => ({
         this.$refs.editable.textContent = this.oldContent;
         this.content = this.oldContent;
         this.editable = false;
+        this.showEditable = false;
     },
     htmlSpecialChars(string) {
         const el = document.createElement('div');
