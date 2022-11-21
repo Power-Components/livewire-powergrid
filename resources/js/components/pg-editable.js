@@ -15,13 +15,15 @@ export default (params) => ({
             this.content = this.htmlSpecialChars(this.fallback);
         }
 
-        this.hash = this.dataField + '-' + this.id
-
         this.$watch('editable', (value) => {
             if (value) {
                 let showEditable = false
 
                 this.showEditable = false
+
+                this.showEditable = false
+
+                this.hash = this.dataField + '-' + this.id
 
                 this.content = this.htmlSpecialChars(this.content);
 
