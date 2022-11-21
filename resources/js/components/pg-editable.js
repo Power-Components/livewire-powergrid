@@ -15,11 +15,13 @@ export default (params) => ({
             this.content = this.htmlSpecialChars(this.fallback);
         }
 
+        this.hash = this.dataField + '-' + this.id
+
         this.$watch('editable', (value) => {
             if (value) {
-                this.showEditable = false
+                let showEditable = false
 
-                this.hash = this.dataField + '-' + this.id
+                this.showEditable = false
 
                 this.content = this.htmlSpecialChars(this.content);
 
@@ -33,10 +35,13 @@ export default (params) => ({
                     const pendingHash = window.editablePending.pending[0]
                     document.getElementById('clickable-' + pendingHash).click()
                 } else {
-                    this.showEditable = true
+                    showEditable = true
                 }
 
-                this.$nextTick(() => setTimeout(() => this.focus(), 50))
+                this.$nextTick(() => setTimeout(() => {
+                    this.showEditable = showEditable
+                    this.focus()
+                }, 150))
             }
         })
 
@@ -67,14 +72,14 @@ export default (params) => ({
                 field: this.dataField
             })
 
+            this.oldContent = null
+
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
                 setTimeout(() => this.$refs.editable.value = '', 200)
             }, 100))
 
-            this.$nextTick(() => setTimeout(() => this.focus(), 50))
-
-        }, 200)
+        }, 100)
 
         this.content = this.htmlSpecialChars(this.$el.textContent)
     },
