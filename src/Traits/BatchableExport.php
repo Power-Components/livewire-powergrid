@@ -24,8 +24,6 @@ trait BatchableExport
 
     public string $onQueue = 'default';
 
-    public int $total = 0;
-
     public int $queues = 0;
 
     public bool $showExporting = true;
