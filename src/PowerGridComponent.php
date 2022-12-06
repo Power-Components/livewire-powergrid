@@ -490,6 +490,17 @@ class PowerGridComponent extends Component
         return $this->powerGridListeners();
     }
 
+    public function refresh(): void
+    {
+        if (($this->total - 1) === intval(data_get($this->setUp, 'footer.perPage'))) {
+            $this->gotoPage(1);
+
+            return;
+        }
+
+        $this->emitSelf('$refresh', []);
+    }
+
     protected function powerGridListeners(): array
     {
         return [
@@ -498,7 +509,7 @@ class PowerGridComponent extends Component
             'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:eventRefresh-' . $this->tableName => 'refresh',
             'pg:softDeletes-' . $this->tableName  => 'softDeletes',
         ];
     }
