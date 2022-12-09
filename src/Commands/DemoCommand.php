@@ -92,6 +92,7 @@ class DemoCommand extends Command
 
         $this->output->getFormatter()->setStyle('msg', $infoStyle);
 
+        /** @phpstan-ignore-next-line */
         $message =  $this->getHelper('formatter')->formatBlock(['', '⚡ Welcome to PowerGrid! ⚡', ''], 'msg', true);
         $this->output->writeln($message);
 
