@@ -217,3 +217,14 @@ function requiresPostgreSQL()
 
     return test();
 }
+
+function requiresOpenSpout()
+{
+    $isInstalled = \Composer\InstalledVersions::isInstalled('openspout/openspout');
+
+    if (!$isInstalled) {
+        test()->markTestSkipped('This test requires openspout/openspout');
+    }
+
+    return test();
+}

@@ -21,7 +21,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: powergridtest
         ports:
-         - 3307:3306
+          - 3307:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       postgres:
@@ -31,19 +31,17 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: powergridtest
         ports:
-        - 5433:5432
+          - 5433:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     strategy:
       matrix:
-        php: [ 8.1, 8.0 ]
-        laravel: [ 9.*, ^8.75 ]
+        php: [ 8.1, 8.2 ]
+        laravel: [ 9.* ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 9.*
             testbench: 7.*
-          - laravel: ^8.75
-            testbench: 6.*
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
 
@@ -55,7 +53,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           tools: composer:v2
           coverage: none
 
@@ -72,10 +70,10 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "openspout/openspout" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
-
       - name: Cs Fixer
+        if: matrix.php == '8.1'
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
@@ -84,11 +82,9 @@ jobs:
       - name: Testing with SQLite
         run: |
           ./vendor/bin/pest --configuration phpunit.sqlite.xml
-
       - name: Testing with MySQL
         run: |
-            ./vendor/bin/pest --configuration phpunit.mysql.xml
-
+          ./vendor/bin/pest --configuration phpunit.mysql.xml
       - name: Testing with PostgreSQL
         run: |
-            ./vendor/bin/pest --configuration phpunit.pgsql.xml
+          ./vendor/bin/pest --configuration phpunit.pgsql.xml

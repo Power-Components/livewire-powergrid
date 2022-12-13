@@ -10,14 +10,14 @@ it('properly export xls - all data', function () {
     livewire(ExportTable::class)
         ->call('exportToXLS', false)
         ->assertFileDownloaded('export.xlsx');
-});
+})->requiresOpenSpout();
 
 it('properly does not export xls data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToXLS', true);
 
     expect(null)->notToBeFileDownloaded($component);
-});
+})->requiresOpenSpout();
 
 it('properly export csv data with selected data', function () {
     $downloadedFile =  livewire(ExportTable::class)
@@ -35,7 +35,7 @@ it('properly export csv data with selected data', function () {
     ];
 
     expect($downloadedFile)->toBeCsvDownload($headings, $rows);
-});
+})->requiresOpenSpout();
 
 it('properly export xls data with selected data', function () {
     $downloadedFile =  livewire(ExportTable::class)
@@ -55,7 +55,7 @@ it('properly export xls data with selected data', function () {
     ];
 
     expect($downloadedFile)->toBeXLSDownload($headings, $rows);
-});
+})->requiresOpenSpout();
 
 it('properly sets CSV separator and delimiter', function () {
     $downloadedFile = livewire(ExportTable::class, ['separator' => '|', 'delimiter' => '@'])
@@ -71,20 +71,20 @@ it('properly sets CSV separator and delimiter', function () {
     ];
 
     expect($downloadedFile)->toBeCsvDownload($headings, $rows);
-});
+})->requiresOpenSpout();
 
 it('properly export csv - all data', function () {
     livewire(ExportTable::class)
         ->call('exportToCsv', false)
         ->assertFileDownloaded('export.csv');
-});
+})->requiresOpenSpout();
 
 it('properly does not export csv data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToCsv', true);
 
     expect(null)->notToBeFileDownloaded($component);
-});
+})->requiresOpenSpout();
 
 /*
 |--------------------------------------------------------------------------
