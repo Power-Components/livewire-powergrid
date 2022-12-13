@@ -73,21 +73,9 @@ class PowerGridComponent extends Component
 
     public bool $rowIndex = true;
 
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return $this->powerGridListeners();
-    }
+    public int $total = 0;
 
-    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
-    {
-        $this->checkbox          = true;
-        $this->checkboxAttribute = $attribute;
-
-        return $this;
-    }
+    public int $totalCurrentPage = 0;
 
     public function mount(): void
     {
@@ -114,10 +102,17 @@ class PowerGridComponent extends Component
         $this->restoreState();
     }
 
+    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->checkbox          = true;
+        $this->checkboxAttribute = $attribute;
+
+        return $this;
+    }
+
     /**
      * Apply checkbox, perPage and search view and theme
-     * @return array
-     */
+    */
     public function setUp(): array
     {
         return [];
@@ -146,6 +141,37 @@ class PowerGridComponent extends Component
                 $this->footerTotalColumn = true;
             }
         });
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function render(): Application|Factory|View
+    {
+        /** @var ThemeBase $themeBase */
+        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+
+        $this->powerGridTheme = $themeBase->apply();
+
+        $this->columns = collect($this->columns)->map(function ($column) {
+            return (object) $column;
+        })->toArray();
+
+        $this->relationSearch = $this->relationSearch();
+
+        $data = $this->fillData();
+
+        if (method_exists($this, 'initActions')) {
+            $this->initActions();
+            if (method_exists($this, 'header')) {
+                $this->headers = $this->header();
+            }
+        }
+
+        /** @phpstan-ignore-next-line */
+        $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
+
+        return $this->renderView($data);
     }
 
     public function template(): ?string
@@ -249,7 +275,6 @@ class PowerGridComponent extends Component
         self::resolveDetailRow($results);
 
         if (method_exists($results, 'total')) {
-            /** @phpstan-ignore-next-line  */
             $this->total = $results->total();
         }
 
@@ -479,32 +504,15 @@ class PowerGridComponent extends Component
         };
     }
 
-    /**
-     * @throws Exception
-     */
-    public function render(): Application|Factory|View
+    public function refresh(): void
     {
-        /** @var ThemeBase $themeBase */
-        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
+        if (($this->total > 0) && ($this->totalCurrentPage - 1) === 0) {
+            $this->previousPage();
 
-        $this->powerGridTheme = $themeBase->apply();
-
-        $this->columns = collect($this->columns)->map(function ($column) {
-            return (object) $column;
-        })->toArray();
-
-        $this->relationSearch = $this->relationSearch();
-
-        $data = $this->fillData();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-            if (method_exists($this, 'header')) {
-                $this->headers = $this->header();
-            }
+            return;
         }
 
-        return $this->renderView($data);
+        $this->emitSelf('$refresh', []);
     }
 
     protected function powerGridListeners(): array
@@ -515,8 +523,16 @@ class PowerGridComponent extends Component
             'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:eventRefresh-' . $this->tableName => 'refresh',
             'pg:softDeletes-' . $this->tableName  => 'softDeletes',
         ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getListeners()
+    {
+        return $this->powerGridListeners();
     }
 }
