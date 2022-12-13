@@ -24,8 +24,8 @@ class ExportToXLS extends Export implements ExportInterface
         $this->striped       = strval(data_get($exportOptions, 'striped'));
 
         /** @var array $columnWidth */
-        $columnWidth         = data_get($exportOptions, 'columnWidth', []);
-        $this->columnWidth   = $columnWidth;
+        $columnWidth       = data_get($exportOptions, 'columnWidth', []);
+        $this->columnWidth = $columnWidth;
 
         $this->build($exportOptions);
 

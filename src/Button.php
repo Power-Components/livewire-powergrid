@@ -191,8 +191,8 @@ final class Button
      */
     public function bladeComponent(string $component, array $params): Button
     {
-        $this->bladeComponent  = $component;
-        $this->params          = $params;
+        $this->bladeComponent = $component;
+        $this->params         = $params;
 
         return $this;
     }
@@ -202,9 +202,9 @@ final class Button
      */
     public function dispatch(string $event, array $params): Button
     {
-        $this->browserEvent  = $event;
-        $this->params        = $params;
-        $this->route         = '';
+        $this->browserEvent = $event;
+        $this->params       = $params;
+        $this->route        = '';
 
         return $this;
     }
@@ -214,7 +214,7 @@ final class Button
      */
     public function id(string $value = null): Button
     {
-        $this->id     = $value;
+        $this->id = $value;
 
         return $this;
     }

@@ -169,7 +169,7 @@ trait WithExport
             return $this->transform($this->resolveCollection());
         }
 
-        $model        = $this->resolveModel();
+        $model = $this->resolveModel();
         /** @phpstan-ignore-next-line */
         $currentTable = $model->getModel()->getTable();
 
@@ -222,7 +222,7 @@ trait WithExport
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
-            $column->hidden     = $currentHiddenStates[$column->field];
+            $column->hidden = $currentHiddenStates[$column->field];
 
             return $column;
         }, $this->columns());
@@ -239,7 +239,7 @@ trait WithExport
 
     private function getExportableClassFromConfig(string $exportType): string
     {
-        $defaultExportable      = strval(config('livewire-powergrid.exportable.default'));
+        $defaultExportable = strval(config('livewire-powergrid.exportable.default'));
 
         return strval(data_get(config('livewire-powergrid.exportable'), $defaultExportable . '.' . $exportType));
     }

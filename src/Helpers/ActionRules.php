@@ -24,7 +24,7 @@ class ActionRules
 
     public function resolveRules(array $rules, object|array $row): Collection
     {
-        $rules   = collect($rules);
+        $rules = collect($rules);
 
         /** @phpstan-ignore-next-line */
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
@@ -68,6 +68,7 @@ class ActionRules
 
             if (isset($key[$action])) {
                 $rule = (array) $key[$action];
+
                 foreach ($this->actionRules as $action) {
                     if (data_get($rule, "action.$action")) {
                         $actionRules[$action][] = data_get($rule, "action.$action");

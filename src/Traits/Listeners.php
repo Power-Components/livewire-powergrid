@@ -14,8 +14,8 @@ trait Listeners
      */
     public function inputTextChanged(array $data = []): void
     {
-        $id         = $data['id'];
-        $field      = $data['field'];
+        $id    = $data['id'];
+        $field = $data['field'];
 
         $this->{$field}[$id] = $data['value'];
 
@@ -31,8 +31,8 @@ trait Listeners
      */
     public function toggleableChanged(array $data = []): void
     {
-        $id         = $data['id'];
-        $field      = $data['field'];
+        $id    = $data['id'];
+        $field = $data['field'];
 
         $this->onUpdatedToggleable($id, $field, $data['value']);
     }

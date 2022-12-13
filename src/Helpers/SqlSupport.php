@@ -43,8 +43,8 @@ class SqlSupport
      */
     public static function sortStringAsNumber(string $sortField): string
     {
-        $driverName              = self::getDatabaseDriverName();
-        $driverVersion           = self::getDatabaseVersion();
+        $driverName    = self::getDatabaseDriverName();
+        $driverVersion = self::getDatabaseVersion();
 
         return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
     }
@@ -121,6 +121,7 @@ class SqlSupport
     public static function getSortFieldType(string $sortField): ?string
     {
         $data = explode('.', $sortField);
+
         if (!isset($data[1])) {
             return null;
         }
@@ -154,7 +155,7 @@ class SqlSupport
      */
     public static function getDatabaseVersion(): string
     {
-        $version =   DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
+        $version = DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
 
         if (!is_string($version)) {
             throw new \Exception('Could not get Database version');

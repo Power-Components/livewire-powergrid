@@ -95,14 +95,14 @@ class Actions
     {
         $rules = resolve(ActionRules::class)->recoverFromButton($this->action, $this->row);
 
-        $this->ruleRedirect          = (array) data_get($rules, 'redirect', []);
-        $this->ruleDisabled          = boolval(data_get($rules, 'disable', false));
-        $this->ruleHide              = boolval(data_get($rules, 'hide', false));
-        $this->ruleAttributes        = (array) (data_get($rules, 'setAttribute', []));
-        $this->ruleBladeComponent    = (array) (data_get($rules, 'bladeComponent', []));
-        $this->ruleEmit              = (array) data_get($rules, 'emit', []);
-        $this->ruleEmitTo            = (array) data_get($rules, 'emitTo', []);
-        $this->ruleCaption           = strval(data_get($rules, 'caption'));
+        $this->ruleRedirect       = (array) data_get($rules, 'redirect', []);
+        $this->ruleDisabled       = boolval(data_get($rules, 'disable', false));
+        $this->ruleHide           = boolval(data_get($rules, 'hide', false));
+        $this->ruleAttributes     = (array) (data_get($rules, 'setAttribute', []));
+        $this->ruleBladeComponent = (array) (data_get($rules, 'bladeComponent', []));
+        $this->ruleEmit           = (array) data_get($rules, 'emit', []);
+        $this->ruleEmitTo         = (array) data_get($rules, 'emitTo', []);
+        $this->ruleCaption        = strval(data_get($rules, 'caption'));
     }
 
     private function attributes(): void
@@ -191,7 +191,7 @@ class Actions
             return;
         }
 
-        $to  =  $this->ruleEmitTo['to'] ?? $this->action->to;
+        $to = $this->ruleEmitTo['to'] ?? $this->action->to;
 
         $event = $this->ruleEmitTo['event'] ?? $this->action->event;
 
@@ -288,8 +288,8 @@ class Actions
         $component = $this->action->bladeComponent;
 
         if (filled($this->ruleBladeComponent)) {
-            $component     = $this->ruleBladeComponent['component'];
-            $parameters    = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
+            $component  = $this->ruleBladeComponent['component'];
+            $parameters = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
         }
 
         $this->bladeComponentParams = new ComponentAttributeBag($parameters ?? $this->parameters);

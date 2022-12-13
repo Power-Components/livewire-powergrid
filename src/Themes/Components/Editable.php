@@ -18,7 +18,7 @@ class Editable
 
     public function view(string $view): Editable
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }
@@ -34,21 +34,21 @@ class Editable
 
     public function span(string $attrClass): Editable
     {
-        $this->spanClass    = $attrClass;
+        $this->spanClass = $attrClass;
 
         return $this;
     }
 
     public function button(string $attrClass): Editable
     {
-        $this->buttonClass    = $attrClass;
+        $this->buttonClass = $attrClass;
 
         return $this;
     }
 
     public function input(string $attrClass): Editable
     {
-        $this->inputClass    = $attrClass;
+        $this->inputClass = $attrClass;
 
         return $this;
     }

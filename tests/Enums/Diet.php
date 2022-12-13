@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Enums;
 
 enum Diet: int
 {
-    case ALL      = 0;
-    case VEGAN    = 1;
-    case CELIAC   = 2;
+    case ALL    = 0;
+    case VEGAN  = 1;
+    case CELIAC = 2;
 
     public function labels(): string
     {
@@ -16,7 +16,7 @@ enum Diet: int
             self::CELIAC => '🥜 Suitable for Celiacs',
         };
     }
-    
+
     /**
      * Sends labels to PowerGrid Enum Input
      *

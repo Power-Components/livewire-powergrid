@@ -20,7 +20,7 @@ it('properly does not export xls data without selected data', function () {
 })->requiresOpenSpout();
 
 it('properly export csv data with selected data', function () {
-    $downloadedFile =  livewire(ExportTable::class)
+    $downloadedFile = livewire(ExportTable::class)
          ->set('checkboxValues', [
              0 => '1',
              1 => '2',
@@ -38,7 +38,7 @@ it('properly export csv data with selected data', function () {
 })->requiresOpenSpout();
 
 it('properly export xls data with selected data', function () {
-    $downloadedFile =  livewire(ExportTable::class)
+    $downloadedFile = livewire(ExportTable::class)
         ->set('checkboxValues', [
             0 => '1',
             1 => '2',

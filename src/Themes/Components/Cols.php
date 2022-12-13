@@ -14,16 +14,16 @@ class Cols
 
     public function div(string $attrClass = '', string $attrStyle = ''): Cols
     {
-        $this->divClass    = $attrClass;
-        $this->divStyle    = $attrStyle;
+        $this->divClass = $attrClass;
+        $this->divStyle = $attrStyle;
 
         return $this;
     }
 
     public function clearFilter(string $attrClass = '', string $attrStyle = ''): Cols
     {
-        $this->clearFilterClass    = $attrClass;
-        $this->clearFilterStyle    = $attrStyle;
+        $this->clearFilterClass = $attrClass;
+        $this->clearFilterStyle = $attrStyle;
 
         return $this;
     }

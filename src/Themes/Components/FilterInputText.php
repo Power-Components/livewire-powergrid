@@ -25,7 +25,7 @@ class FilterInputText
 
     public function view(string $view): FilterInputText
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

@@ -261,6 +261,7 @@ final class Column
     public function field(string $field, string $dataField = ''): Column
     {
         $this->field = $field;
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -371,7 +372,7 @@ final class Column
         $this->editable                         = [];
         $this->inputs['select']['data_source']  = $datasource;
         $this->inputs['select']['displayField'] = $displayField;
-        $this->inputs['select']['dataField']    = $dataField         ?? $displayField;
+        $this->inputs['select']['dataField']    = $dataField ?? $displayField;
         $this->inputs['select']['class']        = $settings['class'] ?? '';
 
         return $this;
@@ -408,6 +409,7 @@ final class Column
         $this->inputs['date_picker']['enabled'] = true;
         $this->inputs['date_picker']['class']   = $classAttr;
         $this->inputs['date_picker']['config']  = $settings;
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -445,7 +447,8 @@ final class Column
     public function makeInputRange(
         string $dataField = '',
     ): Column {
-        $this->inputs['number']['enabled']   = true;
+        $this->inputs['number']['enabled'] = true;
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -459,6 +462,7 @@ final class Column
     public function makeInputText(string $dataField = ''): Column
     {
         $this->inputs['input_text']['enabled'] = true;
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -481,6 +485,7 @@ final class Column
         $this->inputs['boolean']['false_label'] = $falseLabel;
         $this->inputs['boolean']['baseClass']   = $baseClass;
         $this->inputs['boolean']['class']       = $inputClass;
+
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
@@ -499,12 +504,12 @@ final class Column
         array $attributes = [],
         string $baseClass = '',
     ): Column {
-        $this->editable                          = [];
-        $this->inputs['dynamic']['filterType']   = $filter;
-        $this->inputs['dynamic']['dataField']    = $dataField;
-        $this->inputs['dynamic']['component']    = $component;
-        $this->inputs['dynamic']['attributes']   = $attributes;
-        $this->inputs['dynamic']['baseClass']    = $baseClass;
+        $this->editable                        = [];
+        $this->inputs['dynamic']['filterType'] = $filter;
+        $this->inputs['dynamic']['dataField']  = $dataField;
+        $this->inputs['dynamic']['component']  = $component;
+        $this->inputs['dynamic']['attributes'] = $attributes;
+        $this->inputs['dynamic']['baseClass']  = $baseClass;
 
         return $this;
     }

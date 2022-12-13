@@ -11,12 +11,14 @@ trait PersistData
     private function persistState(string $tableItem): void
     {
         $state = [];
+
         if (in_array('columns', $this->persist) || $tableItem === 'columns') {
             $state['columns'] = collect($this->columns)
                 ->map(fn ($column) => (object) $column)
                 ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
                 ->toArray();
         }
+
         if (in_array('filters', $this->persist) || $tableItem === 'filters') {
             $state['filters']        = $this->filters;
             $state['enabledFilters'] = $this->enabledFilters;
@@ -36,6 +38,7 @@ trait PersistData
         }
 
         $cookie = filter_input(INPUT_COOKIE, 'pg:' . $this->tableName);
+
         if (is_null($cookie)) {
             return;
         }

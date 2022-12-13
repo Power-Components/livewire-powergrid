@@ -28,16 +28,18 @@ trait WithCheckbox
         }
 
         /** @var AbstractPaginator $data */
-        $data      = $this->fillData();
+        $data = $this->fillData();
 
         $actionRulesClass = resolve(ActionRules::class);
 
         collect($data->items())->each(function ($model) use ($actionRulesClass) {
-            $rules    = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
+            $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
+
             if (isset($rules['hide'])) {
                 return;
             }
-            $value    = $model->{$this->checkboxAttribute};
+            $value = $model->{$this->checkboxAttribute};
+
             if (!in_array($value, $this->checkboxValues)) {
                 $this->checkboxValues[] = (string) $model->{$this->checkboxAttribute};
             }

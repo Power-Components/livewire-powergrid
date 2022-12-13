@@ -25,7 +25,7 @@ final class Detail
 
     public function view(string $view): Detail
     {
-        $this->view      = $view;
+        $this->view = $view;
 
         return $this;
     }
@@ -33,14 +33,14 @@ final class Detail
     /** @deprecated - use params instead of options, it will deprecate in version 4 */
     public function options(array $options = []): Detail
     {
-        $this->options   = $options;
+        $this->options = $options;
 
         return $this;
     }
 
     public function params(array $params = []): Detail
     {
-        $this->options   = $params;
+        $this->options = $params;
 
         return $this;
     }
@@ -55,7 +55,7 @@ final class Detail
 
     public function collapseOthers(): Detail
     {
-        $this->collapseOthers   = true;
+        $this->collapseOthers = true;
 
         return $this;
     }

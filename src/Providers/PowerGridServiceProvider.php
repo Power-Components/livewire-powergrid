@@ -35,6 +35,7 @@ class PowerGridServiceProvider extends ServiceProvider
         );
 
         $file = __DIR__ . '/../functions.php';
+
         if (file_exists($file)) {
             require_once($file);
         }

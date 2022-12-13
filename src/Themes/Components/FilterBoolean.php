@@ -25,7 +25,7 @@ class FilterBoolean
 
     public function view(string $view): FilterBoolean
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

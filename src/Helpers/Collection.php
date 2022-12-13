@@ -99,6 +99,7 @@ class Collection
             $this->query = $this->query->filter(function ($row) {
                 foreach ($this->columns as $column) {
                     $field = $column->field;
+
                     if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
                         return false !== stristr($row->{$field}, strtolower($this->search));
                     }
@@ -143,7 +144,7 @@ class Collection
     public function filterInputTextContains(string $field, ?string $value): void
     {
         $this->query = $this->query->filter(function ($row) use ($field, $value) {
-            $row     = (object) $row;
+            $row = (object) $row;
 
             return false !== stristr($row->{$field}, strtolower((string) $value));
         });
@@ -157,40 +158,40 @@ class Collection
             'is'          => $this->query->where($field, '=', $value),
             'is_not'      => $this->query->where($field, '!=', $value),
             'starts_with' => $this->query->filter(function ($row) use ($field, $value) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
             'ends_with' => $this->query->filter(function ($row) use ($field, $value) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
             'contains' => $this->query->filter(function ($row) use ($field, $value) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return false !== stristr($row->{$field}, strtolower((string) $value));
             }),
             'contains_not' => $this->query->filter(function ($row) use ($field, $value) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
             'is_empty' => $this->query->filter(function ($row) use ($field) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return $row->{$field} == '' || is_null($row->{$field});
             }),
             'is_not_empty' => $this->query->whereNotNull($field),
             'is_null'      => $this->query->whereNull($field),
             'is_not_null'  => $this->query->filter(function ($row) use ($field) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return $row->{$field} !== '' && !is_null($row->{$field});
             }),
             'is_blank'     => $this->query->whereNotNull($field)->where($field, '=', ''),
             'is_not_blank' => $this->query->filter(function ($row) use ($field) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 return $row->{$field} != '' || is_null($row->{$field});
             }),
@@ -223,12 +224,14 @@ class Collection
         $empty = false;
         /** @var array|null $values */
         $values = collect($value)->get('values');
+
         if (is_array($values) && count($values) > 0) {
             foreach ($values as $value) {
                 if ($value === '') {
                     $empty = true;
                 }
             }
+
             if (!$empty) {
                 $this->query = $this->query->whereIn($field, $values);
             }
@@ -242,6 +245,7 @@ class Collection
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = $value['start'];
+
             if (isset($this->inputRangeConfig[$field])) {
                 $start = str_replace($value['thousands'], '', $value['start']);
                 $start = (float) str_replace($value['decimal'], '.', $start);
@@ -249,14 +253,17 @@ class Collection
 
             $this->query = $this->query->where($field, '>=', $start);
         }
+
         if (!isset($value['start']) && isset($value['end'])) {
             $end = $value['end'];
+
             if (isset($this->inputRangeConfig[$field])) {
                 $end = str_replace($value['thousands'], '', $value['end']);
                 $end = (float) str_replace($value['decimal'], '.', $end);
             }
             $this->query = $this->query->where($field, '<=', $end);
         }
+
         if (isset($value['start']) && isset($value['end'])) {
             $start = $value['start'];
             $end   = $value['end'];
@@ -277,7 +284,7 @@ class Collection
     {
         if (!empty($this->search)) {
             $this->query = $this->query->filter(function ($row) {
-                $row     = (object) $row;
+                $row = (object) $row;
 
                 foreach ($this->columns as $column) {
                     if ($column->searchable) {

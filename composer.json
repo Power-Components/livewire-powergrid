@@ -28,10 +28,10 @@
         "composer/composer": "^2.1",
         "pestphp/pest-plugin-faker": "^1.0",
         "pestphp/pest-plugin-livewire": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.11",
         "nunomaduro/larastan": "^1.0 | 2.1.12",
         "laradumps/laradumps": "^1.1",
-        "phpstan/phpstan": "1.8.1"
+        "phpstan/phpstan": "1.8.1",
+        "laravel/pint": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -54,9 +54,9 @@
         }
     },
     "scripts": {
-        "cs-fixer": "./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation",
-        "fix": "./vendor/bin/php-cs-fixer fix",
+        "pint:fix": "./vendor/bin/pint",
         "test": "@test:sqlite",
+        "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": "./vendor/bin/pest --configuration phpunit.sqlite.xml",
         "test:mysql":  "./vendor/bin/pest --configuration phpunit.mysql.xml",
         "test:pgsql":  "./vendor/bin/pest --configuration phpunit.pgsql.xml",
@@ -69,7 +69,7 @@
             "@test:sqlsrv"
         ],
         "check": [
-            "@cs-fixer",
+            "@test:pint",
             "@test:types",
             "@test"
         ]

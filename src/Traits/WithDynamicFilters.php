@@ -21,8 +21,8 @@ trait WithDynamicFilters
 
                 $explodeFilterType = Str::of($filterType)->explode(',');
 
-                $filter     = strval($explodeFilterType->get(0));
-                $type       = strval($explodeFilterType->get(1));
+                $filter = strval($explodeFilterType->get(0));
+                $type   = strval($explodeFilterType->get(1));
 
                 /** @phpstan-ignore-next-line */
                 $initial = match ($type) {

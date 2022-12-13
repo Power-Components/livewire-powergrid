@@ -92,8 +92,8 @@ class RuleActions
      */
     public function redirect(Closure $closure = null, string $target = '_blank'): RuleActions
     {
-        $this->rule['emit']      = [];
-        $this->rule['redirect']  = [
+        $this->rule['emit']     = [];
+        $this->rule['redirect'] = [
             'closure' => $closure,
             'target'  => $target,
         ];

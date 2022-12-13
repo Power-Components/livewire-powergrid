@@ -25,7 +25,7 @@ class FilterNumber
 
     public function view(string $view): FilterNumber
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

@@ -21,7 +21,7 @@ class FilterMultiSelect
 
     public function view(string $view): FilterMultiSelect
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

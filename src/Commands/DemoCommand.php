@@ -34,10 +34,10 @@ class DemoCommand extends Command
         $this->tableFileName = 'PowerGridDemoTable';
         $this->viewFileName  = 'powergrid-demo.blade';
 
-        $this->livewirePath      = 'Http/Livewire/';
-        $this->fullLivewirePath  = app_path($this->livewirePath);
+        $this->livewirePath     = 'Http/Livewire/';
+        $this->fullLivewirePath = app_path($this->livewirePath);
 
-        $this->viewFolder  = 'resources/views';
+        $this->viewFolder = 'resources/views';
 
         if (!is_dir($this->fullLivewirePath)) {
             (new Filesystem())->makeDirectory($this->fullLivewirePath);
@@ -93,7 +93,7 @@ class DemoCommand extends Command
         $this->output->getFormatter()->setStyle('msg', $infoStyle);
 
         /** @phpstan-ignore-next-line */
-        $message =  $this->getHelper('formatter')->formatBlock(['', '⚡ Welcome to PowerGrid! ⚡', ''], 'msg', true);
+        $message = $this->getHelper('formatter')->formatBlock(['', '⚡ Welcome to PowerGrid! ⚡', ''], 'msg', true);
         $this->output->writeln($message);
 
         $this->output->newLine(2);

@@ -25,7 +25,7 @@ class FilterDatePicker
 
     public function view(string $view): FilterDatePicker
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

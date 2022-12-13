@@ -34,12 +34,12 @@ class ExportToCsv extends Export implements ExportInterface
     {
         $data = $this->prepare($this->data, $this->columns);
 
-        $csvSeparator     = strval(data_get($exportOptions, 'csvSeparator', ','));
-        $csvDelimiter     = strval(data_get($exportOptions, 'csvDelimiter', '"'));
+        $csvSeparator = strval(data_get($exportOptions, 'csvSeparator', ','));
+        $csvDelimiter = strval(data_get($exportOptions, 'csvDelimiter', '"'));
 
-        $csvOptions                   = new \OpenSpout\Writer\CSV\Options();
-        $csvOptions->FIELD_DELIMITER  = $csvSeparator;
-        $csvOptions->FIELD_ENCLOSURE  = $csvDelimiter;
+        $csvOptions                  = new \OpenSpout\Writer\CSV\Options();
+        $csvOptions->FIELD_DELIMITER = $csvSeparator;
+        $csvOptions->FIELD_ENCLOSURE = $csvDelimiter;
 
         $writer = new Writer($csvOptions);
         $writer->openToFile(storage_path($this->fileName . '.csv'));

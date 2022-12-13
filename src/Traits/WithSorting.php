@@ -68,6 +68,7 @@ trait WithSorting
     {
         if (is_a($query, Collection::class)) {
             $formattedSortingArray = [];
+
             foreach ($this->sortArray as $sortField => $sortDirection) {
                 $formattedSortingArray[] = [$sortField, $sortDirection];
             }

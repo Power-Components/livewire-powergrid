@@ -23,8 +23,8 @@ class Actions
      */
     public function rowsBtn(string $attrClass = '', string $attrStyle = ''): Actions
     {
-        $this->btnClass    = $attrClass;
-        $this->btnStyle    = $attrStyle;
+        $this->btnClass = $attrClass;
+        $this->btnStyle = $attrStyle;
 
         return $this;
     }

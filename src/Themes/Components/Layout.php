@@ -16,35 +16,35 @@ class Layout
 
     public function table(string $path): Layout
     {
-        $this->table    = $path;
+        $this->table = $path;
 
         return $this;
     }
 
     public function header(string $path): Layout
     {
-        $this->header    = $path;
+        $this->header = $path;
 
         return $this;
     }
 
     public function pagination(string $path): Layout
     {
-        $this->pagination    = $path;
+        $this->pagination = $path;
 
         return $this;
     }
 
     public function message(string $path): Layout
     {
-        $this->message    = $path;
+        $this->message = $path;
 
         return $this;
     }
 
     public function footer(string $path): Layout
     {
-        $this->footer    = $path;
+        $this->footer = $path;
 
         return $this;
     }

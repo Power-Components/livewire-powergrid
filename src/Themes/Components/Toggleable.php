@@ -8,7 +8,7 @@ class Toggleable
 
     public function view(string $view): Toggleable
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

@@ -103,6 +103,7 @@ it('render x-data correctly for detail row state', function () {
 
     $perPage = data_get($component, 'payload.serverMemo.data.setUp.footer.perPage');
     $xData   = [];
+
     for ($i = 1; $i < $perPage + 1; $i++) {
         $xData[] = 'x-data="{ detailState: window.Livewire.find(\'' . $component->id() . '\').entangle(\'setUp.detail.state.' . $i . '\') }"';
     }

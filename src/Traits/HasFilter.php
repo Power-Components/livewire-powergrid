@@ -34,27 +34,35 @@ trait HasFilter
             unset($this->filters['input_date_picker'][$table][$column]);
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
+
             if (empty($this->filters['input_text'][$table])) {
                 unset($this->filters['input_text'][$table]);
             }
+
             if (empty($this->filters['input_text_options'][$table])) {
                 unset($this->filters['input_text_options'][$table]);
             }
+
             if (empty($this->filters['number_start'][$table])) {
                 unset($this->filters['number_start'][$table]);
             }
+
             if (empty($this->filters['number'][$table]['end'])) {
                 unset($this->filters['number'][$table]['end']);
             }
+
             if (empty($this->filters['boolean'][$table])) {
                 unset($this->filters['boolean'][$table]);
             }
+
             if (empty($this->filters['input_date_picker'][$table])) {
                 unset($this->filters['input_date_picker'][$table]);
             }
+
             if (empty($this->filters['select'][$table])) {
                 unset($this->filters['select'][$table]);
             }
+
             if (empty($this->filters['multi_select'][$table])) {
                 unset($this->filters['multi_select'][$table]);
             }
@@ -113,20 +121,21 @@ trait HasFilter
 
     private function resolveFilters(): void
     {
-        $makeFilters   = [];
+        $makeFilters = [];
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
             if (!isset($column->inputs)) {
                 continue;
             }
+
             foreach ($column->inputs as $key => $input) {
                 if (!isset($input['dataField'])) {
                     data_set($input, 'dataField', $column->dataField ?: $column->field);
                 }
                 data_set($input, 'field', $column->field);
                 data_set($input, 'label', $column->title);
-                $makeFilters[$key][]  = $input;
+                $makeFilters[$key][] = $input;
             }
         }
 
@@ -157,15 +166,15 @@ trait HasFilter
     {
         $this->resetPage();
 
-        $input          = explode('.', $data['values']);
+        $input = explode('.', $data['values']);
 
-        $startDate      = strval(data_get($data, 'selectedDates.0'));
-        $endDate        = strval(data_get($data, 'selectedDates.1'));
+        $startDate = strval(data_get($data, 'selectedDates.0'));
+        $endDate   = strval(data_get($data, 'selectedDates.1'));
 
-        $timeZone       = strval(config('app.timezone'));
+        $timeZone = strval(config('app.timezone'));
 
-        $startDateTime  = Carbon::parse($startDate)->setTimezone($timeZone);
-        $endDateTime    = Carbon::parse($endDate)->setTimezone($timeZone);
+        $startDateTime = Carbon::parse($startDate)->setTimezone($timeZone);
+        $endDateTime   = Carbon::parse($endDate)->setTimezone($timeZone);
 
         if (!$data['enableTime']) {
             $startDateTime->startOfDay();
@@ -175,8 +184,8 @@ trait HasFilter
         data_set($data, 'selectedDates.0', $startDateTime);
         data_set($data, 'selectedDates.1', $endDateTime);
 
-        $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
-        $this->enabledFilters[$data['field']]['label']           = $data['label'];
+        $this->enabledFilters[$data['field']]['data-field'] = $data['field'];
+        $this->enabledFilters[$data['field']]['label']      = $data['label'];
 
         if (count($input) === 3) {
             $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
@@ -202,8 +211,8 @@ trait HasFilter
     {
         $this->resetPage();
 
-        $field      = $data['id'];
-        $values     = $data['values'];
+        $field  = $data['id'];
+        $values = $data['values'];
 
         unset($data['id']);
         unset($data['values']);
@@ -216,8 +225,8 @@ trait HasFilter
         /** @var array $filter */
         $filter = collect($multiSelect)->where('dataField', $field)->first();
 
-        $this->enabledFilters[$field]['id']            = $field;
-        $this->enabledFilters[$field]['label']         = $filter['label'];
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $filter['label'];
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
@@ -234,8 +243,8 @@ trait HasFilter
 
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']         = $field;
-        $this->enabledFilters[$field]['label']      = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         $value = data_get($this->filters, "select.$field");
 
@@ -254,10 +263,10 @@ trait HasFilter
 
         $this->resetPage();
 
-        $this->filters['number'][$field]['start']     = $value;
+        $this->filters['number'][$field]['start'] = $value;
 
-        $this->enabledFilters[$field]['id']          = $field;
-        $this->enabledFilters[$field]['label']       = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -274,10 +283,10 @@ trait HasFilter
 
         $this->resetPage();
 
-        $this->filters['number'][$field]['end']       = $value;
+        $this->filters['number'][$field]['end'] = $value;
 
-        $this->enabledFilters[$field]['id']          = $field;
-        $this->enabledFilters[$field]['label']       = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -294,8 +303,8 @@ trait HasFilter
 
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']          = $field;
-        $this->enabledFilters[$field]['label']       = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -314,8 +323,8 @@ trait HasFilter
 
         $this->filters['boolean'][$field] = $value;
 
-        $this->enabledFilters[$field]['id']          = $field;
-        $this->enabledFilters[$field]['label']       = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         if ($value == 'all') {
             $this->clearFilter($field, emit: false);
@@ -332,16 +341,16 @@ trait HasFilter
 
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
-        $this->enabledFilters[$field]['id']          = $field;
-        $this->enabledFilters[$field]['label']       = $label;
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         $this->resetPage();
 
-        $this->enabledFilters[$field]['disabled']       = false;
+        $this->enabledFilters[$field]['disabled'] = false;
 
         if (in_array($value, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'])) {
-            $this->enabledFilters[$field]['disabled']       = true;
-            $this->filters['input_text'][$field]            = null;
+            $this->enabledFilters[$field]['disabled'] = true;
+            $this->filters['input_text'][$field]      = null;
         }
 
         if (blank($value)) {

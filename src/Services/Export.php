@@ -34,8 +34,8 @@ class Export
      */
     public function setData(array $columns, Collection $data): Export
     {
-        $this->columns    = $columns;
-        $this->data       = collect($data);
+        $this->columns = $columns;
+        $this->data    = collect($data);
 
         return $this;
     }
@@ -51,20 +51,20 @@ class Export
 
         $actionRulesClass = resolve(ActionRules::class);
 
-        $data     = $data->transform(function ($row) use ($columns, $header, $actionRulesClass) {
+        $data = $data->transform(function ($row) use ($columns, $header, $actionRulesClass) {
             $item = collect([]);
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $actionRulesClass) {
                 /** @var Model|\stdClass $row */
                 if (method_exists($row, 'withoutRelations')) {
-                    $row              = $row->withoutRelations()->toArray();
+                    $row = $row->withoutRelations()->toArray();
                 }
 
-                $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
-                $isExportable     = false;
+                $rules        = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
+                $isExportable = false;
 
                 if (isset($rules['hide']) || isset($rules['disable'])) {
-                    $isExportable   = true;
+                    $isExportable = true;
                 }
 
                 /** @var Column $column */
@@ -75,6 +75,7 @@ class Export
                             $item->put($column->title, html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                         }
                     }
+
                     if (!$header->contains($column->title)) {
                         $header->push($column->title);
                     }

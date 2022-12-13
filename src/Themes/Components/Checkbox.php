@@ -20,8 +20,8 @@ class Checkbox
 
     public function th(string $attrClass, string $attrStyle = ''): Checkbox
     {
-        $this->thClass    = $attrClass;
-        $this->thStyle    = $attrStyle;
+        $this->thClass = $attrClass;
+        $this->thStyle = $attrStyle;
 
         return $this;
     }

@@ -24,7 +24,7 @@ class FillableTable
         $model = new $modelQualifiedName();
 
         if (!empty($stubFile)) {
-            $stub =  File::get(base_path($stubFile));
+            $stub = File::get(base_path($stubFile));
         } else {
             $stub = File::get(__DIR__ . '/../../../resources/stubs/table.fillable.stub');
         }
@@ -77,21 +77,21 @@ class FillableTable
 
                 if ($column->getType()->getName() === 'boolean') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
 
                     continue;
                 }
 
                 if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
 
                     continue;
                 }
 
                 if ($column->getType()->getName() === 'string') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
 
                     if (!self::$hasEscapeExample) {
                         $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', function (' . $modelUnqualifiedName . ' $model) {
@@ -104,7 +104,7 @@ class FillableTable
                 }
 
                 $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                $columns    .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
             }
         }
 

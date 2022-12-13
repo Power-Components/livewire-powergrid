@@ -12,8 +12,8 @@ class Footer
 
     public function select(string $attrClass = '', string $attrStyle = ''): Footer
     {
-        $this->selectClass    = $attrClass;
-        $this->selectStyle    = $attrStyle;
+        $this->selectClass = $attrClass;
+        $this->selectStyle = $attrStyle;
 
         return $this;
     }

@@ -81,12 +81,12 @@ it('searches for something that is not on the current page')
     ->assertSeeHtml('Francesinha vegana');
 
 it('properly paginates', function () {
-    $component          = powergrid();
+    $component = powergrid();
 
-    $component->setUp   = [
+    $component->setUp = [
         'footer' => ['perPage' => 5],
     ];
-    $pagination         = $component->fillData();
+    $pagination = $component->fillData();
 
     expect($pagination->items())->toHaveCount(5);
     expect($pagination->first()->name)->toBe('Pastel de Nata');

@@ -43,6 +43,7 @@ if (!function_exists('isBootstrap5')) {
         return in_array(config('livewire-powergrid.theme'), ['bootstrap', Bootstrap5::class]);
     }
 }
+
 if (!function_exists('isTailwind')) {
     function isTailwind(): bool
     {

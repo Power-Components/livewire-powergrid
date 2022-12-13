@@ -90,7 +90,7 @@ class CreateCommand extends Command
      */
     protected function askDatasource(): void
     {
-        $this->datasourceOption =  strval($this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)', 'M'));
+        $this->datasourceOption = strval($this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)', 'M'));
 
         if (!in_array(strtolower(strval($this->datasourceOption)), ['m', 'c'])) {
             throw new CreateCommandException('Invalid option. Please enter [M] for model or [C] for Collection.');
@@ -111,8 +111,8 @@ class CreateCommand extends Command
                 throw new CreateCommandException('Error: You must inform the Model name or file path.');
             }
 
-            $this->modelPath  = explode('\\', $this->model);
-            $this->modelName  = strval(Arr::last($this->modelPath));
+            $this->modelPath = explode('\\', $this->model);
+            $this->modelName = strval(Arr::last($this->modelPath));
 
             if (count($this->modelPath) === 1) {
                 if (file_exists('app/Models')) {

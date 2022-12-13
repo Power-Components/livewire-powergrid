@@ -20,6 +20,7 @@ class PowerGridManager
         if ($class === 'tailwind') {
             $class = Themes\Tailwind::class;
         }
+
         if ($class === 'bootstrap') {
             $class = Themes\Bootstrap5::class;
         }

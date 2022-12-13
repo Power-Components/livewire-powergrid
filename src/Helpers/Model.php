@@ -106,6 +106,7 @@ class Model
                 $empty = true;
             }
         }
+
         if (!$empty) {
             $query->whereIn($field, $values);
         }
@@ -180,6 +181,7 @@ class Model
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = $value['start'];
+
             if (isset($this->inputRangeConfig[$field])) {
                 $start = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['start']);
                 $start = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $start);
@@ -187,8 +189,10 @@ class Model
 
             $query->where($field, '>=', $start);
         }
+
         if (!isset($value['start']) && isset($value['end'])) {
             $end = $value['end'];
+
             if (isset($this->inputRangeConfig[$field])) {
                 $end = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['end']);
                 $end = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $end);
@@ -196,6 +200,7 @@ class Model
 
             $query->where($field, '<=', $end);
         }
+
         if (isset($value['start']) && isset($value['end'])) {
             $start = $value['start'];
             $end   = $value['end'];
@@ -224,7 +229,7 @@ class Model
     public function filterContains(): Model
     {
         if ($this->search != '') {
-            $this->query    = $this->query->where(function (Builder $query) {
+            $this->query = $this->query->where(function (Builder $query) {
                 $modelTable = $query->getModel()->getTable();
 
                 $columnList = $this->getColumnList($modelTable);
@@ -239,9 +244,9 @@ class Model
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
                             /** @var string $table */
-                            $table        = $explodeField->get(0);
+                            $table = $explodeField->get(0);
                             /** @var string $field */
-                            $field        = $explodeField->get(1);
+                            $field = $explodeField->get(1);
                         }
 
                         $hasColumn = in_array($field, $columnList, true);

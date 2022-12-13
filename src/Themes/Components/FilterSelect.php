@@ -14,7 +14,7 @@ class FilterSelect
 
     public function view(string $view): FilterSelect
     {
-        $this->view    = $view;
+        $this->view = $view;
 
         return $this;
     }

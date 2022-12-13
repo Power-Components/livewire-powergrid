@@ -137,6 +137,7 @@ class PowerGridComponent extends Component
             if ($hasHeader) {
                 $this->headerTotalColumn = true;
             }
+
             if ($hasFooter) {
                 $this->footerTotalColumn = true;
             }
@@ -163,6 +164,7 @@ class PowerGridComponent extends Component
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
+
             if (method_exists($this, 'header')) {
                 $this->headers = $this->header();
             }
@@ -258,14 +260,15 @@ class PowerGridComponent extends Component
         if ($this->multiSort) {
             foreach ($this->sortArray as $sortField => $direction) {
                 $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
+
                 if ($this->withSortStringNumber) {
                     $results = self::applyWithSortStringNumber($results, $sortField, $direction);
                 }
                 $results = $results->orderBy($sortField, $direction);
             }
         } else {
-            $results   = self::applyWithSortStringNumber($results, $sortField);
-            $results   = $results->orderBy($sortField, $this->sortDirection);
+            $results = self::applyWithSortStringNumber($results, $sortField);
+            $results = $results->orderBy($sortField, $this->sortDirection);
         }
 
         self::applyTotalColumn($results);
@@ -342,7 +345,7 @@ class PowerGridComponent extends Component
         }
 
         $collection->each(function ($model) {
-            $id    = strval($model->{$this->primaryKey});
+            $id = strval($model->{$this->primaryKey});
 
             data_set($this->setUp, 'detail', (array) $this->setUp['detail']);
 
@@ -373,6 +376,7 @@ class PowerGridComponent extends Component
             if (is_array($datasource)) {
                 return new Support\Collection($datasource);
             }
+
             if (is_a((object) $datasource, Support\Collection::class)) {
                 return $datasource;
             }
