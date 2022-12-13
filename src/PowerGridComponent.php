@@ -9,10 +9,10 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Pagination\{AbstractPaginator, Paginator};
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support as Support;
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Helpers, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{BatchableExport,
     Checkbox,
@@ -73,6 +73,10 @@ class PowerGridComponent extends Component
     public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
+
+    public int $total = 0;
+
+    public int $totalCurrentPage = 0;
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
@@ -163,6 +167,9 @@ class PowerGridComponent extends Component
                 $this->headers = $this->header();
             }
         }
+
+        /** @phpstan-ignore-next-line */
+        $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
 
         return $this->renderView($data);
     }
@@ -490,6 +497,17 @@ class PowerGridComponent extends Component
         return $this->powerGridListeners();
     }
 
+    public function refresh(): void
+    {
+        if (($this->total > 0) && ($this->totalCurrentPage - 1) === 0) {
+            $this->previousPage();
+
+            return;
+        }
+
+        $this->emitSelf('$refresh', []);
+    }
+
     protected function powerGridListeners(): array
     {
         return [
@@ -498,7 +516,7 @@ class PowerGridComponent extends Component
             'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
             'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => '$refresh',
+            'pg:eventRefresh-' . $this->tableName => 'refresh',
             'pg:softDeletes-' . $this->tableName  => 'softDeletes',
         ];
     }
