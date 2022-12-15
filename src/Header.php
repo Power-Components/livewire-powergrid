@@ -18,6 +18,8 @@ final class Header
 
     public string $includeViewOnBottom = '';
 
+    public bool $wireLoading = true;
+
     public static function make(): self
     {
         return new Header();
@@ -68,6 +70,16 @@ final class Header
     public function includeViewOnBottom(string $viewPath): Header
     {
         $this->includeViewOnBottom = $viewPath;
+
+        return $this;
+    }
+
+    /**
+     * Hides the default loading state
+     */
+    public function withoutLoading(): Header
+    {
+        $this->wireLoading = false;
 
         return $this;
     }

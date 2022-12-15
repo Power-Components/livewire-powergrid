@@ -14,7 +14,7 @@
                 @includeIf(powerGridThemeRoot().'.header.toggle-columns')
                 @includeIf(powerGridThemeRoot().'.header.soft-deletes')
             </div>
-            @include(powerGridThemeRoot().'.header.loading')
+            @includeWhen(boolval(data_get($setUp, 'header.wireLoading')), powerGridThemeRoot().'.header.loading')
         </div>
         @include(powerGridThemeRoot().'.header.search')
     </div>
