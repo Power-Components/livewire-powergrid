@@ -75,7 +75,7 @@ final class Header
     }
 
     /**
-     * Include custom view on bottom
+     * Hides the default loading state
      */
     public function withoutLoading(): Header
     {
