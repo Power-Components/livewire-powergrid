@@ -12,7 +12,7 @@
                 @include(powerGridThemeRoot().'.header.toggle-columns')
                 @includeIf(powerGridThemeRoot().'.header.soft-deletes')
 
-                @include(powerGridThemeRoot().'.header.loading')
+                @includeWhen(boolval(data_get($setUp, 'header.wireLoading')), powerGridThemeRoot().'.header.loading')
             </div>
             <div class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3">
                 @include(powerGridThemeRoot().'.header.search')
