@@ -53,6 +53,8 @@ class PowerGridComponent extends Component
 
     public array $relationSearch = [];
 
+    public array $searchMorphs = [];
+
     public bool $ignoreTablePrefix = true;
 
     public string $tableName = 'default';
@@ -160,6 +162,8 @@ class PowerGridComponent extends Component
 
         $this->relationSearch = $this->relationSearch();
 
+        $this->searchMorphs = $this->searchMorphs();
+
         $data = $this->fillData();
 
         if (method_exists($this, 'initActions')) {
@@ -182,6 +186,11 @@ class PowerGridComponent extends Component
     }
 
     public function relationSearch(): array
+    {
+        return [];
+    }
+
+    public function searchMorphs(): array
     {
         return [];
     }
@@ -250,6 +259,7 @@ class PowerGridComponent extends Component
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
+                    ->setSearchMorphs($this->searchMorphs)
                     ->setFilters($this->filters)
                     ->filterContains()
                     ->filter();

@@ -20,6 +20,8 @@ class Model
 
     private array $inputRangeConfig;
 
+    private array $searchMorphs;
+
     public function __construct(private Builder $query)
     {
     }
@@ -60,6 +62,13 @@ class Model
     public function setRelationSearch(array $relations): Model
     {
         $this->relationSearch = $relations;
+
+        return $this;
+    }
+
+    public function setSearchMorphs(array $array): Model
+    {
+        $this->searchMorphs = $array;
 
         return $this;
     }
@@ -150,28 +159,67 @@ class Model
 
     public function filterInputText(Builder $query, string $field, string|array|null $value): void
     {
-        if (is_array($value)) {
+        if (is_array($value) && blank($this->searchMorphs)) {
             $field = $field . '.' . key($value);
             $value = $value[key($value)];
         }
 
         $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower(strval(data_get($this->filters, "input_text_options.$field"))) : 'contains');
 
-        match ($textFieldOperator) {
-            'is'           => $query->where($field, '=', $value),
-            'is_not'       => $query->where($field, '!=', $value),
-            'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-            'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-            'contains'     => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
-            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
-            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
-            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-            'is_null'      => $query->whereNull($field),
-            'is_not_null'  => $query->whereNotNull($field),
-            'is_blank'     => $query->where($field, '=', ''),
-            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-            default        => null,
+        $matchOperatorQuery = function ($textFieldOperator, $query, $field, $value) {
+            match ($textFieldOperator) {
+                'is'           => $query->where($field, '=', $value),
+                'is_not'       => $query->where($field, '!=', $value),
+                'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
+                'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
+                'contains'     => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
+                'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
+                'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
+                'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
+                'is_null'      => $query->whereNull($field),
+                'is_not_null'  => $query->whereNotNull($field),
+                'is_blank'     => $query->where($field, '=', ''),
+                'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
+                default        => null,
+            };
         };
+
+        /**
+        public function searchMorphs(): array
+        {
+            // https://laravel.com/docs/9.x/eloquent-relationships#querying-morph-to-relationships
+            return [
+                'record', // table
+                'owner', // morph relationship
+                [
+                    \App\Models\Gym::class
+                ]
+            ];
+        }**/
+
+        if (filled($this->searchMorphs)) {
+            $table        = $this->searchMorphs[0];
+            $relationship = $this->searchMorphs[1];
+            $types        = $this->searchMorphs[2];
+
+            $query->whereHasMorph(
+                $relationship,
+                $types,
+                fn (Builder $query) => $query->whereHas(
+                    $table,
+                    fn (Builder $query) => $matchOperatorQuery(
+                        $textFieldOperator,
+                        $query,
+                        $field,
+                        $value
+                    )
+                )
+            );
+
+            return;
+        }
+
+        $matchOperatorQuery($textFieldOperator, $query, $field, $value);
     }
 
     /**
