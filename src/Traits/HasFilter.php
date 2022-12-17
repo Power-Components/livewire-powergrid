@@ -337,7 +337,7 @@ trait HasFilter
 
     public function filterInputTextOptions(string $field, string $value): void
     {
-        $label = $this->getLabelFromMakeFilters('input_text_options', $field);
+        $label = $this->getLabelFromMakeFilters('input_text', $field);
 
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
