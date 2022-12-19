@@ -6,6 +6,7 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
             <exclude>./tests/Feature/FilterInputOptionsCollectionTest.php</exclude>
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">

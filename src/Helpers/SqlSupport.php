@@ -71,14 +71,14 @@ class SqlSupport
         $default = "$sortField+0"; //default, fallback
 
         $supportedVersions = [
-            'mysql' => [
+            'mysql'  => [
                 '0'     => $default,
                 '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
             ],
             'sqlite' => [
                 '0' => "CAST($sortField AS INTEGER)",
             ],
-            'pgsql' => [
+            'pgsql'  => [
                 '0' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER)",
             ],
             'sqlsrv' => [
