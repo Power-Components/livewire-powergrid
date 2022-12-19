@@ -23,7 +23,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
 
         expect($component->filters)
             ->toMatchArray([
-                'input_text' => [
+                'input_text'         => [
                     $table => [
                         $field => 'ba',
                     ],
@@ -37,7 +37,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     } else {
         expect($component->filters)
             ->toMatchArray([
-                'input_text' => [
+                'input_text'         => [
                     $params->field => 'ba',
                 ],
                 'input_text_options' => [

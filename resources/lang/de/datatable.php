@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Aktionen',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Aktionen',
         'results_per_page' => 'Ergebnisse pro Seite',
         'clear_filter'     => 'Filter löschen',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Alle',
         'selected'         => 'Ausgewählt',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Suche',
         'select' => 'wählen Sie einen Zeitraum',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Anzeigen von',
         'to'      => 'bis',
         'of'      => 'von',
         'results' => 'Ergebnissen',
         'all'     => 'Alle',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Bitte wählen',
         'all'    => 'Alle',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Bitte wählen',
         'all'    => 'Alle',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Alle',
     ],
     'input_text_options' => [
@@ -49,11 +49,11 @@ return [
         'is_empty'     => 'unausgefüllt',
         'is_not_empty' => 'ausgefüllt',
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'Warten Sie mal!',
         'completed' => 'Export abgeschlossen! Ihre Dateien stehen zum Download bereit',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
