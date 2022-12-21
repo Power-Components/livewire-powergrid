@@ -1,6 +1,6 @@
 <div class="flex flex-col">
-    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="py-2 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8">
+    <div id="power-grid-table-container" class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div id="power-grid-table-base" class="py-2 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8">
 
             @include($theme->layout->header, [
                 'enabledFilters' => $enabledFilters
