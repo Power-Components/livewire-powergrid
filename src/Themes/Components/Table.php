@@ -44,6 +44,10 @@ class Table
 
     public string $tdBodyStyleTotalColumns;
 
+    public string $tdBodyEmptyClass = '';
+
+    public string $tdBodyEmptyStyle = '';
+
     /**
      * Table constructor.
      * @param string $tableClass
@@ -123,6 +127,14 @@ class Table
     {
         $this->tdBodyClassTotalColumns = $attrClass;
         $this->tdBodyStyleTotalColumns = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdBodyEmpty(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->tdBodyEmptyClass = $attrClass;
+        $this->tdBodyEmptyStyle = $attrStyle;
 
         return $this;
     }

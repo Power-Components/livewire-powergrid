@@ -53,7 +53,7 @@
         @if(is_null($data) || count($data) === 0)
             <th>
                 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}" colspan="{{ (($checkbox) ? 1:0)
+                    <td class="{{ $theme->table->tdBodyEmptyClass }}" style="{{ $theme->table->tdBodyEmptyStyle }}" colspan="{{ (($checkbox) ? 1:0)
                                     + ((isset($actions)) ? 1: 0)
                                     + (count($columns))
                                     }}">
