@@ -2,22 +2,22 @@ export default (params) => ({
     dataField: params.dataField ?? null,
     tableName: params.tableName ?? null,
     initialValues: params.initialValues ?? [],
-    defaultFramework: params.defaultFramework ?? [],
+    framework: params.framework ?? [],
     init() {
         const element = '[x-ref="select_picker_'+this.dataField+'"]';
 
-        if (window.TomSelect) {
+        if (this.framework.default === 'tom') {
             this.tomSelect(element)
         }
 
-        if (window.SlimSelect) {
+        if (this.framework.default === 'slim') {
             this.slimSelect(element)
         }
     },
     slimSelect(element) {
         const select = new window.SlimSelect({
             select: element,
-            ...this.defaultFramework,
+            ...this.framework,
             events: {
                 afterChange: (newVal) => {
                     const arrSelected = [];
@@ -30,8 +30,6 @@ export default (params) => ({
                         id: this.dataField,
                         values: arrSelected
                     })
-
-                    console.log(arrSelected)
                 }
             }
         })
@@ -41,7 +39,7 @@ export default (params) => ({
     tomSelect (element) {
         new window.TomSelect(element,{
             items: this.initialValues,
-            ...this.defaultFramework,
+            ...this.framework,
             onChange: (value) => {
                 window.livewire.emit('pg:multiSelect-' + this.tableName, {
                     id: this.dataField,

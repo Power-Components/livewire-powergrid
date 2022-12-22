@@ -9,13 +9,13 @@
 @php
     $initialValues = data_get($filters['multi_select'], $multiSelect['dataField'], []);
 
-    $defaultFramework = config('livewire-powergrid.plugins.multiselect.default');
+    $framework = config('livewire-powergrid.plugins.multiselect');
 
     $params = [
         'tableName' => $tableName,
         'dataField' =>  $multiSelect['dataField'],
         'initialValues' => $initialValues,
-        'defaultFramework' => (array) config('livewire-powergrid.plugins.multiselect.' . $defaultFramework)
+        'framework' => (array) config('livewire-powergrid.plugins.multiselect')
     ];
 @endphp
 <div x-cloak

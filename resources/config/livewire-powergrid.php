@@ -59,10 +59,9 @@ return [
              */
             'slim' => [
                 'settings' => [
-                    'alwaysOpen' => true,
+                    'alwaysOpen' => false,
                 ],
             ],
-
         ],
     ],
 
