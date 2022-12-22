@@ -5,19 +5,28 @@
     'column' => null,
     'tableName' => null,
 ])
+
+@php
+    $initialValues = data_get($filters['multi_select'], $multiSelect['dataField'], []);
+
+    $defaultFramework = config('livewire-powergrid.plugins.multiselect.default');
+
+    $params = [
+        'tableName' => $tableName,
+        'dataField' =>  $multiSelect['dataField'],
+        'initialValues' => $initialValues,
+        'defaultFramework' => (array) config('livewire-powergrid.plugins.multiselect.' . $defaultFramework)
+    ];
+@endphp
 <div x-cloak
      wire:ignore
-     x-data="pgMultiSelectBs5({
-        tableName: '{{ $tableName }}',
-        dataField: '{{ $multiSelect['dataField'] }}',
-    })">
+     x-data="pgMultiSelectBs5(@js($params))">
     @if(filled($multiSelect))
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
-            <select data-none-selected-text="{{ trans('livewire-powergrid::datatable.multi_select.select') }}"
-                    multiple
-                    wire:model="filters.multi_select.{{ $multiSelect['dataField'] }}.values"
+            <select multiple
+                    wire:model.defer="filters.multi_select.{{ $multiSelect['dataField'] }}.values"
                     x-ref="select_picker_{{ $multiSelect['dataField'] }}"
-                    data-live-search="true">
+                    >
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
                 @foreach(data_get($multiSelect, 'data_source') as $relation)
                     @php

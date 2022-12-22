@@ -1,28 +1,53 @@
 export default (params) => ({
     dataField: params.dataField ?? null,
     tableName: params.tableName ?? null,
+    initialValues: params.initialValues ?? [],
+    defaultFramework: params.defaultFramework ?? [],
     init() {
-        const _this = this;
-        const element = '[x-ref="select_picker_'+_this.dataField+'"]';
+        const element = '[x-ref="select_picker_'+this.dataField+'"]';
 
-        $(function () {
-            $(element).selectpicker();
+        if (window.TomSelect) {
+            this.tomSelect(element)
+        }
+
+        if (window.SlimSelect) {
+            this.slimSelect(element)
+        }
+    },
+    slimSelect(element) {
+        const select = new window.SlimSelect({
+            select: element,
+            ...this.defaultFramework,
+            events: {
+                afterChange: (newVal) => {
+                    const arrSelected = [];
+
+                    newVal.forEach(function (selected) {
+                        arrSelected.push(selected.value);
+                    });
+
+                    window.livewire.emit('pg:multiSelect-' + this.tableName, {
+                        id: this.dataField,
+                        values: arrSelected
+                    })
+
+                    console.log(arrSelected)
+                }
+            }
         })
 
-        $(element).selectpicker();
-        $(element).on('change', function () {
-            const selected = $(this).find("option:selected");
-            const arrSelected = [];
-            selected.each(function () {
-                arrSelected.push($(this).val());
-            });
-
-            window.livewire.emit('pg:multiSelect-' + _this.tableName, {
-                id: _this.dataField,
-                values: arrSelected
-            })
-
-            $(element).selectpicker('refresh');
-        });
+        select.setSelected(this.initialValues)
     },
+    tomSelect (element) {
+        new window.TomSelect(element,{
+            items: this.initialValues,
+            ...this.defaultFramework,
+            onChange: (value) => {
+                window.livewire.emit('pg:multiSelect-' + this.tableName, {
+                    id: this.dataField,
+                    values: value
+                })
+            },
+        });
+    }
 })
