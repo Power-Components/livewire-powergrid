@@ -7,7 +7,11 @@
 ])
 
 @php
-    $initialValues = data_get($filters['multi_select'], $multiSelect['dataField'], []);
+    $initialValues = [];
+
+    if (isset($filters['multi_select'])) {
+        $initialValues = data_get($filters['multi_select'], $multiSelect['dataField'], []);
+    }
 
     $framework = config('livewire-powergrid.plugins.multiselect');
 
