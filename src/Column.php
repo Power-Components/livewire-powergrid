@@ -459,9 +459,10 @@ final class Column
     /**
      * Add Input Text
      */
-    public function makeInputText(string $dataField = ''): Column
+    public function makeInputText(string $dataField = '', array $operators = []): Column
     {
-        $this->inputs['input_text']['enabled'] = true;
+        $this->inputs['input_text']['enabled']   = true;
+        $this->inputs['input_text']['operators'] = $operators;
 
         if (filled($dataField)) {
             $this->dataField = $dataField;
