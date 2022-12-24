@@ -9,10 +9,7 @@ it('properly filter the produced_at field between two dates', function (string $
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
-        ->assertDontSeeHtml('Francesinha vegana')
-        ->assertSeeHtmlInOrder([
-            'wire:model="filters.input_date_picker.produced_at"',
-        ]);
+        ->assertDontSeeHtml('Francesinha vegana');
 })->with('themes');
 
 it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
@@ -23,10 +20,7 @@ it('properly filter the created_at field between two dates using collection & ar
         ->assertSeeText('Name 2')
         ->assertSeeText('Name 3')
         ->assertSeeText('Name 4')
-        ->assertDontSeeHtml('Name 5')
-        ->assertSeeHtmlInOrder([
-            'wire:model="filters.input_date_picker.created_at"',
-        ]);
+        ->assertDontSeeHtml('Name 5');
 })->with('themes with collection table', 'themes with array table');
 
 it('properly filter the produced_at field between another two dates', function (string $component, object $params) {
@@ -35,10 +29,7 @@ it('properly filter the produced_at field between another two dates', function (
         ->set('filters', filterDateTime('produced_at', ['2021-11-11 00:00:00', '2021-12-31 00:00:00']))
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
-        ->assertDontSee('Bife à Rolê')
-        ->assertSeeHtmlInOrder([
-            'wire:model="filters.input_date_picker.produced_at"',
-        ]);
+        ->assertDontSee('Bife à Rolê');
 })->with('themes');
 
 function filterDateTime(string $dataField, array $value): array

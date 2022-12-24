@@ -31,7 +31,6 @@ trait HasFilter
             unset($this->filters['number'][$table][$column]['start']);
             unset($this->filters['number'][$table][$column]['end']);
             unset($this->filters['boolean'][$table][$column]);
-            unset($this->filters['input_date_picker'][$table][$column]);
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
 
@@ -55,10 +54,6 @@ trait HasFilter
                 unset($this->filters['boolean'][$table]);
             }
 
-            if (empty($this->filters['input_date_picker'][$table])) {
-                unset($this->filters['input_date_picker'][$table]);
-            }
-
             if (empty($this->filters['select'][$table])) {
                 unset($this->filters['select'][$table]);
             }
@@ -76,7 +71,6 @@ trait HasFilter
             unset($this->filters['number'][$field]['start']);
             unset($this->filters['number'][$field]['end']);
             unset($this->filters['boolean'][$field]);
-            unset($this->filters['input_date_picker'][$field]);
             unset($this->filters['select'][$field]);
             unset($this->filters['multi_select'][$field]);
             unset($this->filters['date_picker'][$field]);

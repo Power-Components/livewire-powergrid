@@ -13,17 +13,19 @@
             $customConfig[$key] = $value;
         }
     }
+
+    $params = [
+        'dataField'   => $date['dataField'],
+        'tableName'   => $tableName,
+        'filterKey'   => 'enabledFilters.date_picker.'.$date['dataField'],
+        'label'       => $date['label'],
+        'locale'      => config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale()),
+        'onlyFuture'  => data_get($customConfig, 'only_future', false),
+        'noWeekEnds'  => data_get($customConfig, 'no_weekends', false),
+        'customConfig'=> $customConfig
+    ];
 @endphp
-<div wire:ignore x-data="pgFlatPickr({
-        dataField: '{{ $date['dataField'] }}',
-        tableName: '{{ $tableName }}',
-        filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
-        label: '{{ $date['label'] }}',
-        locale: {{ json_encode(config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale())) }},
-        onlyFuture: {{ json_encode(data_get($customConfig, 'only_future', false)) }},
-        noWeekEnds: {{ json_encode(data_get($customConfig, 'no_weekends', false)) }},
-        customConfig: {{ json_encode($customConfig) }}
-    })">
+<div wire:ignore x-data="pgFlatPickr(@js($params)">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
             <label for="input_{{ data_get($date, 'field') }}"
@@ -40,8 +42,7 @@
                    class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                    type="text"
                    readonly
-                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-                   wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}">
+                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}">
         </form>
     </div>
 </div>
