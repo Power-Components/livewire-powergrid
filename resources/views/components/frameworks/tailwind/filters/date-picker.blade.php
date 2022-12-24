@@ -42,8 +42,7 @@
                    class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                    type="text"
                    readonly
-                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-                   wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}">
+                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}">
         </form>
     </div>
 </div>

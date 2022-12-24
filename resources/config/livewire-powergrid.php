@@ -11,7 +11,7 @@ return [
     | Configure here the theme of your choice.
     */
 
-    'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+    'theme'         => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
     //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
     /*
@@ -23,17 +23,43 @@ return [
     |
     */
 
-    'plugins' => [
+    'plugins'       => [
         /*
          * https://flatpickr.js.org
          */
-        'flatpickr' => [
+        'flatpickr'   => [
             'locales' => [
                 'pt_BR' => [
                     'locale'     => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
                     'time_24hr'  => true,
+                ],
+            ],
+        ],
+
+        'multiselect' => [
+            'default' => 'tom',
+
+            /*
+             * TomSelect Options
+             * https://tom-select.js.org
+             */
+            'tom'     => [
+                'plugins' => [
+                    'clear_button' => [
+                        'title' => 'Remove all selected options',
+                    ],
+                ],
+            ],
+
+            /*
+             * Slim Select options
+             * https://slimselectjs.com/
+             */
+            'slim'    => [
+                'settings' => [
+                    'alwaysOpen' => false,
                 ],
             ],
         ],
@@ -51,7 +77,7 @@ return [
     |
     */
 
-    'filter' => 'inline',
+    'filter'        => 'inline',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,7 +89,7 @@ return [
     |
     */
 
-    'cached_data' => true,
+    'cached_data'   => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -87,7 +113,7 @@ return [
     |
     */
 
-    'exportable' => [
+    'exportable'    => [
         'default'      => 'openspout_v4',
         'openspout_v4' => [
             'xlsx' => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v4\ExportToXLS::class,
