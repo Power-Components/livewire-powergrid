@@ -9,6 +9,8 @@ export default (params) => ({
     customConfig: params.customConfig ?? null,
     init() {
 
+        console.log(params)
+
         const lang = this.locale.locale;
 
         if (typeof lang !== 'undefined') {
