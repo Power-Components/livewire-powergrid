@@ -25,7 +25,7 @@
         'customConfig'=> $customConfig
     ];
 @endphp
-<div wire:ignore x-data="pgFlatPickr(@js($params)">
+<div wire:ignore x-data="pgFlatPickr(@js($params))">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
             <label for="input_{{ data_get($date, 'field') }}"
