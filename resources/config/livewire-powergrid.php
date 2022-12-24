@@ -37,6 +37,32 @@ return [
                 ],
             ],
         ],
+
+        'multiselect' => [
+            'default' => 'tom',
+
+            /*
+             * TomSelect Options
+             * https://tom-select.js.org
+             */
+            'tom' => [
+                'plugins' => [
+                    'clear_button' => [
+                        'title' => 'Remove all selected options',
+                    ],
+                ],
+            ],
+
+            /*
+             * Slim Select options
+             * https://slimselectjs.com/
+             */
+            'slim' => [
+                'settings' => [
+                    'alwaysOpen' => false,
+                ],
+            ],
+        ],
     ],
 
     /*
