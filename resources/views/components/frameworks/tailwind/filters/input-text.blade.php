@@ -9,6 +9,9 @@
 <div>
     @php
         $field = data_get($inputText, 'dataField') ?? data_get($inputText, 'field');
+
+        $inputTextOptions  = filled(data_get($inputText, 'operators', [])) ? data_get($inputText, 'operators') : $inputTextOptions;
+        $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
     @endphp
     @if(filled($inputText))
         <div @class([
@@ -22,16 +25,16 @@
                 'sm:flex w-full' => !$inline,
                 'flex flex-col' => $inline,
                 ])>
+                @if($showSelectOptions)
                 <div @class([
                         'pl-0 pt-1 w-full sm:pr-3 sm:w-1/2' => !$inline,
                     ])>
                     <div class="relative">
                         <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
-                                wire:model.lazy="filters.input_text_options.{{ $field }}"
-                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value) }}')">
+                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value, @js($inputTextOptions))">
                             @foreach($inputTextOptions as $key => $value)
-                                <option value="{{ $key }}">{{ trans($value) }}</option>
+                                <option value="{{ $key }}">{{ trans('livewire-powergrid::datatable.input_text_options.'.$value) }}</option>
                             @endforeach
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
@@ -39,6 +42,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div @class([
                         'pl-0 pt-1 w-full sm:w-1/2' => !$inline,
                         'mt-1' => $inline,
@@ -47,7 +51,7 @@
                         data-id="{{ $field }}"
                         @if(isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled @else
                         wire:model.debounce.800ms="filters.input_text.{{ $field  }}"
-                        wire:input.debounce.800ms="filterInputText('{{ $field }}', $event.target.value, '{{ data_get($inputText, 'label') }}')"
+                        wire:input.debounce.800ms="filterInputText('{{ $field }}', $event.target.value)"
                         @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"

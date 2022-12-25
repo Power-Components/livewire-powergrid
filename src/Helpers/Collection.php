@@ -4,10 +4,12 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Carbon, Collection as BaseCollection, Facades\Schema, Str};
+use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
 
 class Collection
 {
+    use InputOperators;
+
     private BaseCollection $query;
 
     private array $columns;
@@ -152,7 +154,7 @@ class Collection
 
     public function filterInputText(string $field, ?string $value): void
     {
-        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower($this->filters['input_text_options'][$field]) : 'contains');
+        $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
 
         match ($textFieldOperator) {
             'is'          => $this->query->where($field, '=', $value),

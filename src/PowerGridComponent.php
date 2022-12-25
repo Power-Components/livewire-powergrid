@@ -248,6 +248,7 @@ class PowerGridComponent extends Component
                 Model::query($query)
                     ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
+                    ->setInputTextOperators($this->inputTextOptions)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
                     ->setFilters($this->filters)

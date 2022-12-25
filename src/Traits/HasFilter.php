@@ -15,7 +15,20 @@ trait HasFilter
 
     public array $select = [];
 
-    public array $inputTextOptions = [];
+    public array $inputTextOptions = [
+        'contains',
+        'contains_not',
+        'is',
+        'is_not',
+        'starts_with',
+        'ends_with',
+        'is_empty',
+        'is_not_empty',
+        'is_null',
+        'is_not_null',
+        'is_blank',
+        'is_not_blank',
+    ];
 
     public function clearFilter(string $field = '', bool $emit = true): void
     {
@@ -95,24 +108,6 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public static function getInputTextOptions(): array
-    {
-        return [
-            'contains',
-            'contains_not',
-            'is',
-            'is_not',
-            'starts_with',
-            'ends_with',
-            'is_empty',
-            'is_not_empty',
-            'is_null',
-            'is_not_null',
-            'is_blank',
-            'is_not_blank',
-        ];
-    }
-
     private function resolveFilters(): void
     {
         $makeFilters = [];
@@ -134,12 +129,6 @@ trait HasFilter
         }
 
         $this->makeFilters = collect($makeFilters);
-
-        $path = 'livewire-powergrid::datatable.input_text_options';
-
-        foreach (self::getInputTextOptions() as $option) {
-            $this->inputTextOptions[$option] = "$path.$option";
-        }
     }
 
     public function getLabelFromMakeFilters(string $filterType, string $field): string
@@ -291,24 +280,6 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputText(string $field, string $value): void
-    {
-        $label = $this->getLabelFromMakeFilters('input_text', $field);
-
-        $this->resetPage();
-
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
-
-        if (blank($value)) {
-            $this->clearFilter($field, emit: false);
-        }
-
-        $this->afterChangedInputTextFilter($field, $label, $value);
-
-        $this->persistState('filters');
-    }
-
     public function filterBoolean(string $field, string $value): void
     {
         $label = $this->getLabelFromMakeFilters('boolean', $field);
@@ -329,14 +300,33 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value): void
+    public function filterInputText(string $field, string $value): void
     {
-        $label = $this->getLabelFromMakeFilters('input_text_options', $field);
+        $label = $this->getLabelFromMakeFilters('input_text', $field);
 
-        data_set($this->filters, 'input_text_options.' . $field, $value);
+        $this->resetPage();
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $label;
+
+        if (blank($value)) {
+            $this->clearFilter($field, emit: false);
+        }
+
+        $this->afterChangedInputTextFilter($field, $label, $value);
+
+        $this->persistState('filters');
+    }
+
+    public function filterInputTextOptions(string $field, string $value, array $operators = []): void
+    {
+        $operators ??= $this->inputTextOptions;
+
+        $value = $operators[$value];
+
+        data_set($this->filters, 'input_text_options.' . $field, $value);
+
+        $this->enabledFilters[$field]['id'] = $field;
 
         $this->resetPage();
 

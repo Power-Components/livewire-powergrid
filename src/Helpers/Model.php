@@ -10,6 +10,8 @@ use PowerComponents\LivewirePowerGrid\Column;
 
 class Model
 {
+    use InputOperators;
+
     private array $columns;
 
     private string $search;
@@ -60,6 +62,13 @@ class Model
     public function setRelationSearch(array $relations): Model
     {
         $this->relationSearch = $relations;
+
+        return $this;
+    }
+
+    public function setInputTextOperators(array $operators): Model
+    {
+        $this->inputTextOperators = $operators;
 
         return $this;
     }
@@ -155,14 +164,13 @@ class Model
             $value = $value[key($value)];
         }
 
-        $textFieldOperator = (validateInputTextOptions($this->filters, $field) ? strtolower(strval(data_get($this->filters, "input_text_options.$field"))) : 'contains');
+        $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
 
         match ($textFieldOperator) {
             'is'           => $query->where($field, '=', $value),
             'is_not'       => $query->where($field, '!=', $value),
             'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
             'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-            'contains'     => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
             'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
             'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
             'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
@@ -170,7 +178,7 @@ class Model
             'is_not_null'  => $query->whereNotNull($field),
             'is_blank'     => $query->where($field, '=', ''),
             'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-            default        => null,
+            default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
         };
     }
 
