@@ -24,6 +24,10 @@ class Table
 
     public string $trFiltersStyle = '';
 
+    public string $tdFiltersClass = '';
+
+    public string $tdFiltersStyle = '';
+
     public string $thClass = '';
 
     public string $thStyle = '';
@@ -87,6 +91,14 @@ class Table
     {
         $this->trFiltersClass = $attrClass;
         $this->trFiltersStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdFilters(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->tdFiltersClass = $attrClass;
+        $this->tdFiltersStyle = $attrStyle;
 
         return $this;
     }

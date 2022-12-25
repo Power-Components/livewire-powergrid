@@ -10,20 +10,28 @@
     'filters' => [],
     'setUp' => null
 ])
+@php
+    $trClasses = Arr::toCssClasses([$theme->table->trClass, $theme->table->trFiltersClass]);
+    $tdClasses = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->tdFiltersClass]);
+
+    $trStyles = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->trFiltersStyle]);
+    $tdStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->tdFiltersStyle]);
+@endphp
+
 <div>
     @if(config('livewire-powergrid.filter') === 'inline')
-        <tr class="{{ $theme->table->trClass }} {{ $theme->table->trFiltersClass }}"
-            style="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}">
+        <tr class="{{ $trClasses }}"
+            style="{{ $trStyles }}">
             @if(count($makeFilters))
                 @if(data_get($setUp, 'detail.showCollapseIcon'))
-                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+                    <td class="{{ $tdClasses }}" style="{{ $tdStyles }}"></td>
                 @endif
                 @if($checkbox)
-                    <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+                    <td class="{{ $tdClasses }}" style="{{ $tdStyles }}"></td>
                 @endif
                 @foreach($columns as $column)
-                    <td class="{{ $theme->table->tdBodyClass }}"
-                        style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle }}">
+                    <td class="{{ $tdClasses }}"
+                        style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $tdStyles }}">
                         @foreach(data_get($makeFilters, 'date_picker', []) as $index => $date)
                             @if(data_get($date, 'field') === $column->field)
                                 @includeIf($theme->filterDatePicker->view, [

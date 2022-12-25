@@ -3,7 +3,7 @@
         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
     @if($checkbox)
-        <td  class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+        <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
     @foreach ($columns as $column)
         @php

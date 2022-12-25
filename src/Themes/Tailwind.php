@@ -28,12 +28,12 @@ class Tailwind extends ThemeBase
         return Theme::table('rounded-lg min-w-full border border-pg-primary-200 dark:bg-pg-primary-600 dark:border-pg-primary-500')
             ->div('my-3 overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative')
             ->thead('shadow-sm bg-pg-primary-100 dark:bg-pg-primary-800 border border-pg-primary-200 dark:border-pg-primary-500')
-            ->tr('')
+            ->tr('bg-white2')
             ->trFilters('bg-white shadow-sm dark:bg-pg-primary-700')
             ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semibold text-pg-primary-700 tracking-wider whitespace-nowrap dark:text-pg-primary-300')
             ->tbody('text-pg-primary-800')
             ->trBody('border border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700')
-            ->tdBody('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
+            ->tdBody('pl-[25px] px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
             ->tdBodyEmpty('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
             ->tdBodyTotalColumns('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2');
     }
@@ -100,7 +100,7 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->base('inline-block relative w-full p-2 min-w-[180px]')
+            ->base('inline-block relative w-full min-w-[180px]')
             ->view($this->root() . '.filters.multi-select');
     }
 
