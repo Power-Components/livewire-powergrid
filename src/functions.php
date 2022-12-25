@@ -2,7 +2,6 @@
 
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
-use PowerComponents\LivewirePowerGrid\Traits\HasFilter;
 
 if (!function_exists('powerGridThemeRoot')) {
     /**
@@ -24,16 +23,6 @@ if (!function_exists('powerGridTheme')) {
     function powerGridTheme(): string
     {
         return strval(config('livewire-powergrid.theme'));
-    }
-}
-
-if (!function_exists('validateInputTextOptions')) {
-    function validateInputTextOptions(array $filter, string $field): bool
-    {
-        return data_get($filter, "input_text_options.$field") !== null && in_array(
-            strtolower(strval(data_get($filter, "input_text_options.$field"))),
-            HasFilter::getInputTextOptions()
-        );
     }
 }
 

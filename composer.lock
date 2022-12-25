@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b57106927416aa370bf88b9d9306da79",
+    "content-hash": "b3c23e40d1b877d6fdaf3965755cbaac",
     "packages": [
         {
             "name": "brick/math",
@@ -6118,16 +6118,16 @@
         },
         {
             "name": "laradumps/laradumps",
-            "version": "v1.5.1",
+            "version": "dev-2x",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps.git",
-                "reference": "227bd7c1357f9c54462ec111fcd511bf2560c506"
+                "reference": "a1f2b1f64b169a2d816682b7eb62293e43c45296"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/227bd7c1357f9c54462ec111fcd511bf2560c506",
-                "reference": "227bd7c1357f9c54462ec111fcd511bf2560c506",
+                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/a1f2b1f64b169a2d816682b7eb62293e43c45296",
+                "reference": "a1f2b1f64b169a2d816682b7eb62293e43c45296",
                 "shasum": ""
             },
             "require": {
@@ -6173,7 +6173,7 @@
             "homepage": "https://github.com/laradumps/laradumps",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps/issues",
-                "source": "https://github.com/laradumps/laradumps/tree/v1.5.1"
+                "source": "https://github.com/laradumps/laradumps/tree/2x"
             },
             "funding": [
                 {
@@ -6181,7 +6181,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-11-25T21:12:20+00:00"
+            "time": "2022-12-23T17:18:17+00:00"
         },
         {
             "name": "laravel/pint",
@@ -10078,7 +10078,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "laradumps/laradumps": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
