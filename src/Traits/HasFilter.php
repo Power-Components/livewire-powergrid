@@ -318,9 +318,11 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value): void
+    public function filterInputTextOptions(string $field, string $value, array $operators = []): void
     {
-        $value = $this->inputTextOptions[$value];
+        $operators ??= $this->inputTextOptions;
+
+        $value = $operators[$value];
 
         data_set($this->filters, 'input_text_options.' . $field, $value);
 

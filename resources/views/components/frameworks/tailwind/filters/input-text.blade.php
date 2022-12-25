@@ -32,7 +32,7 @@
                     <div class="relative">
                         <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
-                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value)">
+                                wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value, @js($inputTextOptions))">
                             @foreach($inputTextOptions as $key => $value)
                                 <option value="{{ $key }}">{{ trans('livewire-powergrid::datatable.input_text_options.'.$value) }}</option>
                             @endforeach

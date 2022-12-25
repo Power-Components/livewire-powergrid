@@ -66,9 +66,9 @@ class Model
         return $this;
     }
 
-    public function setInputOperators(array $operators): Model
+    public function setInputTextOperators(array $operators): Model
     {
-        $this->inputOperators = $operators;
+        $this->inputTextOperators = $operators;
 
         return $this;
     }
