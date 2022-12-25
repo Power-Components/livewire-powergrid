@@ -14,7 +14,7 @@
     $trClasses = Arr::toCssClasses([$theme->table->trClass, $theme->table->trFiltersClass]);
     $tdClasses = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->tdFiltersClass]);
 
-    $trStyles = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->trFiltersStyle]);
+    $trStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->trFiltersStyle]);
     $tdStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->tdFiltersStyle]);
 @endphp
 
