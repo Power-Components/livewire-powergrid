@@ -63,7 +63,7 @@ class Table
         $this->tableStyle = $tableStyle;
     }
 
-    public function div(string $attrClass, string $attrStyle = ''): Table
+    public function div(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->divClass = $attrClass;
         $this->divStyle = $attrStyle;
@@ -71,7 +71,7 @@ class Table
         return $this;
     }
 
-    public function thead(string $attrClass, string $attrStyle = ''): Table
+    public function thead(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->theadClass = $attrClass;
         $this->theadStyle = $attrStyle;
@@ -79,7 +79,7 @@ class Table
         return $this;
     }
 
-    public function tr(string $attrClass, string $attrStyle = ''): Table
+    public function tr(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->trClass = $attrClass;
         $this->trStyle = $attrStyle;
@@ -87,7 +87,7 @@ class Table
         return $this;
     }
 
-    public function trFilters(string $attrClass, string $attrStyle = ''): Table
+    public function trFilters(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->trFiltersClass = $attrClass;
         $this->trFiltersStyle = $attrStyle;
@@ -95,7 +95,7 @@ class Table
         return $this;
     }
 
-    public function tdFilters(string $attrClass, string $attrStyle = ''): Table
+    public function tdFilters(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->tdFiltersClass = $attrClass;
         $this->tdFiltersStyle = $attrStyle;
@@ -103,7 +103,7 @@ class Table
         return $this;
     }
 
-    public function th(string $attrClass, string $attrStyle = ''): Table
+    public function th(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->thClass = $attrClass;
         $this->thStyle = $attrStyle;
@@ -111,7 +111,7 @@ class Table
         return $this;
     }
 
-    public function tbody(string $attrClass, string $attrStyle = ''): Table
+    public function tbody(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->tbodyClass = $attrClass;
         $this->tbodyStyle = $attrStyle;
@@ -119,7 +119,7 @@ class Table
         return $this;
     }
 
-    public function trBody(string $attrClass, string $attrStyle = ''): Table
+    public function trBody(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->trBodyClass = $attrClass;
         $this->trBodyStyle = $attrStyle;
@@ -127,7 +127,7 @@ class Table
         return $this;
     }
 
-    public function tdBody(string $attrClass, string $attrStyle = ''): Table
+    public function tdBody(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->tdBodyClass = $attrClass;
         $this->tdBodyStyle = $attrStyle;
@@ -135,7 +135,7 @@ class Table
         return $this;
     }
 
-    public function tdBodyTotalColumns(string $attrClass, string $attrStyle = ''): Table
+    public function tdBodyTotalColumns(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->tdBodyClassTotalColumns = $attrClass;
         $this->tdBodyStyleTotalColumns = $attrStyle;
@@ -143,7 +143,7 @@ class Table
         return $this;
     }
 
-    public function tdBodyEmpty(string $attrClass, string $attrStyle = ''): Table
+    public function tdBodyEmpty(string $attrClass = '', string $attrStyle = ''): Table
     {
         $this->tdBodyEmptyClass = $attrClass;
         $this->tdBodyEmptyStyle = $attrStyle;
