@@ -32,6 +32,10 @@ final class PowerGridDemoTable extends PowerGridComponent
 {
     use ActionButton;
 
+    public array $inputTextOptions = [
+        'contains',
+    ];
+
     // Demo users. Should be removed in a real project.
     protected $demoUsers = null;
 
