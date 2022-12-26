@@ -32,18 +32,18 @@
         ->toArray();
     }
 
-
+    $params = [
+        'data' => $data,
+        'value' => $multiSelect['value'],
+        'text' => $multiSelect['text'],
+        'tableName' => $tableName,
+        'dataField' => $multiSelect['dataField'],
+        'selected' => $selected
+    ];
 @endphp
 <div x-cloak
      wire:ignore.self
-     x-data="pgMultiSelect({
-        data: @js($data),
-        value: '{{ $multiSelect['value'] }}',
-        text: '{{ $multiSelect['text'] }}',
-        tableName: '{{ $tableName }}',
-        dataField: '{{ $multiSelect['dataField'] }}',
-        selected: @js($selected)
-     })">
+     x-data="pgMultiSelect(@js($params))">
     <div @class([
             'p-2' => !$inline,
             $theme->baseClass,

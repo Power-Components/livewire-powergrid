@@ -16,6 +16,7 @@ use Throwable;
 
 /**
  * @property ?Batch $exportBatch
+ * @codeCoverageIgnore
  */
 trait WithExport
 {

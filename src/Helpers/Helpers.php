@@ -32,6 +32,7 @@ class Helpers
         $currentField = $field;
         $replace      = fn ($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
 
+        /** @codeCoverageIgnore */
         if (str_contains($currentField, '.')) {
             $data  = Str::of($field)->explode('.');
             $table = $data->get(0);

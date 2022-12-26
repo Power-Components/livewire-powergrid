@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
+/** @codeCoverageIgnore */
 trait PersistData
 {
     public array $persist = [];

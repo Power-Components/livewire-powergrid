@@ -11,6 +11,7 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Tests\DishesArrayTable,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
+    Tests\DishesDynamicFiltersTable,
     Tests\DishesEnumTable,
     Tests\DishesMakeTable,
     Tests\DishesRowIndex,
@@ -174,6 +175,11 @@ dataset('themes with softDeletes', [
 dataset('row index', [
     'tailwind'  => [DishesRowIndex::class, 'tailwind'],
     'bootstrap' => [DishesRowIndex::class, 'bootstrap'],
+]);
+
+dataset('themes with dynamic filter table', [
+    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => 'tailwind']],
+    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => 'bootstrap']],
 ]);
 
 /**

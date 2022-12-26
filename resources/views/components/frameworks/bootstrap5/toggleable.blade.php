@@ -1,12 +1,16 @@
-<div x-data="pgToggleable({
-            id: '{{ $row->{$primaryKey} }}',
-            isHidden: {{ !$showToggleable ? 'true' : 'false' }},
-            tableName: '{{ $tableName }}',
-            field: '{{ $column->field }}',
-            toggle: {{ (int) $row->{$column->field} }},
-            trueValue: '{{ $column->toggleable['default'][0] }}',
-            falseValue:  '{{ $column->toggleable['default'][1] }}'
-         })">
+@php
+    $params = [
+        'id' => $row->{$primaryKey},
+        'isHidden' => !$showToggleable ? 'true' : 'false',
+        'tableName' => $tableName,
+        'field'  => $column->field,
+        'toggle' => $row->{$column->field},
+        'trueValue' => $column->toggleable['default'][0],
+        'falseValue' => $column->toggleable['default'][1]
+    ];
+@endphp
+
+<div x-data="pgToggleable(@js($params))">
     @if($column->toggleable['enabled'] && $showToggleable === true)
         <div class="form-check form-switch">
             <label>

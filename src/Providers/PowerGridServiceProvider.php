@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
@@ -52,6 +53,11 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../../resources/views' => resource_path('views/vendor/' . $this->packageName),
         ], $this->packageName . '-views');
+
+        Blade::anonymousComponentPath(
+            __DIR__ . '/../../resources/views/tests',
+            'tests'
+        );
     }
 
     private function publishConfigs(): void

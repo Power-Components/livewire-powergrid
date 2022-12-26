@@ -145,7 +145,7 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function render(): Application|Factory|View
     {

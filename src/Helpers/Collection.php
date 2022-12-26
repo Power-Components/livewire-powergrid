@@ -20,14 +20,22 @@ class Collection
 
     private array $inputRangeConfig = [];
 
-    public function __construct(BaseCollection $query)
+    /**
+     * @param BaseCollection $query
+     */
+    public function __construct($query)
     {
         $this->query = $query;
     }
 
-    public static function query(BaseCollection $query): Collection
+    /**
+     * @param BaseCollection $query
+     * @return self
+     */
+    public static function query($query): self
     {
-        return new Collection($query);
+        /** @phpstan-ignore-next-line */
+        return new static($query);
     }
 
     /**
@@ -138,14 +146,14 @@ class Collection
         return $this->query;
     }
 
-    public function filterDatePicker(string $field, array $value): void
+    private function filterDatePicker(string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $this->query = $this->query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
         }
     }
 
-    public function filterInputTextContains(string $field, ?string $value): void
+    private function filterInputTextContains(string $field, ?string $value): void
     {
         $this->query = $this->query->filter(function ($row) use ($field, $value) {
             $row = (object) $row;
@@ -154,11 +162,11 @@ class Collection
         });
     }
 
-    public function filterInputText(string $field, ?string $value): void
+    private function filterInputText(string $field, ?string $value): void
     {
         $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
 
-        match ($textFieldOperator) {
+        $this->query = match ($textFieldOperator) {
             'is'           => $this->query->where($field, '=', $value),
             'is_not'       => $this->query->where($field, '!=', $value),
             'starts_with'  => $this->query->filter(function ($row) use ($field, $value) {
@@ -171,11 +179,6 @@ class Collection
 
                 return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
-            'contains'     => $this->query->filter(function ($row) use ($field, $value) {
-                $row = (object) $row;
-
-                return false !== stristr($row->{$field}, strtolower((string) $value));
-            }),
             'contains_not' => $this->query->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
@@ -186,7 +189,11 @@ class Collection
 
                 return $row->{$field} == '' || is_null($row->{$field});
             }),
-            'is_not_empty' => $this->query->whereNotNull($field),
+            'is_not_empty' => $this->query->filter(function ($row) use ($field) {
+                $row = (object) $row;
+
+                return $row->{$field} !== '' && $row->{$field} !== null;
+            }),
             'is_null'      => $this->query->whereNull($field),
             'is_not_null'  => $this->query->filter(function ($row) use ($field) {
                 $row = (object) $row;
@@ -199,11 +206,15 @@ class Collection
 
                 return $row->{$field} != '' || is_null($row->{$field});
             }),
-            default        => null,
+            default        => $this->query->filter(function ($row) use ($field, $value) {
+                $row = (object) $row;
+
+                return false !== stristr($row->{$field}, strtolower((string) $value));
+            }),
         };
     }
 
-    public function filterBoolean(string $field, ?string $value): void
+    private function filterBoolean(string $field, ?string $value): void
     {
         if (is_null($value)) {
             $value = 'all';
@@ -216,14 +227,14 @@ class Collection
         }
     }
 
-    public function filterSelect(string $field, string $value): void
+    private function filterSelect(string $field, string $value): void
     {
         if (filled($value)) {
             $this->query = $this->query->where($field, $value);
         }
     }
 
-    public function filterMultiSelect(string $field, array|BaseCollection $value): void
+    private function filterMultiSelect(string $field, array|BaseCollection $value): void
     {
         $empty = false;
         /** @var array|null $values */
@@ -245,7 +256,7 @@ class Collection
     /**
      * @param array<string> $value
      */
-    public function filterNumber(string $field, array $value): void
+    private function filterNumber(string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = $value['start'];

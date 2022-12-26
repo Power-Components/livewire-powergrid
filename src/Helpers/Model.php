@@ -95,14 +95,14 @@ class Model
         return $this->query;
     }
 
-    public function filterDatePicker(Builder $query, string $field, array $value): void
+    private function filterDatePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
         }
     }
 
-    public function filterMultiSelect(Builder $query, string $field, array $values): void
+    private function filterMultiSelect(Builder $query, string $field, array $values): void
     {
         $empty = false;
 
@@ -121,7 +121,7 @@ class Model
         }
     }
 
-    public function filterSelect(Builder $query, string $field, string|array|null $values): void
+    private function filterSelect(Builder $query, string $field, string|array|null $values): void
     {
         if (is_array($values)) {
             $field  = $field . '.' . key($values);
@@ -134,7 +134,7 @@ class Model
         }
     }
 
-    public function filterBoolean(Builder $query, string $field, string|array|null $value): void
+    private function filterBoolean(Builder $query, string $field, string|array|null $value): void
     {
         if (is_null($value)) {
             $value = 'all';
@@ -152,12 +152,12 @@ class Model
         }
     }
 
-    public function filterInputTextContains(Builder $query, string $field, ?string $value): void
+    private function filterInputTextContains(Builder $query, string $field, ?string $value): void
     {
         $query->where($field, SqlSupport::like(), '%' . $value . '%');
     }
 
-    public function filterInputText(Builder $query, string $field, string|array|null $value): void
+    private function filterInputText(Builder $query, string $field, string|array|null $value): void
     {
         if (is_array($value)) {
             $field = $field . '.' . key($value);
@@ -185,7 +185,7 @@ class Model
     /**
      * @param string[] $value
      */
-    public function filterNumber(Builder $query, string $field, array $value): void
+    private function filterNumber(Builder $query, string $field, array $value): void
     {
         if (isset($value['start']) && !isset($value['end'])) {
             $start = $value['start'];

@@ -1,6 +1,6 @@
 <div>
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
-    @if(!is_array($data) && count(data_get($setUp, 'footer.perPageValues')) > 1)
+    @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1 && blank(data_get($setUp, 'footer.pagination')))
         <footer class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between">
             <div class="col-auto overflow-auto my-sm-2 my-md-0 ms-sm-0">
                 @if(data_get($setUp, 'footer.perPage') && count(data_get($setUp, 'footer.perPageValues')) > 1)

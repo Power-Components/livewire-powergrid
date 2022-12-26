@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\{Str, Stringable};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
+/** @codeCoverageIgnore */
 trait ExportableJob
 {
     private string $fileName;
