@@ -76,6 +76,7 @@ final class Button
 
     /**
      * Route string
+     * @codeCoverageIgnore
      */
     public function route(string $route, array $params, bool $singleParam = false): Button
     {
