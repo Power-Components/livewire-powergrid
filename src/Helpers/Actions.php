@@ -319,4 +319,9 @@ class Actions
             ]);
         }
     }
+
+    public function getDynamicProperty(string $key): mixed
+    {
+        return data_get($this->action->dynamicProperties, $key);
+    }
 }
