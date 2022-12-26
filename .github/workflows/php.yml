@@ -55,7 +55,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           tools: composer:v2
-          coverage: none
+          coverage: xdebug
 
       - name: Cache composer dependencies
         uses: actions/cache@v3
