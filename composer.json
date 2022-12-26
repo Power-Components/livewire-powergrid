@@ -59,7 +59,7 @@
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
             "@require-openspout",
-            "./vendor/bin/pest --configuration phpunit.sqlite.xml"
+            "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80"
         ],
         "test:mysql":  [
             "@require-openspout",

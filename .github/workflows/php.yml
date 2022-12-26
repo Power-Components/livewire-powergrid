@@ -77,7 +77,7 @@ jobs:
 
       - name: Testing with SQLite
         run: |
-          ./vendor/bin/pest --configuration phpunit.sqlite.xml
+          XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80
       - name: Testing with MySQL
         run: |
           ./vendor/bin/pest --configuration phpunit.mysql.xml
