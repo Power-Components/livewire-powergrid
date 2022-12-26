@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 trait InputOperators
 {
-    private array $inputTextOperators;
+    public array $inputTextOperators;
 
     public function validateInputTextOptions(array $filter, string $field): string
     {

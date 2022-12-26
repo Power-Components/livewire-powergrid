@@ -25,21 +25,16 @@ class Collection
         $this->query = $query;
     }
 
-    /**
-     * @param BaseCollection $query
-     * @return self
-     */
-    public static function query($query): self
+    public static function query(BaseCollection $query): Collection
     {
-        /** @phpstan-ignore-next-line */
-        return new static($query);
+        return new Collection($query);
     }
 
     /**
      * @param array $columns
      * @return $this
      */
-    public function setColumns(array $columns): self
+    public function setColumns(array $columns): Collection
     {
         $this->columns = $columns;
 
@@ -50,7 +45,7 @@ class Collection
      * @param string $search
      * @return $this
      */
-    public function setSearch(string $search): self
+    public function setSearch(string $search): Collection
     {
         $this->search = $search;
 
@@ -61,9 +56,16 @@ class Collection
      * @param array $filters
      * @return $this
      */
-    public function setFilters(array $filters): self
+    public function setFilters(array $filters): Collection
     {
         $this->filters = $filters;
+
+        return $this;
+    }
+
+    public function setInputTextOperators(array $operators): Collection
+    {
+        $this->inputTextOperators = $operators;
 
         return $this;
     }
@@ -157,19 +159,19 @@ class Collection
         $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
 
         match ($textFieldOperator) {
-            'is'          => $this->query->where($field, '=', $value),
-            'is_not'      => $this->query->where($field, '!=', $value),
-            'starts_with' => $this->query->filter(function ($row) use ($field, $value) {
+            'is'           => $this->query->where($field, '=', $value),
+            'is_not'       => $this->query->where($field, '!=', $value),
+            'starts_with'  => $this->query->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return Str::startsWith(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
-            'ends_with' => $this->query->filter(function ($row) use ($field, $value) {
+            'ends_with'    => $this->query->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return Str::endsWith(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
-            'contains' => $this->query->filter(function ($row) use ($field, $value) {
+            'contains'     => $this->query->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return false !== stristr($row->{$field}, strtolower((string) $value));
@@ -179,7 +181,7 @@ class Collection
 
                 return !Str::Contains(Str::lower($row->{$field}), Str::lower((string) $value));
             }),
-            'is_empty' => $this->query->filter(function ($row) use ($field) {
+            'is_empty'     => $this->query->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
                 return $row->{$field} == '' || is_null($row->{$field});
@@ -197,7 +199,7 @@ class Collection
 
                 return $row->{$field} != '' || is_null($row->{$field});
             }),
-            default => null,
+            default        => null,
         };
     }
 

@@ -11,11 +11,10 @@
     </testsuites>
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">./app</directory>
             <directory suffix=".php">./src</directory>
         </include>
     </coverage>
-        <php>
+    <php>
         <server name="APP_ENV" value="testing"/>
         <server name="DB_DRIVER" value="sqlite"/>
         <server name="DB_HOST" value=""/>

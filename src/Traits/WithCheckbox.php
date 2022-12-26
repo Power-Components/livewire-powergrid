@@ -3,8 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
+use PowerComponents\LivewirePowerGrid\Helpers\ActionRules;
+use Throwable;
 
 trait WithCheckbox
 {
@@ -17,7 +19,7 @@ trait WithCheckbox
     public string $checkboxAttribute = '';
 
     /**
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function selectCheckboxAll(): void
     {
@@ -32,7 +34,8 @@ trait WithCheckbox
 
         $actionRulesClass = resolve(ActionRules::class);
 
-        collect($data->items())->each(function ($model) use ($actionRulesClass) {
+        /** @phpstan-ignore-next-line  */
+        collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
             $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
 
             if (isset($rules['hide'])) {

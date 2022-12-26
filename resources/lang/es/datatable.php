@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Filtrar',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Acción',
         'results_per_page' => 'Registros por página',
         'clear_filter'     => 'Borrar el filtro',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Todos',
         'selected'         => 'Seleccionado',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Buscar',
         'select' => 'Seleccione un período',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Mostrando',
         'to'      => 'a',
         'of'      => 'de',
         'results' => 'registros',
         'all'     => 'Todos',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Seleccione',
         'all'    => 'Todos',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Seleccione',
         'all'    => 'Todos',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Todos',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_empty'     => 'Esta relleno',
         'is_not_empty' => 'No está relleno',
     ],
-    'export' => [
+    'export'             => [
         'exporting' => '¡Espere por favor!',
         'completed' => '¡Exportación completada! Tus archivos están listos para descargar',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort' => [
+    'multi_sort'         => [
         'message' => 'Multiple sort is active',
     ],
 ];

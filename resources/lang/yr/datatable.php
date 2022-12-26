@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'àlẹmọ',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Awọn Igbese',
         'results_per_page' => 'Esi Ni oju-iwe',
         'clear_filter'     => 'Ko àlẹmọ',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Gbogbo e',
         'selected'         => 'Oun To Mu',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Wa...',
         'select' => 'Mu akoko Kan',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Afihan',
         'to'      => 'Si',
         'of'      => 'ti',
         'results' => 'Esi',
         'all'     => 'Gbogbo e',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Mu',
         'all'    => 'Gbogbo e',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Mu',
         'all'    => 'Gbogbo e',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Gbogbo e',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_empty'     => 'is_empty',
         'is_not_empty' => 'is_not_empty',
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'jọwọ duro!',
         'completed' => 'O ti setan! Awọn faili rẹ ti šetan fun igbasilẹ',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort' => [
+    'multi_sort'         => [
         'message' => 'Multiple sort is active',
     ],
 ];

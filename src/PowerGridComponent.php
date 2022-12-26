@@ -212,6 +212,7 @@ class PowerGridComponent extends Component
             cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
+                ->setInputTextOperators($this->inputTextOptions)
                 ->setSearch($this->search)
                 ->setFilters($this->filters)
                 ->filterContains()
@@ -282,6 +283,7 @@ class PowerGridComponent extends Component
             $this->total = $results->total();
         }
 
+        /** @phpstan-ignore-next-line */
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
@@ -345,6 +347,7 @@ class PowerGridComponent extends Component
             $collection = collect($results->items());
         }
 
+        /** @phpstan-ignore-next-line */
         $collection->each(function ($model) {
             $id = strval($model->{$this->primaryKey});
 

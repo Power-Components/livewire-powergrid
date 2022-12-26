@@ -7,8 +7,8 @@ use OpenSpout\Common\Entity\Style\{Color, Style};
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\{Options, Writer};
+use PowerComponents\LivewirePowerGrid\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Exportable;
-use PowerComponents\LivewirePowerGrid\Services\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Services\{Export};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 

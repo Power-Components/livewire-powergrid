@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Фильтр',
         'clear_all_filters' => 'Очистити все',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Дія',
         'results_per_page' => 'Записів на сторінку',
         'clear_filter'     => 'Видалити фільтри',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Всі',
         'selected'         => 'Вибрані',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Пошук...',
         'select' => 'Вибрати період',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Відображення від',
         'to'      => 'до',
         'of'      => 'з',
         'results' => 'результатів',
         'all'     => 'Всі',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Вибрати',
         'all'    => 'Всі',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Вибрати',
         'all'    => 'Всі',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Всі',
     ],
     'input_text_options' => [
@@ -50,18 +50,18 @@ return [
         'is_not_blank' => 'Не пусто (blank)',
 
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'Будь ласка зачекайте!',
         'completed' => 'Експорт завершено! Файли готові для скачування',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort' => [
+    'multi_sort'         => [
         'message' => 'Multiple sort is active',
     ],
 ];

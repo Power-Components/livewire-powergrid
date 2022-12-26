@@ -99,8 +99,8 @@ With PowerGrid you get right out of the box:
 
 ## 1. Requirements
 
-- PHP 8.0+
-- [Laravel 8.75+](https://laravel.com/docs/9.x/installation)
+- PHP 8.1+
+- [Laravel 9+](https://laravel.com/docs/9.x/installation)
 - [Livewire 2.10x](https://laravel-livewire.com)
 - [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
@@ -108,7 +108,7 @@ With PowerGrid you get right out of the box:
 
 ## 2. Install
 
-Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/#/get-started/install) page.
+Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/get-started/install.html) page.
 
 <br/>
 

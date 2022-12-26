@@ -318,7 +318,7 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value, array $operators = []): void
+    public function filterInputTextOptions(string $field, string $value, ?array $operators = null): void
     {
         $operators ??= $this->inputTextOptions;
 

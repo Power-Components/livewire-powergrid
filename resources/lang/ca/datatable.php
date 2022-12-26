@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Filtre',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Accions',
         'results_per_page' => 'Registres per pàgina',
         'clear_filter'     => 'Esborra el filtre',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Tots',
         'selected'         => 'Seleccionat',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Cerca...',
         'select' => 'Seleccioneu un període',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Mostrant',
         'to'      => 'a',
         'of'      => 'de',
         'results' => 'Registres',
         'all'     => 'Tots',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Seleccioneu',
         'all'    => 'Tots',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Seleccioneu',
         'all'    => 'Tots',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Tots',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_empty'     => 'És omplit',
         'is_not_empty' => 'No és omplit',
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'Espereu, si us plau!',
         'completed' => 'S\'ha completat l\'exportació. Els vostres fitxers estan a punt per descarregar-se',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort' => [
+    'multi_sort'         => [
         'message' => 'Multiple sort is active',
     ],
 ];
