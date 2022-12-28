@@ -100,7 +100,8 @@ class Tailwind extends ThemeBase
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->base('inline-block relative w-full p-2 min-w-[180px]')
+            ->base('inline-block relative w-full min-w-[180px]')
+            ->select('mt-1')
             ->view($this->root() . '.filters.multi-select');
     }
 

@@ -4,12 +4,15 @@ export default (params) => ({
     init() {
         const element = this.$refs['select_picker_'+params.dataField+'_'+params.tableName];
 
-        new window.TomSelect(element,{
+        const defaultParams = {
             items: params.initialValues,
             ...params.framework,
             onChange: (value) => {
                 storeMultiSelect(params, value)
             },
+        }
+
+        const asyncConfig = {
             valueField: params.optionId,
             labelField: params.optionLabel,
             searchField: params.optionLabel,
@@ -58,6 +61,14 @@ export default (params) => ({
                     return `<div class="py-2 mb-1"><span>${ escape(item[params.optionLabel]) }</span></div>`;
                 }
             },
-        });
+        }
+
+        let parameters = defaultParams
+
+        if (params.hasOwnProperty('asyncData')) {
+            parameters = Object.assign(defaultParams, asyncConfig)
+        }
+
+        new window.TomSelect(element, parameters);
     },
 })

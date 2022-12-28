@@ -26,7 +26,7 @@
         'optionId' => $multiSelect['optionId'],
         'optionLabel' => $multiSelect['optionLabel'],
         'initialValues' => $initialValues,
-        'framework' => (array) config('livewire-powergrid.plugins.multiselect')
+        'framework' => $framework[config('livewire-powergrid.plugins.multiselect.default')]
     ];
 
     if (filled(data_get($multiSelect, 'asyncData'))) {
@@ -36,6 +36,7 @@
     $alpineData = $framework['default'] == 'tom' ?
         'pgTomSelect('.Js::from($params).')' :
         'pgSlimSelect('.Js::from($params).')';
+
 @endphp
 <div x-cloak
      wire:ignore
@@ -45,24 +46,23 @@
             'p-2' => !$inline,
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
-            <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
-                @if(!$inline)
-                    <label class="text-gray-700 dark:text-gray-300">{{ data_get($multiSelect, 'label') }}</label>
+            @if(!$inline)
+                <label class="text-gray-700 dark:text-gray-300">{{ data_get($multiSelect, 'label') }}</label>
+            @endif
+            <select @if ($multiple) multiple @endif
+                    class="{{ $theme->selectClass }}"
+                    wire:model.defer="filters.multi_select.{{ $multiSelect['dataField'] }}.values"
+                    x-ref="select_picker_{{ $multiSelect['dataField'] }}_{{ $tableName }}"
+            >
+                <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
+                @if(blank(data_get($params, 'asyncData', [])))
+                    @foreach($collection->toArray() as $item)
+                        <option value="{{ data_get($item, $multiSelect['optionId']) }}">
+                            {{ data_get($item, $multiSelect['optionLabel'])  }}
+                        </option>
+                    @endforeach
                 @endif
-                <select @if ($multiple) multiple @endif
-                        wire:model.defer="filters.multi_select.{{ $multiSelect['dataField'] }}.values"
-                        x-ref="select_picker_{{ $multiSelect['dataField'] }}_{{ $tableName }}"
-                >
-                    <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
-                    @if(blank(data_get($params, 'asyncData', [])))
-                        @foreach($collection->toArray() as $item)
-                            <option value="{{ data_get($item, $multiSelect['optionId']) }}">
-                                {{ data_get($item, $multiSelect['optionLabel'])  }}
-                            </option>
-                        @endforeach
-                    @endif
-                </select>
-            </div>
+            </select>
         </div>
     @endif
 </div>
