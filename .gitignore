@@ -11,3 +11,4 @@ vendor
 
 pnpm-lock.yaml
 tmp/
+dist/powergrid.js.LICENSE.txt
