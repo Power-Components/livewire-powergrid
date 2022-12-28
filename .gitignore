@@ -12,4 +12,3 @@ vendor
 pnpm-lock.yaml
 tmp/
 dist/powergrid.js.LICENSE.txt
-dist/mix-manifest.json
