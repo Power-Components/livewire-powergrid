@@ -14,7 +14,7 @@
                     wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
                     wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">
                 <option>{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-                @foreach(data_get($select, 'data_source') as $relation)
+                @foreach(data_get($select, 'dataSource') as $relation)
                     @php
                         $key = isset($relation['id']) ? 'id' : 'value';
                         if (isset($relation[$select['dataField']])) $key = $select['dataField'];

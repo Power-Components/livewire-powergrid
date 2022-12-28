@@ -36,22 +36,21 @@
                     @endforeach
                     @foreach(data_get($makeFilters, 'select', []) as $index => $select)
                         @if(data_get($select, 'field') === $column->field)
-                            @includeIf($theme->filterSelect->view, [
-                                'inline' => true,
-                                'column' => $column,
-                                'select' =>$select,
-                                'theme' => $theme->filterSelect,
-                            ])
+                                @includeIf($theme->filterSelect->view, [
+                                    'inline' => true,
+                                    'column' => $column,
+                                    'select' =>$select,
+                                    'theme' => $theme->filterSelect,
+                                ])
                         @endif
                     @endforeach
                     @foreach(data_get($makeFilters, 'multi_select', []) as $index => $multiSelect)
                         @if(data_get($multiSelect, 'field') === $column->field)
-                            @includeIf($theme->filterMultiSelect->view, [
-                                'inline'    => true,
-                                'column'    => $column,
-                                'tableName' => $tableName,
-                                'theme'     => $theme->filterMultiSelect,
-                            ])
+                                <x-livewire-powergrid::inputs.select
+                                    :multiSelect="$multiSelect"
+                                    :theme="$theme->filterMultiSelect"
+                                    :initialValues="data_get(data_get($filters, 'multi_select'), $multiSelect['dataField'], [])"
+                                    :tableName="$tableName" />
                         @endif
                     @endforeach
                     @foreach(data_get($makeFilters, 'dynamic', []) as $index => $input)

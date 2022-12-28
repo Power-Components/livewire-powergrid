@@ -5,6 +5,11 @@
     'inline' => null,
     'select' => null
 ])
+@php
+    $selectClasses = Arr::toCssClasses([
+        $theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid'
+    ])
+@endphp
 <div>
     @if(filled($select))
         <div @class([
@@ -15,12 +20,12 @@
                 <label for="input_{{ data_get($select, 'dataField') }}" class="text-pg-primary-700 dark:text-pg-primary-300">{{ data_get($select, 'label')  }}</label>
             @endif
                 <div @class(['pt-1' => !$inline, 'relative'])>
-                    <select class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+                    <select class="{{ $selectClasses }}"
                             style="{{ data_get($column, 'headerStyle') }}"
                             wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
                             wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">
                         <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-                        @foreach(data_get($select, 'data_source') as $relation)
+                        @foreach(data_get($select, 'dataSource') as $relation)
                             @php
                                 $key = isset($relation['id']) ? 'id' : 'value';
                                 if (isset($relation[$select['dataField']])) $key = $select['dataField'];
