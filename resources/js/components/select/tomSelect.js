@@ -52,26 +52,10 @@ export default (params) => ({
             },
             render: {
                 option: function(item, escape) {
-                    return `<div class="py-2 d-flex">
-							<div>
-								<div class="mb-1">
-									<span class="h4">
-										${ escape(item.name) }
-									</span>
-								</div>
-							</div>
-						</div>`;
+                    return `<div class="py-2 mb-1"><span>${ escape(item[params.optionLabel]) }</span></div>`;
                 },
                 item: function(item, escape) {
-                    return `<div class="py-2 d-flex">
-							<div>
-								<div class="mb-1">
-									<span class="h4">
-										${ escape(item.name) }
-									</span>
-								</div>
-							</div>
-						</div>`;
+                    return `<div class="py-2 mb-1"><span>${ escape(item[params.optionLabel]) }</span></div>`;
                 }
             },
         });
