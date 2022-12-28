@@ -401,7 +401,6 @@ final class Column
     /**
      * Input Multi-Select Filter Async with Tom-Select
      *
-     * @throws Exception
      */
     public function makeInputMultiSelectAsync(
         string $dataField = null,
