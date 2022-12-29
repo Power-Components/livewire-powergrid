@@ -7,6 +7,7 @@
     'tableName' => null,
     'enabledFilters' => null,
     'inputTextOptions' => [],
+    'filters' => null,
 ])
 <div class="w-full my-3 dark:bg-pg-primary-800">
     <div x-data={show:true} class="rounded-full">
@@ -78,12 +79,12 @@
                     @endforeach
                     @foreach(data_get($makeFilters, 'multi_select', []) as $field => $multiSelect)
                         <div class="flex flex-col mb-2 md:w-1/2 lg:w-1/4 {{ data_get($booleanFilter, 'baseClass') }}">
-                            @includeIf($theme->filterMultiSelect->view, [
-                                'inline'         => false,
-                                'multiSelect'    => $multiSelect,
-                                'tableName'      => $tableName,
-                                'theme'          => $theme->filterMultiSelect,
-                            ])
+                            <x-livewire-powergrid::inputs.select
+                                :inline="false"
+                                :multiSelect="$multiSelect"
+                                :theme="$theme->filterMultiSelect"
+                                :initialValues="data_get(data_get($filters, 'multi_select'), $multiSelect['dataField'], [])"
+                                :tableName="$tableName" />
                         </div>
                     @endforeach
                     @foreach(data_get($makeFilters, 'dynamic', []) as $field => $input)

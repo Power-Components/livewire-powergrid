@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Exception;
 use Illuminate\Support\{Collection, Str};
 
 final class Column
@@ -370,7 +371,7 @@ final class Column
         array $settings = []
     ): Column {
         $this->editable                         = [];
-        $this->inputs['select']['data_source']  = $datasource;
+        $this->inputs['select']['dataSource']   = $datasource;
         $this->inputs['select']['displayField'] = $displayField;
         $this->inputs['select']['dataField']    = $dataField ?? $displayField;
         $this->inputs['select']['class']        = $settings['class'] ?? '';
@@ -384,14 +385,33 @@ final class Column
      */
     public function makeInputMultiSelect(
         Collection $datasource,
-        string $optionText,
+        string $optionLabel,
         string $dataField = null,
-        string $optionValue = 'id'
+        string $optionId = 'id'
     ): Column {
         $this->editable                              = [];
-        $this->inputs['multi_select']['data_source'] = $datasource;
-        $this->inputs['multi_select']['text']        = $optionText ?: $optionValue;
-        $this->inputs['multi_select']['value']       = $optionValue;
+        $this->inputs['multi_select']['dataSource']  = $datasource;
+        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
+        $this->inputs['multi_select']['optionId']    = $optionId;
+        $this->inputs['multi_select']['dataField']   = $dataField;
+
+        return $this;
+    }
+
+    /**
+     * Input Multi-Select Filter Async with Tom-Select
+     *
+     */
+    public function makeInputMultiSelectAsync(
+        string $dataField = null,
+        array $asyncData = [],
+        string $optionLabel = 'name',
+        string $optionId = 'id'
+    ): Column {
+        $this->editable                              = [];
+        $this->inputs['multi_select']['asyncData']   = $asyncData;
+        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
+        $this->inputs['multi_select']['optionId']    = $optionId;
         $this->inputs['multi_select']['dataField']   = $dataField;
 
         return $this;
