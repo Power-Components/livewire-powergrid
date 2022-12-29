@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Exception;
 use Illuminate\Support\{Collection, Str};
 
 final class Column
