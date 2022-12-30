@@ -2,16 +2,23 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
+
 it(
     'properly filters by "name is" using collection & array table',
-    fn (string $component, string $theme) => livewire($component)
-        ->call($theme)
-        ->set('filters', filterInputText('Name 1', 'is'))
-        ->assertSee('Name 1')
-        ->assertDontSee('Name 2')
-        ->call('clearFilter', 'name')
-        ->assertSeeText('Name 1')
-)->with('themes with collection table', 'themes with array table');
+    function (string $component, string $theme) {
+        $filter   = Filter::inputText('name', 'name')->operators();
+        $livewire = livewire($component)
+            ->call($theme)
+            ->set('filters', filterInputText('Name 1', 'is'))
+            ->assertSee('Name 1')
+            ->assertDontSee('Name 2')
+            ->call('clearFilter', 'name')
+            ->assertSeeText('Name 1');
+
+        expectColumnsFilterMatch($livewire, $filter);
+    }
+)->group('filters', 'inputText', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name is" using nonexistent record using collection & array table',
@@ -20,7 +27,7 @@ it(
         ->set('filters', filterInputText('Name 6', 'is'))
         ->assertSee('No records found')
         ->assertDontSee('Name 1')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name is not" using collection & array table',
@@ -31,7 +38,7 @@ it(
         ->assertDontSee('NAme 2')
         ->call('clearFilter', 'name')
         ->assertSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name is not" using nonexistent record using collection & array table',
@@ -41,7 +48,7 @@ it(
         ->assertSee('Name 5')
         ->assertSee('Name 4')
         ->call('clearFilter', 'name')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name contains" using collection & array table',
@@ -50,7 +57,7 @@ it(
         ->set('filters', filterInputText('4', 'contains'))
         ->assertSee('Name 4')
         ->assertDontSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name contains" using nonexistent record using collection & array table',
@@ -60,7 +67,7 @@ it(
         ->assertSee('No records found')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name contains not" using collection & array table',
@@ -69,7 +76,7 @@ it(
         ->set('filters', filterInputText('5', 'contains_not'))
         ->assertDontSee('Name 5')
         ->assertSee('Name 1')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name contains not" using nonexistent record using collection & array table',
@@ -78,7 +85,7 @@ it(
         ->set('filters', filterInputText('Name 6', 'contains_not'))
         ->assertSee('Name 1')
         ->assertSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name starts with" using collection & array table',
@@ -87,7 +94,7 @@ it(
         ->set('filters', filterInputText('Na', 'starts_with'))
         ->assertSee('Name 1')
         ->assertSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name starts with" using nonexistent record using collection & array table',
@@ -97,7 +104,7 @@ it(
         ->assertSee('No records found')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name ends with" using collection & array table',
@@ -106,7 +113,7 @@ it(
         ->set('filters', filterInputText('e 5', 'ends_with'))
         ->assertSee('Name 5')
         ->assertDontSee('Name 1')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "name ends with" using nonexistent record using collection & array table',
@@ -117,7 +124,7 @@ it(
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is blank"',
@@ -131,7 +138,7 @@ it(
         ->assertSee('Name 1')
         ->assertDontSee('Name 2')
         ->assertDontSee('Name 3')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is NOT blank"',
@@ -145,7 +152,7 @@ it(
         ->assertSee('Name 2')
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is null"',
@@ -159,7 +166,7 @@ it(
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is NOT null"',
@@ -173,7 +180,7 @@ it(
         ->assertDontSee('Name 1')
         ->assertSee('Name 3')
         ->assertDontSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is empty"',
@@ -187,7 +194,7 @@ it(
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');
 
 it(
     'properly filters by "chef name is NOT empty"',
@@ -201,4 +208,4 @@ it(
         ->assertSee('Name 3')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 2')
-)->with('themes with collection table', 'themes with array table');
+)->group('filters', 'inputText')->with('themes with collection table', 'themes with array table');

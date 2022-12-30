@@ -18,7 +18,7 @@ it('property displays the results and options', function (string $component, obj
             '<option value="2">',
             '🥜 Suitable for Celiacs',
         ]);
-})->with('enum')->onlyFromPhp('8.1');
+})->group('filters')->with('enum');
 
 it('properly filter with diet', function (string $component, object $params) {
     livewire($component)
@@ -28,7 +28,7 @@ it('properly filter with diet', function (string $component, object $params) {
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
-})->with('enum')->onlyFromPhp('8.1');
+})->group('filters')->with('enum');
 
 function filterEnumSelect(string $dataField, ?string $value): array
 {

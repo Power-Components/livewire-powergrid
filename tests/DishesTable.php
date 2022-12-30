@@ -147,15 +147,15 @@ class DishesTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                ->makeInputText('name')
+                //->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::add()
                 ->title('Serving at')
                 ->field('serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
+                ->sortable(),
+            //->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
 
             Column::add()
                 ->title(__('Chef'))
@@ -163,7 +163,7 @@ class DishesTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                ->makeInputText('chef_name')
+                //->makeInputText('chef_name')
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -176,8 +176,8 @@ class DishesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Multiple'))
                 ->field('category_name')
-                ->placeholder('Categoria')
-                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+                ->placeholder('Categoria'),
+            //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))

@@ -7,28 +7,11 @@ use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
 {
-    public Collection $makeFilters;
-
     public array $filters = [];
 
     public array $enabledFilters = [];
 
     public array $select = [];
-
-    public array $inputTextOptions = [
-        'contains',
-        'contains_not',
-        'is',
-        'is_not',
-        'starts_with',
-        'ends_with',
-        'is_empty',
-        'is_not_empty',
-        'is_null',
-        'is_not_null',
-        'is_blank',
-        'is_not_blank',
-    ];
 
     public function clearFilter(string $field = '', bool $emit = true): void
     {
@@ -110,39 +93,27 @@ trait HasFilter
 
     private function resolveFilters(): void
     {
-        $makeFilters = [];
-
+        $filters = collect($this->filters());
         /** @var Column $column */
         foreach ($this->columns as $column) {
-            if (!isset($column->inputs)) {
+            $filterForColumn = $filters->filter(
+                fn ($filter) => $filter->column == $column->field
+            );
+
+            if ($filterForColumn->count() > 0) {
+                $filterForColumn->transform(function ($filter) use ($column) {
+                    $filter->title = $column->title;
+
+                    return $filter;
+                });
+
+                data_set($column, 'filters', $filterForColumn->map(fn ($filter) => (array) $filter));
+
                 continue;
             }
 
-            foreach ($column->inputs as $key => $input) {
-                if (!isset($input['dataField'])) {
-                    data_set($input, 'dataField', $column->dataField ?: $column->field);
-                }
-                data_set($input, 'field', $column->field);
-                data_set($input, 'label', $column->title);
-                $makeFilters[$key][] = $input;
-            }
+            data_set($column, 'filters', collect([]));
         }
-
-        $this->makeFilters = collect($makeFilters);
-    }
-
-    public function getLabelFromMakeFilters(string $filterType, string $field): string
-    {
-        /** @var array $makeFilter */
-        $makeFilter = $this->makeFilters->toArray()[$filterType];
-
-        $filter = collect($makeFilter)
-            ->filter(
-                fn ($filter) => strval(data_get($filter, 'dataField', strval(data_get($filter, 'field')))) === $field
-            )
-                ->first();
-
-        return $filter['label'];
     }
 
     public function datePikerChanged(array $data): void
@@ -190,26 +161,17 @@ trait HasFilter
         }
     }
 
-    public function multiSelectChanged(array $data): void
+    public function multiSelectChanged(array $params): void
     {
         $this->resetPage();
 
-        $field  = $data['id'];
-        $values = $data['values'];
+        $field  = strval(data_get($params, 'params.dataField'));
+        $values = (array) data_get($params, 'values');
 
-        unset($data['id']);
-        unset($data['values']);
-
-        $this->filters['multi_select'][$field] = $values;
-
-        /** @var array $multiSelect */
-        $multiSelect = $this->makeFilters->get('multi_select');
-
-        /** @var array $filter */
-        $filter = collect($multiSelect)->where('dataField', $field)->first();
+        data_set($this->filters, "multi_select.$field", $values);
 
         $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $filter['label'];
+        $this->enabledFilters[$field]['label'] = strval(data_get($params, 'params.title'));
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
@@ -222,7 +184,7 @@ trait HasFilter
 
     public function filterSelect(string $field): void
     {
-        $label = $this->getLabelFromMakeFilters('select', $field);
+        $label = 'label';
 
         $this->resetPage();
 
@@ -242,7 +204,7 @@ trait HasFilter
 
     public function filterNumberStart(string $field, string $value): void
     {
-        $label = $this->getLabelFromMakeFilters('number', $field);
+        $label = 'label';
 
         $this->resetPage();
 
@@ -262,7 +224,7 @@ trait HasFilter
 
     public function filterNumberEnd(string $field, string $value): void
     {
-        $label = $this->getLabelFromMakeFilters('number', $field);
+        $label = 'label';
 
         $this->resetPage();
 
@@ -282,7 +244,7 @@ trait HasFilter
 
     public function filterBoolean(string $field, string $value): void
     {
-        $label = $this->getLabelFromMakeFilters('boolean', $field);
+        $label = 'label';
 
         $this->resetPage();
 
@@ -300,10 +262,8 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputText(string $field, string $value): void
+    public function filterInputText(string $field, string $value, string $label = ''): void
     {
-        $label = $this->getLabelFromMakeFilters('input_text', $field);
-
         $this->resetPage();
 
         $this->enabledFilters[$field]['id']    = $field;
@@ -318,12 +278,8 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value, ?array $operators = null): void
+    public function filterInputTextOptions(string $field, string $value): void
     {
-        $operators ??= $this->inputTextOptions;
-
-        $value = $operators[$value];
-
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
         $this->enabledFilters[$field]['id'] = $field;

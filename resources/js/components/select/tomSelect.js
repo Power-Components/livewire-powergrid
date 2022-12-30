@@ -12,8 +12,9 @@ export default (params) => ({
             },
         }
 
+        console.log(params)
         const asyncConfig = {
-            valueField: params.optionId,
+            valueField: params.optionValue,
             labelField: params.optionLabel,
             searchField: params.optionLabel,
             load: async function (query, callback) {

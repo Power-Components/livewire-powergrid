@@ -1,6 +1,6 @@
 const emit = (listener, params, value) => {
     window.livewire.emit(listener + '-' + params.tableName, {
-        id: params.dataField,
+        params,
         values: value
     })
 }

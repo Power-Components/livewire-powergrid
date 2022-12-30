@@ -157,7 +157,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->field('dish_name')
                 ->searchable()
                 ->clickToCopy(true)
-                ->makeInputText('name')
+               // ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -177,8 +177,8 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Multiple'))
                 ->field('category_name')
-                ->placeholder('Categoria')
-                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+                ->placeholder('Categoria'),
+               // ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))

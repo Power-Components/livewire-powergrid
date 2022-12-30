@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect};
 
 class Model
 {
@@ -66,27 +67,19 @@ class Model
         return $this;
     }
 
-    public function setInputTextOperators(array $operators): Model
-    {
-        $this->inputTextOperators = $operators;
-
-        return $this;
-    }
-
     public function filter(): Builder
     {
         foreach ($this->filters as $key => $type) {
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
                     match ($key) {
-                        'date_picker'         => $this->filterDatePicker($query, $field, $value),
-                        'multi_select'        => $this->filterMultiSelect($query, $field, $value),
-                        'select'              => $this->filterSelect($query, $field, $value),
-                        'boolean'             => $this->filterBoolean($query, $field, $value),
-                        'input_text_contains' => $this->filterInputTextContains($query, $field, $value),
-                        'number'              => $this->filterNumber($query, $field, $value),
-                        'input_text'          => $this->filterInputText($query, $field, $value),
-                        default               => null
+                        'date_picker'  => $this->filterDatePicker($query, $field, $value),
+                        'multi_select' => $this->filterMultiSelect($query, $field, $value),
+                        'select'       => $this->filterSelect($query, $field, $value),
+                        'boolean'      => $this->filterBoolean($query, $field, $value),
+                        'number'       => $this->filterNumber($query, $field, $value),
+                        'input_text'   => $this->filterInputText($query, $field, $value),
+                        default        => null
                     };
                 }
             });
@@ -95,6 +88,7 @@ class Model
         return $this->query;
     }
 
+    /** TODO */
     private function filterDatePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
@@ -104,23 +98,10 @@ class Model
 
     private function filterMultiSelect(Builder $query, string $field, array $values): void
     {
-        $empty = false;
-
-        if (count($values) === 0) {
-            return;
-        }
-
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
-        }
-
-        if (!$empty) {
-            $query->whereIn($field, $values);
-        }
+        FilterMultiSelect::builder($query, $field, $values);
     }
 
+    /** TODO */
     private function filterSelect(Builder $query, string $field, string|array|null $values): void
     {
         if (is_array($values)) {
@@ -134,6 +115,7 @@ class Model
         }
     }
 
+    /** TODO */
     private function filterBoolean(Builder $query, string $field, string|array|null $value): void
     {
         if (is_null($value)) {
@@ -152,34 +134,14 @@ class Model
         }
     }
 
-    private function filterInputTextContains(Builder $query, string $field, ?string $value): void
-    {
-        $query->where($field, SqlSupport::like(), '%' . $value . '%');
-    }
-
     private function filterInputText(Builder $query, string $field, string|array|null $value): void
     {
-        if (is_array($value)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
-        }
+        $selectedOperator = $this->validateInputTextOptions($this->filters, $field);
 
-        $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
-
-        match ($textFieldOperator) {
-            'is'           => $query->where($field, '=', $value),
-            'is_not'       => $query->where($field, '!=', $value),
-            'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-            'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
-            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
-            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-            'is_null'      => $query->whereNull($field),
-            'is_not_null'  => $query->whereNotNull($field),
-            'is_blank'     => $query->where($field, '=', ''),
-            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-            default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
-        };
+        FilterInputText::builder($query, $field, [
+            'selected' => $selectedOperator,
+            'value'    => $value,
+        ]);
     }
 
     /**

@@ -10,7 +10,7 @@ it('property displays the results and options', function (string $component, obj
             'wire:model.debounce.500ms="filters.select.category_id"',
             '<option value="">All</option>',
         ]);
-})->with('themes');
+})->group('filters')->with('themes');
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
@@ -20,7 +20,7 @@ it('properly filter with category_id', function (string $component, object $para
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
-})->with('themes');
+})->group('filters')->with('themes');
 
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
@@ -31,7 +31,7 @@ it('properly filter with another category_id', function (string $component, obje
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->with('themes');
+})->group('filters')->with('themes');
 
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
@@ -54,7 +54,7 @@ it('properly filters using the same model as the component', function (string $c
             ->assertDontSee('Bife à Rolê')
             ->assertDontSee('Francesinha vegana')
             ->assertDontSee('Pastel de Nata');
-})->with('themes');
+})->group('filters')->with('themes');
 
 function filterSelect(string $dataField, ?string $value): array
 {

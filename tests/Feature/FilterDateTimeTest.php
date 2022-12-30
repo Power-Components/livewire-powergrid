@@ -10,7 +10,7 @@ it('properly filter the produced_at field between two dates', function (string $
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSeeHtml('Francesinha vegana');
-})->with('themes');
+})->group('filters')->with('themes');
 
 it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
     livewire($component)
@@ -21,7 +21,7 @@ it('properly filter the created_at field between two dates using collection & ar
         ->assertSeeText('Name 3')
         ->assertSeeText('Name 4')
         ->assertDontSeeHtml('Name 5');
-})->with('themes with collection table', 'themes with array table');
+})->group('filters')->with('themes with collection table', 'themes with array table');
 
 it('properly filter the produced_at field between another two dates', function (string $component, object $params) {
     livewire($component)
@@ -30,7 +30,7 @@ it('properly filter the produced_at field between another two dates', function (
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->with('themes');
+})->group('filters')->with('themes');
 
 function filterDateTime(string $dataField, array $value): array
 {

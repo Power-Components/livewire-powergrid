@@ -7,6 +7,7 @@ use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
@@ -136,14 +137,14 @@ class DishesCollectionTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
-                ->makeInputText('name')
+                //->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
-                ->makeInputText('chef_name')
+                //->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()
@@ -217,6 +218,13 @@ class DishesCollectionTable extends PowerGridComponent
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('name', 'name')->operators(),
         ];
     }
 

@@ -20,14 +20,14 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha vegana')
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
-})->with('themes');
+})->group('filters')->with('themes');
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
     ->set('filters', filterInputDate('2021-03-03', '2021-03-01'))
     ->assertSee('No records found');
-})->with('themes');
+})->group('filters')->with('themes');
 
 function filterInputDate(string $startDate, string $endDate): array
 {

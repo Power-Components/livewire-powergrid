@@ -83,7 +83,7 @@ class ExportTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                ->makeInputText('name')
+               // ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
         ];

@@ -102,6 +102,11 @@ class PowerGridComponent extends Component
         $this->restoreState();
     }
 
+    public function filters(): array
+    {
+        return [];
+    }
+
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
         $this->checkbox          = true;
@@ -212,7 +217,6 @@ class PowerGridComponent extends Component
             cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
-                ->setInputTextOperators($this->inputTextOptions)
                 ->setSearch($this->search)
                 ->setFilters($this->filters)
                 ->filterContains()
@@ -249,7 +253,6 @@ class PowerGridComponent extends Component
                 Model::query($query)
                     ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
-                    ->setInputTextOperators($this->inputTextOptions)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
                     ->setFilters($this->filters)

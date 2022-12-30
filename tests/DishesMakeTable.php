@@ -139,7 +139,7 @@ class DishesMakeTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
-                ->makeInputText('name')
+                //->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -151,7 +151,7 @@ class DishesMakeTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
-                ->makeInputText('chef_name')
+                //->makeInputText('chef_name')
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -160,8 +160,8 @@ class DishesMakeTable extends PowerGridComponent
                 ->makeInputSelect(Category::all(), 'name', 'category_id'),
 
             Column::make('Multiple', 'category_name')
-                ->placeholder('Categoria')
-                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+                ->placeholder('Categoria'),
+                //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::make('Preço', 'price_BRL')
                 ->editOnClick(true, 'price')

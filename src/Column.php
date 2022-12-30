@@ -61,7 +61,7 @@ final class Column
         'footer' => false,
     ];
 
-    public array $inputs = [];
+    public Collection $filters;
 
     /**
      *
@@ -76,6 +76,8 @@ final class Column
     public array $clickToCopy = [];
 
     public bool $index = false;
+
+    public array $inputs = [];
 
     /**
      * Adds a new Column
@@ -361,6 +363,7 @@ final class Column
 
     /**
      * Input Select Filter
+     * @deprecated
      *
      */
     public function makeInputSelect(
@@ -374,44 +377,6 @@ final class Column
         $this->inputs['select']['displayField'] = $displayField;
         $this->inputs['select']['dataField']    = $dataField ?? $displayField;
         $this->inputs['select']['class']        = $settings['class'] ?? '';
-
-        return $this;
-    }
-
-    /**
-     * Input Multi-Select Filter
-     *
-     */
-    public function makeInputMultiSelect(
-        Collection $datasource,
-        string $optionLabel,
-        string $dataField = null,
-        string $optionId = 'id'
-    ): Column {
-        $this->editable                              = [];
-        $this->inputs['multi_select']['dataSource']  = $datasource;
-        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
-        $this->inputs['multi_select']['optionId']    = $optionId;
-        $this->inputs['multi_select']['dataField']   = $dataField;
-
-        return $this;
-    }
-
-    /**
-     * Input Multi-Select Filter Async with Tom-Select
-     *
-     */
-    public function makeInputMultiSelectAsync(
-        string $dataField = null,
-        array $asyncData = [],
-        string $optionLabel = 'name',
-        string $optionId = 'id'
-    ): Column {
-        $this->editable                              = [];
-        $this->inputs['multi_select']['asyncData']   = $asyncData;
-        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
-        $this->inputs['multi_select']['optionId']    = $optionId;
-        $this->inputs['multi_select']['dataField']   = $dataField;
 
         return $this;
     }
@@ -467,21 +432,6 @@ final class Column
         string $dataField = '',
     ): Column {
         $this->inputs['number']['enabled'] = true;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add Input Text
-     */
-    public function makeInputText(string $dataField = '', array $operators = []): Column
-    {
-        $this->inputs['input_text']['enabled']   = true;
-        $this->inputs['input_text']['operators'] = $operators;
 
         if (filled($dataField)) {
             $this->dataField = $dataField;

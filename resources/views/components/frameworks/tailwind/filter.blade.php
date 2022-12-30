@@ -61,7 +61,6 @@
                             @includeIf($theme->filterInputText->view, [
                                  'inline'           => false,
                                  'enabledFilters'   => $enabledFilters,
-                                 'inputTextOptions' => $inputTextOptions,
                                  'enabledFilters'   => $enabledFilters,
                                  'theme'            => $theme->filterInputText,
                             ])
