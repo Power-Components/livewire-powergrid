@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static FilterMultiSelectAsync multiSelectAsync(string $column, string $field)
  * @method static FilterInputText inputText(string $column, string $field)
  * @method static FilterSelect select(string $column, string $field)
+ * @method static FilterNumber number(string $column, string $field)
  *
  * @see FilterManager
  */

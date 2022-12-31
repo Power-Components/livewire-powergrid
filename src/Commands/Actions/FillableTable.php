@@ -84,7 +84,7 @@ class FillableTable
 
                 if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n";
 
                     continue;
                 }

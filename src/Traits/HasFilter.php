@@ -202,42 +202,46 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterNumberStart(string $field, string $value): void
+    public function filterNumberStart(array $params, string $value): void
     {
-        $label = 'label';
+        extract($params);
 
         $this->resetPage();
 
-        $this->filters['number'][$field]['start'] = $value;
+        $this->filters['number'][$field]['start']     = $value;
+        $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->enabledFilters[$field]['label'] = $title;
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
         }
 
-        $this->afterChangedNumberStartFilter($field, $label, $value);
+        $this->afterChangedNumberStartFilter($field, $title, $value);
 
         $this->persistState('filters');
     }
 
-    public function filterNumberEnd(string $field, string $value): void
+    public function filterNumberEnd(array $params, string $value): void
     {
-        $label = 'label';
+        extract($params);
 
         $this->resetPage();
 
-        $this->filters['number'][$field]['end'] = $value;
+        $this->filters['number'][$field]['end']       = $value;
+        $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->enabledFilters[$field]['label'] = $title;
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
         }
 
-        $this->afterChangedNumberEndFilter($field, $value, $label);
+        $this->afterChangedNumberEndFilter($field, $value, $title);
 
         $this->persistState('filters');
     }

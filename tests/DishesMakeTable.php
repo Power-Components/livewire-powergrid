@@ -75,13 +75,6 @@ class DishesMakeTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
@@ -144,8 +137,7 @@ class DishesMakeTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Serving at', 'serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
+                ->sortable(),
 
             Column::make('Chef', 'chef_name')
                 ->searchable()
@@ -156,21 +148,18 @@ class DishesMakeTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Categoria', 'category_name')
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+                ->placeholder('Categoria placeholder'),
 
             Column::make('Multiple', 'category_name')
                 ->placeholder('Categoria'),
             //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::make('Preço', 'price_BRL')
-                ->editOnClick(true, 'price')
-                ->makeInputRange('price'),
+                ->editOnClick(true, 'price'),
 
             Column::make('Preço de Venda', 'sales_price_BRL'),
 
             Column::make('Calorias', 'calories')
-                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::make('Em Estoque', 'in_stock')

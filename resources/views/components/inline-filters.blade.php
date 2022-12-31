@@ -49,7 +49,14 @@
                                    'theme'            => $theme->filterInputText,
                                 ])
                         @endif
-
+                            @if(str(data_get($filter, 'className'))->contains('FilterNumber'))
+                                @includeIf($theme->filterNumber->view, [
+                                   'inline'           => true,
+                                   'enabledFilters'   => $enabledFilters,
+                                   'filter'           => $filter,
+                                   'theme'            => $theme->filterNumber,
+                                ])
+                            @endif
                     @endforeach
 
 
@@ -64,25 +71,7 @@
 {{--                            ])--}}
 {{--                        @endif--}}
 {{--                    @endforeach--}}
-{{--                    @foreach(data_get($makeFilters, 'select', []) as $index => $select)--}}
-{{--                        @if(data_get($select, 'field') === $column->field)--}}
-{{--                                @includeIf($theme->filterSelect->view, [--}}
-{{--                                    'inline' => true,--}}
-{{--                                    'column' => $column,--}}
-{{--                                    'select' =>$select,--}}
-{{--                                    'theme' => $theme->filterSelect,--}}
-{{--                                ])--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
-{{--                    @foreach(data_get($makeFilters, 'multi_select', []) as $index => $multiSelect)--}}
-{{--                        @if(data_get($multiSelect, 'field') === $column->field)--}}
-{{--                                <x-livewire-powergrid::inputs.select--}}
-{{--                                    :multiSelect="$multiSelect"--}}
-{{--                                    :theme="$theme->filterMultiSelect"--}}
-{{--                                    :initialValues="data_get(data_get($filters, 'multi_select'), $multiSelect['dataField'], [])"--}}
-{{--                                    :tableName="$tableName" />--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
+
 {{--                    @foreach(data_get($makeFilters, 'dynamic', []) as $index => $input)--}}
 {{--                        @if(data_get($input, 'field') === $column->field)--}}
 {{--                            @include(powerGridThemeRoot().'.filters.dynamic', [--}}
@@ -90,26 +79,7 @@
 {{--                            ])--}}
 {{--                        @endif--}}
 {{--                    @endforeach--}}
-{{--                    @foreach(data_get($makeFilters, 'number', []) as $index => $number)--}}
-{{--                        @if(data_get($number, 'field') === $column->field)--}}
-{{--                            @includeIf($theme->filterNumber->view, [--}}
-{{--                                 'inline' => true,--}}
-{{--                                 'column' => $column,--}}
-{{--                                 'number' => $number,--}}
-{{--                                 'theme'  => $theme->filterNumber,--}}
-{{--                            ])--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
-{{--                    @foreach(data_get($makeFilters, 'input_text', []) as $index => $inputText)--}}
-{{--                        @if(data_get($inputText, 'field') === $column->field)--}}
-{{--                            @includeIf($theme->filterInputText->view, [--}}
-{{--                                 'inline'           => true,--}}
-{{--                                 'enabledFilters'   => $enabledFilters,--}}
-{{--                                 'inputTextOptions' => $inputTextOptions,--}}
-{{--                                 'enabledFilters'   => $enabledFilters,--}}
-{{--                                 'theme'            => $theme->filterInputText,--}}
-{{--                            ])--}}
-{{--                        @endif--}}
+
 {{--                    @endforeach--}}
 {{--                    @foreach(data_get($makeFilters, 'boolean', []) as $index => $booleanFilter)--}}
 {{--                        @if(data_get($booleanFilter, 'field') === $column->field)--}}

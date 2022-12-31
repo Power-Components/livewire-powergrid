@@ -88,13 +88,6 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -166,27 +159,23 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title('Serving at')
                 ->field('serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::all(), 'serving_at', 'serving_at', ['live-search' => true]),
+                ->sortable(),
 
             Column::add()
                 ->title(__('Categoria'))
                 ->field('category_name', 'categories.name')
                 ->sortable()
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+                ->placeholder('Categoria placeholder'),
 
             Column::add()
                 ->title(__('Multiple'))
                 ->field('category_name')
                 ->placeholder('Categoria'),
-            // ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->editOnClick($canEdit)
-                ->makeInputRange('price'),
+                ->editOnClick($canEdit),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -195,7 +184,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Calorias'))
                 ->field('calories')
-                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::add()

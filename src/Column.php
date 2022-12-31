@@ -362,26 +362,6 @@ final class Column
     }
 
     /**
-     * Input Select Filter
-     * @deprecated
-     *
-     */
-    public function makeInputSelect(
-        Collection $datasource,
-        string $displayField,
-        string $dataField = null,
-        array $settings = []
-    ): Column {
-        $this->editable                         = [];
-        $this->inputs['select']['dataSource']   = $datasource;
-        $this->inputs['select']['displayField'] = $displayField;
-        $this->inputs['select']['dataField']    = $dataField ?? $displayField;
-        $this->inputs['select']['class']        = $settings['class'] ?? '';
-
-        return $this;
-    }
-
-    /**
      * Filter Datepicker
      *
      */
@@ -401,44 +381,25 @@ final class Column
         return $this;
     }
 
-    /**
-     * Filter Enum - ^php8.1
-     *
-     */
-    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
-    {
-        $displayField = 'value';
-
-        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
-            $option = (array) $case;
-
-            if (method_exists($case, 'labelPowergridFilter')) {
-                $option['name'] = $case->labelPowergridFilter();
-                $displayField   = 'name';
-            }
-
-            return $option;
-        });
-
-        $dataField ??= Str::snake(class_basename($enumCases[0]));
-
-        return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
-    }
-
-    /**
-     * Add Input Number Range
-     */
-    public function makeInputRange(
-        string $dataField = '',
-    ): Column {
-        $this->inputs['number']['enabled'] = true;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
+//    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
+//    {
+//        $displayField = 'value';
+//
+//        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
+//            $option = (array) $case;
+//
+//            if (method_exists($case, 'labelPowergridFilter')) {
+//                $option['name'] = $case->labelPowergridFilter();
+//                $displayField   = 'name';
+//            }
+//
+//            return $option;
+//        });
+//
+//        $dataField ??= Str::snake(class_basename($enumCases[0]));
+//
+//       // return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
+//    }
 
     /**
      * Add Boolean Filter

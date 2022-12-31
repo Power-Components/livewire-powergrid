@@ -63,8 +63,6 @@ class PowerGridComponent extends Component
 
     public array $setUp = [];
 
-    public array $inputRangeConfig = [];
-
     public bool $showErrorBag = false;
 
     public string $softDeletes = '';
@@ -85,10 +83,6 @@ class PowerGridComponent extends Component
 
         if (isBootstrap5()) {
             unset($this->setUp['detail']);
-        }
-
-        foreach ($this->inputRangeConfig() as $field => $config) {
-            $this->inputRangeConfig[$field] = $config;
         }
 
         $this->columns = $this->columns();
@@ -119,11 +113,6 @@ class PowerGridComponent extends Component
      * Apply checkbox, perPage and search view and theme
     */
     public function setUp(): array
-    {
-        return [];
-    }
-
-    public function inputRangeConfig(): array
     {
         return [];
     }
@@ -251,7 +240,6 @@ class PowerGridComponent extends Component
         $results = $this->resolveModel($datasource)
             ->where(function (Eloquent\Builder $query) {
                 Model::query($query)
-                    ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)

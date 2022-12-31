@@ -12,11 +12,4 @@ trait WithFilterBase
     ) {
         $this->className = get_called_class();
     }
-
-    public function field(string $field): self
-    {
-        $this->field = $field;
-
-        return $this;
-    }
 }

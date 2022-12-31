@@ -3,7 +3,11 @@ includes:
 
 parameters:
     ignoreErrors:
-    	- '#Cannot call method [a-zA-Z0-9\\_]#'
+        - '#Cannot call method [a-zA-Z0-9\\_]#'
+        - '#Variable \$title might not be defined.#'
+        - '#Variable \$field might not be defined.#'
+        - '#Variable \$thousands might not be defined.#'
+        - '#Variable \$decimal might not be defined.#'
 
     paths:
         - src

@@ -50,13 +50,6 @@ class ExportTable extends PowerGridComponent
         return Dish::with('category');
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);

@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterSelect};
+use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect};
 
 class Collection
 {
@@ -18,8 +18,6 @@ class Collection
     private string $search;
 
     private array $filters;
-
-    private array $inputRangeConfig = [];
 
     /**
      * @param BaseCollection $query
@@ -129,7 +127,7 @@ class Collection
                     'multi_select' => FilterMultiSelect::collection($this->query, $field, $value),
                     'select'       => FilterSelect::collection($this->query, $field, $value),
                     //'boolean'      => $this->filterBoolean($field, $value),
-                    // 'number'       => $this->filterNumber($field, $value),
+                    'number'       => FilterNumber::collection($this->query, $field, $value),
                     'input_text'   => FilterInputText::collection($this->query, $field, [
                         'selected' => $this->validateInputTextOptions($this->filters, $field),
                         'value'    => $value,
@@ -159,48 +157,6 @@ class Collection
             $value = ($value == 'true');
 
             $this->query = $this->query->where($field, '=', $value);
-        }
-    }
-
-    /**
-     * @param array<string> $value
-     */
-    private function filterNumber(string $field, array $value): void
-    {
-        if (isset($value['start']) && !isset($value['end'])) {
-            $start = $value['start'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $start = str_replace($value['thousands'], '', $value['start']);
-                $start = (float) str_replace($value['decimal'], '.', $start);
-            }
-
-            $this->query = $this->query->where($field, '>=', $start);
-        }
-
-        if (!isset($value['start']) && isset($value['end'])) {
-            $end = $value['end'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $end = str_replace($value['thousands'], '', $value['end']);
-                $end = (float) str_replace($value['decimal'], '.', $end);
-            }
-            $this->query = $this->query->where($field, '<=', $end);
-        }
-
-        if (isset($value['start']) && isset($value['end'])) {
-            $start = $value['start'];
-            $end   = $value['end'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $start = str_replace($value['thousands'], '', $value['start']);
-                $start = str_replace($value['decimal'], '.', $start);
-
-                $end = str_replace($value['thousands'], '', $value['end']);
-                $end = str_replace($value['decimal'], '.', $end);
-            }
-
-            $this->query = $this->query->whereBetween($field, [$start, $end]);
         }
     }
 

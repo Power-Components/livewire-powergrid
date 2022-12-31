@@ -77,13 +77,6 @@ class DishesTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
@@ -165,27 +158,23 @@ class DishesTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                //->makeInputText('chef_name')
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Categoria'))
                 ->field('category_name')
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+                ->placeholder('Categoria placeholder'),
 
             Column::add()
                 ->title(__('Multiple'))
                 ->field('category_name')
                 ->placeholder('Categoria'),
-            //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->editOnClick($canEdit, 'price')
-                ->makeInputRange('price'),
+                ->editOnClick($canEdit, 'price'),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -194,7 +183,6 @@ class DishesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Calorias'))
                 ->field('calories')
-                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::add()

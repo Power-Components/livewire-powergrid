@@ -99,13 +99,6 @@ class DishesArrayTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ''],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -148,8 +141,7 @@ class DishesArrayTable extends PowerGridComponent
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->sortable()
-                ->makeInputRange('price'),
+                ->sortable(),
 
             Column::add()
                 ->title(__('In Stock'))

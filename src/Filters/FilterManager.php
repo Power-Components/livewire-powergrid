@@ -23,4 +23,9 @@ class FilterManager
     {
         return new FilterSelect($column, $field);
     }
+
+    public function number(string $column, string $field): FilterNumber
+    {
+        return new FilterNumber($column, $field);
+    }
 }

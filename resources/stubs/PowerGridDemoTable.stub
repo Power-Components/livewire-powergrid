@@ -211,8 +211,7 @@ final class PowerGridDemoTable extends PowerGridComponent
         $canCopy = true;
 
         return [
-            Column::make('ID', 'id')
-                ->makeInputRange(), //Filter for min-max Range
+            Column::make('ID', 'id'),
 
             Column::make('Full name', 'name')
                 ->sortable() //Adds sorting button to the header
@@ -225,8 +224,7 @@ final class PowerGridDemoTable extends PowerGridComponent
                 ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
-            Column::make('US State', 'state_in_usa')
-                ->makeInputSelect($this->demoUsers(), 'state_in_usa', 'id'), //Multiselect filter
+            Column::make('US State', 'state_in_usa'),
 
             Column::make('Laracon visitor?', 'laracon')
                 ->sortable()
