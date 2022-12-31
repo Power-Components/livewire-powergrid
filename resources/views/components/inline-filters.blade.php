@@ -33,6 +33,14 @@
                                 :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"/>
                         @endif
 
+                        @if(str(data_get($filter, 'className'))->contains('FilterSelect'))
+                                @includeIf($theme->filterSelect->view, [
+                                   'inline' => true,
+                                   'column' => $column,
+                                   'filter' => $filter,
+                                   'theme' => $theme->filterSelect,
+                                ])
+                        @endif
                         @if(str(data_get($filter, 'className'))->contains('FilterInputText'))
                                 @includeIf($theme->filterInputText->view, [
                                    'inline'           => true,
@@ -41,6 +49,7 @@
                                    'theme'            => $theme->filterInputText,
                                 ])
                         @endif
+
                     @endforeach
 
 

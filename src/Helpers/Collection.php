@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect};
+use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterSelect};
 
 class Collection
 {
@@ -124,14 +124,17 @@ class Collection
 
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
-                match ($key) {
-                    'date_picker'  => $this->filterDatePicker($field, $value),
-                    'multi_select' => $this->filterMultiSelect($field, $value),
-                    'select'       => $this->filterSelect($field, $value),
-                    'boolean'      => $this->filterBoolean($field, $value),
-                    'number'       => $this->filterNumber($field, $value),
-                    'input_text'   => $this->filterInputText($field, $value),
-                    default        => null
+                $this->query = match ($key) {
+                    //'date_picker'  => $this->filterDatePicker($field, $value),
+                    'multi_select' => FilterMultiSelect::collection($this->query, $field, $value),
+                    'select'       => FilterSelect::collection($this->query, $field, $value),
+                    //'boolean'      => $this->filterBoolean($field, $value),
+                    // 'number'       => $this->filterNumber($field, $value),
+                    'input_text'   => FilterInputText::collection($this->query, $field, [
+                        'selected' => $this->validateInputTextOptions($this->filters, $field),
+                        'value'    => $value,
+                    ]),
+                    default        => $this->query
                 };
             }
         }
@@ -146,16 +149,6 @@ class Collection
         }
     }
 
-    private function filterInputText(string $field, ?string $value): void
-    {
-        $selectedOperator = $this->validateInputTextOptions($this->filters, $field);
-
-        $this->query = FilterInputText::collection($this->query, $field, [
-            'selected' => $selectedOperator,
-            'value'    => $value,
-        ]);
-    }
-
     private function filterBoolean(string $field, ?string $value): void
     {
         if (is_null($value)) {
@@ -167,18 +160,6 @@ class Collection
 
             $this->query = $this->query->where($field, '=', $value);
         }
-    }
-
-    private function filterSelect(string $field, string $value): void
-    {
-        if (filled($value)) {
-            $this->query = $this->query->where($field, $value);
-        }
-    }
-
-    private function filterMultiSelect(string $field, array|BaseCollection $value): void
-    {
-        $this->query = FilterMultiSelect::collection($this->query, $field, $value);
     }
 
     /**

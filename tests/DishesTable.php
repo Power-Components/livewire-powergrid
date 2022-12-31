@@ -22,6 +22,8 @@ class DishesTable extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -228,6 +230,11 @@ class DishesTable extends PowerGridComponent
                 ->emit('deletedEvent', ['dishId' => 'id'])
                 ->method('delete'),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

@@ -18,4 +18,9 @@ class FilterManager
     {
         return new FilterInputText($column, $field);
     }
+
+    public function select(string $column, string $field): FilterSelect
+    {
+        return new FilterSelect($column, $field);
+    }
 }

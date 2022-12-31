@@ -161,7 +161,7 @@ class DishesMakeTable extends PowerGridComponent
 
             Column::make('Multiple', 'category_name')
                 ->placeholder('Categoria'),
-                //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+            //->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::make('Preço', 'price_BRL')
                 ->editOnClick(true, 'price')

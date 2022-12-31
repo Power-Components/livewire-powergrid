@@ -23,6 +23,8 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -178,7 +180,7 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->title(__('Multiple'))
                 ->field('category_name')
                 ->placeholder('Categoria'),
-               // ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+            // ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
 
             Column::add()
                 ->title(__('Preço'))
@@ -248,6 +250,11 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

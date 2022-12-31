@@ -2,12 +2,23 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
+
+use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+
 it('property displays the results and options', function (string $component, object $params) {
-    livewire($component)
+    $select = Filter::select('category_name', 'category_id')
+        ->field('category_name')
+        ->dataSource(Category::all())
+        ->optionValue('category_id')
+        ->optionLabel('category_name');
+    livewire($component, [
+        'testFilters' => [$select],
+    ])
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:input.debounce.500ms="filterSelect(\'category_id\',\'Categoria\')"',
-            'wire:model.debounce.500ms="filters.select.category_id"',
+            'wire:input.debounce.500ms="filterSelect(\'category_name\',\'Categoria\')"',
+            'wire:model.debounce.500ms="filters.select.category_name"',
             '<option value="">All</option>',
         ]);
 })->group('filters')->with('themes');

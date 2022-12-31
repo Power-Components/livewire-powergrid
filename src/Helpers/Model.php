@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect};
+use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterSelect};
 
 class Model
 {
@@ -74,11 +74,14 @@ class Model
                 foreach ($type as $field => $value) {
                     match ($key) {
                         'date_picker'  => $this->filterDatePicker($query, $field, $value),
-                        'multi_select' => $this->filterMultiSelect($query, $field, $value),
-                        'select'       => $this->filterSelect($query, $field, $value),
+                        'multi_select' => FilterMultiSelect::builder($query, $field, $value),
+                        'select'       => FilterSelect::builder($query, $field, $value),
                         'boolean'      => $this->filterBoolean($query, $field, $value),
                         'number'       => $this->filterNumber($query, $field, $value),
-                        'input_text'   => $this->filterInputText($query, $field, $value),
+                        'input_text'   => FilterInputText::builder($query, $field, [
+                            'selected' => $this->validateInputTextOptions($this->filters, $field),
+                            'value'    => $value,
+                        ]),
                         default        => null
                     };
                 }
@@ -93,25 +96,6 @@ class Model
     {
         if (isset($value[0]) && isset($value[1])) {
             $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
-        }
-    }
-
-    private function filterMultiSelect(Builder $query, string $field, array $values): void
-    {
-        FilterMultiSelect::builder($query, $field, $values);
-    }
-
-    /** TODO */
-    private function filterSelect(Builder $query, string $field, string|array|null $values): void
-    {
-        if (is_array($values)) {
-            $field  = $field . '.' . key($values);
-            $values = $values[key($values)];
-        }
-
-        /** @var Builder $query */
-        if (filled($values)) {
-            $query->where($field, $values);
         }
     }
 
@@ -132,16 +116,6 @@ class Model
             $value = ($value == 'true' || $value == '1');
             $query->where($field, '=', $value);
         }
-    }
-
-    private function filterInputText(Builder $query, string $field, string|array|null $value): void
-    {
-        $selectedOperator = $this->validateInputTextOptions($this->filters, $field);
-
-        FilterInputText::builder($query, $field, [
-            'selected' => $selectedOperator,
-            'value'    => $value,
-        ]);
     }
 
     /**

@@ -3,24 +3,29 @@
     'class' => '',
     'column' => null,
     'inline' => null,
-    'select' => null
+    'filter' => null
 ])
 <div>
-    @if(filled($select))
+    @php
+        $field = strval(data_get($filter, 'field'));
+        $title = strval(data_get($filter, 'title'));
+
+        $filterClasses = Arr::toCssClasses([
+            $theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid'
+        ])
+    @endphp
+    @if(filled($filter))
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
-            <select id="input_{!! data_get($select, 'displayField') !!}"
-                    class="power_grid {{ $theme->selectClass }} {{ $class }} {{ data_get($column, 'headerClass') }}"
+            <select id="{{ $field }}"
+                    class="{{ $filterClasses }}"
                     style="{{ data_get($column, 'headerStyle') }}"
-                    wire:input.debounce.500ms="filterSelect('{{ data_get($select, 'dataField') }}','{{ data_get($select, 'label')  }}')"
-                    wire:model.debounce.500ms="filters.select.{{ data_get($select, 'dataField')  }}">
-                <option>{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-                @foreach(data_get($select, 'dataSource') as $relation)
-                    @php
-                        $key = isset($relation['id']) ? 'id' : 'value';
-                        if (isset($relation[$select['dataField']])) $key = $select['dataField'];
-                    @endphp
-                    <option value="{{ data_get($relation, $key) }}">
-                        {{ $relation[data_get($select, 'displayField') ] }}
+                    wire:input.debounce.500ms="filterSelect('{{ $field }}','{{ $title  }}')"
+                    wire:model.debounce.500ms="filters.select.{{ $field  }}">
+                <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                @foreach(data_get($filter, 'dataSource') as $key => $item)
+                    <option wire:key="select-{{ $tableName }}-{{ $key }}"
+                            value="{{ $item[data_get($filter, 'optionValue')] }}">
+                        {{ $item[data_get($filter, 'optionLabel')] }}
                     </option>
                 @endforeach
             </select>
