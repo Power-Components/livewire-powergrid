@@ -87,11 +87,11 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $this->initializePropertiesFromDynamicFilters();
-
         $this->resolveTotalRow();
 
         $this->resolveFilters();
+
+        $this->initializePropertiesFromDynamicFilters();
 
         $this->restoreState();
     }

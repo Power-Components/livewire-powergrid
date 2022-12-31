@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static FilterInputText inputText(string $column, string $field)
  * @method static FilterSelect select(string $column, string $field)
  * @method static FilterNumber number(string $column, string $field)
+ * @method static FilterDynamic dynamic(string $column, string $field)
  *
  * @see FilterManager
  */

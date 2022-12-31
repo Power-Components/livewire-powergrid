@@ -9,6 +9,7 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Detail,
     DynamicInput,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
@@ -72,17 +73,7 @@ class DishesDynamicFiltersTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Category', 'in_stock')
-                ->makeDynamicInput(DynamicInput::FILTER_BOOLEAN, 'in_stock', 'tests::dynamic-select', [
-                    'class'        => 'min-w-[170px]',
-                    'options'      => [
-                        ['name' => 'Active',  'value' => true],
-                        ['name' => 'Inactive', 'value' => false],
-                    ],
-                    'option-label' => 'name',
-                    'option-value' => 'value',
-                    'placeholder'  => 'Choose',
-                ]),
+            Column::make('Category', 'in_stock'),
         ];
     }
 
@@ -92,6 +83,24 @@ class DishesDynamicFiltersTable extends PowerGridComponent
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
                 ->toggleDetail(),
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::dynamic('in_stock', 'in_stock')
+                ->filterType(DynamicInput::FILTER_BOOLEAN)
+                ->component('tests::dynamic-select')
+                ->attributes([
+                    'class'        => 'min-w-[170px]',
+                    'options'      => [
+                        ['name' => 'Active',  'value' => true],
+                        ['name' => 'Inactive', 'value' => false],
+                    ],
+                    'option-label' => 'name',
+                    'option-value' => 'value',
+                    'placeholder'  => 'Choose']),
         ];
     }
 

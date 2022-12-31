@@ -32,23 +32,22 @@
                                 :theme="$theme->filterMultiSelect"
                                 :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"/>
                         @endif
-
-                        @if(str(data_get($filter, 'className'))->contains('FilterSelect'))
+                            @if(str(data_get($filter, 'className'))->contains('FilterSelect'))
                                 @includeIf($theme->filterSelect->view, [
                                    'inline' => true,
                                    'column' => $column,
                                    'filter' => $filter,
                                    'theme' => $theme->filterSelect,
                                 ])
-                        @endif
-                        @if(str(data_get($filter, 'className'))->contains('FilterInputText'))
+                            @endif
+                            @if(str(data_get($filter, 'className'))->contains('FilterInputText'))
                                 @includeIf($theme->filterInputText->view, [
                                    'inline'           => true,
                                    'enabledFilters'   => $enabledFilters,
                                    'filter'           => $filter,
                                    'theme'            => $theme->filterInputText,
                                 ])
-                        @endif
+                            @endif
                             @if(str(data_get($filter, 'className'))->contains('FilterNumber'))
                                 @includeIf($theme->filterNumber->view, [
                                    'inline'           => true,
@@ -56,6 +55,10 @@
                                    'filter'           => $filter,
                                    'theme'            => $theme->filterNumber,
                                 ])
+                            @endif
+                            @if(str(data_get($filter, 'className'))->contains('FilterDynamic'))
+                                <x-dynamic-component :component="data_get($filter, 'component', '')"
+                                                     :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))" />
                             @endif
                     @endforeach
 
@@ -68,14 +71,6 @@
 {{--                                 'tableName' => $tableName,--}}
 {{--                                 'classAttr' => 'w-full',--}}
 {{--                                 'theme'     => $theme->filterDatePicker,--}}
-{{--                            ])--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
-
-{{--                    @foreach(data_get($makeFilters, 'dynamic', []) as $index => $input)--}}
-{{--                        @if(data_get($input, 'field') === $column->field)--}}
-{{--                            @include(powerGridThemeRoot().'.filters.dynamic', [--}}
-{{--                                'input' => $input,--}}
 {{--                            ])--}}
 {{--                        @endif--}}
 {{--                    @endforeach--}}

@@ -28,4 +28,9 @@ class FilterManager
     {
         return new FilterNumber($column, $field);
     }
+
+    public function dynamic(string $column, string $field): FilterDynamic
+    {
+        return new FilterDynamic($column, $field);
+    }
 }
