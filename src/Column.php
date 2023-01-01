@@ -77,8 +77,6 @@ final class Column
 
     public bool $index = false;
 
-    public array $inputs = [];
-
     /**
      * Adds a new Column
      *
@@ -357,29 +355,6 @@ final class Column
             'enabled' => $hasPermission,
             'label'   => $label,
         ];
-
-        return $this;
-    }
-
-    /**
-     * Add Boolean Filter
-     */
-    public function makeBooleanFilter(
-        string $dataField = '',
-        string $trueLabel = 'Yes',
-        string $falseLabel = 'No',
-        string $baseClass = '',
-        string $inputClass = '',
-    ): Column {
-        $this->inputs['boolean']['enabled']     = true;
-        $this->inputs['boolean']['true_label']  = $trueLabel;
-        $this->inputs['boolean']['false_label'] = $falseLabel;
-        $this->inputs['boolean']['baseClass']   = $baseClass;
-        $this->inputs['boolean']['class']       = $inputClass;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
 
         return $this;
     }

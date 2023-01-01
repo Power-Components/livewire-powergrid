@@ -142,7 +142,6 @@ class DishesTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                //->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -150,7 +149,6 @@ class DishesTable extends PowerGridComponent
                 ->title('Serving at')
                 ->field('serving_at')
                 ->sortable(),
-            //->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
 
             Column::add()
                 ->title(__('Chef'))
@@ -188,7 +186,6 @@ class DishesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()

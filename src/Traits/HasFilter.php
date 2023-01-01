@@ -188,10 +188,8 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterSelect(string $field): void
+    public function filterSelect(string $field, string $label): void
     {
-        $label = 'label';
-
         $this->resetPage();
 
         $this->enabledFilters[$field]['id']    = $field;
@@ -252,10 +250,8 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterBoolean(string $field, string $value): void
+    public function filterBoolean(string $field, string $value, string $label): void
     {
-        $label = 'label';
-
         $this->resetPage();
 
         $this->filters['boolean'][$field] = $value;

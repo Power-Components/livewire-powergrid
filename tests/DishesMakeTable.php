@@ -163,8 +163,7 @@ class DishesMakeTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Em Estoque', 'in_stock')
-                ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não'),
+                ->toggleable(true, 'sim', 'não'),
 
             Column::make('Data de produção', 'produced_at_formatted'),
 

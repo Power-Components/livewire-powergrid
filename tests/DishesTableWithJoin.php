@@ -189,7 +189,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->sortable()
                 ->field('in_stock'),
 

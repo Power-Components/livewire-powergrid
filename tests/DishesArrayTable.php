@@ -19,6 +19,8 @@ class DishesArrayTable extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -146,7 +148,6 @@ class DishesArrayTable extends PowerGridComponent
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
@@ -163,6 +164,11 @@ class DishesArrayTable extends PowerGridComponent
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

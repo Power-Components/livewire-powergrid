@@ -8,7 +8,9 @@ it(
     'properly filters by "name is" using collection & array table',
     function (string $component, string $theme) {
         $filter   = Filter::inputText('name', 'name')->operators();
-        $livewire = livewire($component)
+        $livewire = livewire($component, [
+            'testFilters' => [$filter],
+        ])
             ->call($theme)
             ->set('filters', filterInputText('Name 1', 'is'))
             ->assertSee('Name 1')

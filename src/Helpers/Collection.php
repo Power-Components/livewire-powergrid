@@ -5,7 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{FilterDatePicker,
+use PowerComponents\LivewirePowerGrid\Filters\{FilterBoolean,
+    FilterDatePicker,
     FilterInputText,
     FilterMultiSelect,
     FilterNumber,
@@ -107,7 +108,7 @@ class Collection
 
     public function filter(): BaseCollection
     {
-        if (count($this->filters) === 0) {
+        if (blank($this->filters)) {
             return $this->query;
         }
 
@@ -117,7 +118,7 @@ class Collection
                     'date_picker'  => FilterDatePicker::collection($this->query, $field, $value),
                     'multi_select' => FilterMultiSelect::collection($this->query, $field, $value),
                     'select'       => FilterSelect::collection($this->query, $field, $value),
-                    //'boolean'      => $this->filterBoolean($field, $value),
+                    'boolean'      => FilterBoolean::collection($this->query, $field, $value),
                     'number'       => FilterNumber::collection($this->query, $field, $value),
                     'input_text'   => FilterInputText::collection($this->query, $field, [
                         'selected' => $this->validateInputTextOptions($this->filters, $field),
@@ -130,19 +131,6 @@ class Collection
 
         return $this->query;
     }
-
-//    private function filterBoolean(string $field, ?string $value): void
-//    {
-//        if (is_null($value)) {
-//            $value = 'all';
-//        }
-//
-//        if ($value != 'all') {
-//            $value = ($value == 'true');
-//
-//            $this->query = $this->query->where($field, '=', $value);
-//        }
-//    }
 
     public function filterContains(): Collection
     {

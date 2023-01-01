@@ -21,6 +21,8 @@ class DishesCollectionTable extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -148,7 +150,6 @@ class DishesCollectionTable extends PowerGridComponent
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
@@ -214,9 +215,7 @@ class DishesCollectionTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [
-            Filter::inputText('name', 'name')->operators(),
-        ];
+        return $this->testFilters;
     }
 
     public function bootstrap()

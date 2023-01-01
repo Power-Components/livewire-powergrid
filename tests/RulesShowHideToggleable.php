@@ -48,7 +48,6 @@ class RulesShowHideToggleable extends DishesTable
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
         ];
     }

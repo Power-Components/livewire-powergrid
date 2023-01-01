@@ -43,7 +43,6 @@
                             @if(str(data_get($filter, 'className'))->contains('FilterInputText'))
                                 @includeIf($theme->filterInputText->view, [
                                    'inline'           => true,
-                                   'enabledFilters'   => $enabledFilters,
                                    'filter'           => $filter,
                                    'theme'            => $theme->filterInputText,
                                 ])
@@ -51,7 +50,6 @@
                             @if(str(data_get($filter, 'className'))->contains('FilterNumber'))
                                 @includeIf($theme->filterNumber->view, [
                                    'inline'           => true,
-                                   'enabledFilters'   => $enabledFilters,
                                    'filter'           => $filter,
                                    'theme'            => $theme->filterNumber,
                                 ])
@@ -69,19 +67,15 @@
                                     'theme'     => $theme->filterDatePicker,
                                 ])
                             @endif
+                            @if(str(data_get($filter, 'className'))->contains('FilterBoolean'))
+                                {{ $theme->filterBoolean->view }}
+                                @includeIf($theme->filterBoolean->view, [
+                                   'inline'           => true,
+                                   'filter'           => $filter,
+                                   'theme'            => $theme->filterBoolean,
+                                ])
+                            @endif
                     @endforeach
-
-{{--                    @endforeach--}}
-{{--                    @foreach(data_get($makeFilters, 'boolean', []) as $index => $booleanFilter)--}}
-{{--                        @if(data_get($booleanFilter, 'field') === $column->field)--}}
-{{--                            @includeIf($theme->filterBoolean->view, [--}}
-{{--                                'inline'         => true,--}}
-{{--                                'booleanFilter'  => $booleanFilter,--}}
-{{--                                'tableName'      => $tableName,--}}
-{{--                                'theme'          => $theme->filterBoolean,--}}
-{{--                           ])--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
                 </td>
             @endforeach
             @if(isset($actions) && count($actions))

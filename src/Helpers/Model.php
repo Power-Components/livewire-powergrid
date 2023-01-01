@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Filters\{FilterDatePicker,
+use PowerComponents\LivewirePowerGrid\Filters\{FilterBoolean,
+    FilterDatePicker,
     FilterInputText,
     FilterMultiSelect,
     FilterNumber,
@@ -70,7 +71,7 @@ class Model
                         'date_picker'  => FilterDatePicker::builder($query, $field, $value),
                         'multi_select' => FilterMultiSelect::builder($query, $field, $value),
                         'select'       => FilterSelect::builder($query, $field, $value),
-                        // 'boolean'      => $this->filterBoolean($query, $field, $value),
+                        'boolean'      => FilterBoolean::builder($query, $field, $value),
                         'number'       => FilterNumber::builder($query, $field, $value),
                         'input_text'   => FilterInputText::builder($query, $field, [
                             'selected' => $this->validateInputTextOptions($this->filters, $field),
@@ -84,25 +85,6 @@ class Model
 
         return $this->query;
     }
-
-//    /** TODO */
-//    private function filterBoolean(Builder $query, string $field, string|array|null $value): void
-//    {
-//        if (is_null($value)) {
-//            $value = 'all';
-//        }
-//
-//        if (is_array($value)) {
-//            $field = $field . '.' . key($value);
-//            $value = $value[key($value)];
-//        }
-//
-//        /** @var Builder $query */
-//        if ($value != 'all') {
-//            $value = ($value == 'true' || $value == '1');
-//            $query->where($field, '=', $value);
-//        }
-//    }
 
     private function getColumnList(string $modelTable): array
     {
