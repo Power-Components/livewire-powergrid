@@ -153,8 +153,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted')
-                ->makeInputDatePicker('created_at'),
+                ->field('created_at_formatted'),
         ];
     }
 

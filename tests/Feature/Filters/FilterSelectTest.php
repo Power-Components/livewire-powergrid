@@ -3,12 +3,10 @@
 use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
-
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')
-        ->field('category_name')
         ->dataSource(Category::all())
         ->optionValue('category_id')
         ->optionLabel('category_name');
@@ -17,11 +15,11 @@ it('property displays the results and options', function (string $component, obj
     ])
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:input.debounce.500ms="filterSelect(\'category_name\',\'Categoria\')"',
-            'wire:model.debounce.500ms="filters.select.category_name"',
+            'wire:input.debounce.500ms="filterSelect(\'category_id\',\'Categoria\')"',
+            'wire:model.debounce.500ms="filters.select.category_id"',
             '<option value="">All</option>',
         ]);
-})->group('filters')->with('themes');
+})->group('filters', 'filterSelect')->with('themes');
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
@@ -31,7 +29,7 @@ it('properly filter with category_id', function (string $component, object $para
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
-})->group('filters')->with('themes');
+})->group('filters', 'filterSelect')->with('themes');
 
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
@@ -42,7 +40,7 @@ it('properly filter with another category_id', function (string $component, obje
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters')->with('themes');
+})->group('filters', 'filterSelect')->with('themes');
 
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
@@ -65,7 +63,7 @@ it('properly filters using the same model as the component', function (string $c
             ->assertDontSee('Bife à Rolê')
             ->assertDontSee('Francesinha vegana')
             ->assertDontSee('Pastel de Nata');
-})->group('filters')->with('themes');
+})->group('filters', 'filterSelect')->with('themes');
 
 function filterSelect(string $dataField, ?string $value): array
 {

@@ -28,7 +28,6 @@ it('properly filter with category_id - Carnes selected', function (string $compo
 
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
-        ->field('category_id')
         ->dataSource(Category::all())
         ->optionValue('id')
         ->optionLabel('name');

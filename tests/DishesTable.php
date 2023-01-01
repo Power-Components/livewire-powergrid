@@ -193,13 +193,11 @@ class DishesTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('Data de produção'))
-                ->field('produced_at_formatted')
-                ->makeInputDatePicker('produced_at'),
+                ->field('produced_at_formatted'),
 
             Column::add()
                 ->title(__('Data'))
                 ->field('produced_at')
-                ->makeInputDatePicker('produced_at')
                 ->sortable(),
         ];
     }

@@ -2,12 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect};
+use PowerComponents\LivewirePowerGrid\Filters\{FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect};
 
 class Model
 {
@@ -64,10 +67,10 @@ class Model
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
                     match ($key) {
-                        'date_picker'  => $this->filterDatePicker($query, $field, $value),
+                        'date_picker'  => FilterDatePicker::builder($query, $field, $value),
                         'multi_select' => FilterMultiSelect::builder($query, $field, $value),
                         'select'       => FilterSelect::builder($query, $field, $value),
-                        'boolean'      => $this->filterBoolean($query, $field, $value),
+                        // 'boolean'      => $this->filterBoolean($query, $field, $value),
                         'number'       => FilterNumber::builder($query, $field, $value),
                         'input_text'   => FilterInputText::builder($query, $field, [
                             'selected' => $this->validateInputTextOptions($this->filters, $field),
@@ -82,32 +85,24 @@ class Model
         return $this->query;
     }
 
-    /** TODO */
-    private function filterDatePicker(Builder $query, string $field, array $value): void
-    {
-        if (isset($value[0]) && isset($value[1])) {
-            $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
-        }
-    }
-
-    /** TODO */
-    private function filterBoolean(Builder $query, string $field, string|array|null $value): void
-    {
-        if (is_null($value)) {
-            $value = 'all';
-        }
-
-        if (is_array($value)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if ($value != 'all') {
-            $value = ($value == 'true' || $value == '1');
-            $query->where($field, '=', $value);
-        }
-    }
+//    /** TODO */
+//    private function filterBoolean(Builder $query, string $field, string|array|null $value): void
+//    {
+//        if (is_null($value)) {
+//            $value = 'all';
+//        }
+//
+//        if (is_array($value)) {
+//            $field = $field . '.' . key($value);
+//            $value = $value[key($value)];
+//        }
+//
+//        /** @var Builder $query */
+//        if ($value != 'all') {
+//            $value = ($value == 'true' || $value == '1');
+//            $query->where($field, '=', $value);
+//        }
+//    }
 
     private function getColumnList(string $modelTable): array
     {
@@ -184,12 +179,14 @@ class Model
                             );
                         }
                     }
-                } else {
-                    $this->query = $this->query->orWhereHas(
-                        $table,
-                        fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
-                    );
+
+                    continue;
                 }
+
+                $this->query = $this->query->orWhereHas(
+                    $table,
+                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
+                );
             }
         }
     }

@@ -51,5 +51,6 @@ class FilterDynamic implements FilterBaseInterface
 
     public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
     {
+        return $builder;
     }
 }

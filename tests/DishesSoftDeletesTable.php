@@ -68,7 +68,6 @@ class DishesSoftDeletesTable extends PowerGridComponent
             Column::add()
                 ->title(__('Data'))
                 ->field('deleted_at')
-                ->makeInputDatePicker('produced_at')
                 ->sortable(),
         ];
     }

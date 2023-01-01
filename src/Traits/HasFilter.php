@@ -38,8 +38,8 @@ trait HasFilter
                 unset($this->filters['input_text_options'][$table]);
             }
 
-            if (empty($this->filters['number_start'][$table])) {
-                unset($this->filters['number_start'][$table]);
+            if (empty($this->filters['number'][$table]['start'])) {
+                unset($this->filters['number'][$table]['start']);
             }
 
             if (empty($this->filters['number'][$table]['end'])) {
@@ -107,7 +107,13 @@ trait HasFilter
                     return $filter;
                 });
 
-                data_set($column, 'filters', $filterForColumn->map(fn ($filter) => (array) $filter));
+                data_set($column, 'filters', $filterForColumn->map(function ($filter) {
+                    if (method_exists($filter, 'execute')) {
+                        return (array) $filter->execute();
+                    }
+
+                    return (array) $filter;
+                }));
 
                 continue;
             }

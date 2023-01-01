@@ -196,13 +196,11 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Created Categories'))
                 ->sortable()
-                ->field('created_at_formatted', 'categories.created_at')
-                ->makeInputDatePicker('categories.created_at'),
+                ->field('created_at_formatted', 'categories.created_at'),
 
             Column::add()
                 ->title(__('Data de produção'))
-                ->field('produced_at_formatted')
-                ->makeInputDatePicker('produced_at'),
+                ->field('produced_at_formatted'),
         ];
     }
 

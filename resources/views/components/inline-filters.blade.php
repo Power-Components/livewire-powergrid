@@ -32,7 +32,7 @@
                                 :theme="$theme->filterMultiSelect"
                                 :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"/>
                         @endif
-                            @if(str(data_get($filter, 'className'))->contains('FilterSelect'))
+                            @if(str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
                                 @includeIf($theme->filterSelect->view, [
                                    'inline' => true,
                                    'column' => $column,
@@ -58,22 +58,18 @@
                             @endif
                             @if(str(data_get($filter, 'className'))->contains('FilterDynamic'))
                                 <x-dynamic-component :component="data_get($filter, 'component', '')"
-                                                     :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))" />
+                                      :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))" />
+                            @endif
+                            @if(str(data_get($filter, 'className'))->contains('FilterDatePicker'))
+                                @includeIf($theme->filterDatePicker->view, [
+                                    'inline'    => true,
+                                    'filter'    => $filter,
+                                    'tableName' => $tableName,
+                                    'classAttr' => 'w-full',
+                                    'theme'     => $theme->filterDatePicker,
+                                ])
                             @endif
                     @endforeach
-
-
-                        {{--                    @foreach(data_get($makeFilters, 'date_picker', []) as $index => $date)--}}
-{{--                        @if(data_get($date, 'field') === $column->field)--}}
-{{--                            @includeIf($theme->filterDatePicker->view, [--}}
-{{--                                 'inline'    => true,--}}
-{{--                                 'date'      => $date,--}}
-{{--                                 'tableName' => $tableName,--}}
-{{--                                 'classAttr' => 'w-full',--}}
-{{--                                 'theme'     => $theme->filterDatePicker,--}}
-{{--                            ])--}}
-{{--                        @endif--}}
-{{--                    @endforeach--}}
 
 {{--                    @endforeach--}}
 {{--                    @foreach(data_get($makeFilters, 'boolean', []) as $index => $booleanFilter)--}}

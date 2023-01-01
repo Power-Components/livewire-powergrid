@@ -5,13 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect};
+use PowerComponents\LivewirePowerGrid\Filters\{FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect};
 
 class Collection
 {
     use InputOperators;
-
-    private BaseCollection $query;
 
     private array $columns;
 
@@ -22,25 +24,20 @@ class Collection
     /**
      * @param BaseCollection $query
      */
-    public function __construct($query)
-    {
-        $this->query = $query;
+    public function __construct(
+        private BaseCollection $query
+    ) {
     }
 
     /**
      * @param BaseCollection $query
      * @return self
      */
-    public static function query($query): self
+    public static function query(BaseCollection $query): self
     {
-        /** @phpstan-ignore-next-line */
-        return new static($query);
+        return new Collection($query);
     }
 
-    /**
-     * @param array $columns
-     * @return $this
-     */
     public function setColumns(array $columns): Collection
     {
         $this->columns = $columns;
@@ -48,10 +45,6 @@ class Collection
         return $this;
     }
 
-    /**
-     * @param string $search
-     * @return $this
-     */
     public function setSearch(string $search): Collection
     {
         $this->search = $search;
@@ -59,10 +52,6 @@ class Collection
         return $this;
     }
 
-    /**
-     * @param array $filters
-     * @return $this
-     */
     public function setFilters(array $filters): Collection
     {
         $this->filters = $filters;
@@ -99,17 +88,19 @@ class Collection
 
     public function search(): BaseCollection
     {
-        if (!empty($this->search)) {
-            $this->query = $this->query->filter(function ($row) {
-                foreach ($this->columns as $column) {
-                    $field = $column->field;
-
-                    if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
-                        return false !== stristr($row->{$field}, strtolower($this->search));
-                    }
-                }
-            });
+        if (empty($this->search)) {
+            return $this->query;
         }
+
+        $this->query = $this->query->filter(function ($row) {
+            foreach ($this->columns as $column) {
+                $field = $column->field;
+
+                if (Str::contains(strtolower($row->{$field}), strtolower($this->search))) {
+                    return false !== stristr($row->{$field}, strtolower($this->search));
+                }
+            }
+        });
 
         return $this->query;
     }
@@ -123,7 +114,7 @@ class Collection
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
                 $this->query = match ($key) {
-                    //'date_picker'  => $this->filterDatePicker($field, $value),
+                    'date_picker'  => FilterDatePicker::collection($this->query, $field, $value),
                     'multi_select' => FilterMultiSelect::collection($this->query, $field, $value),
                     'select'       => FilterSelect::collection($this->query, $field, $value),
                     //'boolean'      => $this->filterBoolean($field, $value),
@@ -140,25 +131,18 @@ class Collection
         return $this->query;
     }
 
-    private function filterDatePicker(string $field, array $value): void
-    {
-        if (isset($value[0]) && isset($value[1])) {
-            $this->query = $this->query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
-        }
-    }
-
-    private function filterBoolean(string $field, ?string $value): void
-    {
-        if (is_null($value)) {
-            $value = 'all';
-        }
-
-        if ($value != 'all') {
-            $value = ($value == 'true');
-
-            $this->query = $this->query->where($field, '=', $value);
-        }
-    }
+//    private function filterBoolean(string $field, ?string $value): void
+//    {
+//        if (is_null($value)) {
+//            $value = 'all';
+//        }
+//
+//        if ($value != 'all') {
+//            $value = ($value == 'true');
+//
+//            $this->query = $this->query->where($field, '=', $value);
+//        }
+//    }
 
     public function filterContains(): Collection
     {

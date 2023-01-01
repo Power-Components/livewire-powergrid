@@ -13,4 +13,4 @@ it(
             '<div>option-value: value</div>',
             '<div>placeholder: Choose</div>',
         ])
-)->group('filters')->with('themes with dynamic filter table')->only();
+)->group('filters')->with('themes with dynamic filter table');

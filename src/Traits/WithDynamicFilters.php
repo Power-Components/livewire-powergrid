@@ -13,8 +13,9 @@ trait WithDynamicFilters
         $this->columns = collect($this->columns)->transform(function (Column $column) {
             $filters = collect([]);
 
+            /** @var array $filter */
             foreach ($column->filters as $filter) {
-                if (str(data_get($filter, 'className'))->contains('FilterDynamic')) {
+                if (str(strval(data_get($filter, 'className')))->contains('FilterDynamic')) {
                     $filterType = strval(data_get($filter, 'filterType'));
                     $dataField  = strval(data_get($filter, 'field'));
 
@@ -44,9 +45,8 @@ trait WithDynamicFilters
                         ...(array) data_get($filter, 'attributes'),
                         'wire:model.debounce.600ms' => 'filters.' . $filter1 . '.' . $dataField,
                     ];
-
-                    $filters->push($filter);
                 }
+                $filters->push($filter);
             }
 
             data_set($column, 'filters', $filters);

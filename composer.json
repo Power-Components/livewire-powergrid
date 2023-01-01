@@ -15,7 +15,8 @@
     "require": {
         "php": "^8.1",
         "livewire/livewire": "^2.10",
-        "doctrine/dbal": "^3.1|2.12.1"
+        "doctrine/dbal": "^3.1|2.12.1",
+        "openspout/openspout": "^4.11"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
@@ -58,7 +59,7 @@
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
             "@require-openspout",
-            "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80 --stop-on-failure"
+            "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80"
         ],
         "test:mysql":  [
             "@require-openspout",

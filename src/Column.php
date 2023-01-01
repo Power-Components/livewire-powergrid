@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\{Collection, Str};
+use Illuminate\Support\Collection;
 
 final class Column
 {
@@ -362,46 +362,6 @@ final class Column
     }
 
     /**
-     * Filter Datepicker
-     *
-     */
-    public function makeInputDatePicker(
-        string $dataField = '',
-        array $settings = [],
-        string $classAttr = ''
-    ): Column {
-        $this->inputs['date_picker']['enabled'] = true;
-        $this->inputs['date_picker']['class']   = $classAttr;
-        $this->inputs['date_picker']['config']  = $settings;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-//    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
-//    {
-//        $displayField = 'value';
-//
-//        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
-//            $option = (array) $case;
-//
-//            if (method_exists($case, 'labelPowergridFilter')) {
-//                $option['name'] = $case->labelPowergridFilter();
-//                $displayField   = 'name';
-//            }
-//
-//            return $option;
-//        });
-//
-//        $dataField ??= Str::snake(class_basename($enumCases[0]));
-//
-//       // return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
-//    }
-
-    /**
      * Add Boolean Filter
      */
     public function makeBooleanFilter(
@@ -420,27 +380,6 @@ final class Column
         if (filled($dataField)) {
             $this->dataField = $dataField;
         }
-
-        return $this;
-    }
-
-    /**
-     * Add Dynamic Input Component
-     *
-     */
-    public function makeDynamicInput(
-        string $filter = '',
-        string $dataField = '',
-        string $component = '',
-        array $attributes = [],
-        string $baseClass = '',
-    ): Column {
-        $this->editable                        = [];
-        $this->inputs['dynamic']['filterType'] = $filter;
-        $this->inputs['dynamic']['dataField']  = $dataField;
-        $this->inputs['dynamic']['component']  = $component;
-        $this->inputs['dynamic']['attributes'] = $attributes;
-        $this->inputs['dynamic']['baseClass']  = $baseClass;
 
         return $this;
     }
