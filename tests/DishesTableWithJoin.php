@@ -152,7 +152,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->field('dish_name')
                 ->searchable()
                 ->clickToCopy(true)
-               // ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 

@@ -68,7 +68,6 @@
                                 ])
                             @endif
                             @if(str(data_get($filter, 'className'))->contains('FilterBoolean'))
-                                {{ $theme->filterBoolean->view }}
                                 @includeIf($theme->filterBoolean->view, [
                                    'inline'           => true,
                                    'filter'           => $filter,

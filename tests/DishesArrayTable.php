@@ -130,14 +130,12 @@ class DishesArrayTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
-                //->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
-                //->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()

@@ -11,8 +11,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
     Tests\DishesDynamicFiltersTable,
-    Tests\DishesEnumTable,
-    Tests\DishesMakeTable,
     Tests\DishesRowIndex,
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
@@ -43,7 +41,6 @@ function powergrid(): PowerGridComponent
             ->searchable()
             ->editOnClick(true)
             ->clickToCopy(true)
-            //->makeInputText('name')
             ->sortable(),
     ];
 

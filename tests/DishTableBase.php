@@ -88,7 +88,6 @@ class DishTableBase extends PowerGridComponent
 
             Column::make('Name', 'name')
                 ->searchable()
-                //->makeInputText('name')
                 ->sortable(),
 
             Column::make('Category', 'category_name'),
