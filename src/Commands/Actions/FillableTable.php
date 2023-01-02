@@ -42,6 +42,7 @@ class FillableTable
 
         $datasource = '';
         $columns    = "[\n";
+        $filters    = "[\n";
 
         foreach ($getFillable as $field) {
             if (in_array($field, $model->getHidden())) {
@@ -60,7 +61,8 @@ class FillableTable
                 $title = Str::of($field)->replace('_', ' ')->upper();
 
                 if (in_array($column->getType()->getName(), ['datetime', 'date'])) {
-                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable()' . "\n" . '                ->makeInputDatePicker(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable(),' . "\n\n";
+                    $filters .= '            Filter::datepicker(\'' . $field . '_formatted\', \'' . $field . '\'),' . "\n";
                 }
 
                 if ($column->getType()->getName() === 'datetime') {
@@ -78,20 +80,22 @@ class FillableTable
                 if ($column->getType()->getName() === 'boolean') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
+                    $filters .= '            Filter::boolean(\'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if (in_array($column->getType()->getName(), ['smallint', 'integer', 'bigint'])) {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->makeInputRange(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if ($column->getType()->getName() === 'string') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
-                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable()' . "\n" . '                ->makeInputText(),' . "\n\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
+                    $filters .= '            Filter::inputText(\'' . $field . '\'),' . "\n";
 
                     if (!self::$hasEscapeExample) {
                         $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', function (' . $modelUnqualifiedName . ' $model) {
@@ -108,9 +112,12 @@ class FillableTable
             }
         }
 
-        $columns .= "        ]\n";
+        $columns .= "        ];";
+        $filters .= "        ];";
 
         $stub = str_replace('{{ datasource }}', $datasource, $stub);
+
+        $stub = str_replace('{{ filters }}', $filters, $stub);
 
         return str_replace('{{ columns }}', $columns, $stub);
     }

@@ -39,14 +39,12 @@
 
     <x-slot name="rows">
         <x-livewire-powergrid::inline-filters
-            :makeFilters="$makeFilters"
             :checkbox="$checkbox"
             :actions="$actions"
             :columns="$columns"
             :theme="$theme"
             :filters="$filters"
             :enabledFilters="$enabledFilters"
-            :inputTextOptions="$inputTextOptions"
             :tableName="$tableName"
             :setUp="$setUp"
         />

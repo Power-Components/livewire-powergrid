@@ -75,13 +75,6 @@ class DishesMakeTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
@@ -139,49 +132,39 @@ class DishesMakeTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
-                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::make('Serving at', 'serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::servedAt(), 'serving_at', 'serving_at', ['live-search' => true]),
+                ->sortable(),
 
             Column::make('Chef', 'chef_name')
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
-                ->makeInputText('chef_name')
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
             Column::make('Categoria', 'category_name')
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+                ->placeholder('Categoria placeholder'),
 
             Column::make('Multiple', 'category_name')
-                ->placeholder('Categoria')
-                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+                ->placeholder('Categoria'),
 
             Column::make('Preço', 'price_BRL')
-                ->editOnClick(true, 'price')
-                ->makeInputRange('price'),
+                ->editOnClick(true, 'price'),
 
             Column::make('Preço de Venda', 'sales_price_BRL'),
 
             Column::make('Calorias', 'calories')
-                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::make('Em Estoque', 'in_stock')
-                ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não'),
+                ->toggleable(true, 'sim', 'não'),
 
-            Column::make('Data de produção', 'produced_at_formatted')
-                ->makeInputDatePicker('produced_at'),
+            Column::make('Data de produção', 'produced_at_formatted'),
 
             Column::make('Data', 'produced_at')
-                ->makeInputDatePicker('produced_at')
                 ->sortable(),
         ];
     }

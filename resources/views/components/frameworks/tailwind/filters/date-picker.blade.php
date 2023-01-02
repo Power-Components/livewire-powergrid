@@ -7,18 +7,21 @@
 ])
 @php
     $tableName = \Illuminate\Support\Str::kebab($tableName);
+    unset($filter['className']);
+    extract($filter);
+
     $customConfig = [];
-    if (data_get($date, 'config')) {
-        foreach (data_get($date, 'config') as $key => $value) {
+    if ($params) {
+        foreach ($params as $key => $value) {
             $customConfig[$key] = $value;
         }
     }
 
     $params = [
-        'dataField'   => $date['dataField'],
+        'dataField'   => $field,
         'tableName'   => $tableName,
-        'filterKey'   => 'enabledFilters.date_picker.'.$date['dataField'],
-        'label'       => $date['label'],
+        'filterKey'   => 'enabledFilters.date_picker.'.$field,
+        'label'       => $title,
         'locale'      => config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale()),
         'onlyFuture'  => data_get($customConfig, 'only_future', false),
         'noWeekEnds'  => data_get($customConfig, 'no_weekends', false),
@@ -28,16 +31,16 @@
 <div wire:ignore x-data="pgFlatPickr(@js($params))">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
-            <label for="input_{{ data_get($date, 'field') }}"
+            <label for="input_{{ $column }}"
                    class="text-gray-700 dark:text-gray-300">
-                {{ data_get($date, 'label') }}
+                {{ $title }}
             </label>
         @endif
         <form autocomplete="off">
-            <input id="input_{{ data_get($date, 'field') }}"
+            <input id="input_{{ $column }}"
                    x-ref="rangeInput"
                    autocomplete="off"
-                   data-field="{{ data_get($date, 'dataField') }}"
+                   data-field="{{ $field }}"
                    style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
                    class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                    type="text"

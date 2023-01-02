@@ -75,24 +75,22 @@ class DishTableBase extends PowerGridComponent
     {
         return PowerGrid::eloquent()
             ->addColumn('id')
-            ->addColumn('name');
+            ->addColumn('name')
+            ->addColumn('category_id');
     }
 
     public function columns(): array
     {
         return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
+            Column::make('Id', 'id')
                 ->searchable()
                 ->sortable(),
 
-            Column::add()
-                ->title(__('Name'))
-                ->field('name')
+            Column::make('Name', 'name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
+
+            Column::make('Category', 'category_name'),
         ];
     }
 

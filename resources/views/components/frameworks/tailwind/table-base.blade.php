@@ -7,17 +7,11 @@
             ])
 
             @if(config('livewire-powergrid.filter') === 'outside')
-                @if(count($makeFilters) > 0)
-                    <div>
-                        <x-livewire-powergrid::frameworks.tailwind.filter
-                            :makeFilters="$makeFilters"
-                            :inputTextOptions="$inputTextOptions"
-                            :tableName="$tableName"
-                            :filters="$filters"
-                            :theme="$theme"
-                        />
-                    </div>
-                @endif
+                <x-livewire-powergrid::frameworks.tailwind.filter
+                    :tableName="$tableName"
+                    :columns="$columns"
+                    :filters="$filters"
+                    :theme="$theme"/>
             @endif
 
             <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">

@@ -2,11 +2,16 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Filters\{FilterBoolean,
+    FilterDatePicker,
+    FilterInputText,
+    FilterMultiSelect,
+    FilterNumber,
+    FilterSelect};
 
 class Model
 {
@@ -20,8 +25,6 @@ class Model
 
     private array $filters;
 
-    private array $inputRangeConfig;
-
     public function __construct(private Builder $query)
     {
     }
@@ -34,13 +37,6 @@ class Model
     public function setColumns(array $columns): Model
     {
         $this->columns = $columns;
-
-        return $this;
-    }
-
-    public function setInputRangeConfig(array $config): Model
-    {
-        $this->inputRangeConfig = $config;
 
         return $this;
     }
@@ -66,163 +62,28 @@ class Model
         return $this;
     }
 
-    public function setInputTextOperators(array $operators): Model
-    {
-        $this->inputTextOperators = $operators;
-
-        return $this;
-    }
-
     public function filter(): Builder
     {
         foreach ($this->filters as $key => $type) {
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
                     match ($key) {
-                        'date_picker'         => $this->filterDatePicker($query, $field, $value),
-                        'multi_select'        => $this->filterMultiSelect($query, $field, $value),
-                        'select'              => $this->filterSelect($query, $field, $value),
-                        'boolean'             => $this->filterBoolean($query, $field, $value),
-                        'input_text_contains' => $this->filterInputTextContains($query, $field, $value),
-                        'number'              => $this->filterNumber($query, $field, $value),
-                        'input_text'          => $this->filterInputText($query, $field, $value),
-                        default               => null
+                        'date_picker'  => FilterDatePicker::builder($query, $field, $value),
+                        'multi_select' => FilterMultiSelect::builder($query, $field, $value),
+                        'select'       => FilterSelect::builder($query, $field, $value),
+                        'boolean'      => FilterBoolean::builder($query, $field, $value),
+                        'number'       => FilterNumber::builder($query, $field, $value),
+                        'input_text'   => FilterInputText::builder($query, $field, [
+                            'selected' => $this->validateInputTextOptions($this->filters, $field),
+                            'value'    => $value,
+                        ]),
+                        default        => null
                     };
                 }
             });
         }
 
         return $this->query;
-    }
-
-    private function filterDatePicker(Builder $query, string $field, array $value): void
-    {
-        if (isset($value[0]) && isset($value[1])) {
-            $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
-        }
-    }
-
-    private function filterMultiSelect(Builder $query, string $field, array $values): void
-    {
-        $empty = false;
-
-        if (count($values) === 0) {
-            return;
-        }
-
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
-        }
-
-        if (!$empty) {
-            $query->whereIn($field, $values);
-        }
-    }
-
-    private function filterSelect(Builder $query, string $field, string|array|null $values): void
-    {
-        if (is_array($values)) {
-            $field  = $field . '.' . key($values);
-            $values = $values[key($values)];
-        }
-
-        /** @var Builder $query */
-        if (filled($values)) {
-            $query->where($field, $values);
-        }
-    }
-
-    private function filterBoolean(Builder $query, string $field, string|array|null $value): void
-    {
-        if (is_null($value)) {
-            $value = 'all';
-        }
-
-        if (is_array($value)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
-        }
-
-        /** @var Builder $query */
-        if ($value != 'all') {
-            $value = ($value == 'true' || $value == '1');
-            $query->where($field, '=', $value);
-        }
-    }
-
-    private function filterInputTextContains(Builder $query, string $field, ?string $value): void
-    {
-        $query->where($field, SqlSupport::like(), '%' . $value . '%');
-    }
-
-    private function filterInputText(Builder $query, string $field, string|array|null $value): void
-    {
-        if (is_array($value)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
-        }
-
-        $textFieldOperator = $this->validateInputTextOptions($this->filters, $field);
-
-        match ($textFieldOperator) {
-            'is'           => $query->where($field, '=', $value),
-            'is_not'       => $query->where($field, '!=', $value),
-            'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-            'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
-            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
-            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-            'is_null'      => $query->whereNull($field),
-            'is_not_null'  => $query->whereNotNull($field),
-            'is_blank'     => $query->where($field, '=', ''),
-            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-            default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
-        };
-    }
-
-    /**
-     * @param string[] $value
-     */
-    private function filterNumber(Builder $query, string $field, array $value): void
-    {
-        if (isset($value['start']) && !isset($value['end'])) {
-            $start = $value['start'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $start = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['start']);
-                $start = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $start);
-            }
-
-            $query->where($field, '>=', $start);
-        }
-
-        if (!isset($value['start']) && isset($value['end'])) {
-            $end = $value['end'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $end = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['end']);
-                $end = (float) str_replace($this->inputRangeConfig[$field]['decimal'], '.', $end);
-            }
-
-            $query->where($field, '<=', $end);
-        }
-
-        if (isset($value['start']) && isset($value['end'])) {
-            $start = $value['start'];
-            $end   = $value['end'];
-
-            if (isset($this->inputRangeConfig[$field])) {
-                $start = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['start']);
-                $start = str_replace($this->inputRangeConfig[$field]['decimal'], '.', $start);
-
-                $end = str_replace($this->inputRangeConfig[$field]['thousands'], '', $value['end']);
-                $end = str_replace($this->inputRangeConfig[$field]['decimal'], '.', $end);
-            }
-
-            $query->whereBetween($field, [$start, $end]);
-        }
     }
 
     private function getColumnList(string $modelTable): array
@@ -300,12 +161,14 @@ class Model
                             );
                         }
                     }
-                } else {
-                    $this->query = $this->query->orWhereHas(
-                        $table,
-                        fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
-                    );
+
+                    continue;
                 }
+
+                $this->query = $this->query->orWhereHas(
+                    $table,
+                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
+                );
             }
         }
     }

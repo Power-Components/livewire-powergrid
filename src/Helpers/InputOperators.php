@@ -2,13 +2,22 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
+use PowerComponents\LivewirePowerGrid\Filters\FilterInputText;
+
 trait InputOperators
 {
-    public array $inputTextOperators;
-
     public function validateInputTextOptions(array $filter, string $field): string
     {
-        return in_array(strval(data_get($filter, "input_text_options.$field")), $this->inputTextOperators) ?
-            strval(data_get($filter, "input_text_options.$field")) : "contains";
+        /** @var array|string $selected */
+        $selected = data_get($filter, "input_text_options.$field");
+
+        if (is_array($selected)) {
+            $selected = collect($selected)->values()[0];
+        }
+
+        return in_array(strval(
+            $selected
+        ), FilterInputText::getInputTextOperators()) ?
+            strval($selected) : 'contains';
     }
 }

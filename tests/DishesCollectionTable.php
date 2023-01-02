@@ -7,6 +7,7 @@ use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
@@ -19,6 +20,8 @@ class DishesCollectionTable extends PowerGridComponent
     use ActionButton;
 
     public array $eventId = [];
+
+    public array $testFilters = [];
 
     protected function getListeners()
     {
@@ -100,13 +103,6 @@ class DishesCollectionTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ''],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -136,32 +132,27 @@ class DishesCollectionTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
-                ->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->sortable()
-                ->makeInputRange('price'),
+                ->sortable(),
 
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted')
-                ->makeInputDatePicker('created_at'),
+                ->field('created_at_formatted'),
         ];
     }
 
@@ -218,6 +209,11 @@ class DishesCollectionTable extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

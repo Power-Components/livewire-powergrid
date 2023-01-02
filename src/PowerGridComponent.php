@@ -63,8 +63,6 @@ class PowerGridComponent extends Component
 
     public array $setUp = [];
 
-    public array $inputRangeConfig = [];
-
     public bool $showErrorBag = false;
 
     public string $softDeletes = '';
@@ -87,19 +85,20 @@ class PowerGridComponent extends Component
             unset($this->setUp['detail']);
         }
 
-        foreach ($this->inputRangeConfig() as $field => $config) {
-            $this->inputRangeConfig[$field] = $config;
-        }
-
         $this->columns = $this->columns();
-
-        $this->initializePropertiesFromDynamicFilters();
 
         $this->resolveTotalRow();
 
         $this->resolveFilters();
 
+        $this->initializePropertiesFromDynamicFilters();
+
         $this->restoreState();
+    }
+
+    public function filters(): array
+    {
+        return [];
     }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
@@ -114,11 +113,6 @@ class PowerGridComponent extends Component
      * Apply checkbox, perPage and search view and theme
     */
     public function setUp(): array
-    {
-        return [];
-    }
-
-    public function inputRangeConfig(): array
     {
         return [];
     }
@@ -212,7 +206,6 @@ class PowerGridComponent extends Component
             cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
-                ->setInputTextOperators($this->inputTextOptions)
                 ->setSearch($this->search)
                 ->setFilters($this->filters)
                 ->filterContains()
@@ -247,9 +240,7 @@ class PowerGridComponent extends Component
         $results = $this->resolveModel($datasource)
             ->where(function (Eloquent\Builder $query) {
                 Model::query($query)
-                    ->setInputRangeConfig($this->inputRangeConfig)
                     ->setColumns($this->columns)
-                    ->setInputTextOperators($this->inputTextOptions)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
                     ->setFilters($this->filters)

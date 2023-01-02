@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
+use PowerComponents\LivewirePowerGrid\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
@@ -44,6 +45,7 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(PowerGridManager::class, 'powergrid');
         $this->app->alias(ThemeManager::class, 'theme');
         $this->app->alias(RuleManager::class, 'rule');
+        $this->app->alias(FilterManager::class, 'filter');
     }
 
     private function publishViews(): void

@@ -103,8 +103,7 @@ final class {{ componentName }} extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Price', 'price')
-                ->sortable()
-                ->makeInputRange('price', '.', ''),
+                ->sortable(),
 
             Column::make('Created', 'created_at_formatted')
                 ->makeInputDatePicker('created_at'),

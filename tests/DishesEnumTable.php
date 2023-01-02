@@ -4,54 +4,25 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Exportable,
+use PowerComponents\LivewirePowerGrid\{Column,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-    Rules\Rule,
-    Services\ExportOption};
+    PowerGridEloquent};
 
 class DishesEnumTable extends PowerGridComponent
 {
     use ActionButton;
-
-    public array $eventId = [];
-
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
 
     public function setUp(): array
     {
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
             Header::make()
                 ->showToggleColumns()
                 ->showSearchInput(),
@@ -91,37 +62,35 @@ class DishesEnumTable extends PowerGridComponent
         $canEdit = true;
 
         return [
-            Column::add()
-                ->title(__('ID'))
-                ->field('id')
+            Column::make('ID', 'id')
                 ->searchable()
                 ->sortable(),
 
-            Column::add()
-                ->title(__('Stored at'))
-                ->field('storage_room')
+            Column::make('Stored at', 'storage_room')
                 ->sortable(),
 
-            Column::add()
-                ->title(__('Prato'))
-                ->field('name')
+            Column::make('Prato', 'name')
                 ->searchable()
                 ->editOnClick($canEdit)
                 ->clickToCopy(true)
-                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
-            Column::add()
-                ->field('diet', 'dishes.diet')
-                ->makeInputEnumSelect(Diet::cases(), 'dishes.diet')
-                ->title(__('Dieta')),
+            Column::make('Dieta', 'diet', 'dishes.diet'),
         ];
     }
 
     public function actions(): array
     {
         return [];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::enumSelect('diet', 'dishes.diet')
+                ->dataSource(Diet::cases()),
+        ];
     }
 
     public function bootstrap()

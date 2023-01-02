@@ -23,6 +23,8 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -83,13 +85,6 @@ class DishesTableWithJoin extends PowerGridComponent
             'category' => [
                 'name',
             ],
-        ];
-    }
-
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ','],
         ];
     }
 
@@ -157,34 +152,29 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->field('dish_name')
                 ->searchable()
                 ->clickToCopy(true)
-                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::add()
                 ->title('Serving at')
                 ->field('serving_at')
-                ->sortable()
-                ->makeInputSelect(Dish::all(), 'serving_at', 'serving_at', ['live-search' => true]),
+                ->sortable(),
 
             Column::add()
                 ->title(__('Categoria'))
                 ->field('category_name', 'categories.name')
                 ->sortable()
-                ->placeholder('Categoria placeholder')
-                ->makeInputSelect(Category::all(), 'name', 'category_id'),
+                ->placeholder('Categoria placeholder'),
 
             Column::add()
                 ->title(__('Multiple'))
                 ->field('category_name')
-                ->placeholder('Categoria')
-                ->makeInputMultiSelect(Category::query()->take(5)->get(), 'name', 'category_id'),
+                ->placeholder('Categoria'),
 
             Column::add()
                 ->title(__('Preço'))
                 ->field('price_BRL')
-                ->editOnClick($canEdit)
-                ->makeInputRange('price'),
+                ->editOnClick($canEdit),
 
             Column::add()
                 ->title(__('Preço de Venda'))
@@ -193,26 +183,22 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Calorias'))
                 ->field('calories')
-                ->makeInputRange('calories')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Em Estoque'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->sortable()
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created Categories'))
                 ->sortable()
-                ->field('created_at_formatted', 'categories.created_at')
-                ->makeInputDatePicker('categories.created_at'),
+                ->field('created_at_formatted', 'categories.created_at'),
 
             Column::add()
                 ->title(__('Data de produção'))
-                ->field('produced_at_formatted')
-                ->makeInputDatePicker('produced_at'),
+                ->field('produced_at_formatted'),
         ];
     }
 
@@ -248,6 +234,11 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

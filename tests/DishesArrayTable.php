@@ -19,6 +19,8 @@ class DishesArrayTable extends PowerGridComponent
 
     public array $eventId = [];
 
+    public array $testFilters = [];
+
     protected function getListeners()
     {
         return array_merge(
@@ -99,13 +101,6 @@ class DishesArrayTable extends PowerGridComponent
         ];
     }
 
-    public function inputRangeConfig(): array
-    {
-        return [
-            'price' => ['thousands' => '.', 'decimal' => ''],
-        ];
-    }
-
     public function addColumns(): PowerGridEloquent
     {
         return PowerGrid::eloquent()
@@ -135,32 +130,27 @@ class DishesArrayTable extends PowerGridComponent
                 ->title(__('Name'))
                 ->field('name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
-                ->makeInputText('chef_name')
                 ->sortable(),
 
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->sortable()
-                ->makeInputRange('price'),
+                ->sortable(),
 
             Column::add()
                 ->title(__('In Stock'))
                 ->toggleable(true, 'sim', 'não')
-                ->makeBooleanFilter('in_stock', 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
                 ->title(__('Created At'))
-                ->field('created_at_formatted')
-                ->makeInputDatePicker('created_at'),
+                ->field('created_at_formatted'),
         ];
     }
 
@@ -172,6 +162,11 @@ class DishesArrayTable extends PowerGridComponent
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ];
+    }
+
+    public function filters(): array
+    {
+        return $this->testFilters;
     }
 
     public function bootstrap()

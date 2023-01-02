@@ -75,7 +75,6 @@ class DishesSearchableRawTable extends PowerGridComponent
                 ->searchable()
                 ->editOnClick()
                 ->clickToCopy(true)
-                ->makeInputText('name')
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 

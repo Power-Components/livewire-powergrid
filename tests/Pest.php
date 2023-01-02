@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Pest\PendingObjects\TestCall;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\{Column,
@@ -12,8 +11,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Tests\DishesCalculationsTable,
     Tests\DishesCollectionTable,
     Tests\DishesDynamicFiltersTable,
-    Tests\DishesEnumTable,
-    Tests\DishesMakeTable,
     Tests\DishesRowIndex,
     Tests\DishesSearchableRawTable,
     Tests\DishesSoftDeletesTable,
@@ -21,6 +18,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Tests\DishesTableWithJoin};
 
 uses(TestCase::class)->in(__DIR__);
+
+Pest\Plugin::uses(\PowerComponents\LivewirePowerGrid\Tests\PowergridPlugin::class);
 
 function getLaravelDir(): string
 {
@@ -42,7 +41,6 @@ function powergrid(): PowerGridComponent
             ->searchable()
             ->editOnClick(true)
             ->clickToCopy(true)
-            ->makeInputText('name')
             ->sortable(),
     ];
 
@@ -117,11 +115,6 @@ function expectInputText(object $params, mixed $component, string $value, string
     }
 }
 
-dataset('enum', [
-    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-]);
-
 dataset('themes', [
     'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
@@ -146,8 +139,6 @@ dataset('calculations', [
 dataset('themes with name field', [
     'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
     'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-    'tailwind make'  => [DishesMakeTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    'bootstrap make' => [DishesMakeTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
     'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
     'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
 ]);
@@ -158,8 +149,8 @@ dataset('themes with array table', [
 ]);
 
 dataset('themes with collection table', [
-    [DishesCollectionTable::class, 'tailwind'],
-    [DishesCollectionTable::class, 'bootstrap'],
+    'tailwind' => [DishesCollectionTable::class, 'tailwind'],
+    'bootsrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
 
 dataset('searchable-raw', [
@@ -181,21 +172,6 @@ dataset('themes with dynamic filter table', [
     'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => 'tailwind']],
     'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => 'bootstrap']],
 ]);
-
-/**
- * Skip tests based on minimum PHP Version
- *
- * @param string $version
- * @return TestCall|PhpUnitTestCase|mixed
- */
-function onlyFromPhp(string $version): mixed
-{
-    if (version_compare(PHP_VERSION, $version, '<')) {
-        test()->markTestSkipped('This test requires PHP ' . $version);
-    }
-
-    return test();
-}
 
 function requiresMySQL()
 {

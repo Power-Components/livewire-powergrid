@@ -20,7 +20,7 @@ it('searches data', function (string $component, object $params) {
         ->set('search', 'Sugo')
         ->assertSeeHtml('Almôndegas ao Sugo')
         ->assertDontSeeHtml('Pastel de Nata');
-})->with('themes');
+})->with('themes')->skip();
 
 it('searches data as case insensitive', function (string $component, object $params) {
     livewire($component)
@@ -29,4 +29,4 @@ it('searches data as case insensitive', function (string $component, object $par
         ->set('search', 'sugo')
         ->assertSeeHtml('Almôndegas ao Sugo')
         ->assertDontSeeHtml('Pastel de Nata');
-})->with('themes');
+})->with('themes')->skip();

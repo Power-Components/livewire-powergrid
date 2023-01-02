@@ -102,7 +102,6 @@ class DishesActionRulesTable extends PowerGridComponent
                 ->title(__('Prato'))
                 ->field('name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
         ];
     }

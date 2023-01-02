@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\{Collection, Str};
+use Illuminate\Support\Collection;
 
 final class Column
 {
@@ -61,7 +61,7 @@ final class Column
         'footer' => false,
     ];
 
-    public array $inputs = [];
+    public Collection $filters;
 
     /**
      *
@@ -355,181 +355,6 @@ final class Column
             'enabled' => $hasPermission,
             'label'   => $label,
         ];
-
-        return $this;
-    }
-
-    /**
-     * Input Select Filter
-     *
-     */
-    public function makeInputSelect(
-        Collection $datasource,
-        string $displayField,
-        string $dataField = null,
-        array $settings = []
-    ): Column {
-        $this->editable                         = [];
-        $this->inputs['select']['dataSource']   = $datasource;
-        $this->inputs['select']['displayField'] = $displayField;
-        $this->inputs['select']['dataField']    = $dataField ?? $displayField;
-        $this->inputs['select']['class']        = $settings['class'] ?? '';
-
-        return $this;
-    }
-
-    /**
-     * Input Multi-Select Filter
-     *
-     */
-    public function makeInputMultiSelect(
-        Collection $datasource,
-        string $optionLabel,
-        string $dataField = null,
-        string $optionId = 'id'
-    ): Column {
-        $this->editable                              = [];
-        $this->inputs['multi_select']['dataSource']  = $datasource;
-        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
-        $this->inputs['multi_select']['optionId']    = $optionId;
-        $this->inputs['multi_select']['dataField']   = $dataField;
-
-        return $this;
-    }
-
-    /**
-     * Input Multi-Select Filter Async with Tom-Select
-     *
-     */
-    public function makeInputMultiSelectAsync(
-        string $dataField = null,
-        array $asyncData = [],
-        string $optionLabel = 'name',
-        string $optionId = 'id'
-    ): Column {
-        $this->editable                              = [];
-        $this->inputs['multi_select']['asyncData']   = $asyncData;
-        $this->inputs['multi_select']['optionLabel'] = $optionLabel ?: $optionId;
-        $this->inputs['multi_select']['optionId']    = $optionId;
-        $this->inputs['multi_select']['dataField']   = $dataField;
-
-        return $this;
-    }
-
-    /**
-     * Filter Datepicker
-     *
-     */
-    public function makeInputDatePicker(
-        string $dataField = '',
-        array $settings = [],
-        string $classAttr = ''
-    ): Column {
-        $this->inputs['date_picker']['enabled'] = true;
-        $this->inputs['date_picker']['class']   = $classAttr;
-        $this->inputs['date_picker']['config']  = $settings;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Filter Enum - ^php8.1
-     *
-     */
-    public function makeInputEnumSelect(array $enumCases, string $dataField = null, array $settings = []): Column
-    {
-        $displayField = 'value';
-
-        $dataSource = collect($enumCases)->map(function ($case) use (&$displayField) {
-            $option = (array) $case;
-
-            if (method_exists($case, 'labelPowergridFilter')) {
-                $option['name'] = $case->labelPowergridFilter();
-                $displayField   = 'name';
-            }
-
-            return $option;
-        });
-
-        $dataField ??= Str::snake(class_basename($enumCases[0]));
-
-        return $this->makeInputSelect($dataSource, $displayField, $dataField, $settings);
-    }
-
-    /**
-     * Add Input Number Range
-     */
-    public function makeInputRange(
-        string $dataField = '',
-    ): Column {
-        $this->inputs['number']['enabled'] = true;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add Input Text
-     */
-    public function makeInputText(string $dataField = '', array $operators = []): Column
-    {
-        $this->inputs['input_text']['enabled']   = true;
-        $this->inputs['input_text']['operators'] = $operators;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add Boolean Filter
-     */
-    public function makeBooleanFilter(
-        string $dataField = '',
-        string $trueLabel = 'Yes',
-        string $falseLabel = 'No',
-        string $baseClass = '',
-        string $inputClass = '',
-    ): Column {
-        $this->inputs['boolean']['enabled']     = true;
-        $this->inputs['boolean']['true_label']  = $trueLabel;
-        $this->inputs['boolean']['false_label'] = $falseLabel;
-        $this->inputs['boolean']['baseClass']   = $baseClass;
-        $this->inputs['boolean']['class']       = $inputClass;
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add Dynamic Input Component
-     *
-     */
-    public function makeDynamicInput(
-        string $filter = '',
-        string $dataField = '',
-        string $component = '',
-        array $attributes = [],
-        string $baseClass = '',
-    ): Column {
-        $this->editable                        = [];
-        $this->inputs['dynamic']['filterType'] = $filter;
-        $this->inputs['dynamic']['dataField']  = $dataField;
-        $this->inputs['dynamic']['component']  = $component;
-        $this->inputs['dynamic']['attributes'] = $attributes;
-        $this->inputs['dynamic']['baseClass']  = $baseClass;
 
         return $this;
     }

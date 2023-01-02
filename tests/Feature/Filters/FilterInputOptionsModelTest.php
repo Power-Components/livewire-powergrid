@@ -2,26 +2,48 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterInputText};
+
+use PowerComponents\LivewirePowerGrid\Tests\DishesFiltersTable;
+
 it('properly filters by "name is"', function (string $component, object $params) {
-    livewire($component)
+    $filter   = Filter::inputText('name', $params->field)->operators();
+    $livewire = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Francesinha', 'is', $params->field))
         ->assertSee('Francesinha')
         ->assertDontSee('Francesinha vegana')
         ->call('clearFilter', $params->field)
         ->assertSee('Francesinha vegana');
-})->with('themes with name field');
+
+    expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name is" using nonexistent record', function (string $component, object $params) {
-    livewire($component)
+    $filter   = Filter::inputText('name', $params->field)->operators();
+    $livewire = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent dish', 'is', $params->field))
         ->assertSee('No records found')
         ->assertDontSee('Francesinha');
-})->with('themes with name field');
+
+    expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name is not"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Francesinha vegana', 'is_not', $params->field))
         ->assertSee('Francesinha')
@@ -37,10 +59,12 @@ it('properly filters by "name is not"', function (string $component, object $par
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name is not" using nonexistent record', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent dish', 'is_not', $params->field))
         ->assertSee('Francesinha')
@@ -55,10 +79,12 @@ it('properly filters by "name is not" using nonexistent record', function (strin
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name contains"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('francesinha', 'contains', $params->field))
         ->assertSee('Francesinha')
@@ -73,10 +99,12 @@ it('properly filters by "name contains"', function (string $component, object $p
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name contains" using nonexistent record', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent dish', 'contains', $params->field))
         ->assertSee('No records found')
@@ -92,10 +120,12 @@ it('properly filters by "name contains" using nonexistent record', function (str
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name contains not"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('francesinha', 'contains_not', $params->field))
         ->assertDontSee('Francesinha')
@@ -110,10 +140,12 @@ it('properly filters by "name contains not"', function (string $component, objec
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name contains not" using nonexistent record', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent dish', 'contains_not', $params->field))
         ->assertSee('Francesinha')
@@ -128,10 +160,12 @@ it('properly filters by "name contains not" using nonexistent record', function 
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name starts with"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('fran', 'starts_with', $params->field))
         ->assertSee('Francesinha')
@@ -147,10 +181,12 @@ it('properly filters by "name starts with"', function (string $component, object
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name starts with" using nonexistent record', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent', 'starts_with', $params->field))
         ->assertSee('No records found')
@@ -167,10 +203,12 @@ it('properly filters by "name starts with" using nonexistent record', function (
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name ends with"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('vegana', 'ends_with', $params->field))
         ->assertSee('Francesinha vegana')
@@ -185,10 +223,12 @@ it('properly filters by "name ends with"', function (string $component, object $
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name ends with" using nonexistent record', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('Nonexistent', 'ends_with', $params->field))
         ->assertSee('No records found')
@@ -205,10 +245,12 @@ it('properly filters by "name ends with" using nonexistent record', function (st
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is blank"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_blank', 'chef_name'))
         ->assertSee('Carne Louca')
@@ -236,10 +278,12 @@ it('properly filters by "chef name is blank"', function (string $component, obje
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes with name field');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is NOT blank"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_not_blank', 'chef_name'))
         ->assertSee('Pastel de Nata')
@@ -267,10 +311,12 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is null"', function (string $component, object $params) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'join' => $params->join,
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_null', 'chef_name'))
         ->assertSee('Pastel de Nata')
@@ -298,10 +344,16 @@ it('properly filters by "chef name is null"', function (string $component, objec
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->with('themes');
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is NOT null"', function (string $component, object $params) {
-    $component = livewire($component)
+    $filter   = Filter::inputText('name', 'chef_name')->operators();
+    $livewire = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_not_null', 'chef_name'))
         ->assertSee('Francesinha vegana')
@@ -312,7 +364,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, o
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata');
 
-    expect($component->filters)
+    expect($livewire->filters)
         ->toMatchArray([
             'input_text'         => [
                 'chef_name' => '',
@@ -322,14 +374,22 @@ it('properly filters by "chef name is NOT null"', function (string $component, o
             ],
         ]);
 
-    $component->call('clearFilter', 'is_not_null');
+    $livewire->call('clearFilter', 'is_not_null');
 
-    expect($component->filters)
+    expect($livewire->filters)
         ->toMatchArray([]);
-})->with('themes');
+
+    expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is empty"', function (string $component, object $params) {
-    $component = livewire($component)
+    $filter   = Filter::inputText('name', $params->field)->operators();
+    $livewire = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_empty', 'chef_name'))
         ->assertSee('Pastel de Nata')
@@ -340,7 +400,7 @@ it('properly filters by "chef name is empty"', function (string $component, obje
         ->assertSee('Carne Louca')
         ->assertDontSee('Francesinha vegana');
 
-    expect($component->filters)
+    expect($livewire->filters)
         ->toMatchArray([
             'input_text'         => [
                 'chef_name' => '',
@@ -350,14 +410,22 @@ it('properly filters by "chef name is empty"', function (string $component, obje
             ],
         ]);
 
-    $component->call('clearFilter', 'is_empty');
+    $livewire->call('clearFilter', 'is_empty');
 
-    expect($component->filters)
+    expect($livewire->filters)
         ->toMatchArray([]);
-})->with('themes');
+
+    expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "chef name is NOT empty"', function (string $component, object $params) {
-    livewire($component)
+    $filter   = Filter::inputText('name', $params->field)->operators();
+    $livewire = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
         ->call($params->theme)
         ->set('filters', filterInputText('', 'is_not_empty', 'chef_name'))
         ->assertSee('Francesinha vegana')
@@ -366,4 +434,25 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Carne Louca');
-})->with('themes');
+
+    expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
+
+dataset('dishes_filter', [
+    'tailwind'       => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'name', 'join' => false]],
+    'bootstrap'      => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name', 'join' => false]],
+    'tailwind join'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name', 'join' => true]],
+    'bootstrap join' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name', 'join' => true]],
+]);
+
+function expectColumnsFilterMatch($component, $filter, $field = 'name'): void
+{
+    $column = collect($component->columns)
+        ->filter(fn ($column) => $column->field === $field)->first();
+
+    expect($column->filters->first())
+        ->className->toBe(FilterInputText::class)
+        ->operators->toBeArray()
+        ->field->toBe($filter->field)
+        ->title->toBe($column->title);
+}
