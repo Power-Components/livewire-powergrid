@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class FilterNumber implements FilterBaseInterface

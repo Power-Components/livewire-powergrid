@@ -6,12 +6,14 @@ use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Traits\{ActionButton, WithExport};
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
 final class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
+    use WithExport;
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +105,12 @@ final class {{ componentName }} extends PowerGridComponent
      */
     public function columns(): array
     {
-        return {{ columns }};
+        return {{ columns }}
+    }
+
+    public function filters(): array
+    {
+        return {{ filters }}
     }
 
     /*

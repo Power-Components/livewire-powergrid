@@ -8,7 +8,7 @@ trait WithFilterBase
 
     public function __construct(
         public string $column,
-        public ?string $field = null
+        public ?string $field = null,
     ) {
         if (is_null($this->field)) {
             $this->field = $this->column;

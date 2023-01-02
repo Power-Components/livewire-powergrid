@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridEloquent};
 
@@ -116,15 +117,21 @@ final class {{ componentName }} extends PowerGridComponent
 
             Column::make('Name', 'name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
 
             Column::make('Created at', 'created_at')
                 ->hidden(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->makeInputDatePicker()
                 ->searchable()
+        ];
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('name'),
+            Filter::datepicker('created_at_formatted', 'created_at'),
         ];
     }
 
