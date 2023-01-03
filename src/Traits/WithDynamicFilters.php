@@ -37,10 +37,6 @@ trait WithDynamicFilters
 
                     $this->filters[$filter1][$dataField] = $initial;
 
-                    if (config('livewire-powergrid.filter') === 'inline') {
-                        unset($column->inputs['dynamic']['attributes']['label']);
-                    }
-
                     $filter['attributes'] = [
                         ...(array) data_get($filter, 'attributes'),
                         'wire:model.debounce.600ms' => 'filters.' . $filter1 . '.' . $dataField,
