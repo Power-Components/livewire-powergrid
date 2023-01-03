@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Str;
 
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use function Pest\Livewire\livewire;
+
+use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
