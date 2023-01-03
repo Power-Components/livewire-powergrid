@@ -98,4 +98,4 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         ->assertSee('борщ');
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters')->with('themes with name field')->only();
+})->group('filters')->with('themes with name field');
