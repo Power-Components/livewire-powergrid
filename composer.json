@@ -72,7 +72,7 @@
             "@require-openspout",
             "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
         ],
-        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1 --xdebug",
         "require-openspout": "composer require openspout/openspout",
         "test:dbs": [
             "@test:sqlite",
