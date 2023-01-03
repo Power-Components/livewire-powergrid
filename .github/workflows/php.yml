@@ -67,22 +67,22 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer require openspout/openspout
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Pint
         if: matrix.php == '8.1'
-        run: ./vendor/bin/pint --test
+        run: composer test:pint
 
       - name: Larastan
-        run: git update-index --chmod=+x ./larastan.sh && bash ./larastan.sh
+        run: composer test:types
 
-      - name: Testing with SQLite
+      - name: SQLite
         run: |
+          composer require openspout/openspout
           XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80
-      - name: Testing with MySQL
-        run: |
-          ./vendor/bin/pest --configuration phpunit.mysql.xml
-      - name: Testing with PostgreSQL
-        run: |
-          ./vendor/bin/pest --configuration phpunit.pgsql.xml
+
+      - name: MySQL
+        run: composer test:mysql
+
+      - name: PostgreSQL
+        run: composer test:pgsql
