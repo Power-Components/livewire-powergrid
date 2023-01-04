@@ -53,16 +53,19 @@
     </x-slot:loading>
 
     <x-slot:rows>
-        <x-livewire-powergrid::inline-filters
-            :checkbox="$checkbox"
-            :actions="$actions"
-            :columns="$columns"
-            :theme="$theme"
-            :filters="$filters"
-            :enabledFilters="$enabledFilters"
-            :tableName="$tableName"
-            :setUp="$setUp"
-        />
+
+        @if($this->hasColumnFilters)
+            <x-livewire-powergrid::inline-filters
+                :checkbox="$checkbox"
+                :actions="$actions"
+                :columns="$columns"
+                :theme="$theme"
+                :filters="$filters"
+                :enabledFilters="$enabledFilters"
+                :tableName="$tableName"
+                :setUp="$setUp"
+            />
+        @endif
         @if(is_null($data) || count($data) === 0)
             <th>
                 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">

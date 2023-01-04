@@ -542,6 +542,12 @@ class PowerGridComponent extends Component
         ];
     }
 
+    public function getHasColumnFiltersProperty(): bool
+    {
+        return collect($this->columns)
+            ->filter(fn ($column) => filled($column->filters))->count() > 0;
+    }
+
     /**
      * @return array
      */
