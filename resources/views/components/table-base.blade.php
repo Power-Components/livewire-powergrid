@@ -20,6 +20,5 @@
             {{ $loading }}
             </tbody>
         @endif
-
     </table>
 </div>
