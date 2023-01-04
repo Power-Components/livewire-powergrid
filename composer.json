@@ -57,23 +57,18 @@
         "test": "@test:sqlite",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
-            "@require-openspout",
             "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80"
         ],
         "test:mysql":  [
-            "@require-openspout",
             "./vendor/bin/pest --configuration phpunit.mysql.xml"
         ],
         "test:pgsql": [
-            "@require-openspout",
             "./vendor/bin/pest --configuration phpunit.pgsql.xml"
         ],
         "test:sqlsrv": [
-            "@require-openspout",
             "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
         ],
-        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
-        "require-openspout": "composer require openspout/openspout",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1 --xdebug",
         "test:dbs": [
             "@test:sqlite",
             "@test:mysql",

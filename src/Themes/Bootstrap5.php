@@ -30,7 +30,7 @@ class Bootstrap5 extends ThemeBase
             ->div('table-responsive col-md-12', 'margin: 10px 0 10px;')
             ->thead('')
             ->tr('')
-            ->th('', 'white-space: nowrap;min-width: 50px;padding-left: 15px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
+            ->th('', 'white-space: nowrap;min-width: 50px;font-size: 0.75rem;color: #6b6a6a;padding-top: 8px;padding-bottom: 8px;')
             ->tbody('')
             ->tdBody('', 'vertical-align: middle; line-height: normal;')
             ->tdBodyEmpty('', 'vertical-align: middle; line-height: normal;')

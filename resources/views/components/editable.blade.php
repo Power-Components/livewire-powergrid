@@ -27,7 +27,7 @@
      x-data="pgEditable(@js($params))"
      style="width: 100% !important; height: 100% !important;">
     <div :class="{
-            'py-2 px-3' : theme == 'tailwind',
+            'py-2' : theme == 'tailwind',
             'p-1' : theme == 'bootstrap5',
          }"
          x-show="!showEditable"

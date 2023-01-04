@@ -19,10 +19,10 @@
 <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
-    <div class="{{ $theme->cols->divClass }}"
-        @if($column->sortable === true) wire:click="sortBy('{{ $field }}')" @endif>
-        @if($column->sortable === true)
-            <span class="text-md pr-2">
+    <div class="text-md flex gap-2 {{ $theme->cols->divClass }}"
+        @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
+        @if($column->sortable)
+            <span>
                 @if($multiSort && array_key_exists($field,$sortArray))
                     @if ($sortArray[$field] == 'desc')
                         &#8595;
@@ -41,6 +41,8 @@
                     @endif
                 @endif
 			</span>
+        @else
+            <span style="width: 6px"></span>
         @endif
         <span>{{ $column->title }}</span>
     </div>
