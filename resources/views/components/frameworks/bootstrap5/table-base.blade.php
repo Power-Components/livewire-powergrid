@@ -1,4 +1,4 @@
-<div>
+<div @if($deferLoading) wire:init="fetchDatasource" @endif>
     <div class="col-md-12">
         @include($theme->layout->header, [
                 'enabledFilters' => $enabledFilters

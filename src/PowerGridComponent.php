@@ -75,8 +75,16 @@ class PowerGridComponent extends Component
 
     public int $totalCurrentPage = 0;
 
+    public bool $deferLoading = false;
+
+    public bool $readyToLoad;
+
+    public string $loadingComponent = '';
+
     public function mount(): void
     {
+        $this->readyToLoad = !$this->deferLoading;
+
         foreach ($this->setUp() as $setUp) {
             $this->setUp[$setUp->name] = $setUp;
         }
@@ -138,6 +146,11 @@ class PowerGridComponent extends Component
         });
     }
 
+    public function fetchDatasource(): void
+    {
+        $this->readyToLoad = true;
+    }
+
     /**
      * @throws Exception|Throwable
      */
@@ -154,7 +167,7 @@ class PowerGridComponent extends Component
 
         $this->relationSearch = $this->relationSearch();
 
-        $data = $this->fillData();
+        $data = $this->readyToLoad ? $this->fillData() : collect([]);
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -430,8 +443,10 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        /** @phpstan-ignore-next-line */
-        return view($this->powerGridTheme->layout->table, [
+        /** @phpstan-var view-string $view */
+        $view = $this->powerGridTheme->layout->table;
+
+        return view($view, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,
             'table' => 'livewire-powergrid::components.table',
@@ -525,6 +540,12 @@ class PowerGridComponent extends Component
             'pg:eventRefresh-' . $this->tableName => 'refresh',
             'pg:softDeletes-' . $this->tableName  => 'softDeletes',
         ];
+    }
+
+    public function getHasColumnFiltersProperty(): bool
+    {
+        return collect($this->columns)
+            ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
     /**

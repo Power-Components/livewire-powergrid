@@ -35,11 +35,11 @@ class FilterNumber implements FilterBaseInterface
             $start = $values['start'];
 
             if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
+                $start = str_replace($values['thousands'], '', $start);
             }
 
             if (isset($values['decimal'])) {
-                $start = (float) str_replace($values['decimal'], '.', $start);
+                $start = str_replace($values['decimal'], '.', $start);
             }
 
             $query->where($field, '>=', $start);
