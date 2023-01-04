@@ -27,7 +27,7 @@
                         wire:model.lazy="filters.input_text_options.{{ $field }}"
                         wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value)">
                     @foreach($inputTextOptions as $key => $value)
-                        <option wire:key="input-text-options-{{ $tableName }}-{{ $key.'-'.$value }}" value="{{ $key }}">{{ trans('livewire-powergrid::datatable.input_text_options'.$value) }}</option>
+                        <option wire:key="input-text-options-{{ $tableName }}-{{ $key.'-'.$value }}" value="{{ $key }}">{{ trans('livewire-powergrid::datatable.input_text_options.'.$value) }}</option>
                     @endforeach
                 </select>
             </div>

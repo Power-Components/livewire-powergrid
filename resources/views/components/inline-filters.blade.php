@@ -9,15 +9,21 @@
     'filters' => [],
     'setUp' => null
 ])
+@php
+    $trClasses = Arr::toCssClasses([$theme->table->trClass, $theme->table->trFiltersClass]);
+    $tdClasses = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->tdFiltersClass]);
+    $trStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->trFiltersStyle]);
+    $tdStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->tdFiltersStyle]);
+@endphp
 @if(config('livewire-powergrid.filter') === 'inline')
-    <tr class="{{ $theme->table->trClass }} {{ $theme->table->trFiltersClass }}"
+    <tr class="{{ $trClasses }}"
         style="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}">
 
             @if(data_get($setUp, 'detail.showCollapseIcon'))
-                <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+                <td class="{{ $tdClasses }}" style="{{ $tdStyles }}"></td>
             @endif
             @if($checkbox)
-                <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+                <td class="{{ $tdClasses }}" style="{{ $tdStyles }}"></td>
             @endif
 
             @foreach($columns as $column)
