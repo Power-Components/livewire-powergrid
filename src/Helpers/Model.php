@@ -25,6 +25,8 @@ class Model
 
     private array $filters;
 
+    private array $searchMorphs;
+
     public function __construct(private Builder $query)
     {
     }
@@ -62,6 +64,13 @@ class Model
         return $this;
     }
 
+    public function setSearchMorphs(array $array): Model
+    {
+        $this->searchMorphs = $array;
+
+        return $this;
+    }
+
     public function filter(): Builder
     {
         foreach ($this->filters as $key => $type) {
@@ -74,8 +83,9 @@ class Model
                         'boolean'      => FilterBoolean::builder($query, $field, $value),
                         'number'       => FilterNumber::builder($query, $field, $value),
                         'input_text'   => FilterInputText::builder($query, $field, [
-                            'selected' => $this->validateInputTextOptions($this->filters, $field),
-                            'value'    => $value,
+                            'selected'     => $this->validateInputTextOptions($this->filters, $field),
+                            'value'        => $value,
+                            'searchMorphs' => $this->searchMorphs,
                         ]),
                         default        => null
                     };

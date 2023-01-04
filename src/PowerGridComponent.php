@@ -75,6 +75,8 @@ class PowerGridComponent extends Component
 
     public int $totalCurrentPage = 0;
 
+    public array $searchMorphs = [];
+
     public function mount(): void
     {
         foreach ($this->setUp() as $setUp) {
@@ -153,6 +155,7 @@ class PowerGridComponent extends Component
         })->toArray();
 
         $this->relationSearch = $this->relationSearch();
+        $this->searchMorphs   = $this->searchMorphs();
 
         $data = $this->fillData();
 
@@ -176,6 +179,11 @@ class PowerGridComponent extends Component
     }
 
     public function relationSearch(): array
+    {
+        return [];
+    }
+
+    public function searchMorphs(): array
     {
         return [];
     }
@@ -242,6 +250,7 @@ class PowerGridComponent extends Component
                 Model::query($query)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
+                    ->setSearchMorphs($this->searchMorphs)
                     ->setRelationSearch($this->relationSearch)
                     ->setFilters($this->filters)
                     ->filterContains()
