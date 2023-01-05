@@ -67,19 +67,6 @@ class FilterInputText implements FilterBaseInterface
             };
         };
 
-        /** // https://laravel.com/docs/9.x/eloquent-relationships#querying-morph-to-relationships
-        public function searchMorphs(): array
-        {
-            return [
-                'record', // table
-                'owner', // morph relationship
-                [
-                    \App\Models\Gym::class
-                ]
-            ];
-        }
-         **/
-
         if (filled($searchMorphs)) {
             $table        = $searchMorphs[0];
             $relationship = $searchMorphs[1];
