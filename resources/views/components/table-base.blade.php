@@ -1,5 +1,6 @@
 @props([
-    'theme' => null
+    'theme' => null,
+    'readyToLoad' => false,
 ])
 <div>
     <table class="table power-grid-table {{ $theme->tableClass }}"
@@ -8,9 +9,16 @@
                style="{{$theme->theadStyle}}">
                 {{ $header }}
         </thead>
-        <tbody class="{{$theme->tbodyClass}}"
-               style="{{$theme->tbodyStyle}}">
-                {{ $rows }}
-        </tbody>
+        @if($readyToLoad)
+            <tbody class="{{$theme->tbodyClass}}"
+                   style="{{$theme->tbodyStyle}}">
+            {{ $rows }}
+            </tbody>
+        @else
+            <tbody class="{{$theme->tbodyClass}}"
+                   style="{{$theme->tbodyStyle}}">
+            {{ $loading }}
+            </tbody>
+        @endif
     </table>
 </div>

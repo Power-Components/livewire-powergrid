@@ -1,7 +1,7 @@
 @inject('actionRulesClass','PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
 
-<x-livewire-powergrid::table-base :theme="$theme->table">
-    <x-slot name="header">
+<x-livewire-powergrid::table-base :theme="$theme->table" :ready-to-load="$readyToLoad">
+    <x-slot:header>
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
             @if(data_get($setUp, 'detail.showCollapseIcon'))
                 <th scope="col" class="{{ $theme->table->thClass }}"
@@ -35,19 +35,37 @@
                 </th>
             @endif
         </tr>
-    </x-slot>
+    </x-slot:header>
 
-    <x-slot name="rows">
-        <x-livewire-powergrid::inline-filters
-            :checkbox="$checkbox"
-            :actions="$actions"
-            :columns="$columns"
-            :theme="$theme"
-            :filters="$filters"
-            :enabledFilters="$enabledFilters"
-            :tableName="$tableName"
-            :setUp="$setUp"
-        />
+    <x-slot:loading>
+        <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
+            <td class="{{ $theme->table->tdBodyEmptyClass }}" colspan="{{ (($checkbox) ? 1:0)
+                   + ((isset($actions)) ? 1: 0)
+                   + (count($columns))
+                }}">
+                @if($loadingComponent)
+                    @include($loadingComponent)
+                @else
+                    {{ __('Loading') }}
+                @endif
+            </td>
+        </tr>
+    </x-slot:loading>
+
+    <x-slot:rows>
+
+        @if($this->hasColumnFilters)
+            <x-livewire-powergrid::inline-filters
+                :checkbox="$checkbox"
+                :actions="$actions"
+                :columns="$columns"
+                :theme="$theme"
+                :filters="$filters"
+                :enabledFilters="$enabledFilters"
+                :tableName="$tableName"
+                :setUp="$setUp"
+            />
+        @endif
         @if(is_null($data) || count($data) === 0)
             <th>
                 <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
@@ -151,5 +169,5 @@
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
         @endif
-    </x-slot>
+    </x-slot:rows>
 </x-livewire-powergrid::table-base>
