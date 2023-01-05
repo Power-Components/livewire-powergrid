@@ -41,28 +41,55 @@ class FilterInputText implements FilterBaseInterface
     public static function builder(Builder $query, string $field, int|array|string|null $values): void
     {
         /** @var array $values */
-        $value    = $values['value'];
-        $selected = $values['selected'];
+        $value        = $values['value'];
+        $selected     = $values['selected'];
+        $searchMorphs = $values['searchMorphs'];
 
-        if (is_array($value)) {
+        if (is_array($value) && blank($searchMorphs)) {
             $field = $field . '.' . key($value);
             $value = $value[key($value)];
         }
 
-        match ($selected) {
-            'is'           => $query->where($field, '=', $value),
-            'is_not'       => $query->where($field, '!=', $value),
-            'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-            'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-            'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
-            'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
-            'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-            'is_null'      => $query->whereNull($field),
-            'is_not_null'  => $query->whereNotNull($field),
-            'is_blank'     => $query->where($field, '=', ''),
-            'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-            default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
+        $matchOperatorQuery = function (string $selected, Builder $query, string $field, mixed $value) {
+            match ($selected) {
+                'is'           => $query->where($field, '=', $value),
+                'is_not'       => $query->where($field, '!=', $value),
+                'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
+                'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
+                'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
+                'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
+                'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
+                'is_null'      => $query->whereNull($field),
+                'is_not_null'  => $query->whereNotNull($field),
+                'is_blank'     => $query->where($field, '=', ''),
+                'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
+                default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
+            };
         };
+
+        if (filled($searchMorphs)) {
+            $table        = $searchMorphs[0];
+            $relationship = $searchMorphs[1];
+            $types        = $searchMorphs[2];
+
+            $query->whereHasMorph(
+                $relationship,
+                $types,
+                fn (Builder $query) => $query->whereHas(
+                    $table,
+                    fn (Builder $query) => $matchOperatorQuery(
+                        $selected,
+                        $query,
+                        $field,
+                        $value
+                    )
+                )
+            );
+
+            return;
+        }
+
+        $matchOperatorQuery($selected, $query, $field, $value);
     }
 
     public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
