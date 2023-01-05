@@ -2,7 +2,7 @@
     'columns' => null,
     'theme' => null,
     'tableName' => null,
-    'filters' => null,
+    'filtersFromColumns' => null,
 ])
 <div class="w-full my-3 dark:bg-pg-primary-800">
     <div x-data={show:true} class="rounded-full">
@@ -22,10 +22,6 @@
                     $customConfig = [];
                 @endphp
                 <div class="md:flex md:flex-wrap">
-                    @php
-                        $filtersFromColumns = collect($columns)->filter(fn ($column) => filled($column->filters))->pluck('filters');
-                    @endphp
-
                     @foreach($filtersFromColumns as $filters)
                         @foreach($filters as $filter)
                             @if(str(data_get($filter, 'className'))->contains('FilterMultiSelect'))

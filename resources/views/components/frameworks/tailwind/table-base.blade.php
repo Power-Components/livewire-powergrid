@@ -7,11 +7,17 @@
             ])
 
             @if(config('livewire-powergrid.filter') === 'outside')
-                <x-livewire-powergrid::frameworks.tailwind.filter
-                    :tableName="$tableName"
-                    :columns="$columns"
-                    :filters="$filters"
-                    :theme="$theme"/>
+                @php
+                    $filtersFromColumns = collect($columns)->filter(fn ($column) => filled($column->filters))->pluck('filters');
+                @endphp
+
+                @if($filtersFromColumns->count() > 0)
+                    <x-livewire-powergrid::frameworks.tailwind.filter
+                        :tableName="$tableName"
+                        :columns="$columns"
+                        :filtersFromColumns="$filtersFromColumns"
+                        :theme="$theme"/>
+                @endif
             @endif
 
             <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">
