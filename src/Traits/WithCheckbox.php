@@ -26,6 +26,8 @@ trait WithCheckbox
         if (!$this->checkboxAll) {
             $this->checkboxValues = [];
 
+            $this->dispatchBrowserEvent('pgBulkActions::clear', $this->tableName);
+
             return;
         }
 
@@ -44,7 +46,12 @@ trait WithCheckbox
             $value = $model->{$this->checkboxAttribute};
 
             if (!in_array($value, $this->checkboxValues)) {
-                $this->checkboxValues[] = (string) $model->{$this->checkboxAttribute};
+                $this->checkboxValues[] = (string) $value;
+
+                $this->dispatchBrowserEvent('pgBulkActions::addMore', [
+                    'value'     => $value,
+                    'tableName' => $this->tableName,
+                ]);
             }
         });
     }

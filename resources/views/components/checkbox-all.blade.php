@@ -9,7 +9,7 @@
             <label class="{{ $theme->labelClass }}">
                 <input class="{{ $theme->inputClass }}"
                        type="checkbox"
-                       wire:click="selectCheckboxAll()"
+                       wire:click="selectCheckboxAll"
                        wire:model.defer="checkboxAll">
             </label>
         </div>

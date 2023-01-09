@@ -28,6 +28,7 @@
                            class="{{ $theme->checkbox->inputClass }}"
                            @endif
                            type="checkbox"
+                           x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
                            wire:model.defer="checkboxValues"
                            value="{{ $attribute }}">
                 </label>
