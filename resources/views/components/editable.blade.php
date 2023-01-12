@@ -27,15 +27,18 @@
      x-data="pgEditable(@js($params))"
      style="width: 100% !important; height: 100% !important;">
     <div :class="{
-            'py-2 px-3' : theme == 'tailwind',
+            'py-2' : theme == 'tailwind',
             'p-1' : theme == 'bootstrap5',
          }"
          x-show="!showEditable"
          x-on:click="editable = true;"
          :id="`clickable-`+dataField+'-'+id"
-         style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
+         style="cursor: pointer; width: 100%; height: 100%;"
     >
-        {{ $content }}
+        <span style="border-bottom: dotted 1px;">{{ $content }}</span>
+    </div>
+    <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
+        {{ $input }}
     </div>
     <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
         {{ $input }}
