@@ -12,7 +12,9 @@
 
 @php
     $fallback = html_entity_decode(strval(data_get($editable, 'fallback')), ENT_QUOTES, 'utf-8');
-    $content  = html_entity_decode(strval($helperClass->resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8') ?: $fallback;
+    $value  = html_entity_decode(strval($helperClass->resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8');
+
+    $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
         'theme' => $theme->name,
@@ -33,9 +35,9 @@
          x-show="!showEditable"
          x-on:click="editable = true;"
          :id="`clickable-`+dataField+'-'+id"
-         style="border-bottom: dotted 1px; cursor: pointer; width: 100%; height: 100%;"
+         style="cursor: pointer; width: 100%; height: 100%;"
     >
-        {{ $content }}
+        <span style="border-bottom: dotted 1px;">{{ $content }}</span>
     </div>
     <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
         {{ $input }}
