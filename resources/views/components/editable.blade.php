@@ -12,7 +12,9 @@
 
 @php
     $fallback = html_entity_decode(strval(data_get($editable, 'fallback')), ENT_QUOTES, 'utf-8');
-    $content  = html_entity_decode(strval($helperClass->resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8') ?: $fallback;
+    $value  = html_entity_decode(strval($helperClass->resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8');
+
+    $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
         'theme' => $theme->name,
