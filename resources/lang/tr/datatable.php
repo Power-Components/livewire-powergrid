@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Filtre',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'İşlemler',
         'results_per_page' => 'Sayfa başına veri',
         'clear_filter'     => 'Filtreleri temizle',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Tümü',
         'selected'         => 'Seçili',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Arama yap...',
         'select' => 'Dönem seç',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Gösterilen:',
         'to'      => 'ile',
         'of'      => 'arası. Toplam:',
         'results' => 'Sonuç',
         'all'     => 'Tümü',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Seç',
         'all'    => 'Tümü',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Seç',
         'all'    => 'Tümü',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Tümü',
     ],
     'input_text_options' => [
@@ -50,11 +50,11 @@ return [
         'is_not_empty' => 'Boş olmayan',
 
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'Lütfen bekleyin!',
         'completed' => 'Dışa aktarım tamamlandı! Dosyalarınız indirmek için hazır',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
