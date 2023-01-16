@@ -40,9 +40,6 @@
     <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
         {{ $input }}
     </div>
-    <div x-show="showEditable && !hashError" style="margin-bottom: 4px">
-        {{ $input }}
-    </div>
     @if($showErrorBag)
         @error($field.".".$row->{$primaryKey})
         <div class="text-sm text-red-800 p-1 transition transition-all duration-200">
