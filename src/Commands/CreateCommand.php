@@ -147,6 +147,7 @@ class CreateCommand extends Command
         if (!empty($matches)) {
             $this->componentName = end($matches);
             array_splice($matches, 2);
+            /** @var array $matches */
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
 

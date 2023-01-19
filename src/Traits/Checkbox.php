@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Helpers};
 
@@ -33,6 +34,7 @@ trait Checkbox
         $actionRulesClass = resolve(ActionRules::class);
 
         collect($data->items())->each(function ($model) use ($actionRulesClass) {
+            /** @var array|Model|\stdClass $model */
             $rules    = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
             if (isset($rules['hide'])) {
                 return;

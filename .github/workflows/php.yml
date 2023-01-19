@@ -37,13 +37,18 @@ jobs:
     strategy:
       matrix:
         php: [ 8.1, 8.0 ]
-        laravel: [ 9.*, ^8.75 ]
+        laravel: [ 10.*, 9.*, ^8.75 ]
         dependency-version: [ prefer-stable ]
         include:
+          - laravel: 10.*
+            testbench: 8.*
           - laravel: 9.*
             testbench: 7.*
           - laravel: ^8.75
             testbench: 6.*
+        exclude:
+          - php: 8.0
+            laravel: 10.*
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
 
@@ -55,7 +60,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           tools: composer:v2
           coverage: none
 
@@ -76,6 +81,7 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Cs Fixer
+        if: matrix.php == '8.1'
         run: ./vendor/bin/php-cs-fixer fix --verbose --dry-run --using-cache=no --stop-on-violation
 
       - name: Larastan
