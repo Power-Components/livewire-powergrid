@@ -6,7 +6,6 @@
     'tableName' => null,
 ])
 @php
-    $tableName = \Illuminate\Support\Str::kebab($tableName);
     $customConfig = [];
     if (data_get($date, 'config')) {
         foreach (data_get($date, 'config') as $key => $value) {
