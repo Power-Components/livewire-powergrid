@@ -30,8 +30,6 @@ trait HasFilter
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
 
-<<<<<<< HEAD:src/Traits/HasFilter.php
-=======
             unset($this->filters['input_text'][$table . '.' . $column]);
             unset($this->filters['input_text_options'][$table . '.' . $column]);
             unset($this->filters['number'][$table . '.' . $column]['start']);
@@ -40,7 +38,6 @@ trait HasFilter
             unset($this->filters['select'][$table . '.' . $column]);
             unset($this->filters['multi_select'][$table . '.' . $column]);
 
->>>>>>> main:src/Traits/Filter.php
             if (empty($this->filters['input_text'][$table])) {
                 unset($this->filters['input_text'][$table]);
             }
@@ -81,9 +78,9 @@ trait HasFilter
             unset($this->filters['select'][$field]);
             unset($this->filters['multi_select'][$field]);
 
-            if(isset($this->filters['date_picker'][$field])) {
+            if (isset($this->filters['date_picker'][$field])) {
                 unset($this->filters['date_picker'][$field]);
-                $this->dispatchBrowserEvent('pg:datePicker-'.$this->tableName.'-clear');
+                $this->dispatchBrowserEvent('pg:datePicker-' . $this->tableName . '-clear');
             }
         }
 
