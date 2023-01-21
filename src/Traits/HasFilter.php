@@ -69,7 +69,11 @@ trait HasFilter
             unset($this->filters['boolean'][$field]);
             unset($this->filters['select'][$field]);
             unset($this->filters['multi_select'][$field]);
-            unset($this->filters['date_picker'][$field]);
+
+            if(isset($this->filters['date_picker'][$field])) {
+                unset($this->filters['date_picker'][$field]);
+                $this->dispatchBrowserEvent('pg:datePicker-'.$this->tableName.'-clear');
+            }
         }
 
         unset($this->enabledFilters[$field]);

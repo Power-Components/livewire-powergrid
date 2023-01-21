@@ -12,7 +12,6 @@ export default (params) => ({
             },
         }
 
-        console.log(params)
         const asyncConfig = {
             valueField: params.optionValue,
             labelField: params.optionLabel,
