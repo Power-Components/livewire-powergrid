@@ -36,7 +36,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.1, 8.2 ]
+        php: [ 8.2, 8.1 ]
         laravel: [ 10.*, 9.* ]
         dependency-version: [ prefer-stable ]
         include:
@@ -62,6 +62,10 @@ jobs:
           tools: composer:v2
           coverage: xdebug
 
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
       - name: Cache composer dependencies
         uses: actions/cache@v3
         with:
@@ -74,7 +78,6 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer require openspout/openspout
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
-
       - name: Pint
         if: matrix.php == '8.1'
         run: composer test:pint
