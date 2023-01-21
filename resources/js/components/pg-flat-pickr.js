@@ -7,13 +7,25 @@ export default (params) => ({
     onlyFuture: params.onlyFuture ?? false,
     noWeekEnds: params.noWeekEnds ?? false,
     customConfig: params.customConfig ?? null,
+    input: null,
     init() {
+        window.addEventListener('pg:datePicker-' + this.tableName +'-clear' , () => {
+            this.input.clear()
+        })
+
         const lang = this.locale.locale;
 
         if (typeof lang !== 'undefined') {
             this.locale.locale = require("flatpickr/dist/l10n/"+lang+".js").default[lang];
         }
 
+        const options = this.getOptions()
+
+        if(this.$refs.rangeInput) {
+            this.input = flatpickr(this.$refs.rangeInput, options);
+        }
+    },
+    getOptions() {
         const options = {
             mode: 'range',
             defaultHour: 0,
@@ -33,21 +45,21 @@ export default (params) => ({
             ];
         }
 
+        const _this = this;
         options.onClose = function (selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
-                this.$wire.emit('pg:datePicker-' + this.tableName, {
+                _this.$wire.emit('pg:datePicker-' + _this.tableName, {
                     selectedDates: selectedDates,
-                    field: this.dataField,
-                    values: this.filterKey,
-                    label: this.label,
+                    field: _this.dataField,
+                    values: _this.filterKey,
+                    label: _this.label,
                     dateStr: dateStr,
+                    tableName: _this.tableName,
                     enableTime: options.enableTime === undefined ? false : options.enableTime
                 });
             }
         }
 
-        if(this.$refs.rangeInput) {
-            flatpickr(this.$refs.rangeInput, options);
-        }
-    },
+        return options;
+    }
 })
