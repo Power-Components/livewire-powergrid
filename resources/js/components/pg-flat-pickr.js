@@ -37,7 +37,7 @@ export default (params) => ({
 
         options.onClose = function (selectedDates, dateStr, instance) {
             if (selectedDates.length > 0) {
-                window.livewire.emit('pg:datePicker-' + _this.tableName, {
+                _this.$wire.emit('pg:datePicker-' + _this.tableName, {
                     selectedDates: selectedDates,
                     field: _this.dataField,
                     values: _this.filterKey,
