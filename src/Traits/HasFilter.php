@@ -30,6 +30,17 @@ trait HasFilter
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
 
+<<<<<<< HEAD:src/Traits/HasFilter.php
+=======
+            unset($this->filters['input_text'][$table . '.' . $column]);
+            unset($this->filters['input_text_options'][$table . '.' . $column]);
+            unset($this->filters['number'][$table . '.' . $column]['start']);
+            unset($this->filters['number'][$table . '.' . $column]['end']);
+            unset($this->filters['boolean'][$table . '.' . $column]);
+            unset($this->filters['select'][$table . '.' . $column]);
+            unset($this->filters['multi_select'][$table . '.' . $column]);
+
+>>>>>>> main:src/Traits/Filter.php
             if (empty($this->filters['input_text'][$table])) {
                 unset($this->filters['input_text'][$table]);
             }
