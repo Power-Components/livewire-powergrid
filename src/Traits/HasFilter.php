@@ -122,7 +122,7 @@ trait HasFilter
         }
     }
 
-    public function datePikerChanged(array $data): void
+    public function datePickerChanged(array $data): void
     {
         $this->resetPage();
 

@@ -541,7 +541,7 @@ class PowerGridComponent extends Component
     protected function powerGridListeners(): array
     {
         return [
-            'pg:datePicker-' . $this->tableName   => 'datePikerChanged',
+            'pg:datePicker-' . $this->tableName   => 'datePickerChanged',
             'pg:editable-' . $this->tableName     => 'inputTextChanged',
             'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
             'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',

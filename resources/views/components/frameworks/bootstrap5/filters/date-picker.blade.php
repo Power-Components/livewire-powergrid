@@ -6,8 +6,6 @@
     'tableName' => null,
 ])
 @php
-    $tableName = \Illuminate\Support\Str::kebab($tableName);
-
     unset($filter['className']);
     extract($filter);
 
