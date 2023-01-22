@@ -262,9 +262,7 @@ final class Column
     {
         $this->field = $field;
 
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
+        $this->dataField = filled($dataField) ? $dataField : $field;
 
         return $this;
     }

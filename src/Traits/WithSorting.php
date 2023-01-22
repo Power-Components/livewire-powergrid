@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Column;
 
 trait WithSorting
 {
@@ -86,7 +87,7 @@ trait WithSorting
     public function getLabelFromColumn(string $field): string
     {
         $filter = collect($this->columns)->filter(
-            fn ($column) => $column->dataField == $field
+            fn (Column|\stdClass $column) => $column->dataField == $field
         )->map(fn ($column) => (array) $column)
             ->first();
 
