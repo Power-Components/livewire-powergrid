@@ -8,9 +8,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support as Support;
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -47,9 +48,9 @@ class PowerGridComponent extends Component
 
     public string $currentTable = '';
 
-    public Eloquent\Collection|array|Eloquent\Builder $datasource;
+    public Collection|array|Builder $datasource;
 
-    public Support\Collection $withoutPaginatedData;
+    public BaseCollection $withoutPaginatedData;
 
     public array $relationSearch = [];
 
@@ -121,7 +122,7 @@ class PowerGridComponent extends Component
 
     /**
      * Apply checkbox, perPage and search view and theme
-    */
+     */
     public function setUp(): array
     {
         return [];
@@ -212,7 +213,7 @@ class PowerGridComponent extends Component
      */
     public function fillData(): mixed
     {
-        /** @var Eloquent\Builder|Support\Collection|Eloquent\Collection $datasource */
+        /** @var Builder|BaseCollection|BaseCollection|MorphToMany $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         /** @phpstan-ignore-next-line */
@@ -221,9 +222,10 @@ class PowerGridComponent extends Component
             $datasource = collect($this->datasource());
         }
 
-        $this->isCollection = is_a((object) $datasource, Support\Collection::class);
+        $this->isCollection = is_a((object) $datasource, BaseCollection::class);
 
         if ($this->isCollection) {
+            /** @var Builder|BaseCollection|BaseCollection $datasource */
             cache()->forget($this->id);
             $filters = Collection::query($this->resolveCollection($datasource))
                 ->setColumns($this->columns)
@@ -254,12 +256,12 @@ class PowerGridComponent extends Component
         /** @phpstan-ignore-next-line */
         $this->currentTable = $datasource->getModel()->getTable();
 
-        $sortField = Support\Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
+        $sortField = Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
             ? $this->sortField : $this->currentTable . '.' . $this->sortField;
 
-        /** @var Eloquent\Builder $results */
+        /** @var Builder $results */
         $results = $this->resolveModel($datasource)
-            ->where(function (Eloquent\Builder $query) {
+            ->where(function (Builder $query) {
                 Model::query($query)
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
@@ -274,7 +276,7 @@ class PowerGridComponent extends Component
 
         if ($this->multiSort) {
             foreach ($this->sortArray as $sortField => $direction) {
-                $sortField = Support\Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
+                $sortField = Str::of($sortField)->contains('.') || $this->ignoreTablePrefix ? $sortField : $this->currentTable . '.' . $sortField;
 
                 if ($this->withSortStringNumber) {
                     $results = self::applyWithSortStringNumber($results, $sortField, $direction);
@@ -300,7 +302,7 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function applyTotalColumn(Eloquent\Builder $results): void
+    private function applyTotalColumn(Builder|MorphToMany $results): void
     {
         if ($this->headerTotalColumn || $this->footerTotalColumn) {
             $this->withoutPaginatedData = $this->transform($results->get());
@@ -310,8 +312,11 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    private function applyWithSortStringNumber(Eloquent\Builder $results, string $sortField, string $multiSortDirection = null): Eloquent\Builder
-    {
+    private function applyWithSortStringNumber(
+        Builder|MorphToMany $results,
+        string $sortField,
+        string $multiSortDirection = null
+    ): Builder|MorphToMany {
         if (!$this->withSortStringNumber) {
             return $results;
         }
@@ -331,7 +336,7 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    private function applyPerPage(Eloquent\Builder $results): LengthAwarePaginator|Paginator
+    private function applyPerPage(Builder|MorphToMany $results): LengthAwarePaginator|Paginator
     {
         $perPage     = intval(data_get($this->setUp, 'footer.perPage'));
         $recordCount = strval(data_get($this->setUp, 'footer.recordCount'));
@@ -348,7 +353,7 @@ class PowerGridComponent extends Component
         return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator|Support\Collection $results): void
+    private function resolveDetailRow(Paginator|LengthAwarePaginator|BaseCollection $results): void
     {
         if (!isset($this->setUp['detail'])) {
             return;
@@ -356,7 +361,7 @@ class PowerGridComponent extends Component
 
         $collection = $results;
 
-        if (!$results instanceof Support\Collection) {
+        if (!$results instanceof BaseCollection) {
             $collection = collect($results->items());
         }
 
@@ -383,27 +388,27 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    protected function resolveCollection(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection
+    protected function resolveCollection(array|BaseCollection|Builder|null $datasource = null): BaseCollection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
-            return new Support\Collection($this->datasource());
+            return new BaseCollection($this->datasource());
         }
 
         return cache()->rememberForever($this->id, function () use ($datasource) {
             if (is_array($datasource)) {
-                return new Support\Collection($datasource);
+                return new BaseCollection($datasource);
             }
 
-            if (is_a((object) $datasource, Support\Collection::class)) {
+            if (is_a((object) $datasource, BaseCollection::class)) {
                 return $datasource;
             }
 
             /** @var array $datasource */
-            return new Support\Collection($datasource);
+            return new BaseCollection($datasource);
         });
     }
 
-    protected function transform(Support\Collection $results): Support\Collection
+    protected function transform(BaseCollection $results): BaseCollection
     {
         if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
             return $results;
@@ -441,7 +446,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    public function resolveModel(array|Support\Collection|Eloquent\Builder|null $datasource = null): Support\Collection|array|null|Eloquent\Builder
+    public function resolveModel(array|BaseCollection|Builder|null|MorphToMany $datasource = null): BaseCollection|array|null|Builder|MorphToMany
     {
         if (blank($datasource)) {
             return $this->datasource();
@@ -493,7 +498,7 @@ class PowerGridComponent extends Component
         $detailStates = (array) data_get($this->setUp, 'detail.state');
 
         if (boolval(data_get($this->setUp, 'detail.collapseOthers'))) {
-            /** @var Support\Enumerable<(int|string), (int|string)> $except */
+            /** @var \Illuminate\Support\Enumerable<(int|string), (int|string)> $except */
             $except = $id;
             collect($detailStates)->except($except)
                 ->filter(fn ($state) => $state)->keys()
@@ -513,7 +518,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Throwable
      */
-    private function applySoftDeletes(Eloquent\Builder $results): Eloquent\Builder
+    private function applySoftDeletes(Builder|MorphToMany $results): Builder|MorphToMany
     {
         throw_if(
             $this->softDeletes && !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true),
@@ -554,7 +559,7 @@ class PowerGridComponent extends Component
     public function getHasColumnFiltersProperty(): bool
     {
         return collect($this->columns)
-            ->filter(fn ($column) => filled($column->filters))->count() > 0;
+                ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
     /**
