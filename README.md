@@ -132,7 +132,7 @@ Please read the [Contributing Guide](https://github.com/Power-Components/livewir
 
 ## 5. Credits
 
-Created by: [Luan Freitas](https://twitter.com/luanfreitasdev)
+Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
 
 - [Contributors](../../contributors)
 - Logo & artwork by [Caneco](https://twitter.com/caneco)
