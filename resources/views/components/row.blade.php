@@ -5,8 +5,12 @@
         $content = $row->{$column->field};
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $field   = $column->dataField != '' ? $column->dataField : $column->field;
+
+        $dynamicDetailRowRowAttributes = $this->getDynamicDetailRowAttributes($column);
+
     @endphp
-    <td class="{{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
+    <td class="item {{ $theme->table->tdBodyClass . ' '.$column->bodyClass ?? '' }}"
+        {{ $dynamicDetailRowRowAttributes }}
         style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle . ' '.$column->bodyStyle ?? '' }}"
     >
         @if(data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))

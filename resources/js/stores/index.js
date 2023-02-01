@@ -18,6 +18,26 @@ document.addEventListener('alpine:init', () => {
         },
     });
 
+    window.Alpine.store('pgResponsiveColumns', {
+        columns: [],
+        add(value, title, tableName, component) {
+            if(typeof this.columns[tableName] == 'undefined') {
+                this.columns[tableName] = []
+            }
+
+            if(!this.columns[tableName].includes(value)) {
+                this.columns[tableName].push(value)
+
+                const livewire = window.livewire.find(component)
+
+                livewire.call('dynamicDetailRow')
+            }
+        },
+        get(tableName) {
+            return this.columns[tableName]
+        },
+    })
+
     window.Alpine.store('pgBulkActions', {
         selected: [],
         init() {
@@ -75,4 +95,5 @@ document.addEventListener('alpine:init', () => {
 
     window.editablePending = window.Alpine.store('editablePending')
     window.pgBulkActions   = window.Alpine.store('pgBulkActions')
+    window.pgResponsiveColumns = window.Alpine.store('pgResponsiveColumns')
 })

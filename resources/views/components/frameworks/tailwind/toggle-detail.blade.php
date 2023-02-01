@@ -1,4 +1,4 @@
-<td class="{{ $theme->tdBodyClass }}"
+<td class="{{ $theme->tdBodyClass }} !pl-2"
     style="{{ $theme->tdBodyStyle }}">
     <div class="cursor-pointer" x-on:click.prevent="$wire.toggleDetail('{{ $row->{$primaryKey} }}')">
         @includeIf(data_get($setUp, 'detail.viewIcon'))

@@ -14,4 +14,5 @@ document.addEventListener('alpine:init', () => {
     window.Alpine.plugin(pgCopyToClipboard)
 })
 
+import './responsive'
 import './select'

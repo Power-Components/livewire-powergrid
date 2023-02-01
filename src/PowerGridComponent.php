@@ -19,6 +19,7 @@ use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
     WithCheckbox,
+    WithDynamicDetailRow,
     WithDynamicFilters,
     WithSorting};
 use Throwable;
@@ -33,6 +34,7 @@ class PowerGridComponent extends Component
     use PersistData;
     use Listeners;
     use WithDynamicFilters;
+    use WithDynamicDetailRow;
 
     public array $headers = [];
 
@@ -355,7 +357,7 @@ class PowerGridComponent extends Component
 
     private function resolveDetailRow(Paginator|LengthAwarePaginator|BaseCollection $results): void
     {
-        if (!isset($this->setUp['detail'])) {
+        if (!isset($this->setUp['detail']) && !$this->responsiveMode) {
             return;
         }
 

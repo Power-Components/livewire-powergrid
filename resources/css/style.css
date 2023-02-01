@@ -13,6 +13,14 @@ table {
     font-size: 0.85rem;
 }
 
+.fix {
+    @apply sticky
+}
+
+.fix:last-child {
+    @apply right-0 !w-[120px]
+}
+
 .form-control:disabled, .form-control[readonly] {
     background-color: white !important;
     opacity: 1;

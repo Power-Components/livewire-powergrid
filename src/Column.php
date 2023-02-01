@@ -77,6 +77,8 @@ final class Column
 
     public bool $index = false;
 
+    public string $responsive = '';
+
     /**
      * Adds a new Column
      *
@@ -353,6 +355,17 @@ final class Column
             'enabled' => $hasPermission,
             'label'   => $label,
         ];
+
+        return $this;
+    }
+
+    /**
+     * Adds responsive
+     *
+     */
+    public function responsive(array $values): Column
+    {
+        $this->responsive = strval(json_encode($values));
 
         return $this;
     }

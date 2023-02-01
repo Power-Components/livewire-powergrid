@@ -1,6 +1,10 @@
 @inject('actionRulesClass','PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
 
-<x-livewire-powergrid::table-base :theme="$theme->table" :ready-to-load="$readyToLoad">
+<x-livewire-powergrid::table-base
+    :screen-width="$screenWidth"
+    :theme="$theme->table"
+    :table-name="$tableName"
+    :ready-to-load="$readyToLoad">
     <x-slot:header>
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
             @if(data_get($setUp, 'detail.showCollapseIcon'))
@@ -28,7 +32,7 @@
             @endforeach
 
             @if(isset($actions) && count($actions))
-                <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
+                <th class="pg-action {{ $theme->table->thActionClass . ' '. $theme->table->thClass .' '. $column->headerClass }}" scope="col"
                     style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
                     wire:key="{{ md5('actions') }}">
                     {{ trans('livewire-powergrid::datatable.labels.action') }}

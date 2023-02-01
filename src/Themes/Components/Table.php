@@ -8,10 +8,6 @@ class Table
 
     public string $divStyle = '';
 
-    public string $tableClass = '';
-
-    public string $tableStyle = '';
-
     public string $theadClass = '';
 
     public string $theadStyle = '';
@@ -52,15 +48,18 @@ class Table
 
     public string $tdBodyEmptyStyle = '';
 
-    /**
-     * Table constructor.
-     * @param string $tableClass
-     * @param string $tableStyle
-     */
-    public function __construct(string $tableClass, string $tableStyle = '')
-    {
-        $this->tableClass = $tableClass;
-        $this->tableStyle = $tableStyle;
+    public string $tdBodyActionClass = '';
+
+    public string $tdBodyActionStyle = '';
+
+    public string $thActionClass = '';
+
+    public string $thActionStyle = '';
+
+    public function __construct(
+        public string $tableClass,
+        public string $tableStyle = ''
+    ) {
     }
 
     public function div(string $attrClass, string $attrStyle = ''): Table
@@ -111,6 +110,14 @@ class Table
         return $this;
     }
 
+    public function thAction(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->thActionClass = $attrClass;
+        $this->thActionStyle = $attrStyle;
+
+        return $this;
+    }
+
     public function tbody(string $attrClass, string $attrStyle = ''): Table
     {
         $this->tbodyClass = $attrClass;
@@ -147,6 +154,14 @@ class Table
     {
         $this->tdBodyEmptyClass = $attrClass;
         $this->tdBodyEmptyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdBodyAction(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->tdBodyActionClass = $attrClass;
+        $this->tdBodyActionStyle = $attrStyle;
 
         return $this;
     }

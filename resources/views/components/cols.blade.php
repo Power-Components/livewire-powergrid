@@ -10,15 +10,13 @@
     'dataField' => null,
 ])
 @php
-    if (filled($column->dataField)) {
-        $field = $column->dataField;
-    } else {
-        $field = $column->field;
-    }
+    $field = $column->dataField != '' ? $column->dataField : $column->field;
+    $dynamicDetailRowRowAttributes = $this->getDynamicDetailRowAttributes($column);
 @endphp
 <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
+    {{ $dynamicDetailRowRowAttributes }}
     wire:key="{{ md5($column->field) }}"
-    style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
+    style="{{ $column->hidden === true ? 'display:none': '' }}; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
     <div class="text-md flex gap-2 {{ $theme->cols->divClass }}"
         @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable)

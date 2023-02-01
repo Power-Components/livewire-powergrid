@@ -5,9 +5,17 @@
     'row' => null,
     'tableName' => null,
 ])
+@php
+   $tdClasses = Arr::toCssClasses([
+       $theme->table->tdBodyClass, $theme->table->tdBodyActionClass, 'pg-actions'
+   ]);
+   $tdStyles = Arr::toCssClasses([
+       $theme->table->tdBodyStyle, $theme->table->tdBodyActionStyle
+   ])
+@endphp
 <div>
     @if(isset($actions) && count($actions) && $row !== '')
-            <td class="pg-actions {{ $theme->table->tdBodyClass }}"
+            <td class="pg-action {{ $tdClasses }}"
                 style="{{ $theme->table->tdBodyStyle }}">
                 @foreach($actions as $key => $action)
                     @php
