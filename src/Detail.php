@@ -18,6 +18,8 @@ final class Detail
 
     public bool $collapseOthers = false;
 
+    public bool $show = true;
+
     public static function make(): self
     {
         return new Detail();
@@ -56,6 +58,13 @@ final class Detail
     public function collapseOthers(): Detail
     {
         $this->collapseOthers = true;
+
+        return $this;
+    }
+
+    public function hidden(): Detail
+    {
+        $this->show = false;
 
         return $this;
     }

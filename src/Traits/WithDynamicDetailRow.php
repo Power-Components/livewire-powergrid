@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Exception;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -31,17 +32,23 @@ trait WithDynamicDetailRow
             });
     }
 
+    /**
+     * @throws Exception
+     */
     public function dynamicDetailRow(): void
     {
-        $this->responsiveMode = [
-            'name'             => 'detail',
-            'view'             => 'livewire-powergrid::components.detail-row',
-            'options'          => ['hiddenColumns' => $this->hiddenColumns],
-            'state'            => [],
-            'showCollapseIcon' => true,
-            'viewIcon'         => '',
-            'collapseOthers'   => false,
-        ];
+        if (!isset($this->setUp['detail'])) {
+            throw new \Exception('You need to add Detail in the setUp method');
+        }
+
+        if (blank($this->setUp['detail']['view'])) {
+            data_set($this->setUp, 'detail.view', 'livewire-powergrid::components.detail-row');
+        }
+
+        $this->responsiveMode = array_merge($this->setUp['detail'], [
+            'hiddenColumns' => $this->hiddenColumns,
+            'show'          => true,
+        ]);
 
         data_set($this->setUp, 'detail', $this->responsiveMode);
 

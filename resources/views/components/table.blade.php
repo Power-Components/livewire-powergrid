@@ -7,7 +7,7 @@
     :ready-to-load="$readyToLoad">
     <x-slot:header>
         <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
-            @if(data_get($setUp, 'detail.showCollapseIcon'))
+            @if(data_get($setUp, 'detail.showCollapseIcon') && data_get($setUp, 'detail.show'))
                 <th scope="col" class="{{ $theme->table->thClass }}"
                     style="{{ $theme->table->thStyle }}"
                     wire:key="{{ md5('showCollapseIcon') }}">
@@ -100,7 +100,7 @@
                     }
                 @endphp
 
-                @if(isset($setUp['detail']))
+                @if(isset($setUp['detail']) && data_get($setUp, 'detail.show'))
                 <tbody class="{{ $class }}"
                        x-data="{ detailState: @entangle('setUp.detail.state.'.$row->{$primaryKey}) }"
                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
@@ -116,10 +116,12 @@
                             $ruleDetailView   = data_get($ruleRows, 'detailView');
                         @endphp
 
-                        @includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot().'.toggle-detail', [
-                            'theme' => $theme->table,
-                            'view' => data_get($setUp, 'detail.viewIcon') ?? null
-                        ])
+                        @includeWhen(data_get($setUp, 'detail.showCollapseIcon') && data_get($setUp, 'detail.show'),
+                            powerGridThemeRoot().'.toggle-detail', [
+                                'theme' => $theme->table,
+                                'view' => data_get($setUp, 'detail.viewIcon') ?? null
+                            ]
+                        )
 
                         @if($checkbox)
                             @php
