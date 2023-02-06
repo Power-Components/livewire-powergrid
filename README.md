@@ -139,6 +139,11 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev)
 
 <br/>
 
+<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated, associated, endorsed by, or in any way officially connected with the Laravel Livewire - copyright by Caleb Porzio.</sup>
+
+<br/>
+
 ## 6. Thanks  💓
 
 - [JetBrains PhpStorm](https://www.jetbrains.com/phpstorm/) ([@phpstorm](https://twitter.com/phpstorm)) for sponsoring open-source development.
+

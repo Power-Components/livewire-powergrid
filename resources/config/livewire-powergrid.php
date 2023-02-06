@@ -11,7 +11,7 @@ return [
     | Configure here the theme of your choice.
     */
 
-    'theme'         => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+    'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
     //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
     /*
@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'plugins'       => [
+    'plugins' => [
         /*
          * https://github.com/snapappointments/bootstrap-select
          */
@@ -34,7 +34,7 @@ return [
         /*
          * https://flatpickr.js.org
          */
-        'flatpickr'        => [
+        'flatpickr' => [
             'js'      => 'https://cdn.jsdelivr.net/npm/flatpickr',
             'css'     => 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
             'locales' => [
@@ -60,7 +60,7 @@ return [
     |
     */
 
-    'filter'        => 'inline',
+    'filter' => 'inline',
 
     /*
     |--------------------------------------------------------------------------
@@ -72,7 +72,7 @@ return [
     |
     */
 
-    'cached_data'   => true,
+    'cached_data' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -83,7 +83,7 @@ return [
     |
     */
 
-    'alpinejs_cdn'  => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
+    'alpinejs_cdn' => 'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
 
     /*
     |--------------------------------------------------------------------------
