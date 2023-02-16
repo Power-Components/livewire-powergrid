@@ -30,6 +30,11 @@ PowerGrid creates modern, powerful and easy to customize Datatables based on Lar
 
 ➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
+<br/>
+
+<p>
+    <img src="https://livewire-powergrid.com/_media/screenshot.png" alt="PowerGrid Screenshot">
+</p>
 
 <br/>
 
