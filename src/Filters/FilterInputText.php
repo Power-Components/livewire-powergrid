@@ -99,14 +99,14 @@ class FilterInputText implements FilterBaseInterface
         $selected = $values['selected'];
 
         return match ($selected) {
-            'is'           => $builder->where($field, '=', $value),
-            'is_not'       => $builder->where($field, '!=', $value),
-            'starts_with'  => $builder->filter(function ($row) use ($field, $value) {
+            'is'          => $builder->where($field, '=', $value),
+            'is_not'      => $builder->where($field, '!=', $value),
+            'starts_with' => $builder->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return Str::startsWith(Str::lower($row->{$field}), Str::lower($value));
             }),
-            'ends_with'    => $builder->filter(function ($row) use ($field, $value) {
+            'ends_with' => $builder->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return Str::endsWith(Str::lower($row->{$field}), Str::lower($value));
@@ -116,7 +116,7 @@ class FilterInputText implements FilterBaseInterface
 
                 return !Str::Contains(Str::lower($row->{$field}), Str::lower($value));
             }),
-            'is_empty'     => $builder->filter(function ($row) use ($field) {
+            'is_empty' => $builder->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
                 return $row->{$field} == '' || is_null($row->{$field});
@@ -126,8 +126,8 @@ class FilterInputText implements FilterBaseInterface
 
                 return $row->{$field} !== '' && $row->{$field} !== null;
             }),
-            'is_null'      => $builder->whereNull($field),
-            'is_not_null'  => $builder->filter(function ($row) use ($field) {
+            'is_null'     => $builder->whereNull($field),
+            'is_not_null' => $builder->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
                 return $row->{$field} !== '' && !is_null($row->{$field});
@@ -138,7 +138,7 @@ class FilterInputText implements FilterBaseInterface
 
                 return $row->{$field} != '' || is_null($row->{$field});
             }),
-            default        => $builder->filter(function ($row) use ($field, $value) {
+            default => $builder->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
                 return false !== stristr($row->{$field}, strtolower($value));

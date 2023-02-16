@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'فیلتر',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'اقدام ها',
         'results_per_page' => 'آیتم در صفحه',
         'clear_filter'     => 'بدون فیلتر',
@@ -13,26 +13,26 @@ return [
         'all'              => 'همه',
         'selected'         => 'انتخاب شد',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'جستجو...',
         'select' => 'انتخاب یک بازه زمانی',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'نمایش',
         'to'      => 'تا',
         'of'      => 'از',
         'results' => 'نتایج',
         'all'     => 'همه',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'انتخاب',
         'all'    => 'همه',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'انتخاب',
         'all'    => 'همه',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'همه',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_empty'     => 'is_empty',
         'is_not_empty' => 'is_not_empty',
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'لطفا صبر کنید!',
         'completed' => 'صادرات به پایان رسید! فایل های شما آماده بارگیری هستند',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort'         => [
+    'multi_sort' => [
         'message' => 'Multiple sort is active',
     ],
 ];

@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Filtrer',
         'clear_all_filters' => 'Enlever tous les filtres',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Actions',
         'results_per_page' => 'Résultats par page',
         'clear_filter'     => 'Enlever les Filtres',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Tous',
         'selected'         => 'Sélectionné',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Recherche...',
         'select' => 'Sélectionner une période',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Résultats',
         'to'      => 'à',
         'of'      => 'sur',
         'results' => '',
         'all'     => 'Tous',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Sélectionner',
         'all'    => 'Tous',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Sélectionner',
         'all'    => 'Tous',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'Tous',
     ],
     'input_text_options' => [
@@ -50,18 +50,18 @@ return [
         'is_not_blank' => 'N\'est pas vide',
 
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Veuillez patienter !',
         'completed' => 'Exportation terminée ! Vos fichiers sont téléchargés',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Afficher toutes les lignes, même celles supprimées',
         'message_only_trashed' => 'Afficher seulement les lignes supprimées',
         'without_trashed'      => 'Sans les lignes supprimées',
         'with_trashed'         => 'Avec les lignes supprimées',
         'only_trashed'         => 'Uniquement les lignes supprimées',
     ],
-    'multi_sort'         => [
+    'multi_sort' => [
         'message' => 'Multiple sort is active',
     ],
 ];
