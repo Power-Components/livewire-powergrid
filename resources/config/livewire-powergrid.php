@@ -38,7 +38,7 @@ return [
             ],
         ],
 
-        'multiselect' => [
+        'select' => [
             'default' => 'tom',
 
             /*
