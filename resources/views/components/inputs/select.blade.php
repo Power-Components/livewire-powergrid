@@ -31,11 +31,12 @@
         'framework' => $framework[config('livewire-powergrid.plugins.select.default')]
     ];
 
-    if (\Illuminate\Support\Arr::has($filter, ['url', 'method', 'parameters'])) {
+    if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
         $params['asyncData'] = [
              'url' => data_get($filter, 'url'),
              'method' => data_get($filter, 'method'),
              'parameters' => data_get($filter, 'parameters'),
+             'headers' => data_get($filter, 'headers'),
         ];
     }
 
