@@ -19,8 +19,6 @@ class FilterMultiSelectAsync implements FilterBaseInterface
 
     public array $parameters = [];
 
-    public array $headers = [];
-
     public function url(string $url): FilterMultiSelectAsync
     {
         $this->url = $url;
