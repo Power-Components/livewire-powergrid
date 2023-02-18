@@ -19,7 +19,7 @@ export default (params) => ({
             load: async function (query, callback) {
 
                 function makeRequest (asyncData, query) {
-                    const { method, credentials, url, parameters } = asyncData
+                    const { method, url } = asyncData
 
                     const request = new Request(url, {
                         method,
@@ -27,7 +27,6 @@ export default (params) => ({
                             search: query,
                             ...parameters
                         }) : undefined,
-                        credentials
                     })
 
                     request.headers.set('Content-Type', 'application/json')

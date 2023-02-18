@@ -8,7 +8,7 @@
 ])
 
 @php
-    $framework  = config('livewire-powergrid.plugins.multiselect');
+    $framework  = config('livewire-powergrid.plugins.select');
     $collection = collect();
 
     if (filled(data_get($filter, 'dataSource'))) {
@@ -28,14 +28,15 @@
         'optionValue' => data_get($filter, 'optionValue'),
         'optionLabel' => data_get($filter, 'optionLabel'),
         'initialValues' => $initialValues,
-        'framework' => $framework[config('livewire-powergrid.plugins.multiselect.default')]
+        'framework' => $framework[config('livewire-powergrid.plugins.select.default')]
     ];
 
-    if (str(data_get($filter, 'className'))->contains('FilterMultiSelectAsync')) {
+    if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
         $params['asyncData'] = [
              'url' => data_get($filter, 'url'),
              'method' => data_get($filter, 'method'),
              'parameters' => data_get($filter, 'parameters'),
+             'headers' => data_get($filter, 'headers'),
         ];
     }
 
