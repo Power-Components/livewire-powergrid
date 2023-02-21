@@ -26,7 +26,7 @@ class Tailwind extends ThemeBase
     public function table(): Table
     {
         return Theme::table('rounded-lg min-w-full border border-pg-primary-200 dark:bg-pg-primary-600 dark:border-pg-primary-500')
-            ->div('my-3 overflow-x-auto bg-white shadow-lg rounded-lg overflow-y-auto relative')
+            ->div('my-3 bg-white shadow-lg rounded-lg relative')
             ->thead('shadow-sm bg-pg-primary-100 dark:bg-pg-primary-800 border border-pg-primary-200 dark:border-pg-primary-500')
             ->tr('')
             ->trFilters('bg-white shadow-sm dark:bg-pg-primary-700')

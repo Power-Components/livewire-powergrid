@@ -20,7 +20,8 @@
                 @endif
             @endif
 
-            <div class="{{ $theme->table->divClass }}" style="{{ $theme->table->divStyle }}">
+            <div @class(['overflow-auto' => $readyToLoad, 'overflow-hidden' => !$readyToLoad, $theme->table->divClass])
+                 style="{{ $theme->table->divStyle }}">
                 @include($table)
             </div>
 
