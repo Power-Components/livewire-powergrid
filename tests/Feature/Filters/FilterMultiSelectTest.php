@@ -9,7 +9,16 @@ use PowerComponents\LivewirePowerGrid\Tests\DishesFiltersTable;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
-    livewire($component)
+    $multiSelect = Filter::multiSelect('category_name', 'category_id')
+        ->dataSource(Category::all())
+        ->optionValue('id')
+        ->optionLabel('name');
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
         ->set('filters', [
             'multi_select' => [
                 'category_id' => [

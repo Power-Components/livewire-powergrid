@@ -14,6 +14,9 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
             Filter::number('price')
                 ->thousands('.')
                 ->decimal(','),
+            Filter::inputText('name')->operators(),
+            Filter::number('price')->thousands('.')->decimal(','),
+            Filter::boolean('in_stock'),
         ],
     ])
         ->call($params->theme);
@@ -85,6 +88,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         filterNumber('price', '80,00', '100', '.', ','),
         filterBoolean('in_stock', 'true')
     );
+
     expect($component->filters)
         ->toMatchArray($filters);
 

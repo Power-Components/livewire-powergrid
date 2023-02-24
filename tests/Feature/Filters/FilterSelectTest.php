@@ -24,6 +24,9 @@ it('property displays the results and options', function (string $component, obj
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('category_id')->operators(),
+        ])
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
@@ -34,6 +37,9 @@ it('properly filter with category_id', function (string $component, object $para
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('category_id')->operators(),
+        ])
         ->set('filters', filterSelect('category_id', 3))
         ->assertSee('Empadão de Palmito')
         ->assertSee('Empadão de Alcachofra')
@@ -45,6 +51,9 @@ it('properly filter with another category_id', function (string $component, obje
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('serving_at')->operators(),
+        ])
         ->set('filters', filterSelect('serving_at', 'table'))
             ->assertSee('Pastel de Nata')
             ->assertDontSee('Peixada da chef Nábia')

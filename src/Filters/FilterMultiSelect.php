@@ -3,13 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Filters\Builders\WithMultiSelectBuilder;
 
-class FilterMultiSelect implements FilterBaseInterface
+class FilterMultiSelect extends FilterBase
 {
-    use WithFilterBase;
-    use WithMultiSelectBuilder;
-
     public array|Collection $dataSource;
 
     public string $optionValue = '';

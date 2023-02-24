@@ -31,8 +31,11 @@ it('properly filters by "between date"', function (string $component, object $pa
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-    ->set('filters', filterInputDate('2021-03-03', '2021-03-01'))
-    ->assertSee('No records found');
+        ->set('testFilters', [
+            Filter::datepicker('produced_at_formatted', 'produced_at'),
+        ])
+        ->set('filters', filterInputDate('2021-03-03', '2021-03-01'))
+        ->assertSee('No records found');
 })->group('filters', 'filterDatePicker')->with('themes');
 
 function filterInputDate(string $startDate, string $endDate): array

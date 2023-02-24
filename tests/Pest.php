@@ -19,8 +19,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
 
 uses(TestCase::class)->in(__DIR__);
 
-Pest\Plugin::uses(\PowerComponents\LivewirePowerGrid\Tests\PowergridPlugin::class);
-
 function getLaravelDir(): string
 {
     return __DIR__ . '/../vendor/orchestra/testbench-core/laravel/';

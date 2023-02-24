@@ -2,13 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-
-class FilterDynamic implements FilterBaseInterface
+class FilterDynamic extends FilterBase
 {
-    use WithFilterBase;
-
     public string $filterType;
 
     public string $component = '';
@@ -43,14 +38,5 @@ class FilterDynamic implements FilterBaseInterface
         $this->baseClass = $value;
 
         return $this;
-    }
-
-    public static function builder(Builder $query, string $field, int|array|string|null $values): void
-    {
-    }
-
-    public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
-    {
-        return $builder;
     }
 }

@@ -6,7 +6,7 @@ use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($params->theme)
         ->assertSee('Em Estoque')
@@ -48,7 +48,7 @@ it('properly filters by bool true', function (string $component, object $params)
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($theme)
         ->assertSee('In Stock')
@@ -85,7 +85,7 @@ it('properly filters by bool true - using collection & array table', function (s
 
 it('properly filters by bool true - using collection', function (string $component, string $theme) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($theme)
         ->assertSee('In Stock')
@@ -122,7 +122,7 @@ it('properly filters by bool true - using collection', function (string $compone
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($params->theme);
 
@@ -161,7 +161,7 @@ it('properly filters by bool false', function (string $component, object $params
 
 it('properly filters by bool false - using collection & array', function (string $component, string $theme) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($theme)
         ->assertSee('In Stock')
@@ -197,7 +197,7 @@ it('properly filters by bool false - using collection & array', function (string
 
 it('properly filters by bool "all"', function (string $component, object $params) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->trueLabel('sim')->falseLabel('não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
         ->call($params->theme);
 

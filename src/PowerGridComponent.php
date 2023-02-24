@@ -227,10 +227,8 @@ class PowerGridComponent extends Component
         if ($this->isCollection) {
             /** @var Builder|BaseCollection|BaseCollection $datasource */
             cache()->forget($this->id);
-            $filters = Collection::query($this->resolveCollection($datasource))
-                ->setColumns($this->columns)
-                ->setSearch($this->search)
-                ->setFilters($this->filters)
+
+            $filters = Collection::make($this->resolveCollection($datasource), $this)
                 ->filterContains()
                 ->filter();
 
@@ -261,16 +259,11 @@ class PowerGridComponent extends Component
 
         /** @var Builder $results */
         $results = $this->resolveModel($datasource)
-            ->where(function (Builder $query) {
-                Model::query($query)
-                    ->setColumns($this->columns)
-                    ->setSearch($this->search)
-                    ->setSearchMorphs($this->searchMorphs)
-                    ->setRelationSearch($this->relationSearch)
-                    ->setFilters($this->filters)
-                    ->filterContains()
-                    ->filter();
-            });
+            ->where(
+                fn (Builder $query) => Model::make($query, $this)
+                ->filterContains()
+                ->filter()
+            );
 
         $results = self::applySoftDeletes($results);
 
