@@ -60,7 +60,7 @@ it('property displays the results and options - custom builder', function (strin
         ->set('filters', filterSelect('category_id', 1))
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
-})->group('filters', 'filterSelect')->with('themes')->only();
+})->group('filters', 'filterSelect')->with('themes');
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
