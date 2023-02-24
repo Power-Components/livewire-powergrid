@@ -46,7 +46,7 @@ class Model
                         'select'       => (new Select($filter))->builder($query, $field, $value),
                         'boolean'      => (new Boolean($filter))->builder($query, $field, $value),
                         'number'       => (new Number($filter))->builder($query, $field, $value),
-                        'input_text'   => (new InputText())->builder($query, $field, [
+                        'input_text'   => (new InputText($filter))->builder($query, $field, [
                             'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                             'value'        => $value,
                             'searchMorphs' => $this->powerGridComponent->searchMorphs,
