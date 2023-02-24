@@ -36,7 +36,6 @@ class Model
 
         foreach ($this->powerGridComponent->filters as $filterType => $column) {
             $this->query->where(function ($query) use ($filterType, $column, $filters) {
-
                 $filter = function ($query, $filters, $filterType, $field, $value) {
                     $filter = $filters->filter(fn ($filter) => $filter->field === $field)
                         ->first();
@@ -60,7 +59,6 @@ class Model
                     is_array($column[key($column)]) &&
                     is_string(key($column[key($column)])) &&
                     count($column[key($column)]) === 1) {
-
                     $field = key(Arr::dot($column));
 
                     $value = Arr::dot($column)[$field];
