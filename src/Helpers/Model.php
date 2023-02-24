@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
-use Illuminate\Support\Str;
+use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\DatePicker,
     Builders\InputText,
@@ -34,14 +34,14 @@ class Model
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $key => $type) {
-            $this->query->where(function ($query) use ($key, $type, $filters) {
-                foreach ($type as $field => $value) {
-                    $filter = collect($filters)
-                        ->filter(fn ($filter) => $filter->field === $field)
+        foreach ($this->powerGridComponent->filters as $filterType => $column) {
+            $this->query->where(function ($query) use ($filterType, $column, $filters) {
+
+                $filter = function ($query, $filters, $filterType, $field, $value) {
+                    $filter = $filters->filter(fn ($filter) => $filter->field === $field)
                         ->first();
 
-                    match ($key) {
+                    match ($filterType) {
                         'date_picker'  => (new DatePicker($filter))->builder($query, $field, $value),
                         'multi_select' => (new MultiSelect($filter))->builder($query, $field, $value),
                         'select'       => (new Select($filter))->builder($query, $field, $value),
@@ -54,6 +54,22 @@ class Model
                         ]),
                         default => null
                     };
+                };
+
+                if (isset($column[key($column)]) &&
+                    is_array($column[key($column)]) &&
+                    is_string(key($column[key($column)])) &&
+                    count($column[key($column)]) === 1) {
+
+                    $field = key(Arr::dot($column));
+
+                    $value = Arr::dot($column)[$field];
+
+                    $filter($query, $filters, $filterType, $field, $value);
+                } else {
+                    foreach ($column as $field => $value) {
+                        $filter($query, $filters, $filterType, $field, $value);
+                    }
                 }
             });
         }

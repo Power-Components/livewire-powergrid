@@ -2,9 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Support\{Collection, Str};
+use Illuminate\Support\Collection;
 
-class FilterEnumSelect extends FilterSelect
+class FilterEnumSelect extends FilterBase
 {
     public array|Collection $dataSource;
 
@@ -43,14 +43,14 @@ class FilterEnumSelect extends FilterSelect
         return $this;
     }
 
-    public function optionValue(string $value): FilterSelect
+    public function optionValue(string $value): FilterEnumSelect
     {
         $this->optionValue = $value;
 
         return $this;
     }
 
-    public function optionLabel(string $value): FilterSelect
+    public function optionLabel(string $value): FilterEnumSelect
     {
         $this->optionLabel = $value;
 

@@ -196,7 +196,9 @@ it('properly filters by "min & max" formatted', function (string $component, obj
     livewire($component)
         ->call($params->theme)
         ->set('testFilters', [
-            Filter::number('price'),
+            Filter::number('price', 'price')
+                ->thousands('.')
+                ->decimal('.'),
         ])
         ->set('filters', filterNumber('price', '1,50', '20,51', '.', ','))
         ->assertSee('Pastel de Nata')

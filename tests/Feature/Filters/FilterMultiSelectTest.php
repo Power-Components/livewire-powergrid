@@ -35,6 +35,36 @@ it('properly filter with category_id - Carnes selected', function (string $compo
         ]);
 })->group('filters')->with('multi_select');
 
+it('properly filter with category_id - custom builder', function (string $component) {
+    $multiSelect = Filter::multiSelect('category_name', 'category_id')
+        ->dataSource(Category::all())
+        ->optionValue('id')
+        ->optionLabel('name')
+        ->query(function ($builder, $field, $values) {
+            expect($field)
+                ->toBe('category_id')
+                ->and($values)->toBe([0 => 1])
+                ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+            return $builder->where('dishes.id', 1);
+        });
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'category_id' => [
+                    1,
+                ],
+            ],
+        ])
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Francesinha vegana');
+})->group('filters')->with('multi_select');
+
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
         ->dataSource(Category::all())
