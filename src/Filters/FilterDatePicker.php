@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
+/** @codeCoverageIgnore */
 class FilterDatePicker extends FilterBase
 {
     public array $params = [];
