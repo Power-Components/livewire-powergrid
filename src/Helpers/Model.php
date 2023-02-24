@@ -10,12 +10,7 @@ use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\InputText,
     Builders\MultiSelect,
     Builders\Number,
-    Builders\Select,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect};
+    Builders\Select};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 class Model

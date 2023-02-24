@@ -46,6 +46,31 @@ it('properly filter the produced_at field between another two dates', function (
         ->assertDontSee('Bife à Rolê');
 })->group('filters')->with('themes');
 
+it('properly filter the produced_at field between another two dates - custom builder', function (string $component, object $params) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::datepicker('produced_at')
+                ->query(function ($builder, $field, $values) {
+                    expect($field)
+                        ->toBe('produced_at')
+                        ->and($values)->toBe([
+                            '2021-11-11 00:00:00',
+                            '2021-12-31 00:00:00',
+                        ])
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                }),
+        ],
+    ])
+        ->call($params->theme)
+        ->set('filters', filterDateTime('produced_at', ['2021-11-11 00:00:00', '2021-12-31 00:00:00']))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Peixada da chef Nábia')
+        ->assertDontSee('Carne Louca')
+        ->assertDontSee('Bife à Rolê');
+})->group('filters')->with('themes');
+
 function filterDateTime(string $dataField, array $value): array
 {
     return [

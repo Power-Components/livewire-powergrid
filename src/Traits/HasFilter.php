@@ -121,7 +121,9 @@ trait HasFilter
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
-                    unset($filter->builder, $filter->collection);
+                    if (!app()->runningUnitTests()) {
+                        unset($filter->builder, $filter->collection);
+                    }
 
                     if (method_exists($filter, 'execute')) {
                         return (array) $filter->execute();

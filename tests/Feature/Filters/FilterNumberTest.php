@@ -24,6 +24,35 @@ it('properly renders the number filter', function (string $component, object $pa
         ->assertDontSee('Pastel de Nata');
 })->group('filters', 'filterNumber')->with('themes');
 
+it('properly renders the number filter - custom builder', function (string $component, object $params) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::number($params->field)
+                ->query(function ($builder, $field, $values) use ($params) {
+                    expect($field)
+                        ->toBe($params->field)
+                        ->and($values)->toBe([
+                            'start'     => '2',
+                            'end'       => null,
+                            'thousands' => '',
+                            'decimal'   => '',
+                        ])
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 2);
+                })
+                ->thousands('.')
+                ->decimal(','),
+        ],
+    ])
+        ->call($params->theme)
+        ->set('filters', filterNumber($params->field, '2', null))
+        ->assertSee('Peixada da chef Nábia')
+        ->assertDontSee('Francesinha')
+        ->assertDontSee('борщ')
+        ->assertDontSee('Pastel de Nata');
+})->group('filters', 'filterNumber')->with('themes');
+
 it('properly filters by "min"', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
