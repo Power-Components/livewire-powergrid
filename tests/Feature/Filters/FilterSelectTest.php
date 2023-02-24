@@ -21,6 +21,47 @@ it('property displays the results and options', function (string $component, obj
         ]);
 })->group('filters', 'filterSelect')->with('themes');
 
+it('property displays the results and options - custom builder', function (string $component, object $params) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::select('category_name', 'category_id')
+                ->query(function ($builder, $field, $values) {
+                    expect($field)
+                        ->toBe('category_id')
+                        ->and($values)->toBe('1')
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                })
+                ->dataSource(Category::all())
+                ->optionValue('category_id')
+                ->optionLabel('category_name'),
+        ],
+    ])
+        ->call($params->theme)
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Peixada da chef Nábia');
+
+    $component->set('testFilters', [
+        Filter::select('category_name', 'category_id')
+            ->query(function ($builder, $field, $values) {
+                expect($field)
+                    ->toBe('category_id')
+                    ->and($values)->toBe('1')
+                    ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                return $builder->where('dishes.id', 2);
+            })
+            ->dataSource(Category::all())
+            ->optionValue('category_id')
+            ->optionLabel('category_name'),
+    ])
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertDontSee('Pastel de Nata')
+        ->assertSee('Peixada da chef Nábia');
+})->group('filters', 'filterSelect')->with('themes')->only();
+
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)

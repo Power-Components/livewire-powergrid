@@ -10,7 +10,8 @@
     extract($filter);
     $filterClasses = Arr::toCssClasses([
         $theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid'
-    ])
+    ]);
+
 @endphp
 <div @class(['p-2' => !$inline,$theme->baseClass]) style="{{ $theme->baseStyle }}">
     @if(!$inline)
