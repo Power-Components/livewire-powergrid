@@ -25,7 +25,6 @@ document.addEventListener('alpine:init', function () {
   window.Alpine.directive('shift', function (el, _ref) {
     var expression = _ref.expression;
     el.addEventListener('click', function (event) {
-      console.log(expression);
       window.Livewire.find(expression).set('multiSortEnabled', event.shiftKey);
     });
   });
