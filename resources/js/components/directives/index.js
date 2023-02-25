@@ -1,1 +1,1 @@
-import "./shift"
+import "./multisort-shift-click"
