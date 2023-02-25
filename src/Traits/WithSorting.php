@@ -17,6 +17,13 @@ trait WithSorting
 
     public array $sortArray = [];
 
+    public bool $multiSortEnabled = true;
+
+    public function updatedMultiSortEnabled(bool $value): void
+    {
+        $this->multiSort = $value;
+    }
+
     public function sortBy(string $field, string $direction = 'asc'): void
     {
         if ($this->multiSort) {

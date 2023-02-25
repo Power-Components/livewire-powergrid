@@ -55,7 +55,7 @@ class Tailwind extends ThemeBase
     public function cols(): Cols
     {
         return Theme::cols()
-            ->div('')
+            ->div('select-none')
             ->clearFilter('', '');
     }
 
