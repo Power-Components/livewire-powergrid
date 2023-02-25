@@ -87,7 +87,7 @@ class Model
                             'value'        => $value,
                             'searchMorphs' => $this->searchMorphs,
                         ]),
-                        default        => null
+                        default => null
                     };
                 }
             });

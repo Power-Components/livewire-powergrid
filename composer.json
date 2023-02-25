@@ -27,7 +27,7 @@
         "pestphp/pest-plugin-livewire": "^1.0",
         "laravel/pint": "^1.2",
         "nunomaduro/larastan": "^1.0 | ^2.4",
-        "laradumps/laradumps": "dev-2x"
+        "laradumps/laradumps": "2.x-dev"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
@@ -75,7 +75,7 @@
             "@test:pgsql",
             "@test:sqlsrv"
         ],
-        "check": [
+        "verify": [
             "@test:pint",
             "@test:types",
             "@test"

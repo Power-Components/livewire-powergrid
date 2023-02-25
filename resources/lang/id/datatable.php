@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Filter',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Aksi',
         'results_per_page' => 'Data per halaman',
         'clear_filter'     => 'Hapus filter',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Semua',
         'selected'         => 'Dipilih',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Cari...',
         'select' => 'Pilih periode',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Menampilkan',
         'to'      => 'hingga',
         'of'      => 'dari',
         'results' => 'Hasil',
         'all'     => 'Semua',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Pilih',
         'all'    => 'Semua',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Pilih',
         'all'    => 'Semua',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'Semua',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_empty'     => 'Kosong atau tidak ada',
         'is_not_empty' => 'Tidak kosong dan ada',
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Harap tunggu!',
         'completed' => 'Ekspor selesai! File anda siap diunduh',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
         'with_trashed'         => 'With deleted',
         'only_trashed'         => 'Only deleted',
     ],
-    'multi_sort'         => [
+    'multi_sort' => [
         'message' => 'Multiple sort is active',
     ],
 ];

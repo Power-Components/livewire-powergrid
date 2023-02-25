@@ -93,8 +93,8 @@ class DishesDynamicFiltersTable extends PowerGridComponent
                 ->filterType(DynamicInput::FILTER_BOOLEAN)
                 ->component('tests::dynamic-select')
                 ->attributes([
-                    'class'        => 'min-w-[170px]',
-                    'options'      => [
+                    'class'   => 'min-w-[170px]',
+                    'options' => [
                         ['name' => 'Active',  'value' => true],
                         ['name' => 'Inactive', 'value' => false],
                     ],

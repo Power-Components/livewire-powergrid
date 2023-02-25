@@ -30,6 +30,11 @@ PowerGrid creates modern, powerful and easy to customize Datatables based on Lar
 
 ➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
+<br/>
+
+<p>
+    <img src="https://livewire-powergrid.com/_media/screenshot.png" alt="PowerGrid Screenshot">
+</p>
 
 <br/>
 
@@ -132,13 +137,35 @@ Please read the [Contributing Guide](https://github.com/Power-Components/livewir
 
 ## 5. Credits
 
-Created by: [Luan Freitas](https://twitter.com/luanfreitasdev)
+Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
 
 - [Contributors](../../contributors)
 - Logo & artwork by [Caneco](https://twitter.com/caneco)
 
-<br/>
+<hr>
 
-## 6. Thanks  💓
+<p>Sponsored by:</p>
+<p>
+  <!--DevSquad-->
+  <a href="http://devsquad.com" target="_blank">
+    <img src="https://livewire-powergrid.com/_media/logos/devsquad.png" alt="DevSquad" height="undefined">
+  </a>
 
-- [JetBrains PhpStorm](https://www.jetbrains.com/phpstorm/) ([@phpstorm](https://twitter.com/phpstorm)) for sponsoring open-source development.
+</p>
+<p></p>
+<p></p>
+<p>Supported by:</p>
+<p>
+  <!-- PHPStorm -->
+  <a href="https://www.jetbrains.com/phpstorm/" target="_blank">
+    <img src="https://livewire-powergrid.com/_media/logos/phpstorm.png" alt="PHPStorm" height="32">
+  </a>
+  <!-- Araxis Merge -->
+  <a href="https://www.araxis.com/merge/" target="_blank">
+    <img src="https://livewire-powergrid.com/_media/logos/araxis.png" alt="Araxis Merge" height="32">
+  </a>
+</p>
+
+<hr>
+
+<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated, associated, endorsed by, or in any way officially connected with the Laravel Livewire - copyright by Caleb Porzio.</sup>

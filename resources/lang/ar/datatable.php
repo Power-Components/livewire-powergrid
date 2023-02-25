@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'تصفية',
         'clear_all_filters' => 'مسح الكل',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'العمليات',
         'results_per_page' => 'عدد السجلات في الصفحة',
         'clear_filter'     => 'مسح الفلاتر',
@@ -13,26 +13,26 @@ return [
         'all'              => 'الكل',
         'selected'         => 'محدد',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'البحث...',
         'select' => 'اختر فترة',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'يتم عرض',
         'to'      => 'الى',
         'of'      => 'من',
         'results' => 'النتائج',
         'all'     => 'الكل',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'اختيار',
         'all'    => 'الكل',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'اختيار',
         'all'    => 'الكل',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'الكل',
     ],
     'input_text_options' => [
@@ -50,11 +50,11 @@ return [
         'is_not_blank' => 'ليس فراغ',
 
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'الرجاء الانتظار!',
         'completed' => 'تم الانتهاء من التصدير، الملف جاهز للتحميل',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'عرض جميع السجلات بما فيها المحذوفة',
         'message_only_trashed' => 'عرض فقط السجلات المحذوفة',
         'without_trashed'      => 'بدون المحذوف',

@@ -124,7 +124,7 @@ class Collection
                         'selected' => $this->validateInputTextOptions($this->filters, $field),
                         'value'    => $value,
                     ]),
-                    default        => $this->query
+                    default => $this->query
                 };
             }
         }

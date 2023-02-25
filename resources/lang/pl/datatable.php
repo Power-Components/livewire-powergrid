@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Filtry',
         'clear_all_filters' => 'Wyczyść wszystkie filtry',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Akcje',
         'results_per_page' => 'Pozycji na stronę',
         'clear_filter'     => 'Wyczyść filtr',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Wszystkie',
         'selected'         => 'Zaznaczone',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Szukaj...',
         'select' => 'Wybierz okres',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Pozycje',
         'to'      => 'do',
         'of'      => 'z',
         'results' => 'dostępnych',
         'all'     => 'Wszystko',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Wybierz',
         'all'    => 'Wszystko',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Wybierz',
         'all'    => 'Wszystko',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'Wszystko',
     ],
     'input_text_options' => [
@@ -49,18 +49,18 @@ return [
         'is_blank'     => 'Jest pusty (blank)',
         'is_not_blank' => 'Nie jest pusty (blank)',
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Proszę czekać!',
         'completed' => 'Eksport gotowy! Twoje pliki są gotowe do pobrania',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Wyświetlam wszystkie pozycję, uwzględniając skasowane.',
         'message_only_trashed' => 'Wyświetlam tylko pozycję w koszu.',
         'without_trashed'      => 'Bez skasowanych',
         'with_trashed'         => 'Uwzględnij kosz',
         'only_trashed'         => 'Pokaż tylko kosz',
     ],
-    'multi_sort'         => [
+    'multi_sort' => [
         'message' => 'Wielokolumnowe sortowanie jest aktywne',
     ],
 ];

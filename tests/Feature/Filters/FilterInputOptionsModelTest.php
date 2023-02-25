@@ -263,7 +263,7 @@ it('properly filters by "chef name is blank"', function (string $component, obje
 
     expect($component->filters)
         ->toMatchArray([
-            'input_text'         => [
+            'input_text' => [
                 'chef_name' => '',
             ],
             'input_text_options' => [
@@ -296,7 +296,7 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
 
     expect($component->filters)
         ->toMatchArray([
-            'input_text'         => [
+            'input_text' => [
                 'chef_name' => '',
             ],
             'input_text_options' => [
@@ -329,7 +329,7 @@ it('properly filters by "chef name is null"', function (string $component, objec
 
     expect($component->filters)
         ->toMatchArray([
-            'input_text'         => [
+            'input_text' => [
                 'chef_name' => '',
             ],
             'input_text_options' => [
@@ -366,7 +366,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, o
 
     expect($livewire->filters)
         ->toMatchArray([
-            'input_text'         => [
+            'input_text' => [
                 'chef_name' => '',
             ],
             'input_text_options' => [
@@ -402,7 +402,7 @@ it('properly filters by "chef name is empty"', function (string $component, obje
 
     expect($livewire->filters)
         ->toMatchArray([
-            'input_text'         => [
+            'input_text' => [
                 'chef_name' => '',
             ],
             'input_text_options' => [
