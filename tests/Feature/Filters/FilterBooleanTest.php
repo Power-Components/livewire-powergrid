@@ -77,7 +77,9 @@ it('properly filters by bool true - custom builder', function (string $component
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
+        'testFilters' => [
+            Filter::boolean('in_stock')->label('sim', 'não'),
+        ],
     ])
         ->call($theme)
         ->assertSee('In Stock')
@@ -147,7 +149,39 @@ it('properly filters by bool true - using collection', function (string $compone
 
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters', 'filterBoolean')->with('themes with array table');
+})->group('filters', 'filterBoolean')
+    ->with('themes with collection table');
+
+it('properly filters by bool true - using collection - custom builder', function (string $component, string $theme) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::boolean('in_stock')
+                ->label('sim', 'não')
+                ->collection(function ($builder, $field, $values) {
+                    expect($field)
+                        ->toBe('in_stock')
+                        ->and($values)->toBe('true')
+                        ->and($builder)->toBeInstanceOf(Illuminate\Support\Collection::class);
+
+                    return $builder->where('id', 1);
+                }),
+
+        ],
+    ])
+        ->call($theme)
+        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+
+    expect($component->filters)
+        ->toBeEmpty();
+
+    $component ->set('filters', filterBoolean('in_stock', 'true'))
+        ->assertSee('Name 1')
+        ->assertDontSee('Name 2')
+        ->assertDontSee('Name 3')
+        ->assertDontSee('Name 4')
+        ->assertDontSee('Name 5');
+})->group('filters', 'filterBoolean')
+    ->with('themes with collection table');
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
