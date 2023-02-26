@@ -18,6 +18,40 @@ it('properly filter the produced_at field between two dates', function (string $
         ->assertDontSeeHtml('Francesinha vegana');
 })->group('filters')->with('themes');
 
+it('properly filters by "between date"', function (string $component, object $params) {
+    $datepicker = Filter::datepicker('produced_at_formatted', 'produced_at');
+
+    livewire($component, [
+        'testFilters' => [$datepicker],
+    ])
+        ->call($params->theme)
+        ->set('filters', filterDateTime('produced_at', ['2021-01-01', '2021-03-03']))
+        ->assertSeeHtmlInOrder([
+            'id="input_produced_at_formatted"',
+            'type="text"',
+            'placeholder="Select a period"',
+        ])
+        ->assertSee('Pastel de Nata')
+        ->assertSee('Peixada da chef Nábia')
+        ->assertSee('Carne Louca')
+        ->assertDontSee('Barco-Sushi Simples')
+        ->set('filters', filterDateTime('produced_at', ['2021-04-04', '2021-07-07 19:59:58']))
+        ->assertSee('Bife à Rolê')
+        ->assertSee('Francesinha vegana')
+        ->assertSee('Francesinha')
+        ->assertDontSeeHtml('Barco-Sushi da Sueli');
+})->group('filters', 'filterDatePicker')->with('themes');
+
+it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->set('testFilters', [
+            Filter::datepicker('produced_at_formatted', 'produced_at'),
+        ])
+        ->set('filters', filterDateTime('produced_at', ['2021-03-03', '2021-03-01']))
+        ->assertSee('No records found');
+})->group('filters', 'filterDatePicker')->with('themes');
+
 it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
     livewire($component, [
         'testFilters' => [
@@ -57,8 +91,7 @@ it('property filter the created_at field when we are using custom builder collec
         ->assertDontSeeText('Name 4')
         ->assertDontSeeText('Name 5');
 })->group('filters')
-    ->with('themes with collection table', 'themes with array table')
-    ->only();
+    ->with('themes with collection table', 'themes with array table');
 
 it('properly filter the produced_at field between another two dates', function (string $component, object $params) {
     livewire($component, [
