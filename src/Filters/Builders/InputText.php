@@ -14,7 +14,7 @@ class InputText extends BuilderBase
             /** @var \Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
 
-            $closure($builder, $field, $values);
+            $closure($builder, $values);
 
             return;
         }
@@ -77,7 +77,7 @@ class InputText extends BuilderBase
             /** @var \Closure $closure */
             $closure = data_get($this->filterBase, 'collection');
 
-            return $closure($collection, $field, $values);
+            return $closure($collection, $values);
         }
 
         /** @var array $values */

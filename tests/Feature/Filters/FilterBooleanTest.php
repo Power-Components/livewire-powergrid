@@ -52,10 +52,9 @@ it('properly filters by bool true - custom builder', function (string $component
     $component = livewire($component, [
         'testFilters' => [
             Filter::boolean('in_stock')
-                ->query(function ($builder, $field, $values) {
-                    expect($field)
-                        ->toBe('in_stock')
-                        ->and($values)->toBe('true')
+                ->query(function ($builder, $values) {
+                    expect($values)
+                        ->toBe('true')
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                     return $builder->where('dishes.id', 1);
@@ -157,13 +156,11 @@ it('properly filters by bool true - using collection - custom builder', function
         'testFilters' => [
             Filter::boolean('in_stock')
                 ->label('sim', 'não')
-                ->collection(function ($builder, $field, $values) {
-                    expect($field)
-                        ->toBe('in_stock')
-                        ->and($values)->toBe('true')
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+                ->collection(function ($collection, $values) {
+                    expect($values)->toBe('true')
+                        ->and($collection)->toBeInstanceOf(\Illuminate\Support\Collection::class);
 
-                    return $builder->where('id', 1);
+                    return $collection->where('id', 1);
                 }),
 
         ],

@@ -73,13 +73,12 @@ it('property filter the created_at field when we are using custom builder collec
     livewire($component, [
         'testFilters' => [
             Filter::datepicker('created_at')
-                ->collection(function ($builder, $field, $values) use ($dateToFilter) {
-                    expect($field)
-                        ->toBe('created_at')
-                        ->and($values)->toBe($dateToFilter)
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+                ->collection(function ($collection, $values) use ($dateToFilter) {
+                    expect($values)
+                        ->toBe($dateToFilter)
+                        ->and($collection)->toBeInstanceOf(\Illuminate\Support\Collection::class);
 
-                    return $builder->where('id', 1);
+                    return $collection->where('id', 1);
                 }),
         ],
     ])
@@ -111,10 +110,8 @@ it('properly filter the produced_at field between another two dates - custom bui
     livewire($component, [
         'testFilters' => [
             Filter::datepicker('produced_at')
-                ->query(function ($builder, $field, $values) use ($dateToFilter) {
-                    expect($field)
-                        ->toBe('produced_at')
-                        ->and($values)->toBe($dateToFilter)
+                ->query(function ($builder, $values) use ($dateToFilter) {
+                    expect($values)->toBe($dateToFilter)
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                     return $builder->where('dishes.id', 1);

@@ -40,10 +40,9 @@ it('properly filter with category_id using custom builder', function (string $co
         ->dataSource(Category::all())
         ->optionValue('id')
         ->optionLabel('name')
-        ->query(function ($builder, $field, $values) {
-            expect($field)
-                ->toBe('category_id')
-                ->and($values)->toBe([0 => 1])
+        ->query(function ($builder, $values) {
+            expect($values)
+                ->toBe([0 => 1])
                 ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
             return $builder->where('dishes.id', 1);

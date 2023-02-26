@@ -28,15 +28,13 @@ it('properly renders the number filter - custom builder', function (string $comp
     livewire($component, [
         'testFilters' => [
             Filter::number($params->field)
-                ->query(function ($builder, $field, $values) use ($params) {
-                    expect($field)
-                        ->toBe($params->field)
-                        ->and($values)->toBe([
-                            'start'     => '2',
-                            'end'       => null,
-                            'thousands' => '',
-                            'decimal'   => '',
-                        ])
+                ->query(function ($builder, $values) use ($params) {
+                    expect($values)->toBe([
+                        'start'     => '2',
+                        'end'       => null,
+                        'thousands' => '',
+                        'decimal'   => '',
+                    ])
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                     return $builder->where('dishes.id', 2);

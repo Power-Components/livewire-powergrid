@@ -25,10 +25,9 @@ it('property displays the results and options - custom builder', function (strin
     $component = livewire($component, [
         'testFilters' => [
             Filter::select('category_name', 'category_id')
-                ->query(function ($builder, $field, $values) {
-                    expect($field)
-                        ->toBe('category_id')
-                        ->and($values)->toBe('1')
+                ->query(function ($builder, $values) {
+                    expect($values)
+                        ->toBe('1')
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                     return $builder->where('dishes.id', 1);
@@ -45,10 +44,9 @@ it('property displays the results and options - custom builder', function (strin
 
     $component->set('testFilters', [
         Filter::select('category_name', 'category_id')
-            ->query(function ($builder, $field, $values) {
-                expect($field)
-                    ->toBe('category_id')
-                    ->and($values)->toBe('1')
+            ->query(function ($builder, $values) {
+                expect($values)
+                    ->toBe('1')
                     ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                 return $builder->where('dishes.id', 2);

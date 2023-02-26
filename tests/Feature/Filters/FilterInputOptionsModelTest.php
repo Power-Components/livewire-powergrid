@@ -476,10 +476,8 @@ it('properly filters using custom builder', function (string $component, object 
         'join'        => $params->join,
         'testFilters' => [
             Filter::inputText($params->field)
-                ->query(function ($builder, $field, $values) use ($params) {
-                    expect($field)
-                        ->toBe($params->field)
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+                ->query(function ($builder, $values) use ($params) {
+                    expect($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
                     return $builder->where('dishes.id', 1);
                 }),
