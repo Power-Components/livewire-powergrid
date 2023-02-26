@@ -106,6 +106,7 @@ trait HasFilter
     private function resolveFilters(): void
     {
         $filters = collect($this->filters());
+
         /** @var Column $column */
         foreach ($this->columns as $column) {
             $filterForColumn = $filters->filter(
@@ -120,6 +121,10 @@ trait HasFilter
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
+                    if (!app()->runningUnitTests()) {
+                        unset($filter->builder, $filter->collection);
+                    }
+
                     if (method_exists($filter, 'execute')) {
                         return (array) $filter->execute();
                     }

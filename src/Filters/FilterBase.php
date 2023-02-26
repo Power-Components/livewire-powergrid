@@ -2,9 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-trait WithFilterBase
+class FilterBase
 {
     public string $className = '';
+
+    public ?\Closure $builder = null;
+
+    public ?\Closure $collection = null;
 
     public function __construct(
         public string $column,
@@ -15,5 +19,19 @@ trait WithFilterBase
         }
 
         $this->className = get_called_class();
+    }
+
+    public function query(\Closure $closure): static
+    {
+        $this->builder = $closure;
+
+        return $this;
+    }
+
+    public function collection(\Closure $closure): static
+    {
+        $this->collection = $closure;
+
+        return $this;
     }
 }

@@ -45,6 +45,9 @@ it('properly filters by "name is not"', function (string $component, object $par
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('Francesinha vegana', 'is_not', $params->field))
         ->assertSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
@@ -106,6 +109,9 @@ it('properly filters by "name contains" using nonexistent record', function (str
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('Nonexistent dish', 'contains', $params->field))
         ->assertSee('No records found')
         ->assertDontSee('Francesinha')
@@ -127,6 +133,9 @@ it('properly filters by "name contains not"', function (string $component, objec
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('francesinha', 'contains_not', $params->field))
         ->assertDontSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
@@ -147,6 +156,9 @@ it('properly filters by "name contains not" using nonexistent record', function 
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('Nonexistent dish', 'contains_not', $params->field))
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana');
@@ -167,6 +179,9 @@ it('properly filters by "name starts with"', function (string $component, object
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('fran', 'starts_with', $params->field))
         ->assertSee('Francesinha')
         ->assertSee('Francesinha vegana')
@@ -188,6 +203,9 @@ it('properly filters by "name starts with" using nonexistent record', function (
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('Nonexistent', 'starts_with', $params->field))
         ->assertSee('No records found')
         ->assertDontSee('Francesinha')
@@ -210,6 +228,9 @@ it('properly filters by "name ends with"', function (string $component, object $
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('vegana', 'ends_with', $params->field))
         ->assertSee('Francesinha vegana')
         ->assertDontSee('Barco-Sushi da Sueli');
@@ -230,6 +251,9 @@ it('properly filters by "name ends with" using nonexistent record', function (st
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('Nonexistent', 'ends_with', $params->field))
         ->assertSee('No records found')
         ->assertDontSee('Francesinha')
@@ -252,6 +276,9 @@ it('properly filters by "chef name is blank"', function (string $component, obje
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('', 'is_blank', 'chef_name'))
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata')
@@ -285,6 +312,9 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('', 'is_not_blank', 'chef_name'))
         ->assertSee('Pastel de Nata')
         ->assertSee('Francesinha vegana')
@@ -318,6 +348,9 @@ it('properly filters by "chef name is null"', function (string $component, objec
         'join' => $params->join,
     ])
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('name')->operators(),
+        ])
         ->set('filters', filterInputText('', 'is_null', 'chef_name'))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
@@ -436,6 +469,26 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
         ->assertDontSee('Carne Louca');
 
     expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
+
+it('properly filters using custom builder', function (string $component, object $params) {
+    $component = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            Filter::inputText($params->field)
+                ->query(function ($builder, $values) use ($params) {
+                    expect($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                }),
+        ],
+    ])
+        ->call($params->theme);
+
+    $component->set('filters', filterInputText('francesinha', 'contains', $params->field))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Francesinha')
+        ->assertDontSee('Francesinha vegana');
 })->group('filters', 'filterInputText')->with('dishes_filter');
 
 dataset('dishes_filter', [

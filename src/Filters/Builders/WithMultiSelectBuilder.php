@@ -7,8 +7,17 @@ use Illuminate\Support\Collection;
 
 trait WithMultiSelectBuilder
 {
-    public static function builder(Builder $builder, string $field, array|int|string|null $values): void
+    public function builder(Builder $builder, string $field, array|int|string|null $values): void
     {
+        if (data_get($this->filterBase, 'builder')) {
+            /** @var \Closure $closure */
+            $closure = data_get($this->filterBase, 'builder');
+
+            $closure($builder, $values);
+
+            return;
+        }
+
         $empty = false;
 
         /** @var array $values */
@@ -23,14 +32,20 @@ trait WithMultiSelectBuilder
         }
     }
 
-    public static function collection(Collection $builder, string $field, array|int|string|null $values): Collection
+    public function collection(Collection $collection, string $field, array|int|string|null $values): Collection
     {
+        if (data_get($this->filterBase, 'collection')) {
+            /** @var \Closure $closure */
+            $closure = data_get($this->filterBase, 'collection');
+
+            return $closure($collection, $values);
+        }
+
         /** @var array $values */
-        $empty  = false;
-        $values = collect($values)->get('values');
+        $empty = false;
 
         if (!is_array($values) || count($values) === 0) {
-            return $builder;
+            return $collection;
         }
 
         foreach ($values as $value) {
@@ -40,9 +55,9 @@ trait WithMultiSelectBuilder
         }
 
         if ($empty) {
-            return $builder;
+            return $collection;
         }
 
-        return $builder->whereIn($field, $values);
+        return $collection->whereIn($field, $values);
     }
 }

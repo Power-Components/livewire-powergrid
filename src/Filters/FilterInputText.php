@@ -2,14 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\Helpers\SqlSupport;
-
-class FilterInputText implements FilterBaseInterface
+class FilterInputText extends FilterBase
 {
-    use WithFilterBase;
-
     public array $operators = [];
 
     private static array $inputTextOptions = [
@@ -36,114 +30,6 @@ class FilterInputText implements FilterBaseInterface
         $this->operators = $value;
 
         return $this;
-    }
-
-    public static function builder(Builder $query, string $field, int|array|string|null $values): void
-    {
-        /** @var array $values */
-        $value        = $values['value'];
-        $selected     = $values['selected'];
-        $searchMorphs = $values['searchMorphs'];
-
-        if (is_array($value) && blank($searchMorphs)) {
-            $field = $field . '.' . key($value);
-            $value = $value[key($value)];
-        }
-
-        $matchOperatorQuery = function (string $selected, Builder $query, string $field, mixed $value) {
-            match ($selected) {
-                'is'           => $query->where($field, '=', $value),
-                'is_not'       => $query->where($field, '!=', $value),
-                'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-                'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-                'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
-                'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
-                'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-                'is_null'      => $query->whereNull($field),
-                'is_not_null'  => $query->whereNotNull($field),
-                'is_blank'     => $query->where($field, '=', ''),
-                'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-                default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
-            };
-        };
-
-        if (filled($searchMorphs)) {
-            $table        = $searchMorphs[0];
-            $relationship = $searchMorphs[1];
-            $types        = $searchMorphs[2];
-
-            $query->whereHasMorph(
-                $relationship,
-                $types,
-                fn (Builder $query) => $query->whereHas(
-                    $table,
-                    fn (Builder $query) => $matchOperatorQuery(
-                        $selected,
-                        $query,
-                        $field,
-                        $value
-                    )
-                )
-            );
-
-            return;
-        }
-
-        $matchOperatorQuery($selected, $query, $field, $value);
-    }
-
-    public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
-    {
-        /** @var array $values */
-        $value    = $values['value'];
-        $selected = $values['selected'];
-
-        return match ($selected) {
-            'is'          => $builder->where($field, '=', $value),
-            'is_not'      => $builder->where($field, '!=', $value),
-            'starts_with' => $builder->filter(function ($row) use ($field, $value) {
-                $row = (object) $row;
-
-                return Str::startsWith(Str::lower($row->{$field}), Str::lower($value));
-            }),
-            'ends_with' => $builder->filter(function ($row) use ($field, $value) {
-                $row = (object) $row;
-
-                return Str::endsWith(Str::lower($row->{$field}), Str::lower($value));
-            }),
-            'contains_not' => $builder->filter(function ($row) use ($field, $value) {
-                $row = (object) $row;
-
-                return !Str::Contains(Str::lower($row->{$field}), Str::lower($value));
-            }),
-            'is_empty' => $builder->filter(function ($row) use ($field) {
-                $row = (object) $row;
-
-                return $row->{$field} == '' || is_null($row->{$field});
-            }),
-            'is_not_empty' => $builder->filter(function ($row) use ($field) {
-                $row = (object) $row;
-
-                return $row->{$field} !== '' && $row->{$field} !== null;
-            }),
-            'is_null'     => $builder->whereNull($field),
-            'is_not_null' => $builder->filter(function ($row) use ($field) {
-                $row = (object) $row;
-
-                return $row->{$field} !== '' && !is_null($row->{$field});
-            }),
-            'is_blank'     => $builder->whereNotNull($field)->where($field, '=', ''),
-            'is_not_blank' => $builder->filter(function ($row) use ($field) {
-                $row = (object) $row;
-
-                return $row->{$field} != '' || is_null($row->{$field});
-            }),
-            default => $builder->filter(function ($row) use ($field, $value) {
-                $row = (object) $row;
-
-                return false !== stristr($row->{$field}, strtolower($value));
-            }),
-        };
     }
 
     public static function getInputTextOperators(): array

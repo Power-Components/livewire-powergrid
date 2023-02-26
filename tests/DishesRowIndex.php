@@ -7,12 +7,12 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-};
+    PowerGridEloquent};
 
 class DishesRowIndex extends PowerGridComponent
 {
@@ -62,6 +62,13 @@ class DishesRowIndex extends PowerGridComponent
         return PowerGrid::eloquent()
             ->addColumn('id')
             ->addColumn('name');
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('name', 'name')->operators(),
+        ];
     }
 
     public function columns(): array

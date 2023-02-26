@@ -21,9 +21,90 @@ it('property displays the results and options', function (string $component, obj
         ]);
 })->group('filters', 'filterSelect')->with('themes');
 
+it('property filter using custom builder', function (string $component, object $params) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::select('category_name', 'category_id')
+                ->query(function ($builder, $values) {
+                    expect($values)
+                        ->toBe('1')
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                })
+                ->dataSource(Category::all())
+                ->optionValue('category_id')
+                ->optionLabel('category_name'),
+        ],
+    ])
+        ->call($params->theme)
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Peixada da chef Nábia');
+
+    $component->set('testFilters', [
+        Filter::select('category_name', 'category_id')
+            ->query(function ($builder, $values) {
+                expect($values)
+                    ->toBe('1')
+                    ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                return $builder->where('dishes.id', 2);
+            })
+            ->dataSource(Category::all())
+            ->optionValue('category_id')
+            ->optionLabel('category_name'),
+    ])
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertDontSee('Pastel de Nata')
+        ->assertSee('Peixada da chef Nábia');
+})->group('filters', 'filterSelect')->with('themes');
+
+it('property filter using custom collection', function (string $component) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::select('id')
+                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+                ->optionValue('id')
+                ->optionLabel('value')
+                ->collection(function ($builder, $values) {
+                    expect($values)
+                        ->toBe('2')
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+                    return $builder->where('id', 2);
+                }),
+        ],
+    ])
+        ->set('filters', filterSelect('id', 2))
+        ->assertSee('Name 2')
+        ->assertDontSee('Name 1')
+        ->assertDontSee('Name 3');
+})->group('filters', 'filterSelect')
+    ->with('themes with collection table', 'themes with array table');
+
+it('property filter using collection & array', function (string $component) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::select('id')
+                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+                ->optionValue('id')
+                ->optionLabel('value'),
+        ],
+    ])
+        ->set('filters', filterSelect('id', 2))
+        ->assertSee('Name 2')
+        ->assertDontSee('Name 1')
+        ->assertDontSee('Name 3');
+})->group('filters', 'filterSelect')
+    ->with('themes with collection table', 'themes with array table');
+
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('category_id')->operators(),
+        ])
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
@@ -34,6 +115,9 @@ it('properly filter with category_id', function (string $component, object $para
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('category_id')->operators(),
+        ])
         ->set('filters', filterSelect('category_id', 3))
         ->assertSee('Empadão de Palmito')
         ->assertSee('Empadão de Alcachofra')
@@ -45,6 +129,9 @@ it('properly filter with another category_id', function (string $component, obje
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->set('testFilters', [
+            Filter::inputText('serving_at')->operators(),
+        ])
         ->set('filters', filterSelect('serving_at', 'table'))
             ->assertSee('Pastel de Nata')
             ->assertDontSee('Peixada da chef Nábia')

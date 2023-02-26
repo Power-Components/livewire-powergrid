@@ -4,91 +4,70 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Filters\{FilterBoolean,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect};
+use Illuminate\Support\{Arr, Str};
+use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
+    Builders\DatePicker,
+    Builders\InputText,
+    Builders\MultiSelect,
+    Builders\Number,
+    Builders\Select};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 class Model
 {
     use InputOperators;
 
-    private array $columns;
-
-    private string $search;
-
-    private array $relationSearch;
-
-    private array $filters;
-
-    private array $searchMorphs;
-
-    public function __construct(private Builder $query)
+    public function __construct(private Builder $query, private PowerGridComponent $powerGridComponent)
     {
     }
 
-    public static function query(Builder $query): Model
+    public static function make(Builder $query, PowerGridComponent $powerGridComponent): Model
     {
-        return new Model($query);
-    }
-
-    public function setColumns(array $columns): Model
-    {
-        $this->columns = $columns;
-
-        return $this;
-    }
-
-    public function setSearch(string $search): Model
-    {
-        $this->search = $search;
-
-        return $this;
-    }
-
-    public function setFilters(array $filters): Model
-    {
-        $this->filters = $filters;
-
-        return $this;
-    }
-
-    public function setRelationSearch(array $relations): Model
-    {
-        $this->relationSearch = $relations;
-
-        return $this;
-    }
-
-    public function setSearchMorphs(array $array): Model
-    {
-        $this->searchMorphs = $array;
-
-        return $this;
+        return new Model($query, $powerGridComponent);
     }
 
     public function filter(): Builder
     {
-        foreach ($this->filters as $key => $type) {
-            $this->query->where(function ($query) use ($key, $type) {
-                foreach ($type as $field => $value) {
-                    match ($key) {
-                        'date_picker'  => FilterDatePicker::builder($query, $field, $value),
-                        'multi_select' => FilterMultiSelect::builder($query, $field, $value),
-                        'select'       => FilterSelect::builder($query, $field, $value),
-                        'boolean'      => FilterBoolean::builder($query, $field, $value),
-                        'number'       => FilterNumber::builder($query, $field, $value),
-                        'input_text'   => FilterInputText::builder($query, $field, [
-                            'selected'     => $this->validateInputTextOptions($this->filters, $field),
+        $filters = collect($this->powerGridComponent->filters());
+
+        if (blank($filters->flatten()->values())) {
+            return $this->query;
+        }
+
+        foreach ($this->powerGridComponent->filters as $filterType => $column) {
+            $this->query->where(function ($query) use ($filterType, $column, $filters) {
+                $filter = function ($query, $filters, $filterType, $field, $value) {
+                    $filter = $filters->filter(fn ($filter) => $filter->field === $field)
+                        ->first();
+
+                    match ($filterType) {
+                        'date_picker'  => (new DatePicker($filter))->builder($query, $field, $value),
+                        'multi_select' => (new MultiSelect($filter))->builder($query, $field, $value),
+                        'select'       => (new Select($filter))->builder($query, $field, $value),
+                        'boolean'      => (new Boolean($filter))->builder($query, $field, $value),
+                        'number'       => (new Number($filter))->builder($query, $field, $value),
+                        'input_text'   => (new InputText($filter))->builder($query, $field, [
+                            'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                             'value'        => $value,
-                            'searchMorphs' => $this->searchMorphs,
+                            'searchMorphs' => $this->powerGridComponent->searchMorphs,
                         ]),
                         default => null
                     };
+                };
+
+                if (isset($column[key($column)]) &&
+                    is_array($column[key($column)]) &&
+                    is_string(key($column[key($column)])) &&
+                    count($column[key($column)]) === 1) {
+                    $field = key(Arr::dot($column));
+
+                    $value = Arr::dot($column)[$field];
+
+                    $filter($query, $filters, $filterType, $field, $value);
+                } else {
+                    foreach ($column as $field => $value) {
+                        $filter($query, $filters, $filterType, $field, $value);
+                    }
                 }
             });
         }
@@ -96,25 +75,16 @@ class Model
         return $this->query;
     }
 
-    private function getColumnList(string $modelTable): array
-    {
-        try {
-            return (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, fn () => Schema::getColumnListing($modelTable));
-        } catch (\Exception) {
-            return Schema::getColumnListing($modelTable);
-        }
-    }
-
     public function filterContains(): Model
     {
-        if ($this->search != '') {
+        if ($this->powerGridComponent->search != '') {
             $this->query = $this->query->where(function (Builder $query) {
                 $modelTable = $query->getModel()->getTable();
 
                 $columnList = $this->getColumnList($modelTable);
 
                 /** @var Column $column */
-                foreach ($this->columns as $column) {
+                foreach ($this->powerGridComponent->columns as $column) {
                     $searchable = strval(data_get($column, 'searchable'));
                     $table      = $modelTable;
                     $field      = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
@@ -131,11 +101,11 @@ class Model
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->search . '%');
+                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->search . '%\'');
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->powerGridComponent->search . '%\'');
                         }
                     }
                 }
@@ -143,7 +113,7 @@ class Model
                 return $query;
             });
 
-            if (count($this->relationSearch)) {
+            if (count($this->powerGridComponent->relationSearch)) {
                 $this->filterRelation();
             }
         }
@@ -153,7 +123,7 @@ class Model
 
     private function filterRelation(): void
     {
-        foreach ($this->relationSearch as $table => $relation) {
+        foreach ($this->powerGridComponent->relationSearch as $table => $relation) {
             if (!is_array($relation)) {
                 return;
             }
@@ -167,7 +137,7 @@ class Model
                         foreach ($column as $nestedColumn) {
                             $this->query = $this->query->orWhereHas(
                                 $table . '.' . $nestedTable,
-                                fn (Builder $query) => $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%')
+                                fn (Builder $query) => $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
                             );
                         }
                     }
@@ -177,9 +147,18 @@ class Model
 
                 $this->query = $this->query->orWhereHas(
                     $table,
-                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->search . '%')
+                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
                 );
             }
+        }
+    }
+
+    private function getColumnList(string $modelTable): array
+    {
+        try {
+            return (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, fn () => Schema::getColumnListing($modelTable));
+        } catch (\Exception) {
+            return Schema::getColumnListing($modelTable);
         }
     }
 }

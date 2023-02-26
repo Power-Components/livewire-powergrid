@@ -2,13 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use PowerComponents\LivewirePowerGrid\Filters\Builders\WithMultiSelectBuilder;
-
-class FilterMultiSelectAsync implements FilterBaseInterface
+class FilterMultiSelectAsync extends FilterBase
 {
-    use WithFilterBase;
-    use WithMultiSelectBuilder;
-
     public string $url = '';
 
     public string $method = 'get';
