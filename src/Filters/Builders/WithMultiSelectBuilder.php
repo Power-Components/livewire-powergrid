@@ -42,8 +42,7 @@ trait WithMultiSelectBuilder
         }
 
         /** @var array $values */
-        $empty  = false;
-        $values = collect($values)->get('values');
+        $empty = false;
 
         if (!is_array($values) || count($values) === 0) {
             return $collection;

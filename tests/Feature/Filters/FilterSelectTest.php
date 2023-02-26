@@ -83,6 +83,22 @@ it('property filter using custom collection', function (string $component) {
 })->group('filters', 'filterSelect')
     ->with('themes with collection table', 'themes with array table');
 
+it('property filter using collection & array', function (string $component) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::select('id')
+                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+                ->optionValue('id')
+                ->optionLabel('value'),
+        ],
+    ])
+        ->set('filters', filterSelect('id', 2))
+        ->assertSee('Name 2')
+        ->assertDontSee('Name 1')
+        ->assertDontSee('Name 3');
+})->group('filters', 'filterSelect')
+    ->with('themes with collection table', 'themes with array table');
+
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)

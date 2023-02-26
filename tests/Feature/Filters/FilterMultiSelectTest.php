@@ -35,7 +35,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
         ]);
 })->group('filters')->with('multi_select');
 
-it('properly filter with category_id using custom builder', function (string $component) {
+it('properly filter with id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
         ->dataSource(Category::all())
         ->optionValue('id')
@@ -63,6 +63,31 @@ it('properly filter with category_id using custom builder', function (string $co
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
 })->group('filters')->with('multi_select');
+
+it('properly filter with id using collection & array', function (string $component) {
+    $multiSelect = Filter::multiSelect('id')
+        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+        ->optionValue('id')
+        ->optionLabel('value');
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'id' => [
+                    1,
+                    3,
+                ],
+            ],
+        ])
+        ->assertSee('Name 1')
+        ->assertSee('Name 3')
+        ->assertDontSee('Name 2');
+})->group('filters')
+    ->with('themes with collection table', 'themes with array table');
 
 it('properly filter with category_id using custom collection', function (string $component) {
     $multiSelect = Filter::multiSelect('id', 'id')
