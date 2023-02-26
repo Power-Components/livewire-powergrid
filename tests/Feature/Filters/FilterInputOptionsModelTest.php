@@ -471,6 +471,28 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
     expectColumnsFilterMatch($livewire, $filter);
 })->group('filters', 'filterInputText')->with('dishes_filter');
 
+it('properly filters using custom builder', function (string $component, object $params) {
+    $component = livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            Filter::inputText($params->field)
+                ->query(function ($builder, $field, $values) use ($params) {
+                    expect($field)
+                        ->toBe($params->field)
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                }),
+        ],
+    ])
+        ->call($params->theme);
+
+    $component->set('filters', filterInputText('francesinha', 'contains', $params->field))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Francesinha')
+        ->assertDontSee('Francesinha vegana');
+})->group('filters', 'filterInputText')->with('dishes_filter');
+
 dataset('dishes_filter', [
     'tailwind'       => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'name', 'join' => false]],
     'bootstrap'      => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name', 'join' => false]],

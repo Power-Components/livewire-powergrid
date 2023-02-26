@@ -2,8 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Support\{Collection, Str};
-
 class FilterInputText extends FilterBase
 {
     public array $operators = [];

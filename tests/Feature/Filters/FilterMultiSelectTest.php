@@ -35,7 +35,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
         ]);
 })->group('filters')->with('multi_select');
 
-it('properly filter with category_id - custom builder', function (string $component) {
+it('properly filter with category_id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
         ->dataSource(Category::all())
         ->optionValue('id')

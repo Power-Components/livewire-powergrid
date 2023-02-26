@@ -161,7 +161,7 @@ it('properly filters by bool true - using collection - custom builder', function
                     expect($field)
                         ->toBe('in_stock')
                         ->and($values)->toBe('true')
-                        ->and($builder)->toBeInstanceOf(Illuminate\Support\Collection::class);
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
 
                     return $builder->where('id', 1);
                 }),
