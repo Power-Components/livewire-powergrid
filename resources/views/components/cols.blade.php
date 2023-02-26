@@ -18,6 +18,7 @@
 @endphp
 <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
+    x-data x-multisort-shift-click="{{ $this->id }}"
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
     <div class="text-md flex gap-2 {{ $theme->cols->divClass }}"
         @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
