@@ -64,6 +64,38 @@ it('properly filter with category_id using custom builder', function (string $co
         ->assertDontSee('Francesinha vegana');
 })->group('filters')->with('multi_select');
 
+it('properly filter with category_id using custom collection', function (string $component) {
+    $multiSelect = Filter::multiSelect('id', 'id')
+        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+        ->optionValue('id')
+        ->optionLabel('value')
+        ->collection(function ($builder, $values) {
+            expect($values)
+                ->toBe([0 => 1, 1 => 3])
+                ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+            return $builder->whereIn('id', [1, 3]);
+        });
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'id' => [
+                    1,
+                    3,
+                ],
+            ],
+        ])
+        ->assertSee('Name 1')
+        ->assertSee('Name 3')
+        ->assertDontSee('Name 2');
+})->group('filters')
+    ->with('themes with collection table', 'themes with array table');
+
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
         ->dataSource(Category::all())

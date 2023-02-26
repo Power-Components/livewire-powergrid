@@ -21,7 +21,7 @@ it('property displays the results and options', function (string $component, obj
         ]);
 })->group('filters', 'filterSelect')->with('themes');
 
-it('property displays the results and options - custom builder', function (string $component, object $params) {
+it('property filter using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
             Filter::select('category_name', 'category_id')
@@ -59,6 +59,29 @@ it('property displays the results and options - custom builder', function (strin
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 })->group('filters', 'filterSelect')->with('themes');
+
+it('property filter using custom collection', function (string $component) {
+    livewire($component, [
+        'testFilters' => [
+            Filter::select('id')
+                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+                ->optionValue('id')
+                ->optionLabel('value')
+                ->collection(function ($builder, $values) {
+                    expect($values)
+                        ->toBe('2')
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+                    return $builder->where('id', 2);
+                }),
+        ],
+    ])
+        ->set('filters', filterSelect('id', 2))
+        ->assertSee('Name 2')
+        ->assertDontSee('Name 1')
+        ->assertDontSee('Name 3');
+})->group('filters', 'filterSelect')
+    ->with('themes with collection table', 'themes with array table');
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
