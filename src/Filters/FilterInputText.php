@@ -6,6 +6,8 @@ class FilterInputText extends FilterBase
 {
     public array $operators = [];
 
+    public string $placeholder = '';
+
     private static array $inputTextOptions = [
         'contains',
         'contains_not',
@@ -28,6 +30,13 @@ class FilterInputText extends FilterBase
 //        }
 
         $this->operators = $value;
+
+        return $this;
+    }
+
+    public function placeholder(string $placeholder): FilterInputText
+    {
+        $this->placeholder = $placeholder;
 
         return $this;
     }

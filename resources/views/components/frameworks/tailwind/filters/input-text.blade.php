@@ -9,20 +9,24 @@
     @php
         $field = strval(data_get($filter, 'field'));
         $title = strval(data_get($filter, 'title'));
+        $placeholder = strval(data_get($filter, 'placeholder'));
 
         $inputTextOptions = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
 
-        $inputTextOptions  = filled(data_get($filter, 'operators', [])) ?
-                                data_get($filter, 'operators') :
-                                $inputTextOptions;
+        $inputTextOptions  = data_get($filter, 'operators', $inputTextOptions);
 
         $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
+
+        $placeholder = $placeholder ?? ($column->placeholder ?? $column->title);
         @endphp
     @if(filled($filter))
         <div @class([
             'p-2' => !$inline,
             $theme->baseClass,
-        ]) style="{{ $theme->baseStyle }}">
+        ]) style="{{ $theme->baseStyle }}"
+            x-data
+             x-on:keydown.esc="console.log($event)"
+        >
             @if(!$inline)
                 <label class="text-gray-700 dark:text-gray-300">{{ $title }}</label>
             @endif
@@ -54,6 +58,7 @@
                         'mt-1' => $inline,
                     ])>
                     <input
+                        wire:key="input-{{ $field }}"
                         data-id="{{ $field }}"
                         @if(isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled @else
                         wire:model.debounce.700ms="filters.input_text.{{ $field  }}"
@@ -61,7 +66,7 @@
                         @endif
                         type="text"
                         class="power_grid {{ $theme->inputClass }}"
-                        placeholder="{{ empty($column) ? $title:($column->placeholder?:$column->title) }}" />
+                        placeholder="{{ $placeholder }}" />
                 </div>
             </div>
         </div>
