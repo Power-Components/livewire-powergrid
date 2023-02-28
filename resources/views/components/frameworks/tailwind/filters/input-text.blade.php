@@ -23,10 +23,7 @@
         <div @class([
             'p-2' => !$inline,
             $theme->baseClass,
-        ]) style="{{ $theme->baseStyle }}"
-            x-data
-             x-on:keydown.esc="console.log($event)"
-        >
+        ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
                 <label class="text-gray-700 dark:text-gray-300">{{ $title }}</label>
             @endif
