@@ -110,7 +110,7 @@ trait HasFilter
         /** @var Column $column */
         foreach ($this->columns as $column) {
             $filterForColumn = $filters->filter(
-                fn ($filter) => $filter->column == $column->dataField ?? $column->field
+                fn ($filter) => $filter->column == ($column->dataField ?: $column->field)
             );
 
             if ($filterForColumn->count() > 0) {
