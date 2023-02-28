@@ -9,14 +9,15 @@
     @php
         $field = strval(data_get($filter, 'field'));
         $title = strval(data_get($filter, 'title'));
+        $placeholder = strval(data_get($filter, 'placeholder'));
 
         $inputTextOptions = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
 
-        $inputTextOptions  = filled(data_get($filter, 'operators', [])) ?
-                                data_get($filter, 'operators') :
-                                $inputTextOptions;
+        $inputTextOptions  = data_get($filter, 'operators', $inputTextOptions);
 
         $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
+
+        $placeholder = $placeholder ?? ($column->placeholder ?? $column->title);
     @endphp
     @if(filled($filter))
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
@@ -41,7 +42,7 @@
                     @endif
                     type="text"
                     class="power_grid {{ $theme->inputClass }}"
-                    placeholder="{{ empty($column)?$title:($column->placeholder?:$column->title) }}" />
+                    placeholder="{{ $placeholder }}" />
             </div>
         </div>
     @endif
