@@ -18,7 +18,7 @@
         $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
 
         $placeholder = $placeholder ?? ($column->placeholder ?? $column->title);
-        @endphp
+    @endphp
     @if(filled($filter))
         <div @class([
             'p-2' => !$inline,

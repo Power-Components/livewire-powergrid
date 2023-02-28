@@ -5,7 +5,7 @@ use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 it('properly renders the number filter', function (string $component, object $params) {
-    $number = Filter::number('price_BRL', 'price')
+    $number = Filter::number('id', $params->field)
         ->thousands('.')
         ->decimal(',');
 
@@ -15,8 +15,8 @@ it('properly renders the number filter', function (string $component, object $pa
         ->call($params->theme)
         ->set('filters', filterNumber($params->field, '2', null))
         ->assertSeeHtmlInOrder([
-            'wire:model.debounce.800ms="filters.number.price.start"',
-            'wire:model.debounce.800ms="filters.number.price.end',
+            'wire:model.debounce.800ms="filters.number.' . $params->field . '.start"',
+            'wire:model.debounce.800ms="filters.number.' . $params->field . '.end',
         ])
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Francesinha')
