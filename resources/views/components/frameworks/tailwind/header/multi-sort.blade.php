@@ -1,5 +1,5 @@
 @if($multiSort && count($sortArray) > 0)
-    <div class="w-full flex pt-3 mb-3 gap-2">
+    <div class="w-full items-center flex pt-3 mb-3 gap-2">
         <span class="dark:text-pg-primary-300">@lang('livewire-powergrid::datatable.multi_sort.message')</span>
         <span class="flex gap-2 select-none">
             @foreach($sortArray as $field => $sort)
