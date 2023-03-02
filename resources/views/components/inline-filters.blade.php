@@ -32,7 +32,7 @@
                     style="{{ $column->hidden === true ? 'display:none': '' }}; {{ $theme->table->tdBodyStyle }}">
 
                     @foreach($column->filters as $key => $filter)
-                        <div wire:key="filter-{{ $key }}">
+                        <div wire:key="filter-{{ $column->field }}-{{ $key }}">
                             @if(str(data_get($filter, 'className'))->contains('FilterMultiSelect'))
                                 <x-livewire-powergrid::inputs.select
                                         :tableName="$tableName"

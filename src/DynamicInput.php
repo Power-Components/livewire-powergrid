@@ -10,7 +10,7 @@ final class DynamicInput
 
     public const FILTER_BOOLEAN = 'boolean,bool';
 
-    public const FILTER_INPUT_TEXT_CONTAINS = 'input_text_contains,string';
+    public const FILTER_INPUT_TEXT_CONTAINS = 'input_text,string';
 
     public const FILTER_NUMBER = 'number,string';
 

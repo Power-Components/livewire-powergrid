@@ -20,6 +20,10 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
+        if (count($values) === 0) {
+            return;
+        }
+
         /** @var array $values */
         foreach ($values as $value) {
             if ($value === '') {
