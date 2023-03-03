@@ -49,10 +49,11 @@ class ExportJob implements ShouldQueue
             ->limit($this->limit)
             ->get();
 
+        $exportable = new $this->type();
+
         /** @phpstan-ignore-next-line  */
-        (new $this->type())
-            ->fileName($this->getFilename())
+        $exportable->fileName($this->getFilename())
             ->setData($this->columns, $this->transform($query))
-            ->store();
+            ->download([]);
     }
 }
