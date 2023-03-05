@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Support\Collection;
-use Illuminate\Support\Js;
+use Illuminate\Support\{Collection, Js};
 use Illuminate\View\ComponentAttributeBag;
 
 class FilterSelect extends FilterBase

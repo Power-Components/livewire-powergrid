@@ -31,7 +31,9 @@
 @else
     <div>
         @if(!$inline)
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ $title }}</label>
+            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+                {{ $title }}
+            </label>
         @endif
         <div @class(['sm:flex gap-3 w-full' => !$inline,'flex flex-col' => $inline])>
             <div @class(['pl-0 pt-1 w-full sm:w-1/2' => !$inline])>

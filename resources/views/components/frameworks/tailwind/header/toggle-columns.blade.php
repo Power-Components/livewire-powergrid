@@ -3,7 +3,8 @@
          class="mr-2 mt-2 sm:mt-0"
          @click.outside="open = false">
         <button @click.prevent="open = ! open"
-                class="pg-btn-white">
+                class="pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-500 dark:hover:bg-pg-primary-700
+    dark:ring-offset-pg-primary-800 dark:text-pg-primary-400 dark:bg-pg-primary-600">
             <div class="flex">
                 <x-livewire-powergrid::icons.eye-off class="w-5 h-5 text-pg-primary-500 dark:text-pg-primary-300"/>
             </div>

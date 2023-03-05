@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div x-show="show"
-                         class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-700">
+                         class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-600">
                         @foreach($exportedFiles as $file)
                             <div class="flex w-full p-2">
                                 <x-livewire-powergrid::icons.download

@@ -49,7 +49,9 @@
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ $title }}</label>
+                <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+                    {{ $title }}
+                </label>
             @endif
             <div @class([
                 'sm:flex w-full' => !$inline && $showSelectOptions,

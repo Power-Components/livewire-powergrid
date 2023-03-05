@@ -53,7 +53,9 @@
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ data_get($filter, 'title') }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    {{ data_get($filter, 'title') }}
+                </label>
             @endif
             <select @if ($multiple) multiple @endif
                     class="{{ $theme->selectClass }}"
