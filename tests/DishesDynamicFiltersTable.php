@@ -90,7 +90,6 @@ class DishesDynamicFiltersTable extends PowerGridComponent
     {
         return [
             Filter::dynamic('in_stock', 'in_stock')
-                ->filterType(DynamicInput::FILTER_BOOLEAN)
                 ->component('tests::dynamic-select')
                 ->attributes([
                     'class'   => 'min-w-[170px]',

@@ -9,20 +9,27 @@
     @php
         $field               = strval(data_get($filter, 'field'));
         $title               = strval(data_get($filter, 'title'));
-        $operators           = data_get($filter, 'operators', []);
+        $operators           = (array) data_get($filter, 'operators', []);
         $placeholder         = strval(data_get($filter, 'placeholder'));
-        $componentAttributes = (array) (data_get($filter, 'attributes'));
+        $componentAttributes = (array) data_get($filter, 'attributes', []);
 
         $inputTextOptions    = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
-        $inputTextOptions = count($operators) > 0 ? $operators : $inputTextOptions;
-        $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
+        $inputTextOptions    = count($operators) > 0 ? $operators : $inputTextOptions;
+        $showSelectOptions   = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
 
-        $defaultPlaceholder = $column->placeholder ?: $column->title;
+        $defaultPlaceholder  = $column?->placeholder ?: $column?->title;
         $overridePlaceholder = $placeholder ?: $defaultPlaceholder;
 
         unset($filter['placeholder']);
 
         $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field);
+
+        $selectClasses = \Illuminate\Support\Arr::toCssClasses([
+            'power_grid', $theme->selectClass, data_get($column, 'headerClass')
+        ]);
+        $inputClasses = \Illuminate\Support\Arr::toCssClasses([
+            'power_grid', $theme->inputClass
+        ]);
 
         $params = array_merge([
             'showSelectOptions' => $showSelectOptions,
@@ -39,22 +46,21 @@
                 :component="$params['component']" :attributes="new \Illuminate\View\ComponentAttributeBag($params)"/>
     @else
         <div @class([
-            'p-2' => !$inline,
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
-                <label class="text-gray-700 dark:text-gray-300">{{ $title }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">{{ $title }}</label>
             @endif
             <div @class([
-                'sm:flex w-full' => !$inline,
-                'flex flex-col' => $inline,
+                'sm:flex w-full' => !$inline && $showSelectOptions,
+                'flex flex-col' => $inline && $showSelectOptions,
                 ])>
                 @if($showSelectOptions)
                     <div @class([
                             'pl-0 pt-1 w-full sm:pr-3 sm:w-1/2' => !$inline,
                         ])>
                         <div class="relative">
-                            <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
+                            <select class="{{ $selectClasses }}"
                                     style="{{ data_get($column, 'headerStyle') }}"
                                     {{ $defaultAttributes['selectAttributes'] }}>
                                 @foreach($inputTextOptions as $key => $value)
@@ -69,8 +75,9 @@
                     </div>
                 @endif
                 <div @class([
-                        'pl-0 pt-1 w-full sm:w-1/2' => !$inline,
+                        'pl-0 pt-1 w-full sm:w-1/2' => !$inline && $showSelectOptions,
                         'mt-1' => $inline,
+                        'pt-1' => !$showSelectOptions
                     ])>
                     <input
                             wire:key="input-{{ $field }}"
@@ -80,7 +87,7 @@
                                 {{ $defaultAttributes['inputAttributes'] }}
                             @endif
                             type="text"
-                            class="power_grid {{ $theme->inputClass }}"
+                            class="{{ $inputClasses }}"
                             placeholder="{{ $placeholder }}"/>
                 </div>
             </div>

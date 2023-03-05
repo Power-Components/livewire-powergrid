@@ -31,7 +31,7 @@
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
             <label for="input_{{ $column }}"
-                   class="text-gray-700 dark:text-gray-300">
+                   class="block text-sm font-medium text-gray-700 dark:text-gray-400">
                 {{ $title }}
             </label>
         @endif

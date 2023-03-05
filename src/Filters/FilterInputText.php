@@ -8,10 +8,6 @@ class FilterInputText extends FilterBase
 {
     public array $operators = [];
 
-    public string $component = '';
-
-    public array $attributes = [];
-
     public string $placeholder = '';
 
     private static array $inputTextOptions = [
@@ -36,15 +32,6 @@ class FilterInputText extends FilterBase
         }
 
         $this->operators = $value;
-
-        return $this;
-    }
-
-    public function component(string $component, array $attributes = []): FilterInputText
-    {
-        $this->component = $component;
-
-        $this->attributes = $attributes;
 
         return $this;
     }
