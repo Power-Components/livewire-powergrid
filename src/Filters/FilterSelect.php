@@ -3,6 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Js;
+use Illuminate\View\ComponentAttributeBag;
 
 class FilterSelect extends FilterBase
 {
@@ -31,5 +33,15 @@ class FilterSelect extends FilterBase
         $this->optionLabel = $value;
 
         return $this;
+    }
+
+    public static function getWireAttributes(string $field, string $title): array
+    {
+        return collect()
+            ->put('selectAttributes', new ComponentAttributeBag([
+                'wire:model.debounce.500ms' => 'filters.select.' . $field,
+                'wire:input.debounce.500ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
+            ]))
+            ->toArray();
     }
 }
