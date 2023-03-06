@@ -161,15 +161,10 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Categoria'))
+                ->title(__('Category'))
                 ->field('category_name', 'categories.name')
                 ->sortable()
-                ->placeholder('Categoria placeholder'),
-
-            Column::add()
-                ->title(__('Multiple'))
-                ->field('category_name')
-                ->placeholder('Categoria'),
+                ->placeholder('Category placeholder'),
 
             Column::add()
                 ->title(__('Preço'))
