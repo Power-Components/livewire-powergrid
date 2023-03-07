@@ -145,11 +145,8 @@ class DishesMakeTable extends PowerGridComponent
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
-            Column::make('Categoria', 'category_name')
-                ->placeholder('Categoria placeholder'),
-
-            Column::make('Multiple', 'category_name')
-                ->placeholder('Categoria'),
+            Column::make('Category', 'category_name')
+                ->placeholder('Category'),
 
             Column::make('Preço', 'price_BRL')
                 ->editOnClick(true, 'price'),

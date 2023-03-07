@@ -50,11 +50,12 @@
      x-data="{{ $alpineData }}">
     @if(filled($filter))
         <div @class([
-            'p-2' => !$inline,
             $theme->baseClass,
         ]) style="{{ $theme->baseStyle }}">
             @if(!$inline)
-                <label class="text-gray-700 dark:text-gray-300">{{ data_get($filter, 'title') }}</label>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    {{ data_get($filter, 'title') }}
+                </label>
             @endif
             <select @if ($multiple) multiple @endif
                     class="{{ $theme->selectClass }}"

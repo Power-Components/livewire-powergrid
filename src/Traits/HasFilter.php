@@ -109,8 +109,14 @@ trait HasFilter
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
+            if (str($column->dataField)->contains('.')) {
+                $field = $column->field;
+            } else {
+                $field = filled($column->dataField) ? $column->dataField : $column->field;
+            }
+
             $filterForColumn = $filters->filter(
-                fn ($filter) => $filter->column == $column->field
+                fn ($filter) => $filter->column == $field
             );
 
             if ($filterForColumn->count() > 0) {

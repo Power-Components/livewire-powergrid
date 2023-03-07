@@ -2,9 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
+use Illuminate\View\ComponentAttributeBag;
+
 class FilterInputText extends FilterBase
 {
     public array $operators = [];
+
+    public string $placeholder = '';
 
     private static array $inputTextOptions = [
         'contains',
@@ -23,11 +27,32 @@ class FilterInputText extends FilterBase
 
     public function operators(array $value = []): FilterInputText
     {
-//        if (!in_array('contains', $value)) {
-//            $value[] = 'contains';
-//        }
+        if (!in_array('contains', $value)) {
+            $value[] = 'contains';
+        }
 
         $this->operators = $value;
+
+        return $this;
+    }
+
+    public static function getWireAttributes(string $field): array
+    {
+        return collect()
+            ->put('selectAttributes', new ComponentAttributeBag([
+                'wire:model.lazy' => 'filters.input_text_options.' . $field,
+                'wire:input.lazy' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value)',
+            ]))
+            ->put('inputAttributes', new ComponentAttributeBag([
+                'wire:model.debounce.700ms' => 'filters.input_text.' . $field,
+                'wire:input.debounce.700ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $field . '\')',
+            ]))
+            ->toArray();
+    }
+
+    public function placeholder(string $placeholder): FilterInputText
+    {
+        $this->placeholder = $placeholder;
 
         return $this;
     }

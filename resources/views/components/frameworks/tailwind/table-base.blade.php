@@ -13,6 +13,7 @@
 
                 @if($filtersFromColumns->count() > 0)
                     <x-livewire-powergrid::frameworks.tailwind.filter
+                        :enabled-filters="$enabledFilters"
                         :tableName="$tableName"
                         :columns="$columns"
                         :filtersFromColumns="$filtersFromColumns"

@@ -30,8 +30,7 @@
 <div wire:ignore x-data="pgFlatPickr(@js($params))">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
-            <label for="input_{{ $column }}"
-                   class="text-gray-700 dark:text-gray-300">
+            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
                 {{ $title }}
             </label>
         @endif

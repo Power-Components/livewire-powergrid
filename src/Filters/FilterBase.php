@@ -10,6 +10,10 @@ class FilterBase
 
     public ?\Closure $collection = null;
 
+    public string $component = '';
+
+    public array $attributes = [];
+
     public function __construct(
         public string $column,
         public ?string $field = null,
@@ -21,16 +25,25 @@ class FilterBase
         $this->className = get_called_class();
     }
 
-    public function query(\Closure $closure): static
+    public function query(\Closure $closure): self
     {
         $this->builder = $closure;
 
         return $this;
     }
 
-    public function collection(\Closure $closure): static
+    public function collection(\Closure $closure): self
     {
         $this->collection = $closure;
+
+        return $this;
+    }
+
+    public function component(string $component, array $attributes = []): self
+    {
+        $this->component = $component;
+
+        $this->attributes = $attributes;
 
         return $this;
     }

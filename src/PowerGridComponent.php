@@ -32,7 +32,6 @@ class PowerGridComponent extends Component
     use HasFilter;
     use PersistData;
     use Listeners;
-    use WithDynamicFilters;
 
     public array $headers = [];
 
@@ -101,8 +100,6 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->resolveFilters();
-
-        $this->initializePropertiesFromDynamicFilters();
 
         $this->restoreState();
     }

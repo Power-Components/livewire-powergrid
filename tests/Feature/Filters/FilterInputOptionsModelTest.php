@@ -25,7 +25,8 @@ it('properly filters by "name is"', function (string $component, object $params)
 })->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name is" using nonexistent record', function (string $component, object $params) {
-    $filter   = Filter::inputText('name', $params->field)->operators();
+    $filter = Filter::inputText('name', $params->field)
+        ->operators();
     $livewire = livewire($component, [
         'join'        => $params->join,
         'testFilters' => [
@@ -38,6 +39,20 @@ it('properly filters by "name is" using nonexistent record', function (string $c
         ->assertDontSee('Francesinha');
 
     expectColumnsFilterMatch($livewire, $filter);
+})->group('filters', 'filterInputText')->with('dishes_filter');
+
+it('properly show placeholder', function (string $component, object $params) {
+    $filter = Filter::inputText('name', $params->field)
+        ->placeholder('Test Placeholder');
+
+    livewire($component, [
+        'join'        => $params->join,
+        'testFilters' => [
+            $filter,
+        ],
+    ])
+        ->call($params->theme)
+        ->assertSeeHtml('placeholder="Test Placeholder"');
 })->group('filters', 'filterInputText')->with('dishes_filter');
 
 it('properly filters by "name is not"', function (string $component, object $params) {

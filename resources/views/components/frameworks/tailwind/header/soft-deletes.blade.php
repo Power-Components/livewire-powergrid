@@ -4,9 +4,8 @@
          class="mr-0 sm:mr-2 mt-2 sm:mt-0"
          @click.outside="open = false">
         <button @click.prevent="open = ! open"
-                class="block bg-pg-primary-50 text-pg-primary-700 border border-pg-primary-300 rounded py-1.5 px-3 leading-tight
-                       focus:outline-none focus:bg-white focus:border-pg-primary-600 dark:border-pg-primary-500 dark:bg-pg-primary-700
-                       2xl:dark:placeholder-pg-primary-300 dark:text-pg-primary-200 dark:text-pg-primary-300">
+                class="pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-500 dark:hover:bg-pg-primary-700
+    dark:ring-offset-pg-primary-800 dark:text-pg-primary-400 dark:bg-pg-primary-700">
             <div class="flex">
                 <x-livewire-powergrid::icons.trash class="text-pg-primary-500 dark:text-pg-primary-300"/>
             </div>

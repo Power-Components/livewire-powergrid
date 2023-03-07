@@ -69,5 +69,12 @@ export default (params) => ({
         }
 
         new window.TomSelect(element, parameters);
+
+        element.nextSibling.childNodes[0].classList.add(
+            'dark:bg-pg-primary-600',
+            'dark:text-pg-primary-200',
+            'dark:placeholder-pg-primary-100',
+            'dark:border-pg-primary-500'
+        )
     },
 })

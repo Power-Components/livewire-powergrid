@@ -7,25 +7,50 @@
 ])
 <div>
     @php
-        $field = strval(data_get($filter, 'field'));
-        $title = strval(data_get($filter, 'title'));
+        $field               = strval(data_get($filter, 'field'));
+        $title               = strval(data_get($filter, 'title'));
+        $operators           = data_get($filter, 'operators', []);
+        $placeholder         = strval(data_get($filter, 'placeholder'));
+        $componentAttributes = (array) (data_get($filter, 'attributes'));
 
-        $inputTextOptions = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
+        $inputTextOptions    = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
+        $inputTextOptions    = count($operators) > 0 ? $operators : $inputTextOptions;
+        $showSelectOptions   = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
 
-        $inputTextOptions  = filled(data_get($filter, 'operators', [])) ?
-                                data_get($filter, 'operators') :
-                                $inputTextOptions;
+        $defaultPlaceholder  = $column->placeholder ?: $column->title;
+        $overridePlaceholder = $placeholder ?: $defaultPlaceholder;
 
-        $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
+        unset($filter['placeholder']);
+
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field);
+
+        $selectClasses = \Illuminate\Support\Arr::toCssClasses([
+            'power_grid', $theme->selectClass, data_get($column, 'headerClass')
+        ]);
+        $inputClasses = \Illuminate\Support\Arr::toCssClasses([
+            'power_grid', $theme->inputClass
+        ]);
+
+        $params = array_merge([
+            'showSelectOptions' => $showSelectOptions,
+            'placeholder' => $placeholder = $componentAttributes['placeholder'] ?? $overridePlaceholder,
+            ...data_get($filter, 'attributes'),
+            ...$defaultAttributes
+        ], $filter);
     @endphp
-    @if(filled($filter))
+
+    @if($params['component'])
+        @unset($params['operators'], $params['attributes'])
+
+        <x-dynamic-component
+                :component="$params['component']" :attributes="new \Illuminate\View\ComponentAttributeBag($params)"/>
+    @else
         <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
             @if($showSelectOptions)
             <div class="relative">
-                <select class="power_grid {{ $theme->selectClass }} {{ data_get($column, 'headerClass') }}"
+                <select class="{{ $selectClasses }}"
                         style="{{ data_get($column, 'headerStyle') }}"
-                        wire:model.lazy="filters.input_text_options.{{ $field }}"
-                        wire:input.lazy="filterInputTextOptions('{{ $field }}', $event.target.value)">
+                        {{ $defaultAttributes['selectAttributes'] }}>
                     @foreach($inputTextOptions as $key => $value)
                         <option wire:key="input-text-options-{{ $tableName }}-{{ $key.'-'.$value }}" value="{{ $key }}">{{ trans('livewire-powergrid::datatable.input_text_options.'.$value) }}</option>
                     @endforeach
@@ -36,12 +61,11 @@
                 <input
                     data-id="{{ $field }}"
                     @if(isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled @else
-                        wire:model.debounce.700ms="filters.input_text.{{ $field  }}"
-                        wire:input.debounce.700ms="filterInputText('{{ $field }}', $event.target.value)"
+                        {{ $defaultAttributes['inputAttributes'] }}
                     @endif
                     type="text"
-                    class="power_grid {{ $theme->inputClass }}"
-                    placeholder="{{ empty($column)?$title:($column->placeholder?:$column->title) }}" />
+                    class="{{ $inputClasses }}"
+                    placeholder="{{ $placeholder }}" />
             </div>
         </div>
     @endif
