@@ -7,15 +7,12 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
-    Detail,
-    DynamicInput,
     Filters\Filter,
-    Footer,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
-    Rules\Rule};
+    PowerGridEloquent
+};
 
 class DishesDynamicFiltersTable extends PowerGridComponent
 {
