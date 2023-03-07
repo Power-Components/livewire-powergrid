@@ -22,7 +22,7 @@
 @endphp
 
 @if($params['component'])
-    @unset($params['operators'], $params['attributes'])
+    @unset($params['attributes'])
 
     <x-dynamic-component
             :component="$params['component']" :attributes="new \Illuminate\View\ComponentAttributeBag($params)"/>

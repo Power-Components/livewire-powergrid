@@ -4,10 +4,7 @@ title: "[Bug]: "
 body:
   - type: markdown
     attributes:
-      value: "# ⚡ PowerGrid ⚡ Bug Report"
-  - type: markdown
-    attributes:
-      value: "<table><tr><td>❗ You <b>MUST</b> use this template to submit an issue or it will be CLOSED. ❗</td></tr></table><br/>"
+      value: "## ⚡ PowerGrid ⚡ Bug Report"
   - type: markdown
     attributes:
       value: "Thank you for reporting a bug and helping us to improve our software!"
