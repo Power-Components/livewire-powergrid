@@ -15,7 +15,7 @@
     "require": {
         "php": "^8.1",
         "livewire/livewire": "^2.12.3",
-        "doctrine/dbal": "^3.6.1|2.12.1",
+        "doctrine/dbal": "^3.6",
         "illuminate/support": "^9.0|^10.0"
     },
     "require-dev": {
