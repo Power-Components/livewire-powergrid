@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
 use Illuminate\Support\{Arr, Str};
@@ -12,7 +13,7 @@ use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\Number,
     Builders\Select};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use DB;
+
 class Model
 {
     use InputOperators;
@@ -102,9 +103,9 @@ class Model
 
                         if ($hasColumn) {
                             if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json') {
-                                $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->search) . '%');
+                                $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
                             } else {
-                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->search . '%');
+                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
                             }
                         }
 
