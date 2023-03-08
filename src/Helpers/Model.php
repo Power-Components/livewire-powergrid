@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\Number,
     Builders\Select};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-
+use DB;
 class Model
 {
     use InputOperators;
@@ -101,7 +101,11 @@ class Model
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json') {
+                                $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->search) . '%');
+                            } else {
+                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->search . '%');
+                            }
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
