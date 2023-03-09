@@ -314,7 +314,7 @@ class TestDatabase
             }
 
             if (!isset($dish['additional'])) {
-                $dish['additional'] = '';
+                $dish['additional'] = '{}';
             }
 
             return $dish;
