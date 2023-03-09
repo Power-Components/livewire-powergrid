@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  * @property float $price
  * @property int $calories
  * @property bool $in_stock
+ * @property string $additional
  * @property bool $active
  * @property Carbon $created_at
  * @property Carbon $updated_at
