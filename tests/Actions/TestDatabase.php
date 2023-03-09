@@ -54,6 +54,7 @@ class TestDatabase
             $table->boolean('active')->default(true);
             $table->datetime('produced_at');
             $table->string('chef_name')->nullable();
+            $table->json('additional')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -144,6 +145,12 @@ class TestDatabase
                 'price'       => 70.00,
                 'in_stock'    => false,
                 'produced_at' => '2021-07-07 19:59:59',
+                'additional'  => json_encode([
+                    [
+                        'Hot-roll' => 8,
+                        'Temaki'   => 2,
+                    ],
+                ]),
             ],
             [
                 'name'        => 'Barco-Sushi Simples',
@@ -151,6 +158,13 @@ class TestDatabase
                 'price'       => 80.40,
                 'in_stock'    => false,
                 'produced_at' => '2021-08-08 00:00:00',
+                'additional'  => json_encode([
+                    [
+                        'Hot-roll' => 6,
+                        'Temaki'   => 1,
+                        'Uramaki'  => 1,
+                    ],
+                ]),
             ],
             [
                 'name'        => 'Polpetone Filé Mignon',
@@ -297,6 +311,10 @@ class TestDatabase
 
             if (!array_key_exists('serving_at', $dish)) {
                 $dish['serving_at'] = 'pool bar';
+            }
+
+            if (!isset($dish['additional'])) {
+                $dish['additional'] = '{}';
             }
 
             return $dish;

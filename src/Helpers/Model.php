@@ -2,15 +2,18 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
+use DB;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\{Cache,Schema};
+use Illuminate\Support\Facades\{Cache, Schema};
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
+use PowerComponents\LivewirePowerGrid\Filters\{
+    Builders\Boolean,
     Builders\DatePicker,
     Builders\InputText,
     Builders\MultiSelect,
     Builders\Number,
-    Builders\Select};
+    Builders\Select
+};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 class Model
@@ -55,10 +58,12 @@ class Model
                     };
                 };
 
-                if (isset($column[key($column)]) &&
+                if (
+                    isset($column[key($column)]) &&
                     is_array($column[key($column)]) &&
                     is_string(key($column[key($column)])) &&
-                    count($column[key($column)]) === 1) {
+                    count($column[key($column)]) === 1
+                ) {
                     $field = key(Arr::dot($column));
 
                     $value = Arr::dot($column)[$field];
@@ -101,7 +106,11 @@ class Model
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
+                                $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
+                            } else {
+                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            }
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
