@@ -148,9 +148,9 @@ class TestDatabase
                 'additional'  => json_encode([
                     [
                         'Hot-roll' => 8,
-                        'Temaki' => 2
-                    ]
-                ])
+                        'Temaki'   => 2,
+                    ],
+                ]),
             ],
             [
                 'name'        => 'Barco-Sushi Simples',
@@ -161,10 +161,10 @@ class TestDatabase
                 'additional'  => json_encode([
                     [
                         'Hot-roll' => 6,
-                        'Temaki' => 1,
-                        'Uramaki' => 1
-                    ]
-                ])
+                        'Temaki'   => 1,
+                        'Uramaki'  => 1,
+                    ],
+                ]),
             ],
             [
                 'name'        => 'Polpetone Filé Mignon',
