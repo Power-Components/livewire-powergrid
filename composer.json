@@ -19,9 +19,9 @@
         "illuminate/support": "^9.0|^10.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.6.4",
+        "phpunit/phpunit": "^9.6.5",
         "pestphp/pest": "^1.22.5",
-        "orchestra/testbench": "^7.0 | ^8.0.5",
+        "orchestra/testbench": "^7.0 | ^8.0.7",
         "composer/composer": "^2.5.4",
         "pestphp/pest-plugin-faker": "^1.0",
         "pestphp/pest-plugin-livewire": "^1.0",
