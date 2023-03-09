@@ -54,7 +54,7 @@ class TestDatabase
             $table->boolean('active')->default(true);
             $table->datetime('produced_at');
             $table->string('chef_name')->nullable();
-            $table->json('additional')->default('')->nullable();
+            $table->json('additional')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
