@@ -92,7 +92,7 @@ class Tailwind extends ThemeBase
     public function filterDatePicker(): FilterDatePicker
     {
         return Theme::filterDatePicker()
-            ->base('p-2')
+            ->base()
             ->view($this->root() . '.filters.date-picker')
             ->input('flatpickr flatpickr-input block my-1 bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 placeholder-pg-primary-400 dark:placeholder-pg-primary-100 dark:border-pg-primary-500', 'min-width: 12rem');
     }
