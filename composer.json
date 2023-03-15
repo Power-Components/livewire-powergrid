@@ -10,6 +10,11 @@
             "name": "Luan Freitas",
             "email": "luanfreitasgoncalves@gmail.com",
             "role": "Developer"
+        },
+        {
+            "name": "DanSysAnalyst",
+            "email": "daniel@sysanalyst.eu",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -27,7 +32,8 @@
         "pestphp/pest-plugin-livewire": "^1.0",
         "laravel/pint": "^1.6",
         "nunomaduro/larastan": "^2.5.1",
-        "laradumps/laradumps": "2.x-dev"
+        "laradumps/laradumps": "2.x-dev",
+        "spaze/phpstan-disallowed-calls": "^2.12"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
