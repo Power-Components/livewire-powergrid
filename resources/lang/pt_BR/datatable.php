@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Filtrar',
         'clear_all_filters' => 'Limpar Todos',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Ações',
         'results_per_page' => 'Registros por página',
         'clear_filter'     => 'Limpar filtro',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Todos',
         'selected'         => 'Selecionados',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Buscar ...',
         'select' => 'Selecione um período',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Mostrando',
         'to'      => 'até',
         'of'      => 'de',
         'results' => 'Registros',
         'all'     => 'Todos',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Selecione',
         'all'    => 'Todos',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Selecione',
         'all'    => 'Todos',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'Todos',
     ],
     'input_text_options' => [
@@ -49,11 +49,11 @@ return [
         'is_empty'     => 'Não está preenchido',
         'is_not_empty' => 'Está preenchido',
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Por favor, aguarde!',
         'completed' => 'Exportação concluída! Seus arquivos estão prontos para download',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Exibindo todos os registros, incluindo os excluídos.',
         'message_only_trashed' => 'Exibindo apenas os registros excluídos.',
         'without_trashed'      => 'Sem excluídos',
