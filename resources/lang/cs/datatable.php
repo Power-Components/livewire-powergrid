@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons' => [
+    'buttons'            => [
         'filter'            => 'Filtrovat',
         'clear_all_filters' => 'Vymazat vše',
     ],
-    'labels' => [
+    'labels'             => [
         'action'           => 'Akce',
         'results_per_page' => 'Záznamy na stránku',
         'clear_filter'     => 'Vymazat filtry',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Všechny',
         'selected'         => 'Vybrané',
     ],
-    'placeholders' => [
+    'placeholders'       => [
         'search' => 'Hledat...',
         'select' => 'Vyberte období',
     ],
-    'pagination' => [
+    'pagination'         => [
         'showing' => 'Zobrazeno',
         'to'      => 'až',
         'of'      => 'z',
         'results' => 'Výsledků',
         'all'     => 'Všechny',
     ],
-    'multi_select' => [
+    'multi_select'       => [
         'select' => 'Vybrat',
         'all'    => 'Všechny',
     ],
-    'select' => [
+    'select'             => [
         'select' => 'Vybrat',
         'all'    => 'Všechny',
     ],
-    'boolean_filter' => [
+    'boolean_filter'     => [
         'all' => 'Všechny',
     ],
     'input_text_options' => [
@@ -50,11 +50,11 @@ return [
         'is_not_blank' => 'Není prázdný',
 
     ],
-    'export' => [
+    'export'             => [
         'exporting' => 'Počkejte prosím!',
         'completed' => 'Export dokončen! Vaše soubory jsou připraveny ke stažení',
     ],
-    'soft_deletes' => [
+    'soft_deletes'       => [
         'message_with_trashed' => 'Zobrazení všech záznamů, včetně smazaných.',
         'message_only_trashed' => 'Zobrazení pouze smazaných záznamů.',
         'without_trashed'      => 'Bez smazaných záznamů',
