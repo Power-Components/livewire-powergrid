@@ -26,6 +26,10 @@ trait Filter
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }
 
+            if (isset($this->filters['input_date_picker'][$table][$column])) {
+                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+            }
+
             unset($this->filters['input_text'][$table][$column]);
             unset($this->filters['input_text_options'][$table][$column]);
             unset($this->filters['number'][$table][$column]['start']);
@@ -70,6 +74,10 @@ trait Filter
         } else {
             if (isset($this->filters['multi_select'][$field])) {
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+            }
+
+            if (isset($this->filters['input_date_picker'][$field])) {
+                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
             unset($this->filters['input_text'][$field]);
