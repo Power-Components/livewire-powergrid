@@ -77,7 +77,6 @@ trait Filter
             }
 
             if (isset($this->filters['input_date_picker'][$field])) {
-                ds('pg:clearFlatPickr:' . $this->tableName . ':' . $field);
                 $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
