@@ -36,6 +36,7 @@ trait Filter
             unset($this->filters['number'][$table][$column]['end']);
             unset($this->filters['boolean'][$table][$column]);
             unset($this->filters['input_date_picker'][$table][$column]);
+            unset($this->filters['date_picker'][$table][$column]);
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
 
@@ -44,6 +45,8 @@ trait Filter
             unset($this->filters['number'][$table . '.' . $column]['start']);
             unset($this->filters['number'][$table . '.' . $column]['end']);
             unset($this->filters['boolean'][$table . '.' . $column]);
+            unset($this->filters['input_date_picker'][$table . '.' . $column]);
+            unset($this->filters['date_picker'][$table . '.' . $column]);
             unset($this->filters['select'][$table . '.' . $column]);
             unset($this->filters['multi_select'][$table . '.' . $column]);
 
@@ -63,6 +66,11 @@ trait Filter
                 unset($this->filters['boolean'][$table]);
             }
             if (empty($this->filters['input_date_picker'][$table])) {
+                unset($this->filters['input_date_picker'][$table]);
+                unset($this->filters['date_picker'][$table]);
+            }
+            if (empty($this->filters['date_picker'][$table])) {
+                unset($this->filters['date_picker'][$table]);
                 unset($this->filters['input_date_picker'][$table]);
             }
             if (empty($this->filters['select'][$table])) {
@@ -102,6 +110,8 @@ trait Filter
         $this->filters        = [];
 
         $this->persistState('filters');
+
+        $this->dispatchBrowserEvent('pg:clear_all_flatpickr::' . $this->tableName);
     }
 
     public static function getInputTextOptions(): array
