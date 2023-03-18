@@ -23,6 +23,13 @@ export default (params) => ({
             }
         })
 
+        window.addEventListener(`pg:clear_all_flatpickr::${this.tableName}`, () => {
+            if (this.$refs.rangeInput && this.element) {
+                this.element.clear()
+                this.lastRequest = null;
+            }
+        })
+
         const options = {
             mode: 'range',
             defaultHour: 0,
@@ -53,7 +60,7 @@ export default (params) => ({
                     values: this.filterKey,
                     label: this.label,
                     dateStr: dateStr,
-                    enableTime: options.enableTime === undefined ? false : options.enableTime
+                    enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime
                 });
 
                 this.lastRequest = encrypted;
