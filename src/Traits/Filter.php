@@ -94,6 +94,7 @@ trait Filter
             unset($this->filters['number'][$field]['end']);
             unset($this->filters['boolean'][$field]);
             unset($this->filters['input_date_picker'][$field]);
+            unset($this->filters['date_picker'][$field]);
             unset($this->filters['select'][$field]);
             unset($this->filters['multi_select'][$field]);
             unset($this->filters['date_picker'][$field]);
