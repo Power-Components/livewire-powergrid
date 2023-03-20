@@ -15,7 +15,7 @@ If you have any questions, do not hesitate to reach the community in the reposit
 1 .**Fork**
 
 ```shell
-git clone https://github.com/Power-Components/livewire-powergrid.git && livewire-powergrid
+git clone https://github.com/Power-Components/livewire-powergrid.git && cd livewire-powergrid
 ```
 
 Install all dependencies with composer and NPM.

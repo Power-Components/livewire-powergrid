@@ -124,5 +124,4 @@ return [
             'csv'  => \PowerComponents\LivewirePowerGrid\Services\OpenSpout\v3\ExportToCsv::class,
         ],
     ],
-
 ];

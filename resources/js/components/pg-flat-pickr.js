@@ -7,10 +7,21 @@ export default (params) => ({
     onlyFuture: params.onlyFuture ?? false,
     noWeekEnds: params.noWeekEnds ?? false,
     customConfig: params.customConfig ?? null,
-    input: null,
+    element: null,
+    lastRequest: null,
     init() {
-        window.addEventListener('pg:datePicker-' + this.tableName +'-clear' , () => {
-            this.input.clear()
+        window.addEventListener(`pg:clear_flatpickr::${this.tableName}:${this.dataField}`, () => {
+            if (this.$refs.rangeInput && this.element) {
+                this.element.clear()
+                this.lastRequest = null;
+            }
+        })
+
+        window.addEventListener(`pg:clear_all_flatpickr::${this.tableName}`, () => {
+            if (this.$refs.rangeInput && this.element) {
+                this.element.clear()
+                this.lastRequest = null;
+            }
         })
 
         const lang = this.locale.locale;
@@ -22,7 +33,7 @@ export default (params) => ({
         const options = this.getOptions()
 
         if(this.$refs.rangeInput) {
-            this.input = flatpickr(this.$refs.rangeInput, options);
+            this.element = flatpickr(this.$refs.rangeInput, options);
         }
     },
     getOptions() {
@@ -45,17 +56,19 @@ export default (params) => ({
             ];
         }
 
-        const _this = this;
-        options.onClose = function (selectedDates, dateStr, instance) {
-            if (selectedDates.length > 0) {
-                _this.$wire.emit('pg:datePicker-' + _this.tableName, {
+        options.onClose = (selectedDates, dateStr, instance) => {
+            const key = `${this.tableName}::${this.dataField}::${selectedDates}`
+            const encrypted = Buffer.from(key).toString('base64')
+
+            if (selectedDates.length > 0 && encrypted !== this.lastRequest) {
+                window.Livewire.emit('pg:datePicker-' + this.tableName, {
                     selectedDates: selectedDates,
-                    field: _this.dataField,
-                    values: _this.filterKey,
-                    label: _this.label,
+                    field: this.dataField,
+                    values: this.filterKey,
+                    label: this.label,
                     dateStr: dateStr,
-                    tableName: _this.tableName,
-                    enableTime: options.enableTime === undefined ? false : options.enableTime
+                    tableName: this.tableName,
+                    enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime
                 });
             }
         }
