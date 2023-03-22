@@ -88,8 +88,8 @@ it('properly paginates', function () {
     ];
     $pagination = $component->fillData();
 
-    expect($pagination->items())->toHaveCount(5);
-    expect($pagination->first()->name)->toBe('Pastel de Nata');
-    expect($pagination->total())->toBe(102);
-    expect($pagination->perPage())->toBe(5);
+    expect($pagination->items())->toHaveCount(5)
+        ->and($pagination->first()->name)->toBe('Pastel de Nata')
+        ->and($pagination->total())->toBe(102)
+        ->and($pagination->perPage())->toBe(5);
 });

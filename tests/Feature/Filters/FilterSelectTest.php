@@ -3,7 +3,9 @@
 use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
+
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')
@@ -19,7 +21,7 @@ it('property displays the results and options', function (string $component, obj
             'wire:input.debounce.500ms="filterSelect(\'category_id\', \'Category\')"',
             '<option value="">All</option>',
         ]);
-})->group('filters', 'filterSelect')->with('themes');
+})->group('filters', 'filterSelect')->with('filter_select_join');
 
 it('property filter using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -58,7 +60,7 @@ it('property filter using custom builder', function (string $component, object $
         ->set('filters', filterSelect('category_id', 1))
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
-})->group('filters', 'filterSelect')->with('themes');
+})->group('filters', 'filterSelect')->with('filter_select_join');
 
 it('property filter using custom collection', function (string $component) {
     livewire($component, [
@@ -81,7 +83,7 @@ it('property filter using custom collection', function (string $component) {
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
-    ->with('themes with collection table', 'themes with array table');
+    ->with('filter_select_themes_collection', 'filter_select_themes_array');
 
 it('property filter using collection & array', function (string $component) {
     livewire($component, [
@@ -97,7 +99,7 @@ it('property filter using collection & array', function (string $component) {
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
-    ->with('themes with collection table', 'themes with array table');
+    ->with('filter_select_themes_collection', 'filter_select_themes_array');
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)
@@ -110,7 +112,7 @@ it('properly filter with category_id', function (string $component, object $para
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterSelect')->with('themes');
+})->group('filters', 'filterSelect')->with('filter_select_join');
 
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
@@ -124,7 +126,7 @@ it('properly filter with another category_id', function (string $component, obje
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters', 'filterSelect')->with('themes');
+})->group('filters', 'filterSelect')->with('filter_select_join');
 
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
@@ -150,7 +152,24 @@ it('properly filters using the same model as the component', function (string $c
             ->assertDontSee('Bife à Rolê')
             ->assertDontSee('Francesinha vegana')
             ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterSelect')->with('themes');
+})->group('filters', 'filterSelect')->with('filter_select_join');
+
+dataset('filter_select_join', [
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_select_themes_array', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
+]);
+
+dataset('filter_select_themes_collection', [
+    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
+    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
+]);
 
 function filterSelect(string $dataField, ?string $value): array
 {

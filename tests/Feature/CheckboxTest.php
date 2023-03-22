@@ -2,6 +2,8 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Tests\{DishesTable, DishesTableWithJoin};
+
 it('selectCheckboxAll works properly', function (string $component, object $params) {
     $component = livewire($component)
         ->call($params->theme)
@@ -56,4 +58,11 @@ it('selectCheckboxAll works properly', function (string $component, object $para
 
     expect($component->checkboxValues)
         ->toBe([]);
-})->with('themes');
+})->with('checkbox_join');
+
+dataset('checkbox_join', [
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);

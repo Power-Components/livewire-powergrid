@@ -2,6 +2,8 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesRowIndex;
+
 it('sorts by "name" and then by "id"', function (string $component, string $theme) {
     livewire($component)
         ->call($theme)
@@ -39,4 +41,9 @@ it('sorts by "name" and then by "id"', function (string $component, string $them
             '<div>4</div>',
             '<div>Francesinha vegana</div>',
         ]);
-})->with('row index');
+})->with('row_index');
+
+dataset('row_index', [
+    'tailwind'  => [DishesRowIndex::class, 'tailwind'],
+    'bootstrap' => [DishesRowIndex::class, 'bootstrap'],
+]);

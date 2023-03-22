@@ -4,6 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
+
 it('properly filter the produced_at field between two dates', function (string $component, object $params) {
     livewire($component, [
         'testFilters' => [
@@ -16,7 +18,7 @@ it('properly filter the produced_at field between two dates', function (string $
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSeeHtml('Francesinha vegana');
-})->group('filters')->with('themes');
+})->group('filters')->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date"', function (string $component, object $params) {
     $datepicker = Filter::datepicker('produced_at_formatted', 'produced_at');
@@ -40,7 +42,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha vegana')
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
-})->group('filters', 'filterDatePicker')->with('themes');
+})->group('filters', 'filterDatePicker')->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
     livewire($component)
@@ -50,7 +52,7 @@ it('properly filters by "between date" using incorrect filter', function (string
         ])
         ->set('filters', filterDateTime('produced_at', ['2021-03-03', '2021-03-01']))
         ->assertSee('No records found');
-})->group('filters', 'filterDatePicker')->with('themes');
+})->group('filters', 'filterDatePicker')->with('filter_datetime_themes_with_join');
 
 it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
     livewire($component, [
@@ -65,7 +67,7 @@ it('properly filter the created_at field between two dates using collection & ar
         ->assertSeeText('Name 3')
         ->assertSeeText('Name 4')
         ->assertDontSeeHtml('Name 5');
-})->group('filters')->with('themes with collection table', 'themes with array table');
+})->group('filters')->with('filter_datetime_themes_collection', 'filter_datetime_themes_array');
 
 it('property filter the created_at field when we are using custom builder collection & array table', function (string $component, string $theme) {
     $dateToFilter = ['2021-01-01 00:00:00', '2021-04-04 00:00:00'];
@@ -90,7 +92,7 @@ it('property filter the created_at field when we are using custom builder collec
         ->assertDontSeeText('Name 4')
         ->assertDontSeeText('Name 5');
 })->group('filters')
-    ->with('themes with collection table', 'themes with array table');
+    ->with('filter_datetime_themes_collection', 'filter_datetime_themes_array');
 
 it('properly filter the produced_at field between another two dates', function (string $component, object $params) {
     livewire($component, [
@@ -103,7 +105,7 @@ it('properly filter the produced_at field between another two dates', function (
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters')->with('themes');
+})->group('filters')->with('filter_datetime_themes_with_join');
 
 it('properly filter the produced_at field between another two dates - custom builder', function (string $component, object $params) {
     $dateToFilter = ['2021-11-11 00:00:00', '2021-12-31 00:00:00'];
@@ -124,7 +126,24 @@ it('properly filter the produced_at field between another two dates - custom bui
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters')->with('themes');
+})->group('filters')->with('filter_datetime_themes_with_join');
+
+dataset('filter_datetime_themes_with_join', [
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_datetime_themes_array', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
+]);
+
+dataset('filter_datetime_themes_collection', [
+    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
+    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
+]);
 
 function filterDateTime(string $dataField, array $value): array
 {

@@ -5,8 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Actions;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
 
-use function Pest\Faker\faker;
-
 class TestDatabase
 {
     /**
@@ -274,7 +272,7 @@ class TestDatabase
             ['name' => 'Sopa Creme de Ervilha', 'category_id' => 7],
         ]);
 
-        $faker = faker();
+        $faker = fake();
 
         return $dishes->map(function ($dish) use ($faker) {
             if (!isset($dish['price'])) {

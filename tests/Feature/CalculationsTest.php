@@ -4,6 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesCalculationsTable;
+
 beforeEach(
     function () {
         TestDatabase::seed(dishesForWithSum());
@@ -55,6 +57,13 @@ it('calculate "max" on price field', function (string $component, object $params
         ->call($params->theme)
         ->assertSeeHtml('<span>Max Price: 7500</span>');
 })->with('calculations');
+
+dataset('calculations', [
+    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
 
 /**
  * Small Dish dataset for sorting test

@@ -34,9 +34,9 @@ it('add rule \'emitTo\' when dishId == 5', function (string $component, object $
         ->assertPayloadNotSet('deletedEvent', ['dishId' => 6])
         ->call('deletedEvent', ['dishId' => 6])
         ->assertPayloadSet('eventId', ['dishId' => 6]);
-})->with('emitTo')->group('actionRules');
+})->with('emit_to_themes_with_join')->group('actionRules');
 
-dataset('emitTo', [
+dataset('emit_to_themes_with_join', [
     'tailwind'       => [RulesEmitToTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [RulesEmitToTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [RulesEmitToTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
