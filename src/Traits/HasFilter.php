@@ -22,7 +22,7 @@ trait HasFilter
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }
 
-            if (isset($this->filters['input_date_picker'][$table][$column])) {
+            if (isset($this->filters['date_picker'][$table][$column])) {
                 $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
@@ -32,7 +32,6 @@ trait HasFilter
             unset($this->filters['number'][$table][$column]['end']);
             unset($this->filters['boolean'][$table][$column]);
 
-            unset($this->filters['input_date_picker'][$table][$column]);
             unset($this->filters['date_picker'][$table][$column]);
 
             unset($this->filters['select'][$table][$column]);
@@ -43,7 +42,6 @@ trait HasFilter
             unset($this->filters['number'][$table . '.' . $column]['start']);
             unset($this->filters['number'][$table . '.' . $column]['end']);
             unset($this->filters['boolean'][$table . '.' . $column]);
-            unset($this->filters['input_date_picker'][$table . '.' . $column]);
             unset($this->filters['date_picker'][$table . '.' . $column]);
             unset($this->filters['select'][$table . '.' . $column]);
             unset($this->filters['multi_select'][$table . '.' . $column]);
@@ -68,14 +66,8 @@ trait HasFilter
                 unset($this->filters['boolean'][$table]);
             }
 
-            if (empty($this->filters['input_date_picker'][$table])) {
-                unset($this->filters['input_date_picker'][$table]);
-                unset($this->filters['date_picker'][$table]);
-            }
-
             if (empty($this->filters['date_picker'][$table])) {
                 unset($this->filters['date_picker'][$table]);
-                unset($this->filters['input_date_picker'][$table]);
             }
 
             if (empty($this->filters['select'][$table])) {
@@ -86,11 +78,13 @@ trait HasFilter
                 unset($this->filters['multi_select'][$table]);
             }
         } else {
+            ds($this->filters);
+
             if (isset($this->filters['multi_select'][$field])) {
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }
 
-            if (isset($this->filters['input_date_picker'][$field])) {
+            if (isset($this->filters['date_picker'][$field])) {
                 $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
@@ -100,7 +94,6 @@ trait HasFilter
             unset($this->filters['number'][$field]['end']);
             unset($this->filters['boolean'][$field]);
 
-            unset($this->filters['input_date_picker'][$field]);
             unset($this->filters['date_picker'][$field]);
 
             unset($this->filters['select'][$field]);
