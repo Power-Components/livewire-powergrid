@@ -78,8 +78,6 @@ trait HasFilter
                 unset($this->filters['multi_select'][$table]);
             }
         } else {
-            ds($this->filters);
-
             if (isset($this->filters['multi_select'][$field])) {
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }

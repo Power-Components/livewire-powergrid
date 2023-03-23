@@ -24,16 +24,16 @@
         "illuminate/support": "^9.0|^10.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
-        "pestphp/pest": "^2.2",
-        "orchestra/testbench": "^7.0 | ^8.0.7",
-        "composer/composer": "^2.5.4",
+        "phpunit/phpunit": "^10.0.18",
+        "pestphp/pest": "^2.2.1",
+        "orchestra/testbench": "^7.0 | ^8.0.11",
+        "composer/composer": "^2.5.5",
         "pestphp/pest-plugin-faker": "^2.0",
         "pestphp/pest-plugin-livewire": "^2.0",
-        "laravel/pint": "^1.6",
+        "laravel/pint": "^1.7",
         "nunomaduro/larastan": "^2.5.1",
         "laradumps/laradumps": "2.x-dev",
-        "spaze/phpstan-disallowed-calls": "^2.12"
+        "spaze/phpstan-disallowed-calls": "^2.12.1"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"

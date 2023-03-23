@@ -80,6 +80,8 @@ class PowerGridComponent extends Component
 
     public bool $readyToLoad;
 
+    public string $loadingComponent = '';
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
