@@ -19,7 +19,6 @@ use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
     WithCheckbox,
-    WithDynamicFilters,
     WithSorting};
 use Throwable;
 
@@ -80,8 +79,6 @@ class PowerGridComponent extends Component
     public bool $deferLoading = false;
 
     public bool $readyToLoad;
-
-    public string $loadingComponent = '';
 
     public function mount(): void
     {

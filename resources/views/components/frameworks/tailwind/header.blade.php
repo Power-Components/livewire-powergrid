@@ -24,9 +24,7 @@
     </div>
 
     @include(powerGridThemeRoot().'.header.batch-exporting')
-
     @include(powerGridThemeRoot().'.header.multi-sort')
-
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
     @includeIf(powerGridThemeRoot().'.header.message-soft-deletes')
 </div>
