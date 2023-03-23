@@ -4,8 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesCaptionTable};
 
 it('add rule \'caption\' when dish out of stock', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -26,9 +26,9 @@ it('add rule \'caption\' when dish out of stock', function (string $component, o
         ->set('search', 'Bife à Rolê')
         ->assertDontSeeHtml('<div id="edit">Edit</div>')
         ->assertSeeHtml('Cation Edit for id 4');
-})->with('caption')->group('actionRules');
+})->with('caption_themes_with_join')->group('actionRules');
 
-dataset('caption', [
+dataset('caption_themes_with_join', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],

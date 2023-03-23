@@ -4,18 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{Column,
-    PowerGridComponent,
-    Tests\DishesActionRulesTable,
-    Tests\DishesArrayTable,
-    Tests\DishesCalculationsTable,
-    Tests\DishesCollectionTable,
-    Tests\DishesDynamicFiltersTable,
-    Tests\DishesRowIndex,
-    Tests\DishesSearchableRawTable,
-    Tests\DishesSoftDeletesTable,
-    Tests\DishesTable,
-    Tests\DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 uses(TestCase::class)->in(__DIR__);
 
@@ -112,64 +101,6 @@ function expectInputText(object $params, mixed $component, string $value, string
             ]);
     }
 }
-
-dataset('themes', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
-]);
-
-dataset('rules', [
-    'tailwind'       => [DishesActionRulesTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesActionRulesTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishesActionRulesTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
-]);
-
-dataset('calculations', [
-    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
-]);
-
-dataset('themes with name field', [
-    'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
-    'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
-]);
-
-dataset('themes with array table', [
-    [DishesArrayTable::class, 'tailwind'],
-    [DishesArrayTable::class, 'bootstrap'],
-]);
-
-dataset('themes with collection table', [
-    'tailwind' => [DishesCollectionTable::class, 'tailwind'],
-    'bootsrap' => [DishesCollectionTable::class, 'bootstrap'],
-]);
-
-dataset('searchable-raw', [
-    'tailwind'  => [DishesSearchableRawTable::class, (object) ['theme' => 'tailwind']],
-    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => 'bootstrap']],
-]);
-
-dataset('themes with softDeletes', [
-    [DishesSoftDeletesTable::class, 'tailwind'],
-    [DishesSoftDeletesTable::class, 'bootstrap'],
-]);
-
-dataset('row index', [
-    'tailwind'  => [DishesRowIndex::class, 'tailwind'],
-    'bootstrap' => [DishesRowIndex::class, 'bootstrap'],
-]);
-
-dataset('themes with dynamic filter table', [
-    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => 'tailwind']],
-    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => 'bootstrap']],
-]);
 
 function requiresMySQL()
 {

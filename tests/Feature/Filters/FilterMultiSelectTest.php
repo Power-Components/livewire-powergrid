@@ -5,8 +5,8 @@ use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterMultiSelect, FilterMultiSelectAsync};
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\DishesFiltersTable;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesFiltersTable};
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -33,7 +33,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
             'Carne Louca',
             'Bife à Rolê',
         ]);
-})->group('filters')->with('multi_select');
+})->group('filters')->with('filter_multi_select_themes_with_join');
 
 it('properly filter with id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -62,7 +62,7 @@ it('properly filter with id using custom builder', function (string $component) 
         ])
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
-})->group('filters')->with('multi_select');
+})->group('filters')->with('filter_multi_select_themes_with_join');
 
 it('properly filter with id using collection & array', function (string $component) {
     $multiSelect = Filter::multiSelect('id')
@@ -87,7 +87,7 @@ it('properly filter with id using collection & array', function (string $compone
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
 })->group('filters')
-    ->with('themes with collection table', 'themes with array table');
+    ->with('filter_multi_select_themes_collection', 'filter_multi_select_themes_array');
 
 it('properly filter with category_id using custom collection', function (string $component) {
     $multiSelect = Filter::multiSelect('id', 'id')
@@ -119,7 +119,7 @@ it('properly filter with category_id using custom collection', function (string 
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
 })->group('filters')
-    ->with('themes with collection table', 'themes with array table');
+    ->with('filter_multi_select_themes_collection', 'themes with array table');
 
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -179,7 +179,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->className->toBe(FilterMultiSelect::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('multi_select');
+})->group('filters')->with('filter_multi_select_themes_with_join');
 
 it('properly filter with category_id - multiple select async', function (string $component) {
     $multiSelect = Filter::multiSelectAsync('category_name', 'category_id')
@@ -240,11 +240,21 @@ it('properly filter with category_id - multiple select async', function (string 
         ->className->toBe(FilterMultiSelectAsync::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('multi_select');
+})->group('filters')->with('filter_multi_select_themes_with_join');
 
-dataset('multi_select', [
+dataset('filter_multi_select_themes_with_join', [
     'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('filter_multi_select_themes_array', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
+]);
+
+dataset('filter_multi_select_themes_collection', [
+    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
+    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);

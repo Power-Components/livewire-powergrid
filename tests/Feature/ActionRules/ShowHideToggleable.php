@@ -30,7 +30,7 @@ it('hides all Toggleables except for id #2', function (string $component, object
             "id: '3',",
             'isHidden: true,',
         ]);
-})->with('ShowHideToggleable')->group('actionRules');
+})->with('toggleable_themes_with_join')->group('actionRules');
 
 it('hides only toggleables on id #2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -56,9 +56,9 @@ it('hides only toggleables on id #2', function (string $component, object $param
             "id: '3',",
             'isHidden: false,',
         ]);
-})->with('ShowHideToggleable')->group('actionRules');
+})->with('toggleable_themes_with_join')->group('actionRules');
 
-dataset('ShowHideToggleable', [
+dataset('toggleable_themes_with_join', [
     'tailwind'       => [RulesShowHideToggleable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [RulesShowHideToggleable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [RulesShowHideToggleable::class, (object) ['theme' => 'tailwind', 'join' => true]],

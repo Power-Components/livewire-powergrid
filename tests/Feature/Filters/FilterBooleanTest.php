@@ -4,6 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
+
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
@@ -46,7 +48,8 @@ it('properly filters by bool true', function (string $component, object $params)
         ->assertSee('Barco-Sushi Simples')
         ->assertSee('Polpetone Filé Mignon')
         ->assertSee('борщ');
-})->group('filters', 'filterBoolean')->with('themes');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_join');
 
 it('properly filters by bool true - custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -72,7 +75,8 @@ it('properly filters by bool true - custom builder', function (string $component
     $component->set('filters', filterBoolean('in_stock', 'true'))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
-})->group('filters', 'filterBoolean')->with('themes');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_join');
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -111,7 +115,8 @@ it('properly filters by bool true - using collection & array table', function (s
 
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters', 'filterBoolean')->with('themes with collection table', 'themes with array table');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
 
 it('properly filters by bool true - using collection', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -149,7 +154,7 @@ it('properly filters by bool true - using collection', function (string $compone
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('themes with collection table');
+    ->with('filter_boolean_themes_collection');
 
 it('properly filters by bool true - using collection - custom builder', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -178,7 +183,7 @@ it('properly filters by bool true - using collection - custom builder', function
         ->assertDontSee('Name 4')
         ->assertDontSee('Name 5');
 })->group('filters', 'filterBoolean')
-    ->with('themes with collection table');
+    ->with('filter_boolean_themes_collection');
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
@@ -217,7 +222,8 @@ it('properly filters by bool false', function (string $component, object $params
 
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters', 'filterBoolean')->with('themes');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_join');
 
 it('properly filters by bool false - using collection & array', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -253,7 +259,8 @@ it('properly filters by bool false - using collection & array', function (string
 
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters', 'filterBoolean')->with('themes with collection table', 'themes with array table');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
 
 it('properly filters by bool "all"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -282,7 +289,8 @@ it('properly filters by bool "all"', function (string $component, object $params
                 'in_stock' => 'all',
             ],
         ]);
-})->group('filters', 'filterBoolean')->with('themes');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_join');
 
 it('properly filters by bool "all" - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component)
@@ -304,7 +312,25 @@ it('properly filters by bool "all" - using collection & array table', function (
                 'in_stock' => 'all',
             ],
         ]);
-})->group('filters', 'filterBoolean')->with('themes with collection table', 'themes with array table');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
+
+dataset('filter_boolean_join', [
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_boolean_themes_array', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
+]);
+
+dataset('filter_boolean_themes_collection', [
+    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
+    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
+]);
 
 function filterBoolean(string $field, ?string $value): array
 {

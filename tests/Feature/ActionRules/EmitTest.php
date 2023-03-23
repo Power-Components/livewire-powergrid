@@ -26,9 +26,9 @@ it('add rule \'emit\' when dishId == 5', function (string $component, object $pa
         ->assertPayloadNotSet('eventId', ['dishId' => 5])
         ->call('deletedEvent', ['dishId' => 5])
         ->assertPayloadSet('eventId', ['dishId' => 5]);
-})->with('emit')->group('actionRules');
+})->with('emit_themes_with_join')->group('actionRules');
 
-dataset('emit', [
+dataset('emit_themes_with_join', [
     'tailwind'       => [RulesEmitTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [RulesEmitTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [RulesEmitTable::class, (object) ['theme' => 'tailwind', 'join' => true]],

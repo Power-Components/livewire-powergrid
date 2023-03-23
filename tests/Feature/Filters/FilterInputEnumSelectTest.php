@@ -24,7 +24,7 @@ it(
             'value="2"',
             '🥜 Suitable for Celiacs',
         ])
-)->group('filters')->with('enum');
+)->group('filters')->with('enum_themes');
 
 it(
     'properly filter with diet',
@@ -35,7 +35,7 @@ it(
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata')
-)->group('filters')->with('enum');
+)->group('filters')->with('enum_themes');
 
 function filterEnumSelect(string $dataField, ?string $value): array
 {
@@ -46,7 +46,7 @@ function filterEnumSelect(string $dataField, ?string $value): array
     ];
 }
 
-dataset('enum', [
+dataset('enum_themes', [
     'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);

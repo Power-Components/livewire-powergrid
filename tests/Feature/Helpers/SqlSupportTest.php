@@ -51,5 +51,4 @@ it('returns sortField', function (array $data) {
     [['db' => 'sqlsrv', 'version' => '14.00.3421',  'expected' => "CAST(SUBSTRING(field, PATINDEX('%[a-z]%', field), LEN(field)-PATINDEX('%[a-z]%', field)) AS INT)"]],
     [['db' => 'sqlsrv', 'version' => '20.80',  'expected' => "CAST(SUBSTRING(field, PATINDEX('%[a-z]%', field), LEN(field)-PATINDEX('%[a-z]%', field)) AS INT)"]],
     [['db' => 'unsupported-db', 'version' => '29.00.00',  'expected' => 'field+0']],
-
 ]);
