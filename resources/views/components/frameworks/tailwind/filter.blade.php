@@ -30,7 +30,7 @@
                                     :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"/>
                         </div>
                     @endif
-                    @if(str(data_get($filter, 'className'))->contains('FilterDatePicker'))
+                    @if(str(data_get($filter, 'className'))->contains('FilterDateTimePicker'))
                         <div class="flex-1 {{ data_get($filter, 'baseClass') }}">
                             @includeIf($theme->filterDatePicker->view, [
                                 'filter'    => $filter,
@@ -40,6 +40,16 @@
                             ])
                         </div>
                     @endif
+                        @if(str(data_get($filter, 'className'))->contains('FilterDatePicker'))
+                            <div class="flex-1 {{ data_get($filter, 'baseClass') }}">
+                                @includeIf($theme->filterDatePicker->view, [
+                                    'filter'    => $filter,
+                                    'tableName' => $tableName,
+                                    'classAttr' => 'w-full',
+                                    'theme'     => $theme->filterDatePicker,
+                                ])
+                            </div>
+                        @endif
                     @if(str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
                         <div class="flex-1 {{ data_get($filter, 'baseClass') }}">
                             @includeIf($theme->filterSelect->view, [

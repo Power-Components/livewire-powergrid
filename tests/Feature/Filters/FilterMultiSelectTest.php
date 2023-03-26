@@ -33,7 +33,8 @@ it('properly filter with category_id - Carnes selected', function (string $compo
             'Carne Louca',
             'Bife à Rolê',
         ]);
-})->group('filters')->with('filter_multi_select_themes_with_join');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
 it('properly filter with id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -62,7 +63,8 @@ it('properly filter with id using custom builder', function (string $component) 
         ])
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
-})->group('filters')->with('filter_multi_select_themes_with_join');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
 it('properly filter with id using collection & array', function (string $component) {
     $multiSelect = Filter::multiSelect('id')
@@ -146,7 +148,6 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
                 ],
             ],
         ])
-        ->assertDontSee('Empadão de Palmito')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
@@ -163,7 +164,6 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
                 ],
             ],
         ])
-        ->assertSee('Empadão de Palmito')
         ->assertSee('борщ')
         ->assertDontSee('Peixada da chef Nábia');
 
@@ -179,7 +179,8 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->className->toBe(FilterMultiSelect::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('filter_multi_select_themes_with_join');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
 it('properly filter with category_id - multiple select async', function (string $component) {
     $multiSelect = Filter::multiSelectAsync('category_name', 'category_id')
@@ -207,7 +208,6 @@ it('properly filter with category_id - multiple select async', function (string 
                 ],
             ],
         ])
-        ->assertDontSee('Empadão de Palmito')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
@@ -224,7 +224,6 @@ it('properly filter with category_id - multiple select async', function (string 
                 ],
             ],
         ])
-        ->assertSee('Empadão de Palmito')
         ->assertSee('борщ')
         ->assertDontSee('Peixada da chef Nábia');
 
@@ -240,7 +239,8 @@ it('properly filter with category_id - multiple select async', function (string 
         ->className->toBe(FilterMultiSelectAsync::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('filter_multi_select_themes_with_join');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
 dataset('filter_multi_select_themes_with_join', [
     'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],

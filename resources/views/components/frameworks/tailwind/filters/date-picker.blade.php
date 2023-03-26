@@ -4,6 +4,7 @@
     'date' => null,
     'column' => null,
     'tableName' => null,
+    'type' => 'datetime',
 ])
 @php
     unset($filter['className']);
@@ -17,17 +18,18 @@
     }
 
     $params = [
-        'dataField'   => $field,
-        'tableName'   => $tableName,
-        'filterKey'   => 'enabledFilters.date_picker.'.$field,
-        'label'       => $title,
-        'locale'      => config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale()),
-        'onlyFuture'  => data_get($customConfig, 'only_future', false),
-        'noWeekEnds'  => data_get($customConfig, 'no_weekends', false),
-        'customConfig'=> $customConfig
+        'type'         => $type,
+        'dataField'    => $field,
+        'tableName'    => $tableName,
+        'filterKey'    => 'enabledFilters.datetime.'.$field,
+        'label'        => $title,
+        'locale'       => config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale()),
+        'onlyFuture'   => data_get($customConfig, 'only_future', false),
+        'noWeekEnds'   => data_get($customConfig, 'no_weekends', false),
+        'customConfig' => $customConfig
     ];
 @endphp
-<div wire:ignore x-data="pgFlatPickr(@js($params))">
+<div wire:ignore x-data="pgFlatpickr(@js($params))">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         @if(!$inline)
             <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">

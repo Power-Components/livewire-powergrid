@@ -44,6 +44,11 @@ class FilterManager
         return new FilterDatePicker($column, $field);
     }
 
+    public function datetimepicker(string $column, ?string $field = null): FilterDateTimePicker
+    {
+        return new FilterDateTimePicker($column, $field);
+    }
+
     public function boolean(string $column, ?string $field = null): FilterBoolean
     {
         return new FilterBoolean($column, $field);

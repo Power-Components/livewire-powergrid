@@ -66,14 +66,25 @@
                                 <x-dynamic-component :component="data_get($filter, 'component', '')"
                                                      :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))" />
                             @endif
-                            @if(str(data_get($filter, 'className'))->contains('FilterDatePicker'))
+                            @if(str(data_get($filter, 'className'))->contains('FilterDateTimePicker'))
                                 @includeIf($theme->filterDatePicker->view, [
                                     'inline'    => true,
                                     'filter'    => $filter,
+                                    'type'      => 'datetime',
                                     'tableName' => $tableName,
                                     'classAttr' => 'w-full',
                                     'theme'     => $theme->filterDatePicker,
                                 ])
+                            @endif
+                            @if(str(data_get($filter, 'className'))->contains('FilterDatePicker'))
+                                @includeIf($theme->filterDatePicker->view, [
+                                    'inline'    => true,
+                                    'filter'    => $filter,
+                                    'type'      => 'date',
+                                    'tableName' => $tableName,
+                                    'classAttr' => 'w-full',
+                                    'theme'     => $theme->filterDatePicker,
+                                 ])
                             @endif
                             @if(str(data_get($filter, 'className'))->contains('FilterBoolean'))
                                 @includeIf($theme->filterBoolean->view, [

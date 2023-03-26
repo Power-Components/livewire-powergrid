@@ -7,6 +7,7 @@ use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Carbon, Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\DatePicker,
+    Builders\DateTimePicker,
     Builders\InputText,
     Builders\MultiSelect,
     Builders\Number,
@@ -91,7 +92,8 @@ class Collection
                     ->first();
 
                 $this->collection = match ($key) {
-                    'date_picker'  => (new DatePicker($filter))->collection($this->collection, $field, $value),
+                    'datetime'     => (new DateTimePicker($filter))->collection($this->collection, $field, $value),
+                    'date'         => (new DatePicker($filter))->collection($this->collection, $field, $value),
                     'multi_select' => (new MultiSelect($filter))->collection($this->collection, $field, $value),
                     'select'       => (new Select($filter))->collection($this->collection, $field, $value),
                     'boolean'      => (new Boolean($filter))->collection($this->collection, $field, $value),
