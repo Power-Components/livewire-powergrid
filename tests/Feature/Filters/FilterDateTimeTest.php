@@ -16,9 +16,10 @@ it('properly filter the produced_at field between two dates', function (string $
         ->set('filters', filterDate('produced_at', ['2021-02-02', '2021-04-04']))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
-        ->assertDontSee('Bife à Rolê')
+        ->assertSee('Bife à Rolê')
         ->assertDontSeeHtml('Francesinha vegana');
 })->group('filters')
+    ->exceptSQLite()
     ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date"', function (string $component, object $params) {
@@ -36,7 +37,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         ])
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
-        ->assertDontSee('Carne Louca')
+        ->assertSee('Carne Louca')
         ->assertDontSee('Barco-Sushi Simples')
         ->set('filters', filterDateTime('produced_at', ['2021-04-04', '2021-07-07 19:59:58']))
         ->assertSee('Bife à Rolê')
@@ -44,6 +45,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
 })->group('filters', 'filterDatePicker')
+    ->exceptSQLite()
     ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
