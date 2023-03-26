@@ -119,7 +119,11 @@ class Collection implements CollectionFilterInterface
         foreach ($this->filters as $key => $type) {
             foreach ($type as $field => $value) {
                 switch ($key) {
-                    case 'date_picker':
+                    case 'datetime':
+                        $this->filterDateTimePicker($field, $value);
+
+                        break;
+                    case 'date':
                         $this->filterDatePicker($field, $value);
 
                         break;
@@ -150,11 +154,21 @@ class Collection implements CollectionFilterInterface
         return $this->query;
     }
 
-    public function filterDatePicker(string $field, array $value): void
+    public function filterDateTimePicker(string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $this->query = $this->query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
         }
+    }
+
+    public function filterDatePicker(string $field, array $value): void
+    {
+        [$startDate, $endDate] = [
+            0 => Carbon::parse($value[0])->format('Y-m-d'),
+            1 => Carbon::parse($value[1])->format('Y-m-d'),
+        ];
+
+        $this->query = $this->query->whereBetween($field, [$startDate, $endDate]);
     }
 
     public function filterInputText(string $field, ?string $value): void

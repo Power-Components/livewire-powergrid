@@ -4,6 +4,7 @@
     'date' => null,
     'column' => null,
     'tableName' => null,
+    'type' => null,
 ])
 @php
     $customConfig = [];
@@ -13,9 +14,10 @@
         }
     }
 @endphp
-<div wire:ignore x-data="pgFlatPickr({
+<div wire:ignore x-data="pgFlatpickr({
         dataField: '{{ $date['dataField'] }}',
         tableName: '{{ $tableName }}',
+        type: '{{ $type }}',
         filterKey: 'enabledFilters.date_picker.{{ $date['dataField'] }}',
         label: '{{ $date['label'] }}',
         locale: {{ json_encode(config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale())) }},
@@ -33,8 +35,7 @@
                    class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
                    type="text"
                    readonly
-                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"
-                   wire:model="filters.input_date_picker.{{ data_get($date, 'dataField') }}"/>
+                   placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"/>
         </form>
     </div>
 </div>
