@@ -21,6 +21,7 @@ use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
+    Filters\Filter,
     Footer,
     Header,
     PowerGrid,
@@ -115,7 +116,7 @@ final class PowerGridDemoTable extends PowerGridComponent
     * PowerGrid datasource.
     *
     */
-    public function datasource(): Collection
+    public function datasource()
     {
         return $this->demoUsers(); //Get demo users. Should be removed in a real project.
         //return User::query();
@@ -216,25 +217,20 @@ final class PowerGridDemoTable extends PowerGridComponent
             Column::make('Full name', 'name')
                 ->sortable() //Adds sorting button to the header
                 ->searchable() //Includes column in search option (top page)
-                ->makeInputText()//Filter for searching text
                 ->editOnClick($canEdit), //Allows user to edit information on click
 
             Column::make('Email address', 'email')
                 ->searchable()
-                ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
             Column::make('US State', 'state_in_usa'),
 
             Column::make('Laracon visitor?', 'laracon')
-                ->sortable()
-                ->makeBooleanFilter('has_laracon_ticket', 'yes', 'no'), //Boolean filter based on "has_laracon_ticket".
-
+                ->sortable(),
 
             Column::make('Laravel user since', 'laravel_since_formatted')
                 ->sortable()
-                ->makeInputDatePicker('laravel_since') //Date filter
-            ];
+        ];
     }
 
     /*
@@ -311,13 +307,23 @@ final class PowerGridDemoTable extends PowerGridComponent
         throw new \Exception(' Data update is blocked on demo to protect your database!');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | ❗ Demo Users (Should be removed in a real project)
-    |--------------------------------------------------------------------------
-    | Generate random  users for demo purpose.
-    | Data will NOT be stored in your database.
-    */
+    /**
+     * PowerGrid filters.
+     *
+     * @return array<int, Filter>
+     */
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('name')
+                ->operators(['contains']),
+
+            Filter::inputText('email'),
+
+            Filter::boolean('laracon')
+                ->label('Yes', 'No'),
+        ];
+    }
 
     /**
      * Generate demo users

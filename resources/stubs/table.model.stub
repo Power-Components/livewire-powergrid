@@ -46,10 +46,10 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
     /**
-    * PowerGrid datasource.
-    *
-    * @return Builder<\{{ modelName }}>
-    */
+     * PowerGrid datasource.
+     *
+     * @return Builder<\{{ modelName }}>
+     */
     public function datasource(): Builder
     {
         return {{ modelLastName }}::query();
@@ -103,7 +103,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-     /**
+    /**
      * PowerGrid Columns.
      *
      * @return array<int, Column>
@@ -127,6 +127,11 @@ final class {{ componentName }} extends PowerGridComponent
         ];
     }
 
+    /**
+     * PowerGrid Filters.
+     *
+     * @return array<int, Filter>
+     */
     public function filters(): array
     {
         return [
@@ -143,7 +148,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-     /**
+    /**
      * PowerGrid {{ modelLastName }} Action Buttons.
      *
      * @return array<int, Button>
@@ -173,7 +178,7 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-     /**
+    /**
      * PowerGrid {{ modelLastName }} Action Rules.
      *
      * @return array<int, RuleActions>
