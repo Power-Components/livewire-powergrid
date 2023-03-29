@@ -221,7 +221,6 @@ final class PowerGridDemoTable extends PowerGridComponent
 
             Column::make('Email address', 'email')
                 ->searchable()
-               // ->makeInputText()
                 ->clickToCopy($canCopy), //Button for copy to clipboard
 
             Column::make('US State', 'state_in_usa'),
