@@ -4,6 +4,7 @@
     'date' => null,
     'column' => null,
     'tableName' => null,
+    'type' => 'datetime',
 ])
 @php
     unset($filter['className']);
@@ -17,9 +18,10 @@
     }
 
     $params = [
+        'type'        => $type,
         'dataField'   => $field,
         'tableName'   => $tableName,
-        'filterKey'   => 'enabledFilters.date_picker.'.$field,
+        'filterKey'   => 'enabledFilters.datetime.'.$field,
         'label'       => $title,
         'locale'      => config('livewire-powergrid.plugins.flatpickr.locales.'.app()->getLocale()),
         'onlyFuture'  => data_get($customConfig, 'only_future', false),
@@ -27,7 +29,7 @@
         'customConfig'=> $customConfig
     ];
 @endphp
-<div wire:ignore x-data="pgFlatPickr(@js($params))">
+<div wire:ignore x-data="pgFlatpickr(@js($params))">
     <div class="{{ $theme->baseClass }}" style="{{ $theme->baseStyle }}">
         <form autocomplete="off">
             <input id="input_{{ $column }}"

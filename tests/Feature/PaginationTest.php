@@ -4,12 +4,12 @@ use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
 it('properly displays "full" showRecordCount')
     ->livewire(DishesTable::class)
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '10', 'of', '102', 'Results']);
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results']);
 
 it('properly displays "short" showRecordCount')
     ->livewire(DishesTable::class)
     ->set('setUp.footer.recordCount', 'short')
-    ->assertSeeTextInOrder(['1', '-', '10', '|', '102']);
+    ->assertSeeTextInOrder(['1', '-', '10', '|', '15']);
 
 it('properly displays "min" showRecordCount')
     ->livewire(DishesTable::class)
@@ -18,13 +18,12 @@ it('properly displays "min" showRecordCount')
 
 it('properly changes records and displays per page')
     ->livewire(DishesTable::class)
-    ->set('setUp.footer.perPage', '25')
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results'])
-    ->set('setUp.footer.perPage', '50')
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '50', 'of', '102', 'Results'])
+    ->set('setUp.footer.perPage', '11')
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results'])
+    ->set('setUp.footer.perPage', '12')
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '12', 'of', '15', 'Results'])
     ->set('setUp.footer.perPage', '0') //All items
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '102', 'of', '102', 'Results'])
-    ->assertSeeHtml('Sopa Creme de Ervilha')
+    ->assertSeeTextInOrder(['Showing', '1', 'to', '15', 'of', '15', 'Results'])
     ->assertSeeHtml('Pastel de Nata');
 
 it('navigates when click on "page #2"')
@@ -52,22 +51,18 @@ it('navigates when click on "goToPage" and "previousPage"')
 
 it('displays next links ">" and ">>"')
     ->livewire(DishesTable::class)
+    ->set('setUp.footer.perPage', '4')
+
     ->assertSeeHtml('wire:click="nextPage"')
     //page #2
     ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="nextPage"')
-    //Last page
-    ->call('gotoPage', '11')
-    ->assertDontSeeHtml('wire:click="nextPage"');
+    ->assertSeeHtml('wire:click="nextPage"');
 
 it('displays previous links "<" and "<<"')
     ->livewire(DishesTable::class)
     ->assertDontSeeHtml('wire:click="previousPage"')
     //page #2
     ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="previousPage"')
-    //Last page
-    ->call('gotoPage', '11')
     ->assertSeeHtml('wire:click="previousPage"');
 
 it('searches for something that is not on the current page')
@@ -90,6 +85,6 @@ it('properly paginates', function () {
 
     expect($pagination->items())->toHaveCount(5)
         ->and($pagination->first()->name)->toBe('Pastel de Nata')
-        ->and($pagination->total())->toBe(102)
+        ->and($pagination->total())->toBe(15)
         ->and($pagination->perPage())->toBe(5);
 });

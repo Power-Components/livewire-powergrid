@@ -6,14 +6,13 @@ use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache, Schema};
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\Filters\{
-    Builders\Boolean,
+use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\DatePicker,
+    Builders\DateTimePicker,
     Builders\InputText,
     Builders\MultiSelect,
     Builders\Number,
-    Builders\Select
-};
+    Builders\Select};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 class Model
@@ -44,7 +43,8 @@ class Model
                         ->first();
 
                     match ($filterType) {
-                        'date_picker'  => (new DatePicker($filter))->builder($query, $field, $value),
+                        'datetime'     => (new DateTimePicker($filter))->builder($query, $field, $value),
+                        'date'         => (new DatePicker($filter))->builder($query, $field, $value),
                         'multi_select' => (new MultiSelect($filter))->builder($query, $field, $value),
                         'select'       => (new Select($filter))->builder($query, $field, $value),
                         'boolean'      => (new Boolean($filter))->builder($query, $field, $value),

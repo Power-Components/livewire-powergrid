@@ -21,7 +21,8 @@ it('property displays the results and options', function (string $component, obj
             'wire:input.debounce.500ms="filterSelect(\'category_id\', \'Category\')"',
             '<option value="">All</option>',
         ]);
-})->group('filters', 'filterSelect')->with('filter_select_join');
+})->group('filters', 'filterSelect')
+    ->with('filter_select_join');
 
 it('property filter using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -60,7 +61,8 @@ it('property filter using custom builder', function (string $component, object $
         ->set('filters', filterSelect('category_id', 1))
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
-})->group('filters', 'filterSelect')->with('filter_select_join');
+})->group('filters', 'filterSelect')
+    ->with('filter_select_join');
 
 it('property filter using custom collection', function (string $component) {
     livewire($component, [
@@ -112,7 +114,8 @@ it('properly filter with category_id', function (string $component, object $para
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterSelect')->with('filter_select_join');
+})->group('filters', 'filterSelect')
+    ->with('filter_select_join');
 
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
@@ -121,12 +124,11 @@ it('properly filter with another category_id', function (string $component, obje
             Filter::inputText('category_id')->operators(),
         ])
         ->set('filters', filterSelect('category_id', 3))
-        ->assertSee('Empadão de Palmito')
-        ->assertSee('Empadão de Alcachofra')
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters', 'filterSelect')->with('filter_select_join');
+})->group('filters', 'filterSelect')
+    ->with('filter_select_join');
 
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)

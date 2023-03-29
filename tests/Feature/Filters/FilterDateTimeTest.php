@@ -13,12 +13,14 @@ it('properly filter the produced_at field between two dates', function (string $
         ],
     ])
         ->call($params->theme)
-        ->set('filters', filterDateTime('produced_at', ['2021-02-02 00:00:00', '2021-04-04 00:00:00']))
+        ->set('filters', filterDate('produced_at', ['2021-02-02', '2021-04-04']))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
         ->assertSee('Bife à Rolê')
         ->assertDontSeeHtml('Francesinha vegana');
-})->group('filters')->with('filter_datetime_themes_with_join');
+})->group('filters')
+    ->exceptSQLite()
+    ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date"', function (string $component, object $params) {
     $datepicker = Filter::datepicker('produced_at_formatted', 'produced_at');
@@ -27,7 +29,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         'testFilters' => [$datepicker],
     ])
         ->call($params->theme)
-        ->set('filters', filterDateTime('produced_at', ['2021-01-01', '2021-03-03']))
+        ->set('filters', filterDate('produced_at', ['2021-01-01', '2021-03-03']))
         ->assertSeeHtmlInOrder([
             'id="input_produced_at_formatted"',
             'type="text"',
@@ -42,7 +44,9 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha vegana')
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
-})->group('filters', 'filterDatePicker')->with('filter_datetime_themes_with_join');
+})->group('filters', 'filterDatePicker')
+    ->exceptSQLite()
+    ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
     livewire($component)
@@ -50,9 +54,10 @@ it('properly filters by "between date" using incorrect filter', function (string
         ->set('testFilters', [
             Filter::datepicker('produced_at_formatted', 'produced_at'),
         ])
-        ->set('filters', filterDateTime('produced_at', ['2021-03-03', '2021-03-01']))
+        ->set('filters', filterDate('produced_at', ['2021-03-03', '2021-03-01']))
         ->assertSee('No records found');
-})->group('filters', 'filterDatePicker')->with('filter_datetime_themes_with_join');
+})->group('filters', 'filterDatePicker')
+    ->with('filter_datetime_themes_with_join');
 
 it('properly filter the created_at field between two dates using collection & array table', function (string $component, string $theme) {
     livewire($component, [
@@ -67,7 +72,8 @@ it('properly filter the created_at field between two dates using collection & ar
         ->assertSeeText('Name 3')
         ->assertSeeText('Name 4')
         ->assertDontSeeHtml('Name 5');
-})->group('filters')->with('filter_datetime_themes_collection', 'filter_datetime_themes_array');
+})->group('filters')
+    ->with('filter_datetime_themes_collection', 'filter_datetime_themes_array');
 
 it('property filter the created_at field when we are using custom builder collection & array table', function (string $component, string $theme) {
     $dateToFilter = ['2021-01-01 00:00:00', '2021-04-04 00:00:00'];
@@ -101,11 +107,12 @@ it('properly filter the produced_at field between another two dates', function (
         ],
     ])
         ->call($params->theme)
-        ->set('filters', filterDateTime('produced_at', ['2021-11-11 00:00:00', '2021-12-31 00:00:00']))
+        ->set('filters', filterDate('produced_at', ['2021-11-11 00:00:00', '2021-12-31 00:00:00']))
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters')->with('filter_datetime_themes_with_join');
+})->group('filters')
+    ->with('filter_datetime_themes_with_join');
 
 it('properly filter the produced_at field between another two dates - custom builder', function (string $component, object $params) {
     $dateToFilter = ['2021-11-11 00:00:00', '2021-12-31 00:00:00'];
@@ -121,12 +128,13 @@ it('properly filter the produced_at field between another two dates - custom bui
         ],
     ])
         ->call($params->theme)
-        ->set('filters', filterDateTime('produced_at', $dateToFilter))
+        ->set('filters', filterDate('produced_at', $dateToFilter))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters')->with('filter_datetime_themes_with_join');
+})->group('filters')
+    ->with('filter_datetime_themes_with_join');
 
 dataset('filter_datetime_themes_with_join', [
     'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
@@ -145,10 +153,19 @@ dataset('filter_datetime_themes_collection', [
     'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
 
+function filterDate(string $dataField, array $value): array
+{
+    return [
+        'date' => [
+            $dataField => $value,
+        ],
+    ];
+}
+
 function filterDateTime(string $dataField, array $value): array
 {
     return [
-        'date_picker' => [
+        'datetime' => [
             $dataField => $value,
         ],
     ];

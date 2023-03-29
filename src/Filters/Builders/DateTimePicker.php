@@ -5,14 +5,14 @@ namespace PowerComponents\LivewirePowerGrid\Filters\Builders;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\{Carbon, Collection};
 
-class DatePicker extends BuilderBase
+class DateTimePicker extends BuilderBase
 {
     public function builder(Builder $builder, string $field, int|array|string|null $values): void
     {
         /** @var array $values */
         [$startDate, $endDate] = [
-            0 => Carbon::parse($values[0])->format('Y-m-d'),
-            1 => Carbon::parse($values[1])->format('Y-m-d'),
+            0 => Carbon::parse($values[0]),
+            1 => Carbon::parse($values[1]),
         ];
 
         if (data_get($this->filterBase, 'builder')) {
@@ -31,8 +31,8 @@ class DatePicker extends BuilderBase
     {
         /** @var array $values */
         [$startDate, $endDate] = [
-            0 => Carbon::parse($values[0])->format('Y-m-d'),
-            1 => Carbon::parse($values[1])->format('Y-m-d'),
+            0 => Carbon::parse($values[0]),
+            1 => Carbon::parse($values[1]),
         ];
 
         if (data_get($this->filterBase, 'collection')) {
