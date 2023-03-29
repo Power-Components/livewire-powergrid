@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Support\{Arr, Carbon, Collection};
+use DateTimeZone;
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
@@ -173,7 +174,7 @@ trait HasFilter
 
         $appTimeZone = strval(config('app.timezone'));
 
-        $filterTimezone = $data['timezone'] ?? 'UTC';
+        $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
 
         $startDate = Carbon::parse($startDate)->format('Y-m-d');
         $endDate   = Carbon::parse($endDate)->format('Y-m-d');
