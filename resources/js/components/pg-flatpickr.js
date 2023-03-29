@@ -58,7 +58,7 @@ export default (params) => ({
                 window.Livewire.emit('pg:datePicker-' + this.tableName, {
                     selectedDates: selectedDates,
                     field: this.dataField,
-                    timezone: this.customConfig.timezone ?? 'UTC',
+                    timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
                     values: this.filterKey,
                     type: this.type,
                     label: this.label,
