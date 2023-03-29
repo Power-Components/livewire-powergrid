@@ -99,14 +99,12 @@ final class {{ componentName }} extends PowerGridComponent
 
             Column::make('Name', 'name')
                 ->searchable()
-                ->makeInputText('name')
                 ->sortable(),
 
             Column::make('Price', 'price')
                 ->sortable(),
 
-            Column::make('Created', 'created_at_formatted')
-                ->makeInputDatePicker('created_at'),
+            Column::make('Created', 'created_at_formatted'),
         ];
     }
 }
