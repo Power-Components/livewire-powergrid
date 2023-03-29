@@ -2,10 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\{Cache,Schema};
-use Illuminate\Support\Str;
+use Illuminate\Support\{Carbon, Str};
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Services\Contracts\ModelFilterInterface;
 
@@ -71,7 +70,11 @@ class Model implements ModelFilterInterface
             $this->query->where(function ($query) use ($key, $type) {
                 foreach ($type as $field => $value) {
                     switch ($key) {
-                        case 'date_picker':
+                        case 'datetime':
+                            $this->filterDateTimePicker($query, $field, $value);
+
+                            break;
+                        case 'date':
                             $this->filterDatePicker($query, $field, $value);
 
                             break;
@@ -103,11 +106,21 @@ class Model implements ModelFilterInterface
         return $this->query;
     }
 
-    public function filterDatePicker(Builder $query, string $field, array $value): void
+    public function filterDateTimePicker(Builder $query, string $field, array $value): void
     {
         if (isset($value[0]) && isset($value[1])) {
             $query->whereBetween($field, [Carbon::parse($value[0]), Carbon::parse($value[1])]);
         }
+    }
+
+    public function filterDatePicker(Builder $query, string $field, array $value): void
+    {
+        [$startDate, $endDate] = [
+            0 => Carbon::parse($value[0])->format('Y-m-d'),
+            1 => Carbon::parse($value[1])->format('Y-m-d'),
+        ];
+
+        $query->whereBetween($field, [$startDate, $endDate]);
     }
 
     public function filterMultiSelect(Builder $query, string $field, array $values): void

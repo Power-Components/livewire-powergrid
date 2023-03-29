@@ -29,6 +29,7 @@
                                 @includeIf($theme->filterDatePicker->view, [
                                      'inline'    => true,
                                      'date'      => $date,
+                                     'type'      => 'datetime',
                                      'tableName' => $tableName,
                                      'classAttr' => 'w-full',
                                      'theme'     => $theme->filterDatePicker,

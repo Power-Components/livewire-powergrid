@@ -7,6 +7,7 @@ export default (params) => ({
     onlyFuture: params.onlyFuture ?? false,
     noWeekEnds: params.noWeekEnds ?? false,
     customConfig: params.customConfig ?? null,
+    type: params.type,
     element: null,
     lastRequest: null,
     init() {
@@ -57,7 +58,9 @@ export default (params) => ({
                 window.Livewire.emit('pg:datePicker-' + this.tableName, {
                     selectedDates: selectedDates,
                     field: this.dataField,
+                    timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
                     values: this.filterKey,
+                    type: this.type,
                     label: this.label,
                     dateStr: dateStr,
                     enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime

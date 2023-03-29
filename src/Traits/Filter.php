@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use DateTimeZone;
 use Illuminate\Support\{Arr, Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Column;
 
@@ -26,7 +27,7 @@ trait Filter
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }
 
-            if (isset($this->filters['input_date_picker'][$table][$column])) {
+            if (isset($this->filters['datetime'][$table][$column]) || isset($this->filters['date'][$table][$column])) {
                 $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
@@ -35,8 +36,8 @@ trait Filter
             unset($this->filters['number'][$table][$column]['start']);
             unset($this->filters['number'][$table][$column]['end']);
             unset($this->filters['boolean'][$table][$column]);
-            unset($this->filters['input_date_picker'][$table][$column]);
-            unset($this->filters['date_picker'][$table][$column]);
+            unset($this->filters['datetime'][$table][$column]);
+            unset($this->filters['date'][$table][$column]);
             unset($this->filters['select'][$table][$column]);
             unset($this->filters['multi_select'][$table][$column]);
 
@@ -45,8 +46,8 @@ trait Filter
             unset($this->filters['number'][$table . '.' . $column]['start']);
             unset($this->filters['number'][$table . '.' . $column]['end']);
             unset($this->filters['boolean'][$table . '.' . $column]);
-            unset($this->filters['input_date_picker'][$table . '.' . $column]);
-            unset($this->filters['date_picker'][$table . '.' . $column]);
+            unset($this->filters['datetime'][$table . '.' . $column]);
+            unset($this->filters['date'][$table . '.' . $column]);
             unset($this->filters['select'][$table . '.' . $column]);
             unset($this->filters['multi_select'][$table . '.' . $column]);
 
@@ -65,13 +66,11 @@ trait Filter
             if (empty($this->filters['boolean'][$table])) {
                 unset($this->filters['boolean'][$table]);
             }
-            if (empty($this->filters['input_date_picker'][$table])) {
-                unset($this->filters['input_date_picker'][$table]);
-                unset($this->filters['date_picker'][$table]);
+            if (empty($this->filters['datetime'][$table])) {
+                unset($this->filters['datetime'][$table]);
             }
-            if (empty($this->filters['date_picker'][$table])) {
-                unset($this->filters['date_picker'][$table]);
-                unset($this->filters['input_date_picker'][$table]);
+            if (empty($this->filters['date'][$table])) {
+                unset($this->filters['date'][$table]);
             }
             if (empty($this->filters['select'][$table])) {
                 unset($this->filters['select'][$table]);
@@ -84,7 +83,7 @@ trait Filter
                 $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
             }
 
-            if (isset($this->filters['input_date_picker'][$field])) {
+            if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
                 $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
@@ -93,11 +92,10 @@ trait Filter
             unset($this->filters['number'][$field]['start']);
             unset($this->filters['number'][$field]['end']);
             unset($this->filters['boolean'][$field]);
-            unset($this->filters['input_date_picker'][$field]);
-            unset($this->filters['date_picker'][$field]);
+            unset($this->filters['datetime'][$field]);
+            unset($this->filters['date'][$field]);
             unset($this->filters['select'][$field]);
             unset($this->filters['multi_select'][$field]);
-            unset($this->filters['date_picker'][$field]);
         }
 
         unset($this->enabledFilters[$field]);
@@ -165,42 +163,48 @@ trait Filter
     {
         $this->resetPage();
 
-        $input                                   = explode('.', $data['values']);
+        $input = explode('.', $data['values']);
 
-        /** @var string $startDate */
-        $startDate = data_get($data, 'selectedDates.0');
-        /** @var string $endDate */
-        $endDate   = data_get($data, 'selectedDates.1');
+        $startDate = strval(data_get($data, 'selectedDates.0'));
+        $endDate   = strval(data_get($data, 'selectedDates.1'));
 
-        $startDateTime = Carbon::parse($startDate)->setTimezone(strval(config('app.timezone')));
-        $endDateTime   = Carbon::parse($endDate)->setTimezone(strval(config('app.timezone')));
-        if (!$data['enableTime']) {
-            $startDateTime->startOfDay();
-            $endDateTime->endOfDay();
+        $appTimeZone = strval(config('app.timezone'));
+
+        $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
+
+        $startDate = Carbon::parse($startDate)->format('Y-m-d');
+        $endDate   = Carbon::parse($endDate)->format('Y-m-d');
+
+        $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
+        $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
+
+        if ($data['type'] === 'datetime') {
+            $startDate->setTime(0, 0, 0)->setTimeZone($appTimeZone);
+            $endDate->setTime(23, 59, 59)->setTimeZone($appTimeZone);
         }
 
-        data_set($data, 'selectedDates.0', $startDateTime);
-        data_set($data, 'selectedDates.1', $endDateTime);
+        data_set($data, 'selectedDates.0', $startDate);
+        data_set($data, 'selectedDates.1', $endDate);
 
-        $this->enabledFilters[$data['field']]['data-field']      = $data['field'];
-        $this->enabledFilters[$data['field']]['label']           = $data['label'];
+        $this->enabledFilters[$data['field']]['data-field'] = $data['field'];
+        $this->enabledFilters[$data['field']]['label']      = $data['label'];
 
         if (count($input) === 3) {
-            $this->filters['date_picker'][$input[2]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2]] = $data['selectedDates'];
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 4) {
-            $this->filters['date_picker'][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2] . '.' . $input[3]] = $data['selectedDates'];
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 5) {
-            $this->filters['date_picker'][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+            $this->filters[$data['type']][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
             $this->persistState('filters');
         }
     }

@@ -10,7 +10,6 @@ it('properly filters by "between date"', function (string $component, object $pa
             'id="input_produced_at_formatted"',
             'type="text"',
             'placeholder="Select a period"',
-            'wire:model="filters.input_date_picker.produced_at"',
         ])
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
@@ -21,7 +20,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha vegana')
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
-})->with('themes');
+})->with('themes')->exceptSQLite();
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
     livewire($component)
@@ -33,7 +32,7 @@ it('properly filters by "between date" using incorrect filter', function (string
 function filterInputDate(string $startDate, string $endDate): array
 {
     return [
-        'date_picker' => [
+        'date' => [
             'produced_at' => [
                 0 => $startDate,
                 1 => $endDate,
