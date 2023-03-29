@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Support\{Arr, Carbon, Collection};
+use DateTimeZone;
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait Filter
