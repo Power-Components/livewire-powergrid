@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a58a4724914af674f69683c7f37fce4",
+    "content-hash": "921ac73e9fcb0a157ad6495fd1a2dd4b",
     "packages": [
         {
             "name": "brick/math",
@@ -6295,28 +6295,29 @@
         },
         {
             "name": "laradumps/laradumps",
-            "version": "2.x-dev",
+            "version": "v1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps.git",
-                "reference": "56661f5375d7f625fe6e26a67c0ad52f7eff2886"
+                "reference": "0db48329b4df6a4a6533365c49380ad01cd39be9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/56661f5375d7f625fe6e26a67c0ad52f7eff2886",
-                "reference": "56661f5375d7f625fe6e26a67c0ad52f7eff2886",
+                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/0db48329b4df6a4a6533365c49380ad01cd39be9",
+                "reference": "0db48329b4df6a4a6533365c49380ad01cd39be9",
                 "shasum": ""
             },
             "require": {
-                "illuminate/mail": "^9.0|^10.0",
-                "illuminate/support": "^9.0|^10.0",
                 "nunomaduro/termwind": "^1.12",
                 "php": "^8.0"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.8",
+                "illuminate/console": "^8.18 | ^9.0",
+                "illuminate/mail": "^8.18 | ^9.0",
+                "illuminate/support": "^8.18 | ^9.0",
                 "nunomaduro/larastan": "^1.0 | ^2.1",
-                "orchestra/testbench": "^7.0 | ^8.0",
+                "orchestra/testbench": "^6.17 | ^7.0",
                 "pestphp/pest": "^1.21",
                 "symfony/var-dumper": "^5.4 | ^6.0"
             },
@@ -6351,7 +6352,7 @@
             "homepage": "https://github.com/laradumps/laradumps",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps/issues",
-                "source": "https://github.com/laradumps/laradumps/tree/2.x"
+                "source": "https://github.com/laradumps/laradumps/tree/v1.9.3"
             },
             "funding": [
                 {
@@ -6359,7 +6360,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-02-04T16:07:32+00:00"
+            "time": "2023-03-02T20:57:40+00:00"
         },
         {
             "name": "laravel/pint",
@@ -10721,9 +10722,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "laradumps/laradumps": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
