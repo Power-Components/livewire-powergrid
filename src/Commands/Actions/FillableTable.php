@@ -37,7 +37,7 @@ class FillableTable
 
         $getFillable = array_merge(
             $getFillable,
-            ['created_at', 'updated_at']
+            ['created_at']
         );
 
         $datasource = '';
@@ -58,21 +58,22 @@ class FillableTable
             if (Schema::hasColumn($model->getTable(), $field)) {
                 $column = $conn->getDoctrineColumn($model->getTable(), $field);
 
-                $title = Str::of($field)->replace('_', ' ')->upper();
+                $title = Str::of($field)->replace('_', ' ')->ucfirst();
 
                 if (in_array($column->getType()->getName(), ['datetime', 'date'])) {
-                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->searchable()' . "\n" . '                ->sortable(),' . "\n\n";
-                    $filters .= '            Filter::datepicker(\'' . $field . '_formatted\', \'' . $field . '\'),' . "\n";
+                    $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->sortable(),' . "\n\n";
                 }
 
                 if ($column->getType()->getName() === 'datetime') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
+                    $filters .= '            Filter::datetimepicker(\'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if ($column->getType()->getName() === 'date') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
+                    $filters .= '            Filter::datepicker(\'' . $field . '\'),' . "\n";
 
                     continue;
                 }
@@ -95,12 +96,10 @@ class FillableTable
                 if ($column->getType()->getName() === 'string') {
                     $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
-                    $filters .= '            Filter::inputText(\'' . $field . '\'),' . "\n";
+                    $filters .= '            Filter::inputText(\'' . $field . '\')->operators([\'contains\']),' . "\n";
 
                     if (!self::$hasEscapeExample) {
-                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', function (' . $modelUnqualifiedName . ' $model) {
-                return strtolower(e($model->' . $field . '));
-            })' . "\n";
+                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', fn (' . $modelUnqualifiedName . ' $model) => strtolower(e($model->' . $field . ')))' . "\n";
                         self::$hasEscapeExample = true;
                     }
 
