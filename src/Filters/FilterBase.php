@@ -25,7 +25,7 @@ class FilterBase
         $this->className = get_called_class();
     }
 
-    public function query(\Closure $closure): self
+    public function builder(\Closure $closure): self
     {
         $this->builder = $closure;
 

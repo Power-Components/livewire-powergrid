@@ -30,7 +30,7 @@ it('properly renders the number filter - custom builder', function (string $comp
     livewire($component, [
         'testFilters' => [
             Filter::number($params->field)
-                ->query(function ($builder, $values) use ($params) {
+                ->builder(function ($builder, $values) use ($params) {
                     expect($values)->toBe([
                         'start'     => '2',
                         'end'       => null,

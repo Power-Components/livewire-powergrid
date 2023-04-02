@@ -41,7 +41,7 @@ it('properly filter with id using custom builder', function (string $component) 
         ->dataSource(Category::all())
         ->optionValue('id')
         ->optionLabel('name')
-        ->query(function ($builder, $values) {
+        ->builder(function ($builder, $values) {
             expect($values)
                 ->toBe([0 => 1])
                 ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);

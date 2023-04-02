@@ -26,7 +26,7 @@
     "require-dev": {
         "phpunit/phpunit": "^10.0.19",
         "pestphp/pest": "^2.3.0",
-        "orchestra/testbench": "^7.0 | ^8.1.1",
+        "orchestra/testbench": "^7.0 | ^8.2.0",
         "composer/composer": "^2.5.5",
         "pestphp/pest-plugin-faker": "^2.0",
         "pestphp/pest-plugin-livewire": "^2.0",
@@ -63,7 +63,7 @@
         "test": "@test:sqlite",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
-            "XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80"
+            "XDEBUG_MODE=coverage ./vendor/bin/pest --compact --coverage --min=80"
         ],
         "test:mysql":  [
             "./vendor/bin/pest --compact --configuration phpunit.mysql.xml"

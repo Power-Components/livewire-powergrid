@@ -120,7 +120,7 @@ function requiresSQLite()
     return test();
 }
 
-function exceptSQLite()
+function skipOnSQLite()
 {
     if (DB::getDriverName() === 'sqlite') {
         test()->markTestSkipped('This test requires MYSQL/PGSQL database');

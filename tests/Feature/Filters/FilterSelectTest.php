@@ -28,7 +28,7 @@ it('property filter using custom builder', function (string $component, object $
     $component = livewire($component, [
         'testFilters' => [
             Filter::select('category_name', 'category_id')
-                ->query(function ($builder, $values) {
+                ->builder(function ($builder, $values) {
                     expect($values)
                         ->toBe('1')
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
@@ -47,7 +47,7 @@ it('property filter using custom builder', function (string $component, object $
 
     $component->set('testFilters', [
         Filter::select('category_name', 'category_id')
-            ->query(function ($builder, $values) {
+            ->builder(function ($builder, $values) {
                 expect($values)
                     ->toBe('1')
                     ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);

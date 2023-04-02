@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7e91abe59e5002ae0d6745ee187843f",
+    "content-hash": "75229d41e54875a8e85e4431776a23ab",
     "packages": [
         {
             "name": "brick/math",
@@ -6872,16 +6872,16 @@
         },
         {
             "name": "orchestra/testbench",
-            "version": "v8.1.1",
+            "version": "v8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "f8abc7e5e0e9fe240a4dc090113f034f2d06870e"
+                "reference": "8fc09a6db42760f38f9c27fa88273edf497bf74c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/f8abc7e5e0e9fe240a4dc090113f034f2d06870e",
-                "reference": "f8abc7e5e0e9fe240a4dc090113f034f2d06870e",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/8fc09a6db42760f38f9c27fa88273edf497bf74c",
+                "reference": "8fc09a6db42760f38f9c27fa88273edf497bf74c",
                 "shasum": ""
             },
             "require": {
@@ -6889,7 +6889,7 @@
                 "fakerphp/faker": "^1.21",
                 "laravel/framework": ">=10.4.1 <10.6.0",
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench-core": ">=8.2.0 <8.3.0",
+                "orchestra/testbench-core": ">=8.3.0 <8.4.0",
                 "php": "^8.1",
                 "phpunit/phpunit": "^9.6 || ^10.0.7",
                 "spatie/laravel-ray": "^1.32.4",
@@ -6921,22 +6921,22 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
-                "source": "https://github.com/orchestral/testbench/tree/v8.1.1"
+                "source": "https://github.com/orchestral/testbench/tree/v8.2.0"
             },
-            "time": "2023-03-28T13:26:11+00:00"
+            "time": "2023-04-01T14:26:48+00:00"
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v8.2.0",
+            "version": "v8.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "80713894335a55e41ddc1a1e5c5cff3d45c36333"
+                "reference": "01476c2d7b0f1acf2ef5903d7e381155dca668b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/80713894335a55e41ddc1a1e5c5cff3d45c36333",
-                "reference": "80713894335a55e41ddc1a1e5c5cff3d45c36333",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/01476c2d7b0f1acf2ef5903d7e381155dca668b9",
+                "reference": "01476c2d7b0f1acf2ef5903d7e381155dca668b9",
                 "shasum": ""
             },
             "require": {
@@ -7001,16 +7001,16 @@
             "keywords": [
                 "BDD",
                 "TDD",
+                "dev",
                 "laravel",
-                "orchestra-platform",
-                "orchestral",
+                "laravel-packages",
                 "testing"
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
                 "source": "https://github.com/orchestral/testbench-core"
             },
-            "time": "2023-03-27T14:55:53+00:00"
+            "time": "2023-04-01T14:13:38+00:00"
         },
         {
             "name": "pestphp/pest",
@@ -7787,16 +7787,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.9",
+            "version": "1.10.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "9b13dafe3d66693d20fe5729c3dde1d31bb64703"
+                "reference": "f1e22c9b17a879987f8743d81533250a5fff47f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9b13dafe3d66693d20fe5729c3dde1d31bb64703",
-                "reference": "9b13dafe3d66693d20fe5729c3dde1d31bb64703",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f1e22c9b17a879987f8743d81533250a5fff47f9",
+                "reference": "f1e22c9b17a879987f8743d81533250a5fff47f9",
                 "shasum": ""
             },
             "require": {
@@ -7845,7 +7845,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-30T08:58:01+00:00"
+            "time": "2023-04-01T17:06:15+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",

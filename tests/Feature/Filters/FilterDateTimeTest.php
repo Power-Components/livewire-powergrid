@@ -19,7 +19,7 @@ it('properly filter the produced_at field between two dates', function (string $
         ->assertSee('Bife à Rolê')
         ->assertDontSeeHtml('Francesinha vegana');
 })->group('filters')
-    ->exceptSQLite()
+    ->skipOnSQLite()
     ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date"', function (string $component, object $params) {
@@ -45,7 +45,7 @@ it('properly filters by "between date"', function (string $component, object $pa
         ->assertSee('Francesinha')
         ->assertDontSeeHtml('Barco-Sushi da Sueli');
 })->group('filters', 'filterDatePicker')
-    ->exceptSQLite()
+    ->skipOnSQLite()
     ->with('filter_datetime_themes_with_join');
 
 it('properly filters by "between date" using incorrect filter', function (string $component, object $params) {
@@ -119,7 +119,7 @@ it('properly filter the produced_at field between another two dates - custom bui
     livewire($component, [
         'testFilters' => [
             Filter::datepicker('produced_at')
-                ->query(function ($builder, $values) use ($dateToFilter) {
+                ->builder(function ($builder, $values) use ($dateToFilter) {
                     expect($values)->toBe($dateToFilter)
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 

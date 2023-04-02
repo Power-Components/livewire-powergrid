@@ -85,13 +85,13 @@ class Collection
             return $this->collection;
         }
 
-        foreach ($this->powerGridComponent->filters as $key => $type) {
-            foreach ($type as $field => $value) {
+        foreach ($this->powerGridComponent->filters as $filterType => $column) {
+            foreach ($column as $field => $value) {
                 $filter = collect($filters)
                     ->filter(fn ($filter) => $filter->column === $field)
                     ->first();
 
-                $this->collection = match ($key) {
+                $this->collection = match ($filterType) {
                     'datetime'     => (new DateTimePicker($filter))->collection($this->collection, $field, $value),
                     'date'         => (new DatePicker($filter))->collection($this->collection, $field, $value),
                     'multi_select' => (new MultiSelect($filter))->collection($this->collection, $field, $value),
@@ -118,11 +118,7 @@ class Collection
 
                 foreach ($this->powerGridComponent->columns as $column) {
                     if ($column->searchable) {
-                        if (filled($column->dataField)) {
-                            $field = $column->dataField;
-                        } else {
-                            $field = $column->field;
-                        }
+                        $field = filled($column->dataField) ? $column->dataField : $column->field;
 
                         try {
                             if (Str::contains(strtolower($row->{$field}), strtolower($this->powerGridComponent->search))) {

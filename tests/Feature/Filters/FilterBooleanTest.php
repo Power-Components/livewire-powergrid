@@ -55,7 +55,7 @@ it('properly filters by bool true - custom builder', function (string $component
     $component = livewire($component, [
         'testFilters' => [
             Filter::boolean('in_stock')
-                ->query(function ($builder, $values) {
+                ->builder(function ($builder, $values) {
                     expect($values)
                         ->toBe('true')
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
