@@ -150,11 +150,11 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
   <a href="http://devsquad.com" target="_blank">
     <img src="https://livewire-powergrid.com/_media/logos/devsquad.png" alt="DevSquad" height="undefined">
   </a>
-<<<<<<< HEAD
-
 </p>
+
 <p></p>
 <p></p>
+
 <p>Supported by:</p>
 <p>
   <!-- PHPStorm -->
