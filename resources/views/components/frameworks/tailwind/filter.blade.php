@@ -4,7 +4,9 @@
     'tableName' => null,
     'filtersFromColumns' => null,
 ])
-<div x-data={open:false} x-on:toggle-filters-{{ $tableName }}.window="open = !open" class="mt-2 md:mt-0">
+<div x-data="{ open:@entangle('showFilters') }"
+     x-on:toggle-filters-{{ $tableName }}.window="open = !open"
+     class="mt-2 md:mt-0">
     <div x-show="open"
          x-cloak
          x-transition:enter="transform duration-100"

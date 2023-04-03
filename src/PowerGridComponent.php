@@ -78,9 +78,11 @@ class PowerGridComponent extends Component
 
     public bool $deferLoading = false;
 
-    public bool $readyToLoad;
+    public bool $readyToLoad = false;
 
     public string $loadingComponent = '';
+
+    public bool $showFilters = false;
 
     public function mount(): void
     {
