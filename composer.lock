@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75229d41e54875a8e85e4431776a23ab",
+    "content-hash": "1b13b5e9ab28ba314ad29ca09b66b1e7",
     "packages": [
         {
             "name": "brick/math",
@@ -6872,16 +6872,16 @@
         },
         {
             "name": "orchestra/testbench",
-            "version": "v8.2.0",
+            "version": "v8.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "8fc09a6db42760f38f9c27fa88273edf497bf74c"
+                "reference": "4daed4bbfef0d37ea01dc3980ebcba2a10c76f4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/8fc09a6db42760f38f9c27fa88273edf497bf74c",
-                "reference": "8fc09a6db42760f38f9c27fa88273edf497bf74c",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/4daed4bbfef0d37ea01dc3980ebcba2a10c76f4a",
+                "reference": "4daed4bbfef0d37ea01dc3980ebcba2a10c76f4a",
                 "shasum": ""
             },
             "require": {
@@ -6889,7 +6889,7 @@
                 "fakerphp/faker": "^1.21",
                 "laravel/framework": ">=10.4.1 <10.6.0",
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench-core": ">=8.3.0 <8.4.0",
+                "orchestra/testbench-core": ">=8.3.1 <8.4.0",
                 "php": "^8.1",
                 "phpunit/phpunit": "^9.6 || ^10.0.7",
                 "spatie/laravel-ray": "^1.32.4",
@@ -6921,22 +6921,22 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
-                "source": "https://github.com/orchestral/testbench/tree/v8.2.0"
+                "source": "https://github.com/orchestral/testbench/tree/v8.2.1"
             },
-            "time": "2023-04-01T14:26:48+00:00"
+            "time": "2023-04-03T01:28:17+00:00"
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v8.3.0",
+            "version": "v8.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "01476c2d7b0f1acf2ef5903d7e381155dca668b9"
+                "reference": "1b785c2a1a619d5c6751360a1960b8d716d69234"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/01476c2d7b0f1acf2ef5903d7e381155dca668b9",
-                "reference": "01476c2d7b0f1acf2ef5903d7e381155dca668b9",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/1b785c2a1a619d5c6751360a1960b8d716d69234",
+                "reference": "1b785c2a1a619d5c6751360a1960b8d716d69234",
                 "shasum": ""
             },
             "require": {
@@ -6950,7 +6950,7 @@
                 "mockery/mockery": "^1.5.1",
                 "orchestra/canvas": "^8.1",
                 "phpstan/phpstan": "^1.10.7",
-                "phpunit/phpunit": "^10.0.7",
+                "phpunit/phpunit": "~10.0.7",
                 "spatie/laravel-ray": "^1.32.4",
                 "symfony/process": "^6.2",
                 "symfony/yaml": "^6.2",
@@ -7010,28 +7010,28 @@
                 "issues": "https://github.com/orchestral/testbench/issues",
                 "source": "https://github.com/orchestral/testbench-core"
             },
-            "time": "2023-04-01T14:13:38+00:00"
+            "time": "2023-04-02T16:49:31+00:00"
         },
         {
             "name": "pestphp/pest",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "5ae061d2080ea09608fe37fb05ebadcd183cef85"
+                "reference": "12c75524a2548e787ade52023d6e2d5725dba9bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/5ae061d2080ea09608fe37fb05ebadcd183cef85",
-                "reference": "5ae061d2080ea09608fe37fb05ebadcd183cef85",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/12c75524a2548e787ade52023d6e2d5725dba9bb",
+                "reference": "12c75524a2548e787ade52023d6e2d5725dba9bb",
                 "shasum": ""
             },
             "require": {
                 "brianium/paratest": "^7.1.2",
-                "nunomaduro/collision": "^7.3.3",
+                "nunomaduro/collision": "^7.4.0",
                 "nunomaduro/termwind": "^1.15.1",
                 "pestphp/pest-plugin": "^2.0.1",
-                "pestphp/pest-plugin-arch": "^2.0.2",
+                "pestphp/pest-plugin-arch": "^2.1.1",
                 "php": "^8.1.0",
                 "phpunit/phpunit": "^10.0.19"
             },
@@ -7040,8 +7040,8 @@
                 "webmozart/assert": "<1.11.0"
             },
             "require-dev": {
-                "pestphp/pest-dev-tools": "^2.5.0",
-                "symfony/process": "^6.2.7"
+                "pestphp/pest-dev-tools": "^2.6.0",
+                "symfony/process": "^6.2.8"
             },
             "bin": [
                 "bin/pest"
@@ -7097,7 +7097,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v2.3.0"
+                "source": "https://github.com/pestphp/pest/tree/v2.4.0"
             },
             "funding": [
                 {
@@ -7109,7 +7109,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-28T09:16:29+00:00"
+            "time": "2023-04-02T20:12:31+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
@@ -7182,26 +7182,27 @@
         },
         {
             "name": "pestphp/pest-plugin-arch",
-            "version": "v2.0.2",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest-plugin-arch.git",
-                "reference": "02ce3fd7cf795f30be72cb4935f6ad99b077d278"
+                "reference": "eb458dee939014a7f796147fa011db5e73dac63c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest-plugin-arch/zipball/02ce3fd7cf795f30be72cb4935f6ad99b077d278",
-                "reference": "02ce3fd7cf795f30be72cb4935f6ad99b077d278",
+                "url": "https://api.github.com/repos/pestphp/pest-plugin-arch/zipball/eb458dee939014a7f796147fa011db5e73dac63c",
+                "reference": "eb458dee939014a7f796147fa011db5e73dac63c",
                 "shasum": ""
             },
             "require": {
-                "pestphp/pest-plugin": "^2.0.0",
+                "nunomaduro/collision": "^7.4.0",
+                "pestphp/pest-plugin": "^2.0.1",
                 "php": "^8.1",
                 "ta-tikoma/phpunit-architecture-test": "^0.7.2"
             },
             "require-dev": {
-                "pestphp/pest": "^2.2.2",
-                "pestphp/pest-dev-tools": "^2.5.0"
+                "pestphp/pest": "^2.3.0",
+                "pestphp/pest-dev-tools": "^2.6.0"
             },
             "type": "library",
             "autoload": {
@@ -7229,7 +7230,7 @@
                 "unit"
             ],
             "support": {
-                "source": "https://github.com/pestphp/pest-plugin-arch/tree/v2.0.2"
+                "source": "https://github.com/pestphp/pest-plugin-arch/tree/v2.1.1"
             },
             "funding": [
                 {
@@ -7241,7 +7242,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-03-24T11:18:19+00:00"
+            "time": "2023-04-02T19:43:12+00:00"
         },
         {
             "name": "pestphp/pest-plugin-faker",
