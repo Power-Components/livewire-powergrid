@@ -418,7 +418,6 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        /** @phpstan-ignore-next-line */
         return view($this->powerGridTheme->layout->table, [
             'data'  => $data,
             'theme' => $this->powerGridTheme,

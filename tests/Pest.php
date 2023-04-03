@@ -61,7 +61,7 @@ function filterInputText(string $text, string $type, $field = 'name'): array
         $field = $data->get(1);
 
         return [
-            'input_text'         => [
+            'input_text' => [
                 $table => [
                     $field => $text,
                 ],
@@ -75,7 +75,7 @@ function filterInputText(string $text, string $type, $field = 'name'): array
     }
 
     return [
-        'input_text'         => [
+        'input_text' => [
             $field => $text,
         ],
         'input_text_options' => [
@@ -93,7 +93,7 @@ function expectInputText(object $params, mixed $component, string $value, string
 
         expect($component->filters)
             ->toMatchArray([
-                'input_text'         => [
+                'input_text' => [
                     $table => [
                         $field => $value,
                     ],
@@ -107,7 +107,7 @@ function expectInputText(object $params, mixed $component, string $value, string
     } else {
         expect($component->filters)
             ->toMatchArray([
-                'input_text'         => [
+                'input_text' => [
                     $params->field => $value,
                 ],
                 'input_text_options' => [
@@ -191,6 +191,15 @@ function requiresMySQL()
 {
     if (DB::getDriverName() !== 'mysql') {
         test()->markTestSkipped('This test requires MySQL database');
+    }
+
+    return test();
+}
+
+function exceptSQLite()
+{
+    if (DB::getDriverName() === 'sqlite') {
+        test()->markTestSkipped('This test requires MySQL/PGSQL database');
     }
 
     return test();

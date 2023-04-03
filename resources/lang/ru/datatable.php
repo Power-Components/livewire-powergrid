@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Фильтр',
         'clear_all_filters' => 'Очистить все',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Действия',
         'results_per_page' => 'Записей на страницу',
         'clear_filter'     => 'Удалить фильтры',
@@ -13,26 +13,26 @@ return [
         'all'              => 'Все',
         'selected'         => 'Выбранные',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Поиск...',
         'select' => 'Выбрать период',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Отображение',
         'to'      => 'к',
         'of'      => 'из',
         'results' => 'Результаты',
         'all'     => 'Все',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Выбрать',
         'all'    => 'Все',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Выбрать',
         'all'    => 'Все',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'Все',
     ],
     'input_text_options' => [
@@ -50,11 +50,11 @@ return [
         'is_not_blank' => 'Не пусто (blank)',
 
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Пожалуйста подождите!',
         'completed' => 'Экспорт завершен! Файлы готово для скачивания',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',

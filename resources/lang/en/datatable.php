@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'buttons'            => [
+    'buttons' => [
         'filter'            => 'Filter',
         'clear_all_filters' => 'Clear all',
     ],
-    'labels'             => [
+    'labels' => [
         'action'           => 'Actions',
         'results_per_page' => 'Records per page',
         'clear_filter'     => 'Clear filter',
@@ -13,26 +13,26 @@ return [
         'all'              => 'All',
         'selected'         => 'Selected',
     ],
-    'placeholders'       => [
+    'placeholders' => [
         'search' => 'Search...',
         'select' => 'Select a period',
     ],
-    'pagination'         => [
+    'pagination' => [
         'showing' => 'Showing',
         'to'      => 'to',
         'of'      => 'of',
         'results' => 'Results',
         'all'     => 'All',
     ],
-    'multi_select'       => [
+    'multi_select' => [
         'select' => 'Select',
         'all'    => 'All',
     ],
-    'select'             => [
+    'select' => [
         'select' => 'Select',
         'all'    => 'All',
     ],
-    'boolean_filter'     => [
+    'boolean_filter' => [
         'all' => 'All',
     ],
     'input_text_options' => [
@@ -50,11 +50,11 @@ return [
         'is_not_blank' => 'Is not blank',
 
     ],
-    'export'             => [
+    'export' => [
         'exporting' => 'Please wait!',
         'completed' => 'Export completed! Your files are ready for download',
     ],
-    'soft_deletes'       => [
+    'soft_deletes' => [
         'message_with_trashed' => 'Displaying all records, including deleted ones.',
         'message_only_trashed' => 'Displaying only deleted records.',
         'without_trashed'      => 'Without deleted',
