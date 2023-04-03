@@ -18,7 +18,7 @@
     x-data x-multisort-shift-click="{{ $this->id }}"
     @endif
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
-    <div class="text-md flex gap-2 {{ $theme->cols->divClass }}"
+    <div class="{{ $theme->cols->divClass }}"
         @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable)
             <span>
