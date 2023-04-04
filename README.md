@@ -1,7 +1,7 @@
 <div align="center">
 	<p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
     <p align="center">
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A58.0&color=0078BE&logo=laravel&style=flat-square"></a>
+        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A59.0&color=0078BE&logo=laravel&style=flat-square"></a>
         <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
         <a href="https://github.com/Power-Components/livewire-powergrid/actions">
             <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" />
