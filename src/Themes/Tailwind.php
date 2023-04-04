@@ -33,7 +33,7 @@ class Tailwind extends ThemeBase
             ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semibold text-pg-primary-700 tracking-wider whitespace-nowrap dark:text-pg-primary-300')
             ->tbody('text-pg-primary-800')
             ->trBody('border border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700')
-            ->tdBody('pl-[19px] px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
+            ->tdBody('pl-[25px] px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
             ->tdBodyEmpty('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
             ->tdBodyTotalColumns('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2');
     }
@@ -132,7 +132,7 @@ class Tailwind extends ThemeBase
     public function searchBox(): SearchBox
     {
         return Theme::searchBox()
-            ->input('placeholder-pg-primary-400 pl-[36px] block w-full float-right bg-white text-pg-primary-700 border border-pg-primary-300 rounded-lg py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 pl-10 dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-100 dark:border-pg-primary-500')
+            ->input('placeholder-pg-primary-400 text-sm pl-[36px] block w-full float-right bg-white text-pg-primary-700 border border-pg-primary-300 rounded-lg py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 pl-10 dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:placeholder-pg-primary-100 dark:border-pg-primary-500')
             ->iconClose('text-pg-primary-400 dark:text-pg-primary-200')
             ->iconSearch('text-pg-primary-300 mr-2 w-5 h-5 dark:text-pg-primary-200');
     }
