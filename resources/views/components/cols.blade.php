@@ -18,7 +18,11 @@
     x-data x-multisort-shift-click="{{ $this->id }}"
     @endif
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
-    <div class="{{ $theme->cols->divClass }}"
+    <div @class([
+            'pl-[11px]' => !$column->sortable && isTailwind(),
+            $theme->cols->divClass
+        ])
+         style="{{ $theme->cols->divStyle }}"
         @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable)
             <span>
