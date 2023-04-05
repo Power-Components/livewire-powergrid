@@ -94,13 +94,13 @@ class Tailwind extends ThemeBase
         return Theme::filterDatePicker()
             ->base()
             ->view($this->root() . '.filters.date-picker')
-            ->input('flatpickr flatpickr-input block my-1 bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 placeholder-pg-primary-400 dark:placeholder-pg-primary-100 dark:border-pg-primary-500', 'min-width: 12rem');
+            ->input('flatpickr flatpickr-input block my-1 bg-white border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full active dark:bg-pg-primary-600 dark:text-pg-primary-200 placeholder-pg-primary-400 dark:placeholder-pg-primary-100 dark:border-pg-primary-500');
     }
 
     public function filterMultiSelect(): FilterMultiSelect
     {
         return Theme::filterMultiSelect()
-            ->base('inline-block relative w-full min-w-[180px]')
+            ->base('inline-block relative w-full')
             ->select('mt-1')
             ->view($this->root() . '.filters.multi-select');
     }

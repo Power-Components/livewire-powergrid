@@ -14,6 +14,8 @@ class FilterBase
 
     public array $attributes = [];
 
+    public string $baseClass = '';
+
     public function __construct(
         public string $column,
         public ?string $field = null,
@@ -44,6 +46,13 @@ class FilterBase
         $this->component = $component;
 
         $this->attributes = $attributes;
+
+        return $this;
+    }
+
+    public function baseClass(string $attrClass): self
+    {
+        $this->baseClass = $attrClass;
 
         return $this;
     }
