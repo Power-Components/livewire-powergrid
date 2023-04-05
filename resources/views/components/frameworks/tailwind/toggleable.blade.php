@@ -33,7 +33,7 @@
                          'translate-x-0 border-pg-primary-200' => $value === 0,
                     ]) x-on:click="save"></label>
                 <input type="checkbox"
-                       class="appearance-none w-full h-full active:outline-none focus:outline-none"
+                       class="appearance-none opacity-0 w-full h-full active:outline-none focus:outline-none"
                        x-on:click="save">
             </div>
         </div>
