@@ -80,7 +80,7 @@ final class Button
      * Route string
      * @codeCoverageIgnore
      */
-    public function route(string $route, array $params, bool $singleParam = false): Button
+    public function route(string $route, array|\Closure $params, bool $singleParam = false): Button
     {
         $this->route       = $route;
         $this->params      = $params;
@@ -128,7 +128,7 @@ final class Button
     /**
      * Livewire emit
      */
-    public function emit(string $event, array $params, bool $singleParam = false): Button
+    public function emit(string $event, array|\Closure $params, bool $singleParam = false): Button
     {
         $this->event       = $event;
         $this->params      = $params;
@@ -142,7 +142,7 @@ final class Button
      * Add Livewire emitTo
      *
      */
-    public function emitTo(string $to, string $event, array $param, bool $singleParam = false): Button
+    public function emitTo(string $to, string $event, array|\Closure $param, bool $singleParam = false): Button
     {
         $this->to          = $to;
         $this->event       = $event;
