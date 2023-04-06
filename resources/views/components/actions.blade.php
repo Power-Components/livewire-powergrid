@@ -1,4 +1,6 @@
 @inject('helperClass','PowerComponents\LivewirePowerGrid\Helpers\Helpers')
+@inject('actionRenderClass','PowerComponents\LivewirePowerGrid\Helpers\ActionRender')
+
 @props([
     'actions' => null,
     'theme' => null,
@@ -9,17 +11,24 @@
     @if(isset($actions) && count($actions) && $row !== '')
             <td class="pg-actions {{ $theme->table->tdBodyClass }}"
                 style="{{ $theme->table->tdBodyStyle }}">
+
                 @foreach($actions as $key => $action)
                     @php
+                        $customAction = null;
                         $actionClass = new \PowerComponents\LivewirePowerGrid\Helpers\Actions(
                             $action,
                             $row,
                             $primaryKey,
                             $theme,
                         );
+
                     @endphp
 
-                    @if(!boolval($actionClass->ruleHide))
+                    @if(!boolval($actionClass->ruleHide) && empty($customAction))
+                        @if($actionClass->customRender)
+                            {!! $actionClass->customRender !!}
+                        @endif
+
                         @if($actionClass->isButton)
                             <button {{ $actionClass->getAttributes() }}>
                                 {!! $actionClass->caption() !!}
