@@ -289,7 +289,7 @@ class Actions
         ]);
     }
 
-    public function caption(): string
+    public function caption(): ?string
     {
         return $this->ruleCaption ?: $this->action->caption;
     }

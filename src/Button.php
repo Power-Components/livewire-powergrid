@@ -69,7 +69,7 @@ final class Button
     /**
      * Button text in view
      */
-    public function caption(string $caption): Button
+    public function caption(?string $caption = null): Button
     {
         $this->caption = $caption;
 
