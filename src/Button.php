@@ -8,7 +8,7 @@ final class Button
 {
     use Macroable;
 
-    public string $caption = '';
+    public ?string $caption = '';
 
     public string $route = '';
 
@@ -60,7 +60,7 @@ final class Button
     /**
      * Make a new Column
      */
-    public static function make(string $action, string $caption): self
+    public static function make(string $action, ?string $caption = null): self
     {
         return (new static($action))
             ->caption($caption);
