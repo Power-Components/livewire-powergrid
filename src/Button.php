@@ -209,7 +209,7 @@ final class Button
     /**
      * Alpine Dispatch Browser Events
      */
-    public function dispatch(string $event, array $params): Button
+    public function dispatch(string $event, array|\Closure $params): Button
     {
         $this->browserEvent = $event;
         $this->params       = $params;
