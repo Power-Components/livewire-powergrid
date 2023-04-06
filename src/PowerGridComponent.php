@@ -13,7 +13,13 @@ use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRules, Collection, Model, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender,
+    ActionRules,
+    Actions,
+    Collection,
+    Helpers,
+    Model,
+    SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
@@ -415,11 +421,15 @@ class PowerGridComponent extends Component
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
+            if (method_exists($this, 'actions') && count($this->actions())) {
+                $actions = resolve(ActionRender::class)->resolveActionRender($this->actions(), (object) $row);
+            }
+
             if (count($this->actionRules())) {
                 $rules = resolve(ActionRules::class)->resolveRules($this->actionRules(), (object) $row);
             }
 
-            $mergedData = $data->merge($rules ?? []);
+            $mergedData = $data->merge($rules ?? [])->merge($actions ?? []);
 
             return $row instanceof Eloquent\Model
                 ? tap($row)->forceFill($mergedData->toArray())
