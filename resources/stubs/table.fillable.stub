@@ -138,11 +138,15 @@ final class {{ componentName }} extends PowerGridComponent
        return [
            Button::make('edit', 'Edit')
                ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
+               ->route('{{ modelKebabCase }}.edit', function(\{{ modelName }} $model) {
+                    return $model->id;
+               }),
 
            Button::make('destroy', 'Delete')
                ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
+               ->route('{{ modelKebabCase }}.destroy', function(\{{ modelName }} $model) {
+                    return $model->id;
+               })
                ->method('delete')
         ];
     }
