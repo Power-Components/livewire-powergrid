@@ -77,7 +77,7 @@ jobs:
         run: composer test:types
 
       - name: SQLite
-        run: XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --min=80
+        run: composer test:sqlite
 
       - name: MySQL
         run: composer test:mysql
