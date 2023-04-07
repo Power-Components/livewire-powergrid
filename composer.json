@@ -62,7 +62,7 @@
         "test": "@test:sqlite",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
-            "XDEBUG_MODE=coverage ./vendor/bin/pest --compact --coverage --min=80"
+            "./vendor/bin/pest --compact --min=80"
         ],
         "test:mysql":  [
             "./vendor/bin/pest --compact --configuration phpunit.mysql.xml"
