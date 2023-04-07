@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender,
     ActionRules,
@@ -111,6 +111,18 @@ class PowerGridComponent extends Component
         $this->restoreState();
     }
 
+    protected function getCacheKeys(): array
+    {
+        return [
+            json_encode(['page' => $this->page]),
+            json_encode(['checkboxValues' => $this->checkboxValues]),
+            json_encode(['search' => $this->search]),
+            json_encode(['sortDirection' => $this->sortDirection]),
+            json_encode(['sortField' => $this->sortField]),
+            json_encode(['filters' => $this->filters]),
+        ];
+    }
+
     public function filters(): array
     {
         return [];
@@ -175,7 +187,7 @@ class PowerGridComponent extends Component
         $this->relationSearch = $this->relationSearch();
         $this->searchMorphs   = $this->searchMorphs();
 
-        $data = $this->readyToLoad ? $this->fillData() : collect([]);
+        $data = $this->getCachedData();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -189,6 +201,27 @@ class PowerGridComponent extends Component
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
 
         return $this->renderView($data);
+    }
+
+    private function getCachedData(): mixed
+    {
+        if (Cache::supportsTags() && !boolval(data_get($this->setUp, 'cache.enabled'))) {
+            return $this->readyToLoad ? $this->fillData() : collect([]);
+        }
+
+        $customTag = strval(data_get($this->setUp, 'cache.tag'));
+        $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
+        $ttl       = boolval(data_get($this->setUp, 'cache.ttl', false));
+
+        $tag      = $customTag ?: 'powergrid-' . $this->tableName . '-' . $this->datasource()->getModel()->getTable();
+        $cacheKey = join('-', $this->getCacheKeys());
+
+        if ($forever) {
+            return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
+        }
+
+        /** @phpstan-ignore-next-line */
+        return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 
     public function template(): ?string
