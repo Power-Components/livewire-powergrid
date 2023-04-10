@@ -14,6 +14,8 @@ final class Cache
 
     public int $ttl = 300;
 
+    public string $prefix = '';
+
     public static function make(): self
     {
         return new Cache();
@@ -36,6 +38,13 @@ final class Cache
     public function customTag(string $tag): Cache
     {
         $this->tag = $tag;
+
+        return $this;
+    }
+
+    public function prefix(string $prefix): Cache
+    {
+        $this->prefix = $prefix;
 
         return $this;
     }

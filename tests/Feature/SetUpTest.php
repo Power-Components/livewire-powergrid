@@ -36,16 +36,18 @@ it('cache work properly with tags - rememberForever', function () {
     /** @var DishesSetUpTable|\Livewire\Testing\TestableLivewire $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
         Cache::make()
+            ->prefix('test-')
             ->forever(),
     ]]);
 
     expect($component->setUp['cache'])
         ->name->toBe('cache')
+        ->prefix->toBe('test-')
         ->enabled->toBe(true)
         ->forever->toBe(true)
         ->ttl->toBe(300);
 
-    $tag      = 'powergrid-dishes-default';
+    $tag      = 'test-powergrid-dishes-default';
     $cacheKey = '{"page":1}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
