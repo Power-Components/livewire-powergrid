@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\{Builder, Model};
 use Throwable;
 
 trait SoftDeletes
@@ -27,8 +27,10 @@ trait SoftDeletes
         );
 
         return match ($this->softDeletes) {
-            'withTrashed' => $results->withTrashed(), /** @phpstan-ignore-line */
-            'onlyTrashed' => $results->onlyTrashed(), /** @phpstan-ignore-line */
+            /** @phpstan-ignore-next-line  */
+            'withTrashed' => $results->withTrashed(),
+            /** @phpstan-ignore-next-line  */
+            'onlyTrashed' => $results->onlyTrashed(),
             default       => $results
         };
     }
