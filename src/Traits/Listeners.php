@@ -8,33 +8,33 @@ use Exception;
 trait Listeners
 {
     /**
-     * @param array $data
+     * @param array $payload
      * @return void
      * @throws Exception
      */
-    public function inputTextChanged(array $data = []): void
+    public function inputTextChanged(array $payload = []): void
     {
-        $id    = $data['id'];
-        $field = $data['field'];
+        $id    = $payload['id'];
+        $field = $payload['field'];
 
-        $this->{$field}[$id] = $data['value'];
+        $this->{$field}[$id] = $payload['value'];
 
-        $this->onUpdatedEditable($id, $field, $data['value']);
+        $this->onUpdatedEditable($id, $field, $payload['value']);
 
         $this->dispatchBrowserEvent('pg:editable-close-' . $id);
     }
 
     /**
-     * @param array $data
+     * @param array $payload
      * @return void
      * @throws Exception
      */
-    public function toggleableChanged(array $data = []): void
+    public function toggleableChanged(array $payload = []): void
     {
-        $id    = $data['id'];
-        $field = $data['field'];
+        $id    = $payload['id'];
+        $field = $payload['field'];
 
-        $this->onUpdatedToggleable($id, $field, $data['value']);
+        $this->onUpdatedToggleable($id, $field, $payload['value']);
     }
 
     public function onUpdatedEditable(string $id, string $field, string $value): void

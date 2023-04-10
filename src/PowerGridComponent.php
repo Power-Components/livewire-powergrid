@@ -7,23 +7,22 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender,
     ActionRules,
-    Actions,
     Collection,
-    Helpers,
     Model,
     SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
+    SoftDeletes,
     WithCheckbox,
     WithSorting};
 use Throwable;
@@ -37,6 +36,7 @@ class PowerGridComponent extends Component
     use HasFilter;
     use PersistData;
     use Listeners;
+    use SoftDeletes;
 
     public array $headers = [];
 
@@ -69,8 +69,6 @@ class PowerGridComponent extends Component
     public array $setUp = [];
 
     public bool $showErrorBag = false;
-
-    public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
 
@@ -109,6 +107,17 @@ class PowerGridComponent extends Component
         $this->resolveFilters();
 
         $this->restoreState();
+    }
+
+    protected function getCacheKeys(): array
+    {
+        return [
+            json_encode(['page' => $this->page]),
+            json_encode(['search' => $this->search]),
+            json_encode(['sortDirection' => $this->sortDirection]),
+            json_encode(['sortField' => $this->sortField]),
+            json_encode(['filters' => $this->filters]),
+        ];
     }
 
     public function filters(): array
@@ -175,7 +184,7 @@ class PowerGridComponent extends Component
         $this->relationSearch = $this->relationSearch();
         $this->searchMorphs   = $this->searchMorphs();
 
-        $data = $this->readyToLoad ? $this->fillData() : collect([]);
+        $data = $this->getCachedData();
 
         if (method_exists($this, 'initActions')) {
             $this->initActions();
@@ -189,6 +198,28 @@ class PowerGridComponent extends Component
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
 
         return $this->renderView($data);
+    }
+
+    private function getCachedData(): mixed
+    {
+        if (Cache::supportsTags() && !boolval(data_get($this->setUp, 'cache.enabled'))) {
+            return $this->readyToLoad ? $this->fillData() : collect([]);
+        }
+
+        $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
+        $customTag = strval(data_get($this->setUp, 'cache.tag'));
+        $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
+        $ttl       = boolval(data_get($this->setUp, 'cache.ttl', false));
+
+        $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
+        $cacheKey = join('-', $this->getCacheKeys());
+
+        if ($forever) {
+            return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
+        }
+
+        /** @phpstan-ignore-next-line */
+        return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 
     public function template(): ?string
@@ -509,28 +540,6 @@ class PowerGridComponent extends Component
         }
 
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
-    }
-
-    public function softDeletes(string $softDeletes): void
-    {
-        $this->softDeletes = $softDeletes;
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function applySoftDeletes(Builder|MorphToMany $results): Builder|MorphToMany
-    {
-        throw_if(
-            $this->softDeletes && !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true),
-            new Exception(get_class($results->getModel()) . ' is not using the \Illuminate\Database\Eloquent\SoftDeletes trait')
-        );
-
-        return match ($this->softDeletes) {
-            'withTrashed' => $results->withTrashed(), /** @phpstan-ignore-line */
-            'onlyTrashed' => $results->onlyTrashed(), /** @phpstan-ignore-line */
-            default       => $results
-        };
     }
 
     public function refresh(): void
