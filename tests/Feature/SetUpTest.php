@@ -45,8 +45,8 @@ it('cache work properly with tags - rememberForever', function () {
         ->forever->toBe(true)
         ->ttl->toBe(300);
 
-    $tag      = 'powergrid-default-dishes';
-    $cacheKey = '{"page":1}-{"checkboxValues":[]}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $tag      = 'powergrid-dishes-default';
+    $cacheKey = '{"page":1}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -60,10 +60,10 @@ it('cache work properly with tags - rememberForever', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"checkboxValues\":[]}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
+        ->toContain('{\"page\":1}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"checkboxValues":[]}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $cacheKeySearch = '{"page":1}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);
@@ -91,8 +91,8 @@ it('cache work properly with tags - remember', function () {
         ->forever->toBe(false)
         ->ttl->toBe(360);
 
-    $tag      = 'powergrid-default-dishes';
-    $cacheKey = '{"page":1}-{"checkboxValues":[]}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $tag      = 'powergrid-dishes-default';
+    $cacheKey = '{"page":1}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -106,10 +106,10 @@ it('cache work properly with tags - remember', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"checkboxValues\":[]}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
+        ->toContain('{\"page\":1}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"checkboxValues":[]}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $cacheKeySearch = '{"page":1}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);
@@ -139,7 +139,7 @@ it('cache work properly with tags - customTag', function () {
         ->ttl->toBe(360);
 
     $tag      = 'my-custom-tag';
-    $cacheKey = '{"page":1}-{"checkboxValues":[]}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $cacheKey = '{"page":1}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -153,10 +153,10 @@ it('cache work properly with tags - customTag', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"checkboxValues\":[]}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
+        ->toContain('{\"page\":1}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"checkboxValues":[]}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
+    $cacheKeySearch = '{"page":1}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);

@@ -7,23 +7,22 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent as Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\{Builder, SoftDeletes};
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
 use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender,
     ActionRules,
-    Actions,
     Collection,
-    Helpers,
     Model,
     SqlSupport};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
+    SoftDeletes,
     WithCheckbox,
     WithSorting};
 use Throwable;
@@ -37,6 +36,7 @@ class PowerGridComponent extends Component
     use HasFilter;
     use PersistData;
     use Listeners;
+    use SoftDeletes;
 
     public array $headers = [];
 
@@ -69,8 +69,6 @@ class PowerGridComponent extends Component
     public array $setUp = [];
 
     public bool $showErrorBag = false;
-
-    public string $softDeletes = '';
 
     protected ThemeBase $powerGridTheme;
 
@@ -115,7 +113,6 @@ class PowerGridComponent extends Component
     {
         return [
             json_encode(['page' => $this->page]),
-            json_encode(['checkboxValues' => $this->checkboxValues]),
             json_encode(['search' => $this->search]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
@@ -213,7 +210,7 @@ class PowerGridComponent extends Component
         $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
         $ttl       = boolval(data_get($this->setUp, 'cache.ttl', false));
 
-        $tag      = $customTag ?: 'powergrid-' . $this->tableName . '-' . $this->datasource()->getModel()->getTable();
+        $tag      = $customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName;
         $cacheKey = join('-', $this->getCacheKeys());
 
         if ($forever) {
@@ -542,28 +539,6 @@ class PowerGridComponent extends Component
         }
 
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
-    }
-
-    public function softDeletes(string $softDeletes): void
-    {
-        $this->softDeletes = $softDeletes;
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function applySoftDeletes(Builder|MorphToMany $results): Builder|MorphToMany
-    {
-        throw_if(
-            $this->softDeletes && !in_array(SoftDeletes::class, class_uses(get_class($results->getModel())), true),
-            new Exception(get_class($results->getModel()) . ' is not using the \Illuminate\Database\Eloquent\SoftDeletes trait')
-        );
-
-        return match ($this->softDeletes) {
-            'withTrashed' => $results->withTrashed(), /** @phpstan-ignore-line */
-            'onlyTrashed' => $results->onlyTrashed(), /** @phpstan-ignore-line */
-            default       => $results
-        };
     }
 
     public function refresh(): void
