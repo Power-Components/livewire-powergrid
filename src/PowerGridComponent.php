@@ -202,7 +202,7 @@ class PowerGridComponent extends Component
 
     private function getCachedData(): mixed
     {
-        if (Cache::supportsTags() && !boolval(data_get($this->setUp, 'cache.enabled'))) {
+        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
             return $this->readyToLoad ? $this->fillData() : collect([]);
         }
 
