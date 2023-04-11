@@ -22,7 +22,7 @@
 
         unset($filter['placeholder']);
 
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field);
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field, $title);
 
         $selectClasses = \Illuminate\Support\Arr::toCssClasses([
             'power_grid', $theme->selectClass, data_get($column, 'headerClass')

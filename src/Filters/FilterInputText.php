@@ -36,7 +36,7 @@ class FilterInputText extends FilterBase
         return $this;
     }
 
-    public static function getWireAttributes(string $field): array
+    public static function getWireAttributes(string $field, string $title): array
     {
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
@@ -45,7 +45,7 @@ class FilterInputText extends FilterBase
             ]))
             ->put('inputAttributes', new ComponentAttributeBag([
                 'wire:model.debounce.700ms' => 'filters.input_text.' . $field,
-                'wire:input.debounce.700ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $field . '\')',
+                'wire:input.debounce.700ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
             ]))
             ->toArray();
     }
