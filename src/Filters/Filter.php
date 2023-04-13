@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static FilterNumber number(string $column, ?string $field = null)
  * @method static FilterDynamic dynamic(string $column, ?string $field = null)
  * @method static FilterDatePicker datepicker(string $column, ?string $field = null)
+ * @method static FilterDateTimePicker datetimepicker(string $column, ?string $field = null)
  * @method static FilterBoolean boolean(string $column, ?string $field = null)
  *
  * @see FilterManager

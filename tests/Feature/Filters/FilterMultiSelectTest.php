@@ -5,11 +5,20 @@ use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterMultiSelect, FilterMultiSelectAsync};
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\DishesFiltersTable;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesFiltersTable};
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
-    livewire($component)
+    $multiSelect = Filter::multiSelect('category_name', 'category_id')
+        ->dataSource(Category::all())
+        ->optionValue('id')
+        ->optionLabel('name');
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
         ->set('filters', [
             'multi_select' => [
                 'category_id' => [
@@ -24,7 +33,95 @@ it('properly filter with category_id - Carnes selected', function (string $compo
             'Carne Louca',
             'Bife à Rolê',
         ]);
-})->group('filters')->with('multi_select');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
+
+it('properly filter with id using custom builder', function (string $component) {
+    $multiSelect = Filter::multiSelect('category_name', 'category_id')
+        ->dataSource(Category::all())
+        ->optionValue('id')
+        ->optionLabel('name')
+        ->builder(function ($builder, $values) {
+            expect($values)
+                ->toBe([0 => 1])
+                ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+            return $builder->where('dishes.id', 1);
+        });
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'category_id' => [
+                    1,
+                ],
+            ],
+        ])
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Francesinha vegana');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
+
+it('properly filter with id using collection & array', function (string $component) {
+    $multiSelect = Filter::multiSelect('id')
+        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+        ->optionValue('id')
+        ->optionLabel('value');
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'id' => [
+                    1,
+                    3,
+                ],
+            ],
+        ])
+        ->assertSee('Name 1')
+        ->assertSee('Name 3')
+        ->assertDontSee('Name 2');
+})->group('filters')
+    ->with('filter_multi_select_themes_collection', 'filter_multi_select_themes_array');
+
+it('properly filter with category_id using custom collection', function (string $component) {
+    $multiSelect = Filter::multiSelect('id', 'id')
+        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+        ->optionValue('id')
+        ->optionLabel('value')
+        ->collection(function ($builder, $values) {
+            expect($values)
+                ->toBe([0 => 1, 1 => 3])
+                ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+            return $builder->whereIn('id', [1, 3]);
+        });
+
+    livewire($component, [
+        'testFilters' => [
+            $multiSelect,
+        ],
+    ])
+        ->set('filters', [
+            'multi_select' => [
+                'id' => [
+                    1,
+                    3,
+                ],
+            ],
+        ])
+        ->assertSee('Name 1')
+        ->assertSee('Name 3')
+        ->assertDontSee('Name 2');
+})->group('filters')
+    ->with('filter_multi_select_themes_collection', 'themes with array table');
 
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -51,7 +148,6 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
                 ],
             ],
         ])
-        ->assertDontSee('Empadão de Palmito')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
@@ -68,7 +164,6 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
                 ],
             ],
         ])
-        ->assertSee('Empadão de Palmito')
         ->assertSee('борщ')
         ->assertDontSee('Peixada da chef Nábia');
 
@@ -84,7 +179,8 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->className->toBe(FilterMultiSelect::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('multi_select');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
 it('properly filter with category_id - multiple select async', function (string $component) {
     $multiSelect = Filter::multiSelectAsync('category_name', 'category_id')
@@ -112,7 +208,6 @@ it('properly filter with category_id - multiple select async', function (string 
                 ],
             ],
         ])
-        ->assertDontSee('Empadão de Palmito')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
@@ -129,7 +224,6 @@ it('properly filter with category_id - multiple select async', function (string 
                 ],
             ],
         ])
-        ->assertSee('Empadão de Palmito')
         ->assertSee('борщ')
         ->assertDontSee('Peixada da chef Nábia');
 
@@ -145,11 +239,22 @@ it('properly filter with category_id - multiple select async', function (string 
         ->className->toBe(FilterMultiSelectAsync::class)
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
-})->group('filters')->with('multi_select');
+})->group('filters')
+    ->with('filter_multi_select_themes_with_join');
 
-dataset('multi_select', [
+dataset('filter_multi_select_themes_with_join', [
     'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('filter_multi_select_themes_array', [
+    [DishesArrayTable::class, 'tailwind'],
+    [DishesArrayTable::class, 'bootstrap'],
+]);
+
+dataset('filter_multi_select_themes_collection', [
+    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
+    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);

@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\{Arr, Str};
+use Illuminate\Support\{Arr, Collection, Str};
 
 class Helpers
 {
@@ -14,9 +14,11 @@ class Helpers
         foreach ($params as $param => $value) {
             if ($row && filled($row->{$value})) {
                 $parameters[$param] = $row->{$value};
-            } else {
-                $parameters[$param] = $value;
+
+                continue;
             }
+
+            $parameters[$param] = $value;
         }
 
         return $parameters;

@@ -10,7 +10,6 @@ it('properly sorts ASC/DESC with: string join column', function () {
         ->call('sortBy', 'dishes.id')
         ->set('sortDirection', 'desc')
         ->assertSee('Sopas')
-        ->assertSee('Sobremesas')
         ->call('sortBy', 'categories.name')
         ->set('sortDirection', 'asc')
         ->assertSee('Acompanhamentos');

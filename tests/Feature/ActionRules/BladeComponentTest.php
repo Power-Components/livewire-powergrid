@@ -4,8 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesBladeComponentTable};
 
 it('add rule \'bladeComponent\' when dish-id == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -31,9 +31,9 @@ it('add rule \'bladeComponent\' when dish-id == 5', function (string $component,
             '<svg dish-id="9"',
             '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />',
         ]);
-})->with('bladeComponent')->group('actionRules');
+})->with('blade_component_themes_with_join')->group('actionRules');
 
-dataset('bladeComponent', [
+dataset('blade_component_themes_with_join', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],

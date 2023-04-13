@@ -1,4 +1,4 @@
-<svg {{ $attributes->merge(['class' => 'h-6 w-6']) }}
+<svg {{ $attributes->merge(['class' => 'h-5 w-5']) }}
      fill="none"
      stroke="currentColor"
      stroke-linecap="round"

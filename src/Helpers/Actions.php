@@ -39,6 +39,8 @@ class Actions
 
     public ?string $bladeComponent = null;
 
+    public ?string $customRender = null;
+
     public ComponentAttributeBag $bladeComponentParams;
 
     protected array $attributes = [];
@@ -67,6 +69,7 @@ class Actions
         $this->attributes();
         $this->route();
         $this->id();
+        $this->customRender();
 
         if ($this->hasAttributesInComponentBag('wire:click')
             || $this->action->caption
@@ -82,13 +85,21 @@ class Actions
 
     private function initializeParameters(): void
     {
-        if ($this->action->singleParam) {
-            $this->parameters = $this->helperClass->makeActionParameter($this->action->params, $this->row);
+        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+
+        if (filled($customParams) && is_array($customParams['custom-action'])) {
+            $this->parameters = $customParams['custom-action'];
 
             return;
         }
 
-        $this->parameters = $this->helperClass->makeActionParameters($this->action->params, $this->row);
+        if ($this->action->singleParam) {
+            $this->parameters = $this->helperClass->makeActionParameter((array)$this->action->params, $this->row);
+
+            return;
+        }
+
+        $this->parameters = $this->helperClass->makeActionParameters((array)$this->action->params, $this->row);
     }
 
     private function actionRules(): void
@@ -278,7 +289,7 @@ class Actions
         ]);
     }
 
-    public function caption(): string
+    public function caption(): ?string
     {
         return $this->ruleCaption ?: $this->action->caption;
     }
@@ -292,7 +303,15 @@ class Actions
             $parameters = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
         }
 
-        $this->bladeComponentParams = new ComponentAttributeBag($parameters ?? $this->parameters);
+        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+
+        if (filled($customParams) && is_array($customParams['custom-action'])) {
+            $parameters = $customParams['custom-action'];
+        } else {
+            $parameters = $parameters ?? $this->parameters;
+        }
+
+        $this->bladeComponentParams = new ComponentAttributeBag($parameters);
 
         $this->bladeComponent = $component;
     }
@@ -317,6 +336,15 @@ class Actions
             $this->componentBag = $this->componentBag->merge([
                 'id' => $this->action->id . '-' . $this->row->{$this->primaryKey},
             ]);
+        }
+    }
+
+    private function customRender(): void
+    {
+        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+
+        if (filled($customParams) && is_string($customParams['custom-action'])) {
+            $this->customRender = $customParams['custom-action'];
         }
     }
 

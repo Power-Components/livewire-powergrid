@@ -2,16 +2,16 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Js;
+use Illuminate\View\ComponentAttributeBag;
 
-class FilterNumber implements FilterBaseInterface
+class FilterNumber extends FilterBase
 {
-    use WithFilterBase;
-
     public string $thousands = '';
 
     public string $decimal = '';
+
+    public array $placeholder = [];
 
     public function thousands(string $thousands): FilterNumber
     {
@@ -27,105 +27,27 @@ class FilterNumber implements FilterBaseInterface
         return $this;
     }
 
-    public static function builder(Builder $query, string $field, int|array|string|null $values): void
+    public function placeholder(string $min, string $max): FilterNumber
     {
-        /** @var array $values */
+        $this->placeholder = [
+            'min' => $min,
+            'max' => $max,
+        ];
 
-        if (isset($values['start']) && !isset($values['end'])) {
-            $start = $values['start'];
-
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $start);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-            }
-
-            $query->where($field, '>=', $start);
-        }
-
-        if (!isset($values['start']) && isset($values['end'])) {
-            $end = $values['end'];
-
-            if (isset($values['decimal'])) {
-                $end = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $end = (float) str_replace($values['decimal'], '.', $end);
-            }
-
-            $query->where($field, '<=', $end);
-        }
-
-        if (isset($values['start']) && isset($values['end'])) {
-            $start = $values['start'];
-            $end   = $values['end'];
-
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-                $end   = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-                $end   = str_replace($values['decimal'], '.', $end);
-            }
-
-            $query->whereBetween($field, [$start, $end]);
-        }
+        return $this;
     }
 
-    public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
+    public static function getWireAttributes(string $field, array $filter): array
     {
-        /** @var array $values */
-
-        if (isset($values['start']) && !isset($values['end'])) {
-            $start = $values['start'];
-
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = (float) str_replace($values['decimal'], '.', $start);
-            }
-
-            return $builder->where($field, '>=', $start);
-        }
-
-        if (!isset($values['start']) && isset($values['end'])) {
-            $end = $values['end'];
-
-            if (isset($values['thousands'])) {
-                $end = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $end = (float) str_replace($values['decimal'], '.', $end);
-            }
-
-            return $builder->where($field, '<=', $end);
-        }
-
-        if (isset($values['start']) && isset($values['end'])) {
-            $start = $values['start'];
-            $end   = $values['end'];
-
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-                $end   = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-                $end   = str_replace($values['decimal'], '.', $end);
-            }
-
-            return $builder->whereBetween($field, [$start, $end]);
-        }
-
-        return $builder;
+        return collect()
+            ->put('inputStartAttributes', new ComponentAttributeBag([
+                'wire:model.debounce.800ms' => 'filters.number.' . $field . '.start',
+                'wire:input.debounce.800ms' => 'filterNumberStart(' . Js::from($filter) . ', $event.target.value)',
+            ]))
+            ->put('inputEndAttributes', new ComponentAttributeBag([
+                'wire:model.debounce.800ms' => 'filters.number.' . $field . '.end',
+                'wire:input.debounce.800ms' => 'filterNumberEnd(' . Js::from($filter) . ', $event.target.value)',
+            ]))
+            ->toArray();
     }
 }

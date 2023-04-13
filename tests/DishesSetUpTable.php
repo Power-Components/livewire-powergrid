@@ -25,9 +25,15 @@ class DishesSetUpTable extends PowerGridComponent
 
     public bool $testFooter = false;
 
+    public array $testCache = [];
+
     public function setUp(): array
     {
         $this->showCheckBox();
+
+        if ($this->testCache) {
+            return $this->testCache;
+        }
 
         if ($this->testHeader) {
             return [
@@ -44,7 +50,6 @@ class DishesSetUpTable extends PowerGridComponent
                 Footer::make()
                     ->includeViewOnTop('livewire-powergrid::tests.footer-top')
                     ->includeViewOnBottom('livewire-powergrid::tests.footer-bottom'),
-
             ];
         }
     }

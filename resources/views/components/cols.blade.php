@@ -10,16 +10,19 @@
     'dataField' => null,
 ])
 @php
-    if (filled($column->dataField)) {
-        $field = $column->dataField;
-    } else {
-        $field = $column->field;
-    }
+    $field = filled($column->dataField) ? $column->dataField : $column->field;
 @endphp
 <th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
+    @if($column->sortable)
+    x-data x-multisort-shift-click="{{ $this->id }}"
+    @endif
     style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
-    <div class="text-md flex gap-2 {{ $theme->cols->divClass }}"
+    <div @class([
+            'pl-[11px]' => !$column->sortable && isTailwind(),
+            $theme->cols->divClass
+        ])
+         style="{{ $theme->cols->divStyle }}"
         @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
         @if($column->sortable)
             <span>

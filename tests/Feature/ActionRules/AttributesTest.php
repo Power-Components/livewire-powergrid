@@ -4,8 +4,8 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesAttributesTable};
 
 it('set custom class when dish-id == 1 on button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -19,7 +19,7 @@ it('set custom class when dish-id == 1 on button', function (string $component, 
         ->assertSeeHtml([
             'class="text-center"',
         ]);
-})->with('buttonAttributes')->group('actionRules');
+})->with('attributes_themes_with_join')->group('actionRules');
 
 it('change class to bg-pg-primary-100 when dish-id == 1', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -43,7 +43,7 @@ it('change class to bg-pg-primary-100 when dish-id == 1', function (string $comp
         ->assertDontSeeHtml(
             'class="border border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700 bg-pg-primary-400"',
         );
-})->with('buttonAttributesTailwind')->group('actionRules');
+})->with('attributes_tailwind_with_join')->group('actionRules');
 
 it('see many custom \'attributes\' when dish-id == 2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -67,7 +67,7 @@ it('see many custom \'attributes\' when dish-id == 2', function (string $compone
             'title="Title changed by setAttributes when id 2"',
             'Edit',
         ]);
-})->with('buttonAttributes')->group('actionRules');
+})->with('attributes_themes_with_join')->group('actionRules');
 
 it('see many \'attributes\' when dish-id == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -90,7 +90,7 @@ it('see many \'attributes\' when dish-id == 5', function (string $component, obj
             'wire:click="test(' . e('{"param1":5,"dishId":5}') . ')"',
             'title="Title changed by setAttributes when id 5"',
         ]);
-})->with('buttonAttributes')->group('actionRules');
+})->with('attributes_themes_with_join')->group('actionRules');
 
 it('check if there is no rule when dish-id == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -106,16 +106,16 @@ it('check if there is no rule when dish-id == 5', function (string $component, o
             'wire:click="test(' . e('{"param1":5,"dishId":5}') . ')"',
             'title="Title changed by setAttributes when id 5"',
         ]);
-})->with('buttonAttributes')->group('actionRules');
+})->with('attributes_themes_with_join')->group('actionRules');
 
-dataset('buttonAttributes', [
+dataset('attributes_themes_with_join', [
     'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 
-dataset('buttonAttributesTailwind', [
+dataset('attributes_tailwind_with_join', [
     'tailwind'      => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'tailwind join' => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

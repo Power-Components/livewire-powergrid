@@ -2,13 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\{Collection, Js};
+use Illuminate\View\ComponentAttributeBag;
 
-class FilterSelect implements FilterBaseInterface
+class FilterSelect extends FilterBase
 {
-    use WithFilterBase;
-
     public array|Collection $dataSource;
 
     public string $optionValue = '';
@@ -36,25 +34,13 @@ class FilterSelect implements FilterBaseInterface
         return $this;
     }
 
-    public static function builder(Builder $query, string $field, int|array|string|null $values): void
+    public static function getWireAttributes(string $field, string $title): array
     {
-        if (is_array($values)) {
-            $field  = $field . '.' . key($values);
-            $values = $values[key($values)];
-        }
-
-        /** @var Builder $query */
-        if (filled($values)) {
-            $query->where($field, $values);
-        }
-    }
-
-    public static function collection(Collection $builder, string $field, int|array|string|null $values): Collection
-    {
-        if (filled($values)) {
-            return $builder->where($field, $values);
-        }
-
-        return $builder;
+        return collect()
+            ->put('selectAttributes', new ComponentAttributeBag([
+                'wire:model.debounce.500ms' => 'filters.select.' . $field,
+                'wire:input.debounce.500ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
+            ]))
+            ->toArray();
     }
 }

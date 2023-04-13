@@ -5,8 +5,8 @@
     @if($queues > 0 && $showExporting)
         @if($batchExporting && !$batchFinished)
             <div wire:poll="updateExportProgress"
-                 class="w-full my-3 px-4 rounded bg-pg-primary-100 py-3 text-center">
-                <div class="dark:text-pg-primary-300">{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
+                 class="w-full my-3 px-4 rounded dark:text-pg-primary-300 bg-pg-primary-100 dark:bg-pg-primary-700 py-3 text-center">
+                <div>{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
                 <span class="font-normal text-xs">{{ $batchProgress }}%</span>
                 <div
                     class="bg-emerald-500 rounded h-1 text-center"
@@ -18,7 +18,7 @@
         @if($batchFinished)
             <div class="w-full my-3 dark:bg-pg-primary-800">
                 <div x-data={show:true} class="rounded-top">
-                    <div class="px-4 py-3 rounded-md cursor-pointer bg-pg-primary-100 shadow dark:bg-pg-primary-600"
+                    <div class="px-4 py-3 rounded-md cursor-pointer bg-pg-primary-100 shadow dark:bg-pg-primary-700"
                          x-on:click="show =!show">
                         <div class="flex justify-between">
                             <button
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div x-show="show"
-                         class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-700">
+                         class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-600">
                         @foreach($exportedFiles as $file)
                             <div class="flex w-full p-2">
                                 <x-livewire-powergrid::icons.download

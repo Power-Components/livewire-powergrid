@@ -1,30 +1,24 @@
 @if(count($enabledFilters))
-    <div class="w-full pt-3 mb-3">
+    <div class="flex items-center gap-2 mt-2 md:mt-0 flex-wrap">
         @if(count($enabledFilters) > 1)
-            <span
-                class="cursor-pointer inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 mr-1 text-sm font-medium bg-pg-primary-500 text-white dark:bg-pg-primary-600 dark:text-pg-primary-200">
-              {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
-              <button type="button"
-                      wire:click.prevent="clearAllFilters"
-                      class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-white dark:text-pg-primary-200 hover:bg-pg-primary-400 hover:text-pg-primary-500 focus:outline-none focus:bg-pg-primary-500 focus:text-pg-primary-300 dark:focus:text-pg-primary-500">
-                <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-                  <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"/>
-                </svg>
-              </button>
+            <span class="outline-none inline-flex justify-center items-center group rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5 text-pg-primary-100 bg-pg-primary-500 dark:bg-pg-primary-700">
+                {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
+                <div class="relative flex items-center w-2 h-2">
+                    <button wire:click.prevent="clearAllFilters" type="button">
+                        <x-livewire-powergrid::icons.x class="w-4 h-4"/>
+                    </button>
+                </div>
             </span>
         @endif
         @foreach($enabledFilters as $field => $filter)
             @isset($filter['label'])
-                    <span
-                        class="cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-pg-primary-100 text-pg-primary-700 dark:bg-pg-primary-600 dark:text-pg-primary-300">
+                    <span wire:key="enabled-filters-{{ $field }}" class="outline-none inline-flex justify-center items-center group rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5 text-pg-primary-600 bg-pg-primary-100 dark:bg-pg-primary-600">
                         {{ $filter['label'] }}
-                          <button type="button"
-                                  wire:click.prevent="clearFilter('{{ $field }}')"
-                                  class="flex-shrink-0 ml-0.5 h-4 w-4 rounded-full inline-flex items-center justify-center text-pg-primary-600 dark:text-pg-primary-300 hover:bg-pg-primary-200 hover:text-pg-primary-500 focus:outline-none focus:bg-pg-primary-500 focus:text-pg-primary-200 dark:hover:bg-pg-primary-300 dark:hover:text-pg-primary-500">
-                            <svg class="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
-                              <path stroke-linecap="round" stroke-width="1.5" d="M1 1l6 6m0-6L1 7"/>
-                            </svg>
-                          </button>
+                         <div class="relative flex items-center w-2 h-2">
+                             <button wire:click.prevent="clearFilter('{{ $field }}')" type="button">
+                                  <x-livewire-powergrid::icons.x class="w-4 h-4"/>
+                            </button>
+                         </div>
                     </span>
             @endisset
         @endforeach

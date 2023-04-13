@@ -8,7 +8,7 @@ final class Button
 {
     use Macroable;
 
-    public string $caption = '';
+    public ?string $caption = '';
 
     public string $route = '';
 
@@ -36,11 +36,13 @@ final class Button
 
     public string $browserEvent = '';
 
-    public array $params = [];
+    public array|\Closure $params = [];
 
     public ?string $id = null;
 
     public array $dynamicProperties = [];
+
+    public ?\Closure $render = null;
 
     /**
      * Button constructor.
@@ -58,7 +60,7 @@ final class Button
     /**
      * Make a new Column
      */
-    public static function make(string $action, string $caption): self
+    public static function make(string $action, ?string $caption = null): self
     {
         return (new static($action))
             ->caption($caption);
@@ -67,7 +69,7 @@ final class Button
     /**
      * Button text in view
      */
-    public function caption(string $caption): Button
+    public function caption(?string $caption = null): Button
     {
         $this->caption = $caption;
 
@@ -78,7 +80,7 @@ final class Button
      * Route string
      * @codeCoverageIgnore
      */
-    public function route(string $route, array $params, bool $singleParam = false): Button
+    public function route(string $route, array|\Closure $params, bool $singleParam = false): Button
     {
         $this->route       = $route;
         $this->params      = $params;
@@ -111,7 +113,7 @@ final class Button
      * openModal using wire-elements
      * @see https://github.com/wire-elements/modal
      */
-    public function openModal(string $component, array $params, bool $singleParam = false): Button
+    public function openModal(string $component, array|\Closure $params, bool $singleParam = false): Button
     {
         $this->view        = $component;
         $this->params      = $params;
@@ -126,7 +128,7 @@ final class Button
     /**
      * Livewire emit
      */
-    public function emit(string $event, array $params, bool $singleParam = false): Button
+    public function emit(string $event, array|\Closure $params, bool $singleParam = false): Button
     {
         $this->event       = $event;
         $this->params      = $params;
@@ -140,7 +142,7 @@ final class Button
      * Add Livewire emitTo
      *
      */
-    public function emitTo(string $to, string $event, array $param, bool $singleParam = false): Button
+    public function emitTo(string $to, string $event, array|\Closure $param, bool $singleParam = false): Button
     {
         $this->to          = $to;
         $this->event       = $event;
@@ -196,7 +198,7 @@ final class Button
     /**
      * Add Blade Component
      */
-    public function bladeComponent(string $component, array $params): Button
+    public function bladeComponent(string $component, array|\Closure $params): Button
     {
         $this->bladeComponent = $component;
         $this->params         = $params;
@@ -207,7 +209,7 @@ final class Button
     /**
      * Alpine Dispatch Browser Events
      */
-    public function dispatch(string $event, array $params): Button
+    public function dispatch(string $event, array|\Closure $params): Button
     {
         $this->browserEvent = $event;
         $this->params       = $params;
@@ -222,6 +224,16 @@ final class Button
     public function id(string $value = null): Button
     {
         $this->id = $value;
+
+        return $this;
+    }
+
+    /**
+     * Render custom action
+     */
+    public function render(\Closure $closure): Button
+    {
+        $this->render = $closure;
 
         return $this;
     }

@@ -11,11 +11,11 @@ it('deferLoading work properly', function (string $component, object $params) {
     ])
         ->call($params->theme)
         ->call('fetchDatasource')
-        ->set('setUp.footer.perPage', 25)
-        ->assertSeeTextInOrder(['Showing', '1', 'to', '25', 'of', '102', 'Results']);
-})->with('defer')->group('action');
+        ->set('setUp.footer.perPage', 11)
+        ->assertSeeTextInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results']);
+})->with('defer_loading_join')->group('action');
 
-dataset('defer', [
+dataset('defer_loading_join', [
     'tailwind'          => [DishesTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'         => [DishesTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind => join'  => [DishesTable::class, (object) ['theme' => 'tailwind', 'join' => true]],

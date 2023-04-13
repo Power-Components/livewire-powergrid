@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         colors="true"
->
-    <testsuites>
-        <testsuite name="Test Suite">
-            <directory suffix="Test.php">./tests/Feature</directory>
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
-    </testsuites>
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
-    </coverage>
-    <php>
-        <server name="APP_ENV" value="testing"/>
-        <server name="DB_DRIVER" value="sqlite"/>
-        <server name="DB_HOST" value=""/>
-        <server name="DB_PORT" value="0"/>
-        <server name="DB_USERNAME" value=""/>
-        <server name="DB_PASSWORD" value=""/>
-        <server name="DB_DATABASE" value=":memory:"/>
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
+  <testsuites>
+    <testsuite name="Test Suite">
+      <directory suffix="Test.php">./tests/Feature</directory>
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <coverage>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </coverage>
+  <php>
+    <server name="APP_ENV" value="testing"/>
+    <server name="DB_DRIVER" value="sqlite"/>
+    <server name="DB_HOST" value=""/>
+    <server name="DB_PORT" value="0"/>
+    <server name="DB_USERNAME" value=""/>
+    <server name="DB_PASSWORD" value=""/>
+    <server name="DB_DATABASE" value=":memory:"/>
+  </php>
 </phpunit>

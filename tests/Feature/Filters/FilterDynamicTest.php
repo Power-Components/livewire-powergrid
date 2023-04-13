@@ -2,6 +2,8 @@
 
 use function Pest\Livewire\livewire;
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesDynamicFiltersTable;
+
 it(
     'properly filters using dynamic filter feature',
     fn (string $component, object $params) => livewire($component)
@@ -13,4 +15,9 @@ it(
             '<div>option-value: value</div>',
             '<div>placeholder: Choose</div>',
         ])
-)->group('filters')->with('themes with dynamic filter table');
+)->group('filters')->with('dynamic_themes');
+
+dataset('dynamic_themes', [
+    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => 'tailwind']],
+    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => 'bootstrap']],
+]);

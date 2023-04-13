@@ -8,12 +8,17 @@ use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
+use PowerComponents\LivewirePowerGrid\Tests\{DishesTable, DishesTableWithJoin};
+
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
             Filter::number('price')
                 ->thousands('.')
                 ->decimal(','),
+            Filter::inputText('name')->operators(),
+            Filter::number('price')->thousands('.')->decimal(','),
+            Filter::boolean('in_stock'),
         ],
     ])
         ->call($params->theme);
@@ -85,6 +90,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         filterNumber('price', '80,00', '100', '.', ','),
         filterBoolean('in_stock', 'true')
     );
+
     expect($component->filters)
         ->toMatchArray($filters);
 
@@ -98,4 +104,11 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         ->assertSee('борщ');
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters')->with('themes with name field');
+})->group('filters')->with('filter_multiple_themes_with_join');
+
+dataset('filter_multiple_themes_with_join', [
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+]);

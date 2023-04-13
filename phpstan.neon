@@ -1,7 +1,36 @@
 includes:
     - ./vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/spaze/phpstan-disallowed-calls/extension.neon
 
 parameters:
+
+    disallowedFunctionCalls:
+        -
+            function: 'ds()'
+            message: 'You should not be printing or dumping any logs'
+        -
+            function: 'dump()'
+            message: 'You should not be printing or dumping any logs'
+        -
+            function: 'logger()'
+            message: 'You should not be printing or dumping any logs'
+        -
+            function: 'logger()'
+            message: 'You should not be printing or dumping any logs'
+        -
+            function: 'var_dump()'
+            message: 'You should not be printing or dumping any logs'
+        -
+            function: 'print_r()'
+            message: 'You should not be printing or dumping any logs'
+
+    disallowedNamespaces:
+        -
+            class: 'Illuminate\Support\Facades\Log'
+            message: 'PowerGrid should not register any log'
+            allowIn:
+                - 'src/Commands/UpdateCommand.php'
+
     ignoreErrors:
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
