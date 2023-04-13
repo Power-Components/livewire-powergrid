@@ -131,11 +131,15 @@ class Model
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->search . '%');
-                        }
-
-                        if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->search . '%\'');
+                            try {
+                                if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
+                                    $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
+                                } else {
+                                    $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                                }
+                            } catch (\Exception) {
+                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            }
                         }
                     }
                 }
