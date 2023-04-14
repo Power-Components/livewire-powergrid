@@ -40,6 +40,8 @@ PowerGrid creates modern, powerful and easy to customize Datatables based on Lar
 
 ## 🚀 Instant Demo
 
+### [Online Demo](https://demo.livewire-powergrid.com) (tailwind)
+
 Get a view of what PowerGrid can offer in just 2 commands:
 
 Install
