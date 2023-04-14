@@ -21,8 +21,7 @@ class Model
     public function __construct(
         private Builder $query,
         private PowerGridComponent $powerGridComponent
-    )
-    {
+    ) {
     }
 
     public static function make(Builder $query, PowerGridComponent $powerGridComponent): Model
