@@ -3,9 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\{Carbon, HtmlString};
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
-use PowerComponents\LivewirePowerGrid\{Button,
+use Illuminate\Support\Carbon;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\{
     Column,
     Exportable,
     Footer,
@@ -14,7 +14,6 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGridComponent,
     PowerGridEloquent,
     Rules\Rule,
-    Services\ExportOption,
     Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent

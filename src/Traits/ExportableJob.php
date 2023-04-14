@@ -31,8 +31,6 @@ trait ExportableJob
     private function transform(Collection $collection): Collection
     {
         return $collection->transform(function ($row) {
-            $row = (object) $row;
-
             $columns = $this->componentTable->addColumns()->columns;
 
             foreach ($columns as $key => $column) {

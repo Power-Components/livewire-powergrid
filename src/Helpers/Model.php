@@ -2,9 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use DB;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\{Cache, Schema};
+use Illuminate\Support\Facades\{Cache, DB, Schema};
 use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
     Builders\DatePicker,
@@ -19,8 +18,10 @@ class Model
 {
     use InputOperators;
 
-    public function __construct(private Builder $query, private PowerGridComponent $powerGridComponent)
-    {
+    public function __construct(
+        private Builder $query,
+        private PowerGridComponent $powerGridComponent
+    ) {
     }
 
     public static function make(Builder $query, PowerGridComponent $powerGridComponent): Model
@@ -97,18 +98,20 @@ class Model
                     if ($searchable && $field) {
                         if (str_contains($field, '.')) {
                             $explodeField = Str::of($field)->explode('.');
-                            /** @var string $table */
-                            $table = $explodeField->get(0);
-                            /** @var string $field */
-                            $field = $explodeField->get(1);
+                            $table        = strval($explodeField->get(0));
+                            $field        = strval($explodeField->get(1));
                         }
 
                         $hasColumn = in_array($field, $columnList, true);
 
                         if ($hasColumn) {
-                            if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
-                                $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
-                            } else {
+                            try {
+                                if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
+                                    $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
+                                } else {
+                                    $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                                }
+                            } catch (\Exception) {
                                 $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
                             }
                         }
