@@ -1,5 +1,6 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Tests\DishesTableWithJoin;
 use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesTableWithJoinNames;
@@ -15,8 +16,8 @@ it('properly sorts ASC/DESC with: string join column', function (string $compone
         ->set('sortDirection', 'asc')
         ->assertSee('Acompanhamentos');
 })->with([
-    'tailwind'  => [DishesTableWithJoinNames::class, 'tailwind'],
-    'bootstrap' => [DishesTableWithJoinNames::class, 'bootstrap'],
+    'tailwind'  => [DishesTableWithJoin::class, 'tailwind'],
+    'bootstrap' => [DishesTableWithJoin::class, 'bootstrap'],
 ]);
 
 it('properly search join column with invalid table', function (string $component, string $theme) {
