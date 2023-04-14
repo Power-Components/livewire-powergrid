@@ -74,6 +74,7 @@ jobs:
         run: composer test:pint
 
       - name: Larastan
+        if: matrix.php == '8.2'
         run: composer test:types
 
       - name: SQLite
