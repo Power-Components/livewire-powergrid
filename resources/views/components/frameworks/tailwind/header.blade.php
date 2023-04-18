@@ -5,7 +5,7 @@
             <div>
                 @include(powerGridThemeRoot().'.header.actions')
             </div>
-            <div class="flex flex-row justify-center items-center text-sm flex-wrap" x-cloak>
+            <div class="flex flex-row justify-center items-center text-sm flex-wrap">
                 @if(data_get($setUp, 'exportable'))
                     <div class="mr-2 mt-2 sm:mt-0" id="pg-header-export">
                         @include(powerGridThemeRoot().'.header.export')
