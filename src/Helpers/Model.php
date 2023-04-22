@@ -20,7 +20,7 @@ class Model
 
     public function __construct(
         private Builder $query,
-        private PowerGridComponent $powerGridComponent
+        private readonly PowerGridComponent $powerGridComponent
     ) {
     }
 
@@ -31,9 +31,9 @@ class Model
 
     public function filter(): Builder
     {
-        $filters = collect($this->powerGridComponent->filters());
+        $filters = collect($this->powerGridComponent->filters())->flatten()->filter()->values();
 
-        if (blank($filters->flatten()->values())) {
+        if ($filters->isEmpty()) {
             return $this->query;
         }
 
@@ -84,7 +84,14 @@ class Model
     public function filterContains(): Model
     {
         if ($this->powerGridComponent->search != '') {
-            $this->query = $this->query->where(function (Builder $query) {
+            $search = $this->powerGridComponent->search;
+            $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+            if (method_exists($this->powerGridComponent, 'beforeSearchContains')) {
+                $search = $this->powerGridComponent->beforeSearchContains($search);
+            }
+
+            $this->query = $this->query->where(function (Builder $query) use ($search) {
                 $modelTable = $query->getModel()->getTable();
 
                 $columnList = $this->getColumnList($modelTable);
@@ -106,18 +113,21 @@ class Model
 
                         if ($hasColumn) {
                             try {
-                                if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
-                                    $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
+                                $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
+                                $driverName = $query->getModel()->getConnection()->getDriverName();
+
+                                if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
+                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . ":search", ['search' => "%{$search}%"]);
                                 } else {
-                                    $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                                    $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
                                 }
-                            } catch (\Exception) {
-                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            } catch (\Throwable) {
+                                $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
                             }
                         }
 
                         if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->powerGridComponent->search . '%\'');
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
                         }
                     }
                 }
@@ -135,32 +145,35 @@ class Model
 
     private function filterRelation(): void
     {
-        foreach ($this->powerGridComponent->relationSearch as $table => $relation) {
-            if (!is_array($relation)) {
-                return;
+        foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
+            if (is_array($columns)) {
+                $this->filterNestedRelation($table, $columns);
+
+                continue;
             }
 
-            foreach ($relation as $nestedTable => $column) {
-                if (is_array($column)) {
-                    /** @var Builder $query */
-                    $query = $this->query->getRelation($table);
+            $this->query->orWhereHas($table, function ($query) use ($columns) {
+                $query->where($columns, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+            });
+        }
+    }
 
-                    if ($query->getRelation($nestedTable) != '') {
-                        foreach ($column as $nestedColumn) {
-                            $this->query = $this->query->orWhereHas(
-                                $table . '.' . $nestedTable,
-                                fn (Builder $query) => $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
-                            );
+    private function filterNestedRelation(string $table, array $columns): void
+    {
+        foreach ($columns as $nestedTable => $nestedColumns) {
+            if (is_array($nestedColumns)) {
+                if ($this->query->getRelation($nestedTable) != '') {
+                    $nestedTableWithDot = $table . '.' . $nestedTable;
+                    $this->query->orWhereHas($nestedTableWithDot, function ($query) use ($nestedTableWithDot, $nestedColumns) {
+                        foreach ($nestedColumns as $nestedColumn) {
+                            $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
                         }
-                    }
-
-                    continue;
+                    });
                 }
-
-                $this->query = $this->query->orWhereHas(
-                    $table,
-                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
-                );
+            } else {
+                $this->query->orWhereHas($table, function ($query) use ($nestedColumns) {
+                    $query->where($nestedColumns, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                });
             }
         }
     }

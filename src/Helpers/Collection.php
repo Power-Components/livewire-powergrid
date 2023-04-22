@@ -18,8 +18,10 @@ class Collection
 {
     use InputOperators;
 
-    public function __construct(private BaseCollection $collection, private PowerGridComponent $powerGridComponent)
-    {
+    public function __construct(
+        private BaseCollection              $collection,
+        private readonly PowerGridComponent $powerGridComponent
+    ) {
     }
 
     public static function make(BaseCollection $collection, PowerGridComponent $powerGridComponent): self
@@ -56,18 +58,22 @@ class Collection
 
     public function search(): BaseCollection
     {
-        if (empty($this->search)) {
+        $searchTerm = strtolower($this->powerGridComponent->search);
+
+        if (empty($searchTerm)) {
             return $this->collection;
         }
 
-        $this->collection = $this->collection->filter(function ($row) {
+        $this->collection = $this->collection->filter(function ($row) use ($searchTerm) {
             foreach ($this->powerGridComponent->columns as $column) {
                 $field = $column->field;
 
-                if (Str::contains(strtolower($row->{$field}), strtolower($this->powerGridComponent->search))) {
-                    return false !== stristr($row->{$field}, strtolower($this->powerGridComponent->search));
+                if (Str::contains(strtolower($row->{$field}), $searchTerm)) {
+                    return stristr($row->{$field}, $searchTerm) !== false;
                 }
             }
+
+            return false;
         });
 
         return $this->collection;
@@ -112,27 +118,31 @@ class Collection
 
     public function filterContains(): Collection
     {
-        if (!empty($this->search)) {
-            $this->collection = $this->collection->filter(function ($row) {
-                $row = (object) $row;
+        $searchTerm = strtolower($this->powerGridComponent->search);
 
-                foreach ($this->powerGridComponent->columns as $column) {
-                    if ($column->searchable) {
-                        $field = filled($column->dataField) ? $column->dataField : $column->field;
+        if (empty($searchTerm)) {
+            return $this;
+        }
 
-                        try {
-                            if (Str::contains(strtolower($row->{$field}), strtolower($this->powerGridComponent->search))) {
-                                return false !== stristr($row->{$field}, strtolower($this->powerGridComponent->search));
-                            }
-                        } catch (\Exception $exception) {
-                            throw new \Exception($exception);
+        $this->collection = $this->collection->filter(function ($row) use ($searchTerm) {
+            $row = (object) $row;
+
+            foreach ($this->powerGridComponent->columns as $column) {
+                if ($column->searchable) {
+                    $field = filled($column->dataField) ? $column->dataField : $column->field;
+
+                    try {
+                        if (Str::contains(strtolower($row->{$field}), $searchTerm)) {
+                            return stristr($row->{$field}, $searchTerm) !== false;
                         }
+                    } catch (\Throwable $exception) {
+                        throw new \Exception($exception);
                     }
                 }
+            }
 
-                return false;
-            });
-        }
+            return false;
+        });
 
         return $this;
     }
