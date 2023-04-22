@@ -55,13 +55,13 @@ return [
         'completed' => 'Експорт завершено! Файли готові для скачування',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'Показати всі записи, включаючи видалені',
+        'message_only_trashed' => 'Показати тільки видалені записи',
+        'without_trashed'      => 'Без видалених записів',
+        'with_trashed'         => 'З видаленими записами',
+        'only_trashed'         => 'Тільки видалені записи',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Сортувати за',
     ],
 ];
