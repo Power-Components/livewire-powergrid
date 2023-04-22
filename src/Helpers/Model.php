@@ -86,6 +86,7 @@ class Model
         if ($this->powerGridComponent->search != '') {
             $search = $this->powerGridComponent->search;
             $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $search = strtolower($search);
 
             if (method_exists($this->powerGridComponent, 'beforeSearchContains')) {
                 $search = $this->powerGridComponent->beforeSearchContains($search);
@@ -117,7 +118,7 @@ class Model
                                 $driverName = $query->getModel()->getConnection()->getDriverName();
 
                                 if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . ":search", ['search' => "%{$search}%"]);
+                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
                                 } else {
                                     $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
                                 }

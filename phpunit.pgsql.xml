@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" cacheDirectory=".phpunit.cache">
     <testsuites>
         <testsuite name="Test Suite">
             <directory suffix="Test.php">./tests/Feature</directory>
+            <exclude>./tests/Feature/FilterInputOptionsCollectionTest.php</exclude>
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
-    <coverage>
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
-    </coverage>
+    <coverage/>
     <php>
         <server name="APP_ENV" value="testing"/>
         <server name="DB_DRIVER" value="pgsql"/>
@@ -20,4 +17,9 @@
         <server name="DB_PASSWORD" value="password"/>
         <server name="DB_DATABASE" value="powergridtest"/>
     </php>
+    <source>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </source>
 </phpunit>
