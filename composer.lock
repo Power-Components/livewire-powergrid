@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96a0a7fe6212e2a2997b8b3ed1ca9846",
+    "content-hash": "bffeec0678f4e239bff224a04b5f3c5a",
     "packages": [
         {
             "name": "brick/math",
@@ -2509,16 +2509,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "4.x-dev",
+            "version": "4.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "8e955307d32dc9b6992440ff81321d3cb09db75a"
+                "reference": "60a4c63ab724854332900504274f6150ff26d286"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/8e955307d32dc9b6992440ff81321d3cb09db75a",
-                "reference": "8e955307d32dc9b6992440ff81321d3cb09db75a",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/60a4c63ab724854332900504274f6150ff26d286",
+                "reference": "60a4c63ab724854332900504274f6150ff26d286",
                 "shasum": ""
             },
             "require": {
@@ -2559,7 +2559,6 @@
                 "paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
                 "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "captainhook": {
@@ -2586,7 +2585,7 @@
             ],
             "support": {
                 "issues": "https://github.com/ramsey/uuid/issues",
-                "source": "https://github.com/ramsey/uuid/tree/4.x"
+                "source": "https://github.com/ramsey/uuid/tree/4.7.4"
             },
             "funding": [
                 {
@@ -2598,7 +2597,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-27T22:05:11+00:00"
+            "time": "2023-04-15T23:01:58+00:00"
         },
         {
             "name": "symfony/console",
@@ -6291,31 +6290,31 @@
         },
         {
             "name": "laradumps/laradumps",
-            "version": "v1.11.0",
+            "version": "2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laradumps/laradumps.git",
-                "reference": "5cde804d47a7567b2a4c75b2491ca7ef36ddbc49"
+                "reference": "b13273d49b35d6aa320b8368ea7783f559364252"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/5cde804d47a7567b2a4c75b2491ca7ef36ddbc49",
-                "reference": "5cde804d47a7567b2a4c75b2491ca7ef36ddbc49",
+                "url": "https://api.github.com/repos/laradumps/laradumps/zipball/b13273d49b35d6aa320b8368ea7783f559364252",
+                "reference": "b13273d49b35d6aa320b8368ea7783f559364252",
                 "shasum": ""
             },
             "require": {
-                "nunomaduro/termwind": "^1.12",
+                "illuminate/mail": "^9.0|^10.0",
+                "illuminate/support": "^9.0|^10.0",
+                "laradumps/laradumps-core": "dev-main",
+                "nunomaduro/termwind": "^1.15.1",
                 "php": "^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.8",
-                "illuminate/console": "^8.18 | ^9.0",
-                "illuminate/mail": "^8.18 | ^9.0",
-                "illuminate/support": "^8.18 | ^9.0",
-                "nunomaduro/larastan": "^1.0 | ^2.1",
-                "orchestra/testbench": "^6.17 | ^7.0",
-                "pestphp/pest": "^1.21",
-                "symfony/var-dumper": "^5.4 | ^6.0"
+                "laravel/pint": "^1.7",
+                "nunomaduro/larastan": "^2.4",
+                "orchestra/testbench": "^7.22 | ^8.0",
+                "pestphp/pest": "^2.2",
+                "symfony/var-dumper": "^5.4 | ^6.2.5"
             },
             "type": "library",
             "extra": {
@@ -6348,7 +6347,7 @@
             "homepage": "https://github.com/laradumps/laradumps",
             "support": {
                 "issues": "https://github.com/laradumps/laradumps/issues",
-                "source": "https://github.com/laradumps/laradumps/tree/v.1.11.0"
+                "source": "https://github.com/laradumps/laradumps/tree/2.x"
             },
             "funding": [
                 {
@@ -6356,7 +6355,70 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-12T21:15:11+00:00"
+            "time": "2023-04-21T17:50:37+00:00"
+        },
+        {
+            "name": "laradumps/laradumps-core",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laradumps/laradumps-core.git",
+                "reference": "1e704bb505322c2f5990057de2753c6d78106511"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laradumps/laradumps-core/zipball/1e704bb505322c2f5990057de2753c6d78106511",
+                "reference": "1e704bb505322c2f5990057de2753c6d78106511",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "nesbot/carbon": "^2.66",
+                "php": "^8.0",
+                "ramsey/uuid": "^3.9|^4.7.3",
+                "symfony/console": "^6.2.7",
+                "symfony/var-dumper": "^6.2.7",
+                "vlucas/phpdotenv": "^5.5"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.7",
+                "pestphp/pest": "^2.3",
+                "phpstan/phpstan": "^1.10.8"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "LaraDumps\\LaraDumpsCore\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Luan Freitas",
+                    "email": "luanfreitas10@protonmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A dump component for php code.",
+            "homepage": "https://github.com/laradumps/laradumps-core",
+            "support": {
+                "issues": "https://github.com/laradumps/laradumps-core/issues",
+                "source": "https://github.com/laradumps/laradumps-core/tree/main"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/luanfreitasdev",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-04-21T17:25:49+00:00"
         },
         {
             "name": "laravel/pint",
@@ -7739,16 +7801,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.18.1",
+            "version": "1.20.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "22dcdfd725ddf99583bfe398fc624ad6c5004a0f"
+                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/22dcdfd725ddf99583bfe398fc624ad6c5004a0f",
-                "reference": "22dcdfd725ddf99583bfe398fc624ad6c5004a0f",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/90490bd8fd8530a272043c4950c180b6d0cf5f81",
+                "reference": "90490bd8fd8530a272043c4950c180b6d0cf5f81",
                 "shasum": ""
             },
             "require": {
@@ -7778,9 +7840,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.18.1"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.20.2"
             },
-            "time": "2023-04-07T11:51:11+00:00"
+            "time": "2023-04-22T12:59:35+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -10721,7 +10783,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "laradumps/laradumps": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
