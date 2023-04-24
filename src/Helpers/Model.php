@@ -103,25 +103,27 @@ class Model
 
                         $hasColumn = in_array($field, $columnList, true);
 
-                        if (($sqlRaw = strval(data_get($column, 'searchableRaw'))) && $search) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
-                        }
+                        $query->when($search, function () use ($column, $query, $search, $table, $field, $hasColumn) {
+                            if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
+                                $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
+                            }
 
-                        if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
-                            try {
-                                $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
+                            if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
+                                try {
+                                    $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
 
-                                $driverName = $query->getModel()->getConnection()->getDriverName();
+                                    $driverName = $query->getModel()->getConnection()->getDriverName();
 
-                                if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
-                                } else {
+                                    if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
+                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
+                                    } else {
+                                        $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                    }
+                                } catch (\Throwable) {
                                     $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
                                 }
-                            } catch (\Throwable) {
-                                $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
                             }
-                        }
+                        });
                     });
 
                 return $query;
