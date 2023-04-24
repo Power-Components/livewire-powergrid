@@ -130,37 +130,39 @@ class Model
             });
 
             if (count($this->powerGridComponent->relationSearch)) {
-                $this->filterRelation();
+                $this->filterRelation($search);
             }
         }
 
         return $this;
     }
 
-    private function filterRelation(): void
+    private function filterRelation(string $search): void
     {
         foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
             if (is_array($columns)) {
-                $this->filterNestedRelation($table, $columns);
+                $this->filterNestedRelation($table, $columns, $search);
 
                 continue;
             }
 
-            $this->query->orWhereHas($table, function ($query) use ($columns) {
-                $query->where($columns, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+            $this->query->orWhereHas($table, function ($query) use ($columns, $search) {
+                $search = $this->getBeforeSearchMethod($columns, $search);
+                $query->where($columns, SqlSupport::like($query), '%' . $search . '%');
             });
         }
     }
 
-    private function filterNestedRelation(string $table, array $columns): void
+    private function filterNestedRelation(string $table, array $columns, string $search): void
     {
         foreach ($columns as $nestedTable => $nestedColumns) {
             if (is_array($nestedColumns)) {
                 if ($this->query->getRelation($nestedTable) != '') {
                     $nestedTableWithDot = $table . '.' . $nestedTable;
-                    $this->query->orWhereHas($nestedTableWithDot, function ($query) use ($nestedTableWithDot, $nestedColumns) {
+                    $this->query->orWhereHas($nestedTableWithDot, function ($query) use ($nestedTableWithDot, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
-                            $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                            $search = $this->getBeforeSearchMethod($nestedColumn, $search);
+                            $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $search . '%');
                         }
                     });
                 }
@@ -168,8 +170,9 @@ class Model
                 continue;
             }
 
-            $this->query->orWhereHas($table, function ($query) use ($nestedColumns) {
-                $query->where($nestedColumns, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+            $this->query->orWhereHas($table, function ($query) use ($nestedColumns, $search) {
+                $search = $this->getBeforeSearchMethod($nestedColumns, $search);
+                $query->where($nestedColumns, SqlSupport::like($query), '%' . $search . '%');
             });
         }
     }
