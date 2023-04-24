@@ -89,34 +89,25 @@ class Model
             $search = strtolower($search);
 
             $this->query = $this->query->where(function (Builder $query) use ($search) {
-                collect($this->powerGridComponent->columns)
-                    ->filter(fn ($column) => $this->isSearchableRawColumn($column))
-                    ->each(function ($column) use ($query, $search) {
-                        $sqlRaw = strval(data_get($column, 'searchableRaw'));
-
-                        $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
-                    });
+                $modelTable = $query->getModel()->getTable();
+                $columnList = $this->getColumnList($modelTable);
 
                 collect($this->powerGridComponent->columns)
                     ->filter(fn ($column) => $this->isSearchableColumn($column))
-                    ->each(function ($column) use ($query, $search) {
+                    ->each(function ($column) use ($query, $search, $columnList) {
                         $field = $this->getDataField($column);
 
-                        ds($field);
                         [$table, $field] = $this->splitField($field);
 
-                        if (($method = $this->hasBeforeSearchMethod($field)) && $search) {
-                            $beforeSearchString = match ($method) {
-                                'beforeSearch' => $this->powerGridComponent->$method($field, $search),
-                                default => $this->powerGridComponent->$method($search),
-                            };
+                        $search = $this->getBeforeSearchMethod($field, $search);
 
-                            if ($beforeSearchString) {
-                                $search = $beforeSearchString;
-                            }
+                        $hasColumn = in_array($field, $columnList, true);
+
+                        if (($sqlRaw = strval(data_get($column, 'searchableRaw'))) && $search) {
+                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
                         }
 
-                        if (in_array($field, $this->getColumnList($table), true)) {
+                        if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
                             try {
                                 $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
 
@@ -183,12 +174,7 @@ class Model
 
     private function isSearchableColumn(Column|\stdClass $column): bool
     {
-        return boolval(data_get($column, 'searchable')) && !strval(data_get($column, 'searchableRaw') !== '');
-    }
-
-    private function isSearchableRawColumn(Column|\stdClass $column): bool
-    {
-        return !boolval(data_get($column, 'searchable')) && strval(data_get($column, 'searchableRaw') !== '');
+        return boolval(data_get($column, 'searchable')) || strval(data_get($column, 'searchableRaw')) !== '';
     }
 
     private function getDataField(Column|\stdClass $column): string
@@ -196,19 +182,19 @@ class Model
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }
 
-    private function hasBeforeSearchMethod(string $field): ?string
+    private function getBeforeSearchMethod(string $field, string $search): ?string
     {
         $method = 'beforeSearch' . str($field)->headline()->replace(' ', '');
 
         if (method_exists($this->powerGridComponent, $method)) {
-            return $method;
+            return $this->powerGridComponent->$method($search);
         }
 
         if (method_exists($this->powerGridComponent, 'beforeSearch')) {
-            return 'beforeSearch';
+            return $this->powerGridComponent->beforeSearch($field, $search);
         }
 
-        return null;
+        return $search;
     }
 
     private function splitField(string $field): array
