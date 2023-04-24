@@ -129,7 +129,7 @@ class Model
                 return $query;
             });
 
-            if (count($this->powerGridComponent->relationSearch)) {
+            if (count($this->powerGridComponent->relationSearch) && $search) {
                 $this->filterRelation($search);
             }
         }
@@ -187,7 +187,7 @@ class Model
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }
 
-    private function getBeforeSearchMethod(string $field, string $search): ?string
+    private function getBeforeSearchMethod(string $field, ?string $search): ?string
     {
         $method = 'beforeSearch' . str($field)->headline()->replace(' ', '');
 
