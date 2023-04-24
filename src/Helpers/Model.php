@@ -20,7 +20,7 @@ class Model
 
     public function __construct(
         private Builder $query,
-        private PowerGridComponent $powerGridComponent
+        private readonly PowerGridComponent $powerGridComponent
     ) {
     }
 
@@ -31,9 +31,9 @@ class Model
 
     public function filter(): Builder
     {
-        $filters = collect($this->powerGridComponent->filters());
+        $filters = collect($this->powerGridComponent->filters())->flatten()->filter()->values();
 
-        if (blank($filters->flatten()->values())) {
+        if ($filters->isEmpty()) {
             return $this->query;
         }
 
@@ -84,85 +84,135 @@ class Model
     public function filterContains(): Model
     {
         if ($this->powerGridComponent->search != '') {
-            $this->query = $this->query->where(function (Builder $query) {
-                $modelTable = $query->getModel()->getTable();
+            $search = $this->powerGridComponent->search;
+            $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $search = strtolower($search);
 
+            $this->query = $this->query->where(function (Builder $query) use ($search) {
+                $modelTable = $query->getModel()->getTable();
                 $columnList = $this->getColumnList($modelTable);
 
-                /** @var Column $column */
-                foreach ($this->powerGridComponent->columns as $column) {
-                    $searchable = strval(data_get($column, 'searchable'));
-                    $table      = $modelTable;
-                    $field      = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+                collect($this->powerGridComponent->columns)
+                    ->filter(fn ($column) => $this->isSearchableColumn($column))
+                    ->each(function ($column) use ($query, $search, $columnList) {
+                        $field = $this->getDataField($column);
 
-                    if ($searchable && $field) {
-                        if (str_contains($field, '.')) {
-                            $explodeField = Str::of($field)->explode('.');
-                            $table        = strval($explodeField->get(0));
-                            $field        = strval($explodeField->get(1));
-                        }
+                        [$table, $field] = $this->splitField($field);
+
+                        $search = $this->getBeforeSearchMethod($field, $search);
 
                         $hasColumn = in_array($field, $columnList, true);
 
-                        if ($hasColumn) {
-                            try {
-                                if (DB::getSchemaBuilder()->getColumnType($table, $field) == 'json' && $query->getModel()->getConnection()->getDriverName() != 'pgsql') {
-                                    $query->orWhereRaw('LOWER(`' . $table . '` .`' . $field . '`)' . SqlSupport::like($query) . '?', '%' . strtolower($this->powerGridComponent->search) . '%');
-                                } else {
-                                    $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
-                                }
-                            } catch (\Exception) {
-                                $query->orWhere($table . '.' . $field, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%');
+                        $query->when($search, function () use ($column, $query, $search, $table, $field, $hasColumn) {
+                            if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
+                                $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
                             }
-                        }
 
-                        if ($sqlRaw = strval(data_get($column, 'searchableRaw'))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $this->powerGridComponent->search . '%\'');
-                        }
-                    }
-                }
+                            if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
+                                try {
+                                    $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
+
+                                    $driverName = $query->getModel()->getConnection()->getDriverName();
+
+                                    if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
+                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
+                                    } else {
+                                        $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                    }
+                                } catch (\Throwable) {
+                                    $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                }
+                            }
+                        });
+                    });
 
                 return $query;
             });
 
-            if (count($this->powerGridComponent->relationSearch)) {
-                $this->filterRelation();
+            if (count($this->powerGridComponent->relationSearch) && $search) {
+                $this->filterRelation($search);
             }
         }
 
         return $this;
     }
 
-    private function filterRelation(): void
+    private function filterRelation(string $search): void
     {
-        foreach ($this->powerGridComponent->relationSearch as $table => $relation) {
-            if (!is_array($relation)) {
-                return;
+        foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
+            if (is_array($columns)) {
+                $this->filterNestedRelation($table, $columns, $search);
+
+                continue;
             }
 
-            foreach ($relation as $nestedTable => $column) {
-                if (is_array($column)) {
-                    /** @var Builder $query */
-                    $query = $this->query->getRelation($table);
+            $this->query->orWhereHas($table, function ($query) use ($columns, $search) {
+                $search = $this->getBeforeSearchMethod($columns, $search);
+                $query->where($columns, SqlSupport::like($query), '%' . $search . '%');
+            });
+        }
+    }
 
-                    if ($query->getRelation($nestedTable) != '') {
-                        foreach ($column as $nestedColumn) {
-                            $this->query = $this->query->orWhereHas(
-                                $table . '.' . $nestedTable,
-                                fn (Builder $query) => $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
-                            );
+    private function filterNestedRelation(string $table, array $columns, string $search): void
+    {
+        foreach ($columns as $nestedTable => $nestedColumns) {
+            if (is_array($nestedColumns)) {
+                if ($this->query->getRelation($nestedTable) != '') {
+                    $nestedTableWithDot = $table . '.' . $nestedTable;
+                    $this->query->orWhereHas($nestedTableWithDot, function ($query) use ($nestedTableWithDot, $nestedColumns, $search) {
+                        foreach ($nestedColumns as $nestedColumn) {
+                            $search = $this->getBeforeSearchMethod($nestedColumn, $search);
+                            $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $search . '%');
                         }
-                    }
-
-                    continue;
+                    });
                 }
 
-                $this->query = $this->query->orWhereHas(
-                    $table,
-                    fn (Builder $query) => $query->where($column, SqlSupport::like($query), '%' . $this->powerGridComponent->search . '%')
-                );
+                continue;
             }
+
+            $this->query->orWhereHas($table, function ($query) use ($nestedColumns, $search) {
+                $search = $this->getBeforeSearchMethod($nestedColumns, $search);
+                $query->where($nestedColumns, SqlSupport::like($query), '%' . $search . '%');
+            });
         }
+    }
+
+    private function isSearchableColumn(Column|\stdClass $column): bool
+    {
+        return boolval(data_get($column, 'searchable')) || strval(data_get($column, 'searchableRaw')) !== '';
+    }
+
+    private function getDataField(Column|\stdClass $column): string
+    {
+        return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+    }
+
+    private function getBeforeSearchMethod(string $field, ?string $search): ?string
+    {
+        $method = 'beforeSearch' . str($field)->headline()->replace(' ', '');
+
+        if (method_exists($this->powerGridComponent, $method)) {
+            return $this->powerGridComponent->$method($search);
+        }
+
+        if (method_exists($this->powerGridComponent, 'beforeSearch')) {
+            return $this->powerGridComponent->beforeSearch($field, $search);
+        }
+
+        return $search;
+    }
+
+    private function splitField(string $field): array
+    {
+        $table = $this->query->getModel()->getTable();
+
+        if (str_contains($field, '.')) {
+            $explodeField = explode('.', $field);
+            $table        = $explodeField[0];
+            $field        = $explodeField[1];
+        }
+
+        return [$table, $field];
     }
 
     private function getColumnList(string $modelTable): array

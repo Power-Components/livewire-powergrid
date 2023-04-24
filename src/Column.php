@@ -147,8 +147,6 @@ final class Column
     */
     public function searchableRaw(string $sql): Column
     {
-        $this->searchable();
-
         $this->searchableRaw = $sql;
 
         return $this;

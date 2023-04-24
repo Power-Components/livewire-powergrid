@@ -78,7 +78,7 @@ class DishesSearchableRawTable extends PowerGridComponent
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
-            Column::make('Produced At Formatted', 'produced_at_formatted')
+            Column::make('Produced At Formatted', 'produced_at_formatted', 'produced_at')
                 ->searchableRaw($searchableRaw)
                 ->sortable(),
         ];

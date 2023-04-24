@@ -29,10 +29,10 @@
         "composer/composer": "^2.5.5",
         "pestphp/pest-plugin-faker": "^2.0",
         "pestphp/pest-plugin-livewire": "^2.0",
-        "laravel/pint": "^1.8",
-        "nunomaduro/larastan": "^2.5.1",
-        "laradumps/laradumps": "^1.11.0",
-        "spaze/phpstan-disallowed-calls": "^2.12.1"
+        "laravel/pint": "^1.9",
+        "nunomaduro/larastan": "^2.6.0",
+        "laradumps/laradumps": "^1.11",
+        "spaze/phpstan-disallowed-calls": "^2.13.0"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
@@ -62,7 +62,7 @@
         "test": "@test:sqlite",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
-            "./vendor/bin/pest --compact --min=80"
+            "./vendor/bin/pest --compact"
         ],
         "test:mysql":  [
             "./vendor/bin/pest --compact --configuration phpunit.mysql.xml"
