@@ -41,8 +41,8 @@
     }
 
     $alpineData = $framework['default'] == 'tom' ?
-        'pgTomSelect('.Js::from($params).')' :
-        'pgSlimSelect('.Js::from($params).')';
+        'pgTomSelect('.\Illuminate\Support\Js::from($params).')' :
+        'pgSlimSelect('.\Illuminate\Support\Js::from($params).')';
 
 @endphp
 <div x-cloak
