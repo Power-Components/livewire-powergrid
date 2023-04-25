@@ -317,29 +317,31 @@ class Model implements ModelFilterInterface
 
     private function filterRelation(): void
     {
-        foreach ($this->relationSearch as $table => $relation) {
-            if (!is_array($relation)) {
-                return;
-            }
+        $this->query = $this->query->where(function (Builder $query) {
+            foreach ($this->relationSearch as $table => $relation) {
+                if (!is_array($relation)) {
+                    return;
+                }
 
-            foreach ($relation as $nestedTable => $column) {
-                if (is_array($column)) {
-                    /** @var Builder $query */
-                    $query = $this->query->getRelation($table);
+                foreach ($relation as $nestedTable => $column) {
+                    if (is_array($column)) {
+                        /** @var Builder $relationQuery */
+                        $relationQuery = $this->query->getRelation($table);
 
-                    if ($query->getRelation($nestedTable) != '') {
-                        foreach ($column as $nestedColumn) {
-                            $this->query = $this->query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
-                                $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%');
-                            });
+                        if ($relationQuery->getRelation($nestedTable) != '') {
+                            foreach ($column as $nestedColumn) {
+                                $query->orWhereHas($table . '.' . $nestedTable, function (Builder $query) use ($nestedColumn) {
+                                    $query->where($nestedColumn, SqlSupport::like($query), '%' . $this->search . '%');
+                                });
+                            }
                         }
+                    } else {
+                        $query->orWhereHas($table, function (Builder $query) use ($column) {
+                            $query->where($column, SqlSupport::like($query), '%' . $this->search . '%');
+                        });
                     }
-                } else {
-                    $this->query = $this->query->orWhereHas($table, function (Builder $query) use ($column) {
-                        $query->where($column, SqlSupport::like($query), '%' . $this->search . '%');
-                    });
                 }
             }
-        }
+        });
     }
 }
