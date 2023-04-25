@@ -79,6 +79,11 @@ body:
     attributes:
       value: "You can run `composer show -i` and `npm list` to list installed package with their versions."
   - type: input
+    id: PHP
+    attributes:
+      label: PHP Version
+      placeholder: ex. 0.0.1
+  - type: input
     id: PowerGrid
     attributes:
       label: PowerGrid
