@@ -82,27 +82,27 @@ body:
     id: PHP
     attributes:
       label: PHP Version
-      placeholder: ex. 0.0.1
+      placeholder: ex. 8.0.1
   - type: input
     id: PowerGrid
     attributes:
       label: PowerGrid
-      placeholder: ex. 0.0.1
+      placeholder: ex. 4.4.1
   - type: input
     id: Laravel
     attributes:
       label: Laravel
-      placeholder: ex. 0.0.1
+      placeholder: ex. 9.0.1
   - type: input
     id: Livewire
     attributes:
       label: Livewire
-      placeholder: ex. 0.0.1
+      placeholder: ex. 2.10.1
   - type: input
     id: Alpine-JS
     attributes:
       label: Alpine JS
-      placeholder: ex. 0.0.1
+      placeholder: ex. 3.0.1
   - type: dropdown
     attributes:
       label: Theme
