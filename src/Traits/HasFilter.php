@@ -184,7 +184,7 @@ trait HasFilter
 
         if ($data['type'] === 'datetime') {
             $startDate->setTime(0, 0, 0)->setTimeZone($appTimeZone);
-            $endDate->setTime(23, 59, 59)->setTimeZone($appTimeZone);
+            $endDate->setTimeZone($appTimeZone);
         }
 
         data_set($data, 'selectedDates.0', $startDate);
