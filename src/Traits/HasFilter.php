@@ -183,8 +183,8 @@ trait HasFilter
         $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
 
         if ($data['type'] === 'datetime') {
-            $startDate->setTime(0, 0, 0)->setTimeZone($appTimeZone);
-            $endDate->setTime(23, 59, 59)->setTimeZone($appTimeZone);
+            $startDate->setTimeZone($appTimeZone);
+            $endDate->setTimeZone($appTimeZone);
         }
 
         data_set($data, 'selectedDates.0', $startDate);

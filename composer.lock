@@ -6359,16 +6359,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.9.0",
+            "version": "v1.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "eac5ec3d6b5c96543c682e309a10fdddc9f61d80"
+                "reference": "c7a01fa9bdd79819e7a2f1ba63ac1b02e6692dbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/eac5ec3d6b5c96543c682e309a10fdddc9f61d80",
-                "reference": "eac5ec3d6b5c96543c682e309a10fdddc9f61d80",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/c7a01fa9bdd79819e7a2f1ba63ac1b02e6692dbc",
+                "reference": "c7a01fa9bdd79819e7a2f1ba63ac1b02e6692dbc",
                 "shasum": ""
             },
             "require": {
@@ -6421,7 +6421,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2023-04-18T14:50:44+00:00"
+            "time": "2023-04-25T14:52:30+00:00"
         },
         {
             "name": "mockery/mockery",
@@ -9902,16 +9902,16 @@
         },
         {
             "name": "spaze/phpstan-disallowed-calls",
-            "version": "v2.13.0",
+            "version": "v2.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spaze/phpstan-disallowed-calls.git",
-                "reference": "ad3a6d043463c441e73f1d190c1a4a19890abf83"
+                "reference": "b991392c0904fdb3320c978e812da872c768e518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/ad3a6d043463c441e73f1d190c1a4a19890abf83",
-                "reference": "ad3a6d043463c441e73f1d190c1a4a19890abf83",
+                "url": "https://api.github.com/repos/spaze/phpstan-disallowed-calls/zipball/b991392c0904fdb3320c978e812da872c768e518",
+                "reference": "b991392c0904fdb3320c978e812da872c768e518",
                 "shasum": ""
             },
             "require": {
@@ -9956,7 +9956,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spaze/phpstan-disallowed-calls/issues",
-                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.13.0"
+                "source": "https://github.com/spaze/phpstan-disallowed-calls/tree/v2.14.1"
             },
             "funding": [
                 {
@@ -9964,7 +9964,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-24T00:48:17+00:00"
+            "time": "2023-04-26T01:51:29+00:00"
         },
         {
             "name": "symfony/filesystem",
