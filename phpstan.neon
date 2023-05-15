@@ -37,6 +37,8 @@ parameters:
         - '#Variable \$field might not be defined.#'
         - '#Variable \$thousands might not be defined.#'
         - '#Variable \$decimal might not be defined.#'
+        - '~^Parameter #1 \$value of function strval expects bool\|float\|int\|resource\|string\|null, mixed given\.$~'
+        - '~^Parameter #1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$~'
 
     paths:
         - src
