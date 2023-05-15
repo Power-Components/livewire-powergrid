@@ -5,15 +5,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
+    Button,
     Column,
     Detail,
     Exportable,
     Footer,
     Header,
     PowerGrid,
+    PowerGridColumns,
     PowerGridComponent,
-    PowerGridEloquent,
     Rules\Rule
 };
 
@@ -82,9 +83,9 @@ class DishesActionRulesTable extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name');
     }

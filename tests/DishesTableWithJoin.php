@@ -11,10 +11,11 @@ use PowerComponents\LivewirePowerGrid\{
     Footer,
     Header,
     PowerGrid,
+    PowerGridColumns,
     PowerGridComponent,
-    PowerGridEloquent,
     Rules\Rule,
-    Traits\ActionButton};
+    Traits\ActionButton
+};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
@@ -87,9 +88,9 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('dish_name', function (Dish $dish) {
                 return $dish->name;

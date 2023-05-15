@@ -11,8 +11,8 @@ use PowerComponents\LivewirePowerGrid\{
     Footer,
     Header,
     PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent
+    PowerGridColumns,
+    PowerGridComponent
 };
 
 class DishesSoftDeletesTable extends PowerGridComponent
@@ -41,9 +41,9 @@ class DishesSoftDeletesTable extends PowerGridComponent
         return Dish::query();
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('deleted_at');

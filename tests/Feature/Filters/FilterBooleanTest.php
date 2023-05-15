@@ -4,7 +4,11 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
+    DishesCollectionTable,
+    DishesQueryBuilderTable,
+    DishesTable,
+    DishesTableWithJoin};
 
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
@@ -49,7 +53,7 @@ it('properly filters by bool true', function (string $component, object $params)
         ->assertSee('Polpetone Filé Mignon')
         ->assertSee('борщ');
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join');
+    ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
 it('properly filters by bool true - custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -76,7 +80,7 @@ it('properly filters by bool true - custom builder', function (string $component
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join');
+    ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -223,7 +227,7 @@ it('properly filters by bool false', function (string $component, object $params
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join');
+    ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
 it('properly filters by bool false - using collection & array', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -290,7 +294,7 @@ it('properly filters by bool "all"', function (string $component, object $params
             ],
         ]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join');
+    ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
 it('properly filters by bool "all" - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component)
@@ -320,6 +324,11 @@ dataset('filter_boolean_join', [
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_boolean_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 dataset('filter_boolean_themes_array', [

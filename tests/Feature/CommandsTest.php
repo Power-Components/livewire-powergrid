@@ -6,12 +6,12 @@ beforeEach(function () {
     $this->tableModelFilePath      = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->tableCollectionFilePath = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
     $this->model_name_question     = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
-    $this->datasource_question     = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
-    $this->model_path_question     = 'Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
-    $this->use_fillable_question   = 'Create columns based on Model\'s <comment>fillable</comment> property?';
+    $this->datasource_question     = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Builder)';
+    $this->model_path_question     = 'Enter your Builder name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
+    $this->use_fillable_question   = 'Create columns based on Builder\'s <comment>fillable</comment> property?';
 });
 
-it('creates a PowerGrid Model Table', function () {
+it('creates a PowerGrid Builder Table', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
@@ -120,7 +120,7 @@ it('does not create a table with empty model', function () {
         ->expectsQuestion($this->model_name_question, 'DemoTable')
         ->expectsQuestion($this->datasource_question, 'M')
         ->expectsQuestion($this->model_path_question, '')
-        ->expectsOutput('Error: You must inform the Model name or file path.')
+        ->expectsOutput('Error: You must inform the Builder name or file path.')
         ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);

@@ -5,12 +5,14 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Footer,
     Header,
     PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridColumns,
+    PowerGridComponent
+};
 
 class DishesSearchJSONTable extends PowerGridComponent
 {
@@ -37,9 +39,9 @@ class DishesSearchJSONTable extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('additional');

@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesTable, DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{DishesQueryBuilderTable, DishesTable, DishesTableWithJoin};
 
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
     $component = livewire($component, [
@@ -104,11 +104,17 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         ->assertSee('борщ');
     expect($component->filters)
         ->toMatchArray([]);
-})->group('filters')->with('filter_multiple_themes_with_join');
+})->group('filters')
+    ->with('filter_multiple_themes_with_join', 'filter_multiple_query_builder');
 
 dataset('filter_multiple_themes_with_join', [
     'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+]);
+
+dataset('filter_multiple_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);

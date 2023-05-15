@@ -13,10 +13,10 @@ class SqlSupport
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
-    public static function like(Builder $query = null): string
+    public static function like(Builder|\Illuminate\Database\Query\Builder $query = null): string
     {
         if ($query) {
-            $driverName = $query->getModel()->getConnection()->getDriverName();
+            $driverName = $query->getConnection()->getDatabaseName();
         }
 
         if (!isset($driverName) or !is_string($driverName)) {

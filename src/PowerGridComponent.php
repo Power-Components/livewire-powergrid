@@ -6,18 +6,20 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\{Factory, View};
-use Illuminate\Database\Eloquent as Eloquent;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Str};
 use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender,
+use PowerComponents\LivewirePowerGrid\Helpers\{
+    ActionRender,
     ActionRules,
+    Builder,
     Collection,
-    Model,
-    SqlSupport};
+    SqlSupport
+};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
@@ -52,7 +54,7 @@ class PowerGridComponent extends Component
 
     public string $currentTable = '';
 
-    public Collection|array|Builder $datasource;
+    public Collection|array|EloquentBuilder|QueryBuilder $datasource;
 
     public BaseCollection $withoutPaginatedData;
 
@@ -248,7 +250,7 @@ class PowerGridComponent extends Component
      */
     public function fillData(): mixed
     {
-        /** @var Builder|BaseCollection|BaseCollection|MorphToMany $datasource */
+        /** @var EloquentBuilder|QueryBuilder|BaseCollection|BaseCollection|MorphToMany $datasource */
         $datasource = (!empty($this->datasource)) ? $this->datasource : $this->datasource();
 
         /** @phpstan-ignore-next-line */
@@ -260,7 +262,7 @@ class PowerGridComponent extends Component
         $this->isCollection = is_a((object) $datasource, BaseCollection::class);
 
         if ($this->isCollection) {
-            /** @var Builder|BaseCollection|BaseCollection $datasource */
+            /** @var EloquentBuilder|QueryBuilder|BaseCollection|BaseCollection $datasource */
             cache()->forget($this->id);
 
             $filters = Collection::make($this->resolveCollection($datasource), $this)
@@ -286,21 +288,27 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        /** @phpstan-ignore-next-line */
-        $this->currentTable = $datasource->getModel()->getTable();
+        if ($datasource instanceof QueryBuilder) {
+            $this->currentTable = $datasource->from;
+        } else {
+            /** @phpstan-ignore-next-line */
+            $this->currentTable = $datasource->getModel()->getTable();
+        }
 
         $sortField = Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
             ? $this->sortField : $this->currentTable . '.' . $this->sortField;
 
-        /** @var Builder $results */
+        /** @var EloquentBuilder|QueryBuilder $results */
         $results = $this->resolveModel($datasource)
             ->where(
-                fn (Builder $query) => Model::make($query, $this)
+                fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this)
                 ->filterContains()
                 ->filter()
             );
 
-        $results = self::applySoftDeletes($results);
+        if ($datasource instanceof EloquentBuilder) {
+            $results = self::applySoftDeletes($results);
+        }
 
         if ($this->multiSort) {
             foreach ($this->sortArray as $sortField => $direction) {
@@ -330,7 +338,7 @@ class PowerGridComponent extends Component
         return $results->setCollection($this->transform($results->getCollection()));
     }
 
-    private function applyTotalColumn(Builder|MorphToMany $results): void
+    private function applyTotalColumn(EloquentBuilder|QueryBuilder|MorphToMany $results): void
     {
         if ($this->headerTotalColumn || $this->footerTotalColumn) {
             $this->withoutPaginatedData = $this->transform($results->get());
@@ -341,10 +349,10 @@ class PowerGridComponent extends Component
      * @throws Exception
      */
     private function applyWithSortStringNumber(
-        Builder|MorphToMany $results,
+        EloquentBuilder|QueryBuilder|MorphToMany $results,
         string $sortField,
         string $multiSortDirection = null
-    ): Builder|MorphToMany {
+    ): EloquentBuilder|QueryBuilder|MorphToMany {
         if (!$this->withSortStringNumber) {
             return $results;
         }
@@ -364,7 +372,7 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    private function applyPerPage(Builder|MorphToMany $results): LengthAwarePaginator|Paginator
+    private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany $results): LengthAwarePaginator|Paginator
     {
         $perPage     = intval(data_get($this->setUp, 'footer.perPage'));
         $recordCount = strval(data_get($this->setUp, 'footer.recordCount'));
@@ -416,7 +424,7 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception
      */
-    protected function resolveCollection(array|BaseCollection|Builder|null $datasource = null): BaseCollection
+    protected function resolveCollection(array|BaseCollection|EloquentBuilder|QueryBuilder|null $datasource = null): BaseCollection
     {
         if (!boolval(config('livewire-powergrid.cached_data', false))) {
             return new BaseCollection($this->datasource());
@@ -438,10 +446,6 @@ class PowerGridComponent extends Component
 
     protected function transform(BaseCollection $results): BaseCollection
     {
-        if (!is_a((object) $this->addColumns(), PowerGridEloquent::class)) {
-            return $results;
-        }
-
         return $results->map(function ($row) {
             $addColumns = $this->addColumns();
 
@@ -462,13 +466,13 @@ class PowerGridComponent extends Component
 
             $mergedData = $data->merge($rules ?? [])->merge($actions ?? []);
 
-            return $row instanceof Eloquent\Model
+            return $row instanceof \Illuminate\Database\Eloquent\Model
                 ? tap($row)->forceFill($mergedData->toArray())
                 : (object) $mergedData->toArray();
         });
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns|PowerGridEloquent
     {
         return PowerGrid::eloquent();
     }
@@ -478,7 +482,7 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    public function resolveModel(array|BaseCollection|Builder|null|MorphToMany $datasource = null): BaseCollection|array|null|Builder|MorphToMany
+    public function resolveModel(array|BaseCollection|null|MorphToMany|EloquentBuilder|QueryBuilder $datasource = null): mixed
     {
         if (blank($datasource)) {
             return $this->datasource();
