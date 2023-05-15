@@ -58,6 +58,8 @@ export default (params) => ({
         }
 
         options.onClose = (selectedDates, dateStr, instance) => {
+            selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d H:i:S'));
+
             const key = `${this.tableName}::${this.dataField}::${selectedDates}`
             const encrypted = Buffer.from(key).toString('base64')
 
