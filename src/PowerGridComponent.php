@@ -298,7 +298,7 @@ class PowerGridComponent extends Component
         $sortField = Str::of($this->sortField)->contains('.') || $this->ignoreTablePrefix
             ? $this->sortField : $this->currentTable . '.' . $this->sortField;
 
-        /** @var EloquentBuilder|QueryBuilder $results */
+        /** @var EloquentBuilder|QueryBuilder|MorphToMany $results */
         $results = $this->resolveModel($datasource)
             ->where(
                 fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this)
@@ -306,8 +306,11 @@ class PowerGridComponent extends Component
                 ->filter()
             );
 
-        if ($datasource instanceof EloquentBuilder) {
-            $results = self::applySoftDeletes($results);
+        if (!$datasource instanceof QueryBuilder) {
+            /** @var EloquentBuilder|MorphToMany $softDeleteResults */
+            $softDeleteResults = $results;
+
+            $results = self::applySoftDeletes($softDeleteResults);
         }
 
         if ($this->multiSort) {

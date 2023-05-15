@@ -118,7 +118,11 @@ class Builder
                                 try {
                                     $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
 
-                                    $driverName = $query->getModel()->getConnection()->getDriverName();
+                                    if ($query instanceof QueryBuilder) {
+                                        $driverName = Schema::getConnection()->getDriverName();
+                                    } else {
+                                        $driverName = $query->getModel()->getConnection()->getDriverName();
+                                    }
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
                                         $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
@@ -135,7 +139,7 @@ class Builder
                 return $query;
             });
 
-            if (count($this->powerGridComponent->relationSearch)) {
+            if (count($this->powerGridComponent->relationSearch) && $this->query instanceof EloquentBuilder) {
                 $this->filterRelation($search);
             }
         }
@@ -145,6 +149,9 @@ class Builder
 
     private function filterRelation(string $search): void
     {
+        /** @var EloquentBuilder $query */
+        $query = $this->query;
+
         foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
             if (is_array($columns)) {
                 $this->filterNestedRelation($table, $columns, $search);
@@ -152,7 +159,7 @@ class Builder
                 continue;
             }
 
-            $this->query->orWhereHas($table, function (EloquentBuilder $query) use ($columns, $search) {
+            $query->orWhereHas($table, function (EloquentBuilder $query) use ($columns, $search) {
                 $search = $this->getBeforeSearchMethod($columns, $search);
                 $query->when(
                     $search,
@@ -160,15 +167,20 @@ class Builder
                 );
             });
         }
+
+        $this->query = $query;
     }
 
     private function filterNestedRelation(string $table, array $columns, string $search): void
     {
+        /** @var EloquentBuilder $query */
+        $query = $this->query;
+
         foreach ($columns as $nestedTable => $nestedColumns) {
             if (is_array($nestedColumns)) {
-                if ($this->query->getRelation($nestedTable) != '') {
+                if ($query->getRelation($nestedTable) != '') {
                     $nestedTableWithDot = $table . '.' . $nestedTable;
-                    $this->query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $query) use ($nestedTableWithDot, $nestedColumns, $search) {
+                    $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $query) use ($nestedTableWithDot, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
                             $search = $this->getBeforeSearchMethod($nestedColumn, $search);
                             $query->when(
@@ -182,7 +194,7 @@ class Builder
                 continue;
             }
 
-            $this->query->orWhereHas($table, function (EloquentBuilder $query) use ($nestedColumns, $search) {
+            $query->orWhereHas($table, function (EloquentBuilder $query) use ($nestedColumns, $search) {
                 $search = $this->getBeforeSearchMethod($nestedColumns, $search);
 
                 $query->when(
@@ -191,6 +203,8 @@ class Builder
                 );
             });
         }
+
+        $this->query = $query;
     }
 
     private function isSearchableColumn(Column|\stdClass $column): bool

@@ -47,7 +47,7 @@ class InputText extends BuilderBase
             };
         };
 
-        if (filled($searchMorphs)) {
+        if (filled($searchMorphs) && $builder instanceof EloquentBuilder) {
             $table        = $searchMorphs[0];
             $relationship = $searchMorphs[1];
             $types        = $searchMorphs[2];
@@ -55,9 +55,9 @@ class InputText extends BuilderBase
             $builder->whereHasMorph(
                 $relationship,
                 $types,
-                fn (EloquentBuilder|QueryBuilder $query) => $query->whereHas(
+                fn (EloquentBuilder $query) => $query->whereHas(
                     $table,
-                    fn (EloquentBuilder|QueryBuilder $query) => $matchOperatorQuery(
+                    fn (EloquentBuilder $query) => $matchOperatorQuery(
                         $selected,
                         $query,
                         $field,

@@ -132,11 +132,7 @@ class FillableTable
      */
     public static function queryBuilder(string $databaseTableName, string $stubFile = null): string
     {
-        if (!empty($stubFile)) {
-            $stub = File::get(base_path($stubFile));
-        } else {
-            $stub = File::get(__DIR__ . '/../../../resources/stubs/table.query-builder.fillable.stub');
-        }
+        $stub = empty($stubFile) ? File::get(__DIR__ . '/../../../resources/stubs/table.query-builder.fillable.stub') : File::get(base_path($stubFile));
 
         $columnListing = Schema::getColumnListing($databaseTableName);
 
