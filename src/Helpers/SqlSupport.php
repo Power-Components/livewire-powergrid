@@ -17,7 +17,8 @@ class SqlSupport
     public static function like(EloquentBuilder|QueryBuilder $query = null): string
     {
         if ($query) {
-            $driverName = $query->getModel()->getConnection()->getDriverName();
+            /** @phpstan-ignore-next-line  */
+            $driverName = $query->getConnection()->getConfig('driver');
         }
 
         if (!isset($driverName) or !is_string($driverName)) {

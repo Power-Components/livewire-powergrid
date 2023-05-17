@@ -118,11 +118,8 @@ class Builder
                                 try {
                                     $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
 
-                                    if ($query instanceof QueryBuilder) {
-                                        $driverName = Schema::getConnection()->getDriverName();
-                                    } else {
-                                        $driverName = $query->getModel()->getConnection()->getDriverName();
-                                    }
+                                    /** @phpstan-ignore-next-line  */
+                                    $driverName = $query->getConnection()->getConfig('driver');
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
                                         $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
