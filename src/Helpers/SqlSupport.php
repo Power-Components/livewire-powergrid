@@ -3,7 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Exception;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\{DB, Schema};
 
 class SqlSupport
@@ -13,10 +14,10 @@ class SqlSupport
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
-    public static function like(Builder|\Illuminate\Database\Query\Builder $query = null): string
+    public static function like(EloquentBuilder|QueryBuilder $query = null): string
     {
         if ($query) {
-            $driverName = $query->getConnection()->getDatabaseName();
+            $driverName = $query->getModel()->getConnection()->getDriverName();
         }
 
         if (!isset($driverName) or !is_string($driverName)) {
