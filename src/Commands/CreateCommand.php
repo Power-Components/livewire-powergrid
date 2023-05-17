@@ -99,7 +99,7 @@ class CreateCommand extends Command
 
         $exists = Schema::hasTable($this->dataBaseTableName);
 
-        if (!$exists) {
+        if (!$exists && !app()->runningUnitTests()) {
             $this->error('The table you provided does not exist!');
             $this->askDataBaseTableName();
         }

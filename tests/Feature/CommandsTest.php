@@ -6,6 +6,7 @@ beforeEach(function () {
     $this->tableModelFilePath      = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->tableCollectionFilePath = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
     $this->model_name_question     = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
+    $this->table_name_question     = 'What is the name of your database table name? (E.g., <comment>users</comment>)';
     $this->datasource_answer       = 'What type of data source will you use?';
     $this->datasource_answers      = [
         'Eloquent Builder (Model)',
@@ -16,7 +17,7 @@ beforeEach(function () {
     $this->use_fillable_question = 'Create columns based on Model\'s <comment>fillable</comment> property?';
 });
 
-it('creates a PowerGrid Builder Table', function () {
+it('creates a PowerGrid Builder Table using Eloquent Builder', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
@@ -24,6 +25,23 @@ it('creates a PowerGrid Builder Table', function () {
         ->expectsChoice($this->datasource_answer, 'Eloquent Builder (Model)', $this->datasource_answers, true)
         ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
+        ->assertSuccessful();
+
+    $this->assertFileExists($this->tableModelFilePath);
+
+    File::delete($this->tableModelFilePath);
+});
+
+it('creates a PowerGrid Builder Table using Query Builder', function () {
+    File::delete($this->tableModelFilePath);
+
+    $this->artisan('powergrid:create')
+        ->expectsQuestion($this->model_name_question, 'DemoTable')
+        ->expectsChoice($this->datasource_answer, 'Query Builder (DB::table(\'table_name\'))', $this->datasource_answers, true)
+        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->table_name_question, 'users')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
         ->assertSuccessful();
