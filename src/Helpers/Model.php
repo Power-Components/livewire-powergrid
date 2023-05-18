@@ -317,7 +317,7 @@ class Model implements ModelFilterInterface
 
     private function filterRelation(): void
     {
-        $this->query = $this->query->where(function (Builder $query) {
+        $this->query = $this->query->orWhere(function (Builder $query) {
             foreach ($this->relationSearch as $table => $relation) {
                 if (!is_array($relation)) {
                     return;
