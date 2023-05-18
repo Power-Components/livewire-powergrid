@@ -82,6 +82,8 @@ class PowerGridComponent extends Component
 
     public bool $showFilters = false;
 
+    protected ?ProcessDataSourceToRender $processDataSourceInstance = null;
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -287,7 +289,9 @@ class PowerGridComponent extends Component
      */
     public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator
     {
-        return ProcessDataSourceToRender::fillData($this)->get();
+        $this->processDataSourceInstance = ProcessDataSourceToRender::fillData($this);
+
+        return $this->processDataSourceInstance->get();
     }
 
     protected function powerGridListeners(): array

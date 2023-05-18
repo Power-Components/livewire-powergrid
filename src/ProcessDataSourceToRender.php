@@ -15,10 +15,10 @@ class ProcessDataSourceToRender
 {
     use SoftDeletes;
 
-    private bool $isCollection = false;
+    public bool $isCollection = false;
 
     public function __construct(
-        private readonly PowerGridComponent $component
+        public PowerGridComponent $component
     ) {
     }
 
@@ -250,7 +250,7 @@ class ProcessDataSourceToRender
         });
     }
 
-    protected function transform(BaseCollection $results): BaseCollection
+    public function transform(BaseCollection $results): BaseCollection
     {
         return $results->map(function ($row) {
             $addColumns = $this->component->addColumns();
