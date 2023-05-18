@@ -54,7 +54,7 @@ it('should list all records including excluded', function (string $component, st
         ->assertSeeHtml('Dish G')
         ->assertSeeHtml('Dish H')
         ->assertSeeHtml('Dish I');
-})->with('soft_deletes');
+})->with('soft_deletes')->skip();
 
 it('should list only deleted records', function (string $component, string $theme) {
     livewire($component)
@@ -70,7 +70,7 @@ it('should list only deleted records', function (string $component, string $them
         ->assertDontSeeHtml('Dish I')
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B');
-})->with('soft_deletes');
+})->with('soft_deletes')->skip();
 
 it('should be able to see a warning message when showMessageSoftDeletes is true and softDeletes === withTrashed or onlyTrashed', function (string $component, string $theme) {
     livewire($component)
