@@ -48,7 +48,7 @@ class ProcessDataSourceToRender
     /**
      * @return BaseCollection<(int|string), mixed>|Collection|EloquentBuilder|QueryBuilder|null
      */
-    private function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|null
+    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|null
     {
         $datasource = $this->component->datasource ?? null;
 
@@ -174,7 +174,7 @@ class ProcessDataSourceToRender
         $this->component->total = $results->total();
     }
 
-    private function makeSortField(string $sortField): string
+    protected function makeSortField(string $sortField): string
     {
         if (Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix) {
             return $sortField;

@@ -154,38 +154,38 @@ trait WithExport
      */
     public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
     {
-        $datasource = tap(ProcessDataSourceToRender::fillData($this), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSourceToRender::fillData($this), fn ($datasource) => $datasource->get());
 
-        $inClause = $datasource->component->filtered;
+        $inClause = $processDataSource->component->filtered;
 
-        if ($selected && filled($datasource->component->checkboxValues)) {
-            $inClause = $datasource->component->checkboxValues;
+        if ($selected && filled($processDataSource->component->checkboxValues)) {
+            $inClause = $processDataSource->component->checkboxValues;
         }
 
-        if ($datasource->isCollection) {
+        if ($processDataSource->isCollection) {
             if ($inClause) {
-                $results = $datasource->resolveCollection()->whereIn($this->primaryKey, $inClause);
+                $results = $processDataSource->resolveCollection()->whereIn($this->primaryKey, $inClause);
 
-                return $datasource->transform($results);
+                return $processDataSource->transform($results);
             }
 
-            return $datasource->transform($datasource->resolveCollection());
+            return $processDataSource->transform($processDataSource->resolveCollection());
         }
 
-        $model = $datasource->resolveModel();
+        $model = $processDataSource->prepareDataSource();
         /** @phpstan-ignore-next-line */
         $currentTable = $model->getModel()->getTable();
 
-        $sortField = Support\Str::of($datasource->component->sortField)->contains('.') ? $datasource->component->sortField : $currentTable . '.' . $datasource->component->sortField;
+        $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 
-        $results = $datasource->resolveModel()
-            ->when($inClause, function ($query, $inClause) use ($datasource) {
-                return $query->whereIn($datasource->component->primaryKey, $inClause);
+        $results = $processDataSource->prepareDataSource()
+            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
+                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
             })
-            ->orderBy($sortField, $datasource->component->sortDirection)
+            ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 
-        return $datasource->transform($results);
+        return $processDataSource->transform($results);
     }
 
     /**
