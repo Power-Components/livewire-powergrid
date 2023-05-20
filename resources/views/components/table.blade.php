@@ -30,10 +30,6 @@
                 <x-livewire-powergrid::cols
                     :column="$column"
                     :theme="$theme"
-                    :multiSort="$multiSort"
-                    :sortArray="$sortArray"
-                    :sortField="$sortField"
-                    :sortDirection="$sortDirection"
                     :enabledFilters="$enabledFilters"
                 />
             @endforeach
@@ -109,9 +105,9 @@
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
-                    
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
-                    
+
                     if (filled($ruleSetAttribute)) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
