@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\{
     Footer,
     Header,
     PowerGrid,
-    PowerGridEloquent};
+    PowerGridColumns};
 
 class RulesShowHideToggleable extends DishesTable
 {
@@ -28,9 +28,9 @@ class RulesShowHideToggleable extends DishesTable
         ];
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
                   ->addColumn('id')
                   ->addColumn('in_stock')
                   ->addColumn('in_stock_label', function (Dish $dish) {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Livewire{{ subFolder }};
 
-use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
@@ -41,36 +41,18 @@ final class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Datasource
     |--------------------------------------------------------------------------
-    | Provides data to your Table using a Model or Collection
+    | Provides data to your Table using a Eloquent, Query Builder or Collection
     |
     */
 
     /**
      * PowerGrid datasource.
      *
-     * @return Builder<\{{ modelName }}>
+     * @return Builder
      */
     public function datasource(): Builder
     {
-        return {{ modelLastName }}::query();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Relationship Search
-    |--------------------------------------------------------------------------
-    | Configure here relationships to be used by the Search and Table Filters.
-    |
-    */
-
-    /**
-     * Relationship search.
-     *
-     * @return array<string, array<int, string>>
-     */
-    public function relationSearch(): array
-    {
-        return [];
+        return DB::table('{{ dataBaseTableName }}');
     }
 
     /*
@@ -89,9 +71,9 @@ final class {{ componentName }} extends PowerGridComponent
         return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
-            ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)))
+            ->addColumn('name_lower', fn ($row) => strtolower(e($row->name)))
             ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+            ->addColumn('created_at_formatted', fn ($row) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
 
     /*
@@ -148,28 +130,6 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
-     * PowerGrid {{ modelLastName }} Action Buttons.
-     *
-     * @return array<int, Button>
-     */
-
-    /*
-    public function actions(): array
-    {
-       return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
-
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
-               ->method('delete')
-        ];
-    }
-    */
-
     /*
     |--------------------------------------------------------------------------
     | Actions Rules
@@ -179,7 +139,7 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
     /**
-     * PowerGrid {{ modelLastName }} Action Rules.
+     * PowerGrid Action Rules.
      *
      * @return array<int, RuleActions>
      */
@@ -191,7 +151,7 @@ final class {{ componentName }} extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn(${{ modelKebabCase }}) => ${{ modelKebabCase }}->id === 1)
+                ->when(fn($row) => $row->id === 1)
                 ->hide(),
         ];
     }

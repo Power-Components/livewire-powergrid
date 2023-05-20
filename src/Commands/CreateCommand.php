@@ -2,8 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
+use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\{File};
+use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
@@ -21,12 +22,16 @@ class CreateCommand extends Command
 
     protected string $tableName;
 
+    protected string $dataBaseTableName;
+
     protected bool $useFilable = false;
 
     /** @var array<int, string> $modelPath */
     protected array $modelPath = [];
 
     protected string $datasourceOption;
+
+    protected string $usingQueryBuilder;
 
     protected string $stub;
 
@@ -88,27 +93,52 @@ class CreateCommand extends Command
     /**
      * @throws CreateCommandException
      */
+    protected function askDataBaseTableName(): void
+    {
+        $this->dataBaseTableName = strval($this->ask('What is the name of your database table name? (E.g., <comment>users</comment>)'));
+
+        $exists = Schema::hasTable($this->dataBaseTableName);
+
+        if (!$exists && !app()->runningUnitTests()) {
+            $this->error('The table you provided does not exist!');
+            $this->askDataBaseTableName();
+        }
+
+        if (empty(trim(strval($this->dataBaseTableName)))) {
+            $this->error('You must provide database table name!');
+            $this->askDataBaseTableName();
+        }
+    }
+
     protected function askDatasource(): void
     {
-        $this->datasourceOption = strval($this->ask('Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)', 'M'));
+        $datasourceOption = $this->choice('What type of data source will you use?', [
+            'Eloquent Builder (Model)',
+            'Query Builder (DB::table(\'table_name\'))',
+            'Collection',
+        ], 'Eloquent Builder');
 
-        if (!in_array(strtolower(strval($this->datasourceOption)), ['m', 'c'])) {
-            throw new CreateCommandException('Invalid option. Please enter [M] for model or [C] for Collection.');
-        }
+        $this->datasourceOption = match ($datasourceOption) {
+            'Eloquent Builder (Model)'                  => 'm',
+            'Query Builder (DB::table(\'table_name\'))' => 'qb',
+            default                                     => 'c'
+        };
     }
 
     /**
      * @throws CreateCommandException
+     * @throws Exception
+     * @throws \Exception
      */
     protected function askModel(): void
     {
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
 
         if (strtolower($this->datasourceOption) === 'm') {
-            $this->model = strval($this->anticipate('Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', Models::list(), 'User'));
+            $this->model = strval($this->anticipate('Enter your Builder name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', Models::list(), 'User'));
 
             if (empty($this->model)) {
-                throw new CreateCommandException('Error: You must inform the Model name or file path.');
+                throw new CreateCommandException('Error: You must inform the Builder name or file path.');
             }
 
             $this->modelPath = explode('\\', $this->model);
@@ -121,7 +151,7 @@ class CreateCommand extends Command
                     $this->cleanModelName = strval(preg_replace('![^A-Z]+!', '', $this->model));
 
                     if (strlen($this->cleanModelName)) {
-                        throw new CreateCommandException('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+                        throw new CreateCommandException('Error: Could not process the informed Builder name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
                     }
                 }
             }
@@ -129,13 +159,21 @@ class CreateCommand extends Command
             if (!class_exists($this->model)) {
                 throw new CreateCommandException('Error: Could not find "' . $this->model . '" class.');
             }
+        }
 
+        if (in_array(strtolower($this->datasourceOption), ['m', 'qb'])) {
             if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
                 $this->useFilable = true;
             }
 
             if ($this->useFilable) {
-                $this->stub = FillableTable::create($this->model, $this->modelName, strval($this->option('template')));
+                if (strtolower($this->datasourceOption) === 'qb') {
+                    $this->askDataBaseTableName();
+
+                    $this->stub = FillableTable::queryBuilder($this->dataBaseTableName, strval($this->option('template')));
+                } else {
+                    $this->stub = FillableTable::eloquentBuilder($this->model, $this->modelName, strval($this->option('template')));
+                }
             }
         }
 
@@ -159,6 +197,10 @@ class CreateCommand extends Command
             $this->stub = str_replace('{{ modelLastName }}', $this->modelName, $this->stub);
             $this->stub = str_replace('{{ modelLowerCase }}', Str::lower($this->modelName), $this->stub);
             $this->stub = str_replace('{{ modelKebabCase }}', Str::kebab($this->modelName), $this->stub);
+        }
+
+        if (strtolower($this->datasourceOption) === 'qb') {
+            $this->stub = str_replace('{{ databaseTableName }}', $this->dataBaseTableName, $this->stub);
         }
 
         $livewirePath = 'Http/Livewire/';

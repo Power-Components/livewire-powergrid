@@ -10,10 +10,11 @@ use PowerComponents\LivewirePowerGrid\{
     Footer,
     Header,
     PowerGrid,
+    PowerGridColumns,
     PowerGridComponent,
-    PowerGridEloquent,
     Rules\Rule,
-    Traits\ActionButton};
+    Traits\ActionButton
+};
 
 class DishesTableWithJoinNames extends PowerGridComponent
 {
@@ -36,9 +37,9 @@ class DishesTableWithJoinNames extends PowerGridComponent
             ->select('dishes.*', 'newCategories.name as category_name');
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('dish_name', fn (Dish $dish) => $dish->name)
             ->addColumn('category_name', fn (Dish $dish) => $dish->category->name);

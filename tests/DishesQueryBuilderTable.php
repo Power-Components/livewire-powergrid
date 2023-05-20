@@ -3,9 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Button,
@@ -18,7 +18,7 @@ use PowerComponents\LivewirePowerGrid\{
     PowerGridComponent
 };
 
-class DishesTable extends PowerGridComponent
+class DishesQueryBuilderTable extends PowerGridComponent
 {
     use ActionButton;
 
@@ -67,7 +67,11 @@ class DishesTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return Dish::with('category');
+        return DB::table('dishes')
+            ->join('categories', function ($categories) {
+                $categories->on('dishes.category_id', '=', 'categories.id');
+            })
+            ->select('dishes.*', 'categories.name as category_name');
     }
 
     public function relationSearch(): array
@@ -90,59 +94,55 @@ class DishesTable extends PowerGridComponent
             ->addColumn('chef_name')
             ->addColumn('serving_at')
             ->addColumn('calories')
-            ->addColumn('calories', function (Dish $dish) {
+            ->addColumn('calories', function ($dish) {
                 return $dish->calories . ' kcal';
             })
-            ->addColumn('category_id', function (Dish $dish) {
+            ->addColumn('category_id', function ($dish) {
                 return $dish->category_id;
             })
-            ->addColumn('category_name', function (Dish $dish) {
-                return $dish->category->name;
-            })
+            ->addColumn('category_name')
             ->addColumn('price')
-            ->addColumn('price_EUR', function (Dish $dish) use ($fmt) {
+            ->addColumn('price_EUR', function ($dish) use ($fmt) {
                 return $fmt->formatCurrency($dish->price, 'EUR');
             })
-            ->addColumn('price_BRL', function (Dish $dish) {
+            ->addColumn('price_BRL', function ($dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
             ->addColumn('sales_price')
-            ->addColumn('sales_price_BRL', function (Dish $dish) {
+            ->addColumn('sales_price_BRL', function ($dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
                 return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
             })
             ->addColumn('in_stock')
-            ->addColumn('in_stock_label', function (Dish $dish) {
+            ->addColumn('in_stock_label', function ($dish) {
                 return ($dish->in_stock ? 'sim' : 'não');
             })
             ->addColumn('produced_at')
-            ->addColumn('produced_at_formatted', function (Dish $dish) {
+            ->addColumn('produced_at_formatted', function ($dish) {
                 return Carbon::parse($dish->produced_at)->format('d/m/Y');
             });
     }
 
     public function columns(): array
     {
-        $canEdit = true;
-
         return [
             Column::add()
-                ->title(__('ID'))
+                ->title('ID')
                 ->field('id')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Stored at'))
+                ->title('Stored at')
                 ->field('storage_room')
                 ->sortable(),
 
             Column::add()
-                ->title(__('Prato'))
+                ->title('Dish')
                 ->field('name')
                 ->searchable()
-                ->editOnClick($canEdit)
+                ->editOnClick()
                 ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
@@ -153,40 +153,40 @@ class DishesTable extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Chef'))
+                ->title('Chef')
                 ->field('chef_name')
                 ->searchable()
-                ->editOnClick($canEdit)
+                ->editOnClick()
                 ->clickToCopy(true)
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
             Column::add()
-                ->title(__('Category'))
+                ->title('Category')
                 ->field('category_name')
                 ->placeholder('Category placeholder'),
 
             Column::add()
-                ->title(__('Preço'))
+                ->title('Price')
                 ->field('price_BRL')
-                ->editOnClick($canEdit, 'price'),
+                ->editOnClick(true, 'price'),
 
             Column::add()
-                ->title(__('Preço de Venda'))
+                ->title('Sales Price')
                 ->field('sales_price_BRL'),
 
             Column::add()
-                ->title(__('Calorias'))
+                ->title('Calories')
                 ->field('calories')
                 ->sortable(),
 
             Column::add()
-                ->title(__('Em Estoque'))
+                ->title('In Stock')
                 ->toggleable(true, 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
-                ->title(__('Data de produção'))
+                ->title('Produced At')
                 ->field('produced_at_formatted'),
 
             Column::add()
@@ -217,12 +217,12 @@ class DishesTable extends PowerGridComponent
         return $this->testFilters;
     }
 
-    public function bootstrap()
+    public function bootstrap(): void
     {
         config(['livewire-powergrid.theme' => 'bootstrap']);
     }
 
-    public function tailwind()
+    public function tailwind(): void
     {
         config(['livewire-powergrid.theme' => 'tailwind']);
     }

@@ -4,7 +4,7 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterInputText};
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesFiltersTable;
+use PowerComponents\LivewirePowerGrid\Tests\{DishesFiltersTable, DishesQueryBuilderTable};
 
 it('properly filters by "name is"', function (string $component, object $params) {
     $filter   = Filter::inputText('name', $params->field)->operators();
@@ -22,7 +22,8 @@ it('properly filters by "name is"', function (string $component, object $params)
         ->assertSee('Francesinha vegana');
 
     expectColumnsFilterMatch($livewire, $filter);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')
+    ->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name is" using nonexistent record', function (string $component, object $params) {
     $filter = Filter::inputText('name', $params->field)
@@ -39,7 +40,7 @@ it('properly filters by "name is" using nonexistent record', function (string $c
         ->assertDontSee('Francesinha');
 
     expectColumnsFilterMatch($livewire, $filter);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly show placeholder', function (string $component, object $params) {
     $filter = Filter::inputText('name', $params->field)
@@ -53,7 +54,7 @@ it('properly show placeholder', function (string $component, object $params) {
     ])
         ->call($params->theme)
         ->assertSeeHtml('placeholder="Test Placeholder"');
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name is not"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -77,7 +78,7 @@ it('properly filters by "name is not"', function (string $component, object $par
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name is not" using nonexistent record', function (string $component, object $params) {
     $component = livewire($component, [
@@ -97,7 +98,7 @@ it('properly filters by "name is not" using nonexistent record', function (strin
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name contains"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -117,7 +118,7 @@ it('properly filters by "name contains"', function (string $component, object $p
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name contains" using nonexistent record', function (string $component, object $params) {
     $component = livewire($component, [
@@ -141,7 +142,7 @@ it('properly filters by "name contains" using nonexistent record', function (str
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name contains not"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -164,7 +165,7 @@ it('properly filters by "name contains not"', function (string $component, objec
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name contains not" using nonexistent record', function (string $component, object $params) {
     $component = livewire($component, [
@@ -187,7 +188,7 @@ it('properly filters by "name contains not" using nonexistent record', function 
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name starts with"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -211,7 +212,7 @@ it('properly filters by "name starts with"', function (string $component, object
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name starts with" using nonexistent record', function (string $component, object $params) {
     $component = livewire($component, [
@@ -236,7 +237,7 @@ it('properly filters by "name starts with" using nonexistent record', function (
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name ends with"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -259,7 +260,7 @@ it('properly filters by "name ends with"', function (string $component, object $
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "name ends with" using nonexistent record', function (string $component, object $params) {
     $component = livewire($component, [
@@ -284,7 +285,7 @@ it('properly filters by "name ends with" using nonexistent record', function (st
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is blank"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -320,7 +321,7 @@ it('properly filters by "chef name is blank"', function (string $component, obje
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is NOT blank"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -356,7 +357,7 @@ it('properly filters by "chef name is NOT blank"', function (string $component, 
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is null"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -392,7 +393,7 @@ it('properly filters by "chef name is null"', function (string $component, objec
             'input_text'         => [],
             'input_text_options' => [],
         ]);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is NOT null"', function (string $component, object $params) {
     $filter   = Filter::inputText('name', 'chef_name')->operators();
@@ -428,7 +429,7 @@ it('properly filters by "chef name is NOT null"', function (string $component, o
         ->toMatchArray([]);
 
     expectColumnsFilterMatch($livewire, $filter);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is empty"', function (string $component, object $params) {
     $filter   = Filter::inputText('name', $params->field)->operators();
@@ -464,7 +465,7 @@ it('properly filters by "chef name is empty"', function (string $component, obje
         ->toMatchArray([]);
 
     expectColumnsFilterMatch($livewire, $filter);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters by "chef name is NOT empty"', function (string $component, object $params) {
     $filter   = Filter::inputText('name', $params->field)->operators();
@@ -484,7 +485,7 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
         ->assertDontSee('Carne Louca');
 
     expectColumnsFilterMatch($livewire, $filter);
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 it('properly filters using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -504,13 +505,19 @@ it('properly filters using custom builder', function (string $component, object 
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
-})->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join');
+})->group('filters', 'filterInputText')
+    ->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
 dataset('filter_input_text_options_model_themes_with_join', [
     'tailwind'       => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'name', 'join' => false]],
     'bootstrap'      => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name', 'join' => false]],
     'tailwind join'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name', 'join' => true]],
     'bootstrap join' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name', 'join' => true]],
+]);
+
+dataset('filter_input_text_options_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 function expectColumnsFilterMatch($component, $filter, $field = 'name'): void

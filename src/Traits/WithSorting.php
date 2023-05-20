@@ -93,4 +93,21 @@ trait WithSorting
 
         return strval(data_get($filter, 'title'));
     }
+
+    public function sortLabel(string $field): void
+    {
+        if ($this->multiSort && array_key_exists($field, $this->sortArray)) {
+            echo ($this->sortArray[$field] == 'desc') ? '&#8595;' : '&#8593;';
+        } elseif ($this->multiSort) {
+            echo '&#8597;';
+        } else {
+            if ($this->sortField !== $field) {
+                echo '&#8597;';
+            } elseif ($this->sortDirection == 'desc') {
+                echo '&#8593;';
+            } else {
+                echo '&#8595;';
+            }
+        }
+    }
 }

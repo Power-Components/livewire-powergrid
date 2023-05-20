@@ -5,20 +5,43 @@ use Illuminate\Support\Facades\File;
 beforeEach(function () {
     $this->tableModelFilePath      = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
     $this->tableCollectionFilePath = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
-    $this->model_name_question     = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
-    $this->datasource_question     = 'Create Datasource with <comment>[M]</comment>odel or <comment>[C]</comment>ollection? (Default: Model)';
-    $this->model_path_question     = 'Enter your Model name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
-    $this->use_fillable_question   = 'Create columns based on Model\'s <comment>fillable</comment> property?';
+    $this->modelNameQuestion       = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
+    $this->tableNameQuestion       = 'What is the name of your database table name? (E.g., <comment>users</comment>)';
+    $this->datasourceAnswer        = 'What type of data source will you use?';
+    $this->datasourceAnswers       = [
+        'Eloquent Builder (Model)',
+        'Query Builder (DB::table(\'table_name\'))',
+        'Collection',
+    ];
+    $this->modelPathQuestion   = 'Enter your Builder name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
+    $this->useFillableQuestion = 'Create columns based on Model\'s <comment>fillable</comment> property?';
 });
 
-it('creates a PowerGrid Model Table', function () {
+it('creates a PowerGrid Builder Table using Eloquent Builder', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
+        ->assertSuccessful();
+
+    $this->assertFileExists($this->tableModelFilePath);
+
+    File::delete($this->tableModelFilePath);
+});
+
+it('creates a PowerGrid Builder Table using Query Builder', function () {
+    File::delete($this->tableModelFilePath);
+
+    $this->artisan('powergrid:create')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Query Builder (DB::table(\'table_name\'))', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
+        ->expectsQuestion($this->tableNameQuestion, 'users')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
         ->assertSuccessful();
@@ -32,8 +55,8 @@ it('creates a PowerGrid Collection Table', function () {
     File::delete($this->tableCollectionFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'CollectionTable')
-        ->expectsQuestion($this->datasource_question, 'C')
+        ->expectsQuestion($this->modelNameQuestion, 'CollectionTable')
+        ->expectsChoice($this->datasourceAnswer, 'Collection', $this->datasourceAnswers, true)
         ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>")
         ->assertSuccessful();
@@ -54,10 +77,14 @@ it('notifies about tailwind forms', function () {
     File::put($tailwindConfigFile, $content);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice('What type of data source will you use?', 'Eloquent Builder (Model)', [
+            'Eloquent Builder (Model)',
+            'Query Builder (DB::table(\'table_name\'))',
+            'Collection',
+        ], true)
+        ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
@@ -94,20 +121,8 @@ it('does not accept an empty table name', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, '')
+        ->expectsQuestion($this->modelNameQuestion, '')
         ->expectsOutput('You must provide a name for your ⚡ PowerGrid Table!')
-        ->assertFailed();
-
-    $this->assertFileDoesNotExist($this->tableModelFilePath);
-});
-
-it('accepts only [M]odel or [C]ollection', function () {
-    File::delete($this->tableModelFilePath);
-
-    $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'Z')
-        ->expectsOutput('Invalid option. Please enter [M] for model or [C] for Collection.')
         ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
@@ -117,10 +132,10 @@ it('does not create a table with empty model', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, '')
-        ->expectsOutput('Error: You must inform the Model name or file path.')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, '')
+        ->expectsOutput('Error: You must inform the Builder name or file path.')
         ->assertFailed();
 
     $this->assertFileDoesNotExist($this->tableModelFilePath);
@@ -132,9 +147,9 @@ it('does not create a table with invalid model path', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, 'xyz-model')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, 'xyz-model')
         ->expectsOutput('Error: Could not find "xyz-model" class.')
         ->assertFailed();
 
@@ -147,10 +162,10 @@ it('does overwrite the existing table file w/ YES', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->assertSuccessful();
 
     $this->assertFileExists($this->tableModelFilePath);
@@ -160,10 +175,10 @@ it('does overwrite the existing table file w/ YES', function () {
 
     //Alert about overwrite
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes')
         ->assertSuccessful();
 
@@ -176,10 +191,10 @@ it('does NOT overwride the existing table file', function () {
     File::delete($this->tableModelFilePath);
 
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->assertSuccessful();
 
     $this->assertFileExists($this->tableModelFilePath);
@@ -189,10 +204,10 @@ it('does NOT overwride the existing table file', function () {
 
     //Alert about overwrite
     $this->artisan('powergrid:create')
-        ->expectsQuestion($this->model_name_question, 'DemoTable')
-        ->expectsQuestion($this->datasource_question, 'M')
-        ->expectsQuestion($this->model_path_question, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
-        ->expectsQuestion($this->use_fillable_question, 'yes')
+        ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
+        ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', '')
         ->assertSuccessful();
 

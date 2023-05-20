@@ -29,7 +29,7 @@ class Helpers
         return $this->makeActionParameters($params, $row)[0];
     }
 
-    public function resolveContent(string $currentTable, string $field, Model $row): ?string
+    public function resolveContent(string $currentTable, string $field, Model|\stdClass $row): ?string
     {
         $currentField = $field;
         $replace      = fn ($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);

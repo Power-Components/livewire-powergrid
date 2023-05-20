@@ -5,7 +5,11 @@ use function Pest\Livewire\livewire;
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
+    DishesCollectionTable,
+    DishesQueryBuilderTable,
+    DishesTable,
+    DishesTableWithJoin};
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')
@@ -22,7 +26,7 @@ it('property displays the results and options', function (string $component, obj
             '<option value="">All</option>',
         ]);
 })->group('filters', 'filterSelect')
-    ->with('filter_select_join');
+    ->with('filter_select_join', 'filter_select_query_builder');
 
 it('property filter using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
@@ -62,7 +66,7 @@ it('property filter using custom builder', function (string $component, object $
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 })->group('filters', 'filterSelect')
-    ->with('filter_select_join');
+    ->with('filter_select_join', 'filter_select_query_builder');
 
 it('property filter using custom collection', function (string $component) {
     livewire($component, [
@@ -115,7 +119,7 @@ it('properly filter with category_id', function (string $component, object $para
         ->assertSee('Bife à Rolê')
         ->assertDontSee('Pastel de Nata');
 })->group('filters', 'filterSelect')
-    ->with('filter_select_join');
+    ->with('filter_select_join', 'filter_select_query_builder');
 
 it('properly filter with another category_id', function (string $component, object $params) {
     livewire($component)
@@ -128,7 +132,7 @@ it('properly filter with another category_id', function (string $component, obje
         ->assertDontSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
 })->group('filters', 'filterSelect')
-    ->with('filter_select_join');
+    ->with('filter_select_join', 'filter_select_query_builder');
 
 it('properly filters using the same model as the component', function (string $component, object $params) {
     livewire($component)
@@ -154,13 +158,19 @@ it('properly filters using the same model as the component', function (string $c
             ->assertDontSee('Bife à Rolê')
             ->assertDontSee('Francesinha vegana')
             ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterSelect')->with('filter_select_join');
+})->group('filters', 'filterSelect')
+    ->with('filter_select_join', 'filter_select_query_builder');
 
 dataset('filter_select_join', [
     'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_select_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 dataset('filter_select_themes_array', [

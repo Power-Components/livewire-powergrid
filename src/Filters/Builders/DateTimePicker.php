@@ -2,12 +2,13 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters\Builders;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Carbon, Collection};
 
 class DateTimePicker extends BuilderBase
 {
-    public function builder(Builder $builder, string $field, int|array|string|null $values): void
+    public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         /** @var array $values */
         [$startDate, $endDate] = [

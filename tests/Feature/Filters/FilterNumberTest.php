@@ -4,7 +4,11 @@ use function Pest\Livewire\livewire;
 
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesTable, DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
+    DishesCollectionTable,
+    DishesQueryBuilderTable,
+    DishesTable,
+    DishesTableWithJoin};
 
 it('properly renders the number filter', function (string $component, object $params) {
     $number = Filter::number('id', $params->field)
@@ -24,7 +28,8 @@ it('properly renders the number filter', function (string $component, object $pa
         ->assertSee('Francesinha')
         ->assertSee('борщ')
         ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
 it('properly renders the number filter - custom builder', function (string $component, object $params) {
     livewire($component, [
@@ -51,7 +56,8 @@ it('properly renders the number filter - custom builder', function (string $comp
         ->assertDontSee('Francesinha')
         ->assertDontSee('борщ')
         ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
 it('properly filters by "min"', function (string $component, object $params) {
     livewire($component)
@@ -64,7 +70,8 @@ it('properly filters by "min"', function (string $component, object $params) {
         ->assertSee('Francesinha')
         ->assertSee('борщ')
         ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
 it('properly filters by "min" - using collection', function (string $component, string $theme) {
     livewire($component)
@@ -77,7 +84,8 @@ it('properly filters by "min" - using collection', function (string $component, 
         ->assertSee('Name 3')
         ->assertSee('Name 4')
         ->assertDontSee('Name 1');
-})->group('filters', 'filterNumber')->with('filter_number_themes_collection', 'filter_number_themes_array');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_collection', 'filter_number_themes_array');
 
 it('properly filters by "max"', function (string $component, object $params) {
     livewire($component)
@@ -90,7 +98,8 @@ it('properly filters by "max"', function (string $component, object $params) {
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
         ->assertDontSee('Bife à Rolê');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join');
 
 it('properly filters by "max" - using collection & array table', function (string $component, string $theme) {
     livewire($component)
@@ -102,7 +111,8 @@ it('properly filters by "max" - using collection & array table', function (strin
         ->assertSee('Name 1')
         ->assertSee('Name 2')
         ->assertDontSee('Name 3');
-})->group('filters', 'filterNumber')->with('filter_number_themes_collection', 'filter_number_themes_array');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_collection', 'filter_number_themes_array');
 
 it('properly filters by "min & max"', function (string $component, object $params) {
     livewire($component)
@@ -114,7 +124,8 @@ it('properly filters by "min & max"', function (string $component, object $param
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join');
 
 it('properly filters by "min & max" - using collection & array', function (string $component, string $theme) {
     livewire($component)
@@ -128,7 +139,8 @@ it('properly filters by "min & max" - using collection & array', function (strin
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 4')
         ->assertDontSee('Name 5');
-})->group('filters', 'filterNumber')->with('filter_number_themes_collection', 'filter_number_themes_array');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_collection', 'filter_number_themes_array');
 
 it('properly filters by "min & max" currency', function (string $component, object $params) {
     livewire($component)
@@ -142,7 +154,8 @@ it('properly filters by "min & max" currency', function (string $component, obje
         ->assertSee('Barco-Sushi Simples')
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('борщ');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
 it('ignores null "min & max"', function (string $component, object $params) {
     livewire($component)
@@ -154,7 +167,8 @@ it('ignores null "min & max"', function (string $component, object $params) {
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('борщ');
-})->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
 it('ignores null "min & max" - using collection', function (string $component, string $theme) {
     livewire($component)
@@ -168,7 +182,8 @@ it('ignores null "min & max" - using collection', function (string $component, s
         ->assertSee('Name 3')
         ->assertSee('Name 4')
         ->assertSee('Name 5');
-})->group('filters', 'filterNumber')->with('filter_number_themes_collection', 'filter_number_themes_array');
+})->group('filters', 'filterNumber')
+    ->with('filter_number_themes_collection', 'filter_number_themes_array');
 
 it('displays "No records found" with non-existent min', function (string $component, object $params) {
     livewire($component)
@@ -211,6 +226,11 @@ dataset('filter_number_themes_with_join', [
     'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+]);
+
+dataset('filter_number_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 dataset('filter_number_themes_array', [
