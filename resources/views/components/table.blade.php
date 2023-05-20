@@ -1,26 +1,51 @@
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
 
-<x-livewire-powergrid::table-base :theme="$theme->table" :ready-to-load="$readyToLoad">
+<x-livewire-powergrid::table-base
+    :theme="$theme->table"
+    :ready-to-load="$readyToLoad"
+>
     <x-slot:header>
-        <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
+        <tr
+            class="{{ $theme->table->trClass }}"
+            style="{{ $theme->table->trStyle }}"
+        >
             @if (data_get($setUp, 'detail.showCollapseIcon'))
-                <th scope="col" class="{{ $theme->table->thClass }}" style="{{ $theme->table->thStyle }}"
-                    wire:key="{{ md5('showCollapseIcon') }}">
+                <th
+                    scope="col"
+                    class="{{ $theme->table->thClass }}"
+                    style="{{ $theme->table->thStyle }}"
+                    wire:key="{{ md5('showCollapseIcon') }}"
+                >
                 </th>
             @endif
 
             @if ($checkbox)
-                <x-livewire-powergrid::checkbox-all :checkbox="$checkbox" :theme="$theme->checkbox" />
+                <x-livewire-powergrid::checkbox-all
+                    :checkbox="$checkbox"
+                    :theme="$theme->checkbox"
+                />
             @endif
 
             @foreach ($columns as $column)
-                <x-livewire-powergrid::cols :column="$column" :theme="$theme" :multiSort="$multiSort" :sortArray="$sortArray"
-                    :sortField="$sortField" :sortDirection="$sortDirection" :enabledFilters="$enabledFilters" />
+                <x-livewire-powergrid::cols
+                    :column="$column"
+                    :theme="$theme"
+                    :multiSort="$multiSort"
+                    :sortArray="$sortArray"
+                    :sortField="$sortField"
+                    :sortDirection="$sortDirection"
+                    :enabledFilters="$enabledFilters"
+                />
             @endforeach
 
             @if (isset($actions) && count($actions))
-                <th class="{{ $theme->table->thClass . ' ' . $column->headerClass }}" scope="col"
-                    style="{{ $theme->table->thStyle }}" colspan="{{ count($actions) }}" wire:key="{{ md5('actions') }}">
+                <th
+                    class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
+                    scope="col"
+                    style="{{ $theme->table->thStyle }}"
+                    colspan="{{ count($actions) }}"
+                    wire:key="{{ md5('actions') }}"
+                >
                     {{ trans('livewire-powergrid::datatable.labels.action') }}
                 </th>
             @endif
@@ -28,9 +53,14 @@
     </x-slot:header>
 
     <x-slot:loading>
-        <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-            <td class="{{ $theme->table->tdBodyEmptyClass }}"
-                colspan="{{ ($checkbox ? 1 : 0) + (isset($actions) ? 1 : 0) + count($columns) }}">
+        <tr
+            class="{{ $theme->table->trBodyClass }}"
+            style="{{ $theme->table->trBodyStyle }}"
+        >
+            <td
+                class="{{ $theme->table->tdBodyEmptyClass }}"
+                colspan="{{ ($checkbox ? 1 : 0) + (isset($actions) ? 1 : 0) + count($columns) }}"
+            >
                 @if ($loadingComponent)
                     @include($loadingComponent)
                 @else
@@ -43,17 +73,31 @@
     <x-slot:rows>
 
         @if ($this->hasColumnFilters)
-            <x-livewire-powergrid::inline-filters :checkbox="$checkbox" :actions="$actions" :columns="$columns"
-                :theme="$theme" :filters="$filters" :enabledFilters="$enabledFilters" :tableName="$tableName" :setUp="$setUp" />
+            <x-livewire-powergrid::inline-filters
+                :checkbox="$checkbox"
+                :actions="$actions"
+                :columns="$columns"
+                :theme="$theme"
+                :filters="$filters"
+                :enabledFilters="$enabledFilters"
+                :tableName="$tableName"
+                :setUp="$setUp"
+            />
         @endif
         @if (is_null($data) || count($data) === 0)
             <th>
-                <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                    <td class="{{ $theme->table->tdBodyEmptyClass }}" style="{{ $theme->table->tdBodyEmptyStyle }}"
+                <tr
+                    class="{{ $theme->table->trBodyClass }}"
+                    style="{{ $theme->table->trBodyStyle }}"
+                >
+                    <td
+                        class="{{ $theme->table->tdBodyEmptyClass }}"
+                        style="{{ $theme->table->tdBodyEmptyStyle }}"
                         colspan="{{ ($checkbox ? 1 : 0) +
                             (isset($actions) ? 1 : 0) +
                             count($columns) +
-                            (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}">
+                            (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}"
+                    >
                         <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
                     </td>
                 </tr>
@@ -78,11 +122,17 @@
                 @endphp
 
                 @if (isset($setUp['detail']))
-                    <tbody class="{{ $class }}" x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
-                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
+                    <tbody
+                        class="{{ $class }}"
+                        x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
+                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
+                    >
                     @else
-                        <tr style="{{ $theme->table->trBodyStyle }}" class="{{ $class }}"
-                            wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
+                        <tr
+                            style="{{ $theme->table->trBodyStyle }}"
+                            class="{{ $class }}"
+                            wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
+                        >
                 @endif
 
                 @php
@@ -112,11 +162,19 @@
 
                 @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
 
-                <x-livewire-powergrid::actions :primary-key="$primaryKey" :tableName="$tableName" :theme="$theme"
-                    :row="$row" :actions="$actions" />
+                <x-livewire-powergrid::actions
+                    :primary-key="$primaryKey"
+                    :tableName="$tableName"
+                    :theme="$theme"
+                    :row="$row"
+                    :actions="$actions"
+                />
                 </tr>
                 @if (isset($setUp['detail']))
-                    <template x-cloak x-if="detailState">
+                    <template
+                        x-cloak
+                        x-if="detailState"
+                    >
                         <tr>
                             <td
                                 colspan="{{ ($checkbox ? 1 : 0) +

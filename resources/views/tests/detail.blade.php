@@ -2,6 +2,6 @@
     <div>Id {{ $id }}</div>
     <div>Options @json($options)</div>
     @php
-        \Illuminate\Support\Facades\Log::info($id)
+        \Illuminate\Support\Facades\Log::info($id);
     @endphp
 </div>

@@ -8,7 +8,8 @@
     },
     "scripts": {
         "watch": "mix watch",
-        "build": "mix --production"
+        "build": "mix --production",
+        "blade-formatter": "blade-formatter --write resources/**/*.blade.php"
     },
     "repository": {
         "type": "git",
@@ -25,6 +26,7 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.4.14",
+        "blade-formatter": "^1.32.12",
         "flatpickr": "^4.6.13",
         "postcss": "^8.4.21",
         "resolve-url-loader": "^5.0.0",
