@@ -12,21 +12,24 @@
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
 @endphp
-<th class="{{ $theme->table->thClass .' '. $column->headerClass }}"
+<th
+    class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
-    @if($column->sortable)
-    x-data x-multisort-shift-click="{{ $this->id }}"
-    @endif
-    style="{{ $column->hidden === true ? 'display:none': '' }}; width: max-content; @if($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle.' '. $column->headerStyle }}">
-    <div @class([
+    @if ($column->sortable) x-data x-multisort-shift-click="{{ $this->id }}" @endif
+    style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}"
+>
+    <div
+        @class([
             'pl-[11px]' => !$column->sortable && isTailwind(),
-            $theme->cols->divClass
+            $theme->cols->divClass,
         ])
-         style="{{ $theme->cols->divStyle }}"
-        @if($column->sortable) wire:click="sortBy('{{ $field }}')" @endif>
-        @if($column->sortable)
+        style="{{ $theme->cols->divStyle }}"
+        @if ($column->sortable)
+        wire:click="sortBy('{{ $field }}')"
+        @endif>
+        @if ($column->sortable)
             <span>
-                @if($multiSort && array_key_exists($field,$sortArray))
+                @if ($multiSort && array_key_exists($field, $sortArray))
                     @if ($sortArray[$field] == 'desc')
                         &#8595;
                     @else
@@ -43,7 +46,7 @@
                         &#8595;
                     @endif
                 @endif
-			</span>
+            </span>
         @else
             <span style="width: 6px"></span>
         @endif
