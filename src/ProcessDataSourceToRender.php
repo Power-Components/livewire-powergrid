@@ -71,7 +71,7 @@ class ProcessDataSourceToRender
     private function processCollection(mixed $datasource): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         /** @var BaseCollection $datasource */
-        cache()->forget($this->component->id);
+        cache()->forget($this->component->getLivewireId());
 
         $filters = Collection::make($this->resolveCollection($datasource), $this->component)
             ->filterContains()
@@ -267,7 +267,7 @@ class ProcessDataSourceToRender
             return new BaseCollection($this->component->datasource());
         }
 
-        return cache()->rememberForever($this->component->id, function () use ($datasource) {
+        return cache()->rememberForever($this->component->getLivewireId(), function () use ($datasource) {
             if (is_array($datasource)) {
                 return new BaseCollection($datasource);
             }

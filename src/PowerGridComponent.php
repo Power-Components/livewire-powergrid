@@ -283,6 +283,15 @@ class PowerGridComponent extends Component
         $this->emitSelf('$refresh', []);
     }
 
+    public function getLivewireId(): string
+    {
+        if (method_exists($this, 'getId')) {
+            return $this->getId();
+        }
+
+        return $this->id;
+    }
+
     public function getHasColumnFiltersProperty(): bool
     {
         return collect($this->columns)

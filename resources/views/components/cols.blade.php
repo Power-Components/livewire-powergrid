@@ -15,7 +15,7 @@
 <th
     class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
-    @if ($column->sortable) x-data x-multisort-shift-click="{{ $this->id }}" @endif
+    @if ($column->sortable) x-data x-multisort-shift-click="{{ $this->getLivewireId() }}" @endif
     style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}"
 >
     <div
