@@ -11,6 +11,7 @@ use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender, ActionRules, Builder, Collection, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
+/** @internal  */
 class ProcessDataSourceToRender
 {
     use SoftDeletes;
@@ -30,35 +31,43 @@ class ProcessDataSourceToRender
     /**
      * @throws \Throwable
      */
-    public function get(): BaseCollection|Paginator|\Illuminate\Pagination\LengthAwarePaginator|LengthAwarePaginator
+    public function get(): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         $datasource = $this->prepareDataSource();
 
-        if ($this->isCollection) {
+        if ($datasource instanceof BaseCollection) {
             return $this->processCollection($datasource);
         }
 
         $this->getCurrentTable($datasource);
 
+        /** @phpstan-ignore-next-line  */
         return $this->processModel($datasource);
     }
 
-    private function prepareDataSource(): QueryBuilder|BaseCollection|EloquentBuilder|MorphToMany
+    /**
+     * @return BaseCollection<(int|string), mixed>|Collection|EloquentBuilder|QueryBuilder|null
+     */
+    private function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|null
     {
-        /** @var EloquentBuilder|QueryBuilder|BaseCollection|BaseCollection|MorphToMany $datasource */
-        $datasource = (!empty($this->component->datasource)) ? $this->component->datasource : $this->component->datasource();
+        $datasource = $this->component->datasource ?? null;
 
-        /** @phpstan-ignore-next-line */
-        if (is_array($this->component->datasource())) {
-            /** @phpstan-ignore-next-line */
-            $datasource = collect($this->component->datasource());
+        if (empty($datasource)) {
+            $datasource = $this->component->datasource();
         }
 
-        $this->isCollection = is_a((object) $datasource, BaseCollection::class);
+        if (is_array($datasource)) {
+            $datasource = collect($datasource);
+        }
+
+        $this->isCollection = $datasource instanceof BaseCollection;
 
         return $datasource;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function processCollection(mixed $datasource): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         /** @var BaseCollection $datasource */
@@ -90,57 +99,88 @@ class ProcessDataSourceToRender
     /**
      * @throws \Throwable
      */
-    private function processModel(array|BaseCollection|null|MorphToMany|EloquentBuilder|QueryBuilder $datasource): Paginator|LengthAwarePaginator
+    private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
     {
-        /** @var EloquentBuilder|QueryBuilder|MorphToMany $results */
-        $results = $this->resolveModel($datasource)
+        if (is_null($datasource)) {
+            $datasource = $this->component->datasource();
+        }
+
+        $results = $datasource
             ->where(
                 fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this->component)
                     ->filterContains()
                     ->filter()
             );
 
-        if (!$datasource instanceof QueryBuilder) {
-            /** @var EloquentBuilder|MorphToMany $softDeleteResults */
-            $softDeleteResults = $results;
-
-            $results = self::applySoftDeletes($softDeleteResults);
+        if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
+            /** @phpstan-ignore-next-line */
+            $results = $this->applySoftDeletes($results);
         }
 
-        $sortField = $this->makeSortField();
-
-        if ($this->component->multiSort) {
-            foreach ($this->component->sortArray as $sortField => $direction) {
-                $sortField = Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix ? $sortField : $this->component->currentTable . '.' . $sortField;
-
-                if ($this->component->withSortStringNumber) {
-                    $results = self::applyWithSortStringNumber($results, $sortField, $direction);
-                }
-                $results = $results->orderBy($sortField, $direction);
-            }
-        } else {
-            $results = self::applyWithSortStringNumber($results, $sortField);
-            $results = $results->orderBy($sortField, $this->component->sortDirection);
-        }
-
-        self::applyTotalColumn($results);
-
-        $results = self::applyPerPage($results);
-
-        self::resolveDetailRow($results);
-
-        if (method_exists($results, 'total')) {
-            $this->component->total = $results->total();
-        }
+        $sortField = $this->makeSortField($this->component->sortField);
 
         /** @phpstan-ignore-next-line */
-        return $results->setCollection($this->transform($results->getCollection()));
+        $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
+
+        $this->applyTotalColumn($results);
+
+        $results = $this->applyPerPage($results);
+
+        $this->resolveDetailRow($results);
+
+        $this->setTotalCount($results);
+
+        /** @phpstan-ignore-next-line */
+        $collection = $results->getCollection();
+
+        /** @phpstan-ignore-next-line */
+        return $results->setCollection($this->transform($collection));
     }
 
-    private function makeSortField(): string
+    /**
+     * @throws \Exception
+     */
+    private function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany $results): EloquentBuilder|QueryBuilder|MorphToMany
     {
-        return Str::of($this->component->sortField)->contains('.') || $this->component->ignoreTablePrefix
-            ? $this->component->sortField : $this->component->currentTable . '.' . $this->component->sortField;
+        foreach ($this->component->sortArray as $sortField => $direction) {
+            $sortField = $this->makeSortField($sortField);
+
+            if ($this->component->withSortStringNumber) {
+                $results = $this->applyWithSortStringNumber($results, $sortField, $direction);
+            }
+            $results = $results->orderBy($sortField, $direction);
+        }
+
+        return $results;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function applySingleSort(EloquentBuilder|QueryBuilder|MorphToMany|BaseCollection $results, string $sortField): MorphToMany|EloquentBuilder|QueryBuilder
+    {
+        /** @phpstan-ignore-next-line */
+        $results = $this->applyWithSortStringNumber($results, $sortField);
+
+        return $results->orderBy($sortField, $this->component->sortDirection);
+    }
+
+    private function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
+    {
+        if (!method_exists($results, 'total')) {
+            return;
+        }
+
+        $this->component->total = $results->total();
+    }
+
+    private function makeSortField(string $sortField): string
+    {
+        if (Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix) {
+            return $sortField;
+        }
+
+        return $this->component->currentTable . '.' . $sortField;
     }
 
     private function applyTotalColumn(EloquentBuilder|QueryBuilder|MorphToMany $results): void
@@ -218,15 +258,6 @@ class ProcessDataSourceToRender
         });
     }
 
-    public function resolveModel(array|BaseCollection|null|MorphToMany|EloquentBuilder|QueryBuilder $datasource = null): mixed
-    {
-        if (blank($datasource)) {
-            return $this->component->datasource();
-        }
-
-        return $datasource;
-    }
-
     /**
      * @throws \Exception
      */
@@ -278,7 +309,7 @@ class ProcessDataSourceToRender
         });
     }
 
-    private function getCurrentTable(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $datasource): void
+    private function getCurrentTable(EloquentBuilder|array|BaseCollection|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
             $this->component->currentTable = $datasource->from;

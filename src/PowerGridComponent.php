@@ -7,6 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
@@ -116,30 +117,12 @@ class PowerGridComponent extends Component
         ];
     }
 
-    public function filters(): array
-    {
-        return [];
-    }
-
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
     {
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;
-    }
-
-    /**
-     * Apply checkbox, perPage and search view and theme
-     */
-    public function setUp(): array
-    {
-        return [];
-    }
-
-    public function columns(): array
-    {
-        return [];
     }
 
     private function resolveTotalRow(): void
@@ -200,9 +183,22 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    public function updatedSearch(): void
+    /**
+     * Apply checkbox, perPage and search view and theme
+     */
+    public function setUp(): array
     {
-        $this->gotoPage(1);
+        return [];
+    }
+
+    public function columns(): array
+    {
+        return [];
+    }
+
+    public function filters(): array
+    {
+        return [];
     }
 
     /**
@@ -213,14 +209,14 @@ class PowerGridComponent extends Component
         return null;
     }
 
-    public function addColumns(): PowerGridColumns|PowerGridEloquent
-    {
-        return PowerGrid::eloquent();
-    }
-
     public function actionRules(): array
     {
         return [];
+    }
+
+    public function addColumns(): PowerGridColumns|PowerGridEloquent
+    {
+        return PowerGrid::eloquent();
     }
 
     public function checkedValues(): array
@@ -231,6 +227,16 @@ class PowerGridComponent extends Component
     public function updatedPage(): void
     {
         $this->checkboxAll = false;
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->gotoPage(1);
+    }
+
+    public function toggleFilters(): void
+    {
+        $this->showFilters = !$this->showFilters;
     }
 
     /**
@@ -287,7 +293,7 @@ class PowerGridComponent extends Component
      * @throws Exception
      * @throws Throwable
      */
-    public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator
+    public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
     {
         $this->processDataSourceInstance = ProcessDataSourceToRender::fillData($this);
 
