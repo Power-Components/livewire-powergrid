@@ -6,7 +6,7 @@ use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{FillableTable, Models, Stubs, TailwindForm};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables, FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Exceptions\CreateCommandException;
 
@@ -30,8 +30,6 @@ class CreateCommand extends Command
     protected array $modelPath = [];
 
     protected string $datasourceOption;
-
-    protected string $usingQueryBuilder;
 
     protected string $stub;
 
@@ -95,7 +93,7 @@ class CreateCommand extends Command
      */
     protected function askDataBaseTableName(): void
     {
-        $this->dataBaseTableName = strval($this->ask('What is the name of your database table name? (E.g., <comment>users</comment>)'));
+        $this->dataBaseTableName = strval($this->anticipate('What is the name of your database table name? (E.g., <comment>users</comment>)', DatabaseTables::list()));
 
         $exists = Schema::hasTable($this->dataBaseTableName);
 
@@ -113,15 +111,15 @@ class CreateCommand extends Command
     protected function askDatasource(): void
     {
         $datasourceOption = $this->choice('What type of data source will you use?', [
-            'Eloquent Builder (Model)',
-            'Query Builder (DB::table(\'table_name\'))',
+            'Eloquent Builder',
+            'Query Builder',
             'Collection',
         ], 'Eloquent Builder');
 
         $this->datasourceOption = match ($datasourceOption) {
-            'Eloquent Builder (Model)'                  => 'm',
-            'Query Builder (DB::table(\'table_name\'))' => 'qb',
-            default                                     => 'c'
+            'Eloquent Builder' => 'm',
+            'Query Builder'    => 'qb',
+            default            => 'c'
         };
     }
 

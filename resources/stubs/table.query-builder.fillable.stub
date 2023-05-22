@@ -86,7 +86,7 @@ final class {{ componentName }} extends PowerGridComponent
     */
     public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::query(){{ datasource }};
+        return PowerGrid::columns(){{ datasource }};
     }
 
     /*

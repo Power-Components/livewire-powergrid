@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Export;
-use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSourceToRender};
+use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -154,7 +154,7 @@ trait WithExport
      */
     public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
     {
-        $processDataSource = tap(ProcessDataSourceToRender::fillData($this), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::fillData($this), fn ($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered;
 
@@ -172,9 +172,8 @@ trait WithExport
             return $processDataSource->transform($processDataSource->resolveCollection());
         }
 
-        $model = $processDataSource->prepareDataSource();
         /** @phpstan-ignore-next-line */
-        $currentTable = $model->getModel()->getTable();
+        $currentTable = $processDataSource->component->currentTable;
 
         $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 

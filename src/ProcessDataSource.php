@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender, ActionRules, Builde
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
 /** @internal  */
-class ProcessDataSourceToRender
+class ProcessDataSource
 {
     use SoftDeletes;
 
@@ -23,7 +23,7 @@ class ProcessDataSourceToRender
     ) {
     }
 
-    public static function fillData(PowerGridComponent $powerGridComponent): ProcessDataSourceToRender
+    public static function fillData(PowerGridComponent $powerGridComponent): ProcessDataSource
     {
         return new self($powerGridComponent);
     }
@@ -39,7 +39,7 @@ class ProcessDataSourceToRender
             return $this->processCollection($datasource);
         }
 
-        $this->getCurrentTable($datasource);
+        $this->setCurrentTable($datasource);
 
         /** @phpstan-ignore-next-line  */
         return $this->processModel($datasource);
@@ -174,7 +174,7 @@ class ProcessDataSourceToRender
         $this->component->total = $results->total();
     }
 
-    protected function makeSortField(string $sortField): string
+    public function makeSortField(string $sortField): string
     {
         if (Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix) {
             return $sortField;
@@ -309,7 +309,7 @@ class ProcessDataSourceToRender
         });
     }
 
-    private function getCurrentTable(EloquentBuilder|array|BaseCollection|Collection|QueryBuilder|null $datasource): void
+    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
             $this->component->currentTable = $datasource->from;
