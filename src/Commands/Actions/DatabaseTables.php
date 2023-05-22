@@ -16,7 +16,7 @@ class DatabaseTables
         $tables     = Schema::connection($driverName)->getAllTables();
 
         return collect($tables)
-            ->map(fn ($table) => collect($table)->first())
+            ->map(fn ($table) => collect($table)->first()) /** @phpstan-ignore-line */
             ->toArray();
     }
 }
