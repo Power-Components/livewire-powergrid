@@ -9,8 +9,8 @@ beforeEach(function () {
     $this->tableNameQuestion       = 'What is the name of your database table name? (E.g., <comment>users</comment>)';
     $this->datasourceAnswer        = 'What type of data source will you use?';
     $this->datasourceAnswers       = [
-        'Eloquent Builder (Model)',
-        'Query Builder (DB::table(\'table_name\'))',
+        'Eloquent Builder',
+        'Query Builder',
         'Collection',
     ];
     $this->modelPathQuestion   = 'Enter your Builder name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)';
@@ -22,7 +22,7 @@ it('creates a PowerGrid Builder Table using Eloquent Builder', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
@@ -39,7 +39,7 @@ it('creates a PowerGrid Builder Table using Query Builder', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Query Builder (DB::table(\'table_name\'))', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Query Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion($this->tableNameQuestion, 'users')
         ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
@@ -78,11 +78,7 @@ it('notifies about tailwind forms', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice('What type of data source will you use?', 'Eloquent Builder (Model)', [
-            'Eloquent Builder (Model)',
-            'Query Builder (DB::table(\'table_name\'))',
-            'Collection',
-        ], true)
+        ->expectsChoice('What type of data source will you use?', 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
@@ -133,7 +129,7 @@ it('does not create a table with empty model', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, '')
         ->expectsOutput('Error: You must inform the Builder name or file path.')
         ->assertFailed();
@@ -148,7 +144,7 @@ it('does not create a table with invalid model path', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, 'xyz-model')
         ->expectsOutput('Error: Could not find "xyz-model" class.')
         ->assertFailed();
@@ -163,7 +159,7 @@ it('does overwrite the existing table file w/ YES', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->assertSuccessful();
@@ -176,7 +172,7 @@ it('does overwrite the existing table file w/ YES', function () {
     //Alert about overwrite
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', 'yes')
@@ -192,7 +188,7 @@ it('does NOT overwride the existing table file', function () {
 
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->assertSuccessful();
@@ -205,7 +201,7 @@ it('does NOT overwride the existing table file', function () {
     //Alert about overwrite
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'DemoTable')
-        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder (Model)', $this->datasourceAnswers, true)
+        ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, '\PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion('It seems that <comment>DemoTable</comment> already exists. Would you like to overwrite it?', '')
