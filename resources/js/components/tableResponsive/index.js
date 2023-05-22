@@ -16,33 +16,35 @@ export default () => ({
     },
 
     init() {
-        // this.element = this.$el
-        const element = this.$el
-
         this.$nextTick(() => {
-            const resizeObserver = new ResizeObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.contentRect.width > 0) {
+            this.handleResize()
 
-                        // this.hasHiddenElements = this.element.querySelector('table tbody[expand] tr td div')?.innerHTML
+            this.observeElement()
 
-                        onResize(this.$el)
-                    }
-                });
-            });
-
-            resizeObserver.observe(this.$el);
-
-            window.addEventListener('loading', function({ detail }) {
-                const { loading } = detail
-
-                if (loading) {
-                    return;
-                }
-
-                onResize(element)
+            window.addEventListener('pg-livewire-request-finished', () => {
+                setTimeout(() => this.handleResize(), 5);
             })
         })
+    },
+    handleResize() {
+        const element = this.$el
+
+        onResize(element)
+
+        this.hasHiddenElements = element.querySelector('table tbody[expand] tr td div')?.innerHTML
+
+        if (!this.hasHiddenElements) this.expanded = null
+    },
+    observeElement() {
+        const resizeObserver = new ResizeObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.contentRect.width > 0) {
+                   this.handleResize()
+                }
+            });
+        });
+
+        resizeObserver.observe(this.$el);
     }
 })
 

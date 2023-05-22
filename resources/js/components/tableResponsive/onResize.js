@@ -1,5 +1,5 @@
 const EXPAND_ITEM_CONTAINER = ''
-const SCROLLBAR_WIDTH = 12
+const SCROLLBAR_WIDTH = 0
 
 function showAllItems(element) {
     element.querySelectorAll(`tbody tr td`).forEach((el) => { el.classList.remove('hidden') })
@@ -12,7 +12,7 @@ function getTableUtilWidth(element) {
     const fixedItems = element.querySelectorAll('table thead tr:nth-child(1) th[fixed]');
 
     fixedItems.forEach((element) => {
-        fixedSpace += (element.clientWidth - 1)
+        fixedSpace += (element.clientWidth - 4)
     })
 
     return element.clientWidth - fixedSpace - SCROLLBAR_WIDTH;
@@ -53,6 +53,8 @@ function hideItems(element, items) {
 }
 
 function fillTableExpand(element, hideItems) {
+    if (!element.querySelectorAll('table tbody[expand] tr td div').length) return
+
     for (const expands of element.querySelectorAll('table tbody[expand] tr td div')) {
         expands.innerHTML = ""
     }
@@ -63,11 +65,17 @@ function fillTableExpand(element, hideItems) {
         const rows = element.querySelectorAll('table tbody:not(tbody[expand])')
 
         for (const row of rows) {
-            const expandContainer = row.nextElementSibling.querySelector('tr td div')
+            const expandContainer = row.nextElementSibling?.querySelector('tr td div')
 
-            const rowName = element.querySelector(`table thead tr th:nth-child(${hideItem})`).innerHTML
+            if (!expandContainer) continue
 
-            const rowValue = row.querySelector(`tr:first-child td:nth-child(${hideItem})`).innerHTML
+            // if (!row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.textContent.trim()) continue
+
+            let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem})`).textContent
+
+            rowName = rowName.replace('↕', '').trim()
+
+            const rowValue = row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.innerHTML
 
             if (!expandContainer.querySelector(`div[data-expand-item-${hideItem}]`)) {
                 expandContainer.innerHTML += `<div data-expand-item-${hideItem}>
@@ -86,7 +94,7 @@ export default function (element) {
 
     const itemsToHide = getItemsToHide(element, tableUtilWidth)
 
-    // fillTableExpand(element, itemsToHide)
+    fillTableExpand(element, itemsToHide)
 
     hideItems(element, itemsToHide)
 };
