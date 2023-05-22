@@ -2,18 +2,18 @@
 
 namespace App\Http\Livewire{{ subFolder }};
 
-use {{ modelName }};
 use Illuminate\Support\Carbon;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
+use PowerComponents\LivewirePowerGrid\Traits\{ActionButton, WithExport};
 use PowerComponents\LivewirePowerGrid\Filters\Filter;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridColumns};
 
 final class {{ componentName }} extends PowerGridComponent
 {
     use ActionButton;
+    use WithExport;
 
     /*
     |--------------------------------------------------------------------------
@@ -41,18 +41,18 @@ final class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     |  Datasource
     |--------------------------------------------------------------------------
-    | Provides data to your Table using a Model or Collection
+    | Provides data to your Table using a Eloquent, Query Builder or Collection
     |
     */
 
     /**
      * PowerGrid datasource.
      *
-     * @return Builder<\{{ modelName }}>
+     * @return Builder
      */
     public function datasource(): Builder
     {
-        return {{ modelLastName }}::query();
+        return DB::table('{{ databaseTableName }}');
     }
 
     /*
@@ -86,12 +86,7 @@ final class {{ componentName }} extends PowerGridComponent
     */
     public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)))
-            ->addColumn('created_at')
-            ->addColumn('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+        return PowerGrid::query(){{ datasource }};
     }
 
     /*
@@ -103,28 +98,14 @@ final class {{ componentName }} extends PowerGridComponent
     |
     */
 
-    /**
-     * PowerGrid Columns.
-     *
-     * @return array<int, Column>
-     */
+     /**
+      * PowerGrid Columns.
+      *
+      * @return array<int, Column>
+      */
     public function columns(): array
     {
-        return [
-            Column::make('ID', 'id')
-                ->searchable()
-                ->sortable(),
-
-            Column::make('Name', 'name')
-                ->searchable()
-                ->sortable(),
-
-            Column::make('Created at', 'created_at')
-                ->hidden(),
-
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->searchable()
-        ];
+        return {{ columns }}
     }
 
     /**
@@ -134,10 +115,7 @@ final class {{ componentName }} extends PowerGridComponent
      */
     public function filters(): array
     {
-        return [
-            Filter::inputText('name'),
-            Filter::datepicker('created_at_formatted', 'created_at'),
-        ];
+        return {{ filters }}
     }
 
     /*
@@ -146,28 +124,6 @@ final class {{ componentName }} extends PowerGridComponent
     |--------------------------------------------------------------------------
     | Enable the method below only if the Routes below are defined in your app.
     |
-    */
-
-    /**
-     * PowerGrid {{ modelLastName }} Action Buttons.
-     *
-     * @return array<int, Button>
-     */
-
-    /*
-    public function actions(): array
-    {
-       return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.edit', ['{{ modelKebabCase }}' => 'id']),
-
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.destroy', ['{{ modelKebabCase }}' => 'id'])
-               ->method('delete')
-        ];
-    }
     */
 
     /*
@@ -179,7 +135,7 @@ final class {{ componentName }} extends PowerGridComponent
     */
 
     /**
-     * PowerGrid {{ modelLastName }} Action Rules.
+     * PowerGrid Action Rules.
      *
      * @return array<int, RuleActions>
      */
@@ -191,7 +147,7 @@ final class {{ componentName }} extends PowerGridComponent
 
            //Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn(${{ modelKebabCase }}) => ${{ modelKebabCase }}->id === 1)
+                ->when(fn($row) => $row->id === 1)
                 ->hide(),
         ];
     }

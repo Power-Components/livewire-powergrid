@@ -4,14 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
+    Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridColumns,
+    PowerGridComponent
+};
 
 class DishesArrayTable extends PowerGridComponent
 {
@@ -101,9 +103,9 @@ class DishesArrayTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('chef_name')

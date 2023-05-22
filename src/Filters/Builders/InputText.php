@@ -2,13 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters\Builders;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Helpers\SqlSupport;
 
 class InputText extends BuilderBase
 {
-    public function builder(Builder $builder, string $field, int|array|string|null $values): void
+    public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
             /** @var \Closure $closure */
@@ -29,7 +30,7 @@ class InputText extends BuilderBase
             $value = $value[key($value)];
         }
 
-        $matchOperatorQuery = function (string $selected, Builder $query, string $field, mixed $value) {
+        $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, mixed $value) {
             match ($selected) {
                 'is'           => $query->where($field, '=', $value),
                 'is_not'       => $query->where($field, '!=', $value),
@@ -46,7 +47,7 @@ class InputText extends BuilderBase
             };
         };
 
-        if (filled($searchMorphs)) {
+        if (filled($searchMorphs) && $builder instanceof EloquentBuilder) {
             $table        = $searchMorphs[0];
             $relationship = $searchMorphs[1];
             $types        = $searchMorphs[2];
@@ -54,9 +55,9 @@ class InputText extends BuilderBase
             $builder->whereHasMorph(
                 $relationship,
                 $types,
-                fn (Builder $query) => $query->whereHas(
+                fn (EloquentBuilder $query) => $query->whereHas(
                     $table,
-                    fn (Builder $query) => $matchOperatorQuery(
+                    fn (EloquentBuilder $query) => $matchOperatorQuery(
                         $selected,
                         $query,
                         $field,

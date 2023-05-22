@@ -14,13 +14,13 @@ it(
         ])
         ->assertSeeHtmlInOrder([
             'All',
-            '<option wire:key="select-default-0"',
+            '<option', 'wire:key="select-default-0"',
             'value="0"',
             '🍽️ All diets',
-            '<option wire:key="select-default-1"',
+            '<option', 'wire:key="select-default-1"',
             'value="1"',
             '🌱 Suitable for Vegans',
-            '<option wire:key="select-default-2"',
+            '<option', 'wire:key="select-default-2"',
             'value="2"',
             '🥜 Suitable for Celiacs',
         ])

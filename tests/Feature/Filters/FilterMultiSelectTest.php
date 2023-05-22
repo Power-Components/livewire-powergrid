@@ -6,7 +6,10 @@ use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterMultiSelect, Filter
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable, DishesFiltersTable};
+use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
+    DishesCollectionTable,
+    DishesFiltersTable,
+    DishesQueryBuilderTable};
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -34,7 +37,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
             'Bife à Rolê',
         ]);
 })->group('filters')
-    ->with('filter_multi_select_themes_with_join');
+    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 it('properly filter with id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -64,7 +67,7 @@ it('properly filter with id using custom builder', function (string $component) 
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
 })->group('filters')
-    ->with('filter_multi_select_themes_with_join');
+    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 it('properly filter with id using collection & array', function (string $component) {
     $multiSelect = Filter::multiSelect('id')
@@ -180,7 +183,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
 })->group('filters')
-    ->with('filter_multi_select_themes_with_join');
+    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 it('properly filter with category_id - multiple select async', function (string $component) {
     $multiSelect = Filter::multiSelectAsync('category_name', 'category_id')
@@ -240,13 +243,18 @@ it('properly filter with category_id - multiple select async', function (string 
         ->field->toBe($multiSelect->field)
         ->title->toBe($column->title);
 })->group('filters')
-    ->with('filter_multi_select_themes_with_join');
+    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 dataset('filter_multi_select_themes_with_join', [
     'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('filter_multi_select_query_builder', [
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
 dataset('filter_multi_select_themes_array', [

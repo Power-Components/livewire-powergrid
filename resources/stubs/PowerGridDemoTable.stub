@@ -26,7 +26,7 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridEloquent,
+    PowerGridColumns,
     Rules\RuleActions};
 
 final class PowerGridDemoTable extends PowerGridComponent
@@ -151,9 +151,9 @@ final class PowerGridDemoTable extends PowerGridComponent
     |    the database using the `e()` Laravel Helper function.
     |
     */
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('email')

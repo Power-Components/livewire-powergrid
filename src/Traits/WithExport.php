@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support as Support;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Export;
+use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSourceToRender};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -154,36 +154,38 @@ trait WithExport
      */
     public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
     {
-        $inClause = $this->filtered;
+        $processDataSource = tap(ProcessDataSourceToRender::fillData($this), fn ($datasource) => $datasource->get());
 
-        if ($selected && filled($this->checkboxValues)) {
-            $inClause = $this->checkboxValues;
+        $inClause = $processDataSource->component->filtered;
+
+        if ($selected && filled($processDataSource->component->checkboxValues)) {
+            $inClause = $processDataSource->component->checkboxValues;
         }
 
-        if ($this->isCollection) {
+        if ($processDataSource->isCollection) {
             if ($inClause) {
-                $results = $this->resolveCollection()->whereIn($this->primaryKey, $inClause);
+                $results = $processDataSource->resolveCollection()->whereIn($this->primaryKey, $inClause);
 
-                return $this->transform($results);
+                return $processDataSource->transform($results);
             }
 
-            return $this->transform($this->resolveCollection());
+            return $processDataSource->transform($processDataSource->resolveCollection());
         }
 
-        $model = $this->resolveModel();
+        $model = $processDataSource->prepareDataSource();
         /** @phpstan-ignore-next-line */
         $currentTable = $model->getModel()->getTable();
 
-        $sortField = Support\Str::of($this->sortField)->contains('.') ? $this->sortField : $currentTable . '.' . $this->sortField;
+        $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 
-        $results = $this->resolveModel()
-            ->when($inClause, function ($query, $inClause) {
-                return $query->whereIn($this->primaryKey, $inClause);
+        $results = $processDataSource->prepareDataSource()
+            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
+                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
             })
-            ->orderBy($sortField, $this->sortDirection)
+            ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 
-        return $this->transform($results);
+        return $processDataSource->transform($results);
     }
 
     /**

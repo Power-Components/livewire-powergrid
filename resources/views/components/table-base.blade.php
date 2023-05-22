@@ -2,22 +2,30 @@
     'theme' => null,
     'readyToLoad' => false,
 ])
-<div x-data="{{ isset($this->setUp['responsive']) ? 'tableResponsive' : '{}' }}">
-    <table class="table power-grid-table {{ $theme->tableClass }}"
-           style="{{$theme->tableStyle}}">
-        <thead class="{{$theme->theadClass}}"
-               style="{{$theme->theadStyle}}">
-                {{ $header }}
+<div @isset($this->setUp['responsive']) x-data="tableResponsive" @endisset>
+    <table
+        class="table power-grid-table {{ $theme->tableClass }}"
+        style="{{ $theme->tableStyle }}"
+    >
+        <thead
+            class="{{ $theme->theadClass }}"
+            style="{{ $theme->theadStyle }}"
+        >
+            {{ $header }}
         </thead>
-        @if($readyToLoad)
-            <tbody class="{{$theme->tbodyClass}}"
-                   style="{{$theme->tbodyStyle}}">
-            {{ $rows }}
+        @if ($readyToLoad)
+            <tbody
+                class="{{ $theme->tbodyClass }}"
+                style="{{ $theme->tbodyStyle }}"
+            >
+                {{ $rows }}
             </tbody>
         @else
-            <tbody class="{{$theme->tbodyClass}}"
-                   style="{{$theme->tbodyStyle}}">
-            {{ $loading }}
+            <tbody
+                class="{{ $theme->tbodyClass }}"
+                style="{{ $theme->tbodyStyle }}"
+            >
+                {{ $loading }}
             </tbody>
         @endif
     </table>

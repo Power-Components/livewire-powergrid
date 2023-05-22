@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\{Builder, Model};
 use Throwable;
 
 trait SoftDeletes

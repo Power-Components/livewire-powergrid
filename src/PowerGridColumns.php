@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Closure;
 use Illuminate\Support\Collection;
 
-final class PowerGridEloquent
+final class PowerGridColumns
 {
     protected Collection $collection;
 
@@ -21,7 +21,7 @@ final class PowerGridEloquent
      * @param Closure|null $closure
      * @return $this
      */
-    public function addColumn(string $field, Closure $closure = null): PowerGridEloquent
+    public function addColumn(string $field, Closure $closure = null): PowerGridColumns
     {
         $this->columns[$field] = $closure ?? fn ($model) => e(strval(data_get($model, $field)));
 

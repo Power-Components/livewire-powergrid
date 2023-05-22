@@ -1,12 +1,21 @@
-@inject('actionRulesClass','PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
+@inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
 
-<x-livewire-powergrid::table-base :theme="$theme->table" :ready-to-load="$readyToLoad">
+<x-livewire-powergrid::table-base
+    :theme="$theme->table"
+    :ready-to-load="$readyToLoad"
+>
     <x-slot:header>
-        <tr class="{{ $theme->table->trClass }}" style="{{ $theme->table->trStyle }}">
-            @if(data_get($setUp, 'detail.showCollapseIcon'))
-                <th scope="col" class="{{ $theme->table->thClass }}"
+        <tr
+            class="{{ $theme->table->trClass }}"
+            style="{{ $theme->table->trStyle }}"
+        >
+            @if (data_get($setUp, 'detail.showCollapseIcon'))
+                <th
+                    scope="col"
+                    class="{{ $theme->table->thClass }}"
                     style="{{ $theme->table->thStyle }}"
-                    wire:key="{{ md5('showCollapseIcon') }}">
+                    wire:key="{{ md5('showCollapseIcon') }}"
+                >
                 </th>
             @endif
 
@@ -18,31 +27,31 @@
             @if($checkbox)
                 <x-livewire-powergrid::checkbox-all
                     :checkbox="$checkbox"
-                    :theme="$theme->checkbox"/>
+                    :theme="$theme->checkbox"
+                />
             @endif
 
-            @foreach($columns as $column)
+            @foreach ($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
                     :theme="$theme"
-                    :multiSort="$multiSort"
-                    :sortArray="$sortArray"
-                    :sortField="$sortField"
-                    :sortDirection="$sortDirection"
-                    :enabledFilters="$enabledFilters"/>
+                    :enabledFilters="$enabledFilters"
+                />
             @endforeach
 
-            @if(isset($actions) && count($actions))
+            @if (isset($actions) && count($actions))
                 @php
                     $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array('actions', data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
-                <th class="{{ $theme->table->thClass .' '. $column->headerClass }}" scope="col"
-                    @if($isActionFixedOnResponsive)
-                        fixed
-                    @endif
-                    style="{{ $theme->table->thStyle }}" colspan="{{ count($actions )}}"
-                    wire:key="{{ md5('actions') }}">
+                <th
+                    class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
+                    @if($isActionFixedOnResponsive) fixed @endif
+                    scope="col"
+                    style="{{ $theme->table->thStyle }}"
+                    colspan="{{ count($actions) }}"
+                    wire:key="{{ md5('actions') }}"
+                >
                     {{ trans('livewire-powergrid::datatable.labels.action') }}
                 </th>
             @endif
@@ -50,12 +59,15 @@
     </x-slot:header>
 
     <x-slot:loading>
-        <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-            <td class="{{ $theme->table->tdBodyEmptyClass }}" colspan="{{ (($checkbox) ? 1:0)
-                   + ((isset($actions)) ? 1: 0)
-                   + (count($columns))
-                }}">
-                @if($loadingComponent)
+        <tr
+            class="{{ $theme->table->trBodyClass }}"
+            style="{{ $theme->table->trBodyStyle }}"
+        >
+            <td
+                class="{{ $theme->table->tdBodyEmptyClass }}"
+                colspan="{{ ($checkbox ? 1 : 0) + (isset($actions) ? 1 : 0) + count($columns) }}"
+            >
+                @if ($loadingComponent)
                     @include($loadingComponent)
                 @else
                     {{ __('Loading') }}
@@ -66,7 +78,7 @@
 
     <x-slot:rows>
 
-        @if($this->hasColumnFilters)
+        @if ($this->hasColumnFilters)
             <x-livewire-powergrid::inline-filters
                 :checkbox="$checkbox"
                 :actions="$actions"
@@ -78,14 +90,20 @@
                 :setUp="$setUp"
             />
         @endif
-        @if(is_null($data) || count($data) === 0)
+        @if (is_null($data) || count($data) === 0)
             <th>
-                <tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
-                    <td class="{{ $theme->table->tdBodyEmptyClass }}" style="{{ $theme->table->tdBodyEmptyStyle }}" colspan="{{ (($checkbox) ? 1:0)
-                                    + ((isset($actions)) ? 1: 0)
-                                    + (count($columns))
-                                    + (data_get($setUp, 'detail.showCollapseIcon') ? 1: 0)
-                                    }}">
+                <tr
+                    class="{{ $theme->table->trBodyClass }}"
+                    style="{{ $theme->table->trBodyStyle }}"
+                >
+                    <td
+                        class="{{ $theme->table->tdBodyEmptyClass }}"
+                        style="{{ $theme->table->tdBodyEmptyStyle }}"
+                        colspan="{{ ($checkbox ? 1 : 0) +
+                            (isset($actions) ? 1 : 0) +
+                            count($columns) +
+                            (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}"
+                    >
                         <span>{{ trans('livewire-powergrid::datatable.labels.no_data') }}</span>
                     </td>
                 </tr>
@@ -93,10 +111,10 @@
         @else
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
 
-            @foreach($data as $row)
+            @foreach ($data as $row)
                 @php
-                    $class            = $theme->table->trBodyClass;
-                    $rules            = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                    $class = $theme->table->trBodyClass;
+                    $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
 
                     $rowId = $row->$primaryKey;
 
@@ -104,86 +122,104 @@
 
                     if (filled($ruleSetAttribute)) {
                         foreach ($ruleSetAttribute as $attribute) {
-                           if (isset($attribute['attribute'])) {
-                              $class .= ' '.$attribute['value'];
-                           }
+                            if (isset($attribute['attribute'])) {
+                                $class .= ' ' . $attribute['value'];
+                            }
                         }
                     }
                 @endphp
 
-                @if(isset($setUp['detail']))
-                <tbody class="{{ $class }}"
-                       x-data="{ detailState: @entangle('setUp.detail.state.'.$row->{$primaryKey}) }"
-                       wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
-                >
-                @else
-                    <tr style="{{ $theme->table->trBodyStyle }}"
+                @if (isset($setUp['detail']))
+                    <tbody
                         class="{{ $class }}"
-                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
-                        @endif
+                        x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
+                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
+                    >
+                    @else
+                        <tr
+                            style="{{ $theme->table->trBodyStyle }}"
+                            class="{{ $class }}"
+                            wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
+                        >
+                @endif
 
-                            @includeWhen(isset($setUp['responsive']), powerGridThemeRoot().'.toggle-detail-responsive', [
-                                'theme' => $theme->table,
-                                'rowId' => $rowId,
-                                'view' => data_get($setUp, 'detail.viewIcon') ?? null
-                            ])
-                        @php
-                            $ruleRows         = $actionRulesClass->recoverFromAction('pg:rows', $row);
-                            $ruleDetailView   = data_get($ruleRows, 'detailView');
-                        @endphp
+                @includeWhen(isset($setUp['responsive']), powerGridThemeRoot().'.toggle-detail-responsive', [
+                    'theme' => $theme->table,
+                    'rowId' => $rowId,
+                    'view' => data_get($setUp, 'detail.viewIcon') ?? null
+                ])
 
-                        @includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot().'.toggle-detail', [
-                            'theme' => $theme->table,
-                            'view' => data_get($setUp, 'detail.viewIcon') ?? null
-                        ])
+                @php
+                    $ruleRows = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                    $ruleDetailView = data_get($ruleRows, 'detailView');
+                @endphp
 
-                        @if($checkbox)
-                            @php
-                                $rules            = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
-                                $ruleHide         = data_get($rules, 'hide');
-                                $ruleDisable      = data_get($rules, 'disable');
-                                $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
-                            @endphp
-                            @include('livewire-powergrid::components.checkbox-row', [
-                                'attribute' => $row->{$checkboxAttribute}
-                            ])
-                        @endif
+                @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
+                    powerGridThemeRoot() . '.toggle-detail',
+                    [
+                        'theme' => $theme->table,
+                        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+                    ]
+                )
 
-                        @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
+                @if ($checkbox)
+                    @php
+                        $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
+                        $ruleHide = data_get($rules, 'hide');
+                        $ruleDisable = data_get($rules, 'disable');
+                        $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
+                    @endphp
+                    @include('livewire-powergrid::components.checkbox-row', [
+                        'attribute' => $row->{$checkboxAttribute},
+                    ])
+                @endif
 
-                        <x-livewire-powergrid::actions
-                            :primary-key="$primaryKey"
-                            :tableName="$tableName"
-                            :theme="$theme"
-                            :row="$row"
-                            :actions="$actions"/>
-                    </tr>
-                    @if(isset($setUp['detail']))
-                        <template x-cloak
-                                  x-if="detailState">
-                            <tr>
-                                <td colspan="{{ (($checkbox) ? 1:0)
-                                        + ((isset($actions)) ? 1: 0)
-                                        + (count($columns))
-                                        + (data_get($setUp, 'detail.showCollapseIcon') ? 1: 0)
-                                        }}">
-                                    @if(isset($ruleDetailView[0]['detailView']))
-                                        @includeWhen(data_get($setUp, 'detail.state.'.$row->{$primaryKey}), $ruleDetailView[0]['detailView'], [
-                                            'id'      => $row->{$primaryKey},
-                                            'options' => array_merge(data_get($setUp, 'detail.options'), $ruleDetailView[0]['options'])
-                                        ])
-                                    @else
-                                        @includeWhen(data_get($setUp, 'detail.state.'.$row->{$primaryKey}), data_get($setUp, 'detail.view'), [
-                                            'id'      => $row->{$primaryKey},
-                                            'options' => data_get($setUp, 'detail.options')
-                                        ])
-                                    @endif
-                                </td>
-                            </tr>
-                        </template>
-                    @endif
-                    @if(isset($setUp['detail']))
-                </tbody>
+                @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
+
+                <x-livewire-powergrid::actions
+                    :primary-key="$primaryKey"
+                    :tableName="$tableName"
+                    :theme="$theme"
+                    :row="$row"
+                    :actions="$actions"
+                />
+                </tr>
+                @if (isset($setUp['detail']))
+                    <template
+                        x-cloak
+                        x-if="detailState"
+                    >
+                        <tr>
+                            <td
+                                colspan="{{ ($checkbox ? 1 : 0) +
+                                    (isset($actions) ? 1 : 0) +
+                                    count($columns) +
+                                    (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}">
+                                @if (isset($ruleDetailView[0]['detailView']))
+                                    @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),
+                                        $ruleDetailView[0]['detailView'],
+                                        [
+                                            'id' => $row->{$primaryKey},
+                                            'options' => array_merge(
+                                                data_get($setUp, 'detail.options'),
+                                                $ruleDetailView[0]['options']),
+                                        ]
+                                    )
+                                @else
+                                    @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),
+                                        data_get($setUp, 'detail.view'),
+                                        [
+                                            'id' => $row->{$primaryKey},
+                                            'options' => data_get($setUp, 'detail.options'),
+                                        ]
+                                    )
+                                @endif
+                            </td>
+                        </tr>
+                    </template>
+                @endif
+                @if (isset($setUp['detail']))
+                    </tbody>
                 @endif
 
                 @includeWhen(isset($setUp['responsive']) && data_get($setUp, 'responsive.showExpand'), 'livewire-powergrid::components.expand-container')

@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
+    Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
+    PowerGridColumns,
     PowerGridComponent,
-    PowerGridEloquent,
-    Traits\WithExport};
+    Traits\WithExport
+};
 
 class ExportTable extends PowerGridComponent
 {
@@ -50,11 +52,11 @@ class ExportTable extends PowerGridComponent
         return Dish::with('category');
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
         $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
 
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name');
     }

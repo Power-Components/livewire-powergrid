@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Footer,
     Header,
     PowerGrid,
-    PowerGridComponent,
-    PowerGridEloquent};
+    PowerGridColumns,
+    PowerGridComponent
+};
 
 class DishesSearchableRawTable extends PowerGridComponent
 {
@@ -49,9 +51,9 @@ class DishesSearchableRawTable extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name', DB::raw($searchableRaw));
     }
 
-    public function addColumns(): PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent()
+        return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
             ->addColumn('produced_at_formatted');

@@ -22,14 +22,18 @@ it('add rule \'bladeComponent\' when dish-id == 5', function (string $component,
         ])
         ->set('setUp.footer.perPage', 10)
         ->assertSeeHtmlInOrder([
-            '<svg dish-id="5"',
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />',
+            '<svg',
+            'dish-id="5"',
+            '<path',
+            'stroke-linecap="round"',
+            'stroke-linejoin="round"',
+            'd="M9 5l7 7-7 7"',
+            '/>',
         ])
         ->assertDontSeeHtml('<svg dish-id="1"')
         ->set('search', 'Polpetone Filé Mignon')
         ->assertDontSeeHtml([
             '<svg dish-id="9"',
-            '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />',
         ]);
 })->with('blade_component_themes_with_join')->group('actionRules');
 
