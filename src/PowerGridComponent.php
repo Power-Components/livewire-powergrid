@@ -83,7 +83,7 @@ class PowerGridComponent extends Component
 
     public bool $showFilters = false;
 
-    protected ?ProcessDataSourceToRender $processDataSourceInstance = null;
+    protected ?ProcessDataSource $processDataSourceInstance = null;
 
     public function mount(): void
     {
@@ -304,7 +304,7 @@ class PowerGridComponent extends Component
      */
     public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
     {
-        $this->processDataSourceInstance = ProcessDataSourceToRender::fillData($this);
+        $this->processDataSourceInstance = ProcessDataSource::fillData($this);
 
         return $this->processDataSourceInstance->get();
     }
