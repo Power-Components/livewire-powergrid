@@ -204,12 +204,12 @@ class Builder
         $this->query = $query;
     }
 
-    private function isSearchableColumn(Column|\stdClass $column): bool
+    private function isSearchableColumn(Column|\stdClass|array $column): bool
     {
         return boolval(data_get($column, 'searchable')) || strval(data_get($column, 'searchableRaw')) !== '';
     }
 
-    private function getDataField(Column|\stdClass $column): string
+    private function getDataField(Column|\stdClass|array $column): string
     {
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }
