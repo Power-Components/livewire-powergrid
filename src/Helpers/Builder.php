@@ -73,7 +73,13 @@ class Builder
                     $filter($query, $filters, $filterType, $field, $value);
                 } else {
                     foreach ($column as $field => $value) {
-                        $filter($query, $filters, $filterType, $field, $value);
+                        if (is_array($value) && $filterType === 'input_text') {
+                            foreach ($value as $arrayField => $arrayValue) {
+                                $filter($query, $filters, $filterType, $arrayField, $arrayValue);
+                            }
+                        } else {
+                            $filter($query, $filters, $filterType, $field, $value);
+                        }
                     }
                 }
             });
