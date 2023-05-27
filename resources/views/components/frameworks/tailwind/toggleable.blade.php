@@ -47,7 +47,7 @@
             <div @class([
                 'text-xs px-4 w-auto py-1 text-center rounded-md',
                 'bg-red-200 text-red-800' => $value === 0,
-                'bg-blue-200 text-blue-800' => $value === 0,
+                'bg-blue-200 text-blue-800' => $value === 1,
             ])>
                 {{ $value === 0 ? $falseValue : $trueValue }}
             </div>
