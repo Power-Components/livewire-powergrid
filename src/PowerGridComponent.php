@@ -93,10 +93,6 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
-        if (isBootstrap5()) {
-            unset($this->setUp['detail']);
-        }
-
         $this->columns = $this->columns();
 
         $this->resolveTotalRow();
