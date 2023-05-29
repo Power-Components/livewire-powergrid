@@ -149,3 +149,16 @@ table thead {
     hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
     text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
 }
+
+.bs5-rotate-0 {
+    transition: all 0.3s ease;
+    transform: rotate(0deg);
+}
+.bs5-rotate-90 {
+    transition: all 0.3s ease;
+    transform: rotate(90deg);
+}
+.bs5-w-h-1_5em {
+    width: 1.5em;
+    height: 1.5em;
+}
