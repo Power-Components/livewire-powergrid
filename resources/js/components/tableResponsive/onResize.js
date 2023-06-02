@@ -1,6 +1,3 @@
-const EXPAND_ITEM_CONTAINER = ''
-const SCROLLBAR_WIDTH = 0
-
 function showAllItems(element) {
     element.querySelectorAll(`tbody tr td`).forEach((el) => { el.classList.remove('hidden') })
     element.querySelectorAll(`thead tr th`).forEach((el) => { el.classList.remove('hidden') })
@@ -11,11 +8,13 @@ function getTableUtilWidth(element) {
 
     const fixedItems = element.querySelectorAll('table thead tr:nth-child(1) th[fixed]');
 
+    const elementWidth = getElementWidth(element);
+
     fixedItems.forEach((element) => {
-        fixedSpace += (element.clientWidth - 4)
+        fixedSpace += getElementWidth(element);
     })
 
-    return element.clientWidth - fixedSpace - SCROLLBAR_WIDTH;
+    return elementWidth - fixedSpace;
 }
 
 function getItemsToHide(element, tableWidth) {
@@ -28,11 +27,11 @@ function getItemsToHide(element, tableWidth) {
     const itemsToHide = []
 
     for (const [index, item] of items.entries()) {
+        const itemWidth = getElementWidth(item);
+
         if (item.getAttribute('fixed') !== null) {
             continue
         }
-
-        const itemWidth = item.clientWidth - 1;
 
         if (fitsMoreITems && calc <= tableWidth && (calc + itemWidth <= tableWidth)) {
             calc += itemWidth;
@@ -83,6 +82,10 @@ function fillTableExpand(element, hideItems) {
             }
         }
     }
+}
+
+function getElementWidth(element) {
+    return parseFloat(element.getBoundingClientRect().width.toFixed(2))
 }
 
 export default function (element) {
