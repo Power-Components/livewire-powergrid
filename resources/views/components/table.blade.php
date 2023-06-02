@@ -224,7 +224,7 @@
                     </tbody>
                 @endif
 
-                @includeWhen(isset($setUp['responsive']) && data_get($setUp, 'responsive.showExpand'), 'livewire-powergrid::components.expand-container')
+                @includeWhen(isset($setUp['responsive']), 'livewire-powergrid::components.expand-container')
             @endforeach
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')

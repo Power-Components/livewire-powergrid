@@ -21,11 +21,4 @@ final class Responsive
 
         return $this;
     }
-
-    public function showExpand(): static
-    {
-        $this->showExpand = true;
-
-        return $this;
-    }
 }
