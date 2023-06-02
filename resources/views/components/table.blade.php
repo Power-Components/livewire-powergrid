@@ -41,7 +41,9 @@
 
             @if (isset($actions) && count($actions))
                 @php
-                    $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array('actions', data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
+                    $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
+
+                    $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
                 <th

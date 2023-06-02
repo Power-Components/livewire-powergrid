@@ -6,9 +6,9 @@ final class Responsive
 {
     public string $name = 'responsive';
 
-    public array $fixedColumns = ['id', 'actions'];
+    public const ACTIONS_COLUMN_NAME = 'actions';
 
-    public bool $showExpand = false;
+    public array $fixedColumns = ['id', self::ACTIONS_COLUMN_NAME];
 
     public static function make(): static
     {
