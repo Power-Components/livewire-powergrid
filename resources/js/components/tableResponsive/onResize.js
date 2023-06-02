@@ -75,9 +75,9 @@ function fillTableExpand(element, hideItems) {
             const rowValue = row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.innerHTML
 
             if (!expandContainer.querySelector(`div[data-expand-item-${hideItem}]`)) {
-                expandContainer.innerHTML += `<div data-expand-item-${hideItem}>
-                    <span class="font-bold">${rowName}:</span>
-                    <span>${rowValue}</span>
+                expandContainer.innerHTML += `<div class="responsive-row-expand-item-container" data-expand-item-${hideItem}>
+                    <span class="font-bold responsive-row-expand-item-name">${rowName}:</span>
+                    <span class="responsive-row-expand-item-value">${rowValue}</span>
                 </div>`
             }
         }
