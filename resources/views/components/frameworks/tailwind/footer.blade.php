@@ -1,13 +1,13 @@
 <div>
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
     <div @class([
-        'justify-between' => data_get($setUp, 'footer.perPage'),
+        'justify-between' => filled(data_get($setUp, 'footer.perPage')),
         'justify-end' => blank(data_get($setUp, 'footer.perPage')),
         'md:flex md:flex-row w-full items-center py-3 bg-white overflow-y-auto pl-2 pr-2 relative
-                 dark:bg-pg-primary-700' => blank(
+                     dark:bg-pg-primary-700' => blank(
             data_get($setUp, 'footer.pagination')),
     ])>
-        @if (data_get($setUp, 'footer.perPage') &&
+        @if (filled(data_get($setUp, 'footer.perPage')) &&
                 count(data_get($setUp, 'footer.perPageValues')) > 1 &&
                 blank(data_get($setUp, 'footer.pagination')))
             <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
