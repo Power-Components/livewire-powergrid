@@ -26,6 +26,7 @@ export default () => ({
             })
         })
     },
+
     handleResize() {
         const element = this.$el
 
@@ -35,6 +36,7 @@ export default () => ({
 
         if (!this.hasHiddenElements) this.expanded = null
     },
+
     observeElement() {
         const resizeObserver = new ResizeObserver(entries => {
             entries.forEach(entry => {
@@ -47,38 +49,3 @@ export default () => ({
         resizeObserver.observe(this.$el);
     }
 })
-
-
-
-
-
-
-// import Alpine from 'alpinejs';
-
-// Alpine.directive('salada', (el, { modifiers, expression }, { Alpine, cleanup }) => {
-//     const resizeObserver = new ResizeObserver(entries => {
-//         entries.forEach(entry => {
-//             if (entry.contentRect.width > 0) {
-//                 onResize(el)
-//             }
-//         });
-//     });
-
-//     Alpine.nextTick(() => {
-//         resizeObserver.observe(el);
-//     })
-
-//     window.addEventListener('loading', function({ detail }) {
-//         const { loading } = detail
-
-//         if (loading) {
-//             return;
-//         }
-
-//         callback();
-//     })
-
-//     cleanup(() => {
-//         resizeObserver.disconnect();
-//     })
-// })
