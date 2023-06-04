@@ -68,8 +68,6 @@ function fillTableExpand(element, hideItems) {
 
             if (!expandContainer) continue
 
-            // if (!row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.textContent.trim()) continue
-
             const rowName = element.querySelector(`table thead tr th:nth-child(${hideItem})`).textContent.replace(/[^a-zA-Z0-9\s]/g, '').trim()
 
             const rowValue = row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.innerHTML
