@@ -36,9 +36,9 @@
 
             @if (isset($actions) && count($actions))
                 <th
-                    class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
+                    class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
                     scope="col"
-                    style="{{ $theme->table->thStyle }}"
+                    style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
                     colspan="{{ count($actions) }}"
                     wire:key="{{ md5('actions') }}"
                 >

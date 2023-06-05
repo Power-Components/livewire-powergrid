@@ -28,6 +28,8 @@ class Tailwind extends ThemeBase
         return Theme::table('rounded-lg min-w-full border border-pg-primary-200 dark:bg-pg-primary-600 dark:border-pg-primary-500')
             ->div('my-3 bg-white shadow-lg rounded-lg relative')
             ->thead('shadow-sm bg-pg-primary-100 dark:bg-pg-primary-800 border border-pg-primary-200 dark:border-pg-primary-500')
+            ->thAction('!font-bold text-right')
+            ->tdAction('')
             ->tr('')
             ->trFilters('bg-white shadow-sm dark:bg-pg-primary-700')
             ->th('font-semibold px-2 pr-4 py-3 text-left text-xs font-semibold text-pg-primary-700 tracking-wider whitespace-nowrap dark:text-pg-primary-300')
