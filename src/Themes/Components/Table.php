@@ -52,6 +52,14 @@ class Table
 
     public string $tdBodyEmptyStyle = '';
 
+    public string $thActionClass = '';
+
+    public string $thActionStyle = '';
+
+    public string $tdActionClass = '';
+
+    public string $tdActionStyle = '';
+
     /**
      * Table constructor.
      * @param string $tableClass
@@ -147,6 +155,22 @@ class Table
     {
         $this->tdBodyEmptyClass = $attrClass;
         $this->tdBodyEmptyStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function thAction(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->thActionClass = $attrClass;
+        $this->thActionStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function tdAction(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->tdActionClass = $attrClass;
+        $this->tdActionStyle = $attrStyle;
 
         return $this;
     }

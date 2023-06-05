@@ -10,15 +10,15 @@
 <div>
     @if (isset($actions) && count($actions) && $row !== '')
         <td
-            class="pg-actions {{ $theme->table->tdBodyClass }}"
-            style="{{ $theme->table->tdBodyStyle }}"
+            class="pg-actions {{ $theme->table->tdBodyClass. ' ' .$theme->table->tdActionClass }}"
+            style="{{ $theme->table->tdBodyStyle .' '.$theme->table->tdActionStyle }}"
         >
 
             @foreach ($actions as $key => $action)
                 @php
                     $customAction = null;
                     $actionClass = new \PowerComponents\LivewirePowerGrid\Helpers\Actions($action, $row, $primaryKey, $theme);
-                    
+
                 @endphp
 
                 @if (!boolval($actionClass->ruleHide) && empty($customAction))
