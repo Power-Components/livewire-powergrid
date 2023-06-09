@@ -16,6 +16,10 @@ final class Column
 
     public string $bodyClass = '';
 
+    public string $contentClassField = '';
+
+    public array $contentClasses = [];
+
     public string $bodyStyle = '';
 
     public string $dataField = '';
@@ -351,6 +355,20 @@ final class Column
             'enabled' => $hasPermission,
             'label'   => $label,
         ];
+
+        return $this;
+    }
+
+    public function contentClassField(string $dataField = ''): Column
+    {
+        $this->contentClassField = $dataField;
+
+        return $this;
+    }
+
+    public function contentClasses(array $array): Column
+    {
+        $this->contentClasses = $array;
 
         return $this;
     }

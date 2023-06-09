@@ -47,10 +47,10 @@
                 @endphp
 
                 <th
-                    class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
                     @if($isActionFixedOnResponsive) fixed @endif
+                    class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
                     scope="col"
-                    style="{{ $theme->table->thStyle }}"
+                    style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
                     colspan="{{ count($actions) }}"
                     wire:key="{{ md5('actions') }}"
                 >

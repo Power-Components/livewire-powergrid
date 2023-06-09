@@ -156,6 +156,19 @@ trait HasFilter
                     return (array) $filter;
                 }));
 
+                $filterForColumn->each(function ($filter) {
+                    if ($filter->className === 'PowerComponents\LivewirePowerGrid\Filters\FilterDynamic' &&
+                        isset($filter->attributes)) {
+                        $attributes = array_values($filter->attributes);
+
+                        foreach ($attributes as $value) {
+                            if (is_string($value) && str_contains($value, 'filters.')) {
+                                data_set($this->filters, str($value)->replace('filters.', ''), null);
+                            }
+                        }
+                    }
+                });
+
                 continue;
             }
 

@@ -27,7 +27,7 @@
                     <span style="min-width: 25px;">@lang('XLSX')</span>
                     <a
                         class="text-black-50"
-                        wire:click="exportToXLS()"
+                        wire:click.prevent="exportToXLS"
                         href="#"
                     >
                         @lang('livewire-powergrid::datatable.labels.all')
@@ -36,7 +36,7 @@
                         /
                         <a
                             class="text-black-50"
-                            wire:click="exportToXLS(true)"
+                            wire:click.prevent="exportToXLS(true)"
                             href="#"
                         >
                             @lang('livewire-powergrid::datatable.labels.selected')
@@ -51,7 +51,7 @@
                     <span>@lang('Csv')</span>
                     <a
                         class="text-black-50"
-                        wire:click="exportToCsv"
+                        wire:click.prevent="exportToCsv"
                         href="#"
                     >
                         @lang('livewire-powergrid::datatable.labels.all')
@@ -60,7 +60,7 @@
                         /
                         <a
                             class="text-black-50"
-                            wire:click="exportToCsv(true)"
+                            wire:click.prevent="exportToCsv(true)"
                             href="#"
                         >
                             @lang('livewire-powergrid::datatable.labels.selected')

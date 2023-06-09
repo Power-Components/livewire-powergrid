@@ -54,13 +54,13 @@ return [
         'completed' => 'Ekspor selesai! File anda siap diunduh',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'Menampilkan semua data, termasuk yang telah dihapus',
+        'message_only_trashed' => 'Menampilkan data yang telah dihapus',
+        'without_trashed'      => 'Tanpa data yang dihapus',
+        'with_trashed'         => 'Dengan data yang dihapus',
+        'only_trashed'         => 'Hanya data yang dihapus',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Pengurutan ganda diaktifkan',
     ],
 ];

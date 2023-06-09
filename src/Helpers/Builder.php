@@ -66,14 +66,30 @@ class Builder
                     is_string(key($column[key($column)])) &&
                     count($column[key($column)]) === 1
                 ) {
-                    $field = key(Arr::dot($column));
+                    if (count($column) > 1) {
+                        foreach ($column as $tableName => $columnValue) {
+                            $field = key(Arr::dot($columnValue));
 
-                    $value = Arr::dot($column)[$field];
+                            $value = Arr::dot($columnValue)[$field];
 
-                    $filter($query, $filters, $filterType, $field, $value);
+                            $filter($query, $filters, $filterType, $tableName . '.' . $field, $value);
+                        }
+                    } else {
+                        $field = key(Arr::dot($column));
+
+                        $value = Arr::dot($column)[$field];
+
+                        $filter($query, $filters, $filterType, $field, $value);
+                    }
                 } else {
                     foreach ($column as $field => $value) {
-                        $filter($query, $filters, $filterType, $field, $value);
+                        if (is_array($value) && $filterType === 'input_text') {
+                            foreach ($value as $arrayField => $arrayValue) {
+                                $filter($query, $filters, $filterType, $arrayField, $arrayValue);
+                            }
+                        } else {
+                            $filter($query, $filters, $filterType, $field, $value);
+                        }
                     }
                 }
             });

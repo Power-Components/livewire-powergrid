@@ -36,7 +36,6 @@ document.addEventListener('alpine:init', () => {
             })
         },
         add(value, tableName) {
-            value = Number(value)
             if(typeof this.selected[tableName] == 'undefined') {
                this.selected[tableName] = []
             }
