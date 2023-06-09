@@ -118,7 +118,7 @@
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
 
-                    $rowId = $row->$primaryKey;
+                    $rowId = $row->{$primaryKey};
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 

@@ -93,6 +93,10 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
+        if (array_key_exists('detail', $this->setUp) && array_key_exists('responsive', $this->setUp)) {
+            throw new Exception('The Feature Responsive cannot be used with Detail');
+        }
+
         $this->columns = $this->columns();
 
         $this->resolveTotalRow();

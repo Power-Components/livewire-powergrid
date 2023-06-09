@@ -22,7 +22,7 @@ function getItemsToHide(element, tableWidth) {
 
     let calc = 0;
 
-    let fitsMoreITems = true;
+    let fitsMoreItems = true;
 
     const itemsToHide = []
 
@@ -33,11 +33,11 @@ function getItemsToHide(element, tableWidth) {
             continue
         }
 
-        if (fitsMoreITems && calc <= tableWidth && (calc + itemWidth <= tableWidth)) {
+        if (fitsMoreItems && calc <= tableWidth && (calc + itemWidth <= tableWidth)) {
             calc += itemWidth;
         } else {
             itemsToHide.push(index + 1)
-            fitsMoreITems = false
+            fitsMoreItems = false
         }
     }
 

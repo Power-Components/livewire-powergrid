@@ -115,12 +115,5 @@
         @if (isset($actions) && count($actions))
             <td colspan="{{ count($actions) }}"></td>
         @endif
-        <tbody expand wire:key='{{ uniqid() }}'>
-            <tr>
-                <td colspan="400">
-                    <div class="flex gap-x-6 gap-y-2 flex-wrap p-2"></div>
-                </td>
-            </tr>
-        </tbody>
     </tr>
 @endif

@@ -7,12 +7,7 @@ export default () => ({
     hasHiddenElements: false,
 
     toggleExpanded(index) {
-        if (this.expanded == index) {
-            this.expanded = null
-        } else {
-            this.expanded = index
-        }
-
+        this.expanded = this.expanded == index ? null : index
     },
 
     init() {
