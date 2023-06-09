@@ -8,7 +8,9 @@ final class Responsive
 
     public const ACTIONS_COLUMN_NAME = 'actions';
 
-    public array $fixedColumns = ['id', self::ACTIONS_COLUMN_NAME];
+    public const CHECKBOX_COLUMN_NAME = 'checkbox';
+
+    public array $fixedColumns = ['id', self::CHECKBOX_COLUMN_NAME, self::ACTIONS_COLUMN_NAME];
 
     public static function make(): static
     {
