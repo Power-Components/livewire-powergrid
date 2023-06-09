@@ -19,7 +19,12 @@
                 </th>
             @endif
 
-            @if ($checkbox)
+            @isset($setUp['responsive'])
+                <th fixed x-show="hasHiddenElements" class="font-medium p-4 pr-8 pt-0 pb-3 text-slate-200 text-left">
+                </th>
+            @endisset
+
+            @if($checkbox)
                 <x-livewire-powergrid::checkbox-all
                     :checkbox="$checkbox"
                     :theme="$theme->checkbox"
@@ -35,7 +40,14 @@
             @endforeach
 
             @if (isset($actions) && count($actions))
+                @php
+                    $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
+
+                    $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
+                @endphp
+
                 <th
+                    @if($isActionFixedOnResponsive) fixed @endif
                     class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
                     scope="col"
                     style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
@@ -106,6 +118,8 @@
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
 
+                    $rowId = $row->{$primaryKey};
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
                     if (filled($ruleSetAttribute)) {
@@ -130,6 +144,12 @@
                             wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
                         >
                 @endif
+
+                @includeWhen(isset($setUp['responsive']), powerGridThemeRoot().'.toggle-detail-responsive', [
+                    'theme' => $theme->table,
+                    'rowId' => $rowId,
+                    'view' => data_get($setUp, 'detail.viewIcon') ?? null
+                ])
 
                 @php
                     $ruleRows = $actionRulesClass->recoverFromAction('pg:rows', $row);
@@ -203,6 +223,8 @@
                 @if (isset($setUp['detail']))
                     </tbody>
                 @endif
+
+                @includeWhen(isset($setUp['responsive']), 'livewire-powergrid::components.expand-container')
             @endforeach
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
