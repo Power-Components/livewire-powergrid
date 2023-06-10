@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
 use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
@@ -191,17 +192,30 @@ class Builder
 
         foreach ($columns as $nestedTable => $nestedColumns) {
             if (is_array($nestedColumns)) {
-                if ($query->getRelation($nestedTable) != '') {
-                    $nestedTableWithDot = $table . '.' . $nestedTable;
-                    $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $query) use ($nestedTableWithDot, $nestedColumns, $search) {
-                        foreach ($nestedColumns as $nestedColumn) {
-                            $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                            $query->when(
-                                $search,
-                                fn (EloquentBuilder $query) => $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $search . '%')
-                            );
-                        }
-                    });
+                try {
+                    if ($query->getRelation($nestedTable) != '') {
+                        $nestedTableWithDot = $table . '.' . $nestedTable;
+                        $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $query) use ($nestedTableWithDot, $nestedColumns, $search) {
+                            foreach ($nestedColumns as $nestedColumn) {
+                                $search = $this->getBeforeSearchMethod($nestedColumn, $search);
+                                $query->when(
+                                    $search,
+                                    fn (EloquentBuilder $query) => $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $search . '%')
+                                );
+                            }
+                        });
+                    }
+                } catch (RelationNotFoundException $e) {
+                    $query->leftJoin($nestedTable, "$table.$nestedTable" . "_id", '=', "$nestedTable.id")
+                        ->orWhere(function (EloquentBuilder $query) use ($nestedTable, $nestedColumns, $search) {
+                            foreach ($nestedColumns as $nestedColumn) {
+                                $search = $this->getBeforeSearchMethod($nestedColumn, $search);
+                                $query->when(
+                                    $search,
+                                    fn (EloquentBuilder $query) => $query->where("$nestedTable.$nestedColumn", SqlSupport::like($query), '%' . $search . '%')
+                                );
+                            }
+                        });
                 }
 
                 continue;
