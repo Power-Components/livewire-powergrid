@@ -2,9 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder,
+    RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\RelationNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
 use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
