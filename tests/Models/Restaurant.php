@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -11,21 +12,16 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class Category extends Model
+class Restaurant extends Model
 {
-    protected $table = 'categories';
+    protected $table = 'restaurants';
 
     protected $fillable = [
         'name',
     ];
 
-    public function dishes()
+    public function chefs(): HasMany
     {
-        return $this->hasMany(Dish::class, 'category_id');
-    }
-
-    public function parentCategory()
-    {
-        return $this->belongsTo(ParentCategory::class, 'parent_category_id');
+        return $this->hasMany(Chef::class, 'restaurant_id');
     }
 }

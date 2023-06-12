@@ -76,6 +76,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish A',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 100.00,
             'stored_at'   => '1',
             'calories'    => 224,
@@ -87,6 +88,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish B',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 200.10,
             'stored_at'   => '2',
             'calories'    => 224,
@@ -98,6 +100,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish C',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 300.50,
             'stored_at'   => '3',
             'calories'    => 224,
@@ -109,6 +112,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish D',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 400.00,
             'stored_at'   => '4',
             'calories'    => 224,
@@ -120,6 +124,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish E',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 500.00,
             'stored_at'   => '5',
             'calories'    => 224,
@@ -131,6 +136,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish F',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 600.00,
             'stored_at'   => '6',
             'calories'    => 224,
@@ -142,6 +148,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish G',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 700.00,
             'stored_at'   => '7',
             'calories'    => 224,
@@ -153,6 +160,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Zebra Dish H',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 7500.00,
             'stored_at'   => '8',
             'calories'    => 224,
@@ -164,6 +172,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish I',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 800.00,
             'stored_at'   => '9',
             'calories'    => 224,
@@ -175,6 +184,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish J',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 900.00,
             'stored_at'   => '10',
             'calories'    => 224,
@@ -186,6 +196,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish K',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 1000.00,
             'stored_at'   => '1b',
             'calories'    => 224,
@@ -197,6 +208,7 @@ function dishesForWithSum(): array
         [
             'name'        => 'Dish L',
             'category_id' => 7,
+            'chef_id'     => 1,
             'price'       => 2000.00,
             'stored_at'   => '1a',
             'calories'    => 224,

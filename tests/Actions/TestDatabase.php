@@ -27,6 +27,8 @@ class TestDatabase
     {
         Schema::dropIfExists('dishes');
         Schema::dropIfExists('categories');
+        Schema::dropIfExists('chefs');
+        Schema::dropIfExists('restaurants');
     }
 
     public static function migrate(): void
@@ -42,6 +44,7 @@ class TestDatabase
         Schema::create('dishes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained();
+            $table->foreignId('chef_id')->nullable();
             $table->string('name');
             $table->double('price');
             $table->integer('calories');
@@ -56,6 +59,19 @@ class TestDatabase
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Schema::create('chefs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('restaurant_id');
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        Schema::create('restaurants', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
     }
 
     public static function seed(array $dishes = []): void
@@ -64,6 +80,8 @@ class TestDatabase
 
         DB::table('categories')->truncate();
         DB::table('dishes')->truncate();
+        DB::table('chefs')->truncate();
+        DB::table('restaurants')->truncate();
 
         Schema::enableForeignKeyConstraints();
 
@@ -75,6 +93,17 @@ class TestDatabase
             ['name' => 'Massas'],
             ['name' => 'Sobremesas'],
             ['name' => 'Sopas'],
+        ]);
+
+        DB::table('chefs')->insert([
+            [
+                'name'          => 'John Smith',
+                'restaurant_id' => 1,
+            ],
+        ]);
+
+        DB::table('restaurants')->insert([
+            ['name' => 'Not McDonalds'],
         ]);
 
         if (empty($dishes)) {
@@ -90,6 +119,7 @@ class TestDatabase
             [
                 'name'        => 'Pastel de Nata',
                 'category_id' => 6,
+                'chef_id'     => 1,
                 'price'       => 10.00,
                 'in_stock'    => true,
                 'produced_at' => '2021-01-01 00:00:00',
@@ -100,6 +130,7 @@ class TestDatabase
             [
                 'name'        => 'Peixada da chef Nábia',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 20.50,
                 'in_stock'    => true,
                 'produced_at' => '2021-02-02 00:00:00',
@@ -109,6 +140,7 @@ class TestDatabase
             [
                 'name'        => 'Carne Louca',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 30.00,
                 'in_stock'    => true,
                 'produced_at' => '2021-03-03 00:00:00',
@@ -118,6 +150,7 @@ class TestDatabase
             [
                 'name'        => 'Bife à Rolê',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 40.50,
                 'in_stock'    => true,
                 'produced_at' => '2021-04-04 00:00:00',
@@ -126,6 +159,7 @@ class TestDatabase
             [
                 'name'        => 'Francesinha vegana',
                 'category_id' => 2,
+                'chef_id'     => 1,
                 'price'       => 50.00,
                 'in_stock'    => true,
                 'produced_at' => '2021-05-05 00:00:00',
@@ -133,6 +167,7 @@ class TestDatabase
             [
                 'name'        => 'Francesinha',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 60.50,
                 'in_stock'    => false,
                 'produced_at' => '2026-06-06 00:00:00',
@@ -140,6 +175,7 @@ class TestDatabase
             [
                 'name'        => 'Barco-Sushi da Sueli',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 70.00,
                 'in_stock'    => false,
                 'produced_at' => '2021-07-07 19:59:59',
@@ -153,6 +189,7 @@ class TestDatabase
             [
                 'name'        => 'Barco-Sushi Simples',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 80.40,
                 'in_stock'    => false,
                 'produced_at' => '2021-08-08 00:00:00',
@@ -167,6 +204,7 @@ class TestDatabase
             [
                 'name'        => 'Polpetone Filé Mignon',
                 'category_id' => 1,
+                'chef_id'     => 1,
                 'price'       => 90.10,
                 'in_stock'    => false,
                 'produced_at' => '2021-09-09 00:00:00',
@@ -174,15 +212,16 @@ class TestDatabase
             [
                 'name'        => 'борщ',
                 'category_id' => 7,
+                'chef_id'     => 1,
                 'price'       => 100.90,
                 'in_stock'    => false,
                 'produced_at' => '2021-10-10 00:00:00',
             ],
-            ['name' => 'Bife à Parmegiana', 'category_id' => 1],
-            ['name' => 'Berinjela à Parmegiana', 'category_id' => 4],
-            ['name' => 'Almôndegas ao Sugo', 'category_id' => 1],
-            ['name' => 'Filé Mignon à parmegiana', 'category_id' => 1],
-            ['name' => 'Strogonoff de Filé Mignon', 'category_id' => 1],
+            ['name' => 'Bife à Parmegiana', 'category_id' => 1, 'chef_id' => 1],
+            ['name' => 'Berinjela à Parmegiana', 'category_id' => 4, 'chef_id' => 1],
+            ['name' => 'Almôndegas ao Sugo', 'category_id' => 1, 'chef_id' => 1],
+            ['name' => 'Filé Mignon à parmegiana', 'category_id' => 1, 'chef_id' => 1],
+            ['name' => 'Strogonoff de Filé Mignon', 'category_id' => 1, 'chef_id' => 1],
         ]);
 
         $faker = fake();
@@ -226,6 +265,10 @@ class TestDatabase
 
             if (!isset($dish['additional'])) {
                 $dish['additional'] = '{}';
+            }
+
+            if (!isset($dish['chef_id'])) {
+                $dish['chef_id'] = 1;
             }
 
             return $dish;
