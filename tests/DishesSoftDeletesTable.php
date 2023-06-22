@@ -72,21 +72,21 @@ class DishesSoftDeletesTable extends PowerGridComponent
         ];
     }
 
-//    public function actions(): array
-//    {
-//        return [
-//            Button::add('edit-stock')
-//                ->caption('<div id="edit">Edit</div>')
-//                ->class('text-center')
-//                ->openModal('edit-stock', ['dishId' => 'id']),
-//
-//            Button::add('destroy')
-//                ->caption(__('Delete'))
-//                ->class('text-center')
-//                ->emit('deletedEvent', ['dishId' => 'id'])
-//                ->method('delete'),
-//        ];
-//    }
+    //    public function actions(): array
+    //    {
+    //        return [
+    //            Button::add('edit-stock')
+    //                ->caption('<div id="edit">Edit</div>')
+    //                ->class('text-center')
+    //                ->openModal('edit-stock', ['dishId' => 'id']),
+    //
+    //            Button::add('destroy')
+    //                ->caption(__('Delete'))
+    //                ->class('text-center')
+    //                ->emit('deletedEvent', ['dishId' => 'id'])
+    //                ->method('delete'),
+    //        ];
+    //    }
 
     public function bootstrap()
     {
