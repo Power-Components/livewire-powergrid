@@ -160,22 +160,16 @@ it('properly filters by bool true - using collection', function (string $compone
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_collection');
 
-it('properly filters by bool true - using collection - custom builder', function (string $component, string $theme) {
-    $component = livewire($component, [
+it('properly filters by bool true - using collection - custom builder', function (string $componentName, string $theme) {
+    $component = livewire($componentName, [
         'testFilters' => [
-            Filter::boolean('in_stock')
+            Filter::boolean('in_stock', 'dishes.in_stock')
                 ->label('sim', 'não')
-                ->collection(function ($collection, $values) {
-                    expect($values)->toBe('true')
-                        ->and($collection)->toBeInstanceOf(\Illuminate\Support\Collection::class);
-
-                    return $collection->where('id', 1);
-                }),
-
         ],
     ])
         ->call($theme)
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'dishes.in_stock\', $event.target.value, \'In Stock\')"')
+        ->assertSeeHtml('wire:model.lazy="filters.boolean.dishes.in_stock"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -186,6 +180,49 @@ it('properly filters by bool true - using collection - custom builder', function
         ->assertDontSee('Name 3')
         ->assertDontSee('Name 4')
         ->assertDontSee('Name 5');
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes_collection');
+
+it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::boolean('in_stock', 'dishes.in_stock')
+                ->label('sim', 'não')
+                ->collection(function ($collection, $values) {
+                    expect($values)->toBe('true')
+                        ->and($collection)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+                    return $collection->where('id', 1);
+                }),
+        ],
+    ])
+        ->call($theme)
+        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'dishes.in_stock\', $event.target.value, \'In Stock\')"');
+
+    expect($component->filters)
+        ->toBeEmpty();
+
+    $component->set('filters', [
+        'boolean' => [
+            'dishes' => [
+                'in_stock' => 'true',
+            ],
+        ],
+    ])
+        ->assertSee('Name 1')
+        ->assertDontSee('Name 2')
+        ->assertDontSee('Name 3')
+        ->assertDontSee('Name 4')
+        ->assertDontSee('Name 5');
+
+    expect($component->filters)
+        ->toMatchArray([
+            'boolean' => [
+                'dishes' => [
+                    'in_stock' => 'true',
+                ],
+            ],
+        ]);
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_collection');
 
