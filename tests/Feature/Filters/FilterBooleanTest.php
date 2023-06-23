@@ -164,7 +164,7 @@ it('properly filters by bool true - using collection - custom builder', function
     $component = livewire($componentName, [
         'testFilters' => [
             Filter::boolean('in_stock', 'dishes.in_stock')
-                ->label('sim', 'não')
+                ->label('sim', 'não'),
         ],
     ])
         ->call($theme)
