@@ -26,7 +26,7 @@ trait WithCheckbox
         if (!$this->checkboxAll) {
             $this->checkboxValues = [];
 
-            $this->dispatchBrowserEvent('pgBulkActions::clear', $this->tableName);
+          //  $this->dispatchBrowserEvent('pgBulkActions::clear', $this->tableName);
 
             return;
         }

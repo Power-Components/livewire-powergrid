@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Exportable
+use Livewire\Wireable;
+
+final class Exportable implements Wireable
 {
     public const TYPE_XLS = 'xlsx';
     public const TYPE_CSV = 'csv';
@@ -23,13 +25,9 @@ final class Exportable
 
     public array $batchExport = [];
 
-    public function __construct(public string $fileName = 'export')
-    {
-    }
-
     public static function make(string $fileName): self
     {
-        return new Exportable($fileName);
+        return new Exportable('');
     }
 
     public function type(string ...$types): self
@@ -95,5 +93,15 @@ final class Exportable
         data_set($this->batchExport, 'onConnection', $connection);
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

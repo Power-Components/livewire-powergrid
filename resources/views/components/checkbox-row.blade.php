@@ -13,9 +13,8 @@
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
-                        @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
-                           @else
-                           class="{{ $theme->checkbox->inputClass }}" @endif
+                        @if(isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
+                          @endif
                         disabled
                         type="checkbox"
                     >
@@ -30,12 +29,10 @@
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
-                        @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
-                           @else
-                           class="{{ $theme->checkbox->inputClass }}" @endif
+
                         type="checkbox"
                         x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
-                        wire:model.defer="checkboxValues"
+                        wire:model="checkboxValues"
                         value="{{ $attribute }}"
                     >
                 </label>

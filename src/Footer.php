@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Footer
+use Livewire\Wireable;
+
+final class Footer implements Wireable
 {
     public string $name = 'footer';
 
@@ -69,5 +71,15 @@ final class Footer
         $this->includeViewOnBottom = $viewPath;
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

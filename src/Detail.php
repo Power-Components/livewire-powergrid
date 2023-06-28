@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Detail
+use Livewire\Wireable;
+
+final class Detail implements Wireable
 {
     public string $name = 'detail';
 
@@ -58,5 +60,16 @@ final class Detail
         $this->collapseOthers = true;
 
         return $this;
+    }
+
+
+    public function toLivewire()
+    {
+        return $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

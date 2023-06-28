@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Collection;
 
-final class Column
+final class Column implements \Livewire\Wireable
 {
     public string $title = '';
 
@@ -65,7 +65,7 @@ final class Column
         'footer' => false,
     ];
 
-    public Collection $filters;
+    public ?Collection $filters = null;
 
     /**
      *
@@ -371,5 +371,15 @@ final class Column
         $this->contentClasses = $array;
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

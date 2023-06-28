@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Traits\Macroable;
+use Livewire\Wireable;
 
-final class Button
+final class Button implements Wireable
 {
     use Macroable;
 
@@ -236,5 +237,15 @@ final class Button
         $this->render = $closure;
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

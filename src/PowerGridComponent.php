@@ -29,7 +29,6 @@ class PowerGridComponent extends Component
     use WithPagination;
     use WithSorting;
     use WithCheckbox;
-    use HasAttributes;
     use HasFilter;
     use PersistData;
     use Listeners;

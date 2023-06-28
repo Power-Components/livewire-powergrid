@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Header
+use Livewire\Wireable;
+
+final class Header implements Wireable
 {
     public string $name = 'header';
 
@@ -82,5 +84,15 @@ final class Header
         $this->wireLoading = false;
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return new static($value);
     }
 }

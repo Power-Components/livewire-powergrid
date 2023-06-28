@@ -17,22 +17,31 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:livewire/next.git"
+        },
+        {
+            "type": "path",
+            "url": "/Users/luan.freitas/Documents/laradumps/playground/packages/pest-plugin-livewire"
+        }
+    ],
     "require": {
         "php": "^8.1",
-        "livewire/livewire": "^2.12.3",
         "doctrine/dbal": "^3.6.2|2.12.1",
-        "illuminate/support": "^9.0|^10.0"
+        "illuminate/support": "^9.0|^10.0",
+        "livewire/livewire": "dev-main"
     },
     "require-dev": {
         "pestphp/pest": "^2.6.1",
         "orchestra/testbench": "^7.0 | ^8.5.3",
         "composer/composer": "^2.5.5",
         "pestphp/pest-plugin-faker": "^2.0",
-        "pestphp/pest-plugin-livewire": "^2.0",
         "laravel/pint": "^1.10",
         "nunomaduro/larastan": "^2.6.0",
-        "laradumps/laradumps": "^1.12.1",
-        "spaze/phpstan-disallowed-calls": "^2.14.2"
+        "spaze/phpstan-disallowed-calls": "^2.14.2",
+        "pestphp/pest-plugin-livewire": "2.x-dev"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
