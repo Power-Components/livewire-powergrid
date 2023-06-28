@@ -149,7 +149,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('In Stock'))
-                ->toggleable(true, 'sim', 'não')
+                ->toggleable(true, 'yes', 'no')
                 ->field('in_stock'),
 
             Column::add()
