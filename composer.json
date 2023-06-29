@@ -41,7 +41,8 @@
         "laravel/pint": "^1.10",
         "nunomaduro/larastan": "^2.6.0",
         "spaze/phpstan-disallowed-calls": "^2.14.2",
-        "pestphp/pest-plugin-livewire": "2.x-dev"
+        "pestphp/pest-plugin-livewire": "2.x-dev",
+        "laradumps/laradumps-core": "^0.1.0"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"

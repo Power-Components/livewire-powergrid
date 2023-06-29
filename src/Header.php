@@ -93,6 +93,6 @@ final class Header implements Wireable
 
     public static function fromLivewire($value)
     {
-        return new static($value);
+        return $value;
     }
 }

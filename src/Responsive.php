@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Responsive
+use Livewire\Wireable;
+
+final class Responsive implements Wireable
 {
     public string $name = 'responsive';
 
@@ -22,5 +24,15 @@ final class Responsive
         $this->fixedColumns = [...$columnNames];
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

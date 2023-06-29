@@ -80,6 +80,6 @@ final class Footer implements Wireable
 
     public static function fromLivewire($value)
     {
-        return new static($value);
+        return $value;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Cache
+use Livewire\Wireable;
+
+final class Cache implements Wireable
 {
     public string $name = 'cache';
 
@@ -54,5 +56,15 @@ final class Cache
         $this->ttl = $time;
 
         return $this;
+    }
+
+    public function toLivewire()
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

@@ -62,14 +62,13 @@ final class Detail implements Wireable
         return $this;
     }
 
-
     public function toLivewire()
     {
-        return $this;
+        return (array) $this;
     }
 
     public static function fromLivewire($value)
     {
-        return new static($value);
+        return $value;
     }
 }

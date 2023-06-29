@@ -108,7 +108,7 @@ class PowerGridComponent extends Component
     protected function getCacheKeys(): array
     {
         return [
-            json_encode(['page' => $this->page]),
+         //   json_encode(['page' => $this->page]),
             json_encode(['search' => $this->search]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
