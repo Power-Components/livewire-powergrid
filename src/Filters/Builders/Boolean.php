@@ -48,7 +48,7 @@ class Boolean extends BuilderBase
         }
 
         if ($values != 'all') {
-            $values = ($values == 'true');
+            $values = ($values == 'true' || $values == '1');
 
             return $collection->where($field, '=', $values);
         }
