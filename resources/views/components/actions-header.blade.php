@@ -33,6 +33,11 @@
     >
         {!! $action->caption !!}
     </button>
+@elseif ($action->bladeComponent !== '')
+    <x-dynamic-component
+        :component="$action->bladeComponent"
+        :attributes="$parameters"
+    />
 @else
     @if (strtolower($action->method) !== 'get')
         <form
