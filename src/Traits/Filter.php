@@ -172,8 +172,8 @@ trait Filter
 
         $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
 
-        $startDate = Carbon::parse($startDate)->format('Y-m-d');
-        $endDate   = Carbon::parse($endDate)->format('Y-m-d');
+        $startDate = Carbon::parse($startDate)->setTimezone($filterTimezone)->format('Y-m-d');
+        $endDate   = Carbon::parse($endDate)->setTimezone($filterTimezone)->format('Y-m-d');
 
         $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
         $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
