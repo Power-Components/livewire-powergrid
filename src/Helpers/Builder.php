@@ -76,9 +76,9 @@ class Builder
                             $filter($query, $filters, $filterType, $tableName . '.' . $field, $value);
                         }
                     } else {
-                        $field = key(Arr::dot($column));
+                        $field = key(static::arrayToDot($column));
 
-                        $value = Arr::dot($column)[$field];
+                        $value = static::arrayToDot($column)[$field];
 
                         $filter($query, $filters, $filterType, $field, $value);
                     }
@@ -97,6 +97,26 @@ class Builder
         }
 
         return $this->query;
+    }
+
+    public static function arrayToDot($array, $prepend = '')
+    {
+        $results = [];
+
+        foreach ($array as $key => $value) {
+            if (is_array($value) && !empty($value)) {
+                if (is_numeric(array_key_first($value))) {
+                    $results[$prepend . $key] = $value;
+
+                    break;
+                }
+                $results = array_merge($results, static::CustomDot($value, $prepend . $key . '.'));
+            } else {
+                $results[$prepend . $key] = $value;
+            }
+        }
+
+        return $results;
     }
 
     public function filterContains(): Builder
