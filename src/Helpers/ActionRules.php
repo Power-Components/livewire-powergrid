@@ -80,7 +80,7 @@ class ActionRules
         return $actionRules;
     }
 
-    public function recoverFromButton(Button $button, \Illuminate\Database\Eloquent\Model|\stdClass|array $row): array
+    public function recoverFromButton(array|Button $button, \Illuminate\Database\Eloquent\Model|\stdClass|array $row): array
     {
         $actionRules = [];
 
@@ -89,8 +89,8 @@ class ActionRules
         $rules->each(function ($key) use (&$actionRules, $button) {
             $key = (array) $key;
 
-            if (isset($key[$button->action])) {
-                $rule = (array) $key[$button->action];
+            if (isset($key[data_get($button, 'action')])) {
+                $rule = (array) $key[data_get($button, 'action')];
 
                 foreach ($this->actionRules as $action) {
                     if (data_get($rule, "action.$action")) {

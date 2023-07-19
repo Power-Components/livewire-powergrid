@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Filters;
 
-class FilterBase
+use Livewire\Wireable;
+
+class FilterBase implements Wireable
 {
     public string $className = '';
 
@@ -55,5 +57,15 @@ class FilterBase
         $this->baseClass = $attrClass;
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

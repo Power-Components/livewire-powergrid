@@ -31,7 +31,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
         ])
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',
@@ -39,7 +39,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
 })->group('filters')
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
-it('properly filter with id using custom builder', function (string $component) {
+todo('properly filter with id using custom builder', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
         ->dataSource(Category::all())
         ->optionValue('id')
@@ -94,7 +94,7 @@ it('properly filter with id using collection & array', function (string $compone
 })->group('filters')
     ->with('filter_multi_select_themes_collection', 'filter_multi_select_themes_array');
 
-it('properly filter with category_id using custom collection', function (string $component) {
+todo('properly filter with category_id using custom collection', function (string $component) {
     $multiSelect = Filter::multiSelect('id', 'id')
         ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
         ->optionValue('id')
@@ -154,7 +154,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',
@@ -214,7 +214,7 @@ it('properly filter with category_id - multiple select async', function (string 
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',

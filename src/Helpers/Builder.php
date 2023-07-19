@@ -33,16 +33,19 @@ class Builder
 
     public function filter(): EloquentBuilder|QueryBuilder
     {
-        $filters = collect($this->powerGridComponent->filters())->flatten()->filter()->values();
+        $filters = collect($this->powerGridComponent->filters());
 
         if ($filters->isEmpty()) {
             return $this->query;
         }
 
+        //dd($filters);
         foreach ($this->powerGridComponent->filters as $filterType => $column) {
             $this->query->where(function ($query) use ($filterType, $column, $filters) {
                 $filter = function ($query, $filters, $filterType, $field, $value) {
-                    $filter = $filters->filter(fn ($filter) => $filter->field === $field)
+                    $filter = $filters->filter(function ($filter) use ($field) {
+                        return data_get($filter, 'field') === $field;
+                    })
                         ->first();
 
                     match ($filterType) {

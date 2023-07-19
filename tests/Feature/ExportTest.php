@@ -14,9 +14,8 @@ it('properly export xls - all data', function () {
 
 it('properly does not export xls data without selected data', function () {
     $component = livewire(ExportTable::class)
-        ->call('exportToXLS', true);
-
-    expect(null)->notToBeFileDownloaded($component);
+        ->call('exportToXLS', true)
+        ->assertNotFileDownloaded('export.xlsx');
 })->requiresOpenSpout();
 
 it('properly export csv data with selected data', function () {

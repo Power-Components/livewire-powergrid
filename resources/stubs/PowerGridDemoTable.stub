@@ -66,20 +66,20 @@ final class PowerGridDemoTable extends PowerGridComponent
     {
         $message = 'You have clicked #' . $data['id'];
 
-        $this->dispatchBrowserEvent('showAlert', ['message' => $message]);
+        $this->dispatch('showAlert', ['message' => $message]);
     }
 
     public function bulkActionEvent(): void
     {
         if (count($this->checkboxValues) == 0) {
-            $this->dispatchBrowserEvent('showAlert', ['message' => 'You must select at least one item!']);
+            $this->dispatch('showAlert', ['message' => 'You must select at least one item!']);
 
             return;
         }
 
         $ids = implode(', ', $this->checkboxValues);
 
-        $this->dispatchBrowserEvent('showAlert', ['message' => 'You have selected IDs: ' . $ids]);
+        $this->dispatch('showAlert', ['message' => 'You have selected IDs: ' . $ids]);
     }
 
     /*

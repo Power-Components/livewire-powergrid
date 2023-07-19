@@ -94,7 +94,7 @@ class Collection
         foreach ($this->powerGridComponent->filters as $filterType => $column) {
             foreach ($column as $field => $value) {
                 $filter = collect($filters)
-                    ->filter(fn ($filter) => $filter->column === $field)
+                    ->filter(fn ($filter) => data_get($filter, 'column') === $field)
                     ->first();
 
                 $this->collection = match ($filterType) {
@@ -129,7 +129,7 @@ class Collection
 
             foreach ($this->powerGridComponent->columns as $column) {
                 if ($column->searchable) {
-                    $field = filled($column->dataField) ? $column->dataField : $column->field;
+                    $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
 
                     try {
                         if (Str::contains(strtolower($row->{$field}), $searchTerm)) {

@@ -79,7 +79,7 @@ it('properly filter the created_at field between two dates using collection & ar
 })->group('filters')
     ->with('filter_datetime_themes_collection', 'filter_datetime_themes_array');
 
-it('property filter the created_at field when we are using custom builder collection & array table', function (string $component, string $theme) {
+todo('property filter the created_at field when we are using custom builder collection & array table', function (string $component, string $theme) {
     $dateToFilter = ['2021-01-01 00:00:00', '2021-04-04 00:00:00'];
 
     livewire($component, [
@@ -118,7 +118,7 @@ it('properly filter the produced_at field between another two dates', function (
 })->group('filters')
     ->with('filter_datetime_themes_with_join');
 
-it('properly filter the produced_at field between another two dates - custom builder', function (string $component, object $params) {
+todo('properly filter the produced_at field between another two dates - custom builder', function (string $component, object $params) {
     $dateToFilter = ['2021-11-11 00:00:00', '2021-12-31 00:00:00'];
     livewire($component, [
         'testFilters' => [

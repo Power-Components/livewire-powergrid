@@ -12,7 +12,7 @@ class BuilderBase
     }
 
     public function __construct(
-        protected ?FilterBase $filterBase = null
+        protected null|array|FilterBase $filterBase = null
     ) {
     }
 }

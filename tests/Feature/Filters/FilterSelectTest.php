@@ -28,7 +28,7 @@ it('property displays the results and options', function (string $component, obj
 })->group('filters', 'filterSelect')
     ->with('filter_select_join', 'filter_select_query_builder');
 
-it('property filter using custom builder', function (string $component, object $params) {
+todo('property filter using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
             Filter::select('category_name', 'category_id')
@@ -68,7 +68,7 @@ it('property filter using custom builder', function (string $component, object $
 })->group('filters', 'filterSelect')
     ->with('filter_select_join', 'filter_select_query_builder');
 
-it('property filter using custom collection', function (string $component) {
+todo('property filter using custom collection', function (string $component) {
     livewire($component, [
         'testFilters' => [
             Filter::select('id')

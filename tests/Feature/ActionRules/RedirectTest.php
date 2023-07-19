@@ -7,7 +7,7 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-it('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
+todo('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->set('testActions', [

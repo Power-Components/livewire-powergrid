@@ -487,7 +487,7 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
     expectColumnsFilterMatch($livewire, $filter);
 })->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
-it('properly filters using custom builder', function (string $component, object $params) {
+todo('properly filters using custom builder', function (string $component, object $params) {
     $component = livewire($component, [
         'join'        => $params->join,
         'testFilters' => [

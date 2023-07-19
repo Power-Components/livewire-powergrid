@@ -20,11 +20,11 @@ trait HasFilter
             list($table, $column) = explode('.', $field);
 
             if (isset($this->filters['multi_select'][$table][$column])) {
-                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
             }
 
             if (isset($this->filters['datetime'][$table][$column]) || isset($this->filters['date'][$table][$column])) {
-                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
             unset($this->filters['input_text'][$table][$column]);
@@ -84,11 +84,11 @@ trait HasFilter
             }
         } else {
             if (isset($this->filters['multi_select'][$field])) {
-                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
             }
 
             if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
-                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
             unset($this->filters['input_text'][$field]);
@@ -105,7 +105,7 @@ trait HasFilter
         unset($this->enabledFilters[$field]);
 
         if ($emit) {
-            $this->emit('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
+            $this->dispatch('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
         }
 
         $this->persistState('filters');
@@ -118,7 +118,7 @@ trait HasFilter
 
         $this->persistState('filters');
 
-        $this->dispatchBrowserEvent('pg:clear_all_flatpickr::' . $this->tableName);
+        $this->dispatch('pg:clear_all_flatpickr::' . $this->tableName);
     }
 
     private function resolveFilters(): void
@@ -145,9 +145,7 @@ trait HasFilter
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
-                    if (!app()->runningUnitTests()) {
-                        unset($filter->builder, $filter->collection);
-                    }
+                    unset($filter->builder, $filter->collection);
 
                     if (method_exists($filter, 'execute')) {
                         return (array) $filter->execute();

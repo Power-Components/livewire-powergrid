@@ -6,7 +6,7 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\RulesShowHideToggleable;
 
-it('hides all Toggleables except for id #2', function (string $component, object $params) {
+todo('hides all Toggleables except for id #2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActionRules', [

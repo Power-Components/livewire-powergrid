@@ -64,16 +64,18 @@ export default (params) => ({
             const encrypted = Buffer.from(key).toString('base64')
 
             if (selectedDates.length > 0 && encrypted !== this.lastRequest) {
-                window.Livewire.emit('pg:datePicker-' + this.tableName, {
-                    selectedDates: selectedDates,
-                    field: this.dataField,
-                    timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
-                    values: this.filterKey,
-                    label: this.label,
-                    dateStr: dateStr,
-                    tableName: this.tableName,
-                    type: this.type,
-                    enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime
+                window.Livewire.dispatch('pg:datePicker-' + this.tableName, {
+                    data: {
+                        selectedDates: selectedDates,
+                        field: this.dataField,
+                        timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
+                        values: this.filterKey,
+                        label: this.label,
+                        dateStr: dateStr,
+                        tableName: this.tableName,
+                        type: this.type,
+                        enableTime: this.customConfig.enableTime === undefined ? false : this.customConfig.enableTime
+                    }
                 });
             }
         }

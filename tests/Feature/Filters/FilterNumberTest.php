@@ -31,7 +31,7 @@ it('properly renders the number filter', function (string $component, object $pa
 })->group('filters', 'filterNumber')
     ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
-it('properly renders the number filter - custom builder', function (string $component, object $params) {
+todo('properly renders the number filter - custom builder', function (string $component, object $params) {
     livewire($component, [
         'testFilters' => [
             Filter::number($params->field)

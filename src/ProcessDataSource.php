@@ -227,7 +227,6 @@ class ProcessDataSource
             default => 'paginate',
         };
 
-        ds($this->component->setUp);
         if ($perPage > 0) {
             return $results->$paginate($perPage);
         }

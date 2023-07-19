@@ -33,7 +33,7 @@ it('show includeViewOnTop/Bottom - Footer', function () {
 it('cache work properly with tags - rememberForever', function () {
     \Illuminate\Support\Facades\Cache::flush();
 
-    /** @var DishesSetUpTable|\Livewire\Testing\TestableLivewire $component */
+    /** @var DishesSetUpTable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
         Cache::make()
             ->prefix('test-')

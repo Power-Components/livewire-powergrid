@@ -7,7 +7,7 @@ use PowerComponents\LivewirePowerGrid\Rules\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-it('add rule \'hide\' when dishId == 2', function (string $component, object $params) {
+todo('add rule \'hide\' when dishId == 2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActions', [

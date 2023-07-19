@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
 use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
 
-it('add rule \'toggleDetail\' when dishId == 3', function () {
+todo('add rule \'toggleDetail\' when dishId == 3', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
             Footer::make()

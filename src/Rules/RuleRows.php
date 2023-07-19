@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Rules;
 
 use Closure;
+use Livewire\Wireable;
 
-class RuleRows
+class RuleRows implements Wireable
 {
     public array $rule = [];
 
@@ -66,5 +67,15 @@ class RuleRows
         $this->rule['showHideToggleable'] = 'hide';
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

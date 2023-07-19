@@ -46,7 +46,7 @@ class Actions
     protected array $attributes = [];
 
     public function __construct(
-        public Button $action,
+        public array|Button $action,
         public \Illuminate\Database\Eloquent\Model|\stdClass $row,
         public string|int $primaryKey,
         public ThemeBase $theme,
@@ -72,8 +72,8 @@ class Actions
         $this->customRender();
 
         if ($this->hasAttributesInComponentBag('wire:click')
-            || $this->action->caption
-            && blank($this->action->route)
+            || data_get($this->action, 'caption')
+            && blank(data_get($this->action, 'route'))
         ) {
             $this->isButton = true;
         }
@@ -93,13 +93,13 @@ class Actions
             return;
         }
 
-        if ($this->action->singleParam) {
-            $this->parameters = $this->helperClass->makeActionParameter((array)$this->action->params, $this->row);
+        if (data_get($this->action, 'singleParam')) {
+            $this->parameters = $this->helperClass->makeActionParameter((array)data_get($this->action, 'params'), $this->row);
 
             return;
         }
 
-        $this->parameters = $this->helperClass->makeActionParameters((array)$this->action->params, $this->row);
+        $this->parameters = $this->helperClass->makeActionParameters((array)data_get($this->action, 'params'), $this->row);
     }
 
     private function actionRules(): void
@@ -118,7 +118,7 @@ class Actions
 
     private function attributes(): void
     {
-        $class = filled($this->action->class) ? $this->action->class : $this->theme->actions->headerBtnClass;
+        $class = filled(data_get($this->action, 'class')) ? data_get($this->action, 'class') : $this->theme->actions->headerBtnClass;
 
         $this->resolveManyAttributes();
 
@@ -176,13 +176,13 @@ class Actions
     {
         if ((
             $this->hasAttributesInComponentBag('wire:click')
-            || blank($this->action->event)
-            || filled($this->action->to)
+            || blank(data_get($this->action, 'event'))
+            || filled(data_get($this->action, 'to'))
         ) && blank($this->ruleEmit)) {
             return;
         }
 
-        $event = $this->ruleEmit['event'] ?? $this->action->event;
+        $event = $this->ruleEmit['event'] ?? data_get($this->action, 'event');
 
         $parameters = $this->parameters;
 
@@ -198,13 +198,13 @@ class Actions
     private function emitTo(): void
     {
         if (($this->hasAttributesInComponentBag('wire:click')
-            || blank($this->action->to)) && blank($this->ruleEmitTo)) {
+            || blank(data_get($this->action, 'to'))) && blank($this->ruleEmitTo)) {
             return;
         }
 
-        $to = $this->ruleEmitTo['to'] ?? $this->action->to;
+        $to = $this->ruleEmitTo['to'] ?? data_get($this->action, 'to');
 
-        $event = $this->ruleEmitTo['event'] ?? $this->action->event;
+        $event = $this->ruleEmitTo['event'] ?? data_get($this->action, 'event');
 
         $parameters = $this->parameters;
 
@@ -220,13 +220,13 @@ class Actions
     private function openModal(): void
     {
         if ($this->hasAttributesInComponentBag('wire:click')
-           || blank($this->action->view)
+           || blank(data_get($this->action, 'view'))
            || filled($this->ruleRedirect)) {
             return;
         }
 
         $this->componentBag = $this->componentBag->merge([
-            'wire:click' => '$emit("openModal", "' . $this->action->view . '", ' . json_encode($this->parameters) . ')',
+            'wire:click' => '$emit("openModal", "' . data_get($this->action, 'view') . '", ' . json_encode($this->parameters) . ')',
         ]);
     }
 
@@ -234,12 +234,12 @@ class Actions
     {
         if ((
             $this->hasAttributesInComponentBag('wire:click')
-            || blank($this->action->browserEvent)
+            || blank(data_get($this->action, 'browserEvent'))
         ) && blank($this->ruleEmit)) {
             return;
         }
 
-        $event = $this->ruleEmit['event'] ?? $this->action->browserEvent;
+        $event = $this->ruleEmit['event'] ?? data_get($this->action, 'browserEvent');
 
         $parameters = $this->parameters;
 
@@ -254,7 +254,7 @@ class Actions
 
     private function toggleDetail(): void
     {
-        if (!$this->action->toggleDetail) {
+        if (!data_get($this->action, 'toggleDetail')) {
             return;
         }
 
@@ -285,18 +285,18 @@ class Actions
         }
 
         $this->componentBag = $this->componentBag->merge([
-            'title' => $this->action->tooltip,
+            'title' => strval(data_get($this->action, 'tooltip')),
         ]);
     }
 
     public function caption(): ?string
     {
-        return $this->ruleCaption ?: $this->action->caption;
+        return $this->ruleCaption ?: strval(data_get($this->action, 'caption'));
     }
 
     private function bladeComponent(): void
     {
-        $component = $this->action->bladeComponent;
+        $component = strval(data_get($this->action, 'bladeComponent'));
 
         if (filled($this->ruleBladeComponent)) {
             $component  = $this->ruleBladeComponent['component'];
@@ -318,7 +318,7 @@ class Actions
 
     private function route(): void
     {
-        if (!$this->action->route) {
+        if (!data_get($this->action, 'route')) {
             return;
         }
 
@@ -332,9 +332,9 @@ class Actions
 
     private function id(): void
     {
-        if (filled($this->action->id)) {
+        if (filled(data_get($this->action, 'id'))) {
             $this->componentBag = $this->componentBag->merge([
-                'id' => $this->action->id . '-' . $this->row->{$this->primaryKey},
+                'id' => data_get($this->action, 'id') . '-' . $this->row->{$this->primaryKey},
             ]);
         }
     }
@@ -350,6 +350,6 @@ class Actions
 
     public function getDynamicProperty(string $key): mixed
     {
-        return data_get($this->action->dynamicProperties, $key);
+        return data_get(data_get($this->action, 'dynamicProperties'), $key);
     }
 }

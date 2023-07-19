@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
 use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
 
-it('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
+todo('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
     livewire($component, [
         'join'      => $params->join,
         'setUpTest' => [

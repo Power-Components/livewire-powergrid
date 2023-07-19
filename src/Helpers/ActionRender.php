@@ -12,23 +12,23 @@ class ActionRender
         $rules = collect($actions);
 
         /** @phpstan-ignore-next-line */
-        return $rules->mapWithKeys(function (Button $action, $index) use ($row) {
-            $render = $action->render ?? null;
-            $params = $action->params;
+        return $rules->mapWithKeys(function (array|Button $action, $index) use ($row) {
+            $render = data_get($action, 'render');
+            $params = data_get($action, 'params');
 
             if (is_callable($params)) {
                 $resolveParams = $params((object) $row);
 
-                return (object) ['render-action.' . $index . '.' . $action->action => $resolveParams];
+                return (object) ['render-action.' . $index . '.' . data_get($action, 'action') => $resolveParams];
             }
 
             if ($render) {
                 $resolveAction = $render((object) $row);
 
-                return (object) ['render-action.' . $index . '.' . $action->action => $resolveAction];
+                return (object) ['render-action.' . $index . '.' . data_get($action, 'action') => $resolveAction];
             }
 
-            return (object) ['render-action.' . $index . '.' . $action->action => null];
+            return (object) ['render-action.' . $index . '.' . data_get($action, 'action') => null];
         });
     }
 
@@ -42,7 +42,7 @@ class ActionRender
         return collect($actions);
     }
 
-    public function recoverFromButton(Button $button, \Illuminate\Database\Eloquent\Model|\stdClass|array $row): array
+    public function recoverFromButton(array|Button $button, \Illuminate\Database\Eloquent\Model|\stdClass|array $row): array
     {
         $actionRules = [];
 
@@ -51,8 +51,8 @@ class ActionRender
         $actions->each(function ($key) use (&$actionRules, $button) {
             $key = (array) $key;
 
-            if (isset($key[$button->action])) {
-                $action = (array) $key[$button->action];
+            if (isset($key[data_get($button, 'action')])) {
+                $action = (array) $key[data_get($button, 'action')];
 
                 if (isset($action[0])) {
                     $actionRules['custom-action'] = $action[0];

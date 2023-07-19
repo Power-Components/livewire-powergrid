@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Rules;
 
 use Closure;
+use Livewire\Wireable;
 
-class RuleCheckbox
+class RuleCheckbox implements Wireable
 {
     public array $rule = [];
 
@@ -51,5 +52,15 @@ class RuleCheckbox
         $this->rule['disable'] = true;
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

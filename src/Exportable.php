@@ -25,9 +25,13 @@ final class Exportable implements Wireable
 
     public array $batchExport = [];
 
+    public function __construct(public string $fileName = 'export')
+    {
+    }
+
     public static function make(string $fileName): self
     {
-        return new Exportable('');
+        return new Exportable($fileName);
     }
 
     public function type(string ...$types): self
@@ -95,7 +99,7 @@ final class Exportable implements Wireable
         return $this;
     }
 
-    public function toLivewire()
+    public function toLivewire(): array
     {
         return (array) $this;
     }

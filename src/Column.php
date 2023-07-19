@@ -373,7 +373,7 @@ final class Column implements \Livewire\Wireable
         return $this;
     }
 
-    public function toLivewire()
+    public function toLivewire(): array
     {
         return (array) $this;
     }

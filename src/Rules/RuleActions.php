@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Rules;
 
 use Closure;
+use Livewire\Wireable;
 
-class RuleActions
+class RuleActions implements Wireable
 {
     public array $rule = [];
 
@@ -119,5 +120,15 @@ class RuleActions
         ];
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

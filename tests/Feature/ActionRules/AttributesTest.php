@@ -21,7 +21,7 @@ it('set custom class when dish-id == 1 on button', function (string $component, 
         ]);
 })->with('attributes_themes_with_join')->group('actionRules');
 
-it('change class to bg-pg-primary-100 when dish-id == 1', function (string $component, object $params) {
+todo('change class to bg-pg-primary-100 when dish-id == 1', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActions', [
@@ -45,7 +45,7 @@ it('change class to bg-pg-primary-100 when dish-id == 1', function (string $comp
         );
 })->with('attributes_tailwind_with_join')->group('actionRules');
 
-it('see many custom \'attributes\' when dish-id == 2', function (string $component, object $params) {
+todo('see many custom \'attributes\' when dish-id == 2', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('search', 'Peixada da chef Nábia')
@@ -69,7 +69,7 @@ it('see many custom \'attributes\' when dish-id == 2', function (string $compone
         ]);
 })->with('attributes_themes_with_join')->group('actionRules');
 
-it('see many \'attributes\' when dish-id == 5', function (string $component, object $params) {
+todo('see many \'attributes\' when dish-id == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActions', [

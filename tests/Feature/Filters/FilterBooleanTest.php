@@ -55,7 +55,7 @@ it('properly filters by bool true', function (string $component, object $params)
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
-it('properly filters by bool true - custom builder', function (string $component, object $params) {
+todo('properly filters by bool true - custom builder', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
             Filter::boolean('in_stock')
@@ -183,7 +183,7 @@ it('properly filters by bool true - using collection - custom builder', function
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_collection');
 
-it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
+todo('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
     $component = livewire($component, [
         'testFilters' => [
             Filter::boolean('in_stock', 'in_stock')

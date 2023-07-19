@@ -1,4 +1,5 @@
 import { storeMultiSelect } from "./store";
+import TomSelect from "tom-select";
 
 export default (params) => ({
     init() {
@@ -68,7 +69,7 @@ export default (params) => ({
             parameters = Object.assign(defaultParams, asyncConfig)
         }
 
-        new window.TomSelect(element, parameters);
+        new TomSelect(element, parameters);
 
         element.nextSibling.childNodes[0].classList.add(
             'dark:bg-pg-primary-600',

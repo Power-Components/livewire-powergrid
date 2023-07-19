@@ -45,11 +45,11 @@
                         </a>
                     @endif
 
-                    @if (filled($action->route) && !$actionClass->isButton)
-                        @if (strtolower($action->method) !== 'get')
+                    @if (filled(data_get($action, 'route')) && !$actionClass->isButton)
+                        @if (strtolower(data_get($action, 'method')) !== 'get')
                             <form
-                                target="{{ $action->target }}"
-                                action="{{ route($action->route, $actionClass->parameters) }}"
+                                target="{{ data_get($action, 'target') }}"
+                                action="{{ route(data_get($action, 'route'), $actionClass->parameters) }}"
                                 method="post"
                             >
                                 @method($action->method)
@@ -58,13 +58,13 @@
                                     type="submit"
                                     {{ $actionClass->getAttributes() }}
                                 >
-                                    {!! $ruleCaption ?? $action->caption !!}
+                                    {!! $ruleCaption ?? data_get($action, 'caption') !!}
                                 </button>
                             </form>
                         @else
                             <a
-                                href="{{ route($action->route, $actionClass->parameters) }}"
-                                target="{{ $action->target }}"
+                                href="{{ route(data_get($action, 'route'), $actionClass->parameters) }}"
+                                target="{{ data_get($action, 'target') }}"
                                 {{ $actionClass->getAttributes() }}
                             >
                                 {!! $actionClass->caption() !!}

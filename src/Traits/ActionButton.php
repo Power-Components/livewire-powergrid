@@ -22,12 +22,12 @@ trait ActionButton
         foreach ($this->actions as $action) {
             unset($action->render);
 
-            if (is_callable($action->params)) {
-                $action->params = [];
+            if (is_callable(data_get($action, 'params'))) {
+                data_set($action, 'params', []);
             }
 
             if (isset($action->route)) {
-                $this->actionRoutes[$action->action] = $action->route;
+                $this->actionRoutes[data_get($action, 'action')] = data_get($action, 'route');
             }
         }
     }

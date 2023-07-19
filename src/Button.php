@@ -239,7 +239,7 @@ final class Button implements Wireable
         return $this;
     }
 
-    public function toLivewire()
+    public function toLivewire(): array
     {
         return (array) $this;
     }

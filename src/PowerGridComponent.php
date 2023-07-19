@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
@@ -108,7 +107,7 @@ class PowerGridComponent extends Component
     protected function getCacheKeys(): array
     {
         return [
-         //   json_encode(['page' => $this->page]),
+            json_encode(['page' => $this->getPage()]),
             json_encode(['search' => $this->search]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
@@ -279,7 +278,7 @@ class PowerGridComponent extends Component
             return;
         }
 
-        $this->emitSelf('$refresh', []);
+        $this->dispatch('$refresh', []);
     }
 
     public function getLivewireId(): string
@@ -288,6 +287,7 @@ class PowerGridComponent extends Component
             return $this->getId();
         }
 
+        /** @phpstan-ignore-next-line */
         return $this->id;
     }
 
