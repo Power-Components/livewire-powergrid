@@ -99,7 +99,7 @@ class Builder
         return $this->query;
     }
 
-    public static function arrayToDot($array, $prepend = '')
+    public static function arrayToDot(array $array, string $prepend = ''): array
     {
         $results = [];
 
@@ -110,10 +110,13 @@ class Builder
 
                     break;
                 }
-                $results = array_merge($results, static::CustomDot($value, $prepend . $key . '.'));
-            } else {
-                $results[$prepend . $key] = $value;
+
+                $results = array_merge($results, static::arrayToDot($value, $prepend . $key . '.'));
+
+                continue;
             }
+
+            $results[$prepend . $key] = $value;
         }
 
         return $results;
