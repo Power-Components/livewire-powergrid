@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Записи не найдены',
         'all'              => 'Все',
         'selected'         => 'Выбранные',
+        'filtered'         => 'Отфильтровано',
     ],
     'placeholders' => [
         'search' => 'Поиск...',

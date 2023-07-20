@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Nebyly nalezeny žádné záznamy',
         'all'              => 'Všechny',
         'selected'         => 'Vybrané',
+        'filtered'         => 'Filtrovaný',
     ],
     'placeholders' => [
         'search' => 'Hledat...',

@@ -30,7 +30,12 @@
                         wire:click.prevent="exportToXLS"
                         href="#"
                     >
-                        @lang('livewire-powergrid::datatable.labels.all')
+
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.all')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                     @if ($checkbox)
                         /
@@ -39,7 +44,11 @@
                             wire:click.prevent="exportToXLS(true)"
                             href="#"
                         >
-                            @lang('livewire-powergrid::datatable.labels.selected')
+                            @if (count($enabledFilters)===0)
+                                @lang('livewire-powergrid::datatable.labels.selected')
+                            @else
+                                @lang('livewire-powergrid::datatable.labels.filtered')
+                            @endif
                         </a>
                     @endif
                 </div>
@@ -54,7 +63,11 @@
                         wire:click.prevent="exportToCsv"
                         href="#"
                     >
-                        @lang('livewire-powergrid::datatable.labels.all')
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.all')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                     @if ($checkbox)
                         /
@@ -63,7 +76,11 @@
                             wire:click.prevent="exportToCsv(true)"
                             href="#"
                         >
-                            @lang('livewire-powergrid::datatable.labels.selected')
+                            @if (count($enabledFilters)===0)
+                                @lang('livewire-powergrid::datatable.labels.selected')
+                            @else
+                                @lang('livewire-powergrid::datatable.labels.filtered')
+                            @endif
                         </a>
                     @endif
                 </div>

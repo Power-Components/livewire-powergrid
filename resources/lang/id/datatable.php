@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Tidak ada data yang ditemukan',
         'all'              => 'Semua',
         'selected'         => 'Dipilih',
+        'filtered'         => 'Tersaring',
     ],
     'placeholders' => [
         'search' => 'Cari...',

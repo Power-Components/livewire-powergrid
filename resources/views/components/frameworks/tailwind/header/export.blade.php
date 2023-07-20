@@ -33,7 +33,12 @@
                     href="#"
                     class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                 >
-                    @lang('livewire-powergrid::datatable.labels.all')
+                    @if (count($this->filters)===0)
+                        @lang('livewire-powergrid::datatable.labels.all')
+                    @else
+                        @lang('livewire-powergrid::datatable.labels.filtered')
+                    @endif
+
                 </a>
                 @if ($checkbox)
                     <a
@@ -42,7 +47,11 @@
                         href="#"
                         class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                     >
-                        @lang('livewire-powergrid::datatable.labels.selected')
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.selected')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                 @endif
             </div>
@@ -56,7 +65,11 @@
                     href="#"
                     class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                 >
-                    @lang('livewire-powergrid::datatable.labels.all')
+                    @if (count($this->filters)===0)
+                        @lang('livewire-powergrid::datatable.labels.all')
+                    @else
+                        @lang('livewire-powergrid::datatable.labels.filtered')
+                    @endif
                 </a>
                 @if ($checkbox)
                     <a
@@ -65,7 +78,11 @@
                         href="#"
                         class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                     >
-                        @lang('livewire-powergrid::datatable.labels.selected')
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.selected')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                 @endif
             </div>

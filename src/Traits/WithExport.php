@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Export;
-use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{Exportable, Helpers\Builder, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -178,6 +178,11 @@ trait WithExport
         $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 
         $results = $processDataSource->prepareDataSource()
+            ->where(
+                fn ($query) => Builder::make($query, $this)
+                    ->filterContains()
+                    ->filter()
+            )
             ->when($inClause, function ($query, $inClause) use ($processDataSource) {
                 return $query->whereIn($processDataSource->component->primaryKey, $inClause);
             })

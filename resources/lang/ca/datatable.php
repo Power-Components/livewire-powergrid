@@ -12,6 +12,7 @@ return [
         'no_data'          => 'No s\'han trobat registres.',
         'all'              => 'Tots',
         'selected'         => 'Seleccionat',
+        'filtered'         => 'Filtrat',
     ],
     'placeholders' => [
         'search' => 'Cerca...',
