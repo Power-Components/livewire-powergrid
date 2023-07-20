@@ -44,11 +44,7 @@
                             wire:click.prevent="exportToXLS(true)"
                             href="#"
                         >
-                            @if (count($enabledFilters)===0)
-                                @lang('livewire-powergrid::datatable.labels.selected')
-                            @else
-                                @lang('livewire-powergrid::datatable.labels.filtered')
-                            @endif
+                            @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
@@ -76,11 +72,7 @@
                             wire:click.prevent="exportToCsv(true)"
                             href="#"
                         >
-                            @if (count($enabledFilters)===0)
-                                @lang('livewire-powergrid::datatable.labels.selected')
-                            @else
-                                @lang('livewire-powergrid::datatable.labels.filtered')
-                            @endif
+                            @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
