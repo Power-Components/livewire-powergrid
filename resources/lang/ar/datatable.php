@@ -12,7 +12,7 @@ return [
         'no_data'          => 'لا يوجد اي سجلات',
         'all'              => 'الكل',
         'selected'         => 'محدد',
-        'filtered'         => 'مصفى'
+        'filtered'         => 'مصفى',
     ],
     'placeholders' => [
         'search' => 'البحث...',
