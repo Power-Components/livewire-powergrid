@@ -165,7 +165,7 @@ trait WithExport
 
         if ($processDataSource->isCollection) {
             if ($inClause) {
-                $results = $processDataSource->resolveCollection()->whereIn($this->primaryKey, $inClause);
+                $results = $processDataSource->get()->whereIn($this->primaryKey, $inClause);
 
                 return $processDataSource->transform($results);
             }
