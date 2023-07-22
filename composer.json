@@ -73,7 +73,7 @@
         "test:sqlsrv": [
             "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
         ],
-        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1 --xdebug",
+        "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
         "test:dbs": [
             "@test:sqlite",
             "@test:mysql",

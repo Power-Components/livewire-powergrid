@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Keine Ergebnisse gefunden',
         'all'              => 'Alle',
         'selected'         => 'Ausgewählt',
+        'filtered'         => 'Gefiltert',
     ],
     'placeholders' => [
         'search' => 'Suche',

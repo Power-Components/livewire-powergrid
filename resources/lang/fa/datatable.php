@@ -12,6 +12,7 @@ return [
         'no_data'          => 'هیچ رکوردی یافت نشد',
         'all'              => 'همه',
         'selected'         => 'انتخاب شد',
+        'filtered'         => 'پالوده',
     ],
     'placeholders' => [
         'search' => 'جستجو...',

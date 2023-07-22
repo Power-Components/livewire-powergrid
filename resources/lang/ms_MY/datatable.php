@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Tiada rekod ditemui',
         'all'              => 'Semua',
         'selected'         => 'Pilihan',
+        'filtered'         => 'Hasil yang ditapis',
     ],
     'placeholders' => [
         'search' => 'Cari...',
