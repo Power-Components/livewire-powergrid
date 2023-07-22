@@ -11,7 +11,7 @@ use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Helpers\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Export;
-use PowerComponents\LivewirePowerGrid\{Exportable, Helpers\Builder, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
