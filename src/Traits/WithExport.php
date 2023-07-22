@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support as Support;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
+use PowerComponents\LivewirePowerGrid\Helpers\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\Services\Export;
 use PowerComponents\LivewirePowerGrid\{Exportable, Helpers\Builder, ProcessDataSource};
