@@ -115,7 +115,7 @@ With PowerGrid you get right out of the box:
 
 ## 2. Install
 
-Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/get-started/install.html) page.
+Please follow the steps indicated in our [Documentation - Install](https://v4.livewire-powergrid.com/get-started/install.html) page.
 
 <br/>
 
