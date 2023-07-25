@@ -30,7 +30,7 @@ jobs:
       matrix:
         php: [ 8.2, 8.1 ]
         laravel: [ 10.* ]
-        livewire: [v2.12, ^3.0]
+        livewire: [ v2.12, ^3.0 ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 10.*
