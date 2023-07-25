@@ -33,6 +33,15 @@
     >
         {!! $action->caption !!}
     </button>
+@elseif ($action->bladeComponent !== '')
+    @php
+        $action->bladeComponentParams = new \Illuminate\View\ComponentAttributeBag($action->params);
+    @endphp
+
+    <x-dynamic-component
+        :component="$action->bladeComponent"
+        :attributes="$action->bladeComponentParams"
+    />
 @else
     @if (strtolower($action->method) !== 'get')
         <form

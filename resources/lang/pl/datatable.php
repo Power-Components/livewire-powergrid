@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Nie znaleziono pasujących pozycji',
         'all'              => 'Wszystkie',
         'selected'         => 'Zaznaczone',
+        'filtered'         => 'Przefiltrowany',
     ],
     'placeholders' => [
         'search' => 'Szukaj...',

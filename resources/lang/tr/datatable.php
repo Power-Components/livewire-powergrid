@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Veri bulunamadı',
         'all'              => 'Tümü',
         'selected'         => 'Seçili',
+        'filtered'         => 'Filtrelenmiş',
     ],
     'placeholders' => [
         'search' => 'Arama yap...',
