@@ -39,7 +39,7 @@ jobs:
           - php: 8.0
             laravel: 10.*
 
-    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire } (${{ matrix.dependency-version }})
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }} (${{ matrix.dependency-version }})
 
     steps:
       - name: Checkout
