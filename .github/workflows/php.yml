@@ -39,7 +39,7 @@ jobs:
           - php: 8.0
             laravel: 10.*
 
-    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire } (${{ matrix.dependency-version }})
 
     steps:
       - name: Checkout
@@ -67,6 +67,7 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
           rm composer.lock
           composer require openspout/openspout
       - name: Pint
