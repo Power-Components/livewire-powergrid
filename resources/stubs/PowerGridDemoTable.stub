@@ -220,8 +220,7 @@ final class PowerGridDemoTable extends PowerGridComponent
                 ->editOnClick($canEdit), //Allows user to edit information on click
 
             Column::make('Email address', 'email')
-                ->searchable()
-                ->clickToCopy($canCopy), //Button for copy to clipboard
+                ->searchable(),
 
             Column::make('US State', 'state_in_usa'),
 

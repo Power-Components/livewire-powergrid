@@ -1,24 +1,26 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 todo('add rule \'caption\' when dish out of stock', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActions', [
             Button::add('edit')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center'),
         ])
         ->set('testActionRules', [
             Rule::button('edit')
                 ->when(fn (Dish $dish) => $dish->id == 4)
-                ->caption('Cation Edit for id 4'),
+                ->slot('Cation Edit for id 4'),
         ])
         ->set('search', 'Pastel de Nata')
         ->assertSeeHtml('<div id="edit">Edit</div>')

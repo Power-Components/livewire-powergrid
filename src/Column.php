@@ -73,12 +73,6 @@ final class Column implements \Livewire\Wireable
      */
     public array $toggleable = [];
 
-    /**
-     *
-     * @var array<string, bool|string> $clickToCopy
-     */
-    public array $clickToCopy = [];
-
     public bool $index = false;
 
     /**
@@ -99,6 +93,15 @@ final class Column implements \Livewire\Wireable
         return (new static())
             ->title($title)
             ->field($field, $dataField);
+    }
+
+    /**
+     * Make a new action
+     */
+    public static function action(string $title): self
+    {
+        return (new static())
+            ->title($title);
     }
 
     /**
@@ -344,16 +347,6 @@ final class Column implements \Livewire\Wireable
         $this->toggleable = [
             'enabled' => $hasPermission,
             'default' => [$trueLabel,  $falseLabel],
-        ];
-
-        return $this;
-    }
-
-    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
-    {
-        $this->clickToCopy = [
-            'enabled' => $hasPermission,
-            'label'   => $label,
         ];
 
         return $this;

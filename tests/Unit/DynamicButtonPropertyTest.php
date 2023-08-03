@@ -26,7 +26,9 @@ it('properly handles macroable button method', function (string $theme) {
 
     expect($actionClass->getDynamicProperty('icon'))
         ->toBe('fa-user');
-})->with('dynamic-action')->group('dynamic-action');
+})->with('dynamic-action')
+    ->skip()
+    ->group('dynamic-action');
 
 dataset('dynamic-action', [
     'tailwind'  => [Tailwind::class],

@@ -7,27 +7,27 @@ use Illuminate\Support\{Arr, Collection, Str};
 
 class Helpers
 {
-    public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
-    {
-        $parameters = [];
-
-        foreach ($params as $param => $value) {
-            if ($row && filled($row->{$value})) {
-                $parameters[$param] = $row->{$value};
-
-                continue;
-            }
-
-            $parameters[$param] = $value;
-        }
-
-        return $parameters;
-    }
-
-    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): array
-    {
-        return $this->makeActionParameters($params, $row)[0];
-    }
+    //    public function makeActionParameters(array $params = [], Model|\stdClass|null $row = null): array
+    //    {
+    //        $parameters = [];
+    //
+    //        foreach ($params as $param => $value) {
+    //            if ($row && filled($row->{$value})) {
+    //                $parameters[$param] = $row->{$value};
+    //
+    //                continue;
+    //            }
+    //
+    //            $parameters[$param] = $value;
+    //        }
+    //
+    //        return $parameters;
+    //    }
+    //
+    //    public function makeActionParameter(array $params = [], Model|\stdClass|null $row = null): array
+    //    {
+    //        return $this->makeActionParameters($params, $row)[0];
+    //    }
 
     public function resolveContent(string $currentTable, string $field, Model|\stdClass $row): ?string
     {

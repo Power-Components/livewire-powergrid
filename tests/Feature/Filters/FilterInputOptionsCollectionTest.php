@@ -1,10 +1,12 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable};
+
+;
 
 it(
     'properly filters by "name is" using collection & array table',

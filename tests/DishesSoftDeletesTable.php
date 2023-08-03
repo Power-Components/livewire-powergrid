@@ -5,15 +5,14 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent
-};
+    PowerGridComponent};
 
 class DishesSoftDeletesTable extends PowerGridComponent
 {
@@ -72,21 +71,21 @@ class DishesSoftDeletesTable extends PowerGridComponent
         ];
     }
 
-    //    public function actions(): array
-    //    {
-    //        return [
-    //            Button::add('edit-stock')
-    //                ->caption('<div id="edit">Edit</div>')
-    //                ->class('text-center')
-    //                ->openModal('edit-stock', ['dishId' => 'id']),
-    //
-    //            Button::add('destroy')
-    //                ->caption(__('Delete'))
-    //                ->class('text-center')
-    //                ->emit('deletedEvent', ['dishId' => 'id'])
-    //                ->method('delete'),
-    //        ];
-    //    }
+    public function actions(Dish $dish): array
+    {
+        return [
+            Button::add('edit-stock')
+                ->slot('<div id="edit">Edit</div>')
+                ->class('text-center')
+                ->openModal('edit-stock', ['dishId' => $dish->id]),
+
+            Button::add('destroy')
+                ->slot(__('Delete'))
+                ->class('text-center')
+                ->dispatch('deletedEvent', ['dishId' => $dish->id])
+                ->method('delete'),
+        ];
+    }
 
     public function bootstrap()
     {

@@ -29,7 +29,7 @@
             @foreach ($columns as $column)
                 @if (!$column->forceHidden)
                     <div
-                        wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
+                        wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: {{ $column->field }}})"
                         wire:key="toggle-column-{{ $column->field }}"
                         class="@if ($column->hidden) opacity-40 bg-pg-primary-300 dark:bg-pg-primary-800 @endif cursor-pointer flex justify-start block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-200 dark:text-pg-primary-200 dark:hover:bg-gray-900 dark:hover:bg-pg-primary-700"
                     >

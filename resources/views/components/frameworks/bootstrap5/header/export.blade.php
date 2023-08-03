@@ -31,7 +31,7 @@
                         href="#"
                     >
 
-                        @if (count($enabledFilters)===0)
+                        @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
                             @lang('livewire-powergrid::datatable.labels.filtered')
@@ -59,7 +59,7 @@
                         wire:click.prevent="exportToCsv"
                         href="#"
                     >
-                        @if (count($enabledFilters)===0)
+                        @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
                             @lang('livewire-powergrid::datatable.labels.filtered')

@@ -1,4 +1,4 @@
-@inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Helpers\ActionRules')
+@inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
 <x-livewire-powergrid::table-base
     :theme="$theme->table"
@@ -20,12 +20,16 @@
             @endif
 
             @isset($setUp['responsive'])
-                <th fixed x-show="hasHiddenElements" class="{{ $theme->table->thClass }}"
-                    style="{{ $theme->table->thStyle }}">
+                <th
+                    fixed
+                    x-show="hasHiddenElements"
+                    class="{{ $theme->table->thClass }}"
+                    style="{{ $theme->table->thStyle }}"
+                >
                 </th>
             @endisset
 
-            @if($checkbox)
+            @if ($checkbox)
                 <x-livewire-powergrid::checkbox-all
                     :checkbox="$checkbox"
                     :theme="$theme->checkbox"
@@ -40,24 +44,25 @@
                 />
             @endforeach
 
-            @if (isset($actions) && count($actions))
-                @php
-                    $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
+{{--            @if (isset($actions) && count($actions))--}}
+{{--                @php--}}
+{{--                    $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;--}}
 
-                    $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
-                @endphp
+{{--                    $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;--}}
+{{--                @endphp--}}
 
-                <th
-                    @if($isActionFixedOnResponsive) fixed @endif
-                    class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
-                    scope="col"
-                    style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
-                    colspan="{{ count($actions) }}"
-                    wire:key="{{ md5('actions') }}"
-                >
-                    {{ trans('livewire-powergrid::datatable.labels.action') }}
-                </th>
-            @endif
+{{--                <th--}}
+{{--                    @if ($isActionFixedOnResponsive) fixed @endif--}}
+{{--                    class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"--}}
+{{--                    scope="col"--}}
+{{--                    style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"--}}
+{{--                    colspan="{{ count($actions) }}"--}}
+{{--                    wire:key="{{ md5('actions') }}"--}}
+{{--                >--}}
+{{--                    {{ trans('livewire-powergrid::datatable.labels.action') }}--}}
+{{--                </th>--}}
+{{--            @endif--}}
+
         </tr>
     </x-slot:header>
 
@@ -68,7 +73,7 @@
         >
             <td
                 class="{{ $theme->table->tdBodyEmptyClass }}"
-                colspan="{{ ($checkbox ? 1 : 0) + (isset($actions) ? 1 : 0) + count($columns) }}"
+                colspan="{{ ($checkbox ? 1 : 0) + count($columns) }}"
             >
                 @if ($loadingComponent)
                     @include($loadingComponent)
@@ -103,7 +108,6 @@
                         class="{{ $theme->table->tdBodyEmptyClass }}"
                         style="{{ $theme->table->tdBodyEmptyStyle }}"
                         colspan="{{ ($checkbox ? 1 : 0) +
-                            (isset($actions) ? 1 : 0) +
                             count($columns) +
                             (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}"
                     >
@@ -118,7 +122,6 @@
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
-
                     $rowId = $row->{$primaryKey};
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
@@ -141,15 +144,15 @@
                     @else
                         <tr
                             style="{{ $theme->table->trBodyStyle }}"
-                            class="{{ $class }}"
+                            class="{{ trim($class) }}"
                             wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
                         >
                 @endif
 
-                @includeWhen(isset($setUp['responsive']), powerGridThemeRoot().'.toggle-detail-responsive', [
+                @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
                     'theme' => $theme->table,
                     'rowId' => $rowId,
-                    'view' => data_get($setUp, 'detail.viewIcon') ?? null
+                    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
                 ])
 
                 @php
@@ -168,6 +171,7 @@
                 @if ($checkbox)
                     @php
                         $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
+
                         $ruleHide = data_get($rules, 'hide');
                         $ruleDisable = data_get($rules, 'disable');
                         $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
@@ -179,13 +183,6 @@
 
                 @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
 
-                <x-livewire-powergrid::actions
-                    :primary-key="$primaryKey"
-                    :tableName="$tableName"
-                    :theme="$theme"
-                    :row="$row"
-                    :actions="$actions"
-                />
                 </tr>
                 @if (isset($setUp['detail']))
                     <template
@@ -195,8 +192,7 @@
                         <tr>
                             <td
                                 colspan="{{ ($checkbox ? 1 : 0) +
-                                    (isset($actions) ? 1 : 0) +
-                                    count($columns) +
+                                     +
                                     (data_get($setUp, 'detail.showCollapseIcon') ? 1 : 0) }}">
                                 @if (isset($ruleDetailView[0]['detailView']))
                                     @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),

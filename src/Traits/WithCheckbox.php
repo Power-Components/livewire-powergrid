@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Helpers\ActionRules;
+use PowerComponents\LivewirePowerGrid\Components\Rules\RulesController;
 use Throwable;
 
 trait WithCheckbox
@@ -34,7 +34,7 @@ trait WithCheckbox
         /** @var AbstractPaginator $data */
         $data = $this->fillData();
 
-        $actionRulesClass = resolve(ActionRules::class);
+        $actionRulesClass = resolve(RulesController::class);
 
         /** @phpstan-ignore-next-line  */
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {

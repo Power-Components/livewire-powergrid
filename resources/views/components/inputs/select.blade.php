@@ -10,7 +10,7 @@
 @php
     $framework = config('livewire-powergrid.plugins.select');
     $collection = collect();
-    
+
     if (filled(data_get($filter, 'dataSource'))) {
         $collection = collect(data_get($filter, 'dataSource'))->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
             if (is_array($entry)) {
@@ -19,17 +19,17 @@
             return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
         });
     }
-    
+
     $params = [
         'tableName' => $tableName,
-        'title' => data_get($filter, 'title'),
+        'label' => data_get($filter, 'title'),
         'dataField' => data_get($filter, 'field'),
         'optionValue' => data_get($filter, 'optionValue'),
         'optionLabel' => data_get($filter, 'optionLabel'),
         'initialValues' => $initialValues,
         'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
     ];
-    
+
     if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
         $params['asyncData'] = [
             'url' => data_get($filter, 'url'),
@@ -38,9 +38,8 @@
             'headers' => data_get($filter, 'headers'),
         ];
     }
-    
+
     $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')' : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
-    
 @endphp
 <div
     x-cloak

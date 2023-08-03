@@ -6,15 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    Filters\Filter,
+use PowerComponents\LivewirePowerGrid\{Column,
+    Facades\Filter,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent
-};
+    PowerGridComponent};
 
 class DishesEnumTable extends PowerGridComponent
 {
@@ -74,7 +72,6 @@ class DishesEnumTable extends PowerGridComponent
             Column::make('Prato', 'name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 

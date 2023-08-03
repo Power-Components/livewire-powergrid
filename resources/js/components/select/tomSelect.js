@@ -3,7 +3,7 @@ import TomSelect from "tom-select";
 
 export default (params) => ({
     init() {
-        const element = this.$refs['select_picker_'+params.dataField+'_'+params.tableName];
+        const element = this.$refs[`select_picker_${params.dataField}_${params.tableName}`];
 
         const defaultParams = {
             items: params.initialValues,
@@ -71,11 +71,5 @@ export default (params) => ({
 
         new TomSelect(element, parameters);
 
-        element.nextSibling.childNodes[0].classList.add(
-            'dark:bg-pg-primary-600',
-            'dark:text-pg-primary-200',
-            'dark:placeholder-pg-primary-200',
-            'dark:border-pg-primary-500'
-        )
     },
 })

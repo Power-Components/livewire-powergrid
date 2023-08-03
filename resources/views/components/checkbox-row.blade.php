@@ -8,13 +8,12 @@
     @elseif($ruleDisable)
         <td
             class="{{ $theme->checkbox->thClass }}"
-            style="{{ $theme->thStyle }}"
+            style="{{ $theme->checkbox->thStyle }}"
         >
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
-                        @if(isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
-                          @endif
+                        @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }} @endif
                         disabled
                         type="checkbox"
                     >
@@ -29,7 +28,6 @@
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
-
                         type="checkbox"
                         x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
                         wire:model="checkboxValues"

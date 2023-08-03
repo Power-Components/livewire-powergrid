@@ -1,12 +1,14 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
-
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
 use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
+
+;
 
 todo('add rule \'toggleDetail\' when dishId == 3', function () {
     livewire(RulesToggleDetailTable::class, [

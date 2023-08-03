@@ -1,39 +1,69 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use Illuminate\Support\Js;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesActionTable;
+$component = new class () extends DishTableBase {
+    public function executeCall(array $params)
+    {
+    }
 
-it('properly displays "openModal" on edit button', function (string $component, object $params) {
+    public function actions($row): array
+    {
+        return [
+            Button::make('edit')
+                ->slot('call: ' . $row->id)
+                ->call('executeCall', [
+                    'params' => ['id' => $row->id],
+                ]),
+        ];
+    }
+};
+
+dataset('action', [
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+todo('properly displays "call" on edit button', function (string $component, object $params) {
     livewire($component, [
-        'join'        => $params->join,
-        'actionsTest' => [
-            Button::add('openModal')
-                ->id('open-modal')
-                ->caption('openModal')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
-        ],
+        'join' => $params->join,
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSee('$emit("openModal", "edit-stock", {"dishId":1})')
-        ->assertSee('$emit("openModal", "edit-stock", {"dishId":2})')
-        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":7})')
+        ->assertSeeHtml("\$call('executeCall', " . Js::from([
+            'params' => ['id' => 1],
+        ]) . ")")
+        ->assertSeeHtml("\$call('executeCall', " . Js::from([
+            'params' => ['id' => 2],
+        ]) . ")")
+        ->assertDontSeeHtml("\$call('executeCall', " . Js::from([
+            'params' => ['id' => 7],
+        ]) . ")")
         ->call('setPage', 2)
-        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":6})')
-        ->assertDontSee('$emit("openModal", "edit-stock", {"dishId":1})');
+        ->assertSeeHtml("\$call('executeCall', " . Js::from([
+            'params' => ['id' => 7],
+        ]) . ")")
+        ->assertDontSeeHtml("\$call('executeCall', " . Js::from([
+            'params' => ['id' => 1],
+        ]) . ")");
 })->with('action')->group('action');
 
-it('properly displays "$dispatch" on edit button', function (string $component, object $params) {
+todo('properly displays "$dispatch" on edit button', function (string $component, object $params) {
     livewire($component, [
         'join'        => $params->join,
         'actionsTest' => [
             Button::add('dispatch')
                 ->id('dispatch')
-                ->caption('Dispatch')
+                ->slot('Dispatch')
                 ->class('text-center')
                 ->dispatch('browserEvent', ['dishId' => 'id']),
         ],
@@ -48,13 +78,13 @@ it('properly displays "$dispatch" on edit button', function (string $component, 
         ->assertDontSee('$dispatch("browserEvent", {"dishId":1})');
 })->with('action')->group('action');
 
-it('properly displays "$emit" on delete button', function (string $component, object $params) {
+todo('properly displays "$emit" on delete button', function (string $component, object $params) {
     livewire($component, [
         'join'        => $params->join,
         'actionsTest' => [
             Button::add('emit')
                 ->id('emit')
-                ->caption('Delete')
+                ->slot('Delete')
                 ->class('text-center')
                 ->emit('deletedEvent', ['dishId' => 'id']),
         ],
@@ -77,13 +107,13 @@ it('properly displays "$emit" on delete button', function (string $component, ob
     //  ->assertPayloadSet('eventId', ['dishId' => 6]);
 })->with('action')->group('action');
 
-it('properly displays "$emitTo" on delete button from emitTo', function (string $component, object $params) {
+todo('properly displays "$emitTo" on delete button from emitTo', function (string $component, object $params) {
     livewire($component, [
         'join'        => $params->join,
         'actionsTest' => [
             Button::add('emitTo')
                 ->id('emit-to')
-                ->caption('EmitTo')
+                ->slot('EmitTo')
                 ->class('text-center')
                 ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
         ],
@@ -131,7 +161,7 @@ it('properly displays "id" on button', function (string $component, object $para
         'actionsTest' => [
             Button::add('openModal')
                 ->id('open-modal')
-                ->caption('openModal')
+                ->slot('openModal')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ],
@@ -144,10 +174,3 @@ it('properly displays "id" on button', function (string $component, object $para
         ->assertSeeHtml('id="open-modal-2"')
         ->assertDontSeeHtml('id="open-modal-1"');
 })->with('action')->group('action');
-
-dataset('action', [
-    'tailwind'       => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesActionTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishesActionTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
-]);

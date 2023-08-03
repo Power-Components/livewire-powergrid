@@ -20,17 +20,11 @@ export default (params) => ({
         this.$watch('editable', (value) => {
             if (value) {
                 let showEditable = false
-
                 this.showEditable = false
-
                 this.content = this.htmlSpecialChars(this.content);
-
                 this.oldContent = this.content;
-
                 const editablePending = window.editablePending.notContains(this.hash)
-
                 this.hashError = editablePending
-
                 if (editablePending) {
                     const pendingHash = window.editablePending.pending[0]
                     document.getElementById('clickable-' + pendingHash).click()
@@ -66,7 +60,7 @@ export default (params) => ({
                 window.editablePending.set(this.hash)
             }
 
-            this.$wire.emit('pg:editable-' + this.tableName, {
+            this.$wire.dispatch('pg:editable-' + this.tableName, {
                 id: this.id,
                 value: this.$el.textContent,
                 field: this.dataField
@@ -76,7 +70,7 @@ export default (params) => ({
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
-                setTimeout(() => this.$refs.editable.value = '', 200)
+                setTimeout(() => this.$refs.editable.setAttribute('value', ''), 200)
             }, 100))
 
         }, 100)

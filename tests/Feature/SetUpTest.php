@@ -2,7 +2,9 @@
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use function Pest\Livewire\livewire;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 use PowerComponents\LivewirePowerGrid\Cache;
 

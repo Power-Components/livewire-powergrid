@@ -12,21 +12,21 @@
         $operators = (array) data_get($filter, 'operators', []);
         $placeholder = strval(data_get($filter, 'placeholder'));
         $componentAttributes = (array) data_get($filter, 'attributes', []);
-        
-        $inputTextOptions = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
+
+        $inputTextOptions = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText::getInputTextOperators();
         $inputTextOptions = count($operators) > 0 ? $operators : $inputTextOptions;
         $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
-        
+
         $defaultPlaceholder = $column?->placeholder ?: $column?->title;
         $overridePlaceholder = $placeholder ?: $defaultPlaceholder;
-        
+
         unset($filter['placeholder']);
-        
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field, $title);
-        
+
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText::getWireAttributes($field, $title);
+
         $selectClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', $theme->selectClass, data_get($column, 'headerClass')]);
         $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', $theme->inputClass]);
-        
+
         $params = array_merge(
             [
                 'showSelectOptions' => $showSelectOptions,
@@ -42,13 +42,13 @@
         @unset($params['operators'], $params['attributes'])
 
         <x-dynamic-component
-            :component="$params['component']"
-            :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
+                :component="$params['component']"
+                :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
         />
     @else
         <div
-            @class([$theme->baseClass])
-            style="{{ $theme->baseStyle }}"
+                @class([$theme->baseClass])
+                style="{{ $theme->baseStyle }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
@@ -65,20 +65,20 @@
                     ])>
                         <div class="relative">
                             <select
-                                class="{{ $selectClasses }}"
-                                style="{{ data_get($column, 'headerStyle') }}"
-                                {{ $defaultAttributes['selectAttributes'] }}
+                                    class="{{ $selectClasses }}"
+                                    style="{{ data_get($column, 'headerStyle') }}"
+                                    {{ $defaultAttributes['selectAttributes'] }}
                             >
                                 @foreach ($inputTextOptions as $key => $value)
                                     <option
-                                        wire:key="input-text-options-{{ $tableName }}-{{ $key . '-' . $value }}"
-                                        value="{{ $value }}"
+                                            wire:key="input-text-options-{{ $tableName }}-{{ $key . '-' . $value }}"
+                                            value="{{ $value }}"
                                     >{{ trans('livewire-powergrid::datatable.input_text_options.' . $value) }}</option>
                                 @endforeach
                             </select>
                             <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
-                                <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
+                                <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300"/>
                             </div>
                         </div>
                     </div>
@@ -89,14 +89,15 @@
                     'pt-1' => !$showSelectOptions,
                 ])>
                     <input
-                        wire:key="input-{{ $field }}"
-                        data-id="{{ $field }}"
-                        @if (isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled
+                            wire:key="input-{{ $field }}"
+                            data-id="{{ $field }}"
+                            @if (isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled
                             @else
-                                {{ $defaultAttributes['inputAttributes'] }} @endif
-                        type="text"
-                        class="{{ $inputClasses }}"
-                        placeholder="{{ $placeholder }}"
+                                {{ $defaultAttributes['inputAttributes'] }}
+                            @endif
+                            type="text"
+                            class="{{ $inputClasses }}"
+                            placeholder="{{ $placeholder }}"
                     />
                 </div>
             </div>

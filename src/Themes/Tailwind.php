@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 use PowerComponents\LivewirePowerGrid\Themes\Components\{
     Actions,
     Checkbox,
-    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -67,12 +66,6 @@ class Tailwind extends ThemeBase
             ->view($this->root() . '.editable')
             ->span('flex justify-between')
             ->input('dark:bg-pg-primary-700 bg-pg-primary-50 text-black-700 border border-pg-primary-200 rounded py-2 px-3 leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-200 dark:bg-pg-primary-500 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-500 shadow-md');
-    }
-
-    public function clickToCopy(): ClickToCopy
-    {
-        return Theme::clickToCopy()
-            ->span('flex justify-between');
     }
 
     public function checkbox(): Checkbox

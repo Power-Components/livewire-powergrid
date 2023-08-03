@@ -50,4 +50,6 @@ parameters:
     checkGenericClassInNonGenericObjectType: false
 
     excludePaths:
-        - './src/Services/OpenSpout/*'
+        - './src/Components/Exports/OpenSpout/*'
+        - './src/Components/Actions/Macros.php'
+        - './src/Helpers/Actions.php'

@@ -77,24 +77,23 @@ class ExportTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
         ];
     }
 
-    public function actions(): array
+    public function actions(Dish $dish): array
     {
         return [
             Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
+                ->openModal('edit-stock', ['dishId' => $dish->id]),
 
             Button::add('destroy')
-                ->caption(__('Delete'))
+                ->slot(__('Delete'))
                 ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
+                ->dispatch('deletedEvent', ['dishId' => $dish->id])
                 ->method('delete'),
         ];
     }

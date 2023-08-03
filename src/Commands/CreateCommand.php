@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables, FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
-use PowerComponents\LivewirePowerGrid\Exceptions\CreateCommandException;
+use PowerComponents\LivewirePowerGrid\Commands\Exceptions\CreateCommandException;
 
 class CreateCommand extends Command
 {

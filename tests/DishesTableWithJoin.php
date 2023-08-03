@@ -5,17 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     Exportable,
+    Facades\Rule,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
     PowerGridComponent,
-    Rules\Rule,
-    Traits\ActionButton
-};
+    Traits\ActionButton};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
@@ -151,7 +149,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->title(__('Prato'))
                 ->field('dish_name')
                 ->searchable()
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -206,7 +203,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
+                ->slot('cation edit for id 4'),
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)

@@ -1,18 +1,20 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 todo('add rule \'disable\' when dishId === 9', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('testActions', [
             Button::add('edit')
-                ->caption('Edit')
+                ->slot('Edit')
                 ->class('text-center')
                 ->openModal('modal-edit', ['dishId' => 'id']),
         ])

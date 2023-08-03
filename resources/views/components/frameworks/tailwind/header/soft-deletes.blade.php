@@ -27,19 +27,19 @@
         >
 
             <div
-                x-on:click="$wire.emit('pg:softDeletes-{{ $tableName }}', ''); open = false"
+                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', ''); open = false"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-200 dark:text-pg-primary-200 dark:hover:bg-gray-900 dark:hover:bg-pg-primary-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
             </div>
             <div
-                x-on:click="$wire.emit('pg:softDeletes-{{ $tableName }}', 'withTrashed'); open = false"
+                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', 'withTrashed'); open = false"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-200 dark:text-pg-primary-200 dark:hover:bg-gray-900 dark:hover:bg-pg-primary-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
             </div>
             <div
-                x-on:click="$wire.emit('pg:softDeletes-{{ $tableName }}', 'onlyTrashed'); open = false"
+                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', 'onlyTrashed'); open = false"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-200 dark:text-pg-primary-200 dark:hover:bg-gray-900 dark:hover:bg-pg-primary-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.only_trashed')

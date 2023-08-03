@@ -11,7 +11,7 @@
                     <div class="d-flex flex-lg-row align-items-center">
                         <label class="w-auto">
                             <select
-                                wire:model.lazy="setUp.footer.perPage"
+                                wire:model.live="setUp.footer.perPage"
                                 class="form-select"
                             >
                                 @foreach (data_get($setUp, 'footer.perPageValues') as $value)

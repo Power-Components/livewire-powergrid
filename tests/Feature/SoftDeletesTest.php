@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\DB;
 
-use function Pest\Livewire\livewire;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
@@ -21,9 +23,9 @@ it('should display softDeletes button', function (string $component, string $the
         ->set('setUp.footer.perPage', '10')
         ->set('softDeletes', '')
         ->assertSeeHtml('M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16')
-        ->assertSeeHtml("emit('pg:softDeletes-default', 'withTrashed')")
-        ->assertSeeHtml("emit('pg:softDeletes-default', 'onlyTrashed')")
-        ->assertSeeHtml("emit('pg:softDeletes-default', '')");
+        ->assertSeeHtml("dispatch('pg:softDeletes-default', 'withTrashed')")
+        ->assertSeeHtml("dispatch('pg:softDeletes-default', 'onlyTrashed')")
+        ->assertSeeHtml("dispatch('pg:softDeletes-default', '')");
 })->with('soft_deletes');
 
 it('should list only undeleted records', function (string $component, string $theme) {

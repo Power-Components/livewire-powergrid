@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Header};
 
@@ -30,7 +30,7 @@ class RulesDetailRowTable extends DishTableBase
     {
         return [
             Button::add('edit')
-                ->caption('<div id="edit">Toggle</div>')
+                ->slot('<div id="edit">Toggle</div>')
                 ->class('text-center')
                 ->toggleDetail(),
         ];

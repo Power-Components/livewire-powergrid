@@ -13,7 +13,7 @@
                 @foreach ($columns as $column)
                     @if (!$column->forceHidden)
                         <li
-                            wire:click="$emit('pg:toggleColumn-{{ $tableName }}', '{{ $column->field }}')"
+                            wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: {{ $column->field }}})"
                             wire:key="toggle-column-{{ $column->field }}"
                         >
                             <a

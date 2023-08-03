@@ -143,7 +143,6 @@ class DishesTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -157,7 +156,6 @@ class DishesTable extends PowerGridComponent
                 ->field('chef_name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -196,18 +194,18 @@ class DishesTable extends PowerGridComponent
         ];
     }
 
-    public function actions(): array
+    public function actions(Dish $row): array
     {
         return [
             Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
+                ->openModal('edit-stock', ['dishId' => $row->id]),
 
             Button::add('destroy')
-                ->caption(__('Delete'))
+                ->slot(__('Delete'))
                 ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
+                ->dispatch('deletedEvent', ['dishId' => $row->id])
                 ->method('delete'),
         ];
     }

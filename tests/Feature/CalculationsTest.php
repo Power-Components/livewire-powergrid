@@ -1,6 +1,8 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+;
 
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 

@@ -5,11 +5,20 @@ namespace PowerComponents\LivewirePowerGrid;
 use Illuminate\Support\Traits\Macroable;
 use Livewire\Wireable;
 
+/**
+ * @method static dispatch(string $event, array $params)
+ * @method static dispatchTo(string $component, string $event, array $params)
+ * @method static dispatchSelf(string $event, array $params)
+ * @method static openModal(string $component, array $params)
+ * @method static parent(string $method, array $params)
+ * @method static call(string $method, array $params)
+ * @method static toggleDetail()
+ */
 final class Button implements Wireable
 {
     use Macroable;
 
-    public ?string $caption = '';
+    public ?string $slot = '';
 
     public string $route = '';
 
@@ -17,25 +26,13 @@ final class Button implements Wireable
 
     public string $method = 'get';
 
-    public string $view = '';
-
-    public string $event = '';
-
     public bool $can = true;
 
     public string $target = '_blank';
 
-    public string $to = '';
-
     public string $tooltip = '';
 
-    public bool $toggleDetail = false;
-
-    public bool $singleParam = false;
-
     public string $bladeComponent = '';
-
-    public string $browserEvent = '';
 
     public array|\Closure $params = [];
 
@@ -61,18 +58,18 @@ final class Button implements Wireable
     /**
      * Make a new Column
      */
-    public static function make(string $action, ?string $caption = null): self
+    public static function make(string $action, ?string $slot = null): self
     {
         return (new static($action))
-            ->caption($caption);
+            ->slot($slot);
     }
 
     /**
      * Button text in view
      */
-    public function caption(?string $caption = null): Button
+    public function slot(?string $slot = null): Button
     {
-        $this->caption = $caption;
+        $this->slot = $slot;
 
         return $this;
     }
@@ -81,11 +78,10 @@ final class Button implements Wireable
      * Route string
      * @codeCoverageIgnore
      */
-    public function route(string $route, array|\Closure $params, bool $singleParam = false): Button
+    public function route(string $route, array|\Closure $params): Button
     {
-        $this->route       = $route;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
+        $this->route  = $route;
+        $this->params = $params;
 
         return $this;
     }
@@ -106,50 +102,6 @@ final class Button implements Wireable
     public function method(string $method): Button
     {
         $this->method = $method;
-
-        return $this;
-    }
-
-    /**
-     * openModal using wire-elements
-     * @see https://github.com/wire-elements/modal
-     */
-    public function openModal(string $component, array|\Closure $params, bool $singleParam = false): Button
-    {
-        $this->view        = $component;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
-        $this->method      = 'get';
-        $this->route       = '';
-        $this->event       = '';
-
-        return $this;
-    }
-
-    /**
-     * Livewire emit
-     */
-    public function emit(string $event, array|\Closure $params, bool $singleParam = false): Button
-    {
-        $this->event       = $event;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
-        $this->route       = '';
-
-        return $this;
-    }
-
-    /**
-     * Add Livewire emitTo
-     *
-     */
-    public function emitTo(string $to, string $event, array|\Closure $param, bool $singleParam = false): Button
-    {
-        $this->to          = $to;
-        $this->event       = $event;
-        $this->params      = $param;
-        $this->singleParam = $singleParam;
-        $this->route       = '';
 
         return $this;
     }
@@ -187,34 +139,12 @@ final class Button implements Wireable
     }
 
     /**
-     * toggleDetail
-     */
-    public function toggleDetail(): Button
-    {
-        $this->toggleDetail = true;
-
-        return $this;
-    }
-
-    /**
      * Add Blade Component
      */
     public function bladeComponent(string $component, array|\Closure $params): Button
     {
         $this->bladeComponent = $component;
         $this->params         = $params;
-
-        return $this;
-    }
-
-    /**
-     * Alpine Dispatch Browser Events
-     */
-    public function dispatch(string $event, array|\Closure $params): Button
-    {
-        $this->browserEvent = $event;
-        $this->params       = $params;
-        $this->route        = '';
 
         return $this;
     }

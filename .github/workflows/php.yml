@@ -30,16 +30,12 @@ jobs:
       matrix:
         php: [ 8.2, 8.1 ]
         laravel: [ 10.* ]
-        livewire: [ v2.12, ^3.0 ]
         dependency-version: [ prefer-stable ]
         include:
           - laravel: 10.*
             testbench: 8.*
-        exclude:
-          - php: 8.0
-            laravel: 10.*
 
-    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }} (${{ matrix.dependency-version }})
+    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }} / LW:${{ matrix.livewire }}
 
     steps:
       - name: Checkout
@@ -62,12 +58,10 @@ jobs:
         with:
           path: $(composer config cache-files-dir)
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
-          restore-keys: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-
 
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer require "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
           rm composer.lock
           composer require openspout/openspout
       - name: Pint

@@ -1,14 +1,16 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesQueryBuilderTable,
     DishesTable,
     DishesTableWithJoin};
+
+;
 
 it('properly filter the produced_at field between two dates', function (string $component, object $params) {
     livewire($component, [

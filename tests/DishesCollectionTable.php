@@ -4,18 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon, Collection};
 use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
-    Filters\Filter,
+    Facades\Rule,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Rules\Rule
-};
+    PowerGridComponent};
 
 class DishesCollectionTable extends PowerGridComponent
 {
@@ -158,28 +155,28 @@ class DishesCollectionTable extends PowerGridComponent
         ];
     }
 
-    public function actions(): array
+    public function actions($row): array
     {
         return [
             Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
+                ->openModal('edit-stock', ['dishId' => $row['id']]),
 
             Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
+                ->slot('<div id="edit">Edit for Rules</div>')
                 ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
+                ->openModal('edit-stock-for-rules', ['dishId' => $row['id']]),
 
             Button::add('destroy')
-                ->caption(__('Delete'))
+                ->slot(__('Delete'))
                 ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
+                ->dispatch('deletedEvent', ['dishId' => $row['id']])
                 ->method('delete'),
         ];
     }
 
-    public function actionRules(): array
+    public function actionRules($row): array
     {
         return [
             Rule::button('edit-stock-for-rules')
@@ -188,7 +185,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 4)
-                ->caption('cation edit for id 4'),
+                ->slot('cation edit for id 4'),
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)

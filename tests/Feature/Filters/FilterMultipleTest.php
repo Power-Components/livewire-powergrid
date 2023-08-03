@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Str;
-
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
-
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\{DishesQueryBuilderTable, DishesTable, DishesTableWithJoin};
+
+;
 
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
     $component = livewire($component, [

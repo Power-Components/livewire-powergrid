@@ -1,10 +1,13 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterInputText};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterInputText};
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesFiltersTable, DishesQueryBuilderTable};
+
+;
 
 it('properly filters by "name is"', function (string $component, object $params) {
     $filter   = Filter::inputText('name', $params->field)->operators();

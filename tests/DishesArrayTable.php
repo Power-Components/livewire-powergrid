@@ -160,7 +160,7 @@ class DishesArrayTable extends PowerGridComponent
     {
         return [
             Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ];

@@ -1,15 +1,19 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterMultiSelect, FilterMultiSelectAsync};
-
+use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelectAsync};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelect};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesFiltersTable,
     DishesQueryBuilderTable};
+
+;
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')

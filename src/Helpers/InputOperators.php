@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use PowerComponents\LivewirePowerGrid\Filters\FilterInputText;
+use PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText;
 
 trait InputOperators
 {

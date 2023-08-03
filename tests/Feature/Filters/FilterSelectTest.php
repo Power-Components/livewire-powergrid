@@ -1,15 +1,17 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
-
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesQueryBuilderTable,
     DishesTable,
     DishesTableWithJoin};
+
+;
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')

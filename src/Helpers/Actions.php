@@ -2,9 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\{Arr, Js};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 
 class Actions
@@ -23,9 +26,9 @@ class Actions
 
     public array $ruleAttributes;
 
-    public array $ruleEmit;
+    public array $ruleDispatch;
 
-    public array $ruleEmitTo;
+    public array $ruleDispatchTo;
 
     public string $ruleCaption;
 
@@ -47,7 +50,7 @@ class Actions
 
     public function __construct(
         public array|Button $action,
-        public \Illuminate\Database\Eloquent\Model|\stdClass $row,
+        public Model|\stdClass $row,
         public string|int $primaryKey,
         public ThemeBase $theme,
     ) {
@@ -57,15 +60,13 @@ class Actions
         $this->initializeParameters();
 
         $this->actionRules();
-        $this->emit();
         $this->dispatch();
-        $this->emitTo();
-        $this->openModal();
+        //        $this->dispatchTo();
         $this->title();
         $this->bladeComponent();
         $this->disabled();
         $this->redirect();
-        $this->toggleDetail();
+        // $this->toggleDetail();
         $this->attributes();
         $this->route();
         $this->id();
@@ -85,7 +86,7 @@ class Actions
 
     private function initializeParameters(): void
     {
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+        $customParams = resolve(ActionsController::class)->recoverFromButton($this->action, $this->row);
 
         if (filled($customParams) && is_array($customParams['custom-action'])) {
             $this->parameters = $customParams['custom-action'];
@@ -93,18 +94,12 @@ class Actions
             return;
         }
 
-        if (data_get($this->action, 'singleParam')) {
-            $this->parameters = $this->helperClass->makeActionParameter((array)data_get($this->action, 'params'), $this->row);
-
-            return;
-        }
-
-        $this->parameters = $this->helperClass->makeActionParameters((array)data_get($this->action, 'params'), $this->row);
+        // $this->parameters = $this->helperClass->makeActionParameters((array)data_get($this->action, 'params'), $this->row);
     }
 
     private function actionRules(): void
     {
-        $rules = resolve(ActionRules::class)->recoverFromButton($this->action, $this->row);
+        $rules = resolve(RulesController::class)->recoverFromButton($this->action, $this->row);
 
         $this->ruleRedirect       = (array) data_get($rules, 'redirect', []);
         $this->ruleDisabled       = boolval(data_get($rules, 'disable', false));
@@ -217,29 +212,13 @@ class Actions
         ]);
     }
 
-    private function openModal(): void
-    {
-        if ($this->hasAttributesInComponentBag('wire:click')
-           || blank(data_get($this->action, 'view'))
-           || filled($this->ruleRedirect)) {
-            return;
-        }
-
-        $this->componentBag = $this->componentBag->merge([
-            'wire:click' => '$emit("openModal", "' . data_get($this->action, 'view') . '", ' . json_encode($this->parameters) . ')',
-        ]);
-    }
-
     private function dispatch(): void
     {
-        if ((
-            $this->hasAttributesInComponentBag('wire:click')
-            || blank(data_get($this->action, 'browserEvent'))
-        ) && blank($this->ruleEmit)) {
+        if ($this->hasAttributesInComponentBag('wire:click')) {
             return;
         }
 
-        $event = $this->ruleEmit['event'] ?? data_get($this->action, 'browserEvent');
+        $event = $this->ruleDispatch['dispatchEvent'] ?? data_get($this->action, 'dispatchEvent');
 
         $parameters = $this->parameters;
 
@@ -248,7 +227,7 @@ class Actions
         }
 
         $this->componentBag = $this->componentBag->merge([
-            'x-on:click' => '$dispatch("' . $event . '", ' . json_encode($parameters) . ')',
+            'wire:click' => '$dispatch("' . $event . '", ' . Js::encode($parameters) . ' )',
         ]);
     }
 
@@ -303,7 +282,7 @@ class Actions
             $parameters = $this->helperClass->makeActionParameters((array) data_get($this->ruleBladeComponent, 'params', []), $this->row);
         }
 
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+        $customParams = resolve(ActionsController::class)->recoverFromButton($this->action, $this->row);
 
         if (filled($customParams) && is_array($customParams['custom-action'])) {
             $parameters = $customParams['custom-action'];
@@ -341,7 +320,7 @@ class Actions
 
     private function customRender(): void
     {
-        $customParams = resolve(ActionRender::class)->recoverFromButton($this->action, $this->row);
+        $customParams = resolve(ActionsController::class)->recoverFromButton($this->action, $this->row);
 
         if (filled($customParams) && is_string($customParams['custom-action'])) {
             $this->customRender = $customParams['custom-action'];

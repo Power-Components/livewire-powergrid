@@ -33,7 +33,7 @@
                     href="#"
                     class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                 >
-                    @if (count($enabledFilters)===0)
+                    @if (count($enabledFilters) === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else
                         @lang('livewire-powergrid::datatable.labels.filtered')
@@ -61,7 +61,7 @@
                     href="#"
                     class="px-2 block text-pg-primary-800 hover:bg-pg-primary-50 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-700 rounded"
                 >
-                    @if (count($enabledFilters)===0)
+                    @if (count($enabledFilters) === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else
                         @lang('livewire-powergrid::datatable.labels.filtered')

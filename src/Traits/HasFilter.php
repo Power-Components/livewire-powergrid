@@ -3,7 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon, Collection};
+use Illuminate\Support\{Carbon};
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
@@ -155,7 +156,7 @@ trait HasFilter
                 }));
 
                 $filterForColumn->each(function ($filter) {
-                    if ($filter->className === 'PowerComponents\LivewirePowerGrid\Filters\FilterDynamic' &&
+                    if ($filter->className === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
                         isset($filter->attributes)) {
                         $attributes = array_values($filter->attributes);
 
@@ -174,18 +175,25 @@ trait HasFilter
         }
     }
 
-    public function datePickerChanged(array $data): void
-    {
+    #[On('pg:datePicker-{tableName}')]
+    public function datePickerChanged(
+        array $selectedDates,
+        string $field,
+        string $wireModel,
+        string $label,
+        string $type,
+        string $timezone = 'UTC',
+    ): void {
         $this->resetPage();
 
-        $input = explode('.', $data['values']);
+        $input = explode('.', $wireModel);
 
-        $startDate = strval(data_get($data, 'selectedDates.0'));
-        $endDate   = strval(data_get($data, 'selectedDates.1'));
+        $startDate = strval($selectedDates[0]);
+        $endDate   = strval($selectedDates[1]);
 
         $appTimeZone = strval(config('app.timezone'));
 
-        $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
+        $filterTimezone = new DateTimeZone($timezone);
 
         $startDate = Carbon::parse($startDate)->format('Y-m-d');
         $endDate   = Carbon::parse($endDate)->format('Y-m-d');
@@ -193,48 +201,49 @@ trait HasFilter
         $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
         $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
 
-        if ($data['type'] === 'datetime') {
+        if ($type === 'datetime') {
             $startDate->startOfDay()->setTimeZone($appTimeZone);
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
-        data_set($data, 'selectedDates.0', $startDate);
-        data_set($data, 'selectedDates.1', $endDate);
+        $selectedDates[0] = $startDate;
+        $selectedDates[1] = $endDate;
 
-        $this->enabledFilters[$data['field']]['data-field'] = $data['field'];
-        $this->enabledFilters[$data['field']]['label']      = $data['label'];
+        data_set($this->enabledFilters, "$field.data-field", $field);
+        data_set($this->enabledFilters, "$field.label", $label);
 
         if (count($input) === 3) {
-            $this->filters[$data['type']][$input[2]] = $data['selectedDates'];
+            $this->filters[$type][$input[2]] = $selectedDates;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 4) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            $this->filters[$type][$input[2] . '.' . $input[3]] = $selectedDates;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 5) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+            $this->filters[$type][$input[2] . '.' . $input[3] . '.' . $input[4]] = $selectedDates;
             $this->persistState('filters');
         }
     }
 
-    public function multiSelectChanged(array $params): void
-    {
+    #[On('pg:multiSelect-{tableName}')]
+    public function multiSelectChanged(
+        string $field,
+        string $label,
+        array $values,
+    ): void {
         $this->resetPage();
-
-        $field  = strval(data_get($params, 'params.dataField'));
-        $values = (array) data_get($params, 'values');
 
         data_set($this->filters, "multi_select.$field", $values);
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = strval(data_get($params, 'params.title'));
+        data_set($this->enabledFilters, "$field.id", $field);
+        data_set($this->enabledFilters, "$field.label", $label);
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
@@ -249,8 +258,8 @@ trait HasFilter
     {
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        data_set($this->enabledFilters, "$field.id", $field);
+        data_set($this->enabledFilters, "$field.label", $label);
 
         $value = data_get($this->filters, "select.$field");
 

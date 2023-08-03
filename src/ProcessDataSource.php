@@ -3,12 +3,14 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender, ActionRules, Builder, Collection, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
+use PowerComponents\LivewirePowerGrid\Helpers\{Builder, Collection, SqlSupport};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
 /** @internal  */
@@ -71,7 +73,7 @@ class ProcessDataSource
     private function processCollection(mixed $datasource): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         /** @var BaseCollection $datasource */
-        cache()->forget($this->component->getLivewireId());
+        cache()->forget($this->component->getId());
 
         $filters = Collection::make($this->resolveCollection($datasource), $this->component)
             ->filterContains()
@@ -267,7 +269,7 @@ class ProcessDataSource
             return new BaseCollection($this->component->datasource());
         }
 
-        return cache()->rememberForever($this->component->getLivewireId(), function () use ($datasource) {
+        return cache()->rememberForever($this->component->getId(), function () use ($datasource) {
             if (is_array($datasource)) {
                 return new BaseCollection($datasource);
             }
@@ -293,17 +295,25 @@ class ProcessDataSource
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
-            if (method_exists($this->component, 'actions') && count($this->component->actions())) {
-                $actions = resolve(ActionRender::class)->resolveActionRender($this->component->actions(), (object) $row);
+            $actions = [];
+
+            $prepareRules = collect();
+
+            if (method_exists($this->component, 'actionRules')) {
+                $prepareRules = resolve(RulesController::class)->execute($this->component->actionRules($row), (object)$row);
             }
 
-            if (count($this->component->actionRules())) {
-                $rules = resolve(ActionRules::class)->resolveRules($this->component->actionRules(), (object) $row);
+            if (method_exists($this->component, 'actions')) {
+                $actions = (new ActionsController($this->component, $prepareRules))->execute($this->component->actions($row), (object) $row);
             }
 
-            $mergedData = $data->merge($rules ?? [])->merge($actions ?? []);
+            $mergedData = $data->merge([
+                'rules' => $prepareRules,
+            ])->merge([
+                'actions' => $actions,
+            ]);
 
-            return $row instanceof \Illuminate\Database\Eloquent\Model
+            return $row instanceof Model
                 ? tap($row)->forceFill($mergedData->toArray())
                 : (object) $mergedData->toArray();
         });

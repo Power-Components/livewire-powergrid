@@ -2,19 +2,19 @@
 
 namespace PowerComponents\LivewirePowerGrid\Helpers;
 
-use Illuminate\Database\Eloquent\{Builder as EloquentBuilder,
-    RelationNotFoundException};
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
-use PowerComponents\LivewirePowerGrid\Filters\{Builders\Boolean,
-    Builders\DatePicker,
-    Builders\DateTimePicker,
-    Builders\InputText,
-    Builders\MultiSelect,
-    Builders\Number,
-    Builders\Select};
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
+use PowerComponents\LivewirePowerGrid\{Column,
+    Components\Filters\Builders\Boolean,
+    Components\Filters\Builders\DatePicker,
+    Components\Filters\Builders\DateTimePicker,
+    Components\Filters\Builders\InputText,
+    Components\Filters\Builders\MultiSelect,
+    Components\Filters\Builders\Select,
+    PowerGridComponent};
 
 class Builder
 {
