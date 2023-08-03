@@ -29,10 +29,10 @@ class RuleActions implements Wireable
     /**
      * Sets the button's event to be emitted.
      */
-    public function emit(string $event = '', array $params = []): RuleActions
+    public function dispatch(string $event = '', array $params = []): RuleActions
     {
         $this->rule['redirect'] = [];
-        $this->rule['emit']     = [
+        $this->rule['dispatch'] = [
             'event'  => $event,
             'params' => $params,
         ];
@@ -41,12 +41,12 @@ class RuleActions implements Wireable
     }
 
     /**
-     * Sets the button's eventTo to be emitted.
+     * Sets the button's dispatchTo to be emitted.
      */
-    public function emitTo(string $to = '', string $event = '', array $params = []): RuleActions
+    public function dispatchTo(string $to = '', string $event = '', array $params = []): RuleActions
     {
-        $this->rule['redirect'] = [];
-        $this->rule['emitTo']   = [
+        $this->rule['redirect']   = [];
+        $this->rule['dispatchTo'] = [
             'to'     => $to,
             'event'  => $event,
             'params' => $params,

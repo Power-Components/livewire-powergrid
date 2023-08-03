@@ -2,11 +2,10 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\{livewire};
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesEmitTable};
+use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, Models\Dish, RulesEmitToTable};
 
 $component = new class () extends DishTableBase {
     public int $dishId;
@@ -25,20 +24,21 @@ $component = new class () extends DishTableBase {
         return [
             Rule::button('edit')
                 ->when(fn (Dish $dish) => $dish->id == 5)
-                ->dispatch('toggleEvent', ['dishId' => 5]),
+                ->dispatchTo('dishes-table', 'deletedEvent', ['dishId' => 5]),
         ];
     }
 };
 
-it('add rule \'dispatch\' when dishId == 5', function (string $component, object $params) {
+it('add rule \'dispatchTo\' when dishId == 5', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
-        ->set('setUp.footer.perPage', 10)
-        ->set('search', 'Francesinha vegana')
-        ->assertSee("\$dispatch(&#039;toggleEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:5}&#039;))");
-})->with('emit_themes_with_join')->group('actionRules');
+        //page 1
+        ->set('setUp.footer.perPage', 5)
+        ->assertSee('$dispatchTo(&#039;dishes-table&#039;,deletedEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:5}&#039;))')
+        ->assertDontSee('$dispatchTo(&#039;dishes-table&#039;,deletedEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:4}&#039;))');
+})->with('emit_to_themes_with_join')->group('actionRules');
 
-dataset('emit_themes_with_join', [
+dataset('emit_to_themes_with_join', [
     'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],

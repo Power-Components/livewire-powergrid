@@ -43,7 +43,7 @@ class ActionsController
                 $applyRules = $this->applyRules($button);
 
                 // attribute
-                if ($attributeBag = data_get($applyRules, 'attribute')) {
+                if ($attributeBag = data_get($applyRules, 'attributes')) {
                     $attributes = $attributes->merge($attributeBag->getAttributes());
                 }
 
@@ -53,6 +53,8 @@ class ActionsController
                         'render-action.' . $index . '.' . data_get($button, 'action') => $html,
                     ];
                 }
+
+                $ruleSlot = data_get($applyRules, 'slot');
             }
 
             if (filled($attribute) && filled($value)) {
@@ -70,7 +72,7 @@ class ActionsController
                 )
             );
 
-            $slot = strval(data_get($button, 'slot'));
+            $slot = $ruleSlot ?? strval(data_get($button, 'slot'));
 
             $element = "<{$component} {$attributeString}>{$slot}</{$component}>";
 
@@ -106,7 +108,7 @@ class ActionsController
     public function applyRules(Button|array $button): array
     {
         $rules = (array) $this->prepareRules->get(
-            strval(data_get($button, 'class'))
+            strval(data_get($button, 'action'))
         );
 
         $bladeComponent = (array) data_get($rules, 'action.bladeComponent', []);
@@ -130,9 +132,36 @@ class ActionsController
                 //                $ruleRedirect       = (array) data_get($rule, 'redirect', []);
                 //                $ruleDisabled       = boolval(data_get($rule, 'disable', false));
                 //                $ruleHide           = boolval(data_get($rule, 'hide', false));
-                //                $ruleEmit           = (array) data_get($rule, 'dispatch', []);
+
                 //                $ruleEmitTo         = (array) data_get($rule, 'dispatchTo', []);
-                //                $ruleCaption        = strval(data_get($rule, 'caption'));
+
+                // Slot
+                if ($ruleSlot = strval(data_get($rule, 'slot'))) {
+                    return [
+                        'slot' => $ruleSlot,
+                    ];
+                }
+
+                // Dispatch
+                if ($ruleDispatch = (array) data_get($rule, 'dispatch', [])) {
+                    $event  = data_get($ruleDispatch, 'event');
+                    $params = data_get($ruleDispatch, 'params');
+
+                    $attributeBag = $attributeBag->merge([
+                        'wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")",
+                    ]);
+                }
+
+                // DispatchTo
+                if ($ruleDispatch = (array) data_get($rule, 'dispatchTo', [])) {
+                    $to     = data_get($ruleDispatch, 'to');
+                    $event  = data_get($ruleDispatch, 'event');
+                    $params = data_get($ruleDispatch, 'params');
+
+                    $attributeBag = $attributeBag->merge([
+                        'wire:click' => "\$dispatchTo('{$to}',{$event}', " . Js::from($params) . ")",
+                    ]);
+                }
 
                 // setAttributes
                 $ruleAttributes = (array)(data_get($rule, 'setAttribute', []));
@@ -158,7 +187,7 @@ class ActionsController
         }
 
         return [
-            'attribute' => $attributeBag,
+            'attributes' => $attributeBag,
         ];
     }
 }
