@@ -202,7 +202,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 5)
-                ->emit('toggleEvent', ['dishId' => 'id']),
+                ->dispatch('toggleEvent', ['dishId' => 'id']),
 
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 9)

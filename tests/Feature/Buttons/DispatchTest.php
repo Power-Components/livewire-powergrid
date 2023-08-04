@@ -1,9 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
-use Livewire\Attributes\On;
-
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 ;
@@ -12,11 +8,6 @@ use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
 
 $component = new class () extends DishTableBase {
-    #[On('executeDispatch')]
-    public function executeCall(array $params)
-    {
-    }
-
     public function actions($row): array
     {
         return [
@@ -40,12 +31,12 @@ it('properly displays "dispatch" on edit button', function (string $component, o
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("wire:click=\"\$dispatch('executeDispatch', " . Js::from(['id' => 1]) . ")\">dispatch: 1</button>")
-        ->assertSeeHtml("wire:click=\"\$dispatch('executeDispatch', " . Js::from(['id' => 2]) . ")\">dispatch: 2</button>")
-        ->assertDontSeeHtml("wire:click=\"\$dispatch('executeDispatch', " . Js::from(['id' => 7]) . ")\">dispatch: 7</button>")
+        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))")
+        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:2}'))")
+        ->assertDontSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:7}'))")
         ->call('setPage', 2)
-        ->assertSeeHtml("wire:click=\"\$dispatch('executeDispatch', " . Js::from(['id' => 7]) . ")\">dispatch: 7</button>")
-        ->assertDontSeeHtml("wire:click=\"\$dispatch('executeDispatch', " . Js::from(['id' => 1]) . ")\">dispatch: 1</button>");
+        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:7}'))")
+        ->assertDontSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))");
 })
     ->with('action:dispatch')
     ->group('action');

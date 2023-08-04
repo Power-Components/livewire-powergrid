@@ -86,7 +86,7 @@ todo('properly displays "$emit" on delete button', function (string $component, 
                 ->id('emit')
                 ->slot('Delete')
                 ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id']),
+                ->dispatch('deletedEvent', ['dishId' => 'id']),
         ],
     ])
         ->call($params->theme)
@@ -115,7 +115,7 @@ todo('properly displays "$emitTo" on delete button from emitTo', function (strin
                 ->id('emit-to')
                 ->slot('EmitTo')
                 ->class('text-center')
-                ->emitTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
+                ->dispatchTo('dishes-table', 'deletedEvent', ['dishId' => 'id']),
         ],
     ])
         ->call($params->theme)
