@@ -1,13 +1,13 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Helpers;
+namespace PowerComponents\LivewirePowerGrid\Connectors\Support;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\{DB, Schema};
 
-class SqlSupport
+class Sql
 {
     /**
      * @var array<int,string>|string[]

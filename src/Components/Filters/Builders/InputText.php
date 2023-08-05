@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\Helpers\SqlSupport;
+use PowerComponents\LivewirePowerGrid\Connectors\Support\Sql;
 
 class InputText extends BuilderBase
 {
@@ -34,16 +34,16 @@ class InputText extends BuilderBase
             match ($selected) {
                 'is'           => $query->where($field, '=', $value),
                 'is_not'       => $query->where($field, '!=', $value),
-                'starts_with'  => $query->where($field, SqlSupport::like($query), $value . '%'),
-                'ends_with'    => $query->where($field, SqlSupport::like($query), '%' . $value),
-                'contains_not' => $query->where($field, 'NOT ' . SqlSupport::like($query), '%' . $value . '%'),
+                'starts_with'  => $query->where($field, Sql::like($query), $value . '%'),
+                'ends_with'    => $query->where($field, Sql::like($query), '%' . $value),
+                'contains_not' => $query->where($field, 'NOT ' . Sql::like($query), '%' . $value . '%'),
                 'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
                 'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
                 'is_null'      => $query->whereNull($field),
                 'is_not_null'  => $query->whereNotNull($field),
                 'is_blank'     => $query->where($field, '=', ''),
                 'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-                default        => $query->where($field, SqlSupport::like($query), '%' . $value . '%'),
+                default        => $query->where($field, Sql::like($query), '%' . $value . '%'),
             };
         };
 

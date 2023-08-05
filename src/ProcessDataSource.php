@@ -3,15 +3,15 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\Connectors\{Builder, Collection};
-use PowerComponents\LivewirePowerGrid\Helpers\{SqlSupport};
+use PowerComponents\LivewirePowerGrid\Connectors\{Support\Sql};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
 /** @internal  */
@@ -211,10 +211,10 @@ class ProcessDataSource
             $direction = $multiSortDirection;
         }
 
-        $sortFieldType = SqlSupport::getSortFieldType($sortField);
+        $sortFieldType = Sql::getSortFieldType($sortField);
 
-        if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $direction);
+        if (Sql::isValidSortFieldType($sortFieldType)) {
+            $results->orderByRaw(Sql::sortStringAsNumber($sortField) . ' ' . $direction);
         }
 
         return $results;

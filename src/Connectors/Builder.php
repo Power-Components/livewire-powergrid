@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundEx
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Boolean,
     Components\Filters\Builders\DatePicker,
@@ -14,9 +13,10 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\InputText,
     Components\Filters\Builders\MultiSelect,
     Components\Filters\Builders\Select,
-    Helpers\InputOperators,
-    Helpers\SqlSupport,
+    Connectors\Support\InputOperators,
+    Connectors\Support\Sql,
     PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 
 class Builder
 {
@@ -158,7 +158,7 @@ class Builder
 
                         $query->when($search, function () use ($column, $query, $search, $table, $field, $hasColumn) {
                             if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
-                                $query->orWhereRaw($sqlRaw . ' ' . SqlSupport::like($query) . ' \'%' . $search . '%\'');
+                                $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' \'%' . $search . '%\'');
                             }
 
                             if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
@@ -169,12 +169,12 @@ class Builder
                                     $driverName = $query->getConnection()->getConfig('driver');
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
+                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . "?", '%' . $search . '%');
                                     } else {
-                                        $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                        $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                     }
                                 } catch (\Throwable) {
-                                    $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                    $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                 }
                             }
                         });
@@ -207,7 +207,7 @@ class Builder
                 $search = $this->getBeforeSearchMethod($columns, $search);
                 $query->when(
                     $search,
-                    fn (EloquentBuilder $query) => $query->where($columns, SqlSupport::like($query), '%' . $search . '%')
+                    fn (EloquentBuilder $query) => $query->where($columns, Sql::like($query), '%' . $search . '%')
                 );
             });
         }
@@ -230,7 +230,7 @@ class Builder
                                 $search = $this->getBeforeSearchMethod($nestedColumn, $search);
                                 $query->when(
                                     $search,
-                                    fn (EloquentBuilder $query) => $query->where("$nestedTableWithDot.$nestedColumn", SqlSupport::like($query), '%' . $search . '%')
+                                    fn (EloquentBuilder $query) => $query->where("$nestedTableWithDot.$nestedColumn", Sql::like($query), '%' . $search . '%')
                                 );
                             }
                         });
@@ -242,7 +242,7 @@ class Builder
                                 $search = $this->getBeforeSearchMethod($nestedColumn, $search);
                                 $query->when(
                                     $search,
-                                    fn (EloquentBuilder $query) => $query->where("$nestedTable.$nestedColumn", SqlSupport::like($query), '%' . $search . '%')
+                                    fn (EloquentBuilder $query) => $query->where("$nestedTable.$nestedColumn", Sql::like($query), '%' . $search . '%')
                                 );
                             }
                         });
@@ -256,7 +256,7 @@ class Builder
 
                 $query->when(
                     $search,
-                    fn (EloquentBuilder $query) => $query->where($nestedColumns, SqlSupport::like($query), '%' . $search . '%')
+                    fn (EloquentBuilder $query) => $query->where($nestedColumns, Sql::like($query), '%' . $search . '%')
                 );
             });
         }

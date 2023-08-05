@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Helpers;
+namespace PowerComponents\LivewirePowerGrid\Connectors\Support;
 
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText;
 

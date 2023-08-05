@@ -1,19 +1,19 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Helpers\SqlSupport;
+use PowerComponents\LivewirePowerGrid\Connectors\Support\Sql;
 
 it('finds database driver name', function () {
-    expect(SqlSupport::getDatabaseDriverName())->not->toBeNull();
+    expect(Sql::getDatabaseDriverName())->not->toBeNull();
 });
 
 it('finds database version', function () {
-    expect(SqlSupport::getDatabaseVersion())->not->toBeNull();
+    expect(Sql::getDatabaseVersion())->not->toBeNull();
 });
 
 it('returns the proper "LIKE" syntax', function () {
-    $driver = SqlSupport::getDatabaseDriverName();
+    $driver = Sql::getDatabaseDriverName();
 
-    expect(SqlSupport::like())
+    expect(Sql::like())
         ->when(
             $driver === 'mysql',
             fn ($syntax) => $syntax->toBe('LIKE')
@@ -34,7 +34,7 @@ it('returns the proper "LIKE" syntax', function () {
 });
 
 it('returns sortField', function (array $data) {
-    expect(SqlSupport::getSortSqlByDriver('field', $data['db'], $data['version']))
+    expect(Sql::getSortSqlByDriver('field', $data['db'], $data['version']))
         ->toBe($data['expected']);
 })->with([
     [['db' => 'sqlite', 'version' => '3.36.0',  'expected' => 'CAST(field AS INTEGER)']],
