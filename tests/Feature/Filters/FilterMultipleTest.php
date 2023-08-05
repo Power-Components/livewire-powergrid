@@ -8,19 +8,50 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesQueryBuilderTable, DishesTable, DishesTableWithJoin};
 
-;
-
-it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
-    $component = livewire($component, [
-        'testFilters' => [
+$component = new class () extends DishesTable {
+    public function filters(): array
+    {
+        return [
             Filter::number('price')
                 ->thousands('.')
                 ->decimal(','),
             Filter::inputText('name')->operators(),
             Filter::number('price')->thousands('.')->decimal(','),
             Filter::boolean('in_stock'),
-        ],
-    ])
+        ];
+    }
+};
+
+$componentQueryBuilder = new class () extends DishesQueryBuilderTable {
+    public function filters(): array
+    {
+        return [
+            Filter::number('price')
+                ->thousands('.')
+                ->decimal(','),
+            Filter::inputText('name')->operators(),
+            Filter::number('price')->thousands('.')->decimal(','),
+            Filter::boolean('in_stock'),
+        ];
+    }
+};
+
+$componentJoin = new class () extends DishesTableWithJoin {
+    public function filters(): array
+    {
+        return [
+            Filter::number('price')
+                ->thousands('.')
+                ->decimal(','),
+            Filter::inputText('name')->operators(),
+            Filter::number('price')->thousands('.')->decimal(','),
+            Filter::boolean('in_stock'),
+        ];
+    }
+};
+
+it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
+    $component = livewire($component)
         ->call($params->theme);
 
     /** @var PowerGridComponent $component */
@@ -105,16 +136,11 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters')
-    ->with('filter_multiple_themes_with_join', 'filter_multiple_query_builder');
-
-dataset('filter_multiple_themes_with_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
-]);
-
-dataset('filter_multiple_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-]);
+    ->with([
+        'tailwind -> id'                => [$component::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+        'bootstrap -> id'               => [$component::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+        'tailwind -> dishes.id'         => [$componentJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+        'bootstrap -> dishes.id'        => [$componentJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
+        'tailwind query builder -> id'  => [$componentQueryBuilder::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+        'bootstrap query builder -> id' => [$componentQueryBuilder::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    ]);

@@ -122,7 +122,7 @@
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
-                    $rowId = $row->{$primaryKey};
+                    $rowId = data_get($row, $primaryKey);
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
@@ -198,7 +198,7 @@
                                     @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),
                                         $ruleDetailView[0]['detailView'],
                                         [
-                                            'id' => $row->{$primaryKey},
+                                            'id' => data_get($row, $primaryKey),
                                             'options' => array_merge(
                                                 data_get($setUp, 'detail.options'),
                                                 $ruleDetailView[0]['options']),
@@ -208,7 +208,7 @@
                                     @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),
                                         data_get($setUp, 'detail.view'),
                                         [
-                                            'id' => $row->{$primaryKey},
+                                            'id' => data_get($row, $primaryKey),
                                             'options' => data_get($setUp, 'detail.options'),
                                         ]
                                     )

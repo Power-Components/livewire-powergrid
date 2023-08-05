@@ -21,29 +21,9 @@ class DishesQueryBuilderTable extends PowerGridComponent
 {
     use ActionButton;
 
-    public array $eventId = [];
+    public string $primaryKey = 'dishes.id';
 
     public array $testFilters = [];
-
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
 
     public function setUp(): array
     {
@@ -193,7 +173,7 @@ class DishesQueryBuilderTable extends PowerGridComponent
         ];
     }
 
-    public function actions(Dish $dish): array
+    public function actions(object $dish): array
     {
         return [
             Button::add('edit-stock')

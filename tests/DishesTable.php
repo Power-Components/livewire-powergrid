@@ -194,22 +194,6 @@ class DishesTable extends PowerGridComponent
         ];
     }
 
-    public function actions(Dish $row): array
-    {
-        return [
-            Button::add('edit-stock')
-                ->slot('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $row->id]),
-
-            Button::add('destroy')
-                ->slot(__('Delete'))
-                ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $row->id])
-                ->method('delete'),
-        ];
-    }
-
     public function filters(): array
     {
         return $this->testFilters;

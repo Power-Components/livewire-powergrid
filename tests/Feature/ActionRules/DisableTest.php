@@ -21,7 +21,7 @@ $component = new class () extends DishTableBase {
     {
         return [
             Rule::button('dispatch')
-                ->when(fn ($dish) => $dish->id == 3)
+                ->when(fn ($dish) => $dish->id == 1)
                 ->disable(),
         ];
     }

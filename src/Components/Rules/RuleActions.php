@@ -31,7 +31,6 @@ class RuleActions implements Wireable
      */
     public function dispatch(string $event = '', array $params = []): RuleActions
     {
-        $this->rule['redirect'] = [];
         $this->rule['dispatch'] = [
             'event'  => $event,
             'params' => $params,

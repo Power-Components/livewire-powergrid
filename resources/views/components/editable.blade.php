@@ -13,13 +13,13 @@
 @php
     $fallback = html_entity_decode(strval(data_get($editable, 'fallback')), ENT_QUOTES, 'utf-8');
     $value = html_entity_decode(strval($helperClass->resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8');
-    
+
     $content = !empty($value) || $value == '0' ? $value : $fallback;
-    
+
     $params = [
         'theme' => $theme->name,
         'tableName' => $tableName,
-        'id' => $row->{$primaryKey},
+        'id' => data_get($row, $primaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,

@@ -97,7 +97,7 @@ it('see many custom \'attributes\' when dish-id == 2', function (string $compone
         ->set('search', 'Peixada da chef Nábia')
         ->assertSeeHtml(
             <<<HTML
-<button wire:click="test(JSON.parse(&amp;#039;{\u0022param1\u0022:2,\u0022dishId\u0022:2}&amp;#039;))" class="bg-pg-primary-200 text-center" title="Title changed by setAttributes when id 2" id="">Edit: 2</button>
+<button wire:click="test(JSON.parse(&amp;#039;{\u0022param1\u0022:2,\u0022dishId\u0022:2}&amp;#039;))" class="bg-pg-primary-200 text-center" title="Title changed by setAttributes when id 2">Edit: 2</button>
 HTML
         );
 })->with(

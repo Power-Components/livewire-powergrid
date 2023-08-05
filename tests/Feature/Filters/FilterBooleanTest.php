@@ -57,9 +57,12 @@ it('properly filters by bool true', function (string $component, object $params)
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
-todo('properly filters by bool true - custom builder', function (string $component, object $params) {
-    $component = livewire($component, [
-        'testFilters' => [
+$customBuilder = new class () extends DishesTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
             Filter::boolean('in_stock')
                 ->builder(function ($builder, $values) {
                     expect($values)
@@ -69,8 +72,12 @@ todo('properly filters by bool true - custom builder', function (string $compone
                     return $builder->where('dishes.id', 1);
                 })
                 ->label('sim', 'não'),
-        ],
-    ])
+        ];
+    }
+};
+
+it('properly filters by bool true - custom builder', function (string $component, object $params) {
+    $component = livewire($component)
         ->call($params->theme)
         ->assertSee('Em Estoque')
         ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
@@ -82,7 +89,10 @@ todo('properly filters by bool true - custom builder', function (string $compone
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join', 'filter_boolean_query_builder');
+    ->with([
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+    ]);
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -185,9 +195,12 @@ it('properly filters by bool true - using collection - custom builder', function
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_collection');
 
-todo('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
-    $component = livewire($component, [
-        'testFilters' => [
+$customCollection = new class () extends DishesCollectionTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
             Filter::boolean('in_stock', 'in_stock')
                 ->label('yes', 'no')
                 ->collection(function ($collection, $values) {
@@ -196,8 +209,12 @@ todo('properly filters by bool true - using collection - custom builder - using 
 
                     return $collection->where('id', 1);
                 }),
-        ],
-    ])
+        ];
+    }
+};
+
+it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
+    $component = livewire($component)
         ->call($theme)
         ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -222,7 +239,10 @@ todo('properly filters by bool true - using collection - custom builder - using 
             ],
         ]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection');
+    ->with([
+        'tailwind -> id'  => [$customCollection::class, 'tailwind'],
+        'bootstrap -> id' => [$customCollection::class, 'bootstrap'],
+    ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
