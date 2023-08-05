@@ -17,8 +17,6 @@ trait HasFilter
 
     public function clearFilter(string $field = '', bool $emit = true): void
     {
-        ds($this->filters, $field);
-
         if (str_contains($field, '.')) {
             list($table, $column) = explode('.', $field);
 
@@ -112,8 +110,6 @@ trait HasFilter
         }
 
         $this->persistState('filters');
-
-        ds($this->filters, $field);
     }
 
     public function clearAllFilters(): void
