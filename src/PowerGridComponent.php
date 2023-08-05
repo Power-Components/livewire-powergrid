@@ -11,9 +11,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use Livewire\{Attributes\On, Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{
-    Collection,
-};
+use PowerComponents\LivewirePowerGrid\Connectors\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,

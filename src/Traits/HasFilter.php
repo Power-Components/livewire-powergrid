@@ -17,6 +17,8 @@ trait HasFilter
 
     public function clearFilter(string $field = '', bool $emit = true): void
     {
+        ds($this->filters, $field);
+
         if (str_contains($field, '.')) {
             list($table, $column) = explode('.', $field);
 
@@ -110,6 +112,8 @@ trait HasFilter
         }
 
         $this->persistState('filters');
+
+        ds($this->filters, $field);
     }
 
     public function clearAllFilters(): void
@@ -209,8 +213,8 @@ trait HasFilter
         $selectedDates[0] = $startDate;
         $selectedDates[1] = $endDate;
 
-        data_set($this->enabledFilters, "$field.data-field", $field);
-        data_set($this->enabledFilters, "$field.label", $label);
+        $this->enabledFilters[$field]['data-field'] = $field;
+        $this->enabledFilters[$field]['label']      = $label;
 
         if (count($input) === 3) {
             $this->filters[$type][$input[2]] = $selectedDates;
@@ -242,8 +246,8 @@ trait HasFilter
 
         data_set($this->filters, "multi_select.$field", $values);
 
-        data_set($this->enabledFilters, "$field.id", $field);
-        data_set($this->enabledFilters, "$field.label", $label);
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
@@ -258,8 +262,8 @@ trait HasFilter
     {
         $this->resetPage();
 
-        data_set($this->enabledFilters, "$field.id", $field);
-        data_set($this->enabledFilters, "$field.label", $label);
+        $this->enabledFilters[$field]['id']    = $field;
+        $this->enabledFilters[$field]['label'] = $label;
 
         $value = data_get($this->filters, "select.$field");
 

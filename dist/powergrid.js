@@ -260,7 +260,7 @@ __webpack_require__.r(__webpack_exports__);
     toggle: params.toggle,
     save: function save() {
       this.toggle = this.toggle === 0 ? 1 : 0;
-      this.$wire.emit('pg:toggleable-' + this.tableName, {
+      this.$wire.dispatch('pg:toggleable-' + this.tableName, {
         id: this.id,
         field: this.field,
         value: this.toggle

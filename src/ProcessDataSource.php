@@ -10,7 +10,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
-use PowerComponents\LivewirePowerGrid\Helpers\{Builder, Collection, SqlSupport};
+use PowerComponents\LivewirePowerGrid\Connectors\{Builder, Collection};
+use PowerComponents\LivewirePowerGrid\Helpers\{SqlSupport};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
 /** @internal  */

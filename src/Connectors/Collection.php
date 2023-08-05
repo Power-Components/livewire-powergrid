@@ -1,12 +1,18 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Helpers;
+namespace PowerComponents\LivewirePowerGrid\Connectors;
 
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Select};
+use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
+    DatePicker,
+    DateTimePicker,
+    InputText,
+    MultiSelect,
+    Select};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
+use PowerComponents\LivewirePowerGrid\Helpers\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Collection
@@ -19,7 +25,9 @@ class Collection
     ) {
     }
 
-    public static function make(BaseCollection $collection, PowerGridComponent $powerGridComponent): self
+    public static function make(
+        BaseCollection $collection,
+        PowerGridComponent $powerGridComponent): self
     {
         return new Collection($collection, $powerGridComponent);
     }

@@ -9,7 +9,7 @@ use Illuminate\Support as Support;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
-use PowerComponents\LivewirePowerGrid\Helpers\Builder;
+use PowerComponents\LivewirePowerGrid\Connectors\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
