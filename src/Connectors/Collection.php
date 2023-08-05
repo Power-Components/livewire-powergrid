@@ -5,13 +5,13 @@ namespace PowerComponents\LivewirePowerGrid\Connectors;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
     DatePicker,
     DateTimePicker,
     InputText,
     MultiSelect,
     Select};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\Connectors\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -27,8 +27,8 @@ class Collection
 
     public static function make(
         BaseCollection $collection,
-        PowerGridComponent $powerGridComponent): self
-    {
+        PowerGridComponent $powerGridComponent
+    ): self {
         return new Collection($collection, $powerGridComponent);
     }
 

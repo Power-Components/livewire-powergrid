@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundEx
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Boolean,
     Components\Filters\Builders\DatePicker,
@@ -16,7 +17,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Connectors\Support\InputOperators,
     Connectors\Support\Sql,
     PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 
 class Builder
 {
@@ -30,8 +30,8 @@ class Builder
 
     public static function make(
         EloquentBuilder|QueryBuilder $query,
-        PowerGridComponent $powerGridComponent): Builder
-    {
+        PowerGridComponent $powerGridComponent
+    ): Builder {
         return new Builder($query, $powerGridComponent);
     }
 

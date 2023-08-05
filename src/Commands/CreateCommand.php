@@ -49,7 +49,7 @@ class CreateCommand extends Command
     {
         $this->renderPowergridAscii();
 
-        $this->call('powergrid:update');
+        // $this->call('powergrid:update');
 
         try {
             $this->askTableName();
