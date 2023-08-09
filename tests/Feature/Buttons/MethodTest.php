@@ -62,4 +62,4 @@ HTML)
 HTML);
 })
     ->with('action:routeMethod')
-    ->group('action')->only();
+    ->group('action');
