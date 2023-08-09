@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Actions;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\{Collection, Js};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent, Traits\UnDot};
 
@@ -29,6 +29,14 @@ class ActionsController
             //            if (View::exists($component)) {
             //                return Blade::render($component, ...$button);
             //            }
+
+            $closure = data_get($button, 'dynamicProperties.render');
+
+            if ($closure instanceof \Closure) {
+                return (object)[
+                    'render-action.' . $index . '.' . data_get($button, 'action') => $closure($row),
+                ];
+            }
 
             $attributes = $this->extractAttributes($button, $row);
 
@@ -87,15 +95,17 @@ class ActionsController
             ]);
         }
 
-        $attribute = strval(data_get($button, 'dynamicProperties.attribute'));
-        $value     = strval(data_get($button, 'dynamicProperties.value'));
+        foreach ((array) data_get($button, 'dynamicProperties') as $dynamicProperties) {
+            $attribute = strval(data_get($dynamicProperties, 'attribute'));
+            $value     = strval(data_get($dynamicProperties, 'value'));
 
-        $value = str($value)->replace('{primaryKey}', data_get($row, $this->component->primaryKey));
+            $value = str($value)->replace('{primaryKey}', data_get($row, $this->component->primaryKey));
 
-        if (filled($attribute) && filled($value)) {
-            $attributes = $attributes->merge([
-                $attribute => $value,
-            ]);
+            if (filled($attribute) && filled($value)) {
+                $attributes = $attributes->merge([
+                    $attribute => $value,
+                ]);
+            }
         }
 
         return $attributes;

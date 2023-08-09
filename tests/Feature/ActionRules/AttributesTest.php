@@ -9,7 +9,16 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 ;
 
-$rows = new class () extends DishTableBase {
+$simple = new class () extends DishTableBase {
+    public function actions($row): array
+    {
+        return [
+            Button::add('edit')
+                ->slot('Edit: ' . $row->id)
+                ->class('text-center'),
+        ];
+    }
+
     public function actionRules($row): array
     {
         return [
@@ -44,6 +53,20 @@ $customAttributes = new class () extends DishTableBase {
     }
 };
 
+dataset('actionRules:simple', [
+    'tailwind'       => [$simple::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$simple::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+]);
+
+dataset('actionRules:attributes', [
+    'tailwind'       => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => false, 'dishId' => 2]],
+    'bootstrap'      => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 2]],
+    'tailwind join'  => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => true, 'dishId' => 2]],
+    'bootstrap join' => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 2]],
+]);
+
 it('set custom class when dish-id == 1 on button', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
@@ -51,7 +74,8 @@ it('set custom class when dish-id == 1 on button', function (string $component, 
         ->assertSeeHtml([
             'class="text-center"',
         ]);
-})->with('simple')->group('actionRules');
+})->with('actionRules:simple')
+    ->group('actionRules');
 
 it('change class to bg-pg-primary-100 when dish-id == 1 -tailwind', function (string $component, object $params) {
     livewire($component, ['join' => $params->join])
@@ -67,8 +91,8 @@ it('change class to bg-pg-primary-100 when dish-id == 1 -tailwind', function (st
         );
 })->with(
     [
-        'tailwind'      => [$rows::class, (object) ['theme' => 'tailwind', 'join' => false]],
-        'tailwind join' => [$rows::class, (object) ['theme' => 'tailwind', 'join' => true]],
+        'tailwind'      => [$simple::class, (object) ['theme' => 'tailwind', 'join' => false]],
+        'tailwind join' => [$simple::class, (object) ['theme' => 'tailwind', 'join' => true]],
     ]
 )->group('actionRules');
 
@@ -86,13 +110,16 @@ it('change class to bg-pg-primary-100 when dish-id == 1 - bootstrap', function (
         );
 })->with(
     [
-        'bootstrap'      => [$rows::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 1]],
-        'bootstrap join' => [$rows::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 1]],
+        'bootstrap'      => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 1]],
+        'bootstrap join' => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 1]],
     ]
 )->group('actionRules');
 
 it('see many custom \'attributes\' when dish-id == 2', function (string $component, object $params) {
-    livewire($component, ['join' => $params->join, 'dishId' => 2])
+    livewire($component, [
+        'join'   => $params->join,
+        'dishId' => 2,
+    ])
         ->call($params->theme)
         ->set('search', 'Peixada da chef Nábia')
         ->assertSeeHtml(
@@ -100,11 +127,4 @@ it('see many custom \'attributes\' when dish-id == 2', function (string $compone
 <button wire:click="test(JSON.parse(&amp;#039;{\u0022param1\u0022:2,\u0022dishId\u0022:2}&amp;#039;))" class="bg-pg-primary-200 text-center" title="Title changed by setAttributes when id 2">Edit: 2</button>
 HTML
         );
-})->with(
-    [
-        'tailwind'       => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => false, 'dishId' => 2]],
-        'bootstrap'      => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 2]],
-        'tailwind join'  => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => true, 'dishId' => 2]],
-        'bootstrap join' => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 2]],
-    ]
-)->group('actionRules');
+})->with('actionRules:attributes')->group('actionRules');

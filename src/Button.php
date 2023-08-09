@@ -13,6 +13,10 @@ use Livewire\Wireable;
  * @method static parent(string $method, array $params)
  * @method static call(string $method, array $params)
  * @method static toggleDetail()
+ * @method static tooltip(string $title)
+ * @method static route(string $route, array $params)
+ * @method static target(string $target) _blank, _self, _top, _parent, null
+ * @method static render(\Closure $closure)
  */
 final class Button implements Wireable
 {
@@ -20,17 +24,11 @@ final class Button implements Wireable
 
     public ?string $slot = '';
 
-    public string $route = '';
-
     public string $class = '';
 
     public string $method = 'get';
 
     public bool $can = true;
-
-    public string $target = '_blank';
-
-    public string $tooltip = '';
 
     public string $bladeComponent = '';
 
@@ -39,8 +37,6 @@ final class Button implements Wireable
     public ?string $id = null;
 
     public array $dynamicProperties = [];
-
-    public ?\Closure $render = null;
 
     /**
      * Button constructor.
@@ -70,18 +66,6 @@ final class Button implements Wireable
     public function slot(?string $slot = null): Button
     {
         $this->slot = $slot;
-
-        return $this;
-    }
-
-    /**
-     * Route string
-     * @codeCoverageIgnore
-     */
-    public function route(string $route, array|\Closure $params): Button
-    {
-        $this->route  = $route;
-        $this->params = $params;
 
         return $this;
     }
@@ -118,27 +102,6 @@ final class Button implements Wireable
     }
 
     /**
-     * target _blank, _self, _top, _parent, null
-     *
-     */
-    public function target(string $target): Button
-    {
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
-     * Add tooltip
-     */
-    public function tooltip(string $tooltip): Button
-    {
-        $this->tooltip = $tooltip;
-
-        return $this;
-    }
-
-    /**
      * Add Blade Component
      */
     public function bladeComponent(string $component, array|\Closure $params): Button
@@ -155,16 +118,6 @@ final class Button implements Wireable
     public function id(string $value = null): Button
     {
         $this->id = $value;
-
-        return $this;
-    }
-
-    /**
-     * Render custom action
-     */
-    public function render(\Closure $closure): Button
-    {
-        $this->render = $closure;
 
         return $this;
     }
