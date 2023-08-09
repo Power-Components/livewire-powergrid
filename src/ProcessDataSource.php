@@ -301,11 +301,13 @@ class ProcessDataSource
             $prepareRules = collect();
 
             if (method_exists($this->component, 'actionRules')) {
-                $prepareRules = resolve(RulesController::class)->execute($this->component->actionRules($row), (object)$row);
+                $prepareRules = resolve(RulesController::class)
+                    ->execute($this->component->actionRules($row), (object)$row);
             }
 
             if (method_exists($this->component, 'actions')) {
-                $actions = (new ActionsController($this->component, $prepareRules))->execute($this->component->actions($row), (object) $row);
+                $actions = (new ActionsController($this->component, $prepareRules))
+                    ->execute($this->component->actions($row), (object) $row);
             }
 
             $mergedData = $data->merge([

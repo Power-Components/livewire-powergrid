@@ -18,6 +18,7 @@ use Livewire\Wireable;
  * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
  * @method static render(\Closure $closure)
+ * @method static bladeComponent(string $component, array $params)
  */
 final class Button implements Wireable
 {
@@ -28,8 +29,6 @@ final class Button implements Wireable
     public string $class = '';
 
     public bool $can = true;
-
-    public string $bladeComponent = '';
 
     public array|\Closure $params = [];
 
@@ -86,17 +85,6 @@ final class Button implements Wireable
     public function can(bool $can = true): Button
     {
         $this->can = $can;
-
-        return $this;
-    }
-
-    /**
-     * Add Blade Component
-     */
-    public function bladeComponent(string $component, array|\Closure $params): Button
-    {
-        $this->bladeComponent = $component;
-        $this->params         = $params;
 
         return $this;
     }

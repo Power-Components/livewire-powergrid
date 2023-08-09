@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Actions;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Js;
+use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
 
 class Macros
@@ -140,6 +142,18 @@ class Macros
     <button type="submit" class="$this->class" id="$this->id">$this->slot</button>
 </form>
 HTML;
+
+            return $this;
+        });
+
+        Button::macro('bladeComponent', function (string $component, array $params = []) {
+            $this->dynamicProperties['render'] = Blade::render('<x-dynamic-component
+                :component="$component"
+                :attributes="$params"
+                />', [
+                'component' => $component,
+                'params'    => new ComponentAttributeBag((array) $params),
+            ]);
 
             return $this;
         });

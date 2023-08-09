@@ -63,7 +63,7 @@ class Actions
         $this->dispatch();
         //        $this->dispatchTo();
         $this->title();
-        $this->bladeComponent();
+       // $this->bladeComponent();
         $this->disabled();
         $this->redirect();
         // $this->toggleDetail();

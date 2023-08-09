@@ -97,7 +97,7 @@ class ActionsController
 
         if (filled(data_get($button, 'id'))) {
             $attributes = $attributes->merge([
-                'id' => data_get($button, 'id'),
+                'id' => strval(data_get($button, 'id')). '-'.$row->id,
             ]);
         }
 
