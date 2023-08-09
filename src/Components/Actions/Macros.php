@@ -124,5 +124,24 @@ class Macros
 
             return $this;
         });
+
+        Button::macro('method', function (string $method) {
+            $target = strval(data_get($this, 'dynamicProperties.target', '_self'));
+            $route  = strval(data_get($this, 'dynamicProperties.route.value'));
+
+            if (blank($route)) {
+                return $this;
+            }
+
+            $this->dynamicProperties['render'] = <<<HTML
+<form target="$target" action="$route" method="post">
+    @method('$method')
+    @csrf
+    <button type="submit" class="$this->class" id="$this->id">$this->slot</button>
+</form>
+HTML;
+
+            return $this;
+        });
     }
 }

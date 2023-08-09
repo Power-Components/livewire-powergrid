@@ -30,11 +30,17 @@ class ActionsController
             //                return Blade::render($component, ...$button);
             //            }
 
-            $closure = data_get($button, 'dynamicProperties.render');
+            $render = data_get($button, 'dynamicProperties.render');
 
-            if ($closure instanceof \Closure) {
+            if ($render instanceof \Closure) {
                 return (object)[
-                    'render-action.' . $index . '.' . data_get($button, 'action') => $closure($row),
+                    'render-action.' . $index . '.' . data_get($button, 'action') => $render($row),
+                ];
+            }
+
+            if (is_string($render)) {
+                return (object)[
+                    'render-action.' . $index . '.' . data_get($button, 'action') => $render,
                 ];
             }
 

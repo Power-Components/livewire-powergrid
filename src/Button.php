@@ -15,6 +15,7 @@ use Livewire\Wireable;
  * @method static toggleDetail()
  * @method static tooltip(string $title)
  * @method static route(string $route, array $params)
+ * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
  * @method static render(\Closure $closure)
  */
@@ -25,8 +26,6 @@ final class Button implements Wireable
     public ?string $slot = '';
 
     public string $class = '';
-
-    public string $method = 'get';
 
     public bool $can = true;
 
@@ -76,16 +75,6 @@ final class Button implements Wireable
     public function class(string $classAttr): Button
     {
         $this->class = $classAttr;
-
-        return $this;
-    }
-
-    /**
-     * Method for button
-     */
-    public function method(string $method): Button
-    {
-        $this->method = $method;
 
         return $this;
     }
