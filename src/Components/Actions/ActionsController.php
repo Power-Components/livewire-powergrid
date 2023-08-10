@@ -101,7 +101,9 @@ class ActionsController
 
         if (filled(data_get($button, 'id'))) {
             $attributes = $attributes->merge([
-                'id' => strval(data_get($button, 'id')) . '-' . $row->id,
+                'id' => data_get($row, $this->component->primaryKey)
+                    ? strval(data_get($button, 'id')) . '-' . data_get($row, $this->component->primaryKey)
+                    : strval(data_get($button, 'id')),
             ]);
         }
 
@@ -174,6 +176,7 @@ class ActionsController
 
                     if (class_exists($ruleClass)) {
                         $ruleInstance = new $ruleClass();
+                        /** @phpstan-ignore-next-line */
                         $ruleInstance->apply($ruleData, $output);
                     }
                 }
