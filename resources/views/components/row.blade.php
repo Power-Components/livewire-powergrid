@@ -13,24 +13,13 @@
         <div class="flex gap-2 w-full">
             <!-- Render Action -->
             @if (filled(data_get($row, 'actions')) && blank($column->field))
-                @foreach(data_get($row, 'actions') as $key => $action)
+                @foreach (data_get($row, 'actions') as $key => $action)
                     <div wire:key="action-{{ $row->id }}-{{ $key }}">
                         {!! $action !!}
                     </div>
                 @endforeach
             @endif
         </div>
-
-{{--        <!-- Render Livewire Component Action -->--}}
-{{--        @if (data_get($column, 'livewire.component'))--}}
-{{--            <livewire:is--}}
-{{--                key="lv-dy-{{ md5($row->id . data_get($setUp, 'footer.perPage') . $this->getPage()) }}"--}}
-{{--                :component="data_get($column, 'livewire.component')"--}}
-{{--                :field="$field"--}}
-{{--                :row="$row"--}}
-{{--                :params="data_get($column, 'livewire.params', [])"--}}
-{{--            />--}}
-{{--        @endif--}}
 
         @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
             <span class="{{ $contentClassField . ' ' . $contentClass }}">

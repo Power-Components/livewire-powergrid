@@ -3,12 +3,12 @@
     if (str_contains($primaryKey, '.')) {
         $showDefaultToggle = true;
     }
-
+    
     $value = (int) $row->{$column->field};
-
+    
     $trueValue = $column->toggleable['default'][0];
     $falseValue = $column->toggleable['default'][1];
-
+    
     $params = [
         'id' => data_get($row, $primaryKey),
         'isHidden' => !$showToggleable ? 'true' : 'false',

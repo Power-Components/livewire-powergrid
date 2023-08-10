@@ -75,6 +75,8 @@ final class Column implements \Livewire\Wireable
 
     public bool $index = false;
 
+    public   bool $fixedOnResponsive = false;
+
     /**
      * Adds a new Column
      *
@@ -111,6 +113,13 @@ final class Column implements \Livewire\Wireable
     public function title(string $title): Column
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function fixedOnResponsive(): Column
+    {
+        $this->fixedOnResponsive = true;
 
         return $this;
     }
@@ -319,7 +328,11 @@ final class Column implements \Livewire\Wireable
      * Adds Edit on click to a column
      *
      */
-    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
+    public function editOnClick(
+        bool $hasPermission = true,
+        string $dataField = '',
+        string $fallback = null,
+        bool $saveOnMouseOut = false): Column
     {
         $this->editable = [
             'hasPermission'  => $hasPermission,

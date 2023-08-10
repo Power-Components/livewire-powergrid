@@ -1,7 +1,7 @@
 @php
-    $actionController = (new \PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController($this, collect()));
-    $headers          = $this->header();
-    $actions          = $actionController->execute($headers);
+    $actionController = new \PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController($this, collect());
+    $headers = $this->header();
+    $actions = $actionController->execute($headers);
 @endphp
 <div>
     @if (filled($actions))

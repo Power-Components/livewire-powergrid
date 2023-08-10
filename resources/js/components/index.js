@@ -12,4 +12,20 @@ window.tableResponsive = tableResponsive
 window.pgTomSelect = pgTomSelect
 window.phSlimSelect = pgSlimSelect
 
+Livewire.hook('commit', ({ component, succeed, fail }) => {
+    if (component.ephemeral.setUp.hasOwnProperty('responsive')) {
+        succeed(() => {
+            queueMicrotask(() => {
+                window.dispatchEvent(
+                    new CustomEvent('pg-livewire-request-finished')
+                );
+            })
+        })
 
+        fail(() => {
+            window.dispatchEvent(
+                new CustomEvent('pg-livewire-request-finished')
+            );
+        })
+    }
+})

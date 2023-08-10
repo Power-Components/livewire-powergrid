@@ -62,10 +62,15 @@ class Macros
         });
 
         Button::macro('openModal', function (string $component, array $params) {
+            $encoded = Js::from([
+                'component' => $component,
+                'arguments' => $params
+            ]);
+
             $this->dynamicProperties['openModal'] = [
                 "component" => "button",
                 "attribute" => "wire:click",
-                "value"     => "\$dispatch('openModal', { component: {$component}, parameters: " . Js::from($params) . "})",
+                "value"     => "\$dispatch('openModal', $encoded)",
             ];
 
             return $this;

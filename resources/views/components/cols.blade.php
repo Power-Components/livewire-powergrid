@@ -8,7 +8,17 @@
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
     
-    $isFixedOnResponsive = isset($this->setUp['responsive']) && in_array($field, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
+    $isFixedOnResponsive = false;
+    
+    if (isset($this->setUp['responsive'])) {
+        if (in_array($field, data_get($this->setUp, 'responsive.fixedColumns'))) {
+            $isFixedOnResponsive = true;
+        }
+    
+        if ($column->fixedOnResponsive) {
+            $isFixedOnResponsive = true;
+        }
+    }
 @endphp
 <th
     class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
