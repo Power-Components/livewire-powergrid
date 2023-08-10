@@ -21,7 +21,7 @@ $component = new class () extends DishTableBase {
     {
         return [
             Rule::button('dispatch')
-                ->when(fn ($dish) => $dish->id == 1)
+                ->when(fn ($dish) => $dish->id == 3)
                 ->disable(),
         ];
     }
@@ -43,9 +43,8 @@ it('properly displays "hide" on edit button', function (string $component, objec
         ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))")
         ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:2}'))")
         ->assertSeeHtmlInOrder([
-            "\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:3}'))",
             "disabled=\"disabled\"",
-
+            "\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:3}'))",
         ]);
 })
     ->with('action:disabled')

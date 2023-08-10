@@ -1,9 +1,12 @@
+@php
+        $actionController = (new \PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController($this, collect()));
+        $headers          = $this->header();
+        $actions          = $actionController->execute($headers);
+@endphp
 <div>
-    @foreach ($headers as $action)
+    @foreach ($actions as $action)
         <div @class(['me-1' => $loop->last, 'btn-group'])>
-            @includeWhen($action->can, 'livewire-powergrid::components.actions-header', [
-                'action' => $action,
-            ])
+            {!! $action !!}
         </div>
     @endforeach
 </div>

@@ -1970,21 +1970,21 @@
         },
         {
             "name": "nette/schema",
-            "version": "v1.2.3",
+            "version": "v1.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/schema.git",
-                "reference": "abbdbb70e0245d5f3bf77874cea1dfb0c930d06f"
+                "reference": "c9ff517a53903b3d4e29ec547fb20feecb05b8ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/schema/zipball/abbdbb70e0245d5f3bf77874cea1dfb0c930d06f",
-                "reference": "abbdbb70e0245d5f3bf77874cea1dfb0c930d06f",
+                "url": "https://api.github.com/repos/nette/schema/zipball/c9ff517a53903b3d4e29ec547fb20feecb05b8ab",
+                "reference": "c9ff517a53903b3d4e29ec547fb20feecb05b8ab",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^2.5.7 || ^3.1.5 ||  ^4.0",
-                "php": ">=7.1 <8.3"
+                "php": "7.1 - 8.3"
             },
             "require-dev": {
                 "nette/tester": "^2.3 || ^2.4",
@@ -2026,9 +2026,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/schema/issues",
-                "source": "https://github.com/nette/schema/tree/v1.2.3"
+                "source": "https://github.com/nette/schema/tree/v1.2.4"
             },
-            "time": "2022-10-13T01:24:26+00:00"
+            "time": "2023-08-05T18:56:25+00:00"
         },
         {
             "name": "nette/utils",
@@ -6680,16 +6680,16 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.6.5",
+            "version": "1.6.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "68782e943f9ffcbc72bda08aedabe73fecb50041"
+                "reference": "b8e0bb7d8c604046539c1115994632c74dcb361e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mockery/mockery/zipball/68782e943f9ffcbc72bda08aedabe73fecb50041",
-                "reference": "68782e943f9ffcbc72bda08aedabe73fecb50041",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/b8e0bb7d8c604046539c1115994632c74dcb361e",
+                "reference": "b8e0bb7d8c604046539c1115994632c74dcb361e",
                 "shasum": ""
             },
             "require": {
@@ -6761,7 +6761,7 @@
                 "security": "https://github.com/mockery/mockery/security/advisories",
                 "source": "https://github.com/mockery/mockery"
             },
-            "time": "2023-08-06T00:30:34+00:00"
+            "time": "2023-08-09T00:03:52+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -7069,16 +7069,16 @@
         },
         {
             "name": "orchestra/testbench",
-            "version": "v8.6.1",
+            "version": "v8.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "face71aed91a7f5f19ad13846cd81be27f29340d"
+                "reference": "73f78b30e4a4c66e6fafa7c9dcc14ec9c29afb54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/face71aed91a7f5f19ad13846cd81be27f29340d",
-                "reference": "face71aed91a7f5f19ad13846cd81be27f29340d",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/73f78b30e4a4c66e6fafa7c9dcc14ec9c29afb54",
+                "reference": "73f78b30e4a4c66e6fafa7c9dcc14ec9c29afb54",
                 "shasum": ""
             },
             "require": {
@@ -7086,7 +7086,7 @@
                 "fakerphp/faker": "^1.21",
                 "laravel/framework": ">=10.17.0 <10.19.0",
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench-core": ">=8.6.0 <8.7.0",
+                "orchestra/testbench-core": ">=8.6.2 <8.7.0",
                 "php": "^8.1",
                 "phpunit/phpunit": "^9.6 || ^10.1",
                 "spatie/laravel-ray": "^1.32.4",
@@ -7118,22 +7118,22 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
-                "source": "https://github.com/orchestral/testbench/tree/v8.6.1"
+                "source": "https://github.com/orchestral/testbench/tree/v8.6.3"
             },
-            "time": "2023-08-08T14:41:41+00:00"
+            "time": "2023-08-10T02:43:19+00:00"
         },
         {
             "name": "orchestra/testbench-core",
-            "version": "v8.6.0",
+            "version": "v8.6.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench-core.git",
-                "reference": "1c7d8d62a176d3692eb9cbb48f64485d64ed00ec"
+                "reference": "b401efab5a5223a41d355daf7efc83a7615c9632"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/1c7d8d62a176d3692eb9cbb48f64485d64ed00ec",
-                "reference": "1c7d8d62a176d3692eb9cbb48f64485d64ed00ec",
+                "url": "https://api.github.com/repos/orchestral/testbench-core/zipball/b401efab5a5223a41d355daf7efc83a7615c9632",
+                "reference": "b401efab5a5223a41d355daf7efc83a7615c9632",
                 "shasum": ""
             },
             "require": {
@@ -7201,24 +7201,24 @@
                 "issues": "https://github.com/orchestral/testbench/issues",
                 "source": "https://github.com/orchestral/testbench-core"
             },
-            "time": "2023-08-08T08:10:31+00:00"
+            "time": "2023-08-10T02:24:10+00:00"
         },
         {
             "name": "pestphp/pest",
-            "version": "v2.12.2",
+            "version": "v2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "e3a21384e69d6343f8223578bbc38d80e1224f08"
+                "reference": "47f2ae32c14cd3f15520f5a12a3c36fdec25a2ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/e3a21384e69d6343f8223578bbc38d80e1224f08",
-                "reference": "e3a21384e69d6343f8223578bbc38d80e1224f08",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/47f2ae32c14cd3f15520f5a12a3c36fdec25a2ee",
+                "reference": "47f2ae32c14cd3f15520f5a12a3c36fdec25a2ee",
                 "shasum": ""
             },
             "require": {
-                "brianium/paratest": "^7.2.4",
+                "brianium/paratest": "^7.2.5",
                 "nunomaduro/collision": "^7.8.1",
                 "nunomaduro/termwind": "^1.15.1",
                 "pestphp/pest-plugin": "^2.0.1",
@@ -7291,7 +7291,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v2.12.2"
+                "source": "https://github.com/pestphp/pest/tree/v2.13.0"
             },
             "funding": [
                 {
@@ -7303,7 +7303,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-07T09:29:25+00:00"
+            "time": "2023-08-09T11:14:39+00:00"
         },
         {
             "name": "pestphp/pest-plugin",

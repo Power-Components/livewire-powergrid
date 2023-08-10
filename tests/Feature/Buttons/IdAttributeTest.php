@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 ;
@@ -30,7 +28,7 @@ dataset('id', [
 
 it('properly displays "id" on button', function (string $component, object $params) {
     livewire($component, [
-        'join'        => $params->join
+        'join' => $params->join,
     ])
         ->call($params->theme)
         ->set('search', 'Pastel de Nata')

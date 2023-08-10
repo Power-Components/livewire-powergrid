@@ -2,9 +2,9 @@
 
 use OpenSpout\Reader\XLSX\Reader;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\ExportTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)

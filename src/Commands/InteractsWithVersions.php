@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Helpers;
+namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Composer\Factory;
 use Composer\IO\NullIO;

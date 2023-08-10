@@ -1,16 +1,17 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Button;
+
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $bladeComponent = new class () extends DishTableBase {
     public function actions($row): array
     {
         return [
             Button::make('bladeComponent')
-                ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => $row->id])
+                ->bladeComponent('livewire-powergrid::icons.arrow', ['dish-id' => $row->id]),
         ];
     }
 };
@@ -24,7 +25,7 @@ dataset('bladeComponent', [
 
 it('properly displays "bladeComponent" on bladeComponent button', function (string $component, object $params) {
     livewire($component, [
-        'join'        => $params->join
+        'join' => $params->join,
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)

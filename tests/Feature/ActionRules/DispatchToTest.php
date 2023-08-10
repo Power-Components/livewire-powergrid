@@ -34,7 +34,7 @@ it('add rule \'dispatchTo\' when dishId == 5', function (string $component, obje
         ->call($params->theme)
         //page 1
         ->set('setUp.footer.perPage', 5)
-        ->assertSee('$dispatchTo(&#039;dishes-table&#039;,deletedEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:5}&#039;))')
+        ->assertSeeHtml('$dispatchTo(&#039;dishes-table&#039;,deletedEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:5}&#039;))')
         ->assertDontSee('$dispatchTo(&#039;dishes-table&#039;,deletedEvent&#039;, JSON.parse(&#039;{\u0022dishId\u0022:4}&#039;))');
 })->with('emit_to_themes_with_join')->group('actionRules');
 

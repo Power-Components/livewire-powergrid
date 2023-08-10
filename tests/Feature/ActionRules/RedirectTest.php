@@ -7,33 +7,39 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-;
+$component = new class () extends DishTableBase {
+    public function actions($row): array
+    {
+        return [
+            Button::make('edit')
+                ->slot('Edit')
+                ->class('text-center')
+                ->openModal('modal-edit', ['dishId' => $row->id]),
+        ];
+    }
 
-todo('add rule \'redirect\' when out of stock and dishId !== 8', function (string $component, object $params) {
+    public function actionRules($row): array
+    {
+        return [
+            Rule::button('edit')
+                ->when(fn (Dish $dish) => $dish->id === 1)
+                ->redirect(fn (Dish $dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
+        ];
+    }
+};
+
+it('add rule \'redirect\' when out of stock and dishId === 1', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->set('testActions', [
-            Button::add('edit')
-                ->slot('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('modal-edit', ['dishId' => 'id']),
-        ])
-        ->set('testActionRules', [
-            Rule::button('edit')
-                ->when(fn (Dish $dish) => (bool) $dish->in_stock === false)
-                ->redirect(fn (Dish $dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
-        ])
-        ->set('setUp.footer.perPage', 10)
-        ->assertSeeHtml(['href="https://www.dish.test/sorry-out-of-stock?dish=6', 'target="_blank"'])
-        ->assertSeeHtml(['href="https://www.dish.test/sorry-out-of-stock?dish=7', 'target="_blank"'])
-        ->assertSeeHtml('wire:click="$emit(&quot;openModal&quot;, &quot;modal-edit&quot;, {&quot;dishId&quot;:5})"')
-        ->assertSeeHtml(['href="https://www.dish.test/sorry-out-of-stock?dish=8', 'target="_blank"'])
-        ->assertSeeHtml(['href="https://www.dish.test/sorry-out-of-stock?dish=10', 'target="_blank"']);
-})->with('redirect_themes_with_join')->group('actionRules');
+        ->set('setUp.footer.perPage', 6)
+        ->assertSeeHtmlInOrder(['a', 'href="https://www.dish.test/sorry-out-of-stock?dish=1'])
+        ->assertDontSeeHtml('href="https://www.dish.test/sorry-out-of-stock?dish=2');
+})->with('redirect')
+    ->group('actionRules');
 
-dataset('redirect_themes_with_join', [
-    'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+dataset('redirect', [
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);

@@ -395,12 +395,3 @@ dataset('filter_boolean_themes_collection', [
     'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
     'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
-
-function filterBoolean(string $field, ?string $value): array
-{
-    return [
-        'boolean' => [
-            $field => $value,
-        ],
-    ];
-}

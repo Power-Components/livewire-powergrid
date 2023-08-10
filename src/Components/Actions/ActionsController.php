@@ -18,17 +18,13 @@ class ActionsController
     ) {
     }
 
-    public function execute(array $actions, object|array $row): Collection
+    public function execute(array $actions, null|object|array $row = null): Collection
     {
         $actions = collect($actions);
 
         /** @phpstan-ignore-next-line */
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
             $component = strval(data_get($button, 'dynamicProperties.component', 'button'));
-
-            //            if (View::exists($component)) {
-            //                return Blade::render($component, ...$button);
-            //            }
 
             $render = data_get($button, 'dynamicProperties.render');
 
@@ -54,6 +50,14 @@ class ActionsController
                 // attribute
                 if ($attributesRule = (array) data_get($applyRules, 'attributes')) {
                     $attributes = $attributes->merge((new ComponentAttributeBag($attributesRule))->getAttributes());
+
+                    if ($remove = strval(data_get($applyRules, 'remove'))) {
+                        $attributes = $attributes->except($remove);
+                    }
+
+                    if ($componentRule = strval(data_get($applyRules, 'component'))) {
+                        $component = $componentRule;
+                    }
                 }
 
                 $slotRule = data_get($applyRules, 'slot');
@@ -85,7 +89,7 @@ class ActionsController
         });
     }
 
-    protected function extractAttributes(array|Button $button, object|array $row): ComponentAttributeBag
+    protected function extractAttributes(array|Button $button, null|object|array $row = null): ComponentAttributeBag
     {
         $attributes = new ComponentAttributeBag();
 
@@ -97,7 +101,7 @@ class ActionsController
 
         if (filled(data_get($button, 'id'))) {
             $attributes = $attributes->merge([
-                'id' => strval(data_get($button, 'id')). '-'.$row->id,
+                'id' => strval(data_get($button, 'id')) . '-' . $row->id,
             ]);
         }
 

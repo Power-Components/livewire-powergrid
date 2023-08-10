@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use PowerComponents\LivewirePowerGrid\Helpers\InteractsWithVersions;
 
 /** @codeCoverageIgnore */
 class UpdateCommand extends Command

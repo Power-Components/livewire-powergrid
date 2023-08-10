@@ -1,5 +1,3 @@
-@inject('helperClass', 'PowerComponents\LivewirePowerGrid\Helpers\Helpers')
-
 @foreach ($columns as $column)
     @php
         $content = $row->{$column->field};

@@ -254,17 +254,3 @@ dataset('filter_number_themes_collection', [
     'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
     'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
-
-function filterNumber(string $field, ?string $min, ?string $max, ?string $thousands = '', ?string $decimal = ''): array
-{
-    return [
-        'number' => [
-            $field => [
-                'start'     => $min,
-                'end'       => $max,
-                'thousands' => $thousands,
-                'decimal'   => $decimal,
-            ],
-        ],
-    ];
-}
