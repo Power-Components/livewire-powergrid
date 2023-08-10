@@ -64,7 +64,7 @@ class Macros
         Button::macro('openModal', function (string $component, array $params) {
             $encoded = Js::from([
                 'component' => $component,
-                'arguments' => $params
+                'arguments' => $params,
             ]);
 
             $this->dynamicProperties['openModal'] = [

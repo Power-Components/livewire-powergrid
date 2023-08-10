@@ -75,7 +75,7 @@ final class Column implements \Livewire\Wireable
 
     public bool $index = false;
 
-    public   bool $fixedOnResponsive = false;
+    public bool $fixedOnResponsive = false;
 
     /**
      * Adds a new Column
@@ -332,8 +332,8 @@ final class Column implements \Livewire\Wireable
         bool $hasPermission = true,
         string $dataField = '',
         string $fallback = null,
-        bool $saveOnMouseOut = false): Column
-    {
+        bool $saveOnMouseOut = false
+    ): Column {
         $this->editable = [
             'hasPermission'  => $hasPermission,
             'fallback'       => $fallback,
