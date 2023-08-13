@@ -18,6 +18,8 @@ class FilterBase implements Wireable
 
     public string $baseClass = '';
 
+    public array $filterRelation = [];
+
     public function __construct(
         public string $column,
         public ?string $field = null,
@@ -32,6 +34,14 @@ class FilterBase implements Wireable
     public function builder(\Closure $closure): self
     {
         $this->builder = $closure;
+
+        return $this;
+    }
+
+    public function filterRelation(string $relation, string $field): self
+    {
+        $this->filterRelation['relation'] = $relation;
+        $this->filterRelation['field']    = $field;
 
         return $this;
     }

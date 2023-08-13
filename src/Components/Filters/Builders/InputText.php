@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
@@ -11,6 +12,17 @@ class InputText extends BuilderBase
 {
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
+        if ($filterRelation = (array) data_get($this->filterBase, 'filterRelation')) {
+            $relation = strval(data_get($filterRelation, 'relation'));
+            $field    = strval(data_get($filterRelation, 'field'));
+
+            $closure = $this->builderRelation($relation, $field);
+
+            $closure($builder, $values);
+
+            return;
+        }
+
         if (data_get($this->filterBase, 'builder')) {
             /** @var \Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
@@ -130,6 +142,38 @@ class InputText extends BuilderBase
 
                 return false !== stristr($row->{$field}, strtolower($value));
             }),
+        };
+    }
+
+    private function builderRelation(string $relation, string $field): \Closure
+    {
+        return function (Builder $query, array $params) use ($relation, $field) {
+            $value = $params['value'];
+
+            match ($params['selected']) {
+                'is'           => $query->whereRelation($relation, $field, '=', $value),
+                'is_not'       => $query->whereRelation($relation, $field, '!=', $value),
+                'starts_with'  => $query->whereRelation($relation, $field, Sql::like($query), $value . '%'),
+                'ends_with'    => $query->whereRelation($relation, $field, Sql::like($query), '%' . $value),
+                'contains_not' => $query->whereRelation($relation, $field, 'NOT ' . Sql::like($query), '%' . $value . '%'),
+                'is_empty'     => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                    $query->where($field, '=', '')->orWhereNull($field);
+                }),
+                'is_not_empty' => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                    $query->where($field, '!=', '')->orWhereNotNull($field);
+                }),
+                'is_null' => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                    $query->whereNull($field);
+                }),
+                'is_not_null' => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                    $query->whereNotNull($field);
+                }),
+                'is_blank'     => $query->whereRelation($relation, $field, '=', ''),
+                'is_not_blank' => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                    $query->where($field, '!=', '')->orWhereNull($field);
+                }),
+                default => $query->whereRelation($relation, $field, Sql::like($query), '%' . $value . '%'),
+            };
         };
     }
 }
