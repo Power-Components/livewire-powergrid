@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder, Builder as EloquentBuilder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Connectors\Support\Sql;
