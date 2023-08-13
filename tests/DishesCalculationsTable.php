@@ -24,26 +24,6 @@ class DishesCalculationsTable extends PowerGridComponent
 
     public bool $join = false;
 
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
-
     public function setUp(): array
     {
         $this->showCheckBox();

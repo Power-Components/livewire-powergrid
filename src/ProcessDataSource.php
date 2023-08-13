@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str};
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\Connectors\{Builder, Collection};
@@ -82,11 +82,6 @@ class ProcessDataSource
 
         $results = $this->component->applySorting($filters);
 
-        if ($this->component->headerTotalColumn || $this->component->footerTotalColumn) {
-            $this->component->withoutPaginatedData = $results->values()
-                ->map(fn ($item) => (array) $item);
-        }
-
         if ($results->count()) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
@@ -120,12 +115,12 @@ class ProcessDataSource
             $results = $this->applySoftDeletes($results);
         }
 
+        $this->applySummaries($results);
+
         $sortField = $this->makeSortField($this->component->sortField);
 
         /** @phpstan-ignore-next-line */
         $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
-
-        $this->applyTotalColumn($results);
 
         $results = $this->applyPerPage($results);
 
@@ -184,13 +179,6 @@ class ProcessDataSource
         }
 
         return $this->component->currentTable . '.' . $sortField;
-    }
-
-    private function applyTotalColumn(EloquentBuilder|QueryBuilder|MorphToMany $results): void
-    {
-        if ($this->component->headerTotalColumn || $this->component->footerTotalColumn) {
-            $this->component->withoutPaginatedData = $this->transform($results->get());
-        }
     }
 
     /**
@@ -332,5 +320,40 @@ class ProcessDataSource
 
         /** @phpstan-ignore-next-line  */
         $this->component->currentTable = $datasource->getModel()->getTable();
+    }
+
+    private function applySummaries(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
+    {
+        $format = function ($summarize, $column, $field, $value) {
+            if (method_exists($this->component, 'summarizeFormat')) {
+                if (isset($this->component->summarizeFormat()[$field])) {
+                    data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
+
+                    return;
+                }
+
+                data_set($column, 'summarize.' . $summarize, $value);
+
+                return;
+            }
+
+            data_set($column, 'summarize.' . $summarize, $value);
+        };
+
+        $this->component->columns = collect($this->component->columns)
+            ->map(function (array|\stdClass|Column $column) use ($results, $format) {
+                $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+
+                $summaries = ['sum', 'count', 'avg', 'min', 'max'];
+
+                foreach ($summaries as $summary) {
+                    if (data_get($column, $summary . '.header') || data_get($column, $summary . '.footer')) {
+                        $value = $results->{$summary}($field);
+                        $format($summary, $column, $field, $value);
+                    }
+                }
+
+                return (object) $column;
+            })->toArray();
     }
 }

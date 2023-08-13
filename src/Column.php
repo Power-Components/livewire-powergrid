@@ -40,29 +40,36 @@ final class Column implements \Livewire\Wireable
 
     public bool $sortable = false;
 
+    public array $summarize = [];
+
     public array $sum = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $count = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $avg = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $min = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $max = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public ?Collection $filters = null;
@@ -188,12 +195,10 @@ final class Column implements \Livewire\Wireable
         string $label = 'Sum',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
-        $this->sum['label']   = $label;
-        $this->sum['header']  = $header;
-        $this->sum['footer']  = $footer;
-        $this->sum['rounded'] = $rounded;
+        $this->sum['label']  = $label;
+        $this->sum['header'] = $header;
+        $this->sum['footer'] = $footer;
 
         return $this;
     }

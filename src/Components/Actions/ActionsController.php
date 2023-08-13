@@ -26,6 +26,26 @@ class ActionsController
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
             $component = strval(data_get($button, 'dynamicProperties.component', 'button'));
 
+            $show = data_get($button, 'dynamicProperties.show');
+
+            if ($show instanceof \Closure) {
+                if (!$show($row)) {
+                    return (object)[
+                        'render-action.' . $index . '.' . data_get($button, 'action') => null,
+                    ];
+                }
+            }
+
+            $hide = data_get($button, 'dynamicProperties.hide');
+
+            if ($hide instanceof \Closure) {
+                if ($hide($row)) {
+                    return (object)[
+                        'render-action.' . $index . '.' . data_get($button, 'action') => null,
+                    ];
+                }
+            }
+
             $render = data_get($button, 'dynamicProperties.render');
 
             if ($render instanceof \Closure) {

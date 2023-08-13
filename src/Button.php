@@ -19,6 +19,7 @@ use Livewire\Wireable;
  * @method static target(string $target) _blank, _self, _top, _parent, null
  * @method static render(\Closure $closure)
  * @method static bladeComponent(string $component, array $params)
+ *
  */
 final class Button implements Wireable
 {

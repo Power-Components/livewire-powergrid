@@ -45,8 +45,6 @@ class PowerGridComponent extends Component
 
     public Collection|array|EloquentBuilder|QueryBuilder $datasource;
 
-    public BaseCollection $withoutPaginatedData;
-
     public array $relationSearch = [];
 
     public bool $ignoreTablePrefix = true;
@@ -205,6 +203,11 @@ class PowerGridComponent extends Component
         return null;
     }
 
+    public function summarizeFormat(): array
+    {
+        return [];
+    }
+
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns();
@@ -339,14 +342,6 @@ class PowerGridComponent extends Component
         $this->searchMorphs   = $this->searchMorphs();
 
         $data = $this->getCachedData();
-
-        //        if (method_exists($this, 'initActions')) {
-        //            // $this->initActions();
-        //
-        //            if (method_exists($this, 'header')) {
-        //                $this->headers = $this->header();
-        //            }
-        //        }
 
         /** @phpstan-ignore-next-line */
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();

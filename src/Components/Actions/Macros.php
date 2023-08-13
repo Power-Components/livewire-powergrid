@@ -162,5 +162,17 @@ HTML;
 
             return $this;
         });
+
+        Button::macro('hideWhen', function (\Closure $closure) {
+            $this->dynamicProperties['hide'] = $closure;
+
+            return $this;
+        });
+
+        Button::macro('showWhen', function (\Closure $closure) {
+            $this->dynamicProperties['show'] = $closure;
+
+            return $this;
+        });
     }
 }
