@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesFiltersTable, DishesQueryBuilderTable};
+use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, DishesFiltersTable, DishesQueryBuilderTable};
 
 ;
 
@@ -490,30 +490,36 @@ it('properly filters by "chef name is NOT empty"', function (string $component, 
     expectColumnsFilterMatch($livewire, $filter);
 })->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
 
-todo('properly filters using custom builder', function (string $component, object $params) {
-    $component = livewire($component, [
-        'join'        => $params->join,
-        'testFilters' => [
-            Filter::inputText($params->field)
-                ->builder(function ($builder, $values) use ($params) {
-                    expect($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
-
+$component = new class () extends DishTableBase {
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('id')
+                ->builder(function ($builder, $values) {
                     return $builder->where('dishes.id', 1);
                 }),
-        ],
+        ];
+    }
+};
+
+it('properly filters using custom builder', function (string $component, object $params) {
+    $component = livewire($component, [
+        'join' => $params->join,
     ])
         ->call($params->theme);
 
-    $component->set('filters', filterInputText('francesinha', 'contains', $params->field))
+    $component->set('filters', filterInputText('francesinha', 'contains', 'id'))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha')
         ->assertDontSee('Francesinha vegana');
 })->group('filters', 'filterInputText')
-    ->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');
+    ->with([
+        'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+        'bootstrap' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    ]);
 
 dataset('filter_input_text_options_model_themes_with_join', [
-    'tailwind'       => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'name', 'join' => false]],
-    'bootstrap'      => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name', 'join' => false]],
+
     'tailwind join'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name', 'join' => true]],
     'bootstrap join' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name', 'join' => true]],
 ]);

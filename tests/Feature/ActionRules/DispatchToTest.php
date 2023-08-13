@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Facades\Rule;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, Models\Dish, RulesEmitToTable};
+use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, Models\Dish};
 
 $component = new class () extends DishTableBase {
     public int $dishId;

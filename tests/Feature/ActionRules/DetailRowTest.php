@@ -5,15 +5,12 @@ use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
-use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
+use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Tests\DishTableBase};
 
-;
-
-todo('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
-    livewire($component, [
-        'join'      => $params->join,
-        'setUpTest' => [
+$component = new class () extends DishTableBase {
+    public function setUp(): array
+    {
+        return [
             Footer::make()
                 ->showPerPage(5),
 
@@ -23,18 +20,33 @@ todo('change \'detailRow\' component when dish-id == 1', function (string $compo
                     'name' => 'Luan',
                 ])
                 ->showCollapseIcon(),
-        ], ])
-        ->call($params->theme)
-        ->set('testActions', [
+        ];
+    }
+
+    public function actions($row): array
+    {
+        return [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
                 ->toggleDetail(),
-        ])
-        ->set('testActionRules', [
+        ];
+    }
+
+    public function actionRules(): array
+    {
+        return [
             Rule::rows()
                 ->when(fn (Dish $dish) => $dish->id == 3)
                 ->detailView('livewire-powergrid::tests.detail-rules', ['newParameter' => 1]),
-        ])
+        ];
+    }
+};
+
+it('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
+    livewire($component, [
+        'join' => $params->join,
+    ])
+        ->call($params->theme)
         ->assertDontSeeHtml([
             '<div>Id 1</div>',
             '<div>Options {"name":"Luan"}</div>',
@@ -85,9 +97,10 @@ todo('change \'detailRow\' component when dish-id == 1', function (string $compo
             4 => false,
             5 => false,
         ]);
-})->with('detail_row_tailwind_join')->group('actionRules');
+})->with('detail_row_tailwind_join')
+    ->group('actionRules');
 
 dataset('detail_row_tailwind_join', [
-    'tailwind'      => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'tailwind join' => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

@@ -2,11 +2,7 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-;
-
-use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
-
-use PowerComponents\LivewirePowerGrid\{Detail, Footer};
+use PowerComponents\LivewirePowerGrid\{Detail, Footer, Tests\RulesDetailRowTable, Tests\RulesToggleDetailTable};
 
 it('collapse detail row', function () {
     livewire(RulesToggleDetailTable::class, [
@@ -92,7 +88,7 @@ it('collapse detail row', function () {
 });
 
 it('render x-data correctly for detail row state', function () {
-    $component = livewire(RulesToggleDetailTable::class, [
+    $component = livewire(RulesDetailRowTable::class, [
         'setUpTest' => [
             Footer::make()
                 ->showPerPage(5),

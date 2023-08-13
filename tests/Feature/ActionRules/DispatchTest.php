@@ -2,11 +2,11 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
+use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\{livewire};
-
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, RulesEmitTable};
 
 $component = new class () extends DishTableBase {
     public int $dishId;
