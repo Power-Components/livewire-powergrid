@@ -30,7 +30,7 @@
         "composer/composer": "^2.5.8",
         "laravel/pint": "^1.10.5",
         "nunomaduro/larastan": "^2.6.3",
-        "laradumps/laradumps-core": "^0.2.0",
+        "laradumps/laradumps-core": "^0.3.0",
         "spaze/phpstan-disallowed-calls": "^2.16"
     },
     "suggest": {

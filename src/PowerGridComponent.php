@@ -95,8 +95,6 @@ class PowerGridComponent extends Component
 
         $this->resolveTotalRow();
 
-        $this->resolveFilters();
-
         $this->restoreState();
     }
 
@@ -329,6 +327,10 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
+        $this->columns = $this->columns();
+
+        $this->resolveFilters();
+
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
 

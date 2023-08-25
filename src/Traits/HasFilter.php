@@ -128,27 +128,28 @@ trait HasFilter
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
-            if (str($column->dataField)->contains('.')) {
-                $field = $column->field;
+            if (str(data_get($column, 'dataField'))->contains('.')) {
+                $field = data_get($column, 'field');
             } else {
-                $field = filled($column->dataField) ? $column->dataField : $column->field;
+                $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
             }
 
             $filterForColumn = $filters->filter(
-                fn ($filter) => $filter->column == $field
+                fn ($filter) => data_get($filter, 'column') == $field
             );
 
             if ($filterForColumn->count() > 0) {
                 $filterForColumn->transform(function ($filter) use ($column) {
-                    $filter->title = $column->title;
+                    data_set($filter, 'title', data_get($column, 'title'));
 
                     return $filter;
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
-                    unset($filter->builder, $filter->collection);
+                    data_forget($filter, 'builder');
+                    data_forget($filter, 'collection');
 
-                    if (method_exists($filter, 'execute')) {
+                    if (!is_array($filter) && method_exists($filter, 'execute')) {
                         return (array) $filter->execute();
                     }
 
@@ -156,9 +157,9 @@ trait HasFilter
                 }));
 
                 $filterForColumn->each(function ($filter) {
-                    if ($filter->className === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
-                        isset($filter->attributes)) {
-                        $attributes = array_values($filter->attributes);
+                    if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
+                        filled(data_get($filter, 'attributes'))) {
+                        $attributes = array_values(data_get($filter, 'attributes'));
 
                         foreach ($attributes as $value) {
                             if (is_string($value) && str_contains($value, 'filters.')) {
