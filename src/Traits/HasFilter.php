@@ -128,8 +128,8 @@ trait HasFilter
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
-            if (str(data_get($column, 'dataField'))->contains('.')) {
-                $field = data_get($column, 'field');
+            if (str(strval(data_get($column, 'dataField')))->contains('.')) {
+                $field = strval(data_get($column, 'field'));
             } else {
                 $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
             }
@@ -159,7 +159,7 @@ trait HasFilter
                 $filterForColumn->each(function ($filter) {
                     if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
                         filled(data_get($filter, 'attributes'))) {
-                        $attributes = array_values(data_get($filter, 'attributes'));
+                        $attributes = array_values((array) data_get($filter, 'attributes'));
 
                         foreach ($attributes as $value) {
                             if (is_string($value) && str_contains($value, 'filters.')) {
