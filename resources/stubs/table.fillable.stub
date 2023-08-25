@@ -5,10 +5,18 @@ namespace {{ livewireClassNamespace }}{{ subFolder }};
 use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Rules\{Rule, RuleActions};
 use PowerComponents\LivewirePowerGrid\Traits\{ActionButton, WithExport};
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridColumns};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    Components\Rules\RuleActions,
+    Exportable,
+    Facades\Filter,
+    Facades\Rule,
+    Footer,
+    Header,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridColumns};
 
 final class {{ componentName }} extends PowerGridComponent
 {
