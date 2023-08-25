@@ -43,6 +43,7 @@
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
                                 'theme' => $theme->filterDatePicker,
+                                'type' => 'datetime',
                             ])
                         </div>
                     @endif
@@ -53,6 +54,8 @@
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
                                 'theme' => $theme->filterDatePicker,
+                                'type' => 'date',
+
                             ])
                         </div>
                     @endif
