@@ -7,13 +7,22 @@ use Illuminate\View\ComponentAttributeBag;
 
 class FilterSelect extends FilterBase
 {
-    public array|Collection $dataSource;
+    public array|Collection|\Closure $dataSource;
 
     public string $optionValue = '';
 
     public string $optionLabel = '';
 
-    public function dataSource(Collection|array $collection): FilterSelect
+    public array $depends = [];
+
+    public function depends(array $fields): FilterSelect
+    {
+        $this->depends = $fields;
+
+        return $this;
+    }
+
+    public function dataSource(Collection|array|\Closure $collection): FilterSelect
     {
         $this->dataSource = $collection;
 
