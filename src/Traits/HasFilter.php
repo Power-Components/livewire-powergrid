@@ -147,7 +147,7 @@ trait HasFilter
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
                     if (data_get($filter, 'dataSource') instanceof \Closure) {
-                        $depends = data_get($filter, 'depends');
+                        $depends = (array) data_get($filter, 'depends');
                         $closure = data_get($filter, 'dataSource');
 
                         if ($depends && $this->filters) {
