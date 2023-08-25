@@ -3,8 +3,13 @@
         $content = $row->{$column->field};
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-        $field = $column->dataField != '' ? $column->dataField : $column->field;
-        $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
+        $field = $column->dataField ?: $column->field;
+        $contentClass = data_get($column->contentClasses, $content, '');
+
+        if (is_array($contentClass))
+            // todo: fix this bug
+            return
+
     @endphp
     <td
         class="{{ $theme->table->tdBodyClass . ' ' . $column->bodyClass ?? '' }}"
@@ -12,6 +17,7 @@
     >
         <div class="flex gap-2 w-full">
             <!-- Render Action -->
+
             @if (filled(data_get($row, 'actions')) && blank($column->field))
                 @foreach (data_get($row, 'actions') as $key => $action)
                     <div wire:key="action-{{ $row->id }}-{{ $key }}">
