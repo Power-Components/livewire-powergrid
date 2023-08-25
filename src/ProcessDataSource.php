@@ -112,7 +112,7 @@ class ProcessDataSource
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
             /** @phpstan-ignore-next-line */
-            $results = $this->applySoftDeletes($results);
+            $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
         $this->applySummaries($results);

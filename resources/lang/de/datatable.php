@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter'            => 'Aktionen',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'Alle löschen',
     ],
     'labels' => [
         'action'           => 'Aktionen',
@@ -55,13 +55,13 @@ return [
         'completed' => 'Export abgeschlossen! Ihre Dateien stehen zum Download bereit',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'Alle Datensätze anzeigen, einschließlich gelöschter.',
+        'message_only_trashed' => 'Nur gelöschte Datensätze anzeigen.',
+        'without_trashed'      => 'Ohne gelöschte',
+        'with_trashed'         => 'Mit gelöschten',
+        'only_trashed'         => 'Nur gelöschte',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Multiple Suche ist aktiv',
     ],
 ];
