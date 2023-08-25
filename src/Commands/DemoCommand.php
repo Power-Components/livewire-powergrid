@@ -34,7 +34,11 @@ class DemoCommand extends Command
         $this->tableFileName = 'PowerGridDemoTable';
         $this->viewFileName  = 'powergrid-demo.blade';
 
-        $this->livewirePath     = 'Http/Livewire/';
+        $this->livewirePath     = str(config('livewire.class_namespace'))
+            ->replace('\\', '/')
+            ->replace('App', '')
+            ->append('/');
+
         $this->fullLivewirePath = app_path($this->livewirePath);
 
         $this->viewFolder = 'resources/views';
@@ -64,7 +68,7 @@ class DemoCommand extends Command
     protected function instructions(): void
     {
         $this->info(
-            "<comment>➤</comment> <comment>{$this->tableFileName}.php</comment> was successfully created at [<comment>App/{$this->livewirePath }</comment>]\n"
+            "<comment>➤</comment> <comment>{$this->tableFileName}.php</comment> was successfully created at [<comment>App{$this->livewirePath }</comment>]\n"
         );
 
         $this->info("<comment>➤</comment> <comment>{$this->viewFileName}.php</comment> was successfully created at [<comment>{$this->viewFolder }/</comment>]\n");

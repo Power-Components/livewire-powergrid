@@ -24,7 +24,7 @@ class CreateCommand extends Command
 
     protected string $dataBaseTableName;
 
-    protected bool $useFilable = false;
+    protected bool $useFillable = false;
 
     /** @var array<int, string> $modelPath */
     protected array $modelPath = [];
@@ -161,10 +161,10 @@ class CreateCommand extends Command
 
         if (in_array(strtolower($this->datasourceOption), ['m', 'qb'])) {
             if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
-                $this->useFilable = true;
+                $this->useFillable = true;
             }
 
-            if ($this->useFilable) {
+            if ($this->useFillable) {
                 if (strtolower($this->datasourceOption) === 'qb') {
                     $this->askDataBaseTableName();
 
@@ -187,6 +187,7 @@ class CreateCommand extends Command
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
 
+        $this->stub = str_replace('{{ livewireClassNamespace }}', config('livewire.class_namespace'), $this->stub);
         $this->stub = str_replace('{{ subFolder }}', $subFolder, $this->stub);
         $this->stub = str_replace('{{ componentName }}', $this->componentName, $this->stub);
 
@@ -201,8 +202,12 @@ class CreateCommand extends Command
             $this->stub = str_replace('{{ databaseTableName }}', $this->dataBaseTableName, $this->stub);
         }
 
-        $livewirePath = 'Http/Livewire/';
-        $path         = app_path($livewirePath . $this->tableName . '.php');
+        $livewirePath = str(config('livewire.class_namespace'))
+            ->replace('\\', '/')
+            ->replace('App', '')
+            ->append('/');
+
+        $path = app_path($livewirePath . $this->tableName . '.php');
 
         $this->componentFilename = Str::of($path)->basename();
         $basePath                = Str::of($path)->replace($this->componentFilename, '');
@@ -241,7 +246,7 @@ class CreateCommand extends Command
     {
         $this->output->title('Component is ready!');
 
-        $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>App/' . $this->savedAt . '</comment>].');
+        $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>app' . $this->savedAt . '</comment>].');
 
         $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
 
