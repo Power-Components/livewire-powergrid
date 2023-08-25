@@ -34,7 +34,7 @@ class DemoCommand extends Command
         $this->tableFileName = 'PowerGridDemoTable';
         $this->viewFileName  = 'powergrid-demo.blade';
 
-        $this->livewirePath     = str(config('livewire.class_namespace'))
+        $this->livewirePath = str(strval(config('livewire.class_namespace')))
             ->replace('\\', '/')
             ->replace('App', '')
             ->append('/');

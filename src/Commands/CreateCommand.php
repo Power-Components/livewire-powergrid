@@ -187,7 +187,7 @@ class CreateCommand extends Command
             $subFolder = '\\' . str_replace(['.', '/', '\\\\'], '\\', end($matches));
         }
 
-        $this->stub = str_replace('{{ livewireClassNamespace }}', config('livewire.class_namespace'), $this->stub);
+        $this->stub = str_replace('{{ livewireClassNamespace }}', strval(config('livewire.class_namespace')), $this->stub);
         $this->stub = str_replace('{{ subFolder }}', $subFolder, $this->stub);
         $this->stub = str_replace('{{ componentName }}', $this->componentName, $this->stub);
 
@@ -202,7 +202,7 @@ class CreateCommand extends Command
             $this->stub = str_replace('{{ databaseTableName }}', $this->dataBaseTableName, $this->stub);
         }
 
-        $livewirePath = str(config('livewire.class_namespace'))
+        $livewirePath = str(strval(config('livewire.class_namespace')))
             ->replace('\\', '/')
             ->replace('App', '')
             ->append('/');
