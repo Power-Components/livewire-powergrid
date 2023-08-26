@@ -12,6 +12,7 @@
     >
         <div class="flex gap-2 w-full">
             <!-- Render Action -->
+
             @if (filled(data_get($row, 'actions')) && blank($column->field))
                 @foreach (data_get($row, 'actions') as $key => $action)
                     <div wire:key="action-{{ $row->id }}-{{ $key }}">
