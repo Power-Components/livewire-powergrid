@@ -38,28 +38,28 @@ it('properly displays "routeMethod" on edit button', function (string $component
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml(<<<HTML
-<form target="_self" action="http://localhost/testing/1" method="post">
-    @method('post')
-    @csrf
-    <button type="submit" class="text-center" id="">route: 1</button>
-</form>
-HTML)
+        ->assertSeeHtmlInOrder([
+            '<form target="_self" action="http://localhost/testing/1" method="post">',
+            '<input type="hidden" name="_method" value="post">',
+            '<input type="hidden" name="_token" value="">',
+            '<button type="submit" class="text-center" id="">route: 1</button>',
+            '</form>',
+        ])
+        ->assertSeeHtmlInOrder([
+            '<form target="_self" action="http://localhost/testing/2" method="post">',
+            '<input type="hidden" name="_method" value="post">',
+            '<input type="hidden" name="_token" value="">',
+            '<button type="submit" class="text-center" id="">route: 2</button>',
+            '</form>',
+        ])
         ->call('setPage', 2)
-        ->assertSeeHtml(<<<HTML
-<form target="_self" action="http://localhost/testing/7" method="post">
-    @method('post')
-    @csrf
-    <button type="submit" class="text-center" id="">route: 7</button>
-</form>
-HTML)
-        ->assertDontSeeHtml(<<<HTML
-<form target="_self" action="http://localhost/testing/1" method="post">
-    @method('post')
-    @csrf
-    <button type="submit" class="text-center" id="">route: 1</button>
-</form>
-HTML);
+        ->assertSeeHtmlInOrder([
+            '<form target="_self" action="http://localhost/testing/7" method="post">',
+            '<input type="hidden" name="_method" value="post">',
+            '<input type="hidden" name="_token" value="">',
+            '<button type="submit" class="text-center" id="">route: 7</button>',
+            '</form>',
+        ]);
 })
     ->with('action:routeMethod')
     ->group('action');

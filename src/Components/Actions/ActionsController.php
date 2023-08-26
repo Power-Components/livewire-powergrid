@@ -24,8 +24,6 @@ class ActionsController
 
         /** @phpstan-ignore-next-line */
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
-            $component = strval(data_get($button, 'dynamicProperties.component', 'button'));
-
             $show = data_get($button, 'dynamicProperties.show');
 
             if ($show instanceof \Closure) {
@@ -100,6 +98,8 @@ class ActionsController
             );
 
             $slot = filled($slotRule) ? strval($slotRule) : strval(data_get($button, 'slot'));
+
+            $component = strval(data_get($button, 'dynamicProperties.' . key((array) data_get($button, 'dynamicProperties')) . '.component', 'button'));
 
             $element = "<{$component} {$attributeString}>{$slot}</{$component}>";
 

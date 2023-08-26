@@ -56,12 +56,12 @@ it('properly displays "route" on edit button', function (string $component, obje
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("href=\"http://localhost/testing/1\">route: 1</button>")
-        ->assertSeeHtml("href=\"http://localhost/testing/2\">route: 2</button>")
-        ->assertSeeHtml("href=\"http://localhost/testing/3\">route: 3</button>")
+        ->assertSeeHtml("href=\"http://localhost/testing/1\">route: 1</a>")
+        ->assertSeeHtml("href=\"http://localhost/testing/2\">route: 2</a>")
+        ->assertSeeHtml("href=\"http://localhost/testing/3\">route: 3</a>")
         ->call('setPage', 2)
-        ->assertSeeHtml("href=\"http://localhost/testing/7\">route: 7</button>")
-        ->assertDontSeeHtml("href=\"http://localhost/testing/1\">route: 1</button>");
+        ->assertSeeHtml("href=\"http://localhost/testing/7\">route: 7</a>")
+        ->assertDontSeeHtml("href=\"http://localhost/testing/1\">route: 1</a>");
 })
     ->with('action:route')
     ->group('action');
@@ -76,12 +76,12 @@ it('properly displays "routeTarget" on edit button', function (string $component
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/1\">route: 1</button>")
-        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/2\">route: 2</button>")
-        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/3\">route: 3</button>")
+        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/1\">route: 1</a>")
+        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/2\">route: 2</a>")
+        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/3\">route: 3</a>")
         ->call('setPage', 2)
-        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/7\">route: 7</button>")
-        ->assertDontSeeHtml("target=\"_blank\" href=\"http://localhost/testing/1\">route: 1</button>");
+        ->assertSeeHtml("target=\"_blank\" href=\"http://localhost/testing/7\">route: 7</a>")
+        ->assertDontSeeHtml("target=\"_blank\" href=\"http://localhost/testing/1\">route: 1</a>");
 })
     ->with('action:routeTarget')
     ->group('action');

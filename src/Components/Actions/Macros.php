@@ -119,6 +119,7 @@ class Macros
 
         Button::macro('target', function (string $target) {
             $this->dynamicProperties['target'] = [
+                "component" => "a",
                 "attribute" => "target",
                 "value"     => $target,
             ];
@@ -140,13 +141,11 @@ class Macros
                 return $this;
             }
 
-            $this->dynamicProperties['render'] = <<<HTML
-<form target="$target" action="$route" method="post">
-    @method('$method')
+            $this->dynamicProperties['render'] = Blade::render('<form target="' . $target . '" action="' . $route . '" method="post">
+    @method("' . $method . '")
     @csrf
-    <button type="submit" class="$this->class" id="$this->id">$this->slot</button>
-</form>
-HTML;
+    <button type="submit" class="' . $this->class . '" id="' . $this->id . '">' . $this->slot . '</button>
+</form>');
 
             return $this;
         });

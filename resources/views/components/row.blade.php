@@ -3,13 +3,8 @@
         $content = $row->{$column->field};
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-        $field = $column->dataField ?: $column->field;
-        $contentClass = data_get($column->contentClasses, $content, '');
-
-        if (is_array($contentClass))
-            // todo: fix this bug
-            return
-
+        $field = $column->dataField != '' ? $column->dataField : $column->field;
+        $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
     @endphp
     <td
         class="{{ $theme->table->tdBodyClass . ' ' . $column->bodyClass ?? '' }}"
