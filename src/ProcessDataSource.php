@@ -326,13 +326,20 @@ class ProcessDataSource
     {
         $format = function ($summarize, $column, $field, $value) {
             if (method_exists($this->component, 'summarizeFormat')) {
-                if (isset($this->component->summarizeFormat()[$field])) {
-                    data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
+                $summarizeFormat = $this->component->summarizeFormat();
 
-                    return;
+                foreach ($summarizeFormat as $field => $format) {
+                    $parts = explode('.', $field);
+
+                    if (isset($parts[1])) {
+                        $formats  = str($parts[1])->replace(['{', '}'], '');
+                        $subParts = explode(',', $formats);
+
+                        foreach ($subParts as $subFormat) {
+                            data_set($column, 'summarize.' . $subFormat, $this->component->summarizeFormat()[$field]($value));
+                        }
+                    }
                 }
-
-                data_set($column, 'summarize.' . $summarize, $value);
 
                 return;
             }
