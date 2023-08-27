@@ -31,9 +31,6 @@ jobs:
         php: [ 8.2, 8.1 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
-        include:
-          - laravel: 10.*
-            testbench: 8.*
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
 
@@ -61,9 +58,12 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           rm composer.lock
-          composer require openspout/openspout
+
+      - name: Install openspout/openspout
+        run: composer require openspout/openspout
+
       - name: Pint
         if: matrix.php == '8.1'
         run: composer test:pint

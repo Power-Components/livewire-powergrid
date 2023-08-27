@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Actions;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
+use PowerComponents\LivewirePowerGrid\Tests\Models\Chef;
 
 class TestDatabase
 {
@@ -29,6 +30,7 @@ class TestDatabase
         Schema::dropIfExists('categories');
         Schema::dropIfExists('chefs');
         Schema::dropIfExists('restaurants');
+        Schema::dropIfExists('category_chef');
     }
 
     public static function migrate(): void
@@ -72,6 +74,12 @@ class TestDatabase
             $table->string('name');
             $table->timestamps();
         });
+
+        Schema::create('category_chef', function (Blueprint $table) {
+            $table->foreignId('chef_id');
+            $table->foreignId('category_id');
+            $table->timestamps();
+        });
     }
 
     public static function seed(array $dishes = []): void
@@ -82,6 +90,7 @@ class TestDatabase
         DB::table('dishes')->truncate();
         DB::table('chefs')->truncate();
         DB::table('restaurants')->truncate();
+        DB::table('category_chef')->truncate();
 
         Schema::enableForeignKeyConstraints();
 
@@ -96,10 +105,10 @@ class TestDatabase
         ]);
 
         DB::table('chefs')->insert([
-            [
-                'name'          => 'John Smith',
-                'restaurant_id' => 1,
-            ],
+            ['name' => 'Luan', 'restaurant_id' => 1],
+            ['name' => 'Dan', 'restaurant_id' => 1],
+            ['name' => 'Vitor', 'restaurant_id' => 1],
+            ['name' => 'Claudio', 'restaurant_id' => 1],
         ]);
 
         DB::table('restaurants')->insert([
@@ -111,6 +120,17 @@ class TestDatabase
         }
 
         DB::table('dishes')->insert($dishes);
+
+        $chefCategories = [
+            'Luan'    => [1, 3, 4],
+            'Dan'     => [2, 5],
+            'Vitor'   => [5, 6],
+            'Claudio' => [1, 6, 7],
+        ];
+
+        Chef::query()->get()->each(function (Chef $chef) use ($chefCategories) {
+            $chef->categories()->attach($chefCategories[$chef->name]);
+        });
     }
 
     public static function generate(): array
@@ -217,11 +237,31 @@ class TestDatabase
                 'in_stock'    => false,
                 'produced_at' => '2021-10-10 00:00:00',
             ],
-            ['name' => 'Bife à Parmegiana', 'category_id' => 1, 'chef_id' => 1],
-            ['name' => 'Berinjela à Parmegiana', 'category_id' => 4, 'chef_id' => 1],
-            ['name' => 'Almôndegas ao Sugo', 'category_id' => 1, 'chef_id' => 1],
-            ['name' => 'Filé Mignon à parmegiana', 'category_id' => 1, 'chef_id' => 1],
-            ['name' => 'Strogonoff de Filé Mignon', 'category_id' => 1, 'chef_id' => 1],
+            [
+                'name'        => 'Bife à Parmegiana',
+                'category_id' => 1,
+                'chef_id'     => 1,
+            ],
+            [
+                'name'        => 'Berinjela à Parmegiana',
+                'category_id' => 4,
+                'chef_id'     => 1,
+            ],
+            [
+                'name'        => 'Almôndegas ao Sugo',
+                'category_id' => 1,
+                'chef_id'     => 1,
+            ],
+            [
+                'name'        => 'Filé Mignon à parmegiana',
+                'category_id' => 1,
+                'chef_id'     => 1,
+            ],
+            [
+                'name'        => 'Strogonoff de Filé Mignon',
+                'category_id' => 1,
+                'chef_id'     => 1,
+            ],
         ]);
 
         $faker = fake();

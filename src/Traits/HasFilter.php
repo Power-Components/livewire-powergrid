@@ -146,6 +146,19 @@ trait HasFilter
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
+                    if (data_get($filter, 'dataSource') instanceof \Closure) {
+                        $depends = (array) data_get($filter, 'depends');
+                        $closure = data_get($filter, 'dataSource');
+
+                        if ($depends && $this->filters) {
+                            $depends = collect($depends)
+                                ->mapWithKeys(fn ($field) => [$field => data_get($this->filters, 'select', $field)]);
+                        }
+
+                        data_forget($filter, 'dataSource');
+                        data_set($filter, 'dataSource', $closure($depends));
+                    }
+
                     data_forget($filter, 'builder');
                     data_forget($filter, 'collection');
 
