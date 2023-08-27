@@ -238,29 +238,29 @@ class TestDatabase
                 'produced_at' => '2021-10-10 00:00:00',
             ],
             [
-                'name' => 'Bife à Parmegiana',
+                'name'        => 'Bife à Parmegiana',
                 'category_id' => 1,
-                'chef_id' => 1
+                'chef_id'     => 1,
             ],
             [
-                'name' => 'Berinjela à Parmegiana',
+                'name'        => 'Berinjela à Parmegiana',
                 'category_id' => 4,
-                'chef_id' => 1
+                'chef_id'     => 1,
             ],
             [
-                'name' => 'Almôndegas ao Sugo',
+                'name'        => 'Almôndegas ao Sugo',
                 'category_id' => 1,
-                'chef_id' => 1
+                'chef_id'     => 1,
             ],
             [
-                'name' => 'Filé Mignon à parmegiana',
+                'name'        => 'Filé Mignon à parmegiana',
                 'category_id' => 1,
-                'chef_id' => 1
+                'chef_id'     => 1,
             ],
             [
-                'name' => 'Strogonoff de Filé Mignon',
+                'name'        => 'Strogonoff de Filé Mignon',
                 'category_id' => 1,
-                'chef_id' => 1
+                'chef_id'     => 1,
             ],
         ]);
 
