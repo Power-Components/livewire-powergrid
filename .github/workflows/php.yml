@@ -58,7 +58,7 @@ jobs:
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           rm composer.lock
 
       - name: Install openspout/openspout
