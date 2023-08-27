@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.3, 8.2, 8.1 ]
+        php: [ 8.2, 8.1 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
         include:
@@ -65,7 +65,6 @@ jobs:
           rm composer.lock
 
       - name: Install openspout/openspout
-        if: matrix.php != '8.3'
         run: composer require openspout/openspout
 
       - name: Pint
