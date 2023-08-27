@@ -63,6 +63,9 @@ class DishTableBase extends PowerGridComponent
         return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('chef_name', function (Dish $dish) {
+                return $dish->chef->name;
+            })
             ->addColumn('category_id');
     }
 
@@ -74,6 +77,10 @@ class DishTableBase extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Name', 'name')
+                ->searchable()
+                ->sortable(),
+
+            Column::make('Chef', 'chef_name')
                 ->searchable()
                 ->sortable(),
 
