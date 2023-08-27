@@ -63,7 +63,11 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           rm composer.lock
-          composer require openspout/openspout
+
+      - name: Install openspout/openspout
+        if: matrix.php != '8.3'
+        run: composer require openspout/openspout
+
       - name: Pint
         if: matrix.php == '8.1'
         run: composer test:pint
