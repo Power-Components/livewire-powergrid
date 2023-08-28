@@ -18,15 +18,19 @@
             style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyleTotalColumns . ' ' . $column->bodyStyle ?? '' }}"
         >
             @include('livewire-powergrid::components.summarize', [
-                'sum' => data_get($column, 'summarize.sum'),
+                'sum' => $column->sum['footer'] ? data_get($column, 'summarize.sum') : null,
                 'labelSum' => $column->sum['label'],
-                'count' => data_get($column, 'summarize.count'),
+
+                'count' => $column->count['footer'] ? data_get($column, 'summarize.count') : null,
                 'labelCount' => $column->count['label'],
-                'min' => data_get($column, 'summarize.min'),
+
+                'min' => $column->min['footer'] ? data_get($column, 'summarize.min') : null,
                 'labelMin' => $column->min['label'],
-                'max' => data_get($column, 'summarize.max'),
+
+                'max' => $column->max['footer'] ? data_get($column, 'summarize.max') : null,
                 'labelMax' => $column->max['label'],
-                'avg' => data_get($column, 'summarize.avg'),
+
+                'avg' => $column->avg['footer'] ? data_get($column, 'summarize.avg') : null,
                 'labelAvg' => $column->avg['label'],
             ])
         </td>
