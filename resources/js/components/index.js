@@ -13,7 +13,7 @@ window.pgTomSelect = pgTomSelect
 window.phSlimSelect = pgSlimSelect
 
 Livewire.hook('commit', ({ component, succeed, fail }) => {
-    if (component.ephemeral.setUp.hasOwnProperty('responsive')) {
+    if (component.ephemeral.setUp && component.ephemeral.setUp.hasOwnProperty('responsive')) {
         succeed(() => {
             queueMicrotask(() => {
                 window.dispatchEvent(
