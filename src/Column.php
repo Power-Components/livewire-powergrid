@@ -228,9 +228,9 @@ final class Column implements \Livewire\Wireable
         bool $header = true,
         bool $footer = true,
     ): Column {
-        $this->avg['label']   = $label;
-        $this->avg['header']  = $header;
-        $this->avg['footer']  = $footer;
+        $this->avg['label']  = $label;
+        $this->avg['header'] = $header;
+        $this->avg['footer'] = $footer;
 
         return $this;
     }
@@ -244,9 +244,9 @@ final class Column implements \Livewire\Wireable
         bool $header = true,
         bool $footer = true,
     ): Column {
-        $this->min['label']   = $label;
-        $this->min['header']  = $header;
-        $this->min['footer']  = $footer;
+        $this->min['label']  = $label;
+        $this->min['header'] = $header;
+        $this->min['footer'] = $footer;
 
         return $this;
     }
@@ -260,9 +260,9 @@ final class Column implements \Livewire\Wireable
         bool $header = true,
         bool $footer = true
     ): Column {
-        $this->max['label']   = $label;
-        $this->max['header']  = $header;
-        $this->max['footer']  = $footer;
+        $this->max['label']  = $label;
+        $this->max['header'] = $header;
+        $this->max['footer'] = $footer;
 
         return $this;
     }
