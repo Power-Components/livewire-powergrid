@@ -227,12 +227,10 @@ final class Column implements \Livewire\Wireable
         string $label = 'Avg',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
         $this->avg['label']   = $label;
         $this->avg['header']  = $header;
         $this->avg['footer']  = $footer;
-        $this->avg['rounded'] = $rounded;
 
         return $this;
     }
@@ -245,12 +243,10 @@ final class Column implements \Livewire\Wireable
         string $label = 'Min',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
         $this->min['label']   = $label;
         $this->min['header']  = $header;
         $this->min['footer']  = $footer;
-        $this->min['rounded'] = $rounded;
 
         return $this;
     }
@@ -262,13 +258,11 @@ final class Column implements \Livewire\Wireable
     public function withMax(
         string $label = 'Max',
         bool $header = true,
-        bool $footer = true,
-        int $rounded = 2
+        bool $footer = true
     ): Column {
         $this->max['label']   = $label;
         $this->max['header']  = $header;
         $this->max['footer']  = $footer;
-        $this->max['rounded'] = $rounded;
 
         return $this;
     }
