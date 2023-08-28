@@ -332,19 +332,15 @@ class ProcessDataSource
                     $parts = explode('.', $field);
 
                     if (isset($parts[1])) {
-                        $formats  = str($parts[1])->replace(['{', '}'], '');
-                        $subParts = explode(',', $formats);
+                        $formats                 = str($parts[1])->replace(['{', '}'], '');
+                        $allowedSummarizeFormats = explode(',', $formats);
 
-                        foreach ($subParts as $subFormat) {
-                            data_set($column, 'summarize.' . $subFormat, $this->component->summarizeFormat()[$field]($value));
+                        if (in_array($summarize, $allowedSummarizeFormats)) {
+                            data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
                         }
                     }
                 }
-
-                return;
             }
-
-            data_set($column, 'summarize.' . $summarize, $value);
         };
 
         $this->component->columns = collect($this->component->columns)

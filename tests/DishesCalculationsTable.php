@@ -99,6 +99,17 @@ class DishesCalculationsTable extends PowerGridComponent
         ];
     }
 
+    public function summarizeFormat(): array
+    {
+        return [
+            'price.{sum,avg,min,max}' => function ($value) {
+                return (new \NumberFormatter('en_US', \NumberFormatter::CURRENCY))
+                    ->formatCurrency($value, 'USD');
+            },
+            'price.{count}' => fn ($value) => $value,
+        ];
+    }
+
     public function bootstrap()
     {
         config(['livewire-powergrid.theme' => 'bootstrap']);

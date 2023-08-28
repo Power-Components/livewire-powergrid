@@ -1,12 +1,10 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-;
-
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
 use PowerComponents\LivewirePowerGrid\Tests\DishesCalculationsTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 beforeEach(
     function () {
@@ -25,11 +23,11 @@ it('calculate "count" on id field', function (string $component, object $params)
 it('calculate "sum" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Sum Price: 15000.6</span>')
+        ->assertSeeHtml('<span>Sum Price: $15,000.60</span>')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('<span>Sum Price: 300.5</span>')
+        ->assertSeeHtml('<span>Sum Price: $300.50</span>')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('<span>Sum Price: 600</span>');
+        ->assertSeeHtml('<span>Sum Price: $600.00</span>');
 })->with('calculations');
 
 it('calculate "count" on price field', function (string $component, object $params) {
@@ -45,19 +43,19 @@ it('calculate "count" on price field', function (string $component, object $para
 it('calculate "avg" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Avg Price: 1250.05</span>');
+        ->assertSeeHtml('<span>Avg Price: $1,250.05</span>');
 })->with('calculations');
 
 it('calculate "min" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Min Price: 100</span>');
+        ->assertSeeHtml('<span>Min Price: $100.00</span>');
 })->with('calculations');
 
 it('calculate "max" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Max Price: 7500</span>');
+        ->assertSeeHtml('<span>Max Price: $7,500.00</span>');
 })->with('calculations');
 
 dataset('calculations', [
