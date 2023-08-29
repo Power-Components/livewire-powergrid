@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Helpers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Collection, Str};
+use Illuminate\View\ComponentAttributeBag;
 
 class Helpers
 {
@@ -48,5 +49,10 @@ class Helpers
         }
 
         return $replace($row->{$field});
+    }
+
+    public function componentAttributesBag(array $params): ComponentAttributeBag
+    {
+        return new ComponentAttributeBag($params);
     }
 }
