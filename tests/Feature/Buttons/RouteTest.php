@@ -2,12 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Button;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $route = new class () extends DishTableBase {
     public function actions($row): array

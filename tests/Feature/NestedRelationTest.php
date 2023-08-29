@@ -1,10 +1,10 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\NestedRelationSearchTable;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Tests\NestedRelationSearchTable;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('searches data using nested relations', function (string $component, object $params) {
     livewire($component)

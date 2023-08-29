@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
@@ -21,7 +21,6 @@ class PowerGridServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([PublishCommand::class]);
             $this->commands([UpdateCommand::class]);
-            $this->commands([DemoCommand::class]);
             $this->commands([CreateCommand::class]);
         }
 

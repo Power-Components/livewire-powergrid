@@ -2,13 +2,13 @@
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Cache;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Cache;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesSetUpTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('show includeViewOnTop/Bottom - Header', function () {
     livewire(DishesSetUpTable::class, ['testHeader' => true])

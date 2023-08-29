@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\DB;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesSoftDeletesTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 beforeEach(
     function () {

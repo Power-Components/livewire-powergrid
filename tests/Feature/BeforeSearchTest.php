@@ -1,10 +1,10 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesBeforeSearchTable;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesBeforeSearchTable;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('searches data using beforeSearch', function (string $component, object $params) {
     livewire($component)

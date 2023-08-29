@@ -1,11 +1,12 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Button;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $component = new class () extends DishTableBase {
     public function actions($row): array

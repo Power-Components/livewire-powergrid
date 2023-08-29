@@ -1,10 +1,10 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesEnumTable;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesEnumTable;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it(
     'property displays the results and options',

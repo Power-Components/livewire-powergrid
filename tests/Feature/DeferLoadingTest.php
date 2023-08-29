@@ -1,10 +1,10 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
 ;
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('deferLoading work properly', function (string $component, object $params) {
     livewire($component, [
