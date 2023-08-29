@@ -48,7 +48,7 @@ class ProcessDataSource
     /**
      * @return BaseCollection<(int|string), mixed>|Collection|EloquentBuilder|QueryBuilder|null
      */
-    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|null
+    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
     {
         $datasource = $this->component->datasource ?? null;
 
@@ -309,7 +309,7 @@ class ProcessDataSource
         });
     }
 
-    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|Collection|QueryBuilder|null $datasource): void
+    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|MorphToMany|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
             $this->component->currentTable = $datasource->from;
