@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
+// @codeCoverageIgnoreStart
 class DemoCommand extends Command
 {
     protected $signature = 'powergrid:demo';
@@ -103,3 +104,4 @@ class DemoCommand extends Command
         $this->output->newLine(2);
     }
 }
+// @codeCoverageIgnoreEnd
