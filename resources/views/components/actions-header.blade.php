@@ -5,6 +5,9 @@
     } else {
         $parameters = $helperClass->makeActionParameters($action->params);
     }
+    
+    $dynamicComponentAttributesBag = $helperClass->componentAttributesBag($action->params);
+    
 @endphp
 @if ($action->event !== '' && $action->to === '')
     <button
@@ -34,13 +37,9 @@
         {!! $action->caption !!}
     </button>
 @elseif ($action->bladeComponent !== '')
-    @php
-        $action->bladeComponentParams = new \Illuminate\View\ComponentAttributeBag($action->params);
-    @endphp
-
     <x-dynamic-component
         :component="$action->bladeComponent"
-        :attributes="$action->bladeComponentParams"
+        :attributes="$dynamicComponentAttributesBag"
     />
 @else
     @if (strtolower($action->method) !== 'get')
