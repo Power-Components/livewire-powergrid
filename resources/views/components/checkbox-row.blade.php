@@ -8,7 +8,7 @@
     @elseif($ruleDisable)
         <td
             class="{{ $theme->checkbox->thClass }}"
-            style="{{ $theme->thStyle }}"
+            style="{{ $theme->checkbox->thStyle }}"
         >
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
