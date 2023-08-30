@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Column,
     Facades\Filter,
     Footer,
@@ -16,8 +15,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
 
 class DishesEnumTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public function setUp(): array
     {
         $this->showCheckBox();

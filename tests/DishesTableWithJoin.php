@@ -12,13 +12,10 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Traits\ActionButton};
+    PowerGridComponent};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public array $testFilters = [];

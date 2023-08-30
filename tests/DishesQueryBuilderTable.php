@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
@@ -19,8 +18,6 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesQueryBuilderTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public string $primaryKey = 'dishes.id';
 
     public array $testFilters = [];

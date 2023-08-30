@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Button,
     Column,
@@ -20,7 +19,6 @@ use PowerComponents\LivewirePowerGrid\{
 
 class ExportTable extends PowerGridComponent
 {
-    use ActionButton;
     use WithExport;
 
     public string $separator = ',';

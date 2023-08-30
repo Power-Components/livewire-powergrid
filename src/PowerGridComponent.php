@@ -79,6 +79,8 @@ class PowerGridComponent extends Component
 
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
+    public array $actions = [];
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -171,6 +173,11 @@ class PowerGridComponent extends Component
     }
 
     public function searchMorphs(): array
+    {
+        return [];
+    }
+
+    public function header(): array
     {
         return [];
     }

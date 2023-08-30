@@ -11,19 +11,9 @@ use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 
 final class {{ componentName }} extends PowerGridComponent
 {
-    use ActionButton;
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Datasource
-    |--------------------------------------------------------------------------
-    | Provides data to your Table using a Model or Collection
-    |
-    */
     public function datasource(): ?Collection
     {
         return collect([
@@ -35,13 +25,6 @@ final class {{ componentName }} extends PowerGridComponent
         ]);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Relationship Search
-    |--------------------------------------------------------------------------
-    | Configure here relationships to be used by the Search and Table Filters.
-    |
-    */
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -57,14 +40,6 @@ final class {{ componentName }} extends PowerGridComponent
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Add Column
-    |--------------------------------------------------------------------------
-    | Make Datasource fields available to be used as columns.
-    | You can pass a closure to transform/modify the data.
-    |
-    */
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns()
@@ -76,20 +51,6 @@ final class {{ componentName }} extends PowerGridComponent
             });
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Include Columns
-    |--------------------------------------------------------------------------
-    | Include the columns added columns, making them visible on the Table.
-    | Each column can be configured with properties, filters, actions...
-    |
-
-    */
-     /**
-     * PowerGrid Columns.
-     *
-     * @return array<int, Column>
-     */
     public function columns(): array
     {
         return [
