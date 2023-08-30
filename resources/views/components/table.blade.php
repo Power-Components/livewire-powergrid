@@ -47,7 +47,7 @@
             @if (isset($actions) && count($actions))
                 @php
                     $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
-                    
+
                     $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
@@ -121,10 +121,15 @@
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
                     $rowId = data_get($row, $primaryKey);
-                    
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
-                    
-                    if (filled($ruleSetAttribute)) {
+
+                    $applyRulesLoop = true;
+                    if (method_exists($this, 'actionRules')) {
+                         $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
+                    }
+
+                    if (filled($ruleSetAttribute) && $applyRulesLoop) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
                                 $class .= ' ' . $attribute['value'];
@@ -169,7 +174,7 @@
                 @if ($checkbox)
                     @php
                         $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
-                        
+
                         $ruleHide = data_get($rules, 'hide');
                         $ruleDisable = data_get($rules, 'disable');
                         $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
