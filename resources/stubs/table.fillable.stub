@@ -5,31 +5,21 @@ namespace {{ livewireClassNamespace }}{{ subFolder }};
 use {{ modelName }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Traits\{ActionButton, WithExport};
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Components\Rules\RuleActions,
-    Exportable,
-    Facades\Filter,
-    Facades\Rule,
-    Footer,
-    Header,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridColumns};
+use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Exportable;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
+use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\Header;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridColumns;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
 final class {{ componentName }} extends PowerGridComponent
 {
-    use ActionButton;
     use WithExport;
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Features Setup
-    |--------------------------------------------------------------------------
-    | Setup Table's general features
-    |
-    */
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -45,143 +35,55 @@ final class {{ componentName }} extends PowerGridComponent
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Datasource
-    |--------------------------------------------------------------------------
-    | Provides data to your Table using a Model or Collection
-    |
-    */
-
-    /**
-     * PowerGrid datasource.
-     *
-     * @return Builder<\{{ modelName }}>
-     */
     public function datasource(): Builder
     {
         return {{ modelLastName }}::query();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Relationship Search
-    |--------------------------------------------------------------------------
-    | Configure here relationships to be used by the Search and Table Filters.
-    |
-    */
-
-    /**
-     * Relationship search.
-     *
-     * @return array<string, array<int, string>>
-     */
     public function relationSearch(): array
     {
         return [];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Add Column
-    |--------------------------------------------------------------------------
-    | Make Datasource fields available to be used as columns.
-    | You can pass a closure to transform/modify the data.
-    |
-    | ❗ IMPORTANT: When using closures, you must escape any value coming from
-    |    the database using the `e()` Laravel Helper function.
-    |
-    */
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns(){{ datasource }};
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Include Columns
-    |--------------------------------------------------------------------------
-    | Include the columns added columns, making them visible on the Table.
-    | Each column can be configured with properties, filters, actions...
-    |
-    */
-
-     /**
-      * PowerGrid Columns.
-      *
-      * @return array<int, Column>
-      */
     public function columns(): array
     {
         return {{ columns }}
     }
 
-    /**
-     * PowerGrid Filters.
-     *
-     * @return array<int, Filter>
-     */
     public function filters(): array
     {
         return {{ filters }}
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Actions Method
-    |--------------------------------------------------------------------------
-    | Enable the method below only if the Routes below are defined in your app.
-    |
-    */
-
-    /**
-     * PowerGrid {{ modelLastName }} Action Buttons.
-     *
-     * @return array<int, Button>
-     */
-
-    /*
-    public function actions(): array
+    #[\Livewire\Attributes\On('edit')]
+    public function edit($rowId): void
     {
-       return [
-           Button::make('edit', 'Edit')
-               ->class('bg-indigo-500 cursor-pointer text-white px-3 py-2.5 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.edit', function(\{{ modelName }} $model) {
-                    return $model->id;
-               }),
+        $this->js('alert('.$rowId.')');
+    }
 
-           Button::make('destroy', 'Delete')
-               ->class('bg-red-500 cursor-pointer text-white px-3 py-2 m-1 rounded text-sm')
-               ->route('{{ modelKebabCase }}.destroy', function(\{{ modelName }} $model) {
-                    return $model->id;
-               })
-               ->method('delete')
+    public function actions(\{{ modelName }} $row): array
+    {
+        return [
+            Button::add('edit')
+                ->slot('Edit: '.$row->id)
+                ->id()
+                ->class('cursor-pointer block bg-white text-sm text-gray-700 border border-gray-300 rounded py-1.5 px-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300')
+                ->dispatch('edit', ['rowId' => $row->id])
         ];
     }
-    */
-
-    /*
-    |--------------------------------------------------------------------------
-    | Actions Rules
-    |--------------------------------------------------------------------------
-    | Enable the method below to configure Rules for your Table and Action Buttons.
-    |
-    */
-
-    /**
-     * PowerGrid {{ modelLastName }} Action Rules.
-     *
-     * @return array<int, RuleActions>
-     */
 
     /*
     public function actionRules(): array
     {
        return [
-
-           //Hide button edit for ID 1
+            // Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn(${{ modelKebabCase }}) => ${{ modelKebabCase }}->id === 1)
+                ->when(fn($row) => $row->id === 1)
                 ->hide(),
         ];
     }

@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Column,
     Footer,
@@ -17,8 +16,6 @@ use PowerComponents\LivewirePowerGrid\{
 
 class DishesSearchableRawTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public string $database = '';
 
     public function setUp(): array

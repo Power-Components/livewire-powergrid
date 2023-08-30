@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
@@ -16,8 +15,6 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesSoftDeletesTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public function setUp(): array
     {
         return [

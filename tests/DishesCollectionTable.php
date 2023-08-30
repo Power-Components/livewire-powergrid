@@ -3,11 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon, Collection};
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Exportable,
-    Facades\Rule,
     Footer,
     Header,
     PowerGrid,
@@ -16,8 +14,6 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesCollectionTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $testFilters = [];
 
     public function datasource(): Collection

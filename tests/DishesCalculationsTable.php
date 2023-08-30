@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Column,
     Exportable,
@@ -12,14 +11,11 @@ use PowerComponents\LivewirePowerGrid\{
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Services\ExportOption
+    PowerGridComponent
 };
 
 class DishesCalculationsTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public bool $join = false;

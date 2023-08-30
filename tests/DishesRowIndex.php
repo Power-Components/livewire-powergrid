@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{Column,
     Facades\Filter,
     Footer,
@@ -15,8 +14,6 @@ use PowerComponents\LivewirePowerGrid\{Column,
 
 class DishesRowIndex extends PowerGridComponent
 {
-    use ActionButton;
-
     public bool $join = false;
 
     public function setUp(): array

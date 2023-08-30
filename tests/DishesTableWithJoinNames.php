@@ -8,13 +8,10 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Traits\ActionButton};
+    PowerGridComponent};
 
 class DishesTableWithJoinNames extends PowerGridComponent
 {
-    use ActionButton;
-
     public function setUp(): array
     {
         return [
