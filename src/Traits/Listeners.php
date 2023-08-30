@@ -2,9 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
+use Livewire\Attributes\On;
+
 /** @codeCoverageIgnore  */
 trait Listeners
 {
+    #[On('pg:editable-{tableName}')]
     public function inputTextChanged(string|int $id, string $field, string $value): void
     {
         $this->{$field}[$id] = $value;
@@ -14,6 +17,7 @@ trait Listeners
         $this->dispatch('pg:editable-close-' . $id);
     }
 
+    #[On('pg:toggleable-{tableName}')]
     public function toggleableChanged(array $payload = []): void
     {
         $id    = $payload['id'];

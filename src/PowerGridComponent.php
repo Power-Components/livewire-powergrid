@@ -271,6 +271,7 @@ class PowerGridComponent extends Component
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
+    #[On('pg:eventRefresh-{tableName}')]
     public function refresh(): void
     {
         if (($this->total > 0) && ($this->totalCurrentPage - 1) === 0) {
@@ -299,24 +300,6 @@ class PowerGridComponent extends Component
         return $this->processDataSourceInstance->get();
     }
 
-    protected function powerGridListeners(): array
-    {
-        return [
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
-            'pg:eventRefresh-' . $this->tableName => 'refresh',
-            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return $this->powerGridListeners();
-    }
-
     private function renderView(mixed $data): Application|Factory|View
     {
         /** @phpstan-var view-string $view */
@@ -334,8 +317,6 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        $this->columns = $this->columns();
-
         $this->resolveFilters();
 
         /** @var ThemeBase $themeBase */
