@@ -32,7 +32,11 @@ class RulesController
 
         /** @phpstan-ignore-next-line */
         return $rules->mapWithKeys(function ($rule, $index) use ($row) {
-            $resolveRules = $rule->rule['when']((object) $row);
+            $resolveRules = true;
+
+            if (isset($rule->rule['when'])) {
+                $resolveRules = $rule->rule['when']((object) $row);
+            }
 
             $prepareRule = [
                 /** @phpstan-ignore-next-line */
@@ -89,5 +93,16 @@ class RulesController
         });
 
         return $actionRules;
+    }
+
+    public function loop(array $actionRules, object $loop): bool
+    {
+        foreach ($actionRules as $actionRule) {
+            if (isset($actionRule->rule['loop'])) {
+                return $actionRule->rule['loop']($loop);
+            }
+        }
+
+        return true;
     }
 }

@@ -69,6 +69,16 @@ class RuleRows implements Wireable
         return $this;
     }
 
+    /**
+     * Interacts with Blade loop.
+     */
+    public function loop(Closure $closure = null): RuleRows
+    {
+        $this->rule['loop'] = $closure;
+
+        return $this;
+    }
+
     public function toLivewire(): array
     {
         return (array) $this;
