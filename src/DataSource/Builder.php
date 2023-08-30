@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Connectors;
+namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -14,8 +14,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\InputText,
     Components\Filters\Builders\MultiSelect,
     Components\Filters\Builders\Select,
-    Connectors\Support\InputOperators,
-    Connectors\Support\Sql,
+    DataSource\Support\InputOperators,
+    DataSource\Support\Sql,
     PowerGridComponent};
 
 class Builder

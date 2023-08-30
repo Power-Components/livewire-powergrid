@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Connectors;
+namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
     MultiSelect,
     Select};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
-use PowerComponents\LivewirePowerGrid\Connectors\Support\InputOperators;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Collection

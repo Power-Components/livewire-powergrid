@@ -9,7 +9,7 @@ use Illuminate\Support as Support;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
-use PowerComponents\LivewirePowerGrid\Connectors\Builder;
+use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -107,9 +107,9 @@ trait WithExport
 
         for ($i = 1; $i < ($countQueue + 1); $i++) {
             $fileName = 'powergrid-' . Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
-                '-' . ($offset + 1) .
-                '-' . $limit .
-                '-' . $this->id .
+                '-' . round(($offset + 1), 2) .
+                '-' . round($limit, 2) .
+                '-' . $this->getId() .
                 '.' . $fileExtension;
 
             $params = [
