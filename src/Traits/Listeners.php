@@ -10,7 +10,7 @@ trait Listeners
     #[On('pg:editable-{tableName}')]
     public function inputTextChanged(string|int $id, string $field, string $value): void
     {
-        $this->{$field}[$id] = $value;
+        data_set($this, "$field.{$id}", $value);
 
         $this->onUpdatedEditable($id, $field, $value);
 
@@ -18,12 +18,9 @@ trait Listeners
     }
 
     #[On('pg:toggleable-{tableName}')]
-    public function toggleableChanged(array $payload = []): void
+    public function toggleableChanged(string $id, string $field, string $value): void
     {
-        $id    = $payload['id'];
-        $field = $payload['field'];
-
-        $this->onUpdatedToggleable($id, $field, $payload['value']);
+        $this->onUpdatedToggleable($id, $field, $value);
     }
 
     public function onUpdatedEditable(string|int $id, string $field, string $value): void
