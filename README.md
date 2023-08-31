@@ -66,7 +66,7 @@ With PowerGrid you get right out of the box:
 
 - **Click to edit**
 
-- **Click to copy**
+- **Responsive**
 
 - **Link inside a table cell**
 
@@ -98,6 +98,10 @@ With PowerGrid you get right out of the box:
 <br/>
 
 ## 2. Install
+
+```bash
+composer require power-components/livewire-powergrid
+```
 
 Please follow the steps indicated in our [Documentation - Install](https://v4.livewire-powergrid.com/get-started/install.html) page.
 
