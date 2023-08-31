@@ -11,7 +11,7 @@
             </span>
         </button>
         <ul class="dropdown-menu">
-            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', '')">
+            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: ''})">
                 <a
                     class="dropdown-item"
                     href="#"
@@ -19,7 +19,7 @@
                     @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
                 </a>
             </li>
-            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', 'withTrashed')">
+            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: 'withTrashed'})">
                 <a
                     class="dropdown-item"
                     href="#"
@@ -27,7 +27,7 @@
                     @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
                 </a>
             </li>
-            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', 'onlyTrashed')">
+            <li wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: 'onlyTrashed'})">
                 <a
                     class="dropdown-item"
                     href="#"

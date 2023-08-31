@@ -81,11 +81,11 @@ final class {{ componentName }} extends PowerGridComponent
         $this->js('alert('.$rowId.')');
     }
 
-    public function actions(\{{ modelName }} $model): array
+    public function actions(\{{ modelName }} $row): array
     {
         return [
             Button::add('edit')
-                ->slot('Edit: '.$model->id)
+                ->slot('Edit: '.$row->id)
                 ->id()
                 ->class('cursor-pointer block bg-white text-sm text-gray-700 border border-gray-300 rounded py-1.5 px-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-600 dark:border-gray-500 dark:bg-gray-500 2xl:dark:placeholder-gray-300 dark:text-gray-200 dark:text-gray-300')
                 ->dispatch('edit', ['rowId' => $row->id])
@@ -93,7 +93,7 @@ final class {{ componentName }} extends PowerGridComponent
     }
 
     /*
-    public function actionRules(): array
+    public function actionRules(\{{ modelName }} $row): array
     {
        return [
             // Hide button edit for ID 1
