@@ -7,14 +7,14 @@
 ])
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
-
+    
     $isFixedOnResponsive = false;
-
+    
     if (isset($this->setUp['responsive'])) {
         if (in_array($field, data_get($this->setUp, 'responsive.fixedColumns'))) {
             $isFixedOnResponsive = true;
         }
-
+    
         if ($column->fixedOnResponsive) {
             $isFixedOnResponsive = true;
         }

@@ -25,13 +25,13 @@
         <br>
     @endif
 
-        @if ($max)
-            <span>{!! $labelMax !!}: {{ $max }}</span>
-            <br>
-        @endif
+    @if ($max)
+        <span>{!! $labelMax !!}: {{ $max }}</span>
+        <br>
+    @endif
 
-        @if ($avg)
-            <span>{!! $labelAvg !!}: {{ $avg }}</span>
-            <br>
-        @endif
+    @if ($avg)
+        <span>{!! $labelAvg !!}: {{ $avg }}</span>
+        <br>
+    @endif
 </div>

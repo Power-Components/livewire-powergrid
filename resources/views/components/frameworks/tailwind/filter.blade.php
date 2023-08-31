@@ -6,7 +6,7 @@
     'showFilters' => false,
 ])
 <div
-    x-data="{open: @entangle('showFilters').live}"
+    x-data="{ open: @entangle('showFilters').live }"
     class="mt-2 md:mt-0"
 >
     <div
@@ -57,7 +57,6 @@
                                 'classAttr' => 'w-full',
                                 'theme' => $theme->filterDatePicker,
                                 'type' => 'date',
-
                             ])
                         </div>
                     @endif
