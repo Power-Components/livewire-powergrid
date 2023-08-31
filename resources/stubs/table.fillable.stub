@@ -78,7 +78,7 @@ final class {{ componentName }} extends PowerGridComponent
     }
 
     /*
-    public function actionRules(): array
+    public function actionRules($row): array
     {
        return [
             // Hide button edit for ID 1
