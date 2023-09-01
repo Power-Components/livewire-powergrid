@@ -5,6 +5,7 @@ export default () => ({
     expanded: null,
     element: null,
     hasHiddenElements: false,
+    size: 0,
 
     toggleExpanded(index) {
         this.expanded = this.expanded == index ? null : index
@@ -36,7 +37,13 @@ export default () => ({
         const resizeObserver = new ResizeObserver(entries => {
             entries.forEach(entry => {
                 if (entry.contentRect.width > 0) {
-                   this.handleResize()
+                    if (this.size === this.$el.getBoundingClientRect().width) {
+                        return;
+                    }
+
+                    this.size = this.$el.getBoundingClientRect().width
+
+                    this.handleResize()
                 }
             });
         });
