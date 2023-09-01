@@ -30,8 +30,6 @@ final class Button implements Wireable
 
     public string $class = '';
 
-    public bool $can = true;
-
     public array|\Closure $params = [];
 
     public ?string $id = null;
