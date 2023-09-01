@@ -45,4 +45,4 @@ it('properly displays "hide" on edit button', function (string $component, objec
         ->assertDontSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:3}'))");
 })
     ->with('action:hide')
-    ->group('action')->skip('todo');
+    ->group('action');

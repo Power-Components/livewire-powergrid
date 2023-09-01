@@ -25,6 +25,7 @@ class ActionsController
         /** @phpstan-ignore-next-line */
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
             $show = data_get($button, 'dynamicProperties.show');
+            $component = null;
 
             if ($show instanceof \Closure) {
                 if (!$show($row)) {
@@ -65,6 +66,8 @@ class ActionsController
             if (method_exists($this->component, 'actionRules')) {
                 $applyRules = $this->applyRules($button);
 
+                ds($applyRules);
+
                 // attribute
                 if ($attributesRule = (array) data_get($applyRules, 'attributes')) {
                     $attributes = $attributes->merge((new ComponentAttributeBag($attributesRule))->getAttributes());
@@ -86,6 +89,12 @@ class ActionsController
                         'render-action.' . $index . '.' . data_get($button, 'action') => $html,
                     ];
                 }
+
+                if ((bool) data_get($applyRules, 'hide')) {
+                    return (object)[
+                        'render-action.' . $index . '.' . data_get($button, 'action') => null,
+                    ];
+                }
             }
 
             $attributeString = implode(
@@ -99,7 +108,9 @@ class ActionsController
 
             $slot = filled($slotRule) ? strval($slotRule) : strval(data_get($button, 'slot'));
 
-            $component = strval(data_get($button, 'dynamicProperties.' . key((array) data_get($button, 'dynamicProperties')) . '.component', 'button'));
+            if (is_null($component)) {
+                $component = strval(data_get($button, 'dynamicProperties.' . key((array) data_get($button, 'dynamicProperties')) . '.component', 'button'));
+            }
 
             $element = "<{$component} {$attributeString}>{$slot}</{$component}>";
 
