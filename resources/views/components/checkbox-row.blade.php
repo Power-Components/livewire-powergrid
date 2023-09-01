@@ -30,6 +30,7 @@
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
+                        x-data="{}"
                         @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
                            @else
                            class="{{ $theme->checkbox->inputClass }}" @endif
