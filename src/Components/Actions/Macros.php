@@ -173,5 +173,17 @@ class Macros
 
             return $this;
         });
+
+        Button::macro('can', function (bool|\Closure $allowed = true) {
+            if ($allowed instanceof \Closure) {
+                $this->dynamicProperties['show'] = $allowed;
+            } else {
+                $this->dynamicProperties['show'] = fn () => $allowed;
+            }
+
+            $this->dynamicProperties['can'] = $allowed;
+
+            return $this;
+        });
     }
 }
