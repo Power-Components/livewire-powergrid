@@ -21,12 +21,14 @@ document.addEventListener('alpine:init', () => {
     window.Alpine.store('pgBulkActions', {
         selected: [],
         init() {
-            window.addEventListener('pgBulkActions::addMore', ({detail}) => {
-                if(typeof this.selected[detail.tableName] == 'undefined') {
-                    this.selected[detail.tableName] = []
+            window.addEventListener('pgBulkActions::addMore', (event) => {
+                const params = event.__livewire.params[0]
+
+                if(typeof this.selected[params.tableName] == 'undefined') {
+                    this.selected[params.tableName] = []
                 }
 
-                this.selected[detail.tableName].push(detail.value)
+                this.selected[params.tableName].push(params.value)
             })
             window.addEventListener('pgBulkActions::clear', (event) => {
                 this.clear(event.detail);
@@ -40,13 +42,13 @@ document.addEventListener('alpine:init', () => {
                this.selected[tableName] = []
             }
 
-            if(!this.selected[tableName].includes(value)) {
-                this.selected[tableName].push(value)
+            if(!this.selected[tableName].includes(parseFloat(value))) {
+                this.selected[tableName].push(parseFloat(value))
 
                 return;
             }
 
-            this.remove(value, tableName)
+            this.remove(parseFloat(value), tableName)
         },
         remove(value, tableName) {
             const index = this.selected[tableName].indexOf(value);

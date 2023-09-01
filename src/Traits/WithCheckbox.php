@@ -38,7 +38,7 @@ trait WithCheckbox
 
         /** @phpstan-ignore-next-line  */
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
+            $rules = $actionRulesClass->recoverFromAction($model);
 
             if (isset($rules['hide'])) {
                 return;

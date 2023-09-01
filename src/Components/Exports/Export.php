@@ -60,7 +60,7 @@ class Export
                     $row = $row->withoutRelations()->toArray();
                 }
 
-                $rules        = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
+                $rules        = $actionRulesClass->recoverFromAction($row);
                 $isExportable = false;
 
                 if (isset($rules['hide']) || isset($rules['disable'])) {

@@ -21,6 +21,7 @@ class RulesController
         'caption',
         'pg:rows',
         'pg:column',
+        'pg:checkbox',
         'detailView',
         'bladeComponent',
         'showHideToggleable',
@@ -55,16 +56,16 @@ class RulesController
         });
     }
 
-    public function recoverFromAction(string $action, Model|\stdClass|array $row): array
+    public function recoverFromAction(Model|\stdClass|array $row): array
     {
         $actionRules = [];
 
         $rules = $this->unDotActionsFromRow($row, 'rules');
 
-        $rules->each(function ($rule) use (&$actionRules, $action) {
-            foreach ($this->actionRules as $action) {
-                if (data_get($rule, "action.$action")) {
-                    $actionRules[$action][] = data_get($rule, "action.$action");
+        $rules->each(function ($rule) use (&$actionRules) {
+            foreach ($this->actionRules as $actionRule) {
+                if (data_get($rule, "action.$actionRule")) {
+                    $actionRules[$actionRule][] = data_get($rule, "action.$actionRule");
                 }
             }
         });

@@ -47,7 +47,7 @@
             @if (isset($actions) && count($actions))
                 @php
                     $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
-                    
+
                     $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
@@ -119,16 +119,16 @@
             @foreach ($data as $row)
                 @php
                     $class = $theme->table->trBodyClass;
-                    $rules = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                    $rules = $actionRulesClass->recoverFromAction($row);
                     $rowId = data_get($row, $primaryKey);
-                    
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
-                    
+
                     $applyRulesLoop = true;
                     if (method_exists($this, 'actionRules')) {
                         $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                     }
-                    
+
                     if (filled($ruleSetAttribute) && $applyRulesLoop) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
@@ -159,7 +159,7 @@
                 ])
 
                 @php
-                    $ruleRows = $actionRulesClass->recoverFromAction('pg:rows', $row);
+                    $ruleRows = $actionRulesClass->recoverFromAction($row);
                     $ruleDetailView = data_get($ruleRows, 'detailView');
                 @endphp
 
@@ -173,8 +173,8 @@
 
                 @if ($checkbox)
                     @php
-                        $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $row);
-                        
+                        $rules = $actionRulesClass->recoverFromAction($row);
+
                         $ruleHide = data_get($rules, 'hide');
                         $ruleDisable = data_get($rules, 'disable');
                         $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
