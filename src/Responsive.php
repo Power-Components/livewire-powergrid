@@ -26,20 +26,20 @@ final class Responsive
         return $this;
     }
 
-    public function sortOrder(string|array ...$sortOrder): static
+    public function sortOrder(string|array ...$columnNames): static
     {
-        if (is_array(data_get($sortOrder, '0'))) {
-            $sortOrder = $sortOrder[0];
+        if (is_array(data_get($columnNames, '0'))) {
+            $columnNames = $columnNames[0];
         }
 
-        foreach ($sortOrder as $key => $value) {
+        foreach ($columnNames as $key => $column) {
             if (is_int($key)) {
-                $this->sortOrder[$value] = $key + 1;
+                $this->sortOrder[$column] = $key + 1;
 
                 continue;
             }
 
-            $this->sortOrder[$key] = $value;
+            $this->sortOrder[$key] = $column;
         }
 
         return $this;
