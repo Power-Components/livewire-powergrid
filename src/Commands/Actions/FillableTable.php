@@ -56,16 +56,7 @@ class FillableTable
                 ->getDatabasePlatform()
                 ->registerDoctrineTypeMapping('enum', 'string');
 
-            $ensureDataBaseHasColumn = function () use ($conn, $model, $field) {
-                if (str($conn->getDatabaseName())->contains(':memory:')) {
-                    return Schema::hasColumn($model->getTable(), $field);
-                }
-
-                return Schema::connection($conn->getDatabaseName())
-                    ->hasColumn($model->getTable(), $field);
-            };
-
-            if ($ensureDataBaseHasColumn()) {
+            if (Schema::connection($conn->getDatabaseName())->hasColumn($model->getTable(), $field)) {
                 $column = $conn->getDoctrineColumn($model->getTable(), $field);
 
                 $title = Str::of($field)->replace('_', ' ')->ucfirst();

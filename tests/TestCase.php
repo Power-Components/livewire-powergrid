@@ -52,15 +52,19 @@ class TestCase extends BaseTestCase
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
 
-        $app['config']->set('database.connections.testbench', [
-            'driver'   => env('DB_DRIVER'),
-            'host'     => env('DB_HOST'),
-            'port'     => env('DB_PORT'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
-            'database' => env('DB_DATABASE'),
-            'prefix'   => '',
-        ]);
+        $databases = ['testbench', ':memory:', 'powergridtest', 'tempdb'];
+
+        foreach ($databases as $database) {
+            $app['config']->set('database.connections.' . $database, [
+                'driver'   => env('DB_DRIVER'),
+                'host'     => env('DB_HOST'),
+                'port'     => env('DB_PORT'),
+                'username' => env('DB_USERNAME'),
+                'password' => env('DB_PASSWORD'),
+                'database' => env('DB_DATABASE'),
+                'prefix'   => '',
+            ]);
+        }
 
         $app['config']->set('livewire-powergrid.exportable.default', 'openspout_v4');
         $app['config']->set(
