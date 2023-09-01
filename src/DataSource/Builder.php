@@ -43,7 +43,6 @@ class Builder
             return $this->query;
         }
 
-        //dd($filters);
         foreach ($this->powerGridComponent->filters as $filterType => $column) {
             $this->query->where(function ($query) use ($filterType, $column, $filters) {
                 $filter = function ($query, $filters, $filterType, $field, $value) {

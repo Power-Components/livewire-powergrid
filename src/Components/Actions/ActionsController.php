@@ -66,8 +66,6 @@ class ActionsController
             if (method_exists($this->component, 'actionRules')) {
                 $applyRules = $this->applyRules($button);
 
-                ds($applyRules);
-
                 // attribute
                 if ($attributesRule = (array) data_get($applyRules, 'attributes')) {
                     $attributes = $attributes->merge((new ComponentAttributeBag($attributesRule))->getAttributes());
