@@ -90,29 +90,6 @@ it('notifies about tailwind forms', function () {
     File::delete($tailwindConfigFile);
 });
 
-it('publishes the Demo Table', function () {
-    $tableFile = getLaravelDir() . 'app/Livewire/PowerGridDemoTable.php';
-    $viewsFile = getLaravelDir() . 'resources/views/powergrid-demo.blade.php';
-
-    File::delete($tableFile);
-    File::delete($viewsFile);
-
-    $this->artisan('powergrid:demo')
-        ->expectsOutput("➤ PowerGridDemoTable.php was successfully created at [app/Livewire/]\n")
-        ->expectsOutput("➤ powergrid-demo.blade.php was successfully created at [resources/views/]\n")
-        ->expectsOutput("\n1. You must include Route::view('/powergrid', 'powergrid-demo'); in your routes/web.php file.")
-        ->expectsOutput("\n2. Serve your project. For example, run php artisan serve.")
-        ->expectsOutput("\n3. Visit http://localhost/powergrid to view the Demo Table.")
-        ->expectsOutput("\n\n⭐ Thanks! Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n")
-        ->assertSuccessful();
-
-    $this->assertFileExists($tableFile);
-    $this->assertFileExists($viewsFile);
-
-    File::delete($tableFile);
-    File::delete($viewsFile);
-})->skip();
-
 it('does not accept an empty table name', function () {
     File::delete($this->tableModelFilePath);
 
