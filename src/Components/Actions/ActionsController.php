@@ -24,7 +24,7 @@ class ActionsController
 
         /** @phpstan-ignore-next-line */
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
-            $show = data_get($button, 'dynamicProperties.show');
+            $show      = data_get($button, 'dynamicProperties.show');
             $component = null;
 
             if ($show instanceof \Closure) {
