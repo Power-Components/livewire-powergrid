@@ -50,7 +50,7 @@ class FillableTable
                 continue;
             }
 
-            $conn = Schema::getConnection();
+            $conn = $model->getConnection();
 
             $conn->getDoctrineSchemaManager()
                 ->getDatabasePlatform()
