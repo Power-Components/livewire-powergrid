@@ -32,7 +32,7 @@ final class Responsive
             $columnNames = $columnNames[0];
         }
 
-        foreach ($columnNames as $key => $column) {
+        foreach ((array) $columnNames as $key => $column) {
             if (is_int($key)) {
                 $this->sortOrder[$column] = $key + 1;
 
