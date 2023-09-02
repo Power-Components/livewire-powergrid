@@ -7,20 +7,23 @@
 ])
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
-    
+
     $isFixedOnResponsive = false;
-    
+
     if (isset($this->setUp['responsive'])) {
         if (in_array($field, data_get($this->setUp, 'responsive.fixedColumns'))) {
             $isFixedOnResponsive = true;
         }
-    
+
         if ($column->fixedOnResponsive) {
             $isFixedOnResponsive = true;
         }
     }
+
+    $sortOrder = isset($this->setUp['responsive']) ? data_get($this->setUp, "responsive.sortOrder.{$field}", null) : null;
 @endphp
 <th
+    @if($sortOrder) sort_order="{{ $sortOrder }}" @endif
     class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
     wire:key="{{ uniqid() }}"
     @if ($isFixedOnResponsive) fixed @endif
