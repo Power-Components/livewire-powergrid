@@ -24,62 +24,26 @@ class ActionsController
 
         /** @phpstan-ignore-next-line */
         return $actions->mapWithKeys(function (array|Button $button, $index) use ($row) {
-            $show      = data_get($button, 'dynamicProperties.show');
             $component = null;
-
-            if ($show instanceof \Closure) {
-                if (!$show($row)) {
-                    return (object)[
-                        'render-action.' . $index . '.' . data_get($button, 'action') => null,
-                    ];
-                }
-            }
-
-            $hide = data_get($button, 'dynamicProperties.hide');
-
-            if ($hide instanceof \Closure) {
-                if ($hide($row)) {
-                    return (object)[
-                        'render-action.' . $index . '.' . data_get($button, 'action') => null,
-                    ];
-                }
-            }
-
-            $render = data_get($button, 'dynamicProperties.render');
-
-            if ($render instanceof \Closure) {
-                return (object)[
-                    'render-action.' . $index . '.' . data_get($button, 'action') => $render($row),
-                ];
-            }
-
-            if (is_string($render)) {
-                return (object)[
-                    'render-action.' . $index . '.' . data_get($button, 'action') => $render,
-                ];
-            }
 
             $attributes = $this->extractAttributes($button, $row);
 
-            $renderComponent = data_get($button, 'dynamicProperties.component');
+            $dynamicProperties = new DynamicProperties($button, $index, $row, $attributes);
 
-            if ($renderComponent) {
-                $html = Blade::render(
-                    '<x-dynamic-component
-                        :component="$component"
-                        :attributes="$params"
-                        />',
-                    [
-                        'component' => data_get($renderComponent, 'component'),
-                        'params'    => $attributes->merge(
-                            (array) data_get($renderComponent, 'params')
-                        ),
-                    ],
-                );
+            $instance = new \ReflectionClass($dynamicProperties);
 
-                return (object)[
-                    'render-action.' . $index . '.' . data_get($button, 'action') => $html,
-                ];
+            foreach ($instance->getMethods(\ReflectionMethod::IS_PUBLIC) as $allowedProperty) {
+                if ($allowedProperty->getName() == '__construct') {
+                    continue;
+                }
+
+                $allowed = $dynamicProperties->{$allowedProperty->getName()}();
+
+                if (is_null($allowed)) {
+                    continue;
+                }
+
+                return (object) $allowed;
             }
 
             $slotRule = null;
