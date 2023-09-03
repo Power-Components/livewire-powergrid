@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
 use PowerComponents\LivewirePowerGrid\Button;
 
 ;
@@ -34,12 +32,12 @@ it('properly displays "parent" on edit button', function (string $component, obj
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("wire:click=\"\$parent.executeParent(" . Js::from(['id' => 1]) . ")\">parent: 1</button>")
-        ->assertSeeHtml("wire:click=\"\$parent.executeParent(" . Js::from(['id' => 2]) . ")\">parent: 2</button>")
-        ->assertDontSeeHtml("wire:click=\"\$parent.executeParent(" . Js::from(['id' => 7]) . ")\">parent: 7</button>")
+        ->assertSeeHtml('wire:click="$parent.executeParent(JSON.parse(&#039;{\u0022id\u0022:1}&#039;))">parent: 1</button>')
+        ->assertSeeHtml('wire:click="$parent.executeParent(JSON.parse(&#039;{\u0022id\u0022:2}&#039;))">parent: 2</button>')
+        ->assertDontSeeHtml('wire:click="$parent.executeParent(JSON.parse(&#039;{\u0022id\u0022:7}&#039;))">parent: 7</button>')
         ->call('setPage', 2)
-        ->assertSeeHtml("wire:click=\"\$parent.executeParent(" . Js::from(['id' => 7]) . ")\">parent: 7</button>")
-        ->assertDontSeeHtml("wire:click=\"\$parent.executeParent(" . Js::from(['id' => 1]) . ")\">parent: 1</button>");
+        ->assertSeeHtml('wire:click="$parent.executeParent(JSON.parse(&#039;{\u0022id\u0022:7}&#039;))">parent: 7</button>')
+        ->assertDontSeeHtml('wire:click="$parent.executeParent(JSON.parse(&#039;{\u0022id\u0022:2}&#039;))">parent: 2</button>');
 })
     ->with('action:parent')
     ->group('action');

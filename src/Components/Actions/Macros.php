@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Components\Actions;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Js;
-use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
 
 class Macros
@@ -80,7 +79,9 @@ class Macros
             $this->dynamicProperties['toggleDetail'] = [
                 "component" => "button",
                 "attribute" => "wire:click",
-                "value"     => "toggleDetail({primaryKey})",
+                "value"     => function ($component, $row) {
+                    return 'toggleDetail(\'' . data_get($row, $component->primaryKey) . '\')';
+                },
             ];
 
             return $this;
@@ -144,20 +145,28 @@ class Macros
             $this->dynamicProperties['render'] = Blade::render('<form target="' . $target . '" action="' . $route . '" method="post">
     @method("' . $method . '")
     @csrf
-    <button type="submit" class="' . $this->class . '" id="' . $this->id . '">' . $this->slot . '</button>
+    <button type="submit" class="' . $this->class . '">' . $this->slot . '</button>
 </form>');
 
             return $this;
         });
 
         Button::macro('bladeComponent', function (string $component, array $params = []) {
-            $this->dynamicProperties['render'] = Blade::render('<x-dynamic-component
-                :component="$component"
-                :attributes="$params"
-                />', [
+            $this->dynamicProperties['component'] = [
                 'component' => $component,
-                'params'    => new ComponentAttributeBag((array) $params),
-            ]);
+                'params'    => $params,
+            ];
+
+            return $this;
+        });
+
+        Button::macro('id', function (string $id = null) {
+            $this->dynamicProperties['id'] = [
+                "attribute" => "id",
+                "value"     => function ($component, $row) use ($id) {
+                    return $id ? $id . '-' . data_get($row, $component->primaryKey) : data_get($row, $component->primaryKey);
+                },
+            ];
 
             return $this;
         });

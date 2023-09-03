@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
 use PowerComponents\LivewirePowerGrid\Button;
 
 ;
@@ -40,22 +38,12 @@ it('properly displays "call" on edit button', function (string $component, objec
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("wire:click=\"\$call('executeCall', " . Js::from([
-            'params' => ['id' => 1],
-        ]) . ")\">call: 1</button>")
-        ->assertSeeHtml("wire:click=\"\$call('executeCall', " . Js::from([
-            'params' => ['id' => 2],
-        ]) . ")\">call: 2</button>")
-        ->assertDontSeeHtml("wire:click=\"\$call('executeCall', " . Js::from([
-            'params' => ['id' => 7],
-        ]) . ")\">call: 7</button>")
+        ->assertSeeHtml('wire:click="$call(&#039;executeCall&#039;, JSON.parse(&#039;{\u0022params\u0022:{\u0022id\u0022:1}}&#039;))">call: 1</button>')
+        ->assertSeeHtml('wire:click="$call(&#039;executeCall&#039;, JSON.parse(&#039;{\u0022params\u0022:{\u0022id\u0022:2}}&#039;))">call: 2</button>')
+        ->assertDontSeeHtml('wire:click="$call(&#039;executeCall&#039;, JSON.parse(&#039;{\u0022params\u0022:{\u0022id\u0022:7}}&#039;))">call: 7</button>')
         ->call('setPage', 2)
-        ->assertSeeHtml("wire:click=\"\$call('executeCall', " . Js::from([
-            'params' => ['id' => 7],
-        ]) . ")\">call: 7</button>")
-        ->assertDontSeeHtml("wire:click=\"\$call('executeCall', " . Js::from([
-            'params' => ['id' => 1],
-        ]) . ")\">call: 1</button>");
+        ->assertSeeHtml('wire:click="$call(&#039;executeCall&#039;, JSON.parse(&#039;{\u0022params\u0022:{\u0022id\u0022:7}}&#039;))">call: 7</button>')
+        ->assertDontSeeHtml('wire:click="$call(&#039;executeCall&#039;, JSON.parse(&#039;{\u0022params\u0022:{\u0022id\u0022:1}}&#039;))">call: 1</button>');
 })
     ->with('action:call')
     ->group('action');

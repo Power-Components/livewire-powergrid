@@ -20,6 +20,7 @@ use Livewire\Wireable;
  * @method static render(\Closure $closure)
  * @method static bladeComponent(string $component, array $params)
  * @method static can(bool|\Closure $allowed = true)
+ * @method static id(string $id = null)
  *
  */
 final class Button implements Wireable
@@ -31,8 +32,6 @@ final class Button implements Wireable
     public string $class = '';
 
     public array|\Closure $params = [];
-
-    public ?string $id = null;
 
     public array $dynamicProperties = [];
 
@@ -74,16 +73,6 @@ final class Button implements Wireable
     public function class(string $classAttr): Button
     {
         $this->class = $classAttr;
-
-        return $this;
-    }
-
-    /**
-     * Add custom id
-     */
-    public function id(string $value = null): Button
-    {
-        $this->id = $value;
 
         return $this;
     }

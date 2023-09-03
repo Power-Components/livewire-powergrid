@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
 use PowerComponents\LivewirePowerGrid\Button;
 
 ;
@@ -34,12 +32,12 @@ it('properly displays "dispatchTo" on edit button', function (string $component,
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("wire:click=\"\$dispatchTo('another-component', 'executeDispatchTo', " . Js::from(['id' => 1]) . ")\">dispatchTo: 1</button>")
-        ->assertSeeHtml("wire:click=\"\$dispatchTo('another-component', 'executeDispatchTo', " . Js::from(['id' => 2]) . ")\">dispatchTo: 2</button>")
-        ->assertDontSeeHtml("wire:click=\"\$dispatchTo('another-component', 'executeDispatchTo', " . Js::from(['id' => 7]) . ")\">dispatchTo: 7</button>")
+        ->assertSeeHtml('wire:click="$dispatchTo(&#039;another-component&#039;, &#039;executeDispatchTo&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;))">dispatchTo: 1</button>')
+        ->assertSeeHtml('wire:click="$dispatchTo(&#039;another-component&#039;, &#039;executeDispatchTo&#039;, JSON.parse(&#039;{\u0022id\u0022:2}&#039;))">dispatchTo: 2</button>')
+        ->assertDontSeeHtml('wire:click="$dispatchTo(&#039;another-component&#039;, &#039;executeDispatchTo&#039;, JSON.parse(&#039;{\u0022id\u0022:7}&#039;))">dispatchTo: 7</button>')
         ->call('setPage', 2)
-        ->assertSeeHtml("wire:click=\"\$dispatchTo('another-component', 'executeDispatchTo', " . Js::from(['id' => 7]) . ")\">dispatchTo: 7</button>")
-        ->assertDontSeeHtml("wire:click=\"\$dispatchTo('another-component', 'executeDispatchTo', " . Js::from(['id' => 1]) . ")\">dispatchTo: 1</button>");
+        ->assertSeeHtml('wire:click="$dispatchTo(&#039;another-component&#039;, &#039;executeDispatchTo&#039;, JSON.parse(&#039;{\u0022id\u0022:7}&#039;))">dispatchTo: 7</button>')
+        ->assertDontSeeHtml('wire:click="$dispatchTo(&#039;another-component&#039;, &#039;executeDispatchTo&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;))">dispatchTo: 1</button>');
 })
     ->with('action:dispatchTo')
     ->group('action');

@@ -40,11 +40,11 @@ it('properly displays "hide" on edit button', function (string $component, objec
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 3)
-        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))")
-        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:2}'))")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:2}&#039;")
         ->assertSeeHtmlInOrder([
             "disabled=\"disabled\"",
-            "\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:3}'))",
+            "\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:3}&#039;",
         ]);
 })
     ->with('action:disabled')
