@@ -32,12 +32,12 @@ it('properly displays "toggleDetail" on edit button', function (string $componen
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("wire:click=\"toggleDetail(1)\">toggleDetail: 1</button>")
-        ->assertSeeHtml("wire:click=\"toggleDetail(2)\">toggleDetail: 2</button>")
-        ->assertDontSeeHtml("wire:click=\"toggleDetail(7)\">toggleDetail: 7</button>")
+        ->assertSeeHtml("wire:click=\"toggleDetail(&#039;1&#039;)\">toggleDetail: 1</button>")
+        ->assertSeeHtml("wire:click=\"toggleDetail(&#039;2&#039;)\">toggleDetail: 2</button>")
+        ->assertDontSeeHtml("wire:click=\"toggleDetail(&#039;7&#039;)\">toggleDetail: 7</button>")
         ->call('setPage', 2)
-        ->assertSeeHtml("wire:click=\"toggleDetail(7)\">toggleDetail: 7</button>")
-        ->assertDontSeeHtml("wire:click=\"toggleDetail(1)\">toggleDetail: 1</button>");
+        ->assertSeeHtml("wire:click=\"toggleDetail(&#039;7&#039;)\">toggleDetail: 7</button>")
+        ->assertDontSeeHtml("wire:click=\"toggleDetail(&#039;1&#039;)\">toggleDetail: 1</button>");
 })
     ->with('action:toggleDetail')
     ->group('action');

@@ -32,12 +32,12 @@ it('properly displays "dispatch" on edit button', function (string $component, o
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))")
-        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:2}'))")
-        ->assertDontSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:7}'))")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;")
+        ->assertDontSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:7}&#039;")
         ->call('setPage', 2)
-        ->assertSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:7}'))")
-        ->assertDontSeeHtml("\$dispatch('executeDispatch', JSON.parse('{\u0022id\u0022:1}'))");
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:7}&#039;")
+        ->assertDontSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;");
 })
     ->with('action:dispatch')
     ->group('action');
