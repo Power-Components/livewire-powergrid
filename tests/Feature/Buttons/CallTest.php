@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Js;
-
 use PowerComponents\LivewirePowerGrid\Button;
 
 ;
