@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Actions;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\{Arr, Collection};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent, Traits\UnDot};
 
@@ -60,6 +60,27 @@ class ActionsController
             }
 
             $attributes = $this->extractAttributes($button, $row);
+
+            $renderComponent = data_get($button, 'dynamicProperties.component');
+
+            if ($renderComponent) {
+                $html = Blade::render(
+                    '<x-dynamic-component
+                        :component="$component"
+                        :attributes="$params"
+                        />',
+                    [
+                        'component' => data_get($renderComponent, 'component'),
+                        'params'    => $attributes->merge(
+                            (array) data_get($renderComponent, 'params')
+                        ),
+                    ],
+                );
+
+                return (object)[
+                    'render-action.' . $index . '.' . data_get($button, 'action') => $html,
+                ];
+            }
 
             $slotRule = null;
 
@@ -128,19 +149,13 @@ class ActionsController
             ]);
         }
 
-        if (filled(data_get($button, 'id'))) {
-            $attributes = $attributes->merge([
-                'id' => data_get($row, $this->component->primaryKey)
-                    ? strval(data_get($button, 'id')) . '-' . data_get($row, $this->component->primaryKey)
-                    : strval(data_get($button, 'id')),
-            ]);
-        }
-
         foreach ((array) data_get($button, 'dynamicProperties') as $dynamicProperties) {
             $attribute = strval(data_get($dynamicProperties, 'attribute'));
-            $value     = strval(data_get($dynamicProperties, 'value'));
+            $value     = data_get($dynamicProperties, 'value');
 
-            $value = str($value)->replace('{primaryKey}', data_get($row, $this->component->primaryKey));
+            if ($value instanceof \Closure) {
+                $value = $value($this->component, $row);
+            }
 
             if (filled($attribute) && filled($value)) {
                 $attributes = $attributes->merge([
