@@ -81,9 +81,6 @@ class PowerGridComponent extends Component
 
     public array $actions = [];
 
-    /**
-     * @throws Exception
-     */
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -94,11 +91,6 @@ class PowerGridComponent extends Component
 
         if (array_key_exists('detail', $this->setUp) && array_key_exists('responsive', $this->setUp)) {
             throw new Exception('The Feature Responsive cannot be used with Detail');
-        }
-        $data = $this->getCachedData();
-
-        if (!$data->has($this->checkboxAttribute)) {
-            throw new Exception('To use checkboxes, you must define a key attribute in your data source.');
         }
 
         $this->columns = $this->columns();
