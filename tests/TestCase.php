@@ -52,7 +52,7 @@ class TestCase extends BaseTestCase
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('app.key', 'base64:RygUQvaR926QuH4d5G6ZDf9ToJEEeO2p8qDSCq6emPk=');
 
-        $databases = ['testbench', ':memory:', 'powergridtest', 'tempdb'];
+        $databases = ['testbench', ':memory:', 'powergridtest', 'tempdb', 'sqlsrv'];
 
         foreach ($databases as $database) {
             $app['config']->set('database.connections.' . $database, [

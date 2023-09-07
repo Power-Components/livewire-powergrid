@@ -56,7 +56,16 @@ class FillableTable
                 ->getDatabasePlatform()
                 ->registerDoctrineTypeMapping('enum', 'string');
 
-            if (Schema::connection($conn->getDatabaseName())->hasColumn($model->getTable(), $field)) {
+            $hasColumn = function () use ($model, $field, $conn) {
+                try {
+                    return Schema::connection($conn->getDatabaseName())
+                        ->hasColumn($model->getTable(), $field);
+                } catch (\Exception) {
+                    return Schema::hasColumn($model->getTable(), $field);
+                }
+            };
+
+            if ($hasColumn()) {
                 $column = $conn->getDoctrineColumn($model->getTable(), $field);
 
                 $title = Str::of($field)->replace('_', ' ')->ucfirst();
