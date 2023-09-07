@@ -38,6 +38,7 @@
 
             @foreach ($columns as $column)
                 <x-livewire-powergrid::cols
+                    wire:key="cols-{{ $column->field }} }}"
                     :column="$column"
                     :theme="$theme"
                     :enabledFilters="$enabledFilters"
@@ -47,7 +48,7 @@
             @if (isset($actions) && count($actions))
                 @php
                     $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
-
+                    
                     $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
@@ -121,14 +122,14 @@
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction($row);
                     $rowId = data_get($row, $primaryKey);
-
+                    
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
-
+                    
                     $applyRulesLoop = true;
                     if (method_exists($this, 'actionRules')) {
                         $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                     }
-
+                    
                     if (filled($ruleSetAttribute) && $applyRulesLoop) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
@@ -138,19 +139,19 @@
                     }
                 @endphp
 
-                @if (isset($setUp['detail']))
-                    <tbody
-                        class="{{ $class }}"
-                        x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
-                        wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
-                    >
-                    @else
-                        <tr
-                            style="{{ $theme->table->trBodyStyle }}"
-                            class="{{ trim($class) }}"
-                            wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}"
+                <div wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
+                    @if (isset($setUp['detail']))
+                        <tbody
+                            class="{{ $class }}"
+                            x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
                         >
-                @endif
+                        @else
+                            <tr
+                                style="{{ $theme->table->trBodyStyle }}"
+                                class="{{ trim($class) }}"
+                            >
+                    @endif
+                </div>
 
                 @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
                     'theme' => $theme->table,
@@ -174,7 +175,7 @@
                 @if ($checkbox)
                     @php
                         $rules = $actionRulesClass->recoverFromAction($row);
-
+                        
                         $ruleHide = data_get($rules, 'hide');
                         $ruleDisable = data_get($rules, 'disable');
                         $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
@@ -184,7 +185,9 @@
                     ])
                 @endif
 
-                @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
+                <div wire:key="row-{{ $row->{$primaryKey} }}-{{ uniqid() }}">
+                    @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
+                </div>
 
                 </tr>
                 @if (isset($setUp['detail']))

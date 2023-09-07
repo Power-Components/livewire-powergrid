@@ -1,11 +1,11 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => $theme->checkbox->inputClass
+        'class' => $theme->checkbox->inputClass,
     ]);
-
+    
     if (isset($ruleSetAttribute['attribute'])) {
         $inputAttributes = $inputAttributes->merge([
-            $ruleSetAttribute['attribute'] => $ruleSetAttribute['value']
+            $ruleSetAttribute['attribute'] => $ruleSetAttribute['value'],
         ]);
     }
 @endphp
