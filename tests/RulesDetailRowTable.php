@@ -10,6 +10,8 @@ class RulesDetailRowTable extends DishTableBase
 {
     public function setUp(): array
     {
+        config()->set('livewire.inject_morph_markers', false);
+
         return [
             Header::make()
                 ->showToggleColumns()

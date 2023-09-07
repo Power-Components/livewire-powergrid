@@ -10,6 +10,8 @@ use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Tests\DishTableBa
 $component = new class () extends DishTableBase {
     public function setUp(): array
     {
+        config()->set('livewire.inject_morph_markers', false);
+
         return [
             Footer::make()
                 ->showPerPage(5),
