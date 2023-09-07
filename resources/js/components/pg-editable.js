@@ -70,7 +70,7 @@ export default (params) => ({
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
-                setTimeout(() => this.$refs.editable.setAttribute('value', ''), 200)
+                setTimeout(() =>this.$el.setAttribute('value', ''), 200)
             }, 100))
 
         }, 100)
@@ -81,10 +81,10 @@ export default (params) => ({
         const selection = window.getSelection();
         const range = document.createRange();
         selection.removeAllRanges();
-        range.selectNodeContents(this.$refs.editable);
+        range.selectNodeContents(this.$el);
         range.collapse(false);
         selection.addRange(range);
-        this.$refs.editable.focus();
+        this.$el.focus();
     },
     cancel() {
         this.$refs.editable.textContent = this.oldContent;

@@ -89,9 +89,7 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
-        if (array_key_exists('detail', $this->setUp) && array_key_exists('responsive', $this->setUp)) {
-            throw new Exception('The Feature Responsive cannot be used with Detail');
-        }
+        $this->throwFeatureDetail();
 
         $this->columns = $this->columns();
 
@@ -109,6 +107,23 @@ class PowerGridComponent extends Component
             json_encode(['sortField' => $this->sortField]),
             json_encode(['filters' => $this->filters]),
         ];
+    }
+
+    private function throwFeatureDetail(): void
+    {
+        if (
+            array_key_exists('detail', $this->setUp)
+            && array_key_exists('responsive', $this->setUp)
+        ) {
+            throw new Exception('The Feature Responsive cannot be used with Detail');
+        }
+
+        if (
+            array_key_exists('detail', $this->setUp)
+            && config('livewire.inject_morph_markers') === true
+        ) {
+            throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
+        }
     }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
