@@ -4,8 +4,8 @@
 >
     <button
         @click.prevent="open = ! open"
-        class="pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-500 dark:hover:bg-pg-primary-700
-    dark:ring-offset-pg-primary-800 dark:text-pg-primary-400 dark:bg-pg-primary-600"
+        class="pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700
+    dark:ring-offset-pg-primary-800 dark:text-pg-primary-400 dark:bg-pg-primary-700"
     >
         <div class="flex">
             <x-livewire-powergrid::icons.download class="h-5 w-5 text-pg-primary-500 dark:text-pg-primary-300" />
@@ -21,7 +21,7 @@
         x-transition:leave="transform duration-200"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
-        class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-pg-primary-600"
+        class="mt-2 w-auto bg-white shadow-xl absolute z-10 dark:bg-pg-primary-700"
     >
 
         @if (in_array('xlsx', data_get($setUp, 'exportable.type')))

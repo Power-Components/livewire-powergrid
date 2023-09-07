@@ -83,7 +83,7 @@ it('change class to bg-pg-primary-100 when dish-id == 1 -tailwind', function (st
         ->set('search', 'Pastel de Nata')
         ->assertSeeHtmlInOrder([
             '<tr',
-            'class="border border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700 bg-pg-primary-400"',
+            'class="border border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700 bg-pg-primary-400"',
         ])
         ->set('search', 'Barco-Sushi da Sueli')
         ->assertDontSeeHtml(

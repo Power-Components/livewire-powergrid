@@ -224,7 +224,7 @@
     display: inline-block;
 }
 .ts-wrapper.multi .ts-control > div {
-    @apply text-pg-primary-600 dark:text-pg-primary-300 hover:bg-pg-primary-200 hover:text-pg-primary-500 focus:outline-none focus:bg-pg-primary-500 focus:text-pg-primary-200 dark:hover:bg-pg-primary-300 dark:hover:text-pg-primary-500
+    @apply text-pg-primary-600 dark:text-pg-primary-300 hover:bg-pg-primary-200 hover:text-pg-primary-500 focus:outline-none focus:bg-pg-primary-600 focus:text-pg-primary-200 dark:hover:bg-pg-primary-300 dark:hover:text-pg-primary-500
 }
 .ts-wrapper.multi.disabled .ts-control > div, .ts-wrapper.multi.disabled .ts-control > div.active {
     color: white;
@@ -452,11 +452,11 @@
 }
 
 .ts-wrapper.multi .ts-control [data-value] {
-    @apply cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2 pr-2 text-sm font-medium !bg-pg-primary-100 !text-pg-primary-700 dark:bg-pg-primary-600 dark:text-pg-primary-300
+    @apply cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2 pr-2 text-sm font-medium !bg-pg-primary-100 !text-pg-primary-700 dark:bg-pg-primary-700 dark:text-pg-primary-300
 }
 .ts-wrapper.multi .ts-control [data-value].active {
     @apply !bg-pg-secondary-200 !text-pg-secondary-700
 }
 .ts-control {
-    @apply gap-1 block bg-white relative flex overflow-hidden flex-wrap border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full dark:bg-pg-primary-600 dark:text-pg-primary-200 dark:border-pg-primary-500 min-w-[5rem]
+    @apply gap-1 block bg-white relative flex overflow-hidden flex-wrap border border-pg-primary-300 text-pg-primary-700 py-2 px-3 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 w-full dark:bg-pg-primary-700 dark:text-pg-primary-200 dark:border-pg-primary-500 min-w-[5rem]
 }

@@ -6,7 +6,7 @@
         @if ($batchExporting && !$batchFinished)
             <div
                 wire:poll="updateExportProgress"
-                class="w-full my-3 px-4 rounded dark:text-pg-primary-300 bg-pg-primary-100 dark:bg-pg-primary-700 py-3 text-center"
+                class="w-full my-3 px-4 rounded dark:text-pg-primary-300 bg-pg-primary-100 dark:bg-pg-primary-800 py-3 text-center"
             >
                 <div>{{ trans('livewire-powergrid::datatable.export.exporting') }}</div>
                 <span class="font-normal text-xs">{{ $batchProgress }}%</span>
@@ -25,7 +25,7 @@
                     class="rounded-top"
                 >
                     <div
-                        class="px-4 py-3 rounded-md cursor-pointer bg-pg-primary-100 shadow dark:bg-pg-primary-700"
+                        class="px-4 py-3 rounded-md cursor-pointer bg-pg-primary-100 shadow dark:bg-pg-primary-800"
                         x-on:click="show =!show"
                     >
                         <div class="flex justify-between">
@@ -42,7 +42,7 @@
                     </div>
                     <div
                         x-show="show"
-                        class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-600"
+                        class="border-l border-b border-r border-pg-primary-200 dark:border-pg-primary-600 px-2 py-4 dark:border-0 dark:bg-pg-primary-700"
                     >
                         @foreach ($exportedFiles as $file)
                             <div class="flex w-full p-2">
