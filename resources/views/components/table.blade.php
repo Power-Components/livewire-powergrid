@@ -116,8 +116,8 @@
             </th>
         @else
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
-
             @foreach ($data as $row)
+                @if(!isset($row->{$checkboxAttribute}))@php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp @endif
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction($row);
