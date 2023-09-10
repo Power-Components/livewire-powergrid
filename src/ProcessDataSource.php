@@ -328,6 +328,12 @@ class ProcessDataSource
             if (method_exists($this->component, 'summarizeFormat')) {
                 $summarizeFormat = $this->component->summarizeFormat();
 
+                if (count($summarizeFormat) === 0) {
+                    data_set($column, 'summarize.' . $summarize, $value);
+
+                    return;
+                }
+
                 foreach ($summarizeFormat as $field => $format) {
                     $parts = explode('.', $field);
 

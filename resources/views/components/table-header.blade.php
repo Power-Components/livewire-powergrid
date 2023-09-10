@@ -1,10 +1,11 @@
 {{-- blade-formatter-disable --}}
-<tr class="{{ $theme->table->trBodyClass }}" style="{{ $theme->table->trBodyStyle }}">
+<tr class="{{ $theme->table->trBodyClass. ' '.$theme->table->trBodyClassTotalColumns }}"
+    style="{{ $theme->table->trBodyStyle. ' '.$theme->table->trBodyStyleTotalColumns }}">
     @if(data_get($setUp, 'detail.showCollapseIcon'))
         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
     @if($checkbox)
-        <td  class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
+        <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
     @foreach ($columns as $column)
         <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
