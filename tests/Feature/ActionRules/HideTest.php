@@ -1,33 +1,48 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
+
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-it('add rule \'hide\' when dishId == 2', function (string $component, object $params) {
-    livewire($component, ['join' => $params->join])
-        ->call($params->theme)
-        ->set('testActions', [
-            Button::add('edit')
-                ->caption('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('modal-edit', ['dishId' => 'id']),
-        ])
-        ->set('testActionRules', [
-            Rule::button('edit')
-                ->when(fn (Dish $dish) => $dish->id == 2)
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+$component = new class () extends DishTableBase {
+    public function actions($row): array
+    {
+        return [
+            Button::make('dispatch')
+                ->slot('dispatch: ' . $row->id)
+                ->dispatch('executeDispatch', ['id' => $row->id]),
+        ];
+    }
+
+    public function actionRules($row): array
+    {
+        return [
+            Rule::button('dispatch')
+                ->when(fn ($dish) => $dish->id == 3)
                 ->hide(),
-        ])
-        ->assertSeeHtml('wire:click="$emit(&quot;openModal&quot;, &quot;modal-edit&quot;, {&quot;dishId&quot;:1})"')
-        ->assertDontSeeHtml('wire:click="$emit(&quot;openModal&quot;, &quot;modal-edit&quot;, {&quot;dishId&quot;:2})"');
-})->with('hide_themes_with_join')->group('actionRules');
+        ];
+    }
+};
 
-dataset('hide_themes_with_join', [
-    'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+dataset('action:hide', [
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
+
+it('properly displays "hide" on edit button', function (string $component, object $params) {
+    livewire($component, [
+        'join' => $params->join,
+    ])
+        ->call($params->theme)
+        ->set('setUp.footer.perPage', 3)
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:2}&#039;")
+        ->assertDontSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:3}&#039;");
+})
+    ->with('action:hide')
+    ->group('action');

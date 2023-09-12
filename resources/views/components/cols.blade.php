@@ -7,17 +7,26 @@
 ])
 @php
     $field = filled($column->dataField) ? $column->dataField : $column->field;
-
-    $isFixedOnResponsive = isset($this->setUp['responsive']) && in_array($field, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
-
+    
+    $isFixedOnResponsive = false;
+    
+    if (isset($this->setUp['responsive'])) {
+        if (in_array($field, data_get($this->setUp, 'responsive.fixedColumns'))) {
+            $isFixedOnResponsive = true;
+        }
+    
+        if ($column->fixedOnResponsive) {
+            $isFixedOnResponsive = true;
+        }
+    }
+    
     $sortOrder = isset($this->setUp['responsive']) ? data_get($this->setUp, "responsive.sortOrder.{$field}", null) : null;
 @endphp
 <th
-    @if($sortOrder) sort_order="{{ $sortOrder }}" @endif
+    @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
-    wire:key="{{ md5($column->field) }}"
-    @if($isFixedOnResponsive) fixed @endif
-    @if ($column->sortable) x-data x-multisort-shift-click="{{ $this->getLivewireId() }}" wire:click="sortBy('{{ $field }}')" @endif
+    @if ($isFixedOnResponsive) fixed @endif
+    @if ($column->sortable) x-multisort-shift-click="{{ $this->getId() }}" wire:click="sortBy('{{ $field }}')" @endif
     style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) cursor:pointer; @endif {{ $theme->table->thStyle . ' ' . $column->headerStyle }}"
 >
     <div

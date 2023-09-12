@@ -2,11 +2,13 @@
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Cache;
 
+;
+
 use PowerComponents\LivewirePowerGrid\Tests\DishesSetUpTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('show includeViewOnTop/Bottom - Header', function () {
     livewire(DishesSetUpTable::class, ['testHeader' => true])
@@ -33,7 +35,7 @@ it('show includeViewOnTop/Bottom - Footer', function () {
 it('cache work properly with tags - rememberForever', function () {
     \Illuminate\Support\Facades\Cache::flush();
 
-    /** @var DishesSetUpTable|\Livewire\Testing\TestableLivewire $component */
+    /** @var DishesSetUpTable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
         Cache::make()
             ->prefix('test-')

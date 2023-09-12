@@ -42,22 +42,6 @@ PowerGrid creates modern, powerful and easy to customize Datatables based on Lar
 
 ### [Online Demo](https://demo.livewire-powergrid.com) (tailwind)
 
-Get a view of what PowerGrid can offer in just 2 commands:
-
-Install
-
-```bash
-composer require power-components/livewire-powergrid
-```
-
-Run
-
-```bash
-php artisan powergrid:demo
-```
-
-<br/>
-
 ## Features
 
 With PowerGrid you get right out of the box:
@@ -82,7 +66,7 @@ With PowerGrid you get right out of the box:
 
 - **Click to edit**
 
-- **Click to copy**
+- **Responsive**
 
 - **Link inside a table cell**
 
@@ -107,13 +91,17 @@ With PowerGrid you get right out of the box:
 ## 1. Requirements
 
 - PHP 8.1+
-- [Laravel 9+](https://laravel.com/docs/9.x/installation)
-- [Livewire 2.10x](https://laravel-livewire.com)
+- [Laravel 10+](https://laravel.com/docs/9.x/installation)
+- [Livewire 3.0x](https://livewire.laravel.com)
 - [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
 ## 2. Install
+
+```bash
+composer require power-components/livewire-powergrid
+```
 
 Please follow the steps indicated in our [Documentation - Install](https://v4.livewire-powergrid.com/get-started/install.html) page.
 
@@ -149,7 +137,7 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 <p>Sponsored by:</p>
 <p>
   <!--DevSquad-->
-  <a href="http://devsquad.com" target="_blank">
+  <a href="https://devsquad.com" target="_blank">
     <img src="https://livewire-powergrid.com/_media/logos/devsquad.png" alt="DevSquad" height="undefined">
   </a>
 </p>

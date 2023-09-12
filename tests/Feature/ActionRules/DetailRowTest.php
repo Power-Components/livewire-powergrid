@@ -1,17 +1,18 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
-
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Tests\RulesToggleDetailTable;
-use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer};
 
-it('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
-    livewire($component, [
-        'join'      => $params->join,
-        'setUpTest' => [
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Tests\DishTableBase};
+
+$component = new class () extends DishTableBase {
+    public function setUp(): array
+    {
+        config()->set('livewire.inject_morph_markers', false);
+
+        return [
             Footer::make()
                 ->showPerPage(5),
 
@@ -21,18 +22,33 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
                     'name' => 'Luan',
                 ])
                 ->showCollapseIcon(),
-        ], ])
-        ->call($params->theme)
-        ->set('testActions', [
+        ];
+    }
+
+    public function actions($row): array
+    {
+        return [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
                 ->toggleDetail(),
-        ])
-        ->set('testActionRules', [
+        ];
+    }
+
+    public function actionRules(): array
+    {
+        return [
             Rule::rows()
                 ->when(fn (Dish $dish) => $dish->id == 3)
                 ->detailView('livewire-powergrid::tests.detail-rules', ['newParameter' => 1]),
-        ])
+        ];
+    }
+};
+
+it('change \'detailRow\' component when dish-id == 1', function (string $component, object $params) {
+    livewire($component, [
+        'join' => $params->join,
+    ])
+        ->call($params->theme)
         ->assertDontSeeHtml([
             '<div>Id 1</div>',
             '<div>Options {"name":"Luan"}</div>',
@@ -83,9 +99,10 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
             4 => false,
             5 => false,
         ]);
-})->with('detail_row_tailwind_join')->group('actionRules');
+})->with('detail_row_tailwind_join')
+    ->group('actionRules');
 
 dataset('detail_row_tailwind_join', [
-    'tailwind'      => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'tailwind join' => [RulesToggleDetailTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

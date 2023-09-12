@@ -1,8 +1,10 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesDynamicFiltersTable;
+
+;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it(
     'properly filters using dynamic filter feature',

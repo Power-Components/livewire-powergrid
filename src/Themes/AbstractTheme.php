@@ -32,8 +32,6 @@ abstract class AbstractTheme
 
     public Editable $editable;
 
-    public ClickToCopy $clickToCopy;
-
     public Toggleable $toggleable;
 
     public FilterBoolean $filterBoolean;
@@ -72,11 +70,6 @@ abstract class AbstractTheme
     public function editable(): Editable
     {
         return Theme::editable();
-    }
-
-    public function clickToCopy(): ClickToCopy
-    {
-        return Theme::clickToCopy();
     }
 
     public function cols(): Cols

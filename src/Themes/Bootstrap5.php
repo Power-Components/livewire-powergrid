@@ -75,12 +75,6 @@ class Bootstrap5 extends ThemeBase
             ->input('form-control shadow-none');
     }
 
-    public function clickToCopy(): ClickToCopy
-    {
-        return Theme::clickToCopy()
-            ->span('d-flex justify-content-between');
-    }
-
     public function checkbox(): Checkbox
     {
         return Theme::checkbox()

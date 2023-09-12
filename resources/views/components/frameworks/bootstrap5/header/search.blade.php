@@ -20,7 +20,7 @@
                     </svg>
                 </span>
                 <input
-                    wire:model.debounce.600ms="search"
+                    wire:model.live.debounce.600ms="search"
                     type="text"
                     class="{{ $theme->searchBox->inputClass }}"
                     style="{{ $theme->searchBox->inputStyle }}"

@@ -1,15 +1,21 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
-
+use Illuminate\Database\Eloquent\Builder;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+use PowerComponents\LivewirePowerGrid\Tests\{
+    DishTableBase,
+    DishesArrayTable,
     DishesCollectionTable,
     DishesQueryBuilderTable,
     DishesTable,
-    DishesTableWithJoin};
+    DishesTableWithJoin
+};
+
+;
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')
@@ -21,56 +27,40 @@ it('property displays the results and options', function (string $component, obj
     ])
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:model.debounce.500ms="filters.select.category_id"',
+            'wire:model.live.debounce.500ms="filters.select.category_id"',
             'wire:input.debounce.500ms="filterSelect(\'category_id\', \'Category\')"',
             '<option value="">All</option>',
         ]);
 })->group('filters', 'filterSelect')
     ->with('filter_select_join', 'filter_select_query_builder');
 
-it('property filter using custom builder', function (string $component, object $params) {
-    $component = livewire($component, [
-        'testFilters' => [
+$customBuilder = new class () extends DishTableBase {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
             Filter::select('category_name', 'category_id')
                 ->builder(function ($builder, $values) {
                     expect($values)
                         ->toBe('1')
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+                        ->and($builder)->toBeInstanceOf(Builder::class);
 
                     return $builder->where('dishes.id', 1);
                 })
                 ->dataSource(Category::all())
                 ->optionValue('category_id')
                 ->optionLabel('category_name'),
-        ],
-    ])
-        ->call($params->theme)
-        ->set('filters', filterSelect('category_id', 1))
-        ->assertSee('Pastel de Nata')
-        ->assertDontSee('Peixada da chef Nábia');
+        ];
+    }
+};
 
-    $component->set('testFilters', [
-        Filter::select('category_name', 'category_id')
-            ->builder(function ($builder, $values) {
-                expect($values)
-                    ->toBe('1')
-                    ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+$customCollection = new class () extends DishesCollectionTable {
+    public int $dishId;
 
-                return $builder->where('dishes.id', 2);
-            })
-            ->dataSource(Category::all())
-            ->optionValue('category_id')
-            ->optionLabel('category_name'),
-    ])
-        ->set('filters', filterSelect('category_id', 1))
-        ->assertDontSee('Pastel de Nata')
-        ->assertSee('Peixada da chef Nábia');
-})->group('filters', 'filterSelect')
-    ->with('filter_select_join', 'filter_select_query_builder');
-
-it('property filter using custom collection', function (string $component) {
-    livewire($component, [
-        'testFilters' => [
+    public function filters(): array
+    {
+        return [
             Filter::select('id')
                 ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
                 ->optionValue('id')
@@ -82,30 +72,34 @@ it('property filter using custom collection', function (string $component) {
 
                     return $builder->where('id', 2);
                 }),
-        ],
-    ])
-        ->set('filters', filterSelect('id', 2))
-        ->assertSee('Name 2')
-        ->assertDontSee('Name 1')
-        ->assertDontSee('Name 3');
-})->group('filters', 'filterSelect')
-    ->with('filter_select_themes_collection', 'filter_select_themes_array');
+        ];
+    }
+};
 
-it('property filter using collection & array', function (string $component) {
-    livewire($component, [
-        'testFilters' => [
-            Filter::select('id')
-                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
-                ->optionValue('id')
-                ->optionLabel('value'),
-        ],
-    ])
+it('property filter using custom builder', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call($params->theme)
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Peixada da chef Nábia');
+    ;
+})->group('filters', 'filterSelect')
+    ->with([
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    ]);
+
+it('property filter using custom collection', function (string $component) {
+    livewire($component)
         ->set('filters', filterSelect('id', 2))
         ->assertSee('Name 2')
         ->assertDontSee('Name 1')
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
-    ->with('filter_select_themes_collection', 'filter_select_themes_array');
+    ->with([
+        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    ]);
 
 it('properly filter with category_id', function (string $component, object $params) {
     livewire($component)

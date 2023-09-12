@@ -5,12 +5,14 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Livewire\Attributes\On;
 use Throwable;
 
 trait SoftDeletes
 {
     public string $softDeletes = '';
 
+    #[On('pg:softDeletes-{tableName}')]
     public function softDeletes(string $softDeletes): void
     {
         $this->softDeletes = $softDeletes;

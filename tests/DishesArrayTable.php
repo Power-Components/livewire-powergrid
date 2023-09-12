@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Support\{Carbon};
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Button,
     Column,
@@ -17,8 +16,6 @@ use PowerComponents\LivewirePowerGrid\{
 
 class DishesArrayTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public array $testFilters = [];
@@ -160,7 +157,7 @@ class DishesArrayTable extends PowerGridComponent
     {
         return [
             Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
+                ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
                 ->openModal('edit-stock', ['dishId' => 'id']),
         ];

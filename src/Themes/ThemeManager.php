@@ -58,11 +58,6 @@ class ThemeManager
         return new Editable();
     }
 
-    public function clickToCopy(): ClickToCopy
-    {
-        return new ClickToCopy();
-    }
-
     public function layout(): Layout
     {
         return new Layout();

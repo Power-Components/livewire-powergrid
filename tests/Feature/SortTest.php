@@ -1,8 +1,10 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
+
+;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesTable, DishesTableWithJoin};
 

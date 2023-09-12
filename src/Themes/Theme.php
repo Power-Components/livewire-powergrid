@@ -29,7 +29,6 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
  * @method static Actions actions()
  * @method static Checkbox checkbox()
  * @method static Editable editable()
- * @method static ClickToCopy clickToCopy()
  * @method static FilterBoolean filterBoolean()
  * @method static FilterDatePicker filterDatePicker()
  * @method static FilterMultiSelect filterMultiSelect()

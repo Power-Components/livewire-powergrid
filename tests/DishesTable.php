@@ -5,10 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Dish};
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
+use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{
-    Button,
     Column,
     Exportable,
     Footer,
@@ -20,8 +18,6 @@ use PowerComponents\LivewirePowerGrid\{
 
 class DishesTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public array $testFilters = [];
@@ -143,7 +139,6 @@ class DishesTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -157,7 +152,6 @@ class DishesTable extends PowerGridComponent
                 ->field('chef_name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -193,22 +187,6 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Data'))
                 ->field('produced_at')
                 ->sortable(),
-        ];
-    }
-
-    public function actions(): array
-    {
-        return [
-            Button::add('edit-stock')
-                ->caption('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => 'id']),
-
-            Button::add('destroy')
-                ->caption(__('Delete'))
-                ->class('text-center')
-                ->emit('deletedEvent', ['dishId' => 'id'])
-                ->method('delete'),
         ];
     }
 

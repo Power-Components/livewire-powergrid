@@ -3,7 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon, Collection};
+use Illuminate\Support\{Carbon};
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
@@ -20,11 +21,11 @@ trait HasFilter
             list($table, $column) = explode('.', $field);
 
             if (isset($this->filters['multi_select'][$table][$column])) {
-                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
             }
 
             if (isset($this->filters['datetime'][$table][$column]) || isset($this->filters['date'][$table][$column])) {
-                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
             unset($this->filters['input_text'][$table][$column]);
@@ -84,11 +85,11 @@ trait HasFilter
             }
         } else {
             if (isset($this->filters['multi_select'][$field])) {
-                $this->dispatchBrowserEvent('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
             }
 
             if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
-                $this->dispatchBrowserEvent('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
             }
 
             unset($this->filters['input_text'][$field]);
@@ -105,7 +106,7 @@ trait HasFilter
         unset($this->enabledFilters[$field]);
 
         if ($emit) {
-            $this->emit('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
+            $this->dispatch('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
         }
 
         $this->persistState('filters');
@@ -118,7 +119,7 @@ trait HasFilter
 
         $this->persistState('filters');
 
-        $this->dispatchBrowserEvent('pg:clear_all_flatpickr::' . $this->tableName);
+        $this->dispatch('pg:clear_all_flatpickr::' . $this->tableName);
     }
 
     private function resolveFilters(): void
@@ -127,29 +128,41 @@ trait HasFilter
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
-            if (str($column->dataField)->contains('.')) {
-                $field = $column->field;
+            if (str(strval(data_get($column, 'dataField')))->contains('.')) {
+                $field = strval(data_get($column, 'field'));
             } else {
-                $field = filled($column->dataField) ? $column->dataField : $column->field;
+                $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
             }
 
             $filterForColumn = $filters->filter(
-                fn ($filter) => $filter->column == $field
+                fn ($filter) => data_get($filter, 'column') == $field
             );
 
             if ($filterForColumn->count() > 0) {
                 $filterForColumn->transform(function ($filter) use ($column) {
-                    $filter->title = $column->title;
+                    data_set($filter, 'title', data_get($column, 'title'));
 
                     return $filter;
                 });
 
                 data_set($column, 'filters', $filterForColumn->map(function ($filter) {
-                    if (!app()->runningUnitTests()) {
-                        unset($filter->builder, $filter->collection);
+                    if (data_get($filter, 'dataSource') instanceof \Closure) {
+                        $depends = (array) data_get($filter, 'depends');
+                        $closure = data_get($filter, 'dataSource');
+
+                        if ($depends && $this->filters) {
+                            $depends = collect($depends)
+                                ->mapWithKeys(fn ($field) => [$field => data_get($this->filters, 'select', $field)]);
+                        }
+
+                        data_forget($filter, 'dataSource');
+                        data_set($filter, 'dataSource', $closure($depends));
                     }
 
-                    if (method_exists($filter, 'execute')) {
+                    data_forget($filter, 'builder');
+                    data_forget($filter, 'collection');
+
+                    if (!is_array($filter) && method_exists($filter, 'execute')) {
                         return (array) $filter->execute();
                     }
 
@@ -157,9 +170,9 @@ trait HasFilter
                 }));
 
                 $filterForColumn->each(function ($filter) {
-                    if ($filter->className === 'PowerComponents\LivewirePowerGrid\Filters\FilterDynamic' &&
-                        isset($filter->attributes)) {
-                        $attributes = array_values($filter->attributes);
+                    if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
+                        filled(data_get($filter, 'attributes'))) {
+                        $attributes = array_values((array) data_get($filter, 'attributes'));
 
                         foreach ($attributes as $value) {
                             if (is_string($value) && str_contains($value, 'filters.')) {
@@ -176,18 +189,25 @@ trait HasFilter
         }
     }
 
-    public function datePickerChanged(array $data): void
-    {
+    #[On('pg:datePicker-{tableName}')]
+    public function datePickerChanged(
+        array $selectedDates,
+        string $field,
+        string $wireModel,
+        string $label,
+        string $type,
+        string $timezone = 'UTC',
+    ): void {
         $this->resetPage();
 
-        $input = explode('.', $data['values']);
+        $input = explode('.', $wireModel);
 
-        $startDate = strval(data_get($data, 'selectedDates.0'));
-        $endDate   = strval(data_get($data, 'selectedDates.1'));
+        $startDate = strval($selectedDates[0]);
+        $endDate   = strval($selectedDates[1]);
 
         $appTimeZone = strval(config('app.timezone'));
 
-        $filterTimezone = new DateTimeZone($data['timezone'] ?? 'UTC');
+        $filterTimezone = new DateTimeZone($timezone);
 
         $startDate = Carbon::parse($startDate)->format('Y-m-d');
         $endDate   = Carbon::parse($endDate)->format('Y-m-d');
@@ -195,48 +215,49 @@ trait HasFilter
         $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
         $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
 
-        if ($data['type'] === 'datetime') {
+        if ($type === 'datetime') {
             $startDate->startOfDay()->setTimeZone($appTimeZone);
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
-        data_set($data, 'selectedDates.0', $startDate);
-        data_set($data, 'selectedDates.1', $endDate);
+        $selectedDates[0] = $startDate;
+        $selectedDates[1] = $endDate;
 
-        $this->enabledFilters[$data['field']]['data-field'] = $data['field'];
-        $this->enabledFilters[$data['field']]['label']      = $data['label'];
+        $this->enabledFilters[$field]['data-field'] = $field;
+        $this->enabledFilters[$field]['label']      = $label;
 
         if (count($input) === 3) {
-            $this->filters[$data['type']][$input[2]] = $data['selectedDates'];
+            $this->filters[$type][$input[2]] = $selectedDates;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 4) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3]] = $data['selectedDates'];
+            $this->filters[$type][$input[2] . '.' . $input[3]] = $selectedDates;
             $this->persistState('filters');
 
             return;
         }
 
         if (count($input) === 5) {
-            $this->filters[$data['type']][$input[2] . '.' . $input[3] . '.' . $input[4]] = $data['selectedDates'];
+            $this->filters[$type][$input[2] . '.' . $input[3] . '.' . $input[4]] = $selectedDates;
             $this->persistState('filters');
         }
     }
 
-    public function multiSelectChanged(array $params): void
-    {
+    #[On('pg:multiSelect-{tableName}')]
+    public function multiSelectChanged(
+        string $field,
+        string $label,
+        array $values,
+    ): void {
         $this->resetPage();
-
-        $field  = strval(data_get($params, 'params.dataField'));
-        $values = (array) data_get($params, 'values');
 
         data_set($this->filters, "multi_select.$field", $values);
 
         $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = strval(data_get($params, 'params.title'));
+        $this->enabledFilters[$field]['label'] = $label;
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);

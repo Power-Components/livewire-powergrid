@@ -27,7 +27,6 @@ function powergrid(): PowerGridComponent
             ->field('name')
             ->searchable()
             ->editOnClick(true)
-            ->clickToCopy(true)
             ->sortable(),
     ];
 
@@ -100,6 +99,29 @@ function expectInputText(object $params, mixed $component, string $value, string
                 ],
             ]);
     }
+}
+
+function filterNumber(string $field, ?string $min, ?string $max, ?string $thousands = '', ?string $decimal = ''): array
+{
+    return [
+        'number' => [
+            $field => [
+                'start'     => $min,
+                'end'       => $max,
+                'thousands' => $thousands,
+                'decimal'   => $decimal,
+            ],
+        ],
+    ];
+}
+
+function filterBoolean(string $field, ?string $value): array
+{
+    return [
+        'boolean' => [
+            $field => $value,
+        ],
+    ];
 }
 
 function requiresMySQL()

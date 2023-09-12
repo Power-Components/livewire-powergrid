@@ -4,26 +4,26 @@ use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
 
 it('properly displays "full" showRecordCount')
     ->livewire(DishesTable::class)
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results']);
+    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results']);
 
 it('properly displays "short" showRecordCount')
     ->livewire(DishesTable::class)
     ->set('setUp.footer.recordCount', 'short')
-    ->assertSeeTextInOrder(['1', '-', '10', '|', '15']);
+    ->assertSeeHtmlInOrder(['1', '-', '10', '|', '15']);
 
 it('properly displays "min" showRecordCount')
     ->livewire(DishesTable::class)
     ->set('setUp.footer.recordCount', 'min')
-    ->assertSeeTextInOrder(['1', '10']);
+    ->assertSeeHtmlInOrder(['1', '10']);
 
 it('properly changes records and displays per page')
     ->livewire(DishesTable::class)
     ->set('setUp.footer.perPage', '11')
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results'])
+    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results'])
     ->set('setUp.footer.perPage', '12')
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '12', 'of', '15', 'Results'])
+    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '12', 'of', '15', 'Results'])
     ->set('setUp.footer.perPage', '0') //All items
-    ->assertSeeTextInOrder(['Showing', '1', 'to', '15', 'of', '15', 'Results'])
+    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '15', 'of', '15', 'Results'])
     ->assertSeeHtml('Pastel de Nata');
 
 it('navigates when click on "page #2"')

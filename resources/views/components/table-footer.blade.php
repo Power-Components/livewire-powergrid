@@ -13,44 +13,26 @@
         <td></td>
     @endif
     @foreach ($columns as $column)
-        @php
-            if (filled($column->dataField) && str_contains($column->dataField, '.')) {
-                $field = $column->field;
-            } elseif (filled($column->dataField) && !str_contains($column->dataField, '.')) {
-                $field = $column->dataField;
-            } else {
-                $field = $column->field;
-            }
-        @endphp
         <td
             class="{{ $theme->table->tdBodyClassTotalColumns . ' ' . $column->bodyClass ?? '' }}"
             style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyleTotalColumns . ' ' . $column->bodyStyle ?? '' }}"
         >
-            @if ($column->count['footer'])
-                <span>{{ $column->count['label'] }}:
-                    {{ $withoutPaginatedData->collect()->reject(function ($data) use ($field) {return empty($data->{$field} ?? $data[$field]);})->count($field) }}</span>
-                <br>
-            @endif
-            @if ($column->sum['footer'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->sum['label'] }}:
-                    {{ round($withoutPaginatedData->collect()->sum($field), $column->sum['rounded']) }}</span>
-                <br>
-            @endif
-            @if ($column->avg['footer'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->avg['label'] }}:
-                    {{ round($withoutPaginatedData->collect()->avg($field), $column->avg['rounded']) }}</span>
-                <br>
-            @endif
-            @if ($column->min['footer'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->min['label'] }}:
-                    {{ round($withoutPaginatedData->collect()->min($field), $column->min['rounded']) }}</span>
-                <br>
-            @endif
-            @if ($column->max['footer'] && is_numeric($withoutPaginatedData[0][$field]))
-                <span>{{ $column->max['label'] }}:
-                    {{ round($withoutPaginatedData->collect()->max($field), $column->max['rounded']) }}</span>
-                <br>
-            @endif
+            @include('livewire-powergrid::components.summarize', [
+                'sum' => $column->sum['footer'] ? data_get($column, 'summarize.sum') : null,
+                'labelSum' => $column->sum['label'],
+            
+                'count' => $column->count['footer'] ? data_get($column, 'summarize.count') : null,
+                'labelCount' => $column->count['label'],
+            
+                'min' => $column->min['footer'] ? data_get($column, 'summarize.min') : null,
+                'labelMin' => $column->min['label'],
+            
+                'max' => $column->max['footer'] ? data_get($column, 'summarize.max') : null,
+                'labelMax' => $column->max['label'],
+            
+                'avg' => $column->avg['footer'] ? data_get($column, 'summarize.avg') : null,
+                'labelAvg' => $column->avg['label'],
+            ])
         </td>
     @endforeach
     @if (isset($actions) && count($actions))

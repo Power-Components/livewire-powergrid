@@ -4,9 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
-    Button,
     Column,
     Footer,
     Header,
@@ -17,23 +15,7 @@ use PowerComponents\LivewirePowerGrid\{
 
 class DishTableBase extends PowerGridComponent
 {
-    use ActionButton;
-
     public bool $join = false;
-
-    public array $testActions = [];
-
-    public array $testActionRules = [];
-
-    public function actions(): array
-    {
-        return $this->testActions;
-    }
-
-    public function actionRules(): array
-    {
-        return $this->testActionRules;
-    }
 
     public function setUp(): array
     {
@@ -77,6 +59,9 @@ class DishTableBase extends PowerGridComponent
         return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name')
+            ->addColumn('chef_name', function (Dish $dish) {
+                return $dish->chef->name;
+            })
             ->addColumn('category_id');
     }
 
@@ -91,7 +76,13 @@ class DishTableBase extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
+            Column::make('Chef', 'chef_name')
+                ->searchable()
+                ->sortable(),
+
             Column::make('Category', 'category_name'),
+
+            Column::action('Action'),
         ];
     }
 

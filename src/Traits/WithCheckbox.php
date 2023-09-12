@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Helpers\ActionRules;
+use PowerComponents\LivewirePowerGrid\Components\Rules\RulesController;
 use Throwable;
 
 trait WithCheckbox
@@ -26,7 +26,7 @@ trait WithCheckbox
         if (!$this->checkboxAll) {
             $this->checkboxValues = [];
 
-            $this->dispatchBrowserEvent('pgBulkActions::clear', $this->tableName);
+            $this->dispatch('pgBulkActions::clear', $this->tableName);
 
             return;
         }
@@ -34,11 +34,11 @@ trait WithCheckbox
         /** @var AbstractPaginator $data */
         $data = $this->fillData();
 
-        $actionRulesClass = resolve(ActionRules::class);
+        $actionRulesClass = resolve(RulesController::class);
 
         /** @phpstan-ignore-next-line  */
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
+            $rules = $actionRulesClass->recoverFromAction($model);
 
             if (isset($rules['hide']) || isset($rules['disable'])) {
                 return;
@@ -48,7 +48,7 @@ trait WithCheckbox
             if (!in_array($value, $this->checkboxValues)) {
                 $this->checkboxValues[] = (string) $value;
 
-                $this->dispatchBrowserEvent('pgBulkActions::addMore', [
+                $this->dispatch('pgBulkActions::addMore', [
                     'value'     => $value,
                     'tableName' => $this->tableName,
                 ]);

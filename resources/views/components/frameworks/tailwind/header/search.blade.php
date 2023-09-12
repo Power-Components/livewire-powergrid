@@ -10,7 +10,7 @@
                 </span>
             </span>
             <input
-                wire:model.debounce.700ms="search"
+                wire:model.live.debounce.700ms="search"
                 type="text"
                 class="{{ $theme->searchBox->inputClass }}"
                 style="{{ $theme->searchBox->inputStyle }}"

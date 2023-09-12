@@ -1,15 +1,17 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesEnumTable;
+
+;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it(
     'property displays the results and options',
     fn (string $component, object $params) => livewire($component)
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:model.debounce.500ms="filters.select.dishes.diet"',
+            'wire:model.live.debounce.500ms="filters.select.dishes.diet"',
             'wire:input.debounce.500ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
         ])
         ->assertSeeHtmlInOrder([

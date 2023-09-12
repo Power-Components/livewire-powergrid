@@ -1,15 +1,60 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
-use PowerComponents\LivewirePowerGrid\Filters\{Filter, FilterMultiSelect, FilterMultiSelectAsync};
-
+use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelectAsync};
+use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelect};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesFiltersTable,
-    DishesQueryBuilderTable};
+    DishesQueryBuilderTable,
+    DishesTable};
+
+$customBuilder = new class () extends DishesTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
+            Filter::multiSelect('category_name', 'category_id')
+                ->dataSource(Category::all())
+                ->optionValue('id')
+                ->optionLabel('name')
+                ->builder(function ($builder, $values) {
+                    expect($values)
+                        ->toBe([0 => 1])
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+
+                    return $builder->where('dishes.id', 1);
+                }),
+        ];
+    }
+};
+
+$customCollection = new class () extends DishesCollectionTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
+            Filter::multiSelect('id', 'id')
+                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
+                ->optionValue('id')
+                ->optionLabel('value')
+                ->collection(function ($builder, $values) {
+                    expect($values)
+                        ->toBe([0 => 1, 1 => 3])
+                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+
+                    return $builder->whereIn('id', [1, 3]);
+                }),
+        ];
+    }
+};
 
 it('properly filter with category_id - Carnes selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -31,7 +76,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
         ])
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',
@@ -39,24 +84,9 @@ it('properly filter with category_id - Carnes selected', function (string $compo
 })->group('filters')
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
-it('properly filter with id using custom builder', function (string $component) {
-    $multiSelect = Filter::multiSelect('category_name', 'category_id')
-        ->dataSource(Category::all())
-        ->optionValue('id')
-        ->optionLabel('name')
-        ->builder(function ($builder, $values) {
-            expect($values)
-                ->toBe([0 => 1])
-                ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
-
-            return $builder->where('dishes.id', 1);
-        });
-
-    livewire($component, [
-        'testFilters' => [
-            $multiSelect,
-        ],
-    ])
+it('properly filter with id using custom builder', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
         ->set('filters', [
             'multi_select' => [
                 'category_id' => [
@@ -67,19 +97,14 @@ it('properly filter with id using custom builder', function (string $component) 
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Francesinha vegana');
 })->group('filters')
-    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
+    ->with([
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+    ]);
 
-it('properly filter with id using collection & array', function (string $component) {
-    $multiSelect = Filter::multiSelect('id')
-        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
-        ->optionValue('id')
-        ->optionLabel('value');
-
-    livewire($component, [
-        'testFilters' => [
-            $multiSelect,
-        ],
-    ])
+it('properly filter with category_id using custom collection', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
         ->set('filters', [
             'multi_select' => [
                 'id' => [
@@ -92,39 +117,10 @@ it('properly filter with id using collection & array', function (string $compone
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
 })->group('filters')
-    ->with('filter_multi_select_themes_collection', 'filter_multi_select_themes_array');
-
-it('properly filter with category_id using custom collection', function (string $component) {
-    $multiSelect = Filter::multiSelect('id', 'id')
-        ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
-        ->optionValue('id')
-        ->optionLabel('value')
-        ->collection(function ($builder, $values) {
-            expect($values)
-                ->toBe([0 => 1, 1 => 3])
-                ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
-
-            return $builder->whereIn('id', [1, 3]);
-        });
-
-    livewire($component, [
-        'testFilters' => [
-            $multiSelect,
-        ],
-    ])
-        ->set('filters', [
-            'multi_select' => [
-                'id' => [
-                    1,
-                    3,
-                ],
-            ],
-        ])
-        ->assertSee('Name 1')
-        ->assertSee('Name 3')
-        ->assertDontSee('Name 2');
-})->group('filters')
-    ->with('filter_multi_select_themes_collection', 'themes with array table');
+    ->with([
+        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => 'tailwind']],
+        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => 'bootstrap']],
+    ]);
 
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
@@ -140,8 +136,8 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
     ])
         ->set('setUp.footer.perPage', '20')
         ->assertSeeHtmlInOrder([
-            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022title\u0022:\u0022Category\u0022,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
-            'wire:model.defer="filters.multi_select.category_id.values"',
+            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022label\u0022:\u0022Category\u0022,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
+            'wire:model="filters.multi_select.category_id.values"',
             'x-ref="select_picker_category_id_default"',
         ])
         ->set('filters', [
@@ -154,7 +150,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',
@@ -201,7 +197,7 @@ it('properly filter with category_id - multiple select async', function (string 
     ])
         ->set('setUp.footer.perPage', '20')
         ->assertSeeHtmlInOrder([
-            'wire:model.defer="filters.multi_select.category_id.values"',
+            'wire:model="filters.multi_select.category_id.values"',
             'x-ref="select_picker_category_id_default"',
         ])
         ->set('filters', [
@@ -214,7 +210,7 @@ it('properly filter with category_id - multiple select async', function (string 
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('борщ')
         ->assertDontSee('Francesinha vegana')
-        ->assertSeeInOrder([
+        ->assertSeeHtmlInOrder([
             'Peixada da chef Nábia',
             'Carne Louca',
             'Bife à Rolê',

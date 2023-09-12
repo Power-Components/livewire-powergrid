@@ -1,14 +1,16 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesQueryBuilderTable,
     DishesTable,
     DishesTableWithJoin};
+
+;
 
 it('properly renders the number filter', function (string $component, object $params) {
     $number = Filter::number('id', $params->field)
@@ -21,8 +23,8 @@ it('properly renders the number filter', function (string $component, object $pa
         ->call($params->theme)
         ->set('filters', filterNumber($params->field, '2', null))
         ->assertSeeHtmlInOrder([
-            'wire:model.debounce.800ms="filters.number.' . $params->field . '.start"',
-            'wire:model.debounce.800ms="filters.number.' . $params->field . '.end',
+            'wire:model.live.debounce.800ms="filters.number.' . $params->field . '.start"',
+            'wire:model.live.debounce.800ms="filters.number.' . $params->field . '.end',
         ])
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Francesinha')
@@ -31,11 +33,14 @@ it('properly renders the number filter', function (string $component, object $pa
 })->group('filters', 'filterNumber')
     ->with('filter_number_themes_with_join', 'filter_number_query_builder');
 
-it('properly renders the number filter - custom builder', function (string $component, object $params) {
-    livewire($component, [
-        'testFilters' => [
-            Filter::number($params->field)
-                ->builder(function ($builder, $values) use ($params) {
+$customBuilder = new class () extends DishesTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
+            Filter::number('id')
+                ->builder(function ($builder, $values) {
                     expect($values)->toBe([
                         'start'     => '2',
                         'end'       => null,
@@ -48,16 +53,23 @@ it('properly renders the number filter - custom builder', function (string $comp
                 })
                 ->thousands('.')
                 ->decimal(','),
-        ],
-    ])
+        ];
+    }
+};
+
+it('properly renders the number filter - custom builder', function (string $component, object $params) {
+    livewire($component)
         ->call($params->theme)
-        ->set('filters', filterNumber($params->field, '2', null))
+        ->set('filters', filterNumber('id', '2', null))
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Francesinha')
         ->assertDontSee('борщ')
         ->assertDontSee('Pastel de Nata');
 })->group('filters', 'filterNumber')
-    ->with('filter_number_themes_with_join', 'filter_number_query_builder');
+    ->with([
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+    ]);
 
 it('properly filters by "min"', function (string $component, object $params) {
     livewire($component)
@@ -242,17 +254,3 @@ dataset('filter_number_themes_collection', [
     'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
     'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
-
-function filterNumber(string $field, ?string $min, ?string $max, ?string $thousands = '', ?string $decimal = ''): array
-{
-    return [
-        'number' => [
-            $field => [
-                'start'     => $min,
-                'end'       => $max,
-                'thousands' => $thousands,
-                'decimal'   => $decimal,
-            ],
-        ],
-    ];
-}

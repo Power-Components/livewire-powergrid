@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\File;
 
 beforeEach(function () {
-    $this->tableModelFilePath      = getLaravelDir() . 'app/Http/Livewire/DemoTable.php';
-    $this->tableCollectionFilePath = getLaravelDir() . 'app/Http/Livewire/CollectionTable.php';
+    $this->tableModelFilePath      = getLaravelDir() . 'app/Livewire/DemoTable.php';
+    $this->tableCollectionFilePath = getLaravelDir() . 'app/Livewire/CollectionTable.php';
     $this->modelNameQuestion       = 'What is the name of your Table Component? (E.g., <comment>UserTable</comment>)';
     $this->tableNameQuestion       = 'What is the name of your database table name? (E.g., <comment>users</comment>)';
     $this->datasourceAnswer        = 'What type of data source will you use?';
@@ -25,7 +25,7 @@ it('creates a PowerGrid Builder Table using Eloquent Builder', function () {
         ->expectsChoice($this->datasourceAnswer, 'Eloquent Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
-        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [app/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
         ->assertSuccessful();
 
@@ -42,7 +42,7 @@ it('creates a PowerGrid Builder Table using Query Builder', function () {
         ->expectsChoice($this->datasourceAnswer, 'Query Builder', $this->datasourceAnswers, true)
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsQuestion($this->tableNameQuestion, 'users')
-        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [app/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
         ->assertSuccessful();
 
@@ -57,7 +57,7 @@ it('creates a PowerGrid Collection Table', function () {
     $this->artisan('powergrid:create')
         ->expectsQuestion($this->modelNameQuestion, 'CollectionTable')
         ->expectsChoice($this->datasourceAnswer, 'Collection', $this->datasourceAnswers, true)
-        ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ CollectionTable.php was successfully created at [app/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:collection-table/>")
         ->assertSuccessful();
 
@@ -82,35 +82,12 @@ it('notifies about tailwind forms', function () {
         ->expectsQuestion($this->modelPathQuestion, 'PowerComponents\LivewirePowerGrid\Tests\Models\Dish')
         ->expectsQuestion($this->useFillableQuestion, 'yes')
         ->expectsOutput("\n💡 It seems you are using the plugin Tailwindcss/form.\n   Please check: https://livewire-powergrid.com/#/get-started/configure?id=_43-tailwind-forms for more information.")
-        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [App/Http/Livewire/].")
+        ->expectsOutput("\n⚡ DemoTable.php was successfully created at [app/Livewire/].")
         ->expectsOutput("\n⚡ Your PowerGrid table can be now included with the tag: <livewire:demo-table/>")
         ->assertSuccessful();
 
     File::delete($this->tableModelFilePath);
     File::delete($tailwindConfigFile);
-});
-
-it('publishes the Demo Table', function () {
-    $tableFile = getLaravelDir() . 'app/Http/Livewire/PowerGridDemoTable.php';
-    $viewsFile = getLaravelDir() . 'resources/views/powergrid-demo.blade.php';
-
-    File::delete($tableFile);
-    File::delete($viewsFile);
-
-    $this->artisan('powergrid:demo')
-        ->expectsOutput("➤ PowerGridDemoTable.php was successfully created at [App/Http/Livewire/]\n")
-        ->expectsOutput("➤ powergrid-demo.blade.php was successfully created at [resources/views/]\n")
-        ->expectsOutput("\n1. You must include Route::view('/powergrid', 'powergrid-demo'); in your routes/web.php file.")
-        ->expectsOutput("\n2. Serve your project. For example, run php artisan serve.")
-        ->expectsOutput("\n3. Visit http://localhost/powergrid to view the Demo Table.")
-        ->expectsOutput("\n\n⭐ Thanks! Please consider starring our repository at https://github.com/Power-Components/livewire-powergrid ⭐\n")
-        ->assertSuccessful();
-
-    $this->assertFileExists($tableFile);
-    $this->assertFileExists($viewsFile);
-
-    File::delete($tableFile);
-    File::delete($viewsFile);
 });
 
 it('does not accept an empty table name', function () {

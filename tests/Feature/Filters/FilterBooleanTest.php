@@ -1,14 +1,16 @@
 <?php
 
-use function Pest\Livewire\livewire;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use PowerComponents\LivewirePowerGrid\Filters\Filter;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
     DishesCollectionTable,
     DishesQueryBuilderTable,
     DishesTable,
     DishesTableWithJoin};
+
+;
 
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
@@ -55,9 +57,12 @@ it('properly filters by bool true', function (string $component, object $params)
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
-it('properly filters by bool true - custom builder', function (string $component, object $params) {
-    $component = livewire($component, [
-        'testFilters' => [
+$customBuilder = new class () extends DishesTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
             Filter::boolean('in_stock')
                 ->builder(function ($builder, $values) {
                     expect($values)
@@ -67,8 +72,12 @@ it('properly filters by bool true - custom builder', function (string $component
                     return $builder->where('dishes.id', 1);
                 })
                 ->label('sim', 'não'),
-        ],
-    ])
+        ];
+    }
+};
+
+it('properly filters by bool true - custom builder', function (string $component, object $params) {
+    $component = livewire($component)
         ->call($params->theme)
         ->assertSee('Em Estoque')
         ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
@@ -80,7 +89,10 @@ it('properly filters by bool true - custom builder', function (string $component
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join', 'filter_boolean_query_builder');
+    ->with([
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+    ]);
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -183,9 +195,12 @@ it('properly filters by bool true - using collection - custom builder', function
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_collection');
 
-it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
-    $component = livewire($component, [
-        'testFilters' => [
+$customCollection = new class () extends DishesCollectionTable {
+    public int $dishId;
+
+    public function filters(): array
+    {
+        return [
             Filter::boolean('in_stock', 'in_stock')
                 ->label('yes', 'no')
                 ->collection(function ($collection, $values) {
@@ -194,8 +209,12 @@ it('properly filters by bool true - using collection - custom builder - using ta
 
                     return $collection->where('id', 1);
                 }),
-        ],
-    ])
+        ];
+    }
+};
+
+it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
+    $component = livewire($component)
         ->call($theme)
         ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -220,7 +239,10 @@ it('properly filters by bool true - using collection - custom builder - using ta
             ],
         ]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection');
+    ->with([
+        'tailwind -> id'  => [$customCollection::class, 'tailwind'],
+        'bootstrap -> id' => [$customCollection::class, 'bootstrap'],
+    ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
@@ -373,12 +395,3 @@ dataset('filter_boolean_themes_collection', [
     'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
     'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
 ]);
-
-function filterBoolean(string $field, ?string $value): array
-{
-    return [
-        'boolean' => [
-            $field => $value,
-        ],
-    ];
-}

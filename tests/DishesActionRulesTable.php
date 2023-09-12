@@ -4,24 +4,17 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
-    Detail,
-    Exportable,
+    Facades\Rule,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Rules\Rule
-};
+    PowerGridComponent};
 
 class DishesActionRulesTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public bool $join = false;
@@ -111,7 +104,7 @@ class DishesActionRulesTable extends PowerGridComponent
     {
         return [
             Button::add('edit-stock-for-rules')
-                ->caption('<div id="edit">Edit for Rules</div>')
+                ->slot('<div id="edit">Edit for Rules</div>')
                 ->class('text-center')
                 ->openModal('edit-stock-for-rules', ['dishId' => 'id']),
         ];
