@@ -40,7 +40,7 @@ trait WithCheckbox
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
             $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
 
-            if (isset($rules['hide'])) {
+            if (isset($rules['hide']) || isset($rules['disable'])) {
                 return;
             }
             $value = $model->{$this->checkboxAttribute};
