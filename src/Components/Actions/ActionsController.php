@@ -28,24 +28,6 @@ class ActionsController
 
             $attributes = $this->extractAttributes($button, $row);
 
-            $dynamicProperties = new DynamicProperties($button, $index, $row, $attributes);
-
-            $instance = new \ReflectionClass($dynamicProperties);
-
-            foreach ($instance->getMethods(\ReflectionMethod::IS_PUBLIC) as $allowedProperty) {
-                if ($allowedProperty->getName() == '__construct') {
-                    continue;
-                }
-
-                $allowed = $dynamicProperties->{$allowedProperty->getName()}();
-
-                if (is_null($allowed)) {
-                    continue;
-                }
-
-                return (object) $allowed;
-            }
-
             $slotRule = null;
 
             if (method_exists($this->component, 'actionRules')) {
@@ -78,6 +60,24 @@ class ActionsController
                         'render-action.' . $index . '.' . data_get($button, 'action') => null,
                     ];
                 }
+            }
+
+            $dynamicProperties = new DynamicProperties($button, $index, $row, $attributes);
+
+            $instance = new \ReflectionClass($dynamicProperties);
+
+            foreach ($instance->getMethods(\ReflectionMethod::IS_PUBLIC) as $allowedProperty) {
+                if ($allowedProperty->getName() == '__construct') {
+                    continue;
+                }
+
+                $allowed = $dynamicProperties->{$allowedProperty->getName()}();
+
+                if (is_null($allowed)) {
+                    continue;
+                }
+
+                return (object) $allowed;
             }
 
             $attributeString = implode(
