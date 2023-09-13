@@ -77,6 +77,8 @@ class ExportTable extends PowerGridComponent
                 ->editOnClick($canEdit)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
+
+            Column::action('Action')
         ];
     }
 
