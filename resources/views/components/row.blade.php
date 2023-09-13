@@ -1,6 +1,6 @@
 @foreach ($columns as $column)
     @php
-        $content = $row->{$column->field};
+        $content = $row->{$column->field} ?? null;
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $field = $column->dataField != '' ? $column->dataField : $column->field;
@@ -14,7 +14,7 @@
         <div class="flex gap-2 w-full">
             <!-- Render Action -->
 
-            @if (filled(data_get($row, 'actions')) && blank($column->field))
+            @if (filled(data_get($row, 'actions')) && $column->isAction)
                 @foreach (data_get($row, 'actions') as $key => $action)
                     <div wire:key="action-{{ $row->id }}-{{ $key }}">
                         {!! $action !!}

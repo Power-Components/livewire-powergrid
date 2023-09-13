@@ -73,6 +73,8 @@ class DishesEnumTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Dieta', 'diet', 'dishes.diet'),
+
+            Column::action('Action'),
         ];
     }
 

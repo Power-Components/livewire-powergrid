@@ -67,6 +67,8 @@ class DishesDynamicFiltersTable extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Category', 'in_stock'),
+
+            Column::action('Action'),
         ];
     }
 

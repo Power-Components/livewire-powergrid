@@ -56,6 +56,8 @@ class DishesSearchJSONTable extends PowerGridComponent
             Column::make('Adicional', 'additional')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

@@ -188,6 +188,8 @@ class DishesTableWithJoin extends PowerGridComponent
             Column::add()
                 ->title(__('Data de produção'))
                 ->field('produced_at_formatted'),
+
+            Column::action('Action'),
         ];
     }
 

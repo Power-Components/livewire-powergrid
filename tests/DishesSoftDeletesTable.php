@@ -65,6 +65,8 @@ class DishesSoftDeletesTable extends PowerGridComponent
                 ->title(__('Data'))
                 ->field('deleted_at')
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

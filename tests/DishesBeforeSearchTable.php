@@ -54,6 +54,8 @@ class DishesBeforeSearchTable extends PowerGridComponent
             Column::make('Dish', 'name', 'dishes.name')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

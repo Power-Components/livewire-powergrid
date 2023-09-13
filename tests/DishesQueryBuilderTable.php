@@ -167,6 +167,8 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->title(__('Data'))
                 ->field('produced_at')
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

@@ -127,7 +127,7 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function throwColumnAction()
+    private function throwColumnAction(): void
     {
         $hasColumnAction = collect($this->columns())
             ->filter(fn ($column) => data_get($column, 'isAction') === true)

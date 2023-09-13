@@ -87,6 +87,8 @@ class DishesSetUpTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

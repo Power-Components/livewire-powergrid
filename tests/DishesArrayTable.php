@@ -150,6 +150,8 @@ class DishesArrayTable extends PowerGridComponent
             Column::add()
                 ->title(__('Created At'))
                 ->field('created_at_formatted'),
+
+            Column::action('Action'),
         ];
     }
 
