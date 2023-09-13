@@ -1,6 +1,17 @@
 name: Powergrid Tests
 
-on: ['push', 'pull_request']
+on:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "art/**"
+      - "README.md"
+  pull_request:
+    types: [ready_for_review, synchronize, opened]
+    paths-ignore:
+      - "art/**"
+      - "README.md"
 
 jobs:
   build:
@@ -33,6 +44,8 @@ jobs:
         dependency-version: [ prefer-stable ]
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
+
+    if: github.ref != 'refs/heads/todo-tests'
 
     steps:
       - name: Checkout
