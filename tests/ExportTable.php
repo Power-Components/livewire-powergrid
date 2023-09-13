@@ -3,10 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
-use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{
-    Button,
     Column,
     Exportable,
     Footer,
@@ -52,8 +50,6 @@ class ExportTable extends PowerGridComponent
 
     public function addColumns(): PowerGridColumns
     {
-        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
-
         return PowerGrid::columns()
             ->addColumn('id')
             ->addColumn('name');
@@ -61,8 +57,6 @@ class ExportTable extends PowerGridComponent
 
     public function columns(): array
     {
-        $canEdit = true;
-
         return [
             Column::add()
                 ->title(__('ID'))
@@ -74,25 +68,8 @@ class ExportTable extends PowerGridComponent
                 ->title(__('Prato'))
                 ->field('name')
                 ->searchable()
-                ->editOnClick($canEdit)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
-        ];
-    }
-
-    public function actions(Dish $dish): array
-    {
-        return [
-            Button::add('edit-stock')
-                ->slot('<div id="edit">Edit</div>')
-                ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $dish->id]),
-
-            Button::add('destroy')
-                ->slot(__('Delete'))
-                ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $dish->id])
-                ->method('delete'),
         ];
     }
 

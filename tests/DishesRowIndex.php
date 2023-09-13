@@ -78,6 +78,8 @@ class DishesRowIndex extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

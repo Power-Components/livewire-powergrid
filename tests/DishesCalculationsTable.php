@@ -92,6 +92,8 @@ class DishesCalculationsTable extends PowerGridComponent
                 ->withAvg('Avg Price', true, false)
                 ->withMin('Min Price', true, false)
                 ->withMax('Max Price', true, false),
+
+            Column::action('Action'),
         ];
     }
 

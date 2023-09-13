@@ -79,6 +79,8 @@ class DishesSearchableRawTable extends PowerGridComponent
             Column::make('Produced At Formatted', 'produced_at_formatted', 'produced_at')
                 ->searchableRaw($searchableRaw)
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

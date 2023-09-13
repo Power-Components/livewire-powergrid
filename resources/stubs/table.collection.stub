@@ -66,6 +66,8 @@ final class {{ componentName }} extends PowerGridComponent
                 ->sortable(),
 
             Column::make('Created', 'created_at_formatted'),
+
+            Column::action('Action')
         ];
     }
 }

@@ -90,6 +90,7 @@ class PowerGridComponent extends Component
         }
 
         $this->throwFeatureDetail();
+        $this->throwColumnAction();
 
         $this->columns = $this->columns();
 
@@ -123,6 +124,17 @@ class PowerGridComponent extends Component
             && config('livewire.inject_morph_markers') === true
         ) {
             throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
+        }
+    }
+
+    private function throwColumnAction(): void
+    {
+        $hasColumnAction = collect($this->columns())
+            ->filter(fn ($column) => data_get($column, 'isAction') === true)
+            ->isEmpty();
+
+        if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
+            throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
         }
     }
 

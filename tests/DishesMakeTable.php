@@ -160,6 +160,8 @@ class DishesMakeTable extends PowerGridComponent
 
             Column::make('Data', 'produced_at')
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

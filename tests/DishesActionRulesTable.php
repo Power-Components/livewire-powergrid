@@ -97,6 +97,8 @@ class DishesActionRulesTable extends PowerGridComponent
                 ->field('name')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

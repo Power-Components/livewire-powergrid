@@ -51,6 +51,8 @@ class DishesTableWithJoinNames extends PowerGridComponent
             Column::make('Category', 'category_name', 'newCategories.name')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 
