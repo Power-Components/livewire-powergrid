@@ -63,7 +63,9 @@ final class {{ componentName }} extends PowerGridComponent
                 ->hidden(),
 
             Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->searchable()
+                ->searchable(),
+
+            Column::action('Action')
         ];
     }
 

@@ -121,6 +121,8 @@ class FillableTable
             }
         }
 
+        $columns .= '            Column::action(\'Action\')' . "\n";
+
         $columns .= "        ];";
         $filters .= "        ];";
 
