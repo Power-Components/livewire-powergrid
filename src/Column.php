@@ -74,6 +74,8 @@ final class Column implements \Livewire\Wireable
 
     public ?Collection $filters = null;
 
+    public bool $isAction = false;
+
     /**
      *
      * @var array<string, array<int, string>|bool> $toggleable
@@ -110,7 +112,14 @@ final class Column implements \Livewire\Wireable
     public static function action(string $title): self
     {
         return (new static())
-            ->title($title);
+            ->isAction();
+    }
+
+    public function isAction(): Column
+    {
+        $this->isAction = true;
+
+        return $this;
     }
 
     /**
