@@ -112,6 +112,7 @@ final class Column implements \Livewire\Wireable
     public static function action(string $title): self
     {
         return (new static())
+            ->title($title)
             ->isAction();
     }
 
