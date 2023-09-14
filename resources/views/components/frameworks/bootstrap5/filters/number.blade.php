@@ -43,7 +43,7 @@
                 @if ($inline) style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
-                placeholder="{{ $placeholder['min'] ?? __('Min') }}"
+                placeholder="{{ $placeholder['max'] ?? __('Max') }}"
             >
         </div>
     </div>
