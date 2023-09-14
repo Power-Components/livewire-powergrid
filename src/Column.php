@@ -381,9 +381,9 @@ final class Column implements \Livewire\Wireable
         return $this;
     }
 
-    public function contentClasses(string|array $array): Column
+    public function contentClasses(string|array $contentClasses): Column
     {
-        $this->contentClasses = $array;
+        $this->contentClasses = $contentClasses;
 
         return $this;
     }
