@@ -18,7 +18,7 @@ final class Column implements \Livewire\Wireable
 
     public string $contentClassField = '';
 
-    public array $contentClasses = [];
+    public string|array $contentClasses = [];
 
     public string $bodyStyle = '';
 
@@ -381,7 +381,7 @@ final class Column implements \Livewire\Wireable
         return $this;
     }
 
-    public function contentClasses(array $array): Column
+    public function contentClasses(string|array $array): Column
     {
         $this->contentClasses = $array;
 

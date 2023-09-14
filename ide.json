@@ -15,7 +15,7 @@
                     "parameters": [1]
                 },
                 {
-                    "methodNames": ["headerAttribute", "bodyAttribute"],
+                    "methodNames": ["headerAttribute", "bodyAttribute", "contentClasses"],
                     "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Column"],
                     "parameters": [1]
                 },

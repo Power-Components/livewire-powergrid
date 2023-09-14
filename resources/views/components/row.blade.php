@@ -4,10 +4,14 @@
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $field = $column->dataField != '' ? $column->dataField : $column->field;
-        $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
+
+        $contentClass = $column->contentClasses;
+
+        if (is_array($column->contentClasses)) {
+            $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
+        }
     @endphp
-    <td
-        class="{{ $theme->table->tdBodyClass . ' ' . $column->bodyClass ?? '' }}"
+    <td @class([$theme->table->tdBodyClass, $column->bodyClass])
         style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyle . ' ' . $column->bodyStyle ?? '' }}"
         wire:key="row-{{ $column->field }}-{{ uniqid() }}"
     >
@@ -24,7 +28,7 @@
         </div>
 
         @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
-            <span class="{{ $contentClassField . ' ' . $contentClass }}">
+            <span @class([$contentClassField, $contentClass])>
                 @include($theme->editable->view, ['editable' => $column->editable])
             </span>
         @elseif(count($column->toggleable) > 0)
@@ -35,7 +39,7 @@
             @endphp
             @include($theme->toggleable->view, ['tableName' => $tableName])
         @else
-            <span class="{{ $contentClassField . ' ' . $contentClass }}">
+            <span @class([$contentClassField, $contentClass])>
                 <div>{!! $column->index ? $rowIndex : $content !!}</div>
             </span>
         @endif
