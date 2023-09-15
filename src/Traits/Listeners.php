@@ -47,11 +47,11 @@ trait Listeners
     {
     }
 
-    public function afterChangedNumberStartFilter(string $field, string $label, string $value): void
+    public function afterChangedNumberStartFilter(string $field, string $label, string|false $value): void
     {
     }
 
-    public function afterChangedNumberEndFilter(string $field, string $label, string $value): void
+    public function afterChangedNumberEndFilter(string $field, string $label, string|false $value): void
     {
     }
 }
