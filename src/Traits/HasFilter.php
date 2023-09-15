@@ -201,7 +201,7 @@ trait HasFilter
         if (!isset($selectedDates[1])) {
             return;
         }
-        
+
         $this->resetPage();
 
         $input = explode('.', $wireModel);
