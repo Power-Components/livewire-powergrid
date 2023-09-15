@@ -198,6 +198,10 @@ trait HasFilter
         string $type,
         string $timezone = 'UTC',
     ): void {
+        if (!isset($selectedDates[1])) {
+            return;
+        }
+
         $this->resetPage();
 
         $input = explode('.', $wireModel);
