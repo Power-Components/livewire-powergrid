@@ -296,6 +296,8 @@ trait HasFilter
 
         $this->resetPage();
 
+        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+
         $this->filters['number'][$field]['start']     = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
@@ -318,6 +320,8 @@ trait HasFilter
 
         $this->resetPage();
 
+        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+
         $this->filters['number'][$field]['end']       = $value;
         $this->filters['number'][$field]['thousands'] = $thousands;
         $this->filters['number'][$field]['decimal']   = $decimal;
@@ -329,7 +333,7 @@ trait HasFilter
             $this->clearFilter($field, emit: false);
         }
 
-        $this->afterChangedNumberEndFilter($field, $value, $title);
+        $this->afterChangedNumberEndFilter($field, $title, $value);
 
         $this->persistState('filters');
     }
