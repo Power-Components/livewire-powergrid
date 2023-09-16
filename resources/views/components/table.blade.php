@@ -1,5 +1,7 @@
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
+selected: {{ $selectedRadio }}
+
 <x-livewire-powergrid::table-base
     :theme="$theme->table"
     :ready-to-load="$readyToLoad"
@@ -28,6 +30,14 @@
                 >
                 </th>
             @endisset
+
+            @if ($radio)
+                <th
+                    class="{{ $theme->table->thClass }}"
+                    style="{{ $theme->table->thStyle }}"
+                >
+                </th>
+            @endif
 
             @if ($checkbox)
                 <x-livewire-powergrid::checkbox-all
@@ -117,7 +127,9 @@
         @else
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
             @foreach ($data as $row)
-                @if(!isset($row->{$checkboxAttribute}) && $checkbox)@php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp @endif
+                @if (!isset($row->{$checkboxAttribute}) && $checkbox)
+                    @php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp
+                @endif
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction($row);
@@ -172,18 +184,21 @@
                     ]
                 )
 
-                @if ($checkbox)
-                    @php
-                        $rules = $actionRulesClass->recoverFromAction($row);
+                @php
+                    $rules = $actionRulesClass->recoverFromAction($row);
 
-                        $ruleHide = data_get($rules, 'hide');
-                        $ruleDisable = data_get($rules, 'disable');
-                        $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
-                    @endphp
-                    @include('livewire-powergrid::components.checkbox-row', [
-                        'attribute' => $row->{$checkboxAttribute},
-                    ])
-                @endif
+                    $ruleHide = data_get($rules, 'hide');
+                    $ruleDisable = data_get($rules, 'disable');
+                    $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
+                @endphp
+
+                @includeWhen($radio, 'livewire-powergrid::components.radio-row', [
+                    'attribute' => $row->{$radioAttribute},
+                ])
+
+                @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
+                    'attribute' => $row->{$checkboxAttribute},
+                ])
 
                 <div wire:key="row-{{ $row->{$primaryKey} }}-{{ uniqid() }}">
                     @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])

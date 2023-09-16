@@ -81,6 +81,12 @@ class PowerGridComponent extends Component
 
     public array $actions = [];
 
+    public bool $radio;
+
+    public string $radioAttribute;
+
+    public string $selectedRadio = '';
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -142,6 +148,14 @@ class PowerGridComponent extends Component
     {
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
+
+        return $this;
+    }
+
+    public function showRadioButton(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->radio          = true;
+        $this->radioAttribute = $attribute;
 
         return $this;
     }
