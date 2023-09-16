@@ -121,7 +121,7 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function throwInjectMorphMarkers()
+    private function throwInjectMorphMarkers(): void
     {
         if (
             array_key_exists('detail', $this->setUp)
