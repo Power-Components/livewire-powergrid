@@ -4,6 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
+use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
@@ -27,6 +29,9 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishViews();
         $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->packageName);
+
+        Livewire::propertySynthesizer(EloquentModelSynth::class);
+        Livewire::propertySynthesizer(EloquentCollectionSynth::class);
     }
 
     public function register(): void
