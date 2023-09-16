@@ -91,6 +91,7 @@ class PowerGridComponent extends Component
 
         $this->throwFeatureDetail();
         $this->throwColumnAction();
+        $this->throwInjectMorphMarkers();
 
         $this->columns = $this->columns();
 
@@ -118,7 +119,10 @@ class PowerGridComponent extends Component
         ) {
             throw new Exception('The Feature Responsive cannot be used with Detail');
         }
+    }
 
+    private function throwInjectMorphMarkers(): void
+    {
         if (
             array_key_exists('detail', $this->setUp)
             && config('livewire.inject_morph_markers') === true
