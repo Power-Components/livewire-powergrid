@@ -75,27 +75,28 @@ jobs:
           rm composer.lock
           composer install
 
-#      - name: Install openspout/openspout
-#        if: matrix.php == '8.2'
-#        run: composer require openspout/openspout
+      - name: Install openspout/openspout
+        if: matrix.php == '8.2'
+        run: composer require openspout/openspout
 
-#      - name: Pint
-#        if: matrix.php == '8.1'
-#        run: composer test:pint
-#
-#      - name: Larastan
-#        run: composer test:types
-#
-#      - name: SQLite
-#        run: composer test:sqlite
-#
-#      - name: MySQL
-#        run: composer test:mysql
-#
-#      - name: PostGreSQL
-#        run: composer test:pgsql
+      - name: Pint
+        if: matrix.php == '8.1'
+        run: composer test:pint
+
+      - name: Larastan
+        run: composer test:types
+
+      - name: SQLite
+        run: composer test:sqlite
+
+      - name: MySQL
+        run: composer test:mysql
+
+      - name: PostGreSQL
+        run: composer test:pgsql
 
       - name: Cypress
+        if: matrix.php == '8.2'
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-demo-misc.git tests/cypress/app
