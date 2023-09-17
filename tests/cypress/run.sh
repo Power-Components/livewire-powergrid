@@ -6,7 +6,9 @@ git clone https://github.com/Power-Components/powergrid-demo-misc.git app
 # | Environment
 # | ------------------------- |
 
-cp app/.env.example app/.env
+cd app &&
+
+cp .env.example .env
 
 cat >> app/.env <<EOF
 
@@ -20,15 +22,8 @@ DB_PASSWORD=password
 EOF
 
 # | ------------------------- |
-# | install Livewire 3
-# | ------------------------- |
-cd app && composer require livewire/livewire ^3.0
-
-# | ------------------------- |
 # | install local PowerGrid
 # | ------------------------- |
-composer remove power-components/livewire-powergrid
-
 composer_json="composer.json"
 new_minimum_stability="dev"
 new_repositories='[
@@ -46,6 +41,7 @@ jq --arg new_minimum_stability "$new_minimum_stability" \
    }' "$composer_json" > tmp_composer.json
 
 mv tmp_composer.json "$composer_json"
+rm composer.lock
 
 composer require power-components/livewire-powergrid
 

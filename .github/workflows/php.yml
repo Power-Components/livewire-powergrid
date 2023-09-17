@@ -99,5 +99,5 @@ jobs:
         run: |
           chmod +x ./tests/cypress/run.sh
           ./tests/cypress/run.sh
-          php artisan serve -q & sleep 5 & npx cypress run
+          cd tests/cypress && php artisan serve -q & sleep 5 & npx cypress run
         shell: bash
