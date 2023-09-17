@@ -1,15 +1,13 @@
 #!/bin/bash
 
-git clone https://github.com/Power-Components/powergrid-demo-misc.git app
+git clone https://github.com/Power-Components/powergrid-demo-misc.git app &
 
 # | ------------------------- |
 # | copy stubs
 # | ------------------------- |
 
-ls -lh
-
-cp ./stubs/CypressTable.php app/Livewire/CypressTable.php
-cp ./stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
+cp tests/cypress/stubs/CypressTable.php tests/cypress/app/Livewire/CypressTable.php
+cp tests/cypress/stubs/rules-controllers.blade.php tests/cypress/appresources/views/components/header/rules-controllers.blade.php
 
 cd app &&
 
