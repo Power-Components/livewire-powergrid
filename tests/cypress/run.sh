@@ -37,7 +37,6 @@ jq --arg new_minimum_stability "$new_minimum_stability" \
    }' "$composer_json" > tmp_composer.json
 
 mv tmp_composer.json "$composer_json"
-rm composer.lock
 
 composer require power-components/livewire-powergrid
 
