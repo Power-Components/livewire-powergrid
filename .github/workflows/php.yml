@@ -99,7 +99,7 @@ jobs:
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-demo-misc.git tests/cypress/app
-          cd tests/cypress/app &&
+          cd tests/cypress &&
           cp stubs/CypressTable.php app/app/Livewire/CypressTable.php &&
           cp stubs/rules-controllers.blade.php app/resources/views/components/header/rules-controllers.blade.php
           cd ./../../
