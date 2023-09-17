@@ -97,6 +97,7 @@ jobs:
 
       - name: Cypress
         run: |
+          npm install
           chmod +x ./tests/cypress/run.sh
           ./tests/cypress/run.sh
           cd app && php artisan serve & sleep 5 &
