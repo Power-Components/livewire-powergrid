@@ -3,16 +3,17 @@
 git clone https://github.com/Power-Components/powergrid-demo-misc.git app
 
 # | ------------------------- |
-# | Environment
-# | ------------------------- |
-
-cd app &&
-
-# | ------------------------- |
 # | copy stubs
 # | ------------------------- |
 cp stubs/CypressTable.php app/Livewire/CypressTable.php
 cp stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
+
+cd app &&
+
+# | ------------------------- |
+# | Environment
+# | ------------------------- |
+
 
 cp .env.example .env
 
