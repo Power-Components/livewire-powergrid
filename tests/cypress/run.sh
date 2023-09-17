@@ -44,6 +44,12 @@ rm composer.lock
 composer require power-components/livewire-powergrid
 
 # | ------------------------- |
+# | copy stubs
+# | ------------------------- |
+cp ../stubs/CypressTable.php app/Livewire/CypressTable.php
+cp ../stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
+
+# | ------------------------- |
 # | build
 # | ------------------------- |
 php artisan key:generate
