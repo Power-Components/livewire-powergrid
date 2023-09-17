@@ -16,7 +16,13 @@ trait WithCheckbox
 
     public array $checkboxValues = [];
 
-    public string $checkboxAttribute = '';
+    public string $checkboxAttribute = 'id';
+
+    public bool $radio;
+
+    public string $radioAttribute = 'id';
+
+    public string $selectedRow = '';
 
     /**
      * @throws Exception|Throwable

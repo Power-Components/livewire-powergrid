@@ -41,7 +41,7 @@
                     id="radio-{{ $attribute }}"
                     type="radio"
                     {{ $inputAttributes }}
-                    wire:model.live="selectedRadio"
+                    wire:model.live="selectedRow"
                     value="{{ $attribute }}"
                 >
             </label>

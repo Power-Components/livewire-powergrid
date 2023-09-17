@@ -6,13 +6,15 @@ use Illuminate\Support\Js;
 
 class DispatchRule
 {
-    public function apply(array $ruleData, array &$output): void
+    public function apply(array $ruleData): array
     {
-        if ($ruleDispatch = (array) data_get($ruleData, 'dispatch', [])) {
-            $event  = strval(data_get($ruleDispatch, 'event'));
-            $params = (array) data_get($ruleDispatch, 'params', []);
+        $output = [];
 
-            $output['attributes'] = ['wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")"];
-        }
+        $event  = strval(data_get($ruleData, 'event'));
+        $params = (array) data_get($ruleData, 'params', []);
+
+        $output['attributes'] = ['wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")"];
+
+        return $output;
     }
 }

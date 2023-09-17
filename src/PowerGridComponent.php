@@ -81,12 +81,6 @@ class PowerGridComponent extends Component
 
     public array $actions = [];
 
-    public bool $radio;
-
-    public string $radioAttribute;
-
-    public string $selectedRadio = '';
-
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;

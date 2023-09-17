@@ -1,7 +1,5 @@
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
-selected: {{ $selectedRadio }}
-
 <x-livewire-powergrid::table-base
     :theme="$theme->table"
     :ready-to-load="$readyToLoad"
@@ -133,11 +131,16 @@ selected: {{ $selectedRadio }}
                 @php
                     $class = $theme->table->trBodyClass;
                     $rules = $actionRulesClass->recoverFromAction($row);
+
                     $rowId = data_get($row, $primaryKey);
 
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
                     $applyRulesLoop = true;
+
+                    $trAttributesBag = new \Illuminate\View\ComponentAttributeBag();
+                    $trAttributesBag = $trAttributesBag->merge(['class' => $class]);
+
                     if (method_exists($this, 'actionRules')) {
                         $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                     }
@@ -145,22 +148,25 @@ selected: {{ $selectedRadio }}
                     if (filled($ruleSetAttribute) && $applyRulesLoop) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
-                                $class .= ' ' . $attribute['value'];
+                                $trAttributesBag = $trAttributesBag->merge([
+                                    $attribute['attribute'] => $attribute['value'],
+                                ]);
                             }
                         }
                     }
+
                 @endphp
 
                 <div wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
                     @if (isset($setUp['detail']))
                         <tbody
-                            class="{{ $class }}"
+                            {{ $trAttributesBag }}
                             x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
                         >
                         @else
                             <tr
                                 style="{{ $theme->table->trBodyStyle }}"
-                                class="{{ trim($class) }}"
+                                {{ $trAttributesBag }}
                             >
                     @endif
                 </div>

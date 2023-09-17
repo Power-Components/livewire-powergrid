@@ -76,6 +76,11 @@
                     "methodNames": ["base", "input", "select"],
                     "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterInputText"],
                     "parameters": [1]
+                },
+                {
+                    "methodNames": ["setAttribute"],
+                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Rules\\RuleRows"],
+                    "parameters": [2]
                 }
             ]
         },

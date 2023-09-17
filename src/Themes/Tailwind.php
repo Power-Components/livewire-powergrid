@@ -81,11 +81,7 @@ class Tailwind extends ThemeBase
         return Theme::radio()
             ->th('px-6 py-3 text-left text-xs font-medium text-pg-primary-500 tracking-wider')
             ->label('flex items-center space-x-3')
-            ->input('form-radio rounded-full transition ease-in-out duration-100 
-                    border-secondary-300 text-primary-600 focus:ring-primary-600 focus:border-primary-400
-                    dark:border-secondary-500 dark:checked:border-secondary-600 dark:focus:ring-secondary-600
-                    dark:focus:border-secondary-500 dark:bg-secondary-600 dark:text-secondary-600
-                    dark:focus:ring-offset-secondary-800');
+            ->input('form-radio rounded-full transition ease-in-out duration-100');
     }
 
     public function filterBoolean(): FilterBoolean

@@ -52,7 +52,7 @@ class RulesController
                 $prepareRule = [];
             }
 
-            return (object) [$rule->forAction => $prepareRule];
+            return (object) [$rule->forAction . '.' . $index => $prepareRule];
         });
     }
 
