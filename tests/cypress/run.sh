@@ -28,9 +28,8 @@ ls -lh
 sudo chmod -R 755 app
 sudo chmod -R 755 resources
 
-cp tests/cypress/stubs/CypressTable.php app/Livewire/CypressTable.php
-cp tests/cypress/stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
-
+cp tests/cypress/stubs/CypressTable.php tests/cypress/app/app/Livewire/CypressTable.php
+cp tests/cypress/stubs/rules-controllers.blade.php tests/cypress/app/resources/views/components/header/rules-controllers.blade.php
 
 # | ------------------------- |
 # | install local PowerGrid
