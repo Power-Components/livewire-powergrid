@@ -101,8 +101,8 @@ jobs:
           cd tests/cypress && git clone https://github.com/Power-Components/powergrid-demo-misc.git app &&
           cp stubs/CypressTable.php app/app/Livewire/CypressTable.php &&
           cp stubs/rules-controllers.blade.php app/resources/views/components/header/rules-controllers.blade.php
-          chmod +x ./tests/cypress/run.sh
-          ./tests/cypress/run.sh
+          chmod +x run.sh
+          run.sh
           cd app && php artisan serve & sleep 5 &
-          cd tests/cypress && npx cypress run
+          npx cypress run
         shell: bash
