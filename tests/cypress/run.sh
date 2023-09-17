@@ -23,6 +23,9 @@ EOF
 # | copy stubs
 # | ------------------------- |
 
+sudo chmod -R 755 /app
+sudo chmod -R 755 /resources
+
 cp ./tests/cypress/stubs/CypressTable.php app/Livewire/CypressTable.php
 cp ./tests/cypress/stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
 
