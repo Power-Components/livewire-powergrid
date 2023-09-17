@@ -1,10 +1,10 @@
 describe('Action Rules', () => {
     beforeEach(() => {
-        cy.visit('/radio-button');
+        cy.visit('/cypress');
     });
 
     it('can visit page', () => {
-        cy.contains('Radio Button')
+        cy.contains('Cypress')
     })
 
     it('should be able to add class attribute using Rule::rows -> setAttribute on all rows', () => {

@@ -8,6 +8,12 @@ git clone https://github.com/Power-Components/powergrid-demo-misc.git app
 
 cd app &&
 
+# | ------------------------- |
+# | copy stubs
+# | ------------------------- |
+cp stubs/CypressTable.php app/Livewire/CypressTable.php
+cp stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
+
 cp .env.example .env
 
 cat >> .env <<EOF
@@ -42,12 +48,6 @@ mv tmp_composer.json "$composer_json"
 rm composer.lock
 
 composer require power-components/livewire-powergrid
-
-# | ------------------------- |
-# | copy stubs
-# | ------------------------- |
-cp ../stubs/CypressTable.php app/Livewire/CypressTable.php
-cp ../stubs/rules-controllers.blade.php resources/views/components/header/rules-controllers.blade.php
 
 # | ------------------------- |
 # | build
