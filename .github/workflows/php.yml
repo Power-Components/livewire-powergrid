@@ -97,6 +97,7 @@ jobs:
 
       - name: Cypress
         run: |
-          chmod +x ./tests/cypress/server.sh
-          ./tests/cypress/server.sh
+          chmod +x ./tests/cypress/run.sh
+          ./tests/cypress/run.sh
+          php artisan serve -q & sleep 5 & npx cypress run
         shell: bash
