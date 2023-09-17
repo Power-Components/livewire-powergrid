@@ -102,9 +102,8 @@ jobs:
           cp stubs/CypressTable.php app/app/Livewire/CypressTable.php &&
           cp stubs/rules-controllers.blade.php app/resources/views/components/header/rules-controllers.blade.php
           cd ./../../
-          ls -lh
-          chmod +x ./tests/cypress/run.sh
-          ./tests/cypress/run.sh
+          chmod +x tests/cypress/run.sh
+          tests/cypress/run.sh
           cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd app && npx cypress run
         shell: bash
