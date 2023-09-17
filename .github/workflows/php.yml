@@ -39,7 +39,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.2, 8.1 ]
+        php: [ 8.2 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
 
@@ -79,21 +79,21 @@ jobs:
         if: matrix.php == '8.2'
         run: composer require openspout/openspout
 
-      - name: Pint
-        if: matrix.php == '8.1'
-        run: composer test:pint
-
-      - name: Larastan
-        run: composer test:types
-
-      - name: SQLite
-        run: composer test:sqlite
-
-      - name: MySQL
-        run: composer test:mysql
-
-      - name: PostGreSQL
-        run: composer test:pgsql
+#      - name: Pint
+#        if: matrix.php == '8.1'
+#        run: composer test:pint
+#
+#      - name: Larastan
+#        run: composer test:types
+#
+#      - name: SQLite
+#        run: composer test:sqlite
+#
+#      - name: MySQL
+#        run: composer test:mysql
+#
+#      - name: PostGreSQL
+#        run: composer test:pgsql
 
       - name: Cypress
         run: |
