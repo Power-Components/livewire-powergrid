@@ -1,4 +1,4 @@
-name: pgsql
+name: PostGreSQL
 
 on:
   push:

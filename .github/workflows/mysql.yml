@@ -1,4 +1,4 @@
-name: mysql
+name: MySQL
 
 on:
   push:
