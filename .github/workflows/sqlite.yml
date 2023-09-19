@@ -16,8 +16,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    services:
     strategy:
       matrix:
         php: [ 8.2, 8.1 ]
