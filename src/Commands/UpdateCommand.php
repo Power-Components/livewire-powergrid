@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
+use function Laravel\Prompts\{info, warning};
+
 /** @codeCoverageIgnore */
 class UpdateCommand extends Command
 {
@@ -17,6 +19,14 @@ class UpdateCommand extends Command
     public function handle(): int
     {
         if (config('livewire-powergrid.check_version') === false) {
+            warning('livewire-powergrid.check_version is false');
+
+            return self::SUCCESS;
+        }
+
+        if (!class_exists(\Composer\Factory::class)) {
+            \Laravel\Prompts\error('You need to install composer: <comment>composer require composer/composer --dev</comment>');
+
             return self::SUCCESS;
         }
 
@@ -27,9 +37,9 @@ class UpdateCommand extends Command
 
             if (isset($current['version'])) {
                 if (version_compare($remote = $ensureLatestVersion->getLatestVersion(), $current['version']) > 0) {
-                    $this->info("✨ You are using an outdated ⚡ PowerGrid ⚡ version (<comment>{$current['version']}</comment>).");
+                    info("✨ You are using an outdated ⚡ PowerGrid ⚡ version (<comment>{$current['version']}</comment>).");
 
-                    $this->info("   Please consider upgrading to <comment>{$remote}</comment>, released at: <comment>{$current['release']}</comment>\n\n");
+                    info("   Please consider upgrading to <comment>{$remote}</comment>, released at: <comment>{$current['release']}</comment>\n\n");
                 }
             }
         } catch (Exception $e) {

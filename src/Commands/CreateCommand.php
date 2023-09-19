@@ -6,6 +6,9 @@ use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
+
+use function Laravel\Prompts\{confirm, info, select, suggest, text};
+
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables, FillableTable, Models, Stubs, TailwindForm};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Exceptions\CreateCommandException;
@@ -73,11 +76,12 @@ class CreateCommand extends Command
      */
     protected function askTableName(): void
     {
-        $this->tableName = strval($this->ask('What is the name of your Table Component? (E.g., <comment>UserTable</comment>)', 'PowerGridTable'));
-
-        if (empty(trim(strval($this->tableName)))) {
-            throw new CreateCommandException('You must provide a name for your ⚡ PowerGrid Table!');
-        }
+        $this->tableName = text(
+            label: 'What is the name of your Table Component?',
+            placeholder: 'UserTable',
+            default: 'UserTable',
+            required: true
+        );
 
         $this->tableName = str_replace(['.', '\\'], '/', (string) $this->tableName);
 
@@ -93,28 +97,31 @@ class CreateCommand extends Command
      */
     protected function askDataBaseTableName(): void
     {
-        $this->dataBaseTableName = strval($this->anticipate('What is the name of your database table name? (E.g., <comment>users</comment>)', DatabaseTables::list()));
+        $this->dataBaseTableName = suggest(
+            label: 'What is the name of your database table name?',
+            options: DatabaseTables::list(),
+            required: true
+        );
 
         $exists = Schema::hasTable($this->dataBaseTableName);
 
         if (!$exists && !app()->runningUnitTests()) {
-            $this->error('The table you provided does not exist!');
-            $this->askDataBaseTableName();
-        }
-
-        if (empty(trim(strval($this->dataBaseTableName)))) {
-            $this->error('You must provide database table name!');
+            $this->components->error('The table you provided does not exist!');
             $this->askDataBaseTableName();
         }
     }
 
     protected function askDatasource(): void
     {
-        $datasourceOption = $this->choice('What type of data source will you use?', [
-            'Eloquent Builder',
-            'Query Builder',
-            'Collection',
-        ], 'Eloquent Builder');
+        $datasourceOption = select(
+            label: 'What type of data source will you use?',
+            options: [
+                'Eloquent Builder',
+                'Query Builder',
+                'Collection',
+            ],
+            default: 'Eloquent Builder'
+        );
 
         $this->datasourceOption = match ($datasourceOption) {
             'Eloquent Builder' => 'm',
@@ -133,11 +140,12 @@ class CreateCommand extends Command
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
 
         if (strtolower($this->datasourceOption) === 'm') {
-            $this->model = strval($this->anticipate('Enter your Builder name or file path (E.g., <comment>User</comment> or <comment>App\Models\User</comment>)', Models::list(), 'User'));
-
-            if (empty($this->model)) {
-                throw new CreateCommandException('Error: You must inform the Builder name or file path.');
-            }
+            $this->model = suggest(
+                label: 'Enter your Model name or file path',
+                required: true,
+                default: 'User',
+                options: Models::list(),
+            );
 
             $this->modelPath = explode('\\', $this->model);
             $this->modelName = strval(Arr::last($this->modelPath));
@@ -149,7 +157,7 @@ class CreateCommand extends Command
                     $this->cleanModelName = strval(preg_replace('![^A-Z]+!', '', $this->model));
 
                     if (strlen($this->cleanModelName)) {
-                        throw new CreateCommandException('Error: Could not process the informed Builder name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
+                        throw new CreateCommandException('Error: Could not process the informed Model name. Did you use quotes?<info> E.g. <comment>"\App\Models\ResourceModel"</comment></info>');
                     }
                 }
             }
@@ -160,9 +168,7 @@ class CreateCommand extends Command
         }
 
         if (in_array(strtolower($this->datasourceOption), ['m', 'qb'])) {
-            if ($this->confirm('Create columns based on Model\'s <comment>fillable</comment> property?')) {
-                $this->useFillable = true;
-            }
+            $this->useFillable = confirm('Create columns based on Model\'s fillable property?');
 
             if ($this->useFillable) {
                 if (strtolower($this->datasourceOption) === 'qb') {
@@ -230,7 +236,7 @@ class CreateCommand extends Command
         $createTable = true;
 
         if (File::exists($path)) {
-            $confirmation = (bool) $this->confirm('It seems that <comment>' . $this->tableName . '</comment> already exists. Would you like to overwrite it?');
+            $confirmation = (bool) confirm('It seems that ' . $this->tableName . ' already exists. Would you like to overwrite it?');
 
             if ($confirmation === false) {
                 $createTable = false;
@@ -244,13 +250,11 @@ class CreateCommand extends Command
 
     protected function showCreated(): void
     {
-        $this->output->title('Component is ready!');
+        info("⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>app' . $this->savedAt . '</comment>].');
 
-        $this->info("\n⚡ <comment>" . $this->componentFilename . '</comment> was successfully created at [<comment>app' . $this->savedAt . '</comment>].');
+        info("⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
 
-        $this->info("\n⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->componentName . '</comment>');
-
-        $this->info("\n\n⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
+        info("⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
     }
 
     protected function thanks(): string
@@ -263,7 +267,7 @@ class CreateCommand extends Command
         $tailwind = TailwindForm::check();
 
         if (!empty($tailwind)) {
-            $this->info($tailwind);
+            $this->components->info($tailwind);
         }
     }
 }
