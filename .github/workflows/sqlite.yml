@@ -1,4 +1,4 @@
-name: Powergrid Tests
+name: sqlite
 
 on:
   push:
@@ -18,25 +18,6 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: powergridtest
-        ports:
-          - 3307:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      postgres:
-        image: postgres:9.6
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: powergridtest
-        ports:
-          - 5433:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     strategy:
       matrix:
         php: [ 8.2, 8.1 ]
@@ -79,33 +60,5 @@ jobs:
         if: matrix.php == '8.2'
         run: composer require openspout/openspout
 
-      - name: Pint
-        if: matrix.php == '8.1'
-        run: composer test:pint
-
-      - name: Larastan
-        run: composer test:types
-
       - name: SQLite
         run: composer test:sqlite
-
-      - name: MySQL
-        run: composer test:mysql
-
-      - name: PostGreSQL
-        run: composer test:pgsql
-
-      - name: Cypress
-        if: matrix.php == '8.2'
-        run: |
-          npm install
-          git clone https://github.com/Power-Components/powergrid-demo-misc.git tests/cypress/app
-          cd tests/cypress &&
-          cp stubs/CypressTable.php app/app/Livewire/CypressTable.php &&
-          cp stubs/rules-controllers.blade.php app/resources/views/components/header/rules-controllers.blade.php
-          cd ./../../
-          chmod +x ./tests/cypress/run.sh
-          ./tests/cypress/run.sh
-          cd ./tests/cypress/app && php artisan serve & sleep 5 &
-          cd ./tests/cypress && npx cypress run
-        shell: bash
