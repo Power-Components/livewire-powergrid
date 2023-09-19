@@ -29,7 +29,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [ 8.2, 8.1 ]
+        php: [ 8.2 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
 
@@ -70,7 +70,6 @@ jobs:
         run: composer require openspout/openspout
 
       - name: Cypress
-        if: matrix.php == '8.2'
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-demo-misc.git tests/cypress/app
