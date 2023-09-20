@@ -39,7 +39,7 @@ class RulesController
         });
     }
 
-    public function recoverFromAction(Model|\stdClass|array $row, string $filterAction = null): array
+    public function recoverFromAction(Model|\stdClass|array $row, string $filterAction = ''): array
     {
         $actionRules = collect();
 
