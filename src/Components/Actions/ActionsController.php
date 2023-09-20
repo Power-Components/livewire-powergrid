@@ -190,7 +190,7 @@ class ActionsController
                     }
                 };
 
-                if (is_array($ruleFromAction[key($ruleFromAction)])) {
+                if (isset($ruleFromAction[key($ruleFromAction)]) && is_array($ruleFromAction[key($ruleFromAction)])) {
                     /** @var array $rulesData */
                     foreach ($ruleFromAction as $key => $rulesData) {
                         if (isset($rulesData[0])) {

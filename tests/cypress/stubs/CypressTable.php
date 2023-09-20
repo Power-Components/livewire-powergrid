@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
+use Livewire\Attributes\Url;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
 
@@ -16,11 +17,18 @@ final class CypressTable extends PowerGridComponent
 
     public bool $applyRules = false;
 
+    #[Url]
+    public int $rule = 1;
+
     public function setUp(): array
     {
-        $this->showRadioButton();
+        if ($this->rule === 4) {
+            $this->showRadioButton();
+        }
 
-        $this->selectedRow = 1;
+        if ($this->rule === 3) {
+            $this->showCheckBox();
+        }
 
         return [
             Exportable::make('export')

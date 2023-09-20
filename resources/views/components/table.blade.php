@@ -56,7 +56,7 @@
             @if (isset($actions) && count($actions))
                 @php
                     $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
-
+                    
                     $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
                 @endphp
 
@@ -129,32 +129,29 @@
                     @php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp
                 @endif
                 @php
-                    $class = $theme->table->trBodyClass;
-                    $rules = $actionRulesClass->recoverFromAction($row);
-
                     $rowId = data_get($row, $primaryKey);
-
-                    $ruleSetAttribute = data_get($rules, 'setAttribute');
-
+                    
+                    $class = $theme->table->trBodyClass;
+                    
+                    $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+                    
                     $applyRulesLoop = true;
-
+                    
                     $trAttributesBag = new \Illuminate\View\ComponentAttributeBag();
                     $trAttributesBag = $trAttributesBag->merge(['class' => $class]);
-
+                    
                     if (method_exists($this, 'actionRules')) {
                         $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                     }
-
-                    if (filled($ruleSetAttribute) && $applyRulesLoop) {
-                        foreach ($ruleSetAttribute as $attribute) {
-                            if (isset($attribute['attribute'])) {
-                                $trAttributesBag = $trAttributesBag->merge([
-                                    $attribute['attribute'] => $attribute['value'],
-                                ]);
-                            }
+                    
+                    if (filled($rulesValues['setAttributes'])) {
+                        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
+                            $trAttributesBag = $trAttributesBag->merge([
+                                $rulesAttributes['attribute'] => $rulesAttributes['value'],
+                            ]);
                         }
                     }
-
+                    
                 @endphp
 
                 <div wire:key="{{ md5($row->{$primaryKey} ?? $loop->index) }}">
@@ -178,8 +175,7 @@
                 ])
 
                 @php
-                    $ruleRows = $actionRulesClass->recoverFromAction($row);
-                    $ruleDetailView = data_get($ruleRows, 'detailView');
+                    $ruleDetailView = data_get($rulesValues, 'detailView');
                 @endphp
 
                 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
@@ -194,19 +190,9 @@
                     'attribute' => $row->{$radioAttribute},
                 ])
 
-{{--                @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [--}}
-{{--                    'attribute' => $row->{$checkboxAttribute},--}}
-{{--                ])--}}
-
-
-                    @php
-                        $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-
-                        $ruleHide = data_get($rules, 'hide');
-                        $ruleDisable = data_get($rules, 'disable');
-                        $ruleSetAttribute = data_get($rules, 'setAttribute') ?? [];
-
-                    @endphp
+                @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
+                    'attribute' => $row->{$checkboxAttribute},
+                ])
 
                 <div wire:key="row-{{ $row->{$primaryKey} }}-{{ uniqid() }}">
                     @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])

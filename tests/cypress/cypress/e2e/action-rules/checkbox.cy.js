@@ -1,6 +1,6 @@
-describe('Action Rules::radio', () => {
+describe('Action Rules::checkbox', () => {
     beforeEach(() => {
-        cy.visit('/cypress?rule=4');
+        cy.visit('/cypress?rule=3');
     });
 
     it('can visit page', () => {
@@ -8,7 +8,7 @@ describe('Action Rules::radio', () => {
     })
 
     it('should be able to add class attribute with setAttribute when dishId == 1', () => {
-        let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+        let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->setAttribute(\'class\', \'!text-red-500\')';
 
@@ -29,15 +29,15 @@ describe('Action Rules::radio', () => {
 
     it('should be able to add multiple class conditions with setAttribute', () => {
         let $rules = '' +
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->setAttribute(\'class\', \'apply-css-class\'),' +
 
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->setAttribute(\'class\', \'apply-another-css-class\'),' +
 
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 2)\n' +
             '                ->setAttribute(\'id\', \'apply-id\')';
 
@@ -63,11 +63,11 @@ describe('Action Rules::radio', () => {
 
     it('should be able to add disabled attribute when dishId === 1 and 3', () => {
         let $rules = '' +
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->disable(),' +
 
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 3)\n' +
             '                ->disable()';
 
@@ -85,13 +85,13 @@ describe('Action Rules::radio', () => {
             .should('have.attr', 'disabled');
     })
 
-    it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
+    it('should be able to add multiple class conditions using Rule::checkbox -> setAttribute', () => {
         let $rules = '' +
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->hide(),' +
 
-            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
+            '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::checkbox()\n' +
             '                ->when(fn ($row) => $row->id == 3)\n' +
             '                ->hide()';
 

@@ -1,6 +1,6 @@
 describe('Action Rules::rows', () => {
     beforeEach(() => {
-        cy.visit('/cypress');
+        cy.visit('/cypress?rule=1');
     });
 
     it('can visit page', () => {
