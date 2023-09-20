@@ -13,3 +13,5 @@ pnpm-lock.yaml
 tmp/
 dist/powergrid.js.LICENSE.txt
 .env
+tests/cypress/app/
+.DS_Store
