@@ -1,21 +1,25 @@
 @php
+    $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:radio');
+
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => $theme->radio->inputClass,
     ]);
 
-    if (isset($ruleSetAttribute['attribute'])) {
-        $inputAttributes = $inputAttributes->merge([
-            $ruleSetAttribute['attribute'] => $ruleSetAttribute['value'],
-        ]);
+    if (filled($rulesValues['setAttributes'])) {
+        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
+            $inputAttributes = $inputAttributes->merge([
+                $rulesAttributes['attribute'] => $rulesAttributes['value'],
+            ]);
+        }
     }
 @endphp
-@if ($ruleHide)
+@if (filled($rulesValues['hide']))
     <td
         class="{{ $theme->radio->thClass }}"
         style="{{ $theme->radio->thStyle }}"
     >
     </td>
-@elseif($ruleDisable)
+@elseif(filled($rulesValues['disable']))
     <td
         class="{{ $theme->radio->thClass }}"
         style="{{ $theme->radio->thStyle }}"

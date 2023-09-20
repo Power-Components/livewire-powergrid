@@ -12,7 +12,7 @@ class RuleRadio implements Wireable
     public string $forAction = RuleManager::TYPE_RADIO;
 
     /**
-     * Disables the button.
+     * Disables the radio.
      */
     public function when(Closure $closure = null): RuleRadio
     {
@@ -21,8 +21,8 @@ class RuleRadio implements Wireable
         return $this;
     }
 
-    /**
-     * Sets the button's given attribute to the given value.
+    /**Sets the radio's given attribute to the given value
+     * .
      */
     public function setAttribute(string $attribute = null, string $value = null): RuleRadio
     {

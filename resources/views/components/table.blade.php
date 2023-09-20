@@ -190,21 +190,23 @@
                     ]
                 )
 
-                @php
-                    $rules = $actionRulesClass->recoverFromAction($row);
-
-                    $ruleHide = data_get($rules, 'hide');
-                    $ruleDisable = data_get($rules, 'disable');
-                    $ruleSetAttribute = data_get($rules, 'setAttribute')[0] ?? [];
-                @endphp
-
                 @includeWhen($radio, 'livewire-powergrid::components.radio-row', [
                     'attribute' => $row->{$radioAttribute},
                 ])
 
-                @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
-                    'attribute' => $row->{$checkboxAttribute},
-                ])
+{{--                @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [--}}
+{{--                    'attribute' => $row->{$checkboxAttribute},--}}
+{{--                ])--}}
+
+
+                    @php
+                        $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+
+                        $ruleHide = data_get($rules, 'hide');
+                        $ruleDisable = data_get($rules, 'disable');
+                        $ruleSetAttribute = data_get($rules, 'setAttribute') ?? [];
+
+                    @endphp
 
                 <div wire:key="row-{{ $row->{$primaryKey} }}-{{ uniqid() }}">
                     @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])

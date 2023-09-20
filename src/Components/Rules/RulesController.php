@@ -11,22 +11,6 @@ class RulesController
 {
     use UnDot;
 
-    protected array $actionRules = [
-        'dispatch',
-        'dispatchTo',
-        'setAttribute',
-        'disable',
-        'hide',
-        'redirect',
-        'caption',
-        'pg:rows',
-        'pg:column',
-        'pg:checkbox',
-        'detailView',
-        'bladeComponent',
-        'showHideToggleable',
-    ];
-
     public function execute(array $rules, object|array $row): Collection
     {
         $rules = collect($rules);
@@ -56,21 +40,31 @@ class RulesController
         });
     }
 
-    public function recoverFromAction(Model|\stdClass|array $row): array
+    public function recoverFromAction(Model|\stdClass|array $row, $filterAction = null): array
     {
-        $actionRules = [];
+        $actionRules = collect();
 
         $rules = $this->unDotActionsFromRow($row, 'rules');
 
-        $rules->each(function ($rule) use (&$actionRules) {
-            foreach ($this->actionRules as $actionRule) {
-                if (data_get($rule, "action.$actionRule")) {
-                    $actionRules[$actionRule][] = data_get($rule, "action.$actionRule");
-                }
+        $rules->each(function ($rule, $target) use ($actionRules, $filterAction) {
+            if (str_contains($target, $filterAction)) {
+                $actionRules->push(data_get($rule, "action"));
             }
         });
 
-        return $actionRules;
+        $filterRulesByKey = fn ($ruleKey) => array_filter(
+            $actionRules
+                ->map(fn ($item) => $item[$ruleKey] ?? null)
+                ->values()
+                ->toArray(),
+            fn ($value) => !is_null($value),
+        );
+
+        return [
+            'setAttributes' => $filterRulesByKey('setAttribute'),
+            'disable'      => $filterRulesByKey('disable'),
+            'hide'          => $filterRulesByKey('hide'),
+        ];
     }
 
     public function recoverFromButton(Button $button, Model|\stdClass|array $row): array
@@ -85,11 +79,11 @@ class RulesController
             if (isset($key[$button->action])) {
                 $rule = (array) $key[$button->action];
 
-                foreach ($this->actionRules as $action) {
-                    if (data_get($rule, "action.$action")) {
-                        $actionRules[$action] = data_get($rule, "action.$action");
-                    }
-                }
+                //                foreach ($this->actionRules as $action) {
+                //                    if (data_get($rule, "action.$action")) {
+                //                        $actionRules[$action] = data_get($rule, "action.$action");
+                //                    }
+                //                }
             }
         });
 
