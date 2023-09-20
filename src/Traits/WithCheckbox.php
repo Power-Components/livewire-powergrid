@@ -37,22 +37,24 @@ trait WithCheckbox
         $actionRulesClass = resolve(ActionRules::class);
 
         /** @phpstan-ignore-next-line  */
-        collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
+        if ($data->isNotEmpty()) {
+            collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
+                $rules = $actionRulesClass->recoverFromAction('pg:checkbox', $model);
 
-            if (isset($rules['hide']) || isset($rules['disable'])) {
-                return;
-            }
-            $value = $model->{$this->checkboxAttribute};
+                if (isset($rules['hide']) || isset($rules['disable'])) {
+                    return;
+                }
+                $value = $model->{$this->checkboxAttribute};
 
-            if (!in_array($value, $this->checkboxValues)) {
-                $this->checkboxValues[] = (string) $value;
+                if (!in_array($value, $this->checkboxValues)) {
+                    $this->checkboxValues[] = (string) $value;
 
-                $this->dispatchBrowserEvent('pgBulkActions::addMore', [
-                    'value'     => $value,
-                    'tableName' => $this->tableName,
-                ]);
-            }
-        });
+                    $this->dispatchBrowserEvent('pgBulkActions::addMore', [
+                        'value'     => $value,
+                        'tableName' => $this->tableName,
+                    ]);
+                }
+            });
+        }
     }
 }
