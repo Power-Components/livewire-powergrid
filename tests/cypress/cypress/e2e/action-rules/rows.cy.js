@@ -1,4 +1,4 @@
-describe('Action Rules', () => {
+describe('Action Rules::rows', () => {
     beforeEach(() => {
         cy.visit('/cypress');
     });

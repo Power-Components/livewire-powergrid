@@ -42,7 +42,6 @@
         <div class="{{ $theme->radio->divClass }}">
             <label class="{{ $theme->radio->labelClass }}">
                 <input
-                    id="radio-{{ $attribute }}"
                     type="radio"
                     {{ $inputAttributes }}
                     wire:model.live="selectedRow"
