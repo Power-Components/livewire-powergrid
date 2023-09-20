@@ -33,7 +33,7 @@
             </span>
         @elseif(count($column->toggleable) > 0)
             @php
-                $rules = $actionRulesClass->recoverFromAction($row);
+                $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
                 $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
                 $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
             @endphp
