@@ -72,9 +72,3 @@ jobs:
 
       - name: PostGreSQL
         run: composer test:pgsql
-
-      - name: Cypress
-        run: |
-          chmod +x ./tests/cypress/server.sh
-          ./tests/cypress/server.sh
-        shell: bash

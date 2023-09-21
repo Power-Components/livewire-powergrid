@@ -18,7 +18,7 @@
                 class="{{ $theme->tbodyClass }}"
                 style="{{ $theme->tbodyStyle }}"
             >
-                {{ $rows }}
+                {{ $body }}
             </tbody>
         @else
             <tbody

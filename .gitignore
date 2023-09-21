@@ -15,4 +15,3 @@ dist/powergrid.js.LICENSE.txt
 .env
 tests/cypress/app/
 .DS_Store
-
