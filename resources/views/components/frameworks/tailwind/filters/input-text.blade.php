@@ -13,7 +13,7 @@
         $placeholder = strval(data_get($filter, 'placeholder'));
         $componentAttributes = (array) data_get($filter, 'attributes', []);
         
-        $inputTextOptions = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getInputTextOperators();
+        $inputTextOptions = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText::getInputTextOperators();
         $inputTextOptions = count($operators) > 0 ? $operators : $inputTextOptions;
         $showSelectOptions = !(count($inputTextOptions) === 1 && in_array('contains', $inputTextOptions));
         
@@ -22,7 +22,7 @@
         
         unset($filter['placeholder']);
         
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterInputText::getWireAttributes($field, $title);
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText::getWireAttributes($field, $title);
         
         $selectClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', $theme->selectClass, data_get($column, 'headerClass')]);
         $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', $theme->inputClass]);
@@ -77,7 +77,7 @@
                                 @endforeach
                             </select>
                             <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700 dark:text-pg-primary-300">
                                 <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
                             </div>
                         </div>

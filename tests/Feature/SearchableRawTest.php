@@ -1,8 +1,10 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesSearchableRawTable;
+
+;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('searches data using whereRaw on sqlite', function (string $component, object $params) {
     livewire($component, ['database' => 'sqlite'])

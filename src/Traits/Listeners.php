@@ -2,42 +2,28 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Exception;
+use Livewire\Attributes\On;
 
 /** @codeCoverageIgnore  */
 trait Listeners
 {
-    /**
-     * @param array $payload
-     * @return void
-     * @throws Exception
-     */
-    public function inputTextChanged(array $payload = []): void
+    #[On('pg:editable-{tableName}')]
+    public function inputTextChanged(string|int $id, string $field, string $value): void
     {
-        $id    = $payload['id'];
-        $field = $payload['field'];
+        data_set($this, "$field.{$id}", $value);
 
-        $this->{$field}[$id] = $payload['value'];
+        $this->onUpdatedEditable($id, $field, $value);
 
-        $this->onUpdatedEditable($id, $field, $payload['value']);
-
-        $this->dispatchBrowserEvent('pg:editable-close-' . $id);
+        $this->dispatch('pg:editable-close-' . $id);
     }
 
-    /**
-     * @param array $payload
-     * @return void
-     * @throws Exception
-     */
-    public function toggleableChanged(array $payload = []): void
+    #[On('pg:toggleable-{tableName}')]
+    public function toggleableChanged(string $id, string $field, string $value): void
     {
-        $id    = $payload['id'];
-        $field = $payload['field'];
-
-        $this->onUpdatedToggleable($id, $field, $payload['value']);
+        $this->onUpdatedToggleable($id, $field, $value);
     }
 
-    public function onUpdatedEditable(string $id, string $field, string $value): void
+    public function onUpdatedEditable(string|int $id, string $field, string $value): void
     {
     }
 
@@ -61,11 +47,11 @@ trait Listeners
     {
     }
 
-    public function afterChangedNumberStartFilter(string $field, string $label, string $value): void
+    public function afterChangedNumberStartFilter(string $field, string $label, string|false $value): void
     {
     }
 
-    public function afterChangedNumberEndFilter(string $field, string $label, string $value): void
+    public function afterChangedNumberEndFilter(string $field, string $label, string|false $value): void
     {
     }
 }

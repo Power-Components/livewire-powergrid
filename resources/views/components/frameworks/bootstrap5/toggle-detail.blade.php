@@ -10,8 +10,8 @@
 
         @if (!data_get($setUp, 'detail.viewIcon'))
             <x-livewire-powergrid::icons.arrow
-                    x-bind:class="detailState ? 'bs5-rotate-90' : 'bs5-rotate-0'"
-                    class="bs5-w-h-1_5em"
+                x-bind:class="detailState ? 'bs5-rotate-90' : 'bs5-rotate-0'"
+                class="bs5-w-h-1_5em"
             />
         @endif
     </div>

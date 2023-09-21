@@ -1,3 +1,14 @@
+@php
+    $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
+        'class' => $theme->checkbox->inputClass,
+    ]);
+    
+    if (isset($ruleSetAttribute['attribute'])) {
+        $inputAttributes = $inputAttributes->merge([
+            $ruleSetAttribute['attribute'] => $ruleSetAttribute['value'],
+        ]);
+    }
+@endphp
 @if ($checkbox)
     @if ($ruleHide)
         <td
@@ -13,9 +24,7 @@
             <div class="{{ $theme->checkbox->divClass }}">
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
-                        @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
-                           @else
-                           class="{{ $theme->checkbox->inputClass }}" @endif
+                        {{ $inputAttributes }}
                         disabled
                         type="checkbox"
                     >
@@ -31,12 +40,10 @@
                 <label class="{{ $theme->checkbox->labelClass }}">
                     <input
                         x-data="{}"
-                        @if (isset($ruleSetAttribute['attribute'])) {{ $attributes->merge([$ruleSetAttribute['attribute'] => $ruleSetAttribute['value']])->class($theme->checkbox->inputClass) }}
-                           @else
-                           class="{{ $theme->checkbox->inputClass }}" @endif
                         type="checkbox"
+                        {{ $inputAttributes }}
                         x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
-                        wire:model.defer="checkboxValues"
+                        wire:model="checkboxValues"
                         value="{{ $attribute }}"
                     >
                 </label>

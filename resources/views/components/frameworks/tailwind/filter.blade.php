@@ -3,9 +3,10 @@
     'theme' => null,
     'tableName' => null,
     'filtersFromColumns' => null,
+    'showFilters' => false,
 ])
 <div
-    x-data="{ open: @entangle('showFilters') }"
+    x-data="{ open: @entangle('showFilters').live }"
     class="mt-2 md:mt-0"
 >
     <div
@@ -18,6 +19,7 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
         class="py-3"
+        wire:key="{{ uniqid() }}"
     >
         @php
             $customConfig = [];
@@ -55,7 +57,6 @@
                                 'classAttr' => 'w-full',
                                 'theme' => $theme->filterDatePicker,
                                 'type' => 'date',
-
                             ])
                         </div>
                     @endif

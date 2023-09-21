@@ -3,18 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Closure;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Traits\Macroable;
 
 final class PowerGridColumns
 {
-    protected Collection $collection;
+    use Macroable;
 
     public array $columns = [];
-
-    public function __construct()
-    {
-        $this->collection = collect([]);
-    }
 
     /**
      * @param string $field

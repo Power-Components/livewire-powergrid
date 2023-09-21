@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Column,
     Footer,
@@ -16,8 +15,6 @@ use PowerComponents\LivewirePowerGrid\{
 
 class DishesSearchJSONTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public function setUp(): array
     {
         return [
@@ -59,6 +56,8 @@ class DishesSearchJSONTable extends PowerGridComponent
             Column::make('Adicional', 'additional')
                 ->searchable()
                 ->sortable(),
+
+            Column::action('Action'),
         ];
     }
 

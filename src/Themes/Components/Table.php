@@ -44,9 +44,13 @@ class Table
 
     public string $tdFiltersStyle = '';
 
-    public string $tdBodyClassTotalColumns;
+    public string $tdBodyClassTotalColumns = '';
 
-    public string $tdBodyStyleTotalColumns;
+    public string $tdBodyStyleTotalColumns = '';
+
+    public string $trBodyClassTotalColumns = '';
+
+    public string $trBodyStyleTotalColumns = '';
 
     public string $tdBodyEmptyClass = '';
 
@@ -147,6 +151,14 @@ class Table
     {
         $this->tdBodyClassTotalColumns = $attrClass;
         $this->tdBodyStyleTotalColumns = $attrStyle;
+
+        return $this;
+    }
+
+    public function trBodyClassTotalColumns(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->trBodyClassTotalColumns = $attrClass;
+        $this->trBodyStyleTotalColumns = $attrStyle;
 
         return $this;
     }

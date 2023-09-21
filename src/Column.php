@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Collection;
 
-final class Column
+final class Column implements \Livewire\Wireable
 {
     public string $title = '';
 
@@ -18,7 +18,7 @@ final class Column
 
     public string $contentClassField = '';
 
-    public array $contentClasses = [];
+    public string|array $contentClasses = [];
 
     public string $bodyStyle = '';
 
@@ -40,32 +40,41 @@ final class Column
 
     public bool $sortable = false;
 
+    public array $summarize = [];
+
     public array $sum = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $count = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $avg = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $min = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
     public array $max = [
         'header' => false,
         'footer' => false,
+        'label'  => null,
     ];
 
-    public Collection $filters;
+    public ?Collection $filters = null;
+
+    public bool $isAction = false;
 
     /**
      *
@@ -73,13 +82,9 @@ final class Column
      */
     public array $toggleable = [];
 
-    /**
-     *
-     * @var array<string, bool|string> $clickToCopy
-     */
-    public array $clickToCopy = [];
-
     public bool $index = false;
+
+    public bool $fixedOnResponsive = false;
 
     /**
      * Adds a new Column
@@ -102,12 +107,36 @@ final class Column
     }
 
     /**
+     * Make a new action
+     */
+    public static function action(string $title): self
+    {
+        return (new static())
+            ->title($title)
+            ->isAction();
+    }
+
+    public function isAction(): Column
+    {
+        $this->isAction = true;
+
+        return $this;
+    }
+
+    /**
      * Adds title
      *
      */
     public function title(string $title): Column
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function fixedOnResponsive(): Column
+    {
+        $this->fixedOnResponsive = true;
 
         return $this;
     }
@@ -176,12 +205,10 @@ final class Column
         string $label = 'Sum',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
-        $this->sum['label']   = $label;
-        $this->sum['header']  = $header;
-        $this->sum['footer']  = $footer;
-        $this->sum['rounded'] = $rounded;
+        $this->sum['label']  = $label;
+        $this->sum['header'] = $header;
+        $this->sum['footer'] = $footer;
 
         return $this;
     }
@@ -210,12 +237,10 @@ final class Column
         string $label = 'Avg',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
-        $this->avg['label']   = $label;
-        $this->avg['header']  = $header;
-        $this->avg['footer']  = $footer;
-        $this->avg['rounded'] = $rounded;
+        $this->avg['label']  = $label;
+        $this->avg['header'] = $header;
+        $this->avg['footer'] = $footer;
 
         return $this;
     }
@@ -228,12 +253,10 @@ final class Column
         string $label = 'Min',
         bool $header = true,
         bool $footer = true,
-        int $rounded = 2
     ): Column {
-        $this->min['label']   = $label;
-        $this->min['header']  = $header;
-        $this->min['footer']  = $footer;
-        $this->min['rounded'] = $rounded;
+        $this->min['label']  = $label;
+        $this->min['header'] = $header;
+        $this->min['footer'] = $footer;
 
         return $this;
     }
@@ -245,13 +268,11 @@ final class Column
     public function withMax(
         string $label = 'Max',
         bool $header = true,
-        bool $footer = true,
-        int $rounded = 2
+        bool $footer = true
     ): Column {
-        $this->max['label']   = $label;
-        $this->max['header']  = $header;
-        $this->max['footer']  = $footer;
-        $this->max['rounded'] = $rounded;
+        $this->max['label']  = $label;
+        $this->max['header'] = $header;
+        $this->max['footer'] = $footer;
 
         return $this;
     }
@@ -316,8 +337,12 @@ final class Column
      * Adds Edit on click to a column
      *
      */
-    public function editOnClick(bool $hasPermission = true, string $dataField = '', string $fallback = null, bool $saveOnMouseOut = false): Column
-    {
+    public function editOnClick(
+        bool $hasPermission = true,
+        string $dataField = '',
+        string $fallback = null,
+        bool $saveOnMouseOut = false
+    ): Column {
         $this->editable = [
             'hasPermission'  => $hasPermission,
             'fallback'       => $fallback,
@@ -349,16 +374,6 @@ final class Column
         return $this;
     }
 
-    public function clickToCopy(bool $hasPermission, string $label = 'copy'): Column
-    {
-        $this->clickToCopy = [
-            'enabled' => $hasPermission,
-            'label'   => $label,
-        ];
-
-        return $this;
-    }
-
     public function contentClassField(string $dataField = ''): Column
     {
         $this->contentClassField = $dataField;
@@ -366,10 +381,20 @@ final class Column
         return $this;
     }
 
-    public function contentClasses(array $array): Column
+    public function contentClasses(string|array $contentClasses): Column
     {
-        $this->contentClasses = $array;
+        $this->contentClasses = $contentClasses;
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

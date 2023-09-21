@@ -1,12 +1,13 @@
-const emit = (listener, params, value) => {
-    window.livewire.emit(listener + '-' + params.tableName, {
-        params,
+const dispatch = (listener, params, value) => {
+    Livewire.dispatch(`${listener}-${params.tableName}`, {
+        label: params.label,
+        field: params.dataField,
         values: value
     })
 }
 
 const storeMultiSelect = (params, value) => {
-    emit('pg:multiSelect', params, value)
+    dispatch('pg:multiSelect', params, value)
 }
 
 export { storeMultiSelect }

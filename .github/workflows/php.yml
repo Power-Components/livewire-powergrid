@@ -1,6 +1,17 @@
 name: Powergrid Tests
 
-on: ['push', 'pull_request']
+on:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "art/**"
+      - "README.md"
+  pull_request:
+    types: [ready_for_review, synchronize, opened]
+    paths-ignore:
+      - "art/**"
+      - "README.md"
 
 jobs:
   build:
@@ -31,14 +42,10 @@ jobs:
         php: [ 8.2, 8.1 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
-        include:
-          - laravel: 10.*
-            testbench: 8.*
-        exclude:
-          - php: 8.0
-            laravel: 10.*
 
-    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}(${{ matrix.dependency-version }})
+    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
+
+    if: github.ref != 'refs/heads/todo-tests'
 
     steps:
       - name: Checkout
@@ -61,14 +68,17 @@ jobs:
         with:
           path: $(composer config cache-files-dir)
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
-          restore-keys: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
           rm composer.lock
-          composer require openspout/openspout
-#          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+          composer install
+
+      - name: Install openspout/openspout
+        if: matrix.php == '8.2'
+        run: composer require openspout/openspout
+
       - name: Pint
         if: matrix.php == '8.1'
         run: composer test:pint
@@ -82,5 +92,5 @@ jobs:
       - name: MySQL
         run: composer test:mysql
 
-      - name: PostgreSQL
+      - name: PostGreSQL
         run: composer test:pgsql

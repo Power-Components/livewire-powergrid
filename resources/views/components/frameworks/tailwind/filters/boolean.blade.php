@@ -9,7 +9,7 @@
     unset($filter['className']);
     extract($filter);
     
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterBoolean::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterBoolean::getWireAttributes($field, $title);
     
     $selectClasses = Arr::toCssClasses([$theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid']);
     
@@ -43,7 +43,8 @@
                 <option value="true">{{ $trueLabel }}</option>
                 <option value="false">{{ $falseLabel }}</option>
             </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700">
+            <div
+                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700 dark:text-pg-primary-300">
                 <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
             </div>
         </div>

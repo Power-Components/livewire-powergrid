@@ -10,7 +10,7 @@
                     wire:key="{{ $tableName }}-multi-sort-{{ $field }}"
                     wire:click.prevent="sortBy('{{ $field }}')"
                     title="{{ __(':label :sort', ['label' => $label, 'sort' => $sort]) }}"
-                    class="group gap-2 cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-pg-primary-100 text-pg-primary-700 dark:bg-pg-primary-600 dark:text-pg-primary-300"
+                    class="group gap-2 cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-pg-primary-100 text-pg-primary-700 dark:bg-pg-primary-700 dark:text-pg-primary-300"
                 >
                     {{ $label }}
                     @if ($sort == 'desc')

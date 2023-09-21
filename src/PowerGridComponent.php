@@ -6,15 +6,12 @@ use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
-use Livewire\{Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Helpers\{
-    Collection,
-};
+use Livewire\{Attributes\On, Component, WithPagination};
+use PowerComponents\LivewirePowerGrid\DataSource\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
@@ -29,7 +26,6 @@ class PowerGridComponent extends Component
     use WithPagination;
     use WithSorting;
     use WithCheckbox;
-    use HasAttributes;
     use HasFilter;
     use PersistData;
     use Listeners;
@@ -48,8 +44,6 @@ class PowerGridComponent extends Component
     public string $currentTable = '';
 
     public Collection|array|EloquentBuilder|QueryBuilder $datasource;
-
-    public BaseCollection $withoutPaginatedData;
 
     public array $relationSearch = [];
 
@@ -85,6 +79,8 @@ class PowerGridComponent extends Component
 
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
+    public array $actions = [];
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -93,28 +89,57 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
-        if (array_key_exists('detail', $this->setUp) && array_key_exists('responsive', $this->setUp)) {
-            throw new Exception('The Feature Responsive cannot be used with Detail');
-        }
+        $this->throwFeatureDetail();
+        $this->throwColumnAction();
+        $this->throwInjectMorphMarkers();
 
         $this->columns = $this->columns();
 
         $this->resolveTotalRow();
 
-        $this->resolveFilters();
-
         $this->restoreState();
     }
 
-    protected function getCacheKeys(): array
+    private function getCacheKeys(): array
     {
         return [
-            json_encode(['page' => $this->page]),
+            json_encode(['page' => $this->getPage()]),
             json_encode(['search' => $this->search]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
             json_encode(['filters' => $this->filters]),
         ];
+    }
+
+    private function throwFeatureDetail(): void
+    {
+        if (
+            array_key_exists('detail', $this->setUp)
+            && array_key_exists('responsive', $this->setUp)
+        ) {
+            throw new Exception('The Feature Responsive cannot be used with Detail');
+        }
+    }
+
+    private function throwInjectMorphMarkers(): void
+    {
+        if (
+            array_key_exists('detail', $this->setUp)
+            && config('livewire.inject_morph_markers') === true
+        ) {
+            throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
+        }
+    }
+
+    private function throwColumnAction(): void
+    {
+        $hasColumnAction = collect($this->columns())
+            ->filter(fn ($column) => data_get($column, 'isAction') === true)
+            ->isEmpty();
+
+        if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
+            throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
+        }
     }
 
     public function showCheckBox(string $attribute = 'id'): PowerGridComponent
@@ -183,6 +208,11 @@ class PowerGridComponent extends Component
         return [];
     }
 
+    public function header(): array
+    {
+        return [];
+    }
+
     /**
      * Apply checkbox, perPage and search view and theme
      */
@@ -209,14 +239,14 @@ class PowerGridComponent extends Component
         return null;
     }
 
-    public function actionRules(): array
+    public function summarizeFormat(): array
     {
         return [];
     }
 
-    public function addColumns(): PowerGridColumns|PowerGridEloquent
+    public function addColumns(): PowerGridColumns
     {
-        return PowerGrid::eloquent();
+        return PowerGrid::columns();
     }
 
     public function checkedValues(): array
@@ -239,18 +269,18 @@ class PowerGridComponent extends Component
         $this->showFilters = !$this->showFilters;
     }
 
-    /**
-     * @throws Exception
-     */
+    #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
-        $this->columns = collect($this->columns)->map(function ($column) use ($field) {
-            if (data_get($column, 'field') === $field) {
-                data_set($column, 'hidden', !data_get($column, 'hidden'));
-            }
+        $this->columns = collect($this->columns)
+            ->map(function ($column) use ($field) {
+                if (data_get($column, 'field') === $field) {
+                    data_set($column, 'hidden', !data_get($column, 'hidden'));
+                }
 
-            return (object) $column;
-        })->toArray();
+                return (object) $column;
+            })
+            ->toArray();
 
         $this->persistState('columns');
     }
@@ -272,6 +302,7 @@ class PowerGridComponent extends Component
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
+    #[On('pg:eventRefresh-{tableName}')]
     public function refresh(): void
     {
         if (($this->total > 0) && ($this->totalCurrentPage - 1) === 0) {
@@ -280,16 +311,7 @@ class PowerGridComponent extends Component
             return;
         }
 
-        $this->emitSelf('$refresh', []);
-    }
-
-    public function getLivewireId(): string
-    {
-        if (method_exists($this, 'getId')) {
-            return $this->getId();
-        }
-
-        return $this->id;
+        $this->dispatch('$refresh', []);
     }
 
     public function getHasColumnFiltersProperty(): bool
@@ -309,27 +331,6 @@ class PowerGridComponent extends Component
         return $this->processDataSourceInstance->get();
     }
 
-    protected function powerGridListeners(): array
-    {
-        return [
-            'pg:datePicker-' . $this->tableName   => 'datePickerChanged',
-            'pg:editable-' . $this->tableName     => 'inputTextChanged',
-            'pg:toggleable-' . $this->tableName   => 'toggleableChanged',
-            'pg:multiSelect-' . $this->tableName  => 'multiSelectChanged',
-            'pg:toggleColumn-' . $this->tableName => 'toggleColumn',
-            'pg:eventRefresh-' . $this->tableName => 'refresh',
-            'pg:softDeletes-' . $this->tableName  => 'softDeletes',
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    protected function getListeners()
-    {
-        return $this->powerGridListeners();
-    }
-
     private function renderView(mixed $data): Application|Factory|View
     {
         /** @phpstan-var view-string $view */
@@ -347,6 +348,8 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
+        $this->resolveFilters();
+
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
 
@@ -360,14 +363,6 @@ class PowerGridComponent extends Component
         $this->searchMorphs   = $this->searchMorphs();
 
         $data = $this->getCachedData();
-
-        if (method_exists($this, 'initActions')) {
-            $this->initActions();
-
-            if (method_exists($this, 'header')) {
-                $this->headers = $this->header();
-            }
-        }
 
         /** @phpstan-ignore-next-line */
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();

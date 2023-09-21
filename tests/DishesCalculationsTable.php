@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
 use PowerComponents\LivewirePowerGrid\{
     Column,
     Exportable,
@@ -12,37 +11,14 @@ use PowerComponents\LivewirePowerGrid\{
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent,
-    Services\ExportOption
+    PowerGridComponent
 };
 
 class DishesCalculationsTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public bool $join = false;
-
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
 
     public function setUp(): array
     {
@@ -116,6 +92,19 @@ class DishesCalculationsTable extends PowerGridComponent
                 ->withAvg('Avg Price', true, false)
                 ->withMin('Min Price', true, false)
                 ->withMax('Max Price', true, false),
+
+            Column::action('Action'),
+        ];
+    }
+
+    public function summarizeFormat(): array
+    {
+        return [
+            'price.{sum,avg,min,max}' => function ($value) {
+                return (new \NumberFormatter('en_US', \NumberFormatter::CURRENCY))
+                    ->formatCurrency($value, 'USD');
+            },
+            'price.{count}' => fn ($value) => $value,
         ];
     }
 

@@ -5,21 +5,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    Filters\Filter,
+use PowerComponents\LivewirePowerGrid\{Column,
+    Facades\Filter,
     Footer,
     Header,
     PowerGrid,
     PowerGridColumns,
-    PowerGridComponent
-};
+    PowerGridComponent};
 
 class DishesEnumTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -74,11 +69,12 @@ class DishesEnumTable extends PowerGridComponent
             Column::make('Prato', 'name')
                 ->searchable()
                 ->editOnClick($canEdit)
-                ->clickToCopy(true)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
             Column::make('Dieta', 'diet', 'dishes.diet'),
+
+            Column::action('Action'),
         ];
     }
 

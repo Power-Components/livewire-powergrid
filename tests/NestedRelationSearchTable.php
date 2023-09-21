@@ -4,21 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-use PowerComponents\LivewirePowerGrid\{
-    Button,
-    Column,
-    Filters\Filter,
-    Header,
-    PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent
-};
+use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
 
 class NestedRelationSearchTable extends PowerGridComponent
 {
-    use ActionButton;
-
     public bool $join = false;
 
     public function setUp(): array

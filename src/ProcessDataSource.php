@@ -3,12 +3,15 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Helpers\{ActionRender, ActionRules, Builder, Collection, SqlSupport};
+use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str};
+use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
+use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
+use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
 /** @internal  */
@@ -71,18 +74,13 @@ class ProcessDataSource
     private function processCollection(mixed $datasource): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         /** @var BaseCollection $datasource */
-        cache()->forget($this->component->getLivewireId());
+        cache()->forget($this->component->getId());
 
         $filters = Collection::make($this->resolveCollection($datasource), $this->component)
             ->filterContains()
             ->filter();
 
         $results = $this->component->applySorting($filters);
-
-        if ($this->component->headerTotalColumn || $this->component->footerTotalColumn) {
-            $this->component->withoutPaginatedData = $results->values()
-                ->map(fn ($item) => (array) $item);
-        }
 
         if ($results->count()) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
@@ -117,12 +115,12 @@ class ProcessDataSource
             $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
+        $this->applySummaries($results);
+
         $sortField = $this->makeSortField($this->component->sortField);
 
         /** @phpstan-ignore-next-line */
         $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
-
-        $this->applyTotalColumn($results);
 
         $results = $this->applyPerPage($results);
 
@@ -183,13 +181,6 @@ class ProcessDataSource
         return $this->component->currentTable . '.' . $sortField;
     }
 
-    private function applyTotalColumn(EloquentBuilder|QueryBuilder|MorphToMany $results): void
-    {
-        if ($this->component->headerTotalColumn || $this->component->footerTotalColumn) {
-            $this->component->withoutPaginatedData = $this->transform($results->get());
-        }
-    }
-
     /**
      * @throws \Exception
      */
@@ -208,10 +199,10 @@ class ProcessDataSource
             $direction = $multiSortDirection;
         }
 
-        $sortFieldType = SqlSupport::getSortFieldType($sortField);
+        $sortFieldType = Sql::getSortFieldType($sortField);
 
-        if (SqlSupport::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(SqlSupport::sortStringAsNumber($sortField) . ' ' . $direction);
+        if (Sql::isValidSortFieldType($sortFieldType)) {
+            $results->orderByRaw(Sql::sortStringAsNumber($sortField) . ' ' . $direction);
         }
 
         return $results;
@@ -267,7 +258,7 @@ class ProcessDataSource
             return new BaseCollection($this->component->datasource());
         }
 
-        return cache()->rememberForever($this->component->getLivewireId(), function () use ($datasource) {
+        return cache()->rememberForever($this->component->getId(), function () use ($datasource) {
             if (is_array($datasource)) {
                 return new BaseCollection($datasource);
             }
@@ -293,17 +284,27 @@ class ProcessDataSource
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
-            if (method_exists($this->component, 'actions') && count($this->component->actions())) {
-                $actions = resolve(ActionRender::class)->resolveActionRender($this->component->actions(), (object) $row);
+            $actions = [];
+
+            $prepareRules = collect();
+
+            if (method_exists($this->component, 'actionRules')) {
+                $prepareRules = resolve(RulesController::class)
+                    ->execute($this->component->actionRules($row), (object)$row);
             }
 
-            if (count($this->component->actionRules())) {
-                $rules = resolve(ActionRules::class)->resolveRules($this->component->actionRules(), (object) $row);
+            if (method_exists($this->component, 'actions')) {
+                $actions = (new ActionsController($this->component, $prepareRules))
+                    ->execute($this->component->actions($row), (object) $row);
             }
 
-            $mergedData = $data->merge($rules ?? [])->merge($actions ?? []);
+            $mergedData = $data->merge([
+                'rules' => $prepareRules,
+            ])->merge([
+                'actions' => $actions,
+            ]);
 
-            return $row instanceof \Illuminate\Database\Eloquent\Model
+            return $row instanceof Model
                 ? tap($row)->forceFill($mergedData->toArray())
                 : (object) $mergedData->toArray();
         });
@@ -319,5 +320,49 @@ class ProcessDataSource
 
         /** @phpstan-ignore-next-line  */
         $this->component->currentTable = $datasource->getModel()->getTable();
+    }
+
+    private function applySummaries(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
+    {
+        $format = function ($summarize, $column, $field, $value) {
+            if (method_exists($this->component, 'summarizeFormat')) {
+                $summarizeFormat = $this->component->summarizeFormat();
+
+                if (count($summarizeFormat) === 0) {
+                    data_set($column, 'summarize.' . $summarize, $value);
+
+                    return;
+                }
+
+                foreach ($summarizeFormat as $field => $format) {
+                    $parts = explode('.', $field);
+
+                    if (isset($parts[1])) {
+                        $formats                 = str($parts[1])->replace(['{', '}'], '');
+                        $allowedSummarizeFormats = explode(',', $formats);
+
+                        if (in_array($summarize, $allowedSummarizeFormats)) {
+                            data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
+                        }
+                    }
+                }
+            }
+        };
+
+        $this->component->columns = collect($this->component->columns)
+            ->map(function (array|\stdClass|Column $column) use ($results, $format) {
+                $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+
+                $summaries = ['sum', 'count', 'avg', 'min', 'max'];
+
+                foreach ($summaries as $summary) {
+                    if (data_get($column, $summary . '.header') || data_get($column, $summary . '.footer')) {
+                        $value = $results->{$summary}($field);
+                        $format($summary, $column, $field, $value);
+                    }
+                }
+
+                return (object) $column;
+            })->toArray();
     }
 }

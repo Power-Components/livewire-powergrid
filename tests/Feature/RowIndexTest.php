@@ -1,8 +1,10 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\DishesRowIndex;
+
+;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('sorts by "name" and then by "id"', function (string $component, string $theme) {
     livewire($component)

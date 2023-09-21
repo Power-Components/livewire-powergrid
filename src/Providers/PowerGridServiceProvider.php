@@ -4,10 +4,13 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, DemoCommand, PublishCommand, UpdateCommand};
-use PowerComponents\LivewirePowerGrid\Filters\FilterManager;
+use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
+use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
+use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
+use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
-use PowerComponents\LivewirePowerGrid\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 
 /** @codeCoverageIgnore */
@@ -20,13 +23,15 @@ class PowerGridServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([PublishCommand::class]);
             $this->commands([UpdateCommand::class]);
-            $this->commands([DemoCommand::class]);
             $this->commands([CreateCommand::class]);
         }
 
         $this->publishViews();
         $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->packageName);
+
+        Livewire::propertySynthesizer(EloquentModelSynth::class);
+        Livewire::propertySynthesizer(EloquentCollectionSynth::class);
     }
 
     public function register(): void
@@ -46,6 +51,8 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(ThemeManager::class, 'theme');
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
+
+        Macros::boot();
     }
 
     private function publishViews(): void

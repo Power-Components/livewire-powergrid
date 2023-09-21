@@ -1,39 +1,51 @@
 <?php
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Rules\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
+
 use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
 
-it('add rule \'disable\' when dishId === 9', function (string $component, object $params) {
-    livewire($component, ['join' => $params->join])
-        ->call($params->theme)
-        ->set('testActions', [
-            Button::add('edit')
-                ->caption('Edit')
-                ->class('text-center')
-                ->openModal('modal-edit', ['dishId' => 'id']),
-        ])
-        ->set('testActionRules', [
-            Rule::button('edit')
-                ->when(fn (Dish $dish) => $dish->id === 9)
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+$component = new class () extends DishTableBase {
+    public function actions($row): array
+    {
+        return [
+            Button::make('dispatch')
+                ->slot('dispatch: ' . $row->id)
+                ->dispatch('executeDispatch', ['id' => $row->id]),
+        ];
+    }
+
+    public function actionRules($row): array
+    {
+        return [
+            Rule::button('dispatch')
+                ->when(fn ($dish) => $dish->id == 3)
                 ->disable(),
-        ])
-        ->set('search', 'Polpetone Filé Mignon')
-        ->assertSeeHtml([
-            'disabled="disabled"',
-            'class="text-center"',
-        ])
-        ->set('search', 'Peixada da chef Nábia')
-        ->assertDontSeeHtml('disabled="disabled"')
-        ->assertSeeHtml('class="text-center"');
-})->with('disable_themes_with_join')->group('actionRules');
+        ];
+    }
+};
 
-dataset('disable_themes_with_join', [
-    'tailwind'       => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+dataset('action:disabled', [
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
+
+it('properly displays "hide" on edit button', function (string $component, object $params) {
+    livewire($component, [
+        'join' => $params->join,
+    ])
+        ->call($params->theme)
+        ->set('setUp.footer.perPage', 3)
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:1}&#039;")
+        ->assertSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:2}&#039;")
+        ->assertSeeHtmlInOrder([
+            "disabled=\"disabled\"",
+            "\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:3}&#039;",
+        ]);
+})
+    ->with('action:disabled')
+    ->group('action');

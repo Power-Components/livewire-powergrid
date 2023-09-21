@@ -9,7 +9,7 @@
     extract($filter);
     unset($filter['className']);
     
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterNumber::getWireAttributes($field, $filter);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterNumber::getWireAttributes($field, $filter);
     
     $filterClasses = Arr::toCssClasses([$theme->inputClass, data_get($column, 'headerClass'), 'power_grid']);
     
@@ -43,7 +43,7 @@
                 @if ($inline) style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
-                placeholder="{{ $placeholder['min'] ?? __('Min') }}"
+                placeholder="{{ $placeholder['max'] ?? __('Max') }}"
             >
         </div>
     </div>

@@ -22,7 +22,7 @@
     
     $params = [
         'tableName' => $tableName,
-        'title' => data_get($filter, 'title'),
+        'label' => data_get($filter, 'title'),
         'dataField' => data_get($filter, 'field'),
         'optionValue' => data_get($filter, 'optionValue'),
         'optionLabel' => data_get($filter, 'optionLabel'),
@@ -40,7 +40,6 @@
     }
     
     $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')' : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
-    
 @endphp
 <div
     x-cloak
@@ -60,7 +59,7 @@
             <select
                 @if ($multiple) multiple @endif
                 class="{{ $theme->selectClass }}"
-                wire:model.defer="filters.multi_select.{{ data_get($filter, 'field') }}.values"
+                wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>

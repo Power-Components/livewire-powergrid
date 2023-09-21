@@ -10,7 +10,7 @@
     $field = strval(data_get($filter, 'field'));
     $title = strval(data_get($filter, 'title'));
     
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterSelect::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
     
     $filterClasses = Arr::toCssClasses([$theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid']);
     

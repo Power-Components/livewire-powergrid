@@ -2,12 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests;
 
-use PowerComponents\LivewirePowerGrid\Traits\ActionButton;
-
 class DishesActionTable extends DishTableBase
 {
-    use ActionButton;
-
     public array $eventId = [];
 
     public bool $join = false;
@@ -32,10 +28,5 @@ class DishesActionTable extends DishTableBase
     public function openModal(array $params)
     {
         $this->eventId = $params;
-    }
-
-    public function actions(): array
-    {
-        return $this->actionsTest;
     }
 }

@@ -12,7 +12,7 @@ class ThemeBase extends AbstractTheme
 
     public function root(): string
     {
-        return $this->base . '' . $this->name;
+        return $this->base . $this->name;
     }
 
     public function toggleable(): Toggleable
@@ -37,7 +37,6 @@ class ThemeBase extends AbstractTheme
         $this->footer            = $this->footer();
         $this->cols              = $this->cols();
         $this->editable          = $this->editable();
-        $this->clickToCopy       = $this->clickToCopy();
         $this->layout            = $this->layout();
         $this->toggleable        = $this->toggleable();
         $this->actions           = $this->actions();

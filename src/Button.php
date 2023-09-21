@@ -3,46 +3,37 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Traits\Macroable;
+use Livewire\Wireable;
 
-final class Button
+/**
+ * @method static dispatch(string $event, array $params)
+ * @method static dispatchTo(string $component, string $event, array $params)
+ * @method static dispatchSelf(string $event, array $params)
+ * @method static openModal(string $component, array $params)
+ * @method static parent(string $method, array $params)
+ * @method static call(string $method, array $params)
+ * @method static toggleDetail()
+ * @method static tooltip(string $title)
+ * @method static route(string $route, array $params)
+ * @method static method(string $method)
+ * @method static target(string $target) _blank, _self, _top, _parent, null
+ * @method static render(\Closure $closure)
+ * @method static bladeComponent(string $component, array $params)
+ * @method static can(bool|\Closure $allowed = true)
+ * @method static id(string $id = null)
+ *
+ */
+final class Button implements Wireable
 {
     use Macroable;
 
-    public ?string $caption = '';
-
-    public string $route = '';
+    public ?string $slot = '';
 
     public string $class = '';
 
-    public string $method = 'get';
-
-    public string $view = '';
-
-    public string $event = '';
-
-    public bool $can = true;
-
-    public string $target = '_blank';
-
-    public string $to = '';
-
-    public string $tooltip = '';
-
-    public bool $toggleDetail = false;
-
-    public bool $singleParam = false;
-
-    public string $bladeComponent = '';
-
-    public string $browserEvent = '';
-
     public array|\Closure $params = [];
 
-    public ?string $id = null;
-
     public array $dynamicProperties = [];
-
-    public ?\Closure $render = null;
 
     /**
      * Button constructor.
@@ -60,31 +51,18 @@ final class Button
     /**
      * Make a new Column
      */
-    public static function make(string $action, ?string $caption = null): self
+    public static function make(string $action, ?string $slot = null): self
     {
         return (new static($action))
-            ->caption($caption);
+            ->slot($slot);
     }
 
     /**
      * Button text in view
      */
-    public function caption(?string $caption = null): Button
+    public function slot(?string $slot = null): Button
     {
-        $this->caption = $caption;
-
-        return $this;
-    }
-
-    /**
-     * Route string
-     * @codeCoverageIgnore
-     */
-    public function route(string $route, array|\Closure $params, bool $singleParam = false): Button
-    {
-        $this->route       = $route;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
+        $this->slot = $slot;
 
         return $this;
     }
@@ -99,142 +77,13 @@ final class Button
         return $this;
     }
 
-    /**
-     * Method for button
-     */
-    public function method(string $method): Button
+    public function toLivewire(): array
     {
-        $this->method = $method;
-
-        return $this;
+        return (array) $this;
     }
 
-    /**
-     * openModal using wire-elements
-     * @see https://github.com/wire-elements/modal
-     */
-    public function openModal(string $component, array|\Closure $params, bool $singleParam = false): Button
+    public static function fromLivewire($value)
     {
-        $this->view        = $component;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
-        $this->method      = 'get';
-        $this->route       = '';
-        $this->event       = '';
-
-        return $this;
-    }
-
-    /**
-     * Livewire emit
-     */
-    public function emit(string $event, array|\Closure $params, bool $singleParam = false): Button
-    {
-        $this->event       = $event;
-        $this->params      = $params;
-        $this->singleParam = $singleParam;
-        $this->route       = '';
-
-        return $this;
-    }
-
-    /**
-     * Add Livewire emitTo
-     *
-     */
-    public function emitTo(string $to, string $event, array|\Closure $param, bool $singleParam = false): Button
-    {
-        $this->to          = $to;
-        $this->event       = $event;
-        $this->params      = $param;
-        $this->singleParam = $singleParam;
-        $this->route       = '';
-
-        return $this;
-    }
-
-    /**
-     * Can
-     *
-     */
-    public function can(bool $can = true): Button
-    {
-        $this->can = $can;
-
-        return $this;
-    }
-
-    /**
-     * target _blank, _self, _top, _parent, null
-     *
-     */
-    public function target(string $target): Button
-    {
-        $this->target = $target;
-
-        return $this;
-    }
-
-    /**
-     * Add tooltip
-     */
-    public function tooltip(string $tooltip): Button
-    {
-        $this->tooltip = $tooltip;
-
-        return $this;
-    }
-
-    /**
-     * toggleDetail
-     */
-    public function toggleDetail(): Button
-    {
-        $this->toggleDetail = true;
-
-        return $this;
-    }
-
-    /**
-     * Add Blade Component
-     */
-    public function bladeComponent(string $component, array|\Closure $params): Button
-    {
-        $this->bladeComponent = $component;
-        $this->params         = $params;
-
-        return $this;
-    }
-
-    /**
-     * Alpine Dispatch Browser Events
-     */
-    public function dispatch(string $event, array|\Closure $params): Button
-    {
-        $this->browserEvent = $event;
-        $this->params       = $params;
-        $this->route        = '';
-
-        return $this;
-    }
-
-    /**
-     * Add custom id
-     */
-    public function id(string $value = null): Button
-    {
-        $this->id = $value;
-
-        return $this;
-    }
-
-    /**
-     * Render custom action
-     */
-    public function render(\Closure $closure): Button
-    {
-        $this->render = $closure;
-
-        return $this;
+        return $value;
     }
 }

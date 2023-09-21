@@ -2,9 +2,9 @@
 
 use OpenSpout\Reader\XLSX\Reader;
 
-use function Pest\Livewire\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\ExportTable;
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
@@ -16,7 +16,7 @@ it('properly does not export xls data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToXLS', true);
 
-    expect(null)->notToBeFileDownloaded($component);
+    expect()->notToBeFileDownloaded($component);
 })->requiresOpenSpout();
 
 it('properly export csv data with selected data', function () {
@@ -83,7 +83,7 @@ it('properly does not export csv data without selected data', function () {
     $component = livewire(ExportTable::class)
         ->call('exportToCsv', true);
 
-    expect(null)->notToBeFileDownloaded($component);
+    expect()->notToBeFileDownloaded($component);
 })->requiresOpenSpout();
 
 /*
@@ -94,13 +94,13 @@ it('properly does not export csv data without selected data', function () {
 */
 
 expect()->extend('notToBeFileDownloaded', function ($component) {
-    $downloadEffect = data_get($component->lastResponse, 'original.effects.download');
+    $downloadEffect = data_get($component->effects, 'download');
 
     expect($downloadEffect)->toBeNull();
 });
 
 expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
-    $downloadEffect = data_get($this->value->lastResponse, 'original.effects.download');
+    $downloadEffect = data_get($this->value->effects, 'download');
 
     $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.csv';
     $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
@@ -139,7 +139,7 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
 });
 
 expect()->extend('toBeXLSDownload', function (array $headings, array $rows) {
-    $downloadEffect = data_get($this->value->lastResponse, 'original.effects.download');
+    $downloadEffect = data_get($this->value->effects, 'download');
 
     $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.xlsx';
     $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');

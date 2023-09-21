@@ -1,6 +1,6 @@
 @php
     $params = [
-        'id' => $row->{$primaryKey},
+        'id' => data_get($row, $primaryKey),
         'isHidden' => !$showToggleable ? 'true' : 'false',
         'tableName' => $tableName,
         'field' => $column->field,

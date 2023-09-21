@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-final class Responsive
+use Livewire\Wireable;
+
+final class Responsive implements Wireable
 {
     public string $name = 'responsive';
 
@@ -43,5 +45,15 @@ final class Responsive
         }
 
         return $this;
+    }
+
+    public function toLivewire(): array
+    {
+        return (array) $this;
+    }
+
+    public static function fromLivewire($value)
+    {
+        return $value;
     }
 }

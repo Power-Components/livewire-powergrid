@@ -6,12 +6,6 @@ use PowerComponents\LivewirePowerGrid\Themes as Themes;
 
 class PowerGridManager
 {
-    /** @deprecated */
-    public function eloquent(): PowerGridEloquent
-    {
-        return new PowerGridEloquent();
-    }
-
     public function columns(): PowerGridColumns
     {
         return new PowerGridColumns();

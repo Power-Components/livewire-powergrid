@@ -8,7 +8,7 @@
     unset($filter['className']);
     extract($filter);
     
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Filters\FilterBoolean::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterBoolean::getWireAttributes($field, $title);
     
     $selectClasses = Arr::toCssClasses([$theme->selectClass, data_get($column, 'headerClass'), 'power_grid']);
     
