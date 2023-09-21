@@ -44,11 +44,12 @@ trait WithCheckbox
 
         /** @phpstan-ignore-next-line  */
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction($model);
+            $rules = $actionRulesClass->recoverFromAction($model, 'pg:checkbox');
 
-            if (isset($rules['hide']) || isset($rules['disable'])) {
+            if (filled($rules['hide']) || filled($rules['disable'])) {
                 return;
             }
+
             $value = $model->{$this->checkboxAttribute};
 
             if (!in_array($value, $this->checkboxValues)) {
