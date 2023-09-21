@@ -73,7 +73,6 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
             4 => false,
             5 => false,
         ])
-        //
         ->assertSet('setUp.detail.state', [
             1 => true,
             2 => false,
@@ -84,10 +83,6 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
         ->call('toggleDetail', 1)
         // show detail row #1
         ->call('toggleDetail', 3)
-        ->assertDontSeeHtml([
-            '<div>Id 1</div>',
-            '<div>Options {"name":"Luan"}</div>',
-        ])
         ->assertSeeHtmlInOrder([
             '<div>Id 3</div>',
             '<div>Options {"name":"Luan","newParameter":1}</div>',

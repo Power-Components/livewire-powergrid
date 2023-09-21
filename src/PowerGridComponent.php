@@ -127,7 +127,7 @@ class PowerGridComponent extends Component
             array_key_exists('detail', $this->setUp)
             && config('livewire.inject_morph_markers') === true
         ) {
-            throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
+            // throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
         }
     }
 

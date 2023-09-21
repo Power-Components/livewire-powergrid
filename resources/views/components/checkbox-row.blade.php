@@ -1,10 +1,10 @@
 @php
     $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:checkbox');
-
+    
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => $theme->checkbox->inputClass,
     ]);
-
+    
     if (filled($rulesValues['setAttributes'])) {
         foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
             $inputAttributes = $inputAttributes->merge([

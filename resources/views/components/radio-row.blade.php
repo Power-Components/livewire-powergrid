@@ -1,10 +1,10 @@
 @php
     $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:radio');
-
+    
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => $theme->radio->inputClass,
     ]);
-
+    
     if (filled($rulesValues['setAttributes'])) {
         foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
             $inputAttributes = $inputAttributes->merge([
