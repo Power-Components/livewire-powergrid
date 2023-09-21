@@ -60,10 +60,10 @@ class Export
                     $row = $row->withoutRelations()->toArray();
                 }
 
-                $rules        = $actionRulesClass->recoverFromAction($row);
+                $rules        = $actionRulesClass->recoverFromAction($row, 'pg:rows');
                 $isExportable = false;
 
-                if (isset($rules['hide']) || isset($rules['disable'])) {
+                if (filled($rules['hide']) || filled($rules['disable'])) {
                     $isExportable = true;
                 }
 

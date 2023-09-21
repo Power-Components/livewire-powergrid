@@ -2,10 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{
-    Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
-    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -15,10 +13,10 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{
     FilterNumber,
     FilterSelect,
     Footer,
+    Radio,
     SearchBox,
     Table,
-    Toggleable,
-};
+    Toggleable};
 
 class Bootstrap5 extends ThemeBase
 {
@@ -82,6 +80,14 @@ class Bootstrap5 extends ThemeBase
             ->div('form-check')
             ->label('form-check-label')
             ->input('form-check-input shadow-none');
+    }
+
+    public function radio(): Radio
+    {
+        return Theme::radio()
+            ->th('')
+            ->label('form-check-label')
+            ->input('form-check-input');
     }
 
     public function filterBoolean(): FilterBoolean

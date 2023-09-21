@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 use Illuminate\Support\Facades\Facade;
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
-    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -16,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
+    Radio,
     SearchBox,
     Table,
     Toggleable};
@@ -28,6 +28,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
  * @method static Cols cols()
  * @method static Actions actions()
  * @method static Checkbox checkbox()
+ * @method static Radio radio()
  * @method static Editable editable()
  * @method static FilterBoolean filterBoolean()
  * @method static FilterDatePicker filterDatePicker()
@@ -36,7 +37,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
  * @method static FilterSelect filterSelect()
  * @method static FilterInputText filterInputText()
  * @method static SearchBox searchBox()
- * @see \PowerComponents\LivewirePowerGrid\Themes\ThemeManager
+ * @see ThemeManager
  */
 class Theme extends Facade
 {

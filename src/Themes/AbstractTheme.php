@@ -15,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     FilterSelect,
     Footer,
     Layout,
+    Radio,
     SearchBox,
     Table,
     Toggleable};
@@ -25,6 +26,8 @@ abstract class AbstractTheme
     public Table $table;
 
     public Checkbox $checkbox;
+
+    public Radio $radio;
 
     public Layout $layout;
 
@@ -60,6 +63,11 @@ abstract class AbstractTheme
     public function checkbox(): Checkbox
     {
         return Theme::checkbox();
+    }
+
+    public function radio(): Radio
+    {
+        return Theme::radio();
     }
 
     public function footer(): Footer

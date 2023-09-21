@@ -1,3 +1,30 @@
+@props([
+    'rowIndex' => 0,
+])
+
+@includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
+    'theme' => $theme->table,
+    'rowId' => $rowId,
+    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+])
+
+@php
+    $ruleDetailView = data_get($rulesValues, 'detailView');
+@endphp
+
+@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot() . '.toggle-detail', [
+    'theme' => $theme->table,
+    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+])
+
+@includeWhen($radio, 'livewire-powergrid::components.radio-row', [
+    'attribute' => $row->{$radioAttribute},
+])
+
+@includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
+    'attribute' => $row->{$checkboxAttribute},
+])
+
 @foreach ($columns as $column)
     @php
         $content = $row->{$column->field} ?? null;
@@ -11,9 +38,10 @@
             $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
         }
     @endphp
-    <td @class([$theme->table->tdBodyClass, $column->bodyClass])
+    <td
+        @class([$theme->table->tdBodyClass, $column->bodyClass])
         style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyle . ' ' . $column->bodyStyle ?? '' }}"
-        wire:key="row-{{ $column->field }}-{{ uniqid() }}"
+        wire:key="row-{{ $column->field }}"
     >
         <div class="flex gap-2 w-full">
             <!-- Render Action -->
@@ -33,7 +61,7 @@
             </span>
         @elseif(count($column->toggleable) > 0)
             @php
-                $rules = $actionRulesClass->recoverFromAction($row);
+                $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
                 $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
                 $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
             @endphp
