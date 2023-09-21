@@ -7,30 +7,27 @@ use Illuminate\View\ComponentAttributeBag;
 
 class SetAttributeRule
 {
-    public function apply(array $ruleData, array &$output): void
+    public function apply(array $ruleData): array
     {
-        $ruleAttributes = (array)(data_get($ruleData, 'setAttribute', []));
+        $output        = [];
+        $ruleAttribute = $ruleData;
 
-        $attributeBag   = new ComponentAttributeBag();
-        $attributeValue = null;
+        $attributeBag = new ComponentAttributeBag();
 
-        /** @var array $ruleAttribute */
-        foreach ($ruleAttributes as $ruleAttribute) {
-            if (is_string($ruleAttribute['value'])) {
-                $attributeValue = $ruleAttribute['value'];
+        if (is_array($ruleAttribute['value'])) {
+            if (is_array($ruleAttribute['value'][1])) {
+                $attributeValue = $ruleAttribute['value'][0] . '(' . Js::from($ruleAttribute['value'][1]) . ')';
+            } else {
+                $attributeValue = $ruleAttribute['value'][0] . '(' . $ruleAttribute['value'][1] . ')';
             }
-
-            if (is_array($ruleAttribute['value'])) {
-                if (is_array($ruleAttribute['value'][1])) {
-                    $attributeValue = $ruleAttribute['value'][0] . '(' . Js::from($ruleAttribute['value'][1]) . ')';
-                } else {
-                    $attributeValue = $ruleAttribute['value'][0] . '(' . $ruleAttribute['value'][1] . ')';
-                }
-            }
-
-            $attributeBag = $attributeBag->merge([$ruleAttribute['attribute'] => $attributeValue]);
+        } else {
+            $attributeValue = $ruleAttribute['value'];
         }
 
+        $attributeBag = $attributeBag->merge([$ruleAttribute['attribute'] => $attributeValue]);
+
         $output['attributes'] = $attributeBag->getAttributes();
+
+        return $output;
     }
 }

@@ -41,6 +41,7 @@ class ThemeBase extends AbstractTheme
         $this->toggleable        = $this->toggleable();
         $this->actions           = $this->actions();
         $this->checkbox          = $this->checkbox();
+        $this->radio             = $this->radio();
         $this->filterBoolean     = $this->filterBoolean();
         $this->filterDatePicker  = $this->filterDatePicker();
         $this->filterMultiSelect = $this->filterMultiSelect();

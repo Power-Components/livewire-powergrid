@@ -91,7 +91,6 @@ class PowerGridComponent extends Component
 
         $this->throwFeatureDetail();
         $this->throwColumnAction();
-        $this->throwInjectMorphMarkers();
 
         $this->columns = $this->columns();
 
@@ -121,16 +120,6 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function throwInjectMorphMarkers(): void
-    {
-        if (
-            array_key_exists('detail', $this->setUp)
-            && config('livewire.inject_morph_markers') === true
-        ) {
-            throw new Exception('The Feature Detail cannot be used when `livewire.inject_morph_markers` is true');
-        }
-    }
-
     private function throwColumnAction(): void
     {
         $hasColumnAction = collect($this->columns())
@@ -146,6 +135,14 @@ class PowerGridComponent extends Component
     {
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
+
+        return $this;
+    }
+
+    public function showRadioButton(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->radio          = true;
+        $this->radioAttribute = $attribute;
 
         return $this;
     }

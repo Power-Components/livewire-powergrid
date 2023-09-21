@@ -33,16 +33,23 @@ class ActionsController
             if (method_exists($this->component, 'actionRules')) {
                 $applyRules = $this->applyRules($button);
 
-                // attribute
-                if ($attributesRule = (array) data_get($applyRules, 'attributes')) {
-                    $attributes = $attributes->merge((new ComponentAttributeBag($attributesRule))->getAttributes());
+                if (isset($applyRules['remove'])) {
+                    $attributes = $attributes->except($applyRules['remove']);
+                }
 
-                    if ($remove = strval(data_get($applyRules, 'remove'))) {
-                        $attributes = $attributes->except($remove);
-                    }
+                if (isset($applyRules['component'])) {
+                    $component = $applyRules['component'];
+                }
 
-                    if ($componentRule = strval(data_get($applyRules, 'component'))) {
-                        $component = $componentRule;
+                foreach ($applyRules as $key => $applyRule) {
+                    if (is_array($applyRule) && count($applyRule) > 0) {
+                        $attributes = $attributes->merge([
+                            $key => implode(' ', $applyRule),
+                        ]);
+                    } else {
+                        $attributes = $attributes->merge([
+                            $key => $applyRule,
+                        ]);
                     }
                 }
 
@@ -160,37 +167,58 @@ class ActionsController
             strval(data_get($button, 'action'))
         );
 
-        $bladeComponent = (array) data_get($rules, 'action.bladeComponent', []);
-
-        if ($bladeComponent) {
-            return [
-                'blade' => Blade::render('<x-dynamic-component
-                :component="$component"
-                :attributes="$params"
-                />', [
-                    'component' => $bladeComponent['component'],
-                    'params'    => new ComponentAttributeBag((array) $bladeComponent['params']),
-                ]),
-            ];
-        }
-
         $output = [];
 
+        $rules = $this->prepareRules->toArray();
+
         if ($rules) {
-            /** @var array $ruleData */
-            foreach ($rules as $ruleData) {
-                foreach ($ruleData as $key => $value) {
+            /** @var array $rule */
+            foreach ($rules as $rule) {
+                if (!isset($rule['action'])) {
+                    continue;
+                }
+
+                $ruleFromAction = $rule['action'];
+
+                $getRulesOutPutFromClass = function ($key, $value, &$output) {
                     $ruleClass = "PowerComponents\\LivewirePowerGrid\\Components\\Rules\\Support\\" . ucfirst($key) . 'Rule';
 
                     if (class_exists($ruleClass)) {
                         $ruleInstance = new $ruleClass();
                         /** @phpstan-ignore-next-line */
-                        $ruleInstance->apply($ruleData, $output);
+                        $output[] = $ruleInstance->apply($value);
                     }
+                };
+
+                if (isset($ruleFromAction[key($ruleFromAction)]) && is_array($ruleFromAction[key($ruleFromAction)])) {
+                    /** @var array $rulesData */
+                    foreach ($ruleFromAction as $key => $rulesData) {
+                        if (isset($rulesData[0])) {
+                            foreach ($rulesData as $ruleData) {
+                                $getRulesOutPutFromClass(ucfirst($key), $ruleData, $output);
+                            }
+                        } else {
+                            $getRulesOutPutFromClass(ucfirst($key), $rulesData, $output);
+                        }
+                    }
+                } else {
+                    $getRulesOutPutFromClass(key($ruleFromAction), $ruleFromAction, $output);
                 }
             }
         }
 
-        return $output;
+        $mergedAttributes = [];
+
+        foreach ($output as $item) {
+            if (isset($item['attributes'])) {
+                $mergedAttributes = array_merge_recursive($mergedAttributes, $item['attributes']);
+
+                continue;
+            }
+
+            $mergedAttributes = array_merge($item);
+        }
+
+        return $mergedAttributes;
     }
 }

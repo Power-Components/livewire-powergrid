@@ -19,7 +19,7 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
         class="py-3"
-        wire:key="{{ uniqid() }}"
+        wire:key="filter-{{ uniqid() }}"
     >
         @php
             $customConfig = [];

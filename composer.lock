@@ -991,16 +991,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.23.1",
+            "version": "v10.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "dbfd495557678759153e8d71cc2f6027686ca51e"
+                "reference": "bcebd0a4c015d5c38aeec299d355a42451dd3726"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/dbfd495557678759153e8d71cc2f6027686ca51e",
-                "reference": "dbfd495557678759153e8d71cc2f6027686ca51e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bcebd0a4c015d5c38aeec299d355a42451dd3726",
+                "reference": "bcebd0a4c015d5c38aeec299d355a42451dd3726",
                 "shasum": ""
             },
             "require": {
@@ -1187,7 +1187,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-09-13T14:51:46+00:00"
+            "time": "2023-09-19T15:25:04+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -7245,24 +7245,24 @@
         },
         {
             "name": "orchestra/testbench",
-            "version": "v8.11.0",
+            "version": "v8.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orchestral/testbench.git",
-                "reference": "4e895271327a58e911f7db3a3b505eadc18a75ee"
+                "reference": "9ae0506585b2b28d43027501c6931d7fa2565bda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orchestral/testbench/zipball/4e895271327a58e911f7db3a3b505eadc18a75ee",
-                "reference": "4e895271327a58e911f7db3a3b505eadc18a75ee",
+                "url": "https://api.github.com/repos/orchestral/testbench/zipball/9ae0506585b2b28d43027501c6931d7fa2565bda",
+                "reference": "9ae0506585b2b28d43027501c6931d7fa2565bda",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.2",
                 "fakerphp/faker": "^1.21",
-                "laravel/framework": ">=10.23.1 <10.24.0",
+                "laravel/framework": ">=10.23.1 <10.25.0",
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench-core": ">=8.11.0 <8.12.0",
+                "orchestra/testbench-core": ">=8.11.1 <8.12.0",
                 "orchestra/workbench": "^0.3.0",
                 "php": "^8.1",
                 "phpunit/phpunit": "^9.6 || ^10.1",
@@ -7295,9 +7295,9 @@
             ],
             "support": {
                 "issues": "https://github.com/orchestral/testbench/issues",
-                "source": "https://github.com/orchestral/testbench/tree/v8.11.0"
+                "source": "https://github.com/orchestral/testbench/tree/v8.11.1"
             },
-            "time": "2023-09-19T05:51:52+00:00"
+            "time": "2023-09-19T22:00:00+00:00"
         },
         {
             "name": "orchestra/testbench-core",

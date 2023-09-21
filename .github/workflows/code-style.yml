@@ -1,4 +1,4 @@
-name: Powergrid Tests
+name: Code style
 
 on:
   push:
@@ -16,30 +16,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: password
-          MYSQL_DATABASE: powergridtest
-        ports:
-          - 3307:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      postgres:
-        image: postgres:9.6
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: powergridtest
-        ports:
-          - 5433:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
     strategy:
       matrix:
-        php: [ 8.2, 8.1 ]
+        php: [ 8.2 ]
         laravel: [ 10.* ]
         dependency-version: [ prefer-stable ]
 
@@ -75,22 +54,5 @@ jobs:
           rm composer.lock
           composer install
 
-      - name: Install openspout/openspout
-        if: matrix.php == '8.2'
-        run: composer require openspout/openspout
-
       - name: Pint
-        if: matrix.php == '8.1'
         run: composer test:pint
-
-      - name: Larastan
-        run: composer test:types
-
-      - name: SQLite
-        run: composer test:sqlite
-
-      - name: MySQL
-        run: composer test:mysql
-
-      - name: PostGreSQL
-        run: composer test:pgsql

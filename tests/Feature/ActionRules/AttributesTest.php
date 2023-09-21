@@ -71,8 +71,8 @@ it('set custom class when dish-id == 1 on button', function (string $component, 
     livewire($component, ['join' => $params->join])
         ->call($params->theme)
         ->set('search', 'Pastel de Nata')
-        ->assertSeeHtml([
-            'class="text-center"',
+        ->assertSeeHtmlInOrder([
+            'class="bg-pg-primary-400 text-center"',
         ]);
 })->with('actionRules:simple')
     ->group('actionRules');
@@ -83,11 +83,12 @@ it('change class to bg-pg-primary-100 when dish-id == 1 -tailwind', function (st
         ->set('search', 'Pastel de Nata')
         ->assertSeeHtmlInOrder([
             '<tr',
-            'class="border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700 bg-pg-primary-400"',
+            'style',
+            'class="bg-pg-primary-400 border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700"',
         ])
         ->set('search', 'Barco-Sushi da Sueli')
         ->assertDontSeeHtml(
-            'class="border-b border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700 bg-pg-primary-400"',
+            'class="bg-pg-primary-400 border-b border-pg-primary-100 dark:border-pg-primary-400 hover:bg-pg-primary-50 dark:bg-pg-primary-700 dark:odd:bg-pg-primary-800 dark:odd:hover:bg-pg-primary-900 dark:hover:bg-pg-primary-700"',
         );
 })->with(
     [
