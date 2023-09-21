@@ -42,26 +42,28 @@ trait WithCheckbox
 
         $actionRulesClass = resolve(RulesController::class);
 
-        /** @phpstan-ignore-next-line  */
-        if ($data->isNotEmpty()) {
-            collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-              $rules = $actionRulesClass->recoverFromAction($model, 'pg:checkbox');
-
-              if (filled($rules['hide']) || filled($rules['disable'])) {
-                  return;
-              }
-
-              $value = $model->{$this->checkboxAttribute};
-
-              if (!in_array($value, $this->checkboxValues)) {
-                  $this->checkboxValues[] = (string) $value;
-
-                  $this->dispatch('pgBulkActions::addMore', [
-                      'value'     => $value,
-                      'tableName' => $this->tableName,
-                  ]);
-              }
-          });
+        if ($data->isEmpty()) {
+            return;
         }
+
+        /** @phpstan-ignore-next-line  */
+        collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
+            $rules = $actionRulesClass->recoverFromAction($model, 'pg:checkbox');
+
+            if (filled($rules['hide']) || filled($rules['disable'])) {
+                return;
+            }
+
+            $value = $model->{$this->checkboxAttribute};
+
+            if (!in_array($value, $this->checkboxValues)) {
+                $this->checkboxValues[] = (string) $value;
+
+                $this->dispatch('pgBulkActions::addMore', [
+                    'value'     => $value,
+                    'tableName' => $this->tableName,
+                ]);
+            }
+        });
     }
 }
