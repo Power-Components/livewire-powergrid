@@ -4,12 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules\Support;
 
 class RedirectRule
 {
-    public function apply(array $ruleData, array &$output): void
+    public function apply(array $ruleData): array
     {
-        if ($redirectToUrl = data_get($ruleData, 'redirect.url')) {
-            $output['attributes'] = ['href' => $redirectToUrl];
-            $output['remove']     = 'wire:click';
-            $output['component']  = 'a';
-        }
+        $output = [];
+
+        $redirectToUrl = data_get($ruleData, 'url');
+
+        $output['attributes'] = ['href' => $redirectToUrl, 'target' => '_blank'];
+        $output['remove']     = 'wire:click';
+        $output['component']  = 'a';
+
+        return $output;
     }
 }

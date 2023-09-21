@@ -2,10 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{
-    Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
-    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
@@ -16,10 +14,10 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{
     FilterSelect,
     Footer,
     Layout,
+    Radio,
     SearchBox,
     Table,
-    Toggleable,
-};
+    Toggleable};
 
 class ThemeManager
 {
@@ -51,6 +49,11 @@ class ThemeManager
     public function checkbox(): Checkbox
     {
         return new Checkbox();
+    }
+
+    public function radio(): Radio
+    {
+        return new Radio();
     }
 
     public function editable(): Editable

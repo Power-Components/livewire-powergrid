@@ -10,6 +10,8 @@ class RuleManager
 
     public const TYPE_CHECKBOX = 'pg:checkbox';
 
+    public const TYPE_RADIO = 'pg:radio';
+
     public const TYPE_COLUMN = 'pg:column';
 
     public function button(string $button): RuleActions
@@ -25,5 +27,10 @@ class RuleManager
     public function checkbox(): RuleCheckbox
     {
         return new RuleCheckbox();
+    }
+
+    public function radio(): RuleRadio
+    {
+        return new RuleRadio();
     }
 }

@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use PowerComponents\LivewirePowerGrid\Themes\Components\{
-    Actions,
+use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
     Cols,
     Editable,
@@ -14,9 +13,9 @@ use PowerComponents\LivewirePowerGrid\Themes\Components\{
     FilterNumber,
     FilterSelect,
     Footer,
+    Radio,
     SearchBox,
-    Table,
-};
+    Table};
 
 class Tailwind extends ThemeBase
 {
@@ -75,6 +74,14 @@ class Tailwind extends ThemeBase
             ->th('px-6 py-3 text-left text-xs font-medium text-pg-primary-500 tracking-wider')
             ->label('flex items-center space-x-3')
             ->input('h-4 w-4');
+    }
+
+    public function radio(): Radio
+    {
+        return Theme::radio()
+            ->th('px-6 py-3 text-left text-xs font-medium text-pg-primary-500 tracking-wider')
+            ->label('flex items-center space-x-3')
+            ->input('form-radio rounded-full transition ease-in-out duration-100');
     }
 
     public function filterBoolean(): FilterBoolean
