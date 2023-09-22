@@ -14,17 +14,19 @@ class SetAttributeRule
 
         $attributeBag = new ComponentAttributeBag();
 
-        if (is_array($ruleAttribute['value'])) {
-            if (is_array($ruleAttribute['value'][1])) {
-                $attributeValue = $ruleAttribute['value'][0] . '(' . Js::from($ruleAttribute['value'][1]) . ')';
+        foreach ($ruleAttribute as $rule) {
+            if (is_array($rule['value'])) {
+                if (is_array($rule['value'][1])) {
+                    $attributeValue = $rule['value'][0] . '(' . Js::from($rule['value'][1]) . ')';
+                } else {
+                    $attributeValue = $rule['value'][0] . '(' . $rule['value'][1] . ')';
+                }
             } else {
-                $attributeValue = $ruleAttribute['value'][0] . '(' . $ruleAttribute['value'][1] . ')';
+                $attributeValue = $rule['value'];
             }
-        } else {
-            $attributeValue = $ruleAttribute['value'];
-        }
 
-        $attributeBag = $attributeBag->merge([$ruleAttribute['attribute'] => $attributeValue]);
+            $attributeBag = $attributeBag->merge([$rule['attribute'] => $attributeValue]);
+        }
 
         $output['attributes'] = $attributeBag->getAttributes();
 
