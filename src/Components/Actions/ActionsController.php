@@ -163,61 +163,49 @@ class ActionsController
 
     public function applyRules(Button|array $button): array
     {
-        $rules = (array) $this->prepareRules->get(
-            strval(data_get($button, 'action'))
-        );
+        $output = collect();
 
-        $output = [];
+        $actionRules  = collect();
+        $filterAction = strval(data_get($button, 'action'));
 
-        $rules = $this->prepareRules->toArray();
-
-        if ($rules) {
-            /** @var array $rule */
-            foreach ($rules as $rule) {
-                if (!isset($rule['action'])) {
-                    continue;
-                }
-
-                $ruleFromAction = $rule['action'];
-
-                $getRulesOutPutFromClass = function ($key, $value, &$output) {
-                    $ruleClass = "PowerComponents\\LivewirePowerGrid\\Components\\Rules\\Support\\" . ucfirst($key) . 'Rule';
-
-                    if (class_exists($ruleClass)) {
-                        $ruleInstance = new $ruleClass();
-                        /** @phpstan-ignore-next-line */
-                        $output[] = $ruleInstance->apply($value);
-                    }
-                };
-
-                if (isset($ruleFromAction[key($ruleFromAction)]) && is_array($ruleFromAction[key($ruleFromAction)])) {
-                    /** @var array $rulesData */
-                    foreach ($ruleFromAction as $key => $rulesData) {
-                        if (isset($rulesData[0])) {
-                            foreach ($rulesData as $ruleData) {
-                                $getRulesOutPutFromClass(ucfirst($key), $ruleData, $output);
-                            }
-                        } else {
-                            $getRulesOutPutFromClass(ucfirst($key), $rulesData, $output);
-                        }
-                    }
-                } else {
-                    $getRulesOutPutFromClass(key($ruleFromAction), $ruleFromAction, $output);
-                }
+        $this->prepareRules->each(function ($rule, $target) use ($actionRules, $filterAction) {
+            if (str_contains($target, $filterAction)) {
+                $actionRules->push(data_get($rule, "action"));
             }
+        });
+
+        if ($actionRules->count()) {
+            $getRulesOutPutFromClass = function ($key, $value) {
+                $output    = [];
+                $ruleClass = "PowerComponents\\LivewirePowerGrid\\Components\\Rules\\Support\\" . ucfirst($key) . 'Rule';
+
+                if (class_exists($ruleClass)) {
+                    $ruleInstance = new $ruleClass();
+                    /** @phpstan-ignore-next-line */
+                    $output[] = $ruleInstance->apply($value);
+                }
+
+                return $output;
+            };
+
+            $actionRules->each(function (?array $rule) use ($getRulesOutPutFromClass, $output) {
+                if ($rule) {
+                    collect($rule)->each(function ($rulesData, $key) use ($getRulesOutPutFromClass, $output) {
+                        $output->push($getRulesOutPutFromClass(ucfirst($key), $rulesData));
+                    });
+                }
+            });
         }
 
         $mergedAttributes = [];
 
-        foreach ($output as $item) {
-            if (isset($item['attributes'])) {
-                $mergedAttributes = array_merge_recursive($mergedAttributes, $item['attributes']);
-
-                continue;
+        $output->each(function ($rule) use (&$mergedAttributes) {
+            if (isset($rule[0]['attributes'])) {
+                $mergedAttributes = array_merge_recursive($mergedAttributes, $rule[0]['attributes']);
+            } else {
+                $mergedAttributes = array_merge($rule[0] ?? []);
             }
-
-            $mergedAttributes = array_merge($item);
-        }
+        });
 
         return $mergedAttributes;
     }

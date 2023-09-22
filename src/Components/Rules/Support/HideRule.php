@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules\Support;
 
 class HideRule
 {
-    public function apply(array $ruleData): array
+    public function apply(bool $ruleData = false): array
     {
         $output = [];
 
-        if (boolval(data_get($ruleData, 'hide', false))) {
+        if ($ruleData) {
             $output['hide'] = true;
         }
 
