@@ -17,7 +17,7 @@
             <tbody
                 class="{{ $theme->tbodyClass }}"
                 style="{{ $theme->tbodyStyle }}"
-                wire:key="{{ md5('tableBody') }}
+                wire:key="{{ md5('tableBody-'.now()) }}
             >
                 {{ $rows }}
             </tbody>
