@@ -20,7 +20,7 @@ it('properly filters by bool true', function (string $component, object $params)
     ])
         ->call($params->theme)
         ->assertSee('Em Estoque')
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -80,7 +80,7 @@ it('properly filters by bool true - custom builder', function (string $component
     $component = livewire($component)
         ->call($params->theme)
         ->assertSee('Em Estoque')
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -102,7 +102,7 @@ it('properly filters by bool true - using collection & array table', function (s
     ])
         ->call($theme)
         ->assertSee('In Stock')
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -140,7 +140,7 @@ it('properly filters by bool true - using collection', function (string $compone
     ])
         ->call($theme)
         ->assertSee('In Stock')
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -180,8 +180,8 @@ it('properly filters by bool true - using collection - custom builder', function
         ],
     ])
         ->call($theme)
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
-        ->assertSeeHtml('wire:model.lazy="filters.boolean.in_stock"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
+        ->assertSeeHtml('wire:model.blur="filters.boolean.in_stock"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -216,7 +216,7 @@ $customCollection = new class () extends DishesCollectionTable {
 it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
     $component = livewire($component)
         ->call($theme)
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
     expect($component->filters)
         ->toBeEmpty();
@@ -290,7 +290,7 @@ it('properly filters by bool false - using collection & array', function (string
     ])
         ->call($theme)
         ->assertSee('In Stock')
-        ->assertSeeHtml('wire:input.lazy="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
+        ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
     expect($component->filters)
         ->toMatchArray([]);
