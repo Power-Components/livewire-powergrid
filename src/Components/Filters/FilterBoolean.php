@@ -22,8 +22,8 @@ class FilterBoolean extends FilterBase
     {
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:input.lazy' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                'wire:model.lazy' => 'filters.boolean.' . $field,
+                'wire:input.blur' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
+                'wire:model.blur' => 'filters.boolean.' . $field,
             ]))->toArray();
     }
 }
