@@ -314,6 +314,7 @@ trait HasFilter
         $this->resetPage();
 
         $setFilter = true;
+
         // If the field is an attribute of a table (tablename.attribute) check if the filter is already set.
         // after the setting of the field with the table name it throws an error while getting the collection
         if (str_contains($field, '.')) {

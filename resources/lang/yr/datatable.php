@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Ko si awọn igbasilẹ ti a rii',
         'all'              => 'Gbogbo e',
         'selected'         => 'Oun To Mu',
+        'filtered'         => 'Filter',
     ],
     'placeholders' => [
         'search' => 'Wa...',

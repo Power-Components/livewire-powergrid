@@ -30,7 +30,12 @@
                         wire:click.prevent="exportToXLS"
                         href="#"
                     >
-                        @lang('livewire-powergrid::datatable.labels.all')
+
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.all')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                     @if ($checkbox)
                         /
@@ -54,7 +59,11 @@
                         wire:click.prevent="exportToCsv"
                         href="#"
                     >
-                        @lang('livewire-powergrid::datatable.labels.all')
+                        @if (count($enabledFilters)===0)
+                            @lang('livewire-powergrid::datatable.labels.all')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
                     </a>
                     @if ($checkbox)
                         /

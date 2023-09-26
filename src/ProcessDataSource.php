@@ -48,7 +48,7 @@ class ProcessDataSource
     /**
      * @return BaseCollection<(int|string), mixed>|Collection|EloquentBuilder|QueryBuilder|null
      */
-    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|null
+    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
     {
         $datasource = $this->component->datasource ?? null;
 
@@ -91,8 +91,6 @@ class ProcessDataSource
             $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
         }
 
-        self::resolveDetailRow($results);
-
         return $results;
     }
 
@@ -114,7 +112,7 @@ class ProcessDataSource
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
             /** @phpstan-ignore-next-line */
-            $results = $this->applySoftDeletes($results);
+            $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
         $sortField = $this->makeSortField($this->component->sortField);
@@ -125,8 +123,6 @@ class ProcessDataSource
         $this->applyTotalColumn($results);
 
         $results = $this->applyPerPage($results);
-
-        $this->resolveDetailRow($results);
 
         $this->setTotalCount($results);
 
@@ -234,30 +230,6 @@ class ProcessDataSource
         return $results->$paginate($results->count());
     }
 
-    private function resolveDetailRow(Paginator|LengthAwarePaginator|BaseCollection $results): void
-    {
-        if (!isset($this->component->setUp['detail'])) {
-            return;
-        }
-
-        $collection = $results;
-
-        if (!$results instanceof BaseCollection) {
-            $collection = collect($results->items());
-        }
-
-        /** @phpstan-ignore-next-line */
-        $collection->each(function ($model) {
-            $id = strval($model->{$this->component->primaryKey});
-
-            data_set($this->component->setUp, 'detail', (array) $this->component->setUp['detail']);
-
-            $state = data_get($this->component->setUp, 'detail.state.' . $id, false);
-
-            data_set($this->component->setUp, 'detail.state.' . $id, $state);
-        });
-    }
-
     /**
      * @throws \Exception
      */
@@ -309,7 +281,7 @@ class ProcessDataSource
         });
     }
 
-    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|Collection|QueryBuilder|null $datasource): void
+    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|MorphToMany|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
             $this->component->currentTable = $datasource->from;

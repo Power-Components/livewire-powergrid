@@ -12,6 +12,7 @@ return [
         'no_data'          => 'Записи не знайдені',
         'all'              => 'Всі',
         'selected'         => 'Вибрані',
+        'filtered'         => 'Відфільтровані',
     ],
     'placeholders' => [
         'search' => 'Пошук...',

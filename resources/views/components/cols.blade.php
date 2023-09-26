@@ -9,8 +9,11 @@
     $field = filled($column->dataField) ? $column->dataField : $column->field;
 
     $isFixedOnResponsive = isset($this->setUp['responsive']) && in_array($field, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
+
+    $sortOrder = isset($this->setUp['responsive']) ? data_get($this->setUp, "responsive.sortOrder.{$field}", null) : null;
 @endphp
 <th
+    @if($sortOrder) sort_order="{{ $sortOrder }}" @endif
     class="{{ $theme->table->thClass . ' ' . $column->headerClass }}"
     wire:key="{{ md5($column->field) }}"
     @if($isFixedOnResponsive) fixed @endif

@@ -19,14 +19,14 @@ trait SoftDeletes
     /**
      * @throws Throwable
      */
-    public function applySoftDeletes(Builder|MorphToMany $results): Builder|MorphToMany
+    public function applySoftDeletes(Builder|MorphToMany $results, string $softDeletes): Builder|MorphToMany
     {
         throw_if(
-            $this->softDeletes && !in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses(get_class($results->getModel())), true),
+            $softDeletes && !in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses(get_class($results->getModel())), true),
             new Exception(get_class($results->getModel()) . ' is not using the \Illuminate\Database\Eloquent\SoftDeletes trait')
         );
 
-        return match ($this->softDeletes) {
+        return match ($softDeletes) {
             /** @phpstan-ignore-next-line  */
             'withTrashed' => $results->withTrashed(),
             /** @phpstan-ignore-next-line  */

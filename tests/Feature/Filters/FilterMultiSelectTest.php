@@ -124,7 +124,7 @@ it('properly filter with category_id using custom collection', function (string 
         ->assertSee('Name 3')
         ->assertDontSee('Name 2');
 })->group('filters')
-    ->with('filter_multi_select_themes_collection', 'themes with array table');
+    ->with('filter_multi_select_themes_collection');
 
 it('properly filter with category_id - Carnes and Peixe selected', function (string $component) {
     $multiSelect = Filter::multiSelect('category_name', 'category_id')
