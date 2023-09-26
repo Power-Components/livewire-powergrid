@@ -91,8 +91,6 @@ class ProcessDataSource
             $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
         }
 
-        self::resolveDetailRow($results);
-
         return $results;
     }
 
@@ -125,8 +123,6 @@ class ProcessDataSource
         $this->applyTotalColumn($results);
 
         $results = $this->applyPerPage($results);
-
-        $this->resolveDetailRow($results);
 
         $this->setTotalCount($results);
 
@@ -232,30 +228,6 @@ class ProcessDataSource
         }
 
         return $results->$paginate($results->count());
-    }
-
-    private function resolveDetailRow(Paginator|LengthAwarePaginator|BaseCollection $results): void
-    {
-        if (!isset($this->component->setUp['detail'])) {
-            return;
-        }
-
-        $collection = $results;
-
-        if (!$results instanceof BaseCollection) {
-            $collection = collect($results->items());
-        }
-
-        /** @phpstan-ignore-next-line */
-        $collection->each(function ($model) {
-            $id = strval($model->{$this->component->primaryKey});
-
-            data_set($this->component->setUp, 'detail', (array) $this->component->setUp['detail']);
-
-            $state = data_get($this->component->setUp, 'detail.state.' . $id, false);
-
-            data_set($this->component->setUp, 'detail.state.' . $id, $state);
-        });
     }
 
     /**
