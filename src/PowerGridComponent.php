@@ -99,7 +99,7 @@ class PowerGridComponent extends Component
         $this->restoreState();
     }
 
-    private function getCacheKeys(): array
+    protected function getCacheKeys(): array
     {
         return [
             json_encode(['page' => $this->getPage()]),
