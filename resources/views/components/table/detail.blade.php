@@ -1,10 +1,9 @@
 @php
     $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-
 @endphp
 <template
-        x-cloak
-        x-if="detailState"
+    x-cloak
+    x-if="detailState"
 >
     <td colspan="999">
         @if (filled($rulesValues['detailView']))
