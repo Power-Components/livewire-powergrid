@@ -155,7 +155,7 @@ class PowerGridComponent extends Component
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
         $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
-        $ttl       = boolval(data_get($this->setUp, 'cache.ttl', false));
+        $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
 
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = join('-', $this->getCacheKeys());
