@@ -164,7 +164,6 @@ class PowerGridComponent extends Component
             return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
         }
 
-        /** @phpstan-ignore-next-line */
         return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 
