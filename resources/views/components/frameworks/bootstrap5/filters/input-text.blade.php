@@ -59,7 +59,7 @@
                     >
                         @foreach ($inputTextOptions as $key => $value)
                             <option
-                                wire:key="{{ uniqid() }}"
+                                wire:key="input-text-options-{{ $tableName }}-{{ $key . '-' . $value }}"
                                 value="{{ $value }}"
                             >{{ trans('livewire-powergrid::datatable.input_text_options.' . $value) }}</option>
                         @endforeach
