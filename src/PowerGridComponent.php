@@ -112,6 +112,7 @@ class PowerGridComponent extends Component
             json_encode(['page' => $this->page]),
             json_encode(['perPage' => data_get($this->setUp, 'footer.perPage')]),
             json_encode(['search' => $this->search]),
+            json_encode(['perPage' => data_get($this->setUp, 'footer.perPage')]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
             json_encode(['filters' => $this->filters]),
