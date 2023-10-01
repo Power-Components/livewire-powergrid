@@ -10,6 +10,9 @@ export default (params) => ({
     hash: null,
     hashError: true,
     showEditable: false,
+    editableInput: '',
+    inputClass: params.inputClass,
+    saveOnMouseOut: params.saveOnMouseOut,
     init() {
         if (this.content.length === 0 && this.fallback) {
             this.content = this.htmlSpecialChars(this.fallback);
@@ -31,6 +34,21 @@ export default (params) => ({
                 } else {
                     showEditable = true
                 }
+
+                this.editableInput = `
+                <div
+                    x-ref="editable"
+                    x-text="content"
+                    value="${this.content}"
+                    placeholder="adasda"
+                    contenteditable
+                    class="pg-single-line ${this.inputClass}"
+                    ${this.saveOnMouseOut ? 'x-on:mousedown.outside="save()"' : ''}
+                    x-on:keydown.enter="save()"
+                    id="${`editable-` + this.dataField + `-` + this.id}"
+                    x-on:keydown.esc="cancel"
+                >
+                </div>`;
 
                 this.$nextTick(() => setTimeout(() => {
                     this.showEditable = showEditable
@@ -70,7 +88,7 @@ export default (params) => ({
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
-                setTimeout(() =>this.$el.setAttribute('value', ''), 200)
+                setTimeout(() => this.$el.setAttribute('value', ''), 200)
             }, 100))
 
         }, 100)

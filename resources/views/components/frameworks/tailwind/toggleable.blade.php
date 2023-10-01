@@ -3,12 +3,12 @@
     if (str_contains($primaryKey, '.')) {
         $showDefaultToggle = true;
     }
-    
+
     $value = (int) $row->{$column->field};
-    
+
     $trueValue = $column->toggleable['default'][0];
     $falseValue = $column->toggleable['default'][1];
-    
+
     $params = [
         'id' => data_get($row, $primaryKey),
         'isHidden' => !$showToggleable ? 'true' : 'false',
@@ -22,17 +22,18 @@
 <div x-data="pgToggleable(@js($params))">
     @if ($column->toggleable['enabled'] && !$showDefaultToggle && $showToggleable === true)
         <div class="flex">
-            <div @class([
-                'relative rounded-full w-8 h-4 transition duration-200 ease-linear',
-                'bg-pg-secondary-600 dark:pg-secondary-500' => $value === 1,
-                'bg-pg-primary-200' => $value === 0,
-            ])>
+            <div
+                :class="{
+                    'relative rounded-full w-8 h-4 transition duration-200 ease-linear': true,
+                    'bg-pg-secondary-600 dark:pg-secondary-500': toggle,
+                    'bg-pg-primary-200': !toggle
+                }">
                 <label
-                    @class([
-                        'absolute left-0 bg-white border-2 mb-2 w-4 h-4 rounded-full transition transform duration-100 ease-linear cursor-pointer',
-                        'translate-x-full border-pg-secondary-600' => $value === 1,
-                        'translate-x-0 border-pg-primary-200' => $value === 0,
-                    ])
+                    :class="{
+                        'absolute left-0 bg-white border-2 mb-2 w-4 h-4 rounded-full transition transform duration-100 ease-linear cursor-pointer': true,
+                        'translate-x-full border-pg-secondary-600': toggle,
+                        'translate-x-0 border-pg-primary-200': !toggle
+                    }"
                     x-on:click="save"
                 ></label>
                 <input
