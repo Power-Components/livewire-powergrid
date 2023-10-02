@@ -129,7 +129,6 @@ class DishesMakeTable extends PowerGridComponent
 
             Column::make('Prato', 'name')
                 ->searchable()
-                ->editOnClick()
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -138,15 +137,13 @@ class DishesMakeTable extends PowerGridComponent
 
             Column::make('Chef', 'chef_name')
                 ->searchable()
-                ->editOnClick()
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
             Column::make('Category', 'category_name')
                 ->placeholder('Category'),
 
-            Column::make('Preço', 'price_BRL')
-                ->editOnClick(true, 'price'),
+            Column::make('Preço', 'price_BRL'),
 
             Column::make('Preço de Venda', 'sales_price_BRL'),
 

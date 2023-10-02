@@ -68,7 +68,6 @@ class DishesEnumTable extends PowerGridComponent
 
             Column::make('Prato', 'name')
                 ->searchable()
-                ->editOnClick($canEdit)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 

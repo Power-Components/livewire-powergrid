@@ -103,6 +103,7 @@ class PowerGridComponent extends Component
     {
         return [
             json_encode(['page' => $this->getPage()]),
+            json_encode(['perPage' => data_get($this->setUp, 'footer.perPage')]),
             json_encode(['search' => $this->search]),
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
@@ -177,7 +178,7 @@ class PowerGridComponent extends Component
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
         $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
-        $ttl       = boolval(data_get($this->setUp, 'cache.ttl', false));
+        $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
 
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = join('-', $this->getCacheKeys());
@@ -186,7 +187,6 @@ class PowerGridComponent extends Component
             return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
         }
 
-        /** @phpstan-ignore-next-line */
         return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 

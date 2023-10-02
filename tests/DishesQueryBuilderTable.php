@@ -118,7 +118,6 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->title('Dish')
                 ->field('name')
                 ->searchable()
-                ->editOnClick()
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -131,7 +130,6 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->title('Chef')
                 ->field('chef_name')
                 ->searchable()
-                ->editOnClick()
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -142,8 +140,7 @@ class DishesQueryBuilderTable extends PowerGridComponent
 
             Column::add()
                 ->title('Price')
-                ->field('price_BRL')
-                ->editOnClick(true, 'price'),
+                ->field('price_BRL'),
 
             Column::add()
                 ->title('Sales Price')
