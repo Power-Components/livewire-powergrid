@@ -92,7 +92,7 @@ class Builder
                     foreach ($column as $field => $value) {
                         if (is_array($value) && $filterType === 'input_text') {
                             foreach ($value as $arrayField => $arrayValue) {
-                                $filter($query, $filters, $filterType, $arrayField, $arrayValue);
+                                $filter($query, $filters, $filterType, $field . '.' . $arrayField, $arrayValue);
                             }
                         } else {
                             $filter($query, $filters, $filterType, $field, $value);
