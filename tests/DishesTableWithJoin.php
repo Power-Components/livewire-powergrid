@@ -162,8 +162,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Column::add()
                 ->title(__('Preço'))
-                ->field('price_BRL')
-                ->editOnClick($canEdit),
+                ->field('price_BRL'),
 
             Column::add()
                 ->title(__('Preço de Venda'))

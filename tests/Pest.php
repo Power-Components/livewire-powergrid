@@ -26,7 +26,6 @@ function powergrid(): PowerGridComponent
             ->title('Name')
             ->field('name')
             ->searchable()
-            ->editOnClick(true)
             ->sortable(),
     ];
 

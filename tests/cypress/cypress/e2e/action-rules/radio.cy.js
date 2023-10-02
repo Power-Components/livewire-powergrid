@@ -16,15 +16,14 @@ describe('Action Rules::radio', () => {
 
         cy.get('[data-cy=apply-rules]').click()
 
-        cy.get('.power-grid-table tbody tr').each(($tr, index) => {
-            const input = $tr.eq(0).find('div label input')
+        cy.get('.power-grid-table tbody tr').eq(0).find('div label input')
+            .should('have.class', '!text-red-500');
 
-            if (index === 0) {
-                cy.wrap(input).should('have.class', '!text-red-500')
-            } else {
-                cy.wrap(input).should('not.have.class', '!text-red-500')
-            }
-        });
+        cy.get('.power-grid-table tbody tr').eq(1).find('div label input')
+            .should('not.have.class', '!text-red-500');
+
+        cy.get('.power-grid-table tbody tr').eq(2).find('div label input')
+            .should('not.have.class', '!text-red-500');
     })
 
     it('should be able to add multiple class conditions with setAttribute', () => {

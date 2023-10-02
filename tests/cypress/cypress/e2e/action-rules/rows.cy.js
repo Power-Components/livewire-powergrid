@@ -15,9 +15,17 @@ describe('Action Rules::rows', () => {
 
         cy.get('[data-cy=apply-rules]').click()
 
-        cy.get('.power-grid-table tbody tr').each(($tr) => {
-            cy.wrap($tr).should('have.class', '!cursor-pointer');
-        });
+        cy.get('.power-grid-table tbody tr').eq(0)
+            .should('have.class', '!cursor-pointer');
+
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('have.class', '!cursor-pointer');
+
+        cy.get('.power-grid-table tbody tr').eq(2)
+            .should('have.class', '!cursor-pointer');
+
+        cy.get('.power-grid-table tbody tr').eq(3)
+            .should('have.class', '!cursor-pointer');
     })
 
     it('should be able to add class attribute using Rule::rows -> setAttribute when dishId == 1', () => {
@@ -29,13 +37,11 @@ describe('Action Rules::rows', () => {
 
         cy.get('[data-cy=apply-rules]').click()
 
-        cy.get('.power-grid-table tbody tr').each(($tr, index) => {
-            if (index === 0) {
-                cy.wrap($tr).should('have.class', '!cursor-pointer');
-            } else {
-                cy.wrap($tr).should('not.have.class', '!cursor-pointer');
-            }
-        });
+        cy.get('.power-grid-table tbody tr').eq(0)
+            .should('have.class', '!cursor-pointer');
+
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('not.have.class', '!cursor-pointer');
     })
 
     it('should be able to add class attribute using Rule::rows -> setAttribute when dishId != 1', () => {
@@ -47,13 +53,11 @@ describe('Action Rules::rows', () => {
 
         cy.get('[data-cy=apply-rules]').click()
 
-        cy.get('.power-grid-table tbody tr').each(($tr, index) => {
-            if (index === 0) {
-                cy.wrap($tr).should('not.have.class', '!cursor-pointer');
-            } else {
-                cy.wrap($tr).should('have.class', '!cursor-pointer');
-            }
-        });
+        cy.get('.power-grid-table tbody tr').eq(0)
+            .should('not.have.class', '!cursor-pointer');
+
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('have.class', '!cursor-pointer');
     })
 
     it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
@@ -68,23 +72,17 @@ describe('Action Rules::rows', () => {
 
         cy.get('[data-cy=apply-rules]').click()
 
-        cy.get('.power-grid-table tbody tr').each(($tr, index) => {
-            if (index === 0) {
-                cy.wrap($tr).should('have.class', '!bg-red-100');
-            }
+        cy.get('.power-grid-table tbody tr').eq(0)
+            .should('not.have.class', '!bg-red-100');
 
-            if (index === 0) {
-                cy.wrap($tr).should('not.have.class', '!bg-green-100');
-            }
+        cy.get('.power-grid-table tbody tr').eq(0)
+            .should('not.have.class', '!bg-green-100');
 
-            if (index === 1) {
-                cy.wrap($tr).should('have.class', '!bg-green-100');
-            }
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('not.have.class', '!bg-green-100');
 
-            if (index === 1) {
-                cy.wrap($tr).should('not.have.class', '!bg-red-100');
-            }
-        });
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('not.have.class', '!bg-red-100');
     })
 
     it('should be able to add multiple attributes using Rule::rows -> setAttribute when dishId == 3', () => {
