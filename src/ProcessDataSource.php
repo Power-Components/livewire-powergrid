@@ -265,9 +265,7 @@ class ProcessDataSource
             $columns    = collect($columns);
 
             /** @phpstan-ignore-next-line */
-            $data = $columns->mapWithKeys(
-                fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]
-            );
+            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
             $prepareRules = collect();
             $actions      = collect();
