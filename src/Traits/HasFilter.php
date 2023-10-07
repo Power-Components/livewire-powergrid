@@ -398,7 +398,12 @@ trait HasFilter
 
         if (in_array($value, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'])) {
             $this->enabledFilters[$field]['disabled'] = true;
-            $this->filters['input_text'][$field]      = null;
+
+            if (str($field)->contains('.')) {
+                $this->filters['input_text'][str($field)->before('.')->toString()][str($field)->after('.')->toString()] = null;
+            } else {
+                $this->filters['input_text'][$field] = null;
+            }
         }
 
         if (blank($value)) {
