@@ -40,8 +40,8 @@ class FilterInputText extends FilterBase
     {
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:model.blur' => 'filters.input_text_options.' . $field,
-                'wire:input.blur' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value)',
+                'wire:model.live' => 'filters.input_text_options.' . $field,
+                'wire:input.live' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value)',
             ]))
             ->put('inputAttributes', new ComponentAttributeBag([
                 'wire:model.live.debounce.700ms' => 'filters.input_text.' . $field,
