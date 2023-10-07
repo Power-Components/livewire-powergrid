@@ -401,8 +401,7 @@ trait HasFilter
 
             if (str($field)->contains('.')) {
                 $this->filters['input_text'][str($field)->before('.')->toString()][str($field)->after('.')->toString()] = null;
-            }
-            else {
+            } else {
                 $this->filters['input_text'][$field] = null;
             }
         }
