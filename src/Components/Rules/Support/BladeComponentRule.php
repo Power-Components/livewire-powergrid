@@ -22,7 +22,7 @@ class BladeComponentRule
                 'params'    => new ComponentAttributeBag((array) $params),
             ]);
 
-            $output['component'] = $html;
+            $output['blade'] = $html;
         }
 
         return $output;
