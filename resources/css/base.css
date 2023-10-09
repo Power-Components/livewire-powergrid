@@ -14,3 +14,9 @@ table thead {
     padding-top: 8px;
     padding-bottom: 8px
 }
+
+.pg-actions {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+}
