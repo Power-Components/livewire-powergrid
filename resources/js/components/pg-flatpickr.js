@@ -8,6 +8,7 @@ export default (params) => ({
     customConfig: params.customConfig ?? null,
     type: params.type,
     element: null,
+    selectedDates: null,
     init() {
         window.addEventListener(`pg:clear_flatpickr::${this.tableName}:${this.dataField}`, () => {
             if (this.$refs.rangeInput && this.element) {
@@ -32,8 +33,9 @@ export default (params) => ({
         if(this.$refs.rangeInput) {
             this.element = flatpickr(this.$refs.rangeInput, options);
 
-            const selectedDates = this.$wire.get(`filters.${this.type}.${this.dataField}.formatted`)
-            this.element.setDate(selectedDates)
+            this.selectedDates = this.$wire.get(`filters.${this.type}.${this.dataField}.formatted`)
+
+            this.element.setDate(this.selectedDates)
         }
     },
     getOptions() {
@@ -60,7 +62,7 @@ export default (params) => ({
 
             selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
 
-            if (selectedDates.length > 0) {
+            if (selectedDates.length > 0 && (this.selectedDates !== dateStr)) {
                 Livewire.dispatch('pg:datePicker-' + this.tableName, {
                     selectedDates: selectedDates,
                     dateStr,
