@@ -193,7 +193,7 @@ trait HasFilter
     public function datePickerChanged(
         array $selectedDates,
         string $field,
-        string $wireModel,
+        string $dateStr,
         string $label,
         string $type,
         string $timezone = 'UTC',
@@ -203,8 +203,6 @@ trait HasFilter
         }
 
         $this->resetPage();
-
-        $input = explode('.', $wireModel);
 
         $startDate = strval($selectedDates[0]);
         $endDate   = strval($selectedDates[1]);
@@ -224,30 +222,16 @@ trait HasFilter
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
-        $selectedDates[0] = $startDate;
-        $selectedDates[1] = $endDate;
+        $selectedDatesFormatted = [$startDate, $endDate];
 
         $this->enabledFilters[$field]['data-field'] = $field;
         $this->enabledFilters[$field]['label']      = $label;
 
-        if (count($input) === 3) {
-            $this->filters[$type][$input[2]] = $selectedDates;
-            $this->persistState('filters');
+        $this->filters[$type][$field] = $selectedDatesFormatted;
 
-            return;
-        }
+        $this->filters[$type][$field]['formatted'] = $dateStr;
 
-        if (count($input) === 4) {
-            $this->filters[$type][$input[2] . '.' . $input[3]] = $selectedDates;
-            $this->persistState('filters');
-
-            return;
-        }
-
-        if (count($input) === 5) {
-            $this->filters[$type][$input[2] . '.' . $input[3] . '.' . $input[4]] = $selectedDates;
-            $this->persistState('filters');
-        }
+        $this->persistState('filters');
     }
 
     #[On('pg:multiSelect-{tableName}')]
