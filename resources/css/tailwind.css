@@ -1,0 +1,32 @@
+@import "base.css";
+@import "editable.css";
+
+.page-link {
+    @apply block bg-white text-pg-secondary-800 border-r border-gray-200 outline-none py-2 w-12 text-sm text-center
+}
+
+.page-link:last-child {
+    @apply border-0
+}
+
+.page-link:hover {
+    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+}
+
+.page-item.active .page-link {
+    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+}
+
+.page-item.disabled .page-link {
+    @apply bg-white text-gray-300 border-gray-200
+}
+
+.pg-btn-white {
+    @apply outline-none inline-flex justify-center items-center focus:ring-1 focus:ring-offset-1 bg-white
+    hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
+    text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
+}
+
+.pg-actions {
+    @apply flex gap-2 w-full
+}
