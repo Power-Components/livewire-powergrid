@@ -33,9 +33,6 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
-    /**
-     * @throws Exception
-     */
     public function prepareToExport(): Eloquent\Collection|Collection
     {
         $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn($datasource) => $datasource->get());

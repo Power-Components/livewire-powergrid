@@ -39,14 +39,12 @@ class ExportJob implements ShouldQueue
         $this->limit           = $params['limit'];
         $this->filters         = $params['filters'];
 
-
         /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
     }
 
     public function handle(): void
     {
-
         $exportable = new $this->exportableClass();
 
         $currentHiddenStates = collect($this->columns)
@@ -63,6 +61,5 @@ class ExportJob implements ShouldQueue
             ->fileName($this->getFilename()) /** @phpstan-ignore-next-line  */
             ->setData($columnsWithHiddenState, $this->prepareToExport())
             ->download([]);
-
     }
 }
