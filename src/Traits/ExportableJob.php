@@ -37,19 +37,9 @@ trait ExportableJob
     {
         $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn($datasource) => $datasource->get());
 
-        $inClause = $processDataSource->component->filtered;
+        $inClause = $processDataSource?->component?->filtered ?? [];
 
         $this->componentTable->filters = $this->filters ?? [];
-
-        if ($processDataSource->isCollection) {
-            if ($inClause) {
-                $results = $processDataSource->get()->whereIn($this->componentTable->primaryKey, $inClause);
-
-                return $processDataSource->transform($results);
-            }
-
-            return $processDataSource->transform($processDataSource->resolveCollection());
-        }
 
         /** @phpstan-ignore-next-line */
         $currentTable = $processDataSource->component->currentTable;
