@@ -37,7 +37,7 @@ trait ExportableJob
     {
         $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn($datasource) => $datasource->get());
 
-        $inClause = $processDataSource?->component?->filtered ?? [];
+        $inClause = $processDataSource->component->filtered ?? [];
 
         $this->componentTable->filters = $this->filters ?? [];
 
