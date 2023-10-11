@@ -58,7 +58,7 @@ class ExportJob implements ShouldQueue
 
         /** @phpstan-ignore-next-line  */
         $exportable
-            ->fileName($this->getFilename()) /** @phpstan-ignore-next-line  */
+            ->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport())
             ->download([]);
     }
