@@ -120,7 +120,7 @@ trait WithExport
                 'fileName'        => $fileName,
                 'offset'          => $offset,
                 'limit'           => $limit,
-                'filters'         => $filters
+                'filters'         => $filters,
             ];
 
             $queues->push(new $this->exportableJobClass(

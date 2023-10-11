@@ -8,7 +8,6 @@ use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\ProcessDataSource;
 
-
 /** @codeCoverageIgnore */
 trait ExportableJob
 {
