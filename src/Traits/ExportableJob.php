@@ -34,10 +34,12 @@ trait ExportableJob
 
     private function prepareToExport(): Eloquent\Collection|Collection
     {
+        /** @phpstan-ignore-next-line */
         $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered ?? [];
 
+        /** @phpstan-ignore-next-line */
         $this->componentTable->filters = $this->filters ?? [];
 
         /** @phpstan-ignore-next-line */
