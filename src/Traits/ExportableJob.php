@@ -39,7 +39,6 @@ trait ExportableJob
 
         $inClause = $processDataSource->component->filtered;
 
-        $processDataSource->component->filter = $this->filters;
         $this->componentTable->filters = $this->filters ?? [];
 
         if ($processDataSource->isCollection) {
