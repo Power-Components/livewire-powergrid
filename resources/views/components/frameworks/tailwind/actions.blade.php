@@ -1,6 +1,6 @@
 <div class="md:flex md:flex-row w-full">
     <div>
-        <x-livewire-powergrid::actions-header
+        <x-livewire-powergrid::frameworks.tailwind.header.actions
             :theme="$theme"
             :actions="$this->headers"
         />
