@@ -103,8 +103,8 @@ trait WithExport
         $this->exportedFiles = [];
         $filters             = $processDataSource?->component?->filters ?? [];
         $queues              = collect([]);
-        $countQueue          = $this->getQueuesCount();
-        $perPage             = $this->total / $countQueue;
+        $countQueue          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+        $perPage             = $this->total > $countQueue ? ($this->total / $countQueue) : 1;
         $offset              = 0;
         $limit               = $perPage;
 
