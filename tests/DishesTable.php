@@ -138,7 +138,6 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Prato'))
                 ->field('name')
                 ->searchable()
-                ->editOnClick($canEdit)
                 ->placeholder('Prato placeholder')
                 ->sortable(),
 
@@ -151,7 +150,6 @@ class DishesTable extends PowerGridComponent
                 ->title(__('Chef'))
                 ->field('chef_name')
                 ->searchable()
-                ->editOnClick($canEdit)
                 ->placeholder('Chef placeholder')
                 ->sortable(),
 
@@ -162,8 +160,7 @@ class DishesTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('Preço'))
-                ->field('price_BRL')
-                ->editOnClick($canEdit, 'price'),
+                ->field('price_BRL'),
 
             Column::add()
                 ->title(__('Preço de Venda'))

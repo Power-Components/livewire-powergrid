@@ -9,14 +9,14 @@
 @php
     unset($filter['className']);
     extract($filter);
-    
+
     $customConfig = [];
     if ($params) {
         foreach ($params as $key => $value) {
             $customConfig[$key] = $value;
         }
     }
-    
+
     $params = [
         'type' => $type,
         'dataField' => $field,
@@ -46,6 +46,7 @@
             <input
                 id="input_{{ $column }}"
                 x-ref="rangeInput"
+                wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
                 style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"

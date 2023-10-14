@@ -246,19 +246,29 @@ class ProcessDataSource
 
     public function transform(BaseCollection $results): BaseCollection
     {
-        return $results->map(function ($row) {
+        $processedResults = collect();
+
+        $results->chunk(3)
+            ->each(function (BaseCollection $collection) use (&$processedResults) {
+                $processedBatch   = $this->processBatch($collection);
+                $processedResults = $processedResults->concat($processedBatch);
+            });
+
+        return $processedResults;
+    }
+
+    private function processBatch(BaseCollection $collection): BaseCollection
+    {
+        return $collection->map(function ($row) {
             $addColumns = $this->component->addColumns();
-
-            $columns = $addColumns->columns;
-
-            $columns = collect($columns);
+            $columns    = $addColumns->columns;
+            $columns    = collect($columns);
 
             /** @phpstan-ignore-next-line */
             $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
 
-            $actions = [];
-
             $prepareRules = collect();
+            $actions      = collect();
 
             if (method_exists($this->component, 'actionRules')) {
                 $prepareRules = resolve(RulesController::class)
@@ -267,7 +277,7 @@ class ProcessDataSource
 
             if (method_exists($this->component, 'actions')) {
                 $actions = (new ActionsController($this->component, $prepareRules))
-                    ->execute($this->component->actions($row), (object) $row);
+                    ->execute($this->component->actions($row), (object)$row);
             }
 
             $mergedData = $data->merge([

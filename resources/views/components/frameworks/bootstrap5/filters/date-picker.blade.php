@@ -9,19 +9,18 @@
 @php
     unset($filter['className']);
     extract($filter);
-    
+
     $customConfig = [];
     if ($params) {
         foreach ($params as $key => $value) {
             $customConfig[$key] = $value;
         }
     }
-    
+
     $params = [
         'type' => $type,
         'dataField' => $field,
         'tableName' => $tableName,
-        'filterKey' => 'enabledFilters.datetime.' . $field,
         'label' => $title,
         'locale' => config('livewire-powergrid.plugins.flatpickr.locales.' . app()->getLocale()),
         'onlyFuture' => data_get($customConfig, 'only_future', false),
@@ -30,7 +29,7 @@
     ];
 @endphp
 <div
-    wire:ignore
+    wire:ignore.self
     x-data="pgFlatpickr(@js($params))"
 >
     <div
@@ -41,6 +40,7 @@
             <input
                 id="input_{{ $column }}"
                 x-ref="rangeInput"
+                wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $column }}"
                 style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
