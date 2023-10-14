@@ -5,8 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\ProcessDataSource;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, ProcessDataSource};
 
 /** @codeCoverageIgnore */
 trait ExportableJob
@@ -35,7 +34,7 @@ trait ExportableJob
     private function prepareToExport(): Eloquent\Collection|Collection
     {
         /** @phpstan-ignore-next-line */
-        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn ($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered ?? [];
 
@@ -49,7 +48,7 @@ trait ExportableJob
 
         $results = $processDataSource->prepareDataSource()
             ->where(
-                fn($query) => Builder::make($query, $this->componentTable)
+                fn ($query) => Builder::make($query, $this->componentTable)
                     ->filterContains()
                     ->filter()
             )
