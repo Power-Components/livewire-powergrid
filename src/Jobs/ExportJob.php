@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Jobs;
 
 use Illuminate\Bus\{Batchable, Queueable};
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -35,6 +34,7 @@ class ExportJob implements ShouldQueue
         $this->fileName        = $params['fileName'];
         $this->offset          = $params['offset'];
         $this->limit           = $params['limit'];
+        $this->filters         = $params['filters'];
 
         /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
@@ -42,18 +42,21 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
-        /** @var Builder $query */
-        $query = $this->componentTable->datasource();
-
-        $query = $query->offset($this->offset)
-            ->limit($this->limit)
-            ->get();
-
         $exportable = new $this->exportableClass();
 
+        $currentHiddenStates = collect($this->columns)
+            ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
+
+        $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
+            $column->hidden = $currentHiddenStates[$column->field];
+
+            return $column;
+        }, $this->componentTable->columns());
+
         /** @phpstan-ignore-next-line  */
-        $exportable->fileName($this->getFilename())
-            ->setData($this->columns, $this->transform($query))
+        $exportable
+            ->fileName($this->getFilename())
+            ->setData($columnsWithHiddenState, $this->prepareToExport())
             ->download([]);
     }
 }

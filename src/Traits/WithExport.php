@@ -98,10 +98,13 @@ trait WithExport
 
     private function putQueuesToBus(string $exportableClass, string $fileExtension): Collection
     {
+        $processDataSource = tap(ProcessDataSource::fillData($this), fn ($datasource) => $datasource->get());
+
         $this->exportedFiles = [];
+        $filters             = $processDataSource?->component?->filters ?? [];
         $queues              = collect([]);
-        $countQueue          = $this->getQueuesCount();
-        $perPage             = $this->total / $countQueue;
+        $countQueue          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+        $perPage             = $this->total > $countQueue ? ($this->total / $countQueue) : 1;
         $offset              = 0;
         $limit               = $perPage;
 
@@ -117,6 +120,7 @@ trait WithExport
                 'fileName'        => $fileName,
                 'offset'          => $offset,
                 'limit'           => $limit,
+                'filters'         => $filters,
             ];
 
             $queues->push(new $this->exportableJobClass(

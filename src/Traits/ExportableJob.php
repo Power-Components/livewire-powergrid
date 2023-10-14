@@ -2,9 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\{Str, Stringable};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Illuminate\Database\Eloquent as Eloquent;
+use Illuminate\Support\{Collection, Str, Stringable};
+use PowerComponents\LivewirePowerGrid\DataSource\Builder;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, ProcessDataSource};
 
 /** @codeCoverageIgnore */
 trait ExportableJob
@@ -21,6 +22,8 @@ trait ExportableJob
 
     private int $limit;
 
+    private array $filters;
+
     private function getFilename(): Stringable
     {
         return Str::of($this->fileName)
@@ -28,16 +31,33 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
-    private function transform(Collection $collection): Collection
+    private function prepareToExport(): Eloquent\Collection|Collection
     {
-        return $collection->transform(function ($row) {
-            $columns = $this->componentTable->addColumns()->columns;
+        /** @phpstan-ignore-next-line */
+        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn ($datasource) => $datasource->get());
 
-            foreach ($columns as $key => $column) {
-                $row->{$key} = $column($row);
-            }
+        $inClause = $processDataSource->component->filtered ?? [];
 
-            return $row;
-        });
+        /** @phpstan-ignore-next-line */
+        $this->componentTable->filters = $this->filters ?? [];
+
+        /** @phpstan-ignore-next-line */
+        $currentTable = $processDataSource->component->currentTable;
+
+        $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
+
+        $results = $processDataSource->prepareDataSource()
+            ->where(
+                fn ($query) => Builder::make($query, $this->componentTable)
+                    ->filterContains()
+                    ->filter()
+            )
+            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
+                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
+            })
+            ->orderBy($sortField, $processDataSource->component->sortDirection)
+            ->get();
+
+        return $processDataSource->transform($results);
     }
 }
