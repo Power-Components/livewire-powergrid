@@ -154,11 +154,11 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 <p>
   <!-- PHPStorm -->
   <a href="https://www.jetbrains.com/phpstorm/" target="_blank">
-    <img src="https://livewire-powergrid.com/_media/logos/phpstorm.png" alt="PHPStorm" height="32">
+    <img src="https://livewire-powergrid.com/assets/phpstorm.686d5c70.png" alt="PHPStorm" height="32">
   </a>
   <!-- Araxis Merge -->
   <a href="https://www.araxis.com/merge/" target="_blank">
-    <img src="https://livewire-powergrid.com/_media/logos/araxis.png" alt="Araxis Merge" height="32">
+    <img src="https://livewire-powergrid.com/assets/araxis.c39292c6.png" alt="Araxis Merge" height="32">
   </a>
 </p>
 
