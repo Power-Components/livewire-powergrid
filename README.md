@@ -143,7 +143,7 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 <p>
   <!--DevSquad-->
   <a href="https://devsquad.com" target="_blank">
-    <img src="https://livewire-powergrid.com/_media/logos/devsquad.png" alt="DevSquad" height="undefined">
+    <img src="https://livewire-powergrid.com/assets/devsquad.a7795966.png" alt="DevSquad" height="undefined">
   </a>
 </p>
 
