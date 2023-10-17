@@ -1,7 +1,7 @@
 <div class="hidden lg:!block">
     <div
         wire:loading
-        class="mt-2"
+        class="mt-2 hidden"
     >
         <svg
             class="animate-spin h-5 w-5 text-pg-primary-300 dark:text-pg-primary-400"
