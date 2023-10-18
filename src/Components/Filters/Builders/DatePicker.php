@@ -13,7 +13,7 @@ class DatePicker extends BuilderBase
         if (gettype($values) === 'string') {
             return;
         }
-        
+
         /** @var array $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values[0])->format('Y-m-d'),
