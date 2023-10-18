@@ -10,6 +10,10 @@ class DatePicker extends BuilderBase
 {
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
+        if (gettype($values) === 'string') {
+            return;
+        }
+
         /** @var array $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values[0])->format('Y-m-d'),
