@@ -126,6 +126,8 @@ class Builder
     {
         if ($this->powerGridComponent->search != '') {
             $search = $this->powerGridComponent->search;
+            $search = str_replace('"', '', $search);
+            $search = str_replace("'", '', $search);
             $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $search = strtolower($search);
 
@@ -160,14 +162,17 @@ class Builder
 
                                     /** @phpstan-ignore-next-line  */
                                     $driverName = $query->getConnection()->getConfig('driver');
+                                    $columnQuoteClean = <<<EOD
+                                        REPLACE(REPLACE({$table}.{$field}, '"', ''), "'", '')
+                                    EOD;
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
                                         $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . SqlSupport::like($query) . "?", '%' . $search . '%');
                                     } else {
-                                        $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                        $query->orWhereRaw($columnQuoteClean .' '.SqlSupport::like($query).' \'%' . $search . '%\'');
                                     }
                                 } catch (\Throwable) {
-                                    $query->orWhere("{$table}.{$field}", SqlSupport::like($query), "%{$search}%");
+                                    $query->orWhereRaw($columnQuoteClean .' '.SqlSupport::like($query).' \'%' . $search . '%\'');
                                 }
                             }
                         });
