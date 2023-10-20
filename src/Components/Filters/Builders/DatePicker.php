@@ -10,7 +10,7 @@ class DatePicker extends BuilderBase
 {
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
-        if (gettype($values) === 'string') {
+        if (gettype($values) !== 'array') {
             return;
         }
 
