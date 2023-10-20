@@ -65,7 +65,8 @@ class Builder
                     isset($column[key($column)]) &&
                     is_array($column[key($column)]) &&
                     is_string(key($column[key($column)])) &&
-                    count($column[key($column)]) === 1
+                    count($column[key($column)]) === 1 &&
+                    $filterType !== 'number'
                 ) {
                     if (count($column) > 1) {
                         foreach ($column as $tableName => $columnValue) {
