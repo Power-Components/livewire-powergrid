@@ -34,7 +34,7 @@
             ></td>
         @endif
 
-        @foreach ($columns as $column)
+        @foreach ($this->visibleColumns as $column)
             <td
                 class="{{ $theme->table->tdBodyClass }}"
                 wire:key="column-filter-{{ $column->field }}"

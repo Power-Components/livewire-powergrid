@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
-use Livewire\{Attributes\On, Component, WithPagination};
+use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
@@ -150,18 +150,17 @@ class PowerGridComponent extends Component
 
     private function resolveTotalRow(): void
     {
-        collect($this->columns)->each(function (Column $column) {
-            $hasHeader = $column->sum['header'] || $column->count['header'] || $column->min['header'] || $column->avg['header'] || $column->max['header'];
-            $hasFooter = $column->sum['footer'] || $column->count['footer'] || $column->min['footer'] || $column->avg['footer'] || $column->max['footer'];
+        collect($this->columns)
+            ->each(function ($column) {
+                $hasHeaderFooter = false;
 
-            if ($hasHeader) {
-                $this->headerTotalColumn = true;
-            }
+                foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
+                    $hasHeaderFooter = $hasHeaderFooter || data_get($column, "$operation.header") || data_get($column, "$operation.footer");
+                }
 
-            if ($hasFooter) {
-                $this->footerTotalColumn = true;
-            }
-        });
+                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeaderFooter;
+                $this->footerTotalColumn = $this->footerTotalColumn || $hasHeaderFooter;
+            });
     }
 
     public function fetchDatasource(): void
@@ -269,15 +268,13 @@ class PowerGridComponent extends Component
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
-        $this->columns = collect($this->columns)
-            ->map(function ($column) use ($field) {
-                if (data_get($column, 'field') === $field) {
-                    data_set($column, 'hidden', !data_get($column, 'hidden'));
-                }
+        foreach ($this->visibleColumns() as &$column) {
+            if (data_get($column, 'field') === $field) {
+                data_set($column, 'hidden', !data_get($column, 'hidden'));
 
-                return (object) $column;
-            })
-            ->toArray();
+                break;
+            }
+        }
 
         $this->persistState('columns');
     }
@@ -311,7 +308,8 @@ class PowerGridComponent extends Component
         $this->dispatch('$refresh', []);
     }
 
-    public function getHasColumnFiltersProperty(): bool
+    #[Computed]
+    public function hasColumnFilters(): bool
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
@@ -363,6 +361,13 @@ class PowerGridComponent extends Component
 
             data_set($this->setUp, 'detail.state.' . $id, $state);
         });
+    }
+
+    #[Computed]
+    public function visibleColumns(): BaseCollection
+    {
+        return collect($this->columns)
+            ->where('forceHidden', false);
     }
 
     /**

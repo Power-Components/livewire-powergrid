@@ -10,25 +10,23 @@
                 <x-livewire-powergrid::icons.eye-off width="20" />
             </button>
             <ul class="dropdown-menu">
-                @foreach ($columns as $column)
-                    @if (!$column->forceHidden)
-                        <li
-                            wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ $column->field }}'})"
-                            wire:key="toggle-column-{{ $column->field }}"
+                @foreach ($this->visibleColumns as $column)
+                    <li
+                        wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ $column->field }}'})"
+                        wire:key="toggle-column-{{ $column->field }}"
+                    >
+                        <a
+                            class="dropdown-item"
+                            href="#"
                         >
-                            <a
-                                class="dropdown-item"
-                                href="#"
-                            >
-                                @if ($column->hidden === false)
-                                    <x-livewire-powergrid::icons.eye width="20" />
-                                @else
-                                    <x-livewire-powergrid::icons.eye-off width="20" />
-                                @endif
-                                {!! $column->title !!}
-                            </a>
-                        </li>
-                    @endif
+                            @if ($column->hidden === false)
+                                <x-livewire-powergrid::icons.eye width="20" />
+                            @else
+                                <x-livewire-powergrid::icons.eye-off width="20" />
+                            @endif
+                            {!! $column->title !!}
+                        </a>
+                    </li>
                 @endforeach
             </ul>
         </div>
