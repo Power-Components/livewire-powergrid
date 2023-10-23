@@ -83,6 +83,8 @@ class PowerGridComponent extends Component
 
     public bool $showFilters = false;
 
+    public bool $displayActionsFirst = false;
+
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
     public function mount(): void
@@ -123,6 +125,12 @@ class PowerGridComponent extends Component
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
 
+        return $this;
+    }
+
+    public function showActionsFirst(string $attribute = 'id'): PowerGridComponent
+    {
+        $this->displayActionsFirst = true;
         return $this;
     }
 

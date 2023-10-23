@@ -32,6 +32,27 @@
                 />
             @endif
 
+            @if($displayActionsFirst)
+
+                @if (isset($actions) && count($actions))
+                    @php
+                        $responsiveActionsColumnName = PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME;
+
+                        $isActionFixedOnResponsive = isset($this->setUp['responsive']) && in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns')) ? true : false;
+                    @endphp
+
+                    <th
+                            @if($isActionFixedOnResponsive) fixed @endif
+                    class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
+
+                            style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }} width: max-content;  cursor:pointer;"
+                            wire:key="{{ md5('actions') }}"
+                    >
+                        {{ trans('livewire-powergrid::datatable.labels.action') }}
+                    </th>
+                @endif
+            @endif
+
             @foreach ($columns as $column)
                 <x-livewire-powergrid::cols
                     :column="$column"
@@ -175,6 +196,16 @@
                     @include('livewire-powergrid::components.checkbox-row', [
                         'attribute' => $row->{$checkboxAttribute},
                     ])
+                @endif
+
+                @if($displayActionsFirst)
+                    <x-livewire-powergrid::actions
+                            :primary-key="$primaryKey"
+                            :tableName="$tableName"
+                            :theme="$theme"
+                            :row="$row"
+                            :actions="$actions"
+                    />
                 @endif
 
                 @include('livewire-powergrid::components.row', ['rowIndex' => $loop->index + 1])
