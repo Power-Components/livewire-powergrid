@@ -25,7 +25,7 @@
     'attribute' => $row->{$checkboxAttribute},
 ])
 
-@foreach ($columns as $column)
+@foreach ($this->visibleColumns as $column)
     @php
         $content = $row->{$column->field} ?? null;
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';

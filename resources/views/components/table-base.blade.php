@@ -17,7 +17,6 @@
             <tbody
                 class="{{ $theme->tbodyClass }}"
                 style="{{ $theme->tbodyStyle }}"
-                wire:key="tableBody-{{ uniqid() }}"
             >
                 {{ $body }}
             </tbody>

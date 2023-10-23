@@ -7,7 +7,7 @@
     @if($checkbox)
         <td class="{{ $theme->table->tdBodyClass }}" style="{{ $theme->table->tdBodyStyle }}"></td>
     @endif
-    @foreach ($columns as $column)
+    @foreach ($this->visibleColumns as $column)
         <td class="{{ $theme->table->tdBodyClassTotalColumns . ' '.$column->bodyClass ?? '' }}"
             style="{{ $column->hidden === true ? 'display:none': '' }}; {{$theme->table->tdBodyStyleTotalColumns . ' '.$column->bodyStyle ?? ''  }}">
             @include('livewire-powergrid::components.summarize', [
