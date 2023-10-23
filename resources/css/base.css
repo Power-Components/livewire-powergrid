@@ -6,6 +6,30 @@ table {
     width: 100%;
 }
 
+.loader {
+    border-top-color: #222;
+    -webkit-animation: spinner 1.5s linear infinite;
+    animation: spinner 1.5s linear infinite
+}
+
+@-webkit-keyframes spinner {
+    0% {
+        -webkit-transform: rotate(0)
+    }
+    100% {
+        -webkit-transform: rotate(360deg)
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
 table thead {
     padding-left: 15px;
     text-transform: uppercase;
