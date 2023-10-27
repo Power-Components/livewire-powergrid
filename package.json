@@ -31,7 +31,7 @@
         "blade-formatter": "^1.37.1",
         "cypress": "^13.3.0",
         "flatpickr": "^4.6.13",
-        "postcss": "^8.4.29",
+        "postcss": "^8.4.31",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.66.1",
         "sass-loader": "^13.3.2",
