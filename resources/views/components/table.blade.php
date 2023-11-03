@@ -121,9 +121,13 @@
 
                     $rowId = $row->{$primaryKey};
 
+                    if (method_exists($this, 'actionRules')) {
+                        $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
+                    }
+
                     $ruleSetAttribute = data_get($rules, 'setAttribute');
 
-                    if (filled($ruleSetAttribute)) {
+                    if (filled($ruleSetAttribute) && $applyRulesLoop) {
                         foreach ($ruleSetAttribute as $attribute) {
                             if (isset($attribute['attribute'])) {
                                 $class .= ' ' . $attribute['value'];
