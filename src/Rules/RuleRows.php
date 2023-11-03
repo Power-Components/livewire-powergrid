@@ -67,4 +67,14 @@ class RuleRows
 
         return $this;
     }
+
+    /**
+     * Interacts with Blade loop.
+     */
+    public function loop(Closure $closure = null): RuleRows
+    {
+        $this->rule['loop'] = $closure;
+
+        return $this;
+    }
 }
