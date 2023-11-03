@@ -154,11 +154,17 @@ table thead {
     transition: all 0.3s ease;
     transform: rotate(0deg);
 }
+
 .bs5-rotate-90 {
     transition: all 0.3s ease;
     transform: rotate(90deg);
 }
+
 .bs5-w-h-1_5em {
     width: 1.5em;
     height: 1.5em;
+}
+
+.pg-filter-container {
+    @apply py-3;
 }
