@@ -19,7 +19,6 @@
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
         class="pg-filter-container"
-        wire:key="filter-{{ uniqid() }}"
     >
         @php
             $customConfig = [];
