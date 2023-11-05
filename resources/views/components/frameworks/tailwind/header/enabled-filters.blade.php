@@ -1,7 +1,7 @@
 @if (count($enabledFilters))
     <div class="pg-enabled-filters-base">
         @if (count($enabledFilters) > 1)
-            <span class="pg-enabled-filters-clear-all">
+            <span class="group pg-enabled-filters-clear-all">
                 {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
                 <div class="relative flex items-center w-2 h-2">
                     <button
@@ -17,7 +17,7 @@
             @isset($filter['label'])
                 <span
                     wire:key="enabled-filters-{{ $field }}"
-                    class="pg-enabled-filters-span"
+                    class="group pg-enabled-filters-span"
                 >
                     {{ $filter['label'] }}
                     <div class="relative flex items-center w-2 h-2">
