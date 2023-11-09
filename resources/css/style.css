@@ -166,3 +166,7 @@ table thead {
 .pg-actions {
     @apply flex gap-2 w-full
 }
+
+.pg-filter-container {
+    @apply py-3;
+}

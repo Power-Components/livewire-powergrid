@@ -26,3 +26,7 @@
     hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
     text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
 }
+
+.pg-filter-container {
+    @apply py-3;
+}
