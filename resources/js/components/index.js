@@ -10,7 +10,7 @@ window.pgFlatpickr = pgFlatpickr
 window.pgEditable = pgEditable
 window.tableResponsive = tableResponsive
 window.pgTomSelect = pgTomSelect
-window.phSlimSelect = pgSlimSelect
+window.pgSlimSelect = pgSlimSelect
 
 Livewire.hook('commit', ({ component, succeed, fail }) => {
     if (component.ephemeral.setUp && component.ephemeral.setUp.hasOwnProperty('responsive')) {
