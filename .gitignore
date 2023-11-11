@@ -16,3 +16,4 @@ dist/powergrid.js.LICENSE.txt
 
 tests/cypress/app/
 .DS_Store
+package-lock.json
