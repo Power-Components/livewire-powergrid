@@ -1,15 +1,20 @@
 import { storeMultiSelect } from "./store";
 
 export default (params) => ({
-    init() {
-        const element = this.$refs['select_picker_'+params.dataField+'_'+params.tableName];
+  init() {
+    console.log(params);
+    const element =
+      this.$refs["select_picker_" + params.dataField + "_" + params.tableName];
 
-        new window.SlimSelect(element,{
-            items: this.initialValues,
-            ...this.framework,
-            onChange: (value) => {
-                storeMultiSelect(params, value)
-            },
-        });
-    }
-})
+    new window.SlimSelect({
+      select: element,
+      data: this.initialValues,
+      ...this.framework,
+      events: {
+        afterChange: (value) => {
+          storeMultiSelect(params, value);
+        },
+      },
+    });
+  },
+});
