@@ -13,3 +13,4 @@ pnpm-lock.yaml
 tmp/
 dist/powergrid.js.LICENSE.txt
 .env
+package-lock.json
