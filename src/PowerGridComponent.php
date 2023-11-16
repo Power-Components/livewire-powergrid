@@ -152,14 +152,16 @@ class PowerGridComponent extends Component
     {
         collect($this->columns)
             ->each(function ($column) {
-                $hasHeaderFooter = false;
+                $hasHeader = false;
+                $hasFooter = false;
 
                 foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
-                    $hasHeaderFooter = $hasHeaderFooter || data_get($column, "$operation.header") || data_get($column, "$operation.footer");
+                    $hasHeader = $hasHeader || data_get($column, "$operation.header");
+                    $hasFooter = $hasFooter || data_get($column, "$operation.footer");
                 }
 
-                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeaderFooter;
-                $this->footerTotalColumn = $this->footerTotalColumn || $hasHeaderFooter;
+                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
+                $this->footerTotalColumn = $this->footerTotalColumn || $hasFooter;
             });
     }
 
