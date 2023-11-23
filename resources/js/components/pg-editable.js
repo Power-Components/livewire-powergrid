@@ -40,7 +40,7 @@ export default (params) => ({
                     x-ref="editable"
                     x-text="content"
                     value="${this.content}"
-                    placeholder="adasda"
+                    placeholder="${this.content}"
                     contenteditable
                     class="pg-single-line ${this.inputClass}"
                     ${this.saveOnMouseOut ? 'x-on:mousedown.outside="save()"' : ''}
