@@ -65,9 +65,9 @@ jobs:
           rm composer.lock
           composer install
 
-      - name: Install openspout/openspout
+      - name: Install openspout/openspout 4.20
         if: matrix.php == '8.2'
-        run: composer require openspout/openspout
+        run: composer require openspout/openspout 4.20
 
       - name: Cypress
         run: |
