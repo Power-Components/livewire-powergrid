@@ -43,7 +43,12 @@ class Builder
         }
 
         foreach ($this->powerGridComponent->filters as $filterType => $filter) {
+            if (empty($filter)) {
+                continue;
+            }
+
             $field = str(key($filter))->replace('->>', '.')->toString();
+
             $value = $filter[str(key($filter))->replace('.', '->>')->toString()];
 
             $this->query->where(function ($query) use ($filterType, $field, $filter, $value, $filters) {
