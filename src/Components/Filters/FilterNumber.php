@@ -39,14 +39,16 @@ class FilterNumber extends FilterBase
 
     public static function getWireAttributes(string $field, array $filter): array
     {
+        $field = str($field)->replace('.', '->>')->toString();
+
         return collect()
             ->put('inputStartAttributes', new ComponentAttributeBag([
-                'wire:model.live.debounce.800ms' => 'filters.number.' . $field . '.start',
-                'wire:input.live.debounce.800ms' => 'filterNumberStart(' . Js::from($filter) . ', $event.target.value)',
+                'wire:model.live.debounce.600ms' => 'filters.number.' . $field . '.start',
+                'wire:input.live.debounce.800ms' => 'filterNumberStart(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]))
             ->put('inputEndAttributes', new ComponentAttributeBag([
-                'wire:model.live.debounce.800ms' => 'filters.number.' . $field . '.end',
-                'wire:input.live.debounce.800ms' => 'filterNumberEnd(' . Js::from($filter) . ', $event.target.value)',
+                'wire:model.live.debounce.600ms' => 'filters.number.' . $field . '.end',
+                'wire:input.live.debounce.800ms' => 'filterNumberEnd(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]))
             ->toArray();
     }

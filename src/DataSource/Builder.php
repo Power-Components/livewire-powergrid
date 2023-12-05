@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
@@ -43,8 +42,11 @@ class Builder
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $filterType => $column) {
-            $this->query->where(function ($query) use ($filterType, $column, $filters) {
+        foreach ($this->powerGridComponent->filters as $filterType => $filter) {
+            $field = str(key($filter))->replace('->>', '.')->toString();
+            $value = $filter[str(key($filter))->replace('.', '->>')->toString()];
+
+            $this->query->where(function ($query) use ($filterType, $field, $filter, $value, $filters) {
                 $filter = function ($query, $filters, $filterType, $field, $value) {
                     $filter = $filters->filter(function ($filter) use ($field) {
                         return data_get($filter, 'field') === $field;
@@ -67,65 +69,11 @@ class Builder
                     };
                 };
 
-                if (
-                    isset($column[key($column)]) &&
-                    is_array($column[key($column)]) &&
-                    is_string(key($column[key($column)])) &&
-                    count($column[key($column)]) === 1
-                ) {
-                    if (count($column) > 1) {
-                        foreach ($column as $tableName => $columnValue) {
-                            $field = key(Arr::dot($columnValue));
-
-                            $value = Arr::dot($columnValue)[$field];
-
-                            $filter($query, $filters, $filterType, $tableName . '.' . $field, $value);
-                        }
-                    } else {
-                        $field = key(static::arrayToDot($column));
-
-                        $value = static::arrayToDot($column)[$field];
-
-                        $filter($query, $filters, $filterType, $field, $value);
-                    }
-                } else {
-                    foreach ($column as $field => $value) {
-                        if (is_array($value) && $filterType === 'input_text') {
-                            foreach ($value as $arrayField => $arrayValue) {
-                                $filter($query, $filters, $filterType, $field . '.' . $arrayField, $arrayValue);
-                            }
-                        } else {
-                            $filter($query, $filters, $filterType, $field, $value);
-                        }
-                    }
-                }
+                $filter($query, $filters, $filterType, $field, $value);
             });
         }
 
         return $this->query;
-    }
-
-    public static function arrayToDot(array $array, string $prepend = ''): array
-    {
-        $results = [];
-
-        foreach ($array as $key => $value) {
-            if (is_array($value) && !empty($value)) {
-                if (is_numeric(array_key_first($value))) {
-                    $results[$prepend . $key] = $value;
-
-                    break;
-                }
-
-                $results = array_merge($results, static::arrayToDot($value, $prepend . $key . '.'));
-
-                continue;
-            }
-
-            $results[$prepend . $key] = $value;
-        }
-
-        return $results;
     }
 
     public function filterContains(): Builder

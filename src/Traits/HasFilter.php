@@ -30,8 +30,8 @@ trait HasFilter
 
             unset($this->filters['input_text'][$table][$column]);
             unset($this->filters['input_text_options'][$table][$column]);
-            unset($this->filters['number'][$table][$column]['start']);
-            unset($this->filters['number'][$table][$column]['end']);
+            unset($this->filters['number_start'][$table][$column]);
+            unset($this->filters['number_end'][$table][$column]);
             unset($this->filters['boolean'][$table][$column]);
             unset($this->filters['datetime'][$table][$column]);
             unset($this->filters['date'][$table][$column]);
@@ -40,8 +40,8 @@ trait HasFilter
 
             unset($this->filters['input_text'][$table . '.' . $column]);
             unset($this->filters['input_text_options'][$table . '.' . $column]);
-            unset($this->filters['number'][$table . '.' . $column]['start']);
-            unset($this->filters['number'][$table . '.' . $column]['end']);
+            unset($this->filters['number_start'][$table . '.' . $column]);
+            unset($this->filters['number_end'][$table . '.' . $column]);
             unset($this->filters['boolean'][$table . '.' . $column]);
             unset($this->filters['datetime'][$table . '.' . $column]);
             unset($this->filters['date'][$table . '.' . $column]);
@@ -56,12 +56,12 @@ trait HasFilter
                 unset($this->filters['input_text_options'][$table]);
             }
 
-            if (empty($this->filters['number'][$table]['start'])) {
-                unset($this->filters['number'][$table]['start']);
+            if (empty($this->filters['number_start'][$table])) {
+                unset($this->filters['number_start'][$table]);
             }
 
-            if (empty($this->filters['number'][$table]['end'])) {
-                unset($this->filters['number'][$table]['end']);
+            if (empty($this->filters['number_end'][$table])) {
+                unset($this->filters['number_end'][$table]);
             }
 
             if (empty($this->filters['boolean'][$table])) {
@@ -94,8 +94,8 @@ trait HasFilter
 
             unset($this->filters['input_text'][$field]);
             unset($this->filters['input_text_options'][$field]);
-            unset($this->filters['number'][$field]['start']);
-            unset($this->filters['number'][$field]['end']);
+            unset($this->filters['number_start'][$field]);
+            unset($this->filters['number_end'][$field]);
             unset($this->filters['boolean'][$field]);
             unset($this->filters['datetime'][$field]);
             unset($this->filters['date'][$field]);
@@ -274,17 +274,17 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterNumberStart(array $params, string $value): void
+    public function filterNumberStart(string $field, array $params, string $value): void
     {
         extract($params);
 
         $this->resetPage();
 
         $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-
-        $this->filters['number'][$field]['start']     = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        //
+        //        $this->filters[$field]['start']       = $value;
+        //        $this->filters['number'][$field]['thousands'] = $thousands;
+        //        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
@@ -298,7 +298,7 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterNumberEnd(array $params, string $value): void
+    public function filterNumberEnd(string $field, array $params, string $value): void
     {
         extract($params);
 
@@ -306,9 +306,9 @@ trait HasFilter
 
         $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 
-        $this->filters['number'][$field]['end']       = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        //        $this->filters['number'][$field]['end']       = $value;
+        //        $this->filters['numberEnd'][$field]['thousands'] = $thousands;
+        //        $this->filters['numberEnd'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;

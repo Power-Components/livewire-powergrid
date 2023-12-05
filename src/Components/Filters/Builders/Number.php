@@ -23,13 +23,13 @@ class Number extends BuilderBase
         if (isset($values['start']) && !isset($values['end'])) {
             $start = $values['start'];
 
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $start);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-            }
+            //            if (isset($values['thousands'])) {
+            //                $start = str_replace($values['thousands'], '', $start);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $start = str_replace($values['decimal'], '.', $start);
+            //            }
 
             $builder->where($field, '>=', $start);
         }
@@ -37,13 +37,13 @@ class Number extends BuilderBase
         if (!isset($values['start']) && isset($values['end'])) {
             $end = $values['end'];
 
-            if (isset($values['decimal'])) {
-                $end = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $end = (float) str_replace($values['decimal'], '.', $end);
-            }
+            //            if (isset($values['decimal'])) {
+            //                $end = str_replace($values['thousands'], '', $values['end']);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $end = (float) str_replace($values['decimal'], '.', $end);
+            //            }
 
             $builder->where($field, '<=', $end);
         }
@@ -52,15 +52,15 @@ class Number extends BuilderBase
             $start = $values['start'];
             $end   = $values['end'];
 
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-                $end   = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-                $end   = str_replace($values['decimal'], '.', $end);
-            }
+            //            if (isset($values['thousands'])) {
+            //                $start = str_replace($values['thousands'], '', $values['start']);
+            //                $end   = str_replace($values['thousands'], '', $values['end']);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $start = str_replace($values['decimal'], '.', $start);
+            //                $end   = str_replace($values['decimal'], '.', $end);
+            //            }
 
             $builder->whereBetween($field, [$start, $end]);
         }
@@ -79,27 +79,27 @@ class Number extends BuilderBase
         if (isset($values['start']) && !isset($values['end'])) {
             $start = $values['start'];
 
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = (float) str_replace($values['decimal'], '.', $start);
-            }
+            //            if (isset($values['thousands'])) {
+            //                $start = str_replace($values['thousands'], '', $values['start']);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $start = (float) str_replace($values['decimal'], '.', $start);
+            //            }
 
             return $collection->where($field, '>=', $start);
         }
 
         if (!isset($values['start']) && isset($values['end'])) {
             $end = $values['end'];
-
-            if (isset($values['thousands'])) {
-                $end = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $end = (float) str_replace($values['decimal'], '.', $end);
-            }
+            //
+            //            if (isset($values['thousands'])) {
+            //                $end = str_replace($values['thousands'], '', $values['end']);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $end = (float) str_replace($values['decimal'], '.', $end);
+            //            }
 
             return $collection->where($field, '<=', $end);
         }
@@ -108,15 +108,15 @@ class Number extends BuilderBase
             $start = $values['start'];
             $end   = $values['end'];
 
-            if (isset($values['thousands'])) {
-                $start = str_replace($values['thousands'], '', $values['start']);
-                $end   = str_replace($values['thousands'], '', $values['end']);
-            }
-
-            if (isset($values['decimal'])) {
-                $start = str_replace($values['decimal'], '.', $start);
-                $end   = str_replace($values['decimal'], '.', $end);
-            }
+            //            if (isset($values['thousands'])) {
+            //                $start = str_replace($values['thousands'], '', $values['start']);
+            //                $end   = str_replace($values['thousands'], '', $values['end']);
+            //            }
+            //
+            //            if (isset($values['decimal'])) {
+            //                $start = str_replace($values['decimal'], '.', $start);
+            //                $end   = str_replace($values['decimal'], '.', $end);
+            //            }
 
             return $collection->whereBetween($field, [$start, $end]);
         }
