@@ -50,7 +50,7 @@ it('cache work properly with tags - rememberForever', function () {
         ->ttl->toBe(300);
 
     $tag      = 'test-powergrid-dishes-default';
-    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -64,10 +64,10 @@ it('cache work properly with tags - rememberForever', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}-{\"sortArray\":[]}');
+        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);
@@ -98,7 +98,7 @@ it('cache work properly with tags - remember', function () {
         ->ttl->toBe(360);
 
     $tag      = 'powergrid-dishes-default';
-    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -112,10 +112,10 @@ it('cache work properly with tags - remember', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}-{\"sortArray\":[]}');
+        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);
@@ -147,7 +147,7 @@ it('cache work properly with tags - customTag', function () {
         ->ttl->toBe(360);
 
     $tag      = 'my-custom-tag';
-    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
 
@@ -161,10 +161,10 @@ it('cache work properly with tags - customTag', function () {
     $storage = Livewire\invade($tags->getStore())->storage;
 
     expect(json_encode($storage))
-        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}-{\"sortArray\":[]}');
+        ->toContain('{\"page\":1}-{\"perPage\":15}-{\"search\":\"\"}-{\"sortDirection\":\"asc\"}-{\"sortField\":\"id\"}-{\"filters\":[]}');
 
     $component->set('search', 'New search');
-    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
+    $cacheKeySearch = '{"page":1}-{"perPage":15}-{"search":"New search"}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}';
 
     /** @var LengthAwarePaginator $items */
     $items = $tags->get($cacheKeySearch);
