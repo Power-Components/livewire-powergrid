@@ -24,13 +24,13 @@
         "laravel/prompts": "^0.1.13"
     },
     "require-dev": {
-        "pestphp/pest": "^2.26",
-        "orchestra/testbench": "^8.14.1",
         "composer/composer": "^2.6.5",
         "laravel/pint": "^1.13",
         "laradumps/laradumps-core": "^0.3.0",
         "spaze/phpstan-disallowed-calls": "^2.16.1",
-        "larastan/larastan": "^2.7"
+        "larastan/larastan": "^2.7",
+        "pestphp/pest": "^2.28",
+        "orchestra/testbench": "^8.15"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
