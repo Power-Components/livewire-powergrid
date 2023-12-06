@@ -18,11 +18,11 @@
 ])
 
 @includeWhen($radio, 'livewire-powergrid::components.radio-row', [
-    'attribute' => data_get($row, $radioAttribute),
+    'attribute' => $row->{$radioAttribute},
 ])
 
 @includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
-    'attribute' => data_get($row, $checkboxAttribute),
+    'attribute' => $row->{$checkboxAttribute},
 ])
 
 @foreach ($this->visibleColumns as $column)

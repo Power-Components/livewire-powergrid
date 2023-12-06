@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30b5974425c7573ddea3431585de4a44",
+    "content-hash": "96062194db88c598d6682a45898a9b76",
     "packages": [
         {
             "name": "brick/math",
@@ -6688,16 +6688,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.13.6",
+            "version": "v1.13.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "3e3d2ab01c7d8b484c18e6100ecf53639c744fa7"
+                "reference": "4157768980dbd977f1c4b4cc94997416d8b30ece"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/3e3d2ab01c7d8b484c18e6100ecf53639c744fa7",
-                "reference": "3e3d2ab01c7d8b484c18e6100ecf53639c744fa7",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/4157768980dbd977f1c4b4cc94997416d8b30ece",
+                "reference": "4157768980dbd977f1c4b4cc94997416d8b30ece",
                 "shasum": ""
             },
             "require": {
@@ -6750,7 +6750,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2023-11-07T17:59:57+00:00"
+            "time": "2023-12-05T19:43:12+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -7470,16 +7470,16 @@
         },
         {
             "name": "pestphp/pest",
-            "version": "v2.24.3",
+            "version": "v2.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pestphp/pest.git",
-                "reference": "f235d84d95aca83425d83e64792352a7424a89d5"
+                "reference": "90fb8c602cf982ec973c2d13b31ce7510154ebc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pestphp/pest/zipball/f235d84d95aca83425d83e64792352a7424a89d5",
-                "reference": "f235d84d95aca83425d83e64792352a7424a89d5",
+                "url": "https://api.github.com/repos/pestphp/pest/zipball/90fb8c602cf982ec973c2d13b31ce7510154ebc2",
+                "reference": "90fb8c602cf982ec973c2d13b31ce7510154ebc2",
                 "shasum": ""
             },
             "require": {
@@ -7498,7 +7498,7 @@
             },
             "require-dev": {
                 "pestphp/pest-dev-tools": "^2.16.0",
-                "pestphp/pest-plugin-type-coverage": "^2.4.0",
+                "pestphp/pest-plugin-type-coverage": "^2.5.0",
                 "symfony/process": "^6.3.4"
             },
             "bin": [
@@ -7562,7 +7562,7 @@
             ],
             "support": {
                 "issues": "https://github.com/pestphp/pest/issues",
-                "source": "https://github.com/pestphp/pest/tree/v2.24.3"
+                "source": "https://github.com/pestphp/pest/tree/v2.26.0"
             },
             "funding": [
                 {
@@ -7574,7 +7574,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-11-08T09:47:14+00:00"
+            "time": "2023-11-29T09:09:09+00:00"
         },
         {
             "name": "pestphp/pest-plugin",
