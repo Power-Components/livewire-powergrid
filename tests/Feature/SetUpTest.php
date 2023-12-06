@@ -83,7 +83,7 @@ it('cache work properly with tags - rememberForever', function () {
 it('cache work properly with tags - remember', function () {
     \Illuminate\Support\Facades\Cache::flush();
 
-    /** @var DishesSetUpTable|\Livewire\Testing\TestableLivewire $component */
+    /** @var DishesSetUpTable|\Livewire\Features\SupportTesting\Testable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
         Cache::make()
             ->ttl(360),
