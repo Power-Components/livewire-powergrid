@@ -108,6 +108,7 @@ class PowerGridComponent extends Component
             json_encode(['sortDirection' => $this->sortDirection]),
             json_encode(['sortField' => $this->sortField]),
             json_encode(['filters' => $this->filters]),
+            json_encode(['sortArray' => $this->sortArray]),
         ];
     }
 
