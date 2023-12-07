@@ -34,7 +34,6 @@ parameters:
     ignoreErrors:
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
-        - '#Variable \$field might not be defined.#'
         - '#Variable \$thousands might not be defined.#'
         - '#Variable \$decimal might not be defined.#'
         - '~^Parameter #1 \$value of function strval expects bool\|float\|int\|resource\|string\|null, mixed given\.$~'
