@@ -282,6 +282,9 @@ trait HasFilter
 
         $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 
+        $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal']   = $decimal;
+
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
 
@@ -301,6 +304,9 @@ trait HasFilter
         $this->resetPage();
 
         $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+
+        $this->filters['number'][$field]['thousands'] = $thousands;
+        $this->filters['number'][$field]['decimal']   = $decimal;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;

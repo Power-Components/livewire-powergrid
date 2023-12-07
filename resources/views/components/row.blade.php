@@ -44,10 +44,9 @@
         wire:key="row-{{ $column->field }}"
     >
         <div class="pg-actions">
-            <!-- Render Action -->
             @if (filled(data_get($row, 'actions')) && $column->isAction)
                 @foreach (data_get($row, 'actions') as $key => $action)
-                    <div wire:key="action-{{ $row->id }}-{{ $key }}">
+                    <div wire:key="action-{{ data_get($row, $primaryKey) }}-{{ $key }}">
                         {!! $action !!}
                     </div>
                 @endforeach

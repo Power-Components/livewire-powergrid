@@ -17,9 +17,9 @@ class FilterDynamic extends FilterBase
         return $this;
     }
 
-    public function baseClass(string $value): FilterDynamic
+    public function baseClass(string $attrClass): FilterDynamic
     {
-        $this->baseClass = $value;
+        $this->baseClass = $attrClass;
 
         return $this;
     }
