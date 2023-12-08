@@ -63,7 +63,6 @@
         "test": "@test:sqlite --bail",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
-            "Composer\\Config::disableProcessTimeout",
             "./vendor/bin/pest --compact"
         ],
         "test:mysql":  [
