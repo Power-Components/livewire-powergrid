@@ -41,11 +41,9 @@ class FilterNumber extends FilterBase
     {
         return collect()
             ->put('inputStartAttributes', new ComponentAttributeBag([
-                // 'wire:model.live.debounce.800ms' => 'filters.number.' . $field . '.start',
                 'wire:input.live.debounce.800ms' => 'filterNumberStart(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]))
             ->put('inputEndAttributes', new ComponentAttributeBag([
-                // 'wire:model.live.debounce.800ms' => 'filters.number.' . $field . '.end',
                 'wire:input.live.debounce.800ms' => 'filterNumberEnd(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]))
             ->toArray();
