@@ -39,8 +39,6 @@ class FilterNumber extends FilterBase
 
     public static function getWireAttributes(string $field, array $filter): array
     {
-        $field = str($field)->replace('.', '->>')->toString();
-
         return collect()
             ->put('inputStartAttributes', new ComponentAttributeBag([
                 'wire:model.live.debounce.800ms' => 'filters.number.' . $field . '.start',

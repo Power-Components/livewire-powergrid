@@ -45,8 +45,6 @@ class FilterSelect extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        $field = str($field)->replace('.', '->>')->toString();
-
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
                 'wire:model.live.debounce.500ms' => 'filters.select.' . $field,

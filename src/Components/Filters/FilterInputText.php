@@ -38,8 +38,6 @@ class FilterInputText extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        $field = str($field)->replace('.', '->>')->toString();
-
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
                 'wire:model.live' => 'filters.input_text_options.' . $field,

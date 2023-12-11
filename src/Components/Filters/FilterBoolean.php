@@ -20,8 +20,6 @@ class FilterBoolean extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        $field = str($field)->replace('.', '->>')->toString();
-
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
                 'wire:input.blur' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',

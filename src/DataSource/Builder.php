@@ -47,9 +47,9 @@ class Builder
                 continue;
             }
 
-            $field = str(key($filter))->replace('->>', '.')->toString();
+            $field = key($filter);
 
-            $value = $filter[str(key($filter))->replace('.', '->>')->toString()];
+            $value = $filter[key($filter)];
 
             $this->query->where(function ($query) use ($filterType, $field, $filter, $value, $filters) {
                 $filter = function ($query, $filters, $filterType, $field, $value) {
