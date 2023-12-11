@@ -5,6 +5,9 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use DateTimeZone;
 use Illuminate\Support\{Carbon};
 use Livewire\Attributes\On;
+
+use function Livewire\store;
+
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
@@ -274,17 +277,16 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterNumberStart(array $params, string $value): void
+    public function filterNumberStart(string $field, array $params, string $value): void
     {
         extract($params);
 
         $this->resetPage();
 
-        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        $this->filters['number'][$field]['start'] = $value;
 
-        $this->filters['number'][$field]['start']     = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
+        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
@@ -298,17 +300,16 @@ trait HasFilter
         $this->persistState('filters');
     }
 
-    public function filterNumberEnd(array $params, string $value): void
+    public function filterNumberEnd(string $field, array $params, string $value): void
     {
         extract($params);
 
         $this->resetPage();
 
-        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
+        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
-        $this->filters['number'][$field]['end']       = $value;
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        $this->filters['number'][$field]['end'] = $value;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
@@ -325,22 +326,6 @@ trait HasFilter
     public function filterBoolean(string $field, string $value, string $label): void
     {
         $this->resetPage();
-
-        $setFilter = true;
-
-        // If the field is an attribute of a table (tablename.attribute) check if the filter is already set.
-        // after the setting of the field with the table name it throws an error while getting the collection
-        if (str_contains($field, '.')) {
-            list($tableName, $attribute) = explode('.', $field, 2);
-
-            if (isset($this->filters['boolean'][$tableName][$attribute])) {
-                $setFilter = false;
-            }
-        }
-
-        if ($setFilter) {
-            $this->filters['boolean'][$field] = $value;
-        }
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $label;

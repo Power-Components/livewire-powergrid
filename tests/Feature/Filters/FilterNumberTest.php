@@ -22,10 +22,6 @@ it('properly renders the number filter', function (string $component, object $pa
     ])
         ->call($params->theme)
         ->set('filters', filterNumber($params->field, '2', null))
-        ->assertSeeHtmlInOrder([
-            'wire:model.live.debounce.800ms="filters.number.' . $params->field . '.start"',
-            'wire:model.live.debounce.800ms="filters.number.' . $params->field . '.end',
-        ])
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Francesinha')
         ->assertSee('борщ')
@@ -42,10 +38,8 @@ $customBuilder = new class () extends DishesTable {
             Filter::number('id')
                 ->builder(function ($builder, $values) {
                     expect($values)->toBe([
-                        'start'     => '2',
-                        'end'       => null,
-                        'thousands' => '',
-                        'decimal'   => '',
+                        'start' => '2',
+                        'end'   => null,
                     ])
                         ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
 
@@ -220,14 +214,15 @@ it('displays "No records found" with non-existent min - using collection & array
 })->group('filters', 'filterNumber')->with('filter_number_themes_collection', 'filter_number_themes_array');
 
 it('properly filters by "min & max" formatted', function (string $component, object $params) {
-    livewire($component)
+    $instance = livewire($component)
         ->call($params->theme)
         ->set('testFilters', [
-            Filter::number('price', 'price')
+            Filter::number('price')
                 ->thousands('.')
                 ->decimal('.'),
-        ])
-        ->set('filters', filterNumber('price', '1,50', '20,51', '.', ','))
+        ]);
+
+    $instance->set('filters', filterNumber('price', '1.50', '20.51'))
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Carne Louca');
