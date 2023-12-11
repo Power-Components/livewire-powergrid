@@ -5,6 +5,9 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use DateTimeZone;
 use Illuminate\Support\{Carbon};
 use Livewire\Attributes\On;
+
+use function Livewire\store;
+
 use PowerComponents\LivewirePowerGrid\Column;
 
 trait HasFilter
@@ -280,10 +283,10 @@ trait HasFilter
 
         $this->resetPage();
 
-        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        $this->filters['number'][$field]['start'] = $value;
 
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
+        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
@@ -303,10 +306,10 @@ trait HasFilter
 
         $this->resetPage();
 
-        $value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
+        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
-        $this->filters['number'][$field]['thousands'] = $thousands;
-        $this->filters['number'][$field]['decimal']   = $decimal;
+        $this->filters['number'][$field]['end'] = $value;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;

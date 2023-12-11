@@ -101,13 +101,13 @@ class Collection
                     ->first();
 
                 $this->collection = match ($filterType) {
-                    'datetime'     => (new DateTimePicker($filter))->collection($this->collection, $field, $value),
-                    'date'         => (new DatePicker($filter))->collection($this->collection, $field, $value),
-                    'multi_select' => (new MultiSelect($filter))->collection($this->collection, $field, $value),
-                    'select'       => (new Select($filter))->collection($this->collection, $field, $value),
-                    'boolean'      => (new Boolean($filter))->collection($this->collection, $field, $value),
-                    'number'       => (new Number($filter))->collection($this->collection, $field, $value),
-                    'input_text'   => (new InputText($filter))->collection($this->collection, $field, [
+                    'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'date'         => (new DatePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'select'       => (new Select($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'boolean'      => (new Boolean($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'number'       => (new Number($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'input_text'   => (new InputText($this->powerGridComponent, $filter))->collection($this->collection, $field, [
                         'selected' => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                         'value'    => $value,
                     ]),

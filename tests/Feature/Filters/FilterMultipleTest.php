@@ -92,7 +92,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
 
     $component->assertSee('Barco-Sushi da Sueli');
 
-    $filters = array_merge($component->filters, filterNumber('price', '80,00', '100', '.', ','));
+    $filters = array_merge($component->filters, filterNumber('price', '80.00', '100'));
 
     $component->set('filters', $filters)
         ->assertDontSee('Barco-Sushi da Sueli')
@@ -118,7 +118,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
             'input_text'         => [],
             'input_text_options' => [],
         ],
-        filterNumber('price', '80,00', '100', '.', ','),
+        filterNumber('price', '80.00', '100'),
         filterBoolean('in_stock', 'true')
     );
 

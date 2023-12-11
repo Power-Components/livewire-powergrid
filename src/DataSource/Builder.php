@@ -43,7 +43,7 @@ class Builder
         }
 
         foreach ($this->powerGridComponent->filters as $filterType => $filter) {
-            if (empty($filter)) {
+            if (blank($filter)) {
                 continue;
             }
 
@@ -59,13 +59,13 @@ class Builder
                         ->first();
 
                     match ($filterType) {
-                        'datetime'     => (new DateTimePicker($filter))->builder($query, $field, $value),
-                        'date'         => (new DatePicker($filter))->builder($query, $field, $value),
-                        'multi_select' => (new MultiSelect($filter))->builder($query, $field, $value),
-                        'select'       => (new Select($filter))->builder($query, $field, $value),
-                        'boolean'      => (new Boolean($filter))->builder($query, $field, $value),
-                        'number'       => (new Number($filter))->builder($query, $field, $value),
-                        'input_text'   => (new InputText($filter))->builder($query, $field, [
+                        'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'date'         => (new DatePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'select'       => (new Select($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'boolean'      => (new Boolean($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'number'       => (new Number($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                        'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
                             'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                             'value'        => $value,
                             'searchMorphs' => $this->powerGridComponent->searchMorphs,
