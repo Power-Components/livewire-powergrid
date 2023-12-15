@@ -11,8 +11,8 @@ it(
     fn (string $component, object $params) => livewire($component)
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
-            'wire:model.live.debounce.500ms="filters.select.dishes.diet"',
-            'wire:input.debounce.500ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
+            'wire:model="filters.select.dishes.diet"',
+            'wire:input.debounce.600ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
         ])
         ->assertSeeHtmlInOrder([
             'All',

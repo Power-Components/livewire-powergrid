@@ -181,7 +181,7 @@ it('properly filters by bool true - using collection - custom builder', function
     ])
         ->call($theme)
         ->assertSeeHtml('wire:input.blur="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
-        ->assertSeeHtml('wire:model.blur="filters.boolean.in_stock"');
+        ->assertSeeHtml('wire:model="filters.boolean.in_stock"');
 
     expect($component->filters)
         ->toBeEmpty();
