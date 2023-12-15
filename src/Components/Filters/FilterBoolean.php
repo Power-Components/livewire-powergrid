@@ -23,7 +23,7 @@ class FilterBoolean extends FilterBase
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
                 'wire:input.blur' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                'wire:model.blur' => 'filters.boolean.' . $field,
+                'wire:model'      => 'filters.boolean.' . $field,
             ]))->toArray();
     }
 }

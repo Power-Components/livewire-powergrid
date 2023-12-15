@@ -47,8 +47,8 @@ class FilterSelect extends FilterBase
     {
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:model.live.debounce.500ms' => 'filters.select.' . $field,
-                'wire:input.debounce.500ms'      => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
+                'wire:model'                => 'filters.select.' . $field,
+                'wire:input.debounce.600ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
             ]))
             ->toArray();
     }

@@ -129,6 +129,10 @@ trait HasFilter
     {
         $filters = collect($this->filters());
 
+        if ($filters->isEmpty()) {
+            return;
+        }
+
         /** @var Column $column */
         foreach ($this->columns as $column) {
             if (str(strval(data_get($column, 'dataField')))->contains('.')) {
@@ -283,8 +287,6 @@ trait HasFilter
 
         $this->resetPage();
 
-        $this->filters['number'][$field]['start'] = $value;
-
         store($this)->set('filters.number.' . $field . '.thousands', $thousands);
         store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
@@ -308,8 +310,6 @@ trait HasFilter
 
         store($this)->set('filters.number.' . $field . '.thousands', $thousands);
         store($this)->set('filters.number.' . $field . '.decimal', $decimal);
-
-        $this->filters['number'][$field]['end'] = $value;
 
         $this->enabledFilters[$field]['id']    = $field;
         $this->enabledFilters[$field]['label'] = $title;
