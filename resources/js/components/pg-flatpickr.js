@@ -11,8 +11,12 @@ export default (params) => ({
     selectedDates: null,
     init() {
         if(typeof flatpickr == "undefined") {
+            console.log('%c%s',
+                'color: #f59e0c; font-size: 1.2em; font-weight: bold; line-height: 1.5',
+                ` PowerGrid`);
+
             console.error('%c%s',
-                'font-size: normal;',
+                'font-size: 1em; line-height: 1.5',
                 `
 Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.tableName}']
 
