@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Url;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    Exportable,
+    Facades\Filter,
+    Footer,
+    Header,
+    PowerGrid,
+    PowerGridColumns,
+    PowerGridComponent};
 
 final class CypressTable extends PowerGridComponent
 {
@@ -20,6 +28,9 @@ final class CypressTable extends PowerGridComponent
     #[Url]
     public int $rule = 1;
 
+    #[Url]
+    public string $testType = 'rule'; // rule, filters
+
     public function setUp(): array
     {
         if ($this->rule === 4) {
@@ -30,13 +41,24 @@ final class CypressTable extends PowerGridComponent
             $this->showCheckBox();
         }
 
+        $headerTest = match ($this->testType) {
+            'filters' => [
+                Header::make()
+                    ->includeViewOnTop('components.header.filters-controllers')
+                    ->showSearchInput(),
+            ],
+            default => [
+                Header::make()
+                    ->includeViewOnTop('components.header.rules-controllers')
+                    ->showSearchInput(),
+            ],
+        };
+
         return [
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()
-                ->includeViewOnTop('components.header.rules-controllers')
-                ->showSearchInput(),
+            ...$headerTest,
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
@@ -94,6 +116,19 @@ final class CypressTable extends PowerGridComponent
     public function applyRules(): void
     {
         $this->applyRules = true;
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::inputText('name'),
+            Filter::inputText('email'),
+            Filter::number('id'),
+            Filter::datetimepicker('created_at_formatted', 'created_at')
+                ->params([
+                    'timezone' => 'America/Sao_Paulo',
+                ]),
+        ];
     }
 
     public function actionRules($row): array
