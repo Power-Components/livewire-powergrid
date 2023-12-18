@@ -40,11 +40,11 @@ class FilterInputText extends FilterBase
     {
         return collect()
             ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:model' => 'filters.input_text_options.' . $field,
+                'wire:model'                     => 'filters.input_text_options.' . $field,
                 'wire:input.live.debounce.600ms' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value)',
             ]))
             ->put('inputAttributes', new ComponentAttributeBag([
-                'wire:model' => 'filters.input_text.' . $field,
+                'wire:model'                     => 'filters.input_text.' . $field,
                 'wire:input.live.debounce.600ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
             ]))
             ->toArray();
