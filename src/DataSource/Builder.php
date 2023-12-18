@@ -42,40 +42,34 @@ class Builder
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $filterType => $filter) {
-            if (blank($filter)) {
-                continue;
-            }
+        foreach ($this->powerGridComponent->filters as $filterType => $column) {
+            foreach ($column as $field => $value) {
+                $this->query->where(function ($query) use ($filterType, $field, $value, $filters) {
+                    $filter = function ($query, $filters, $filterType, $field, $value) {
+                        $filter = $filters->filter(function ($filter) use ($field) {
+                            return data_get($filter, 'field') === $field;
+                        })
+                            ->first();
 
-            $field = key($filter);
-
-            $value = $filter[key($filter)];
-
-            $this->query->where(function ($query) use ($filterType, $field, $filter, $value, $filters) {
-                $filter = function ($query, $filters, $filterType, $field, $value) {
-                    $filter = $filters->filter(function ($filter) use ($field) {
-                        return data_get($filter, 'field') === $field;
-                    })
-                        ->first();
-
-                    match ($filterType) {
-                        'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'date'         => (new DatePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'select'       => (new Select($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'boolean'      => (new Boolean($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'number'       => (new Number($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                        'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
-                            'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
-                            'value'        => $value,
-                            'searchMorphs' => $this->powerGridComponent->searchMorphs,
-                        ]),
-                        default => null
+                        match ($filterType) {
+                            'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'date'         => (new DatePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'select'       => (new Select($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'boolean'      => (new Boolean($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'number'       => (new Number($this->powerGridComponent, $filter))->builder($query, $field, $value),
+                            'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
+                                'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
+                                'value'        => $value,
+                                'searchMorphs' => $this->powerGridComponent->searchMorphs,
+                            ]),
+                            default => null
+                        };
                     };
-                };
 
-                $filter($query, $filters, $filterType, $field, $value);
-            });
+                    $filter($query, $filters, $filterType, $field, $value);
+                });
+            }
         }
 
         return $this->query;
