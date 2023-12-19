@@ -60,7 +60,7 @@ describe('Action Rules::rows', () => {
             .should('have.class', '!cursor-pointer');
     })
 
-    it.only('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
+    it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 1)' +
             '->setAttribute(\'class\', \'!bg-red-100\'), ' +
