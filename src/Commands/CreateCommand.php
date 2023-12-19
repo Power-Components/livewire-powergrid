@@ -128,11 +128,11 @@ class CreateCommand extends Command
 
     protected function askDatasource(): void
     {
-        $this->datasourceOption = select(
+        $this->datasourceOption = strval(select(
             label: 'What type of data source will you use?',
             options: self::DATASOURCE_OPTIONS,
             default: self::DATASOURCE_ELOQUENT_BUILDER
-        );
+        ));
     }
 
     /**
