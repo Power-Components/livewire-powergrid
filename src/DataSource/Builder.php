@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
@@ -42,8 +43,29 @@ class Builder
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $filterType => $column) {
-            foreach ($column as $field => $value) {
+        foreach ($this->powerGridComponent->filters as $filterType => $columns) {
+            $columns = Arr::dot($columns);
+
+            foreach ($columns as $field => $value) {
+                if ($filterType == 'number') {
+                    if (str($field)->contains('.start')) {
+                        $value = [
+                            'start' => $value,
+                        ];
+                    }
+
+                    if (str($field)->contains('.end')) {
+                        $value = [
+                            'end' => $value,
+                        ];
+                    }
+
+                    $field = str($field)->replace('.start', '')
+                        ->replace('.end', '')
+                        ->trim()
+                        ->toString();
+                }
+
                 $this->query->where(function ($query) use ($filterType, $field, $value, $filters) {
                     $filter = function ($query, $filters, $filterType, $field, $value) {
                         $filter = $filters->filter(function ($filter) use ($field) {

@@ -12,6 +12,7 @@ class Number extends BuilderBase
 {
     public function builder(Builder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
+        ds($values);
         $thousands = store($this->component)->get('filters.number.' . $field . '.thousands');
         $decimal   = store($this->component)->get('filters.number.' . $field . '.decimal');
 
