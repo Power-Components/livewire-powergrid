@@ -75,6 +75,8 @@ it('searches for something that is not on the current page')
     ->assertDontSeeHtml('Bife à Parmegiana')
     ->assertSeeHtml('Francesinha vegana');
 
+todo('prevents the "division by zero exception" when there is no data and when using toBase');
+
 it('properly paginates', function () {
     $component = powergrid();
 
