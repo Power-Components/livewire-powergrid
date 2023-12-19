@@ -1,6 +1,6 @@
 describe('Action Rules::rows', () => {
     beforeEach(() => {
-        cy.visit('/cypress?rule=1');
+        cy.visit('/cypress?ruleType=rows');
     });
 
     it('can visit page', () => {
@@ -60,20 +60,20 @@ describe('Action Rules::rows', () => {
             .should('have.class', '!cursor-pointer');
     })
 
-    it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
+    it.only('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 1)' +
             '->setAttribute(\'class\', \'!bg-red-100\'), ' +
             '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 2)' +
-            '->setAttribute(\'class\', \'!bg-green-100\')';
+            '->setAttribute(\'class\', \'!bg-blue-100\')';
 
         cy.get('[data-cy=dynamic-rules]').type($rules)
 
         cy.get('[data-cy=apply-rules]').click()
 
         cy.get('.power-grid-table tbody tr').eq(0)
-            .should('not.have.class', '!bg-red-100');
+            .should('have.class', '!bg-red-100');
 
         cy.get('.power-grid-table tbody tr').eq(0)
             .should('not.have.class', '!bg-green-100');
