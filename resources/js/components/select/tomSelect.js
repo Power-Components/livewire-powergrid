@@ -11,6 +11,19 @@ export default (params) => ({
             onChange: (value) => {
                 storeMultiSelect(params, value)
             },
+            onInitialize: () => {
+                window.addEventListener(`pg:clear_multi_select::${params.tableName}:${params.dataField}`, () => {
+                    if (element) {
+                        element.tomselect.clear(true)
+                    }
+                })
+
+                window.addEventListener(`pg:clear_all_multi_select::${params.tableName}`, () => {
+                    if (element) {
+                        element.tomselect.clear(true)
+                    }
+                })
+            },
         }
 
         const asyncConfig = {

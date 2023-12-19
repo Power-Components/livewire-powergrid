@@ -24,7 +24,7 @@ trait HasFilter
             list($table, $column) = explode('.', $field);
 
             if (isset($this->filters['multi_select'][$table][$column])) {
-                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
             }
 
             if (isset($this->filters['datetime'][$table][$column]) || isset($this->filters['date'][$table][$column])) {
@@ -88,7 +88,7 @@ trait HasFilter
             }
         } else {
             if (isset($this->filters['multi_select'][$field])) {
-                $this->dispatch('pg:clear_multi_select::' . $this->tableName);
+                $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
             }
 
             if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
@@ -123,6 +123,7 @@ trait HasFilter
         $this->persistState('filters');
 
         $this->dispatch('pg:clear_all_flatpickr::' . $this->tableName);
+        $this->dispatch('pg:clear_all_multi_select::' . $this->tableName);
     }
 
     private function resolveFilters(): void
