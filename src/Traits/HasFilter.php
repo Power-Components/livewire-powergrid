@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use DateTimeZone;
-use Illuminate\Support\{Carbon};
+use Illuminate\Support\{Arr, Carbon};
 use Livewire\Attributes\On;
 
 use function Livewire\store;
