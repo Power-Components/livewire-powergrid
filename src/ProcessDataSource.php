@@ -218,7 +218,9 @@ class ProcessDataSource
             return $results->$paginate($perPage);
         }
 
-        return $results->$paginate($results->count());
+        $count = $results->count();
+
+        return $results->$paginate($count ?: 10);
     }
 
     /**
