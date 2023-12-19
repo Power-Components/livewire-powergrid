@@ -3,14 +3,14 @@
             class="w-[180px]"
             label="Select Rule"
             :options="[
-        ['name' => 'Rows',  'id' => 1],
-        ['name' => 'Buttons', 'id' => 2],
-        ['name' => 'Checkbox', 'id' => 3],
-        ['name' => 'Radio', 'id' => 4],
+        ['name' => 'Rows',  'value' => 'rows'],
+        ['name' => 'Buttons', 'value' => 'buttons'],
+        ['name' => 'Checkbox', 'value' => 'checkbox'],
+        ['name' => 'Radio', 'value' => 'radio'],
     ]"
             option-label="name"
-            option-value="id"
-            wire:model="rule"
+            option-value="value"
+            wire:model="ruleType"
     />
 
     <x-textarea data-cy="dynamic-rules" wire:model="dynamicRules"/>

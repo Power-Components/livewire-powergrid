@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Url;
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
 
@@ -18,25 +19,39 @@ final class CypressTable extends PowerGridComponent
     public bool $applyRules = false;
 
     #[Url]
-    public int $rule = 1;
+    public string $ruleType = 'rows'; // rows, checkbox, radio,
+
+    #[Url]
+    public string $testType = 'rules'; // rules, filters
 
     public function setUp(): array
     {
-        if ($this->rule === 4) {
+        if ($this->ruleType === 'radio') {
             $this->showRadioButton();
         }
 
-        if ($this->rule === 3) {
+        if ($this->ruleType === 'checkbox') {
             $this->showCheckBox();
         }
+
+        $headerTest = match ($this->testType) {
+            'filters' => [
+                Header::make()
+                    ->includeViewOnTop('components.header.filters-controllers')
+                    ->showSearchInput(),
+            ],
+            default => [
+                Header::make()
+                    ->includeViewOnTop('components.header.rules-controllers')
+                    ->showSearchInput(),
+            ],
+        };
 
         return [
             Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-            Header::make()
-                ->includeViewOnTop('components.header.rules-controllers')
-                ->showSearchInput(),
+            ...$headerTest,
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount(),
@@ -94,6 +109,23 @@ final class CypressTable extends PowerGridComponent
     public function applyRules(): void
     {
         $this->applyRules = true;
+    }
+
+    public function filters(): array
+    {
+        if ($this->testType == 'rules') {
+            return [];
+        }
+
+        return [
+            Filter::inputText('name'),
+            Filter::inputText('email'),
+            Filter::number('id'),
+            Filter::datetimepicker('created_at_formatted', 'created_at')
+                ->params([
+                    'timezone' => 'America/Sao_Paulo',
+                ]),
+        ];
     }
 
     public function actionRules($row): array
