@@ -230,12 +230,11 @@ trait HasFilter
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
-        $selectedDatesFormatted = [$startDate, $endDate];
-
         $this->enabledFilters[$field]['data-field'] = $field;
         $this->enabledFilters[$field]['label']      = $label;
 
-        $this->filters[$type][$field] = $selectedDatesFormatted;
+        $this->filters[$type][$field]['start'] = $startDate;
+        $this->filters[$type][$field]['end']   = $endDate;
 
         $this->filters[$type][$field]['formatted'] = $dateStr;
 
