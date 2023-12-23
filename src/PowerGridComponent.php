@@ -24,6 +24,9 @@ use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     WithSorting};
 use Throwable;
 
+/**
+ * @property-read mixed $getCachedData
+ */
 class PowerGridComponent extends Component
 {
     use WithPagination;
@@ -82,24 +85,9 @@ class PowerGridComponent extends Component
 
     public array $actions = [];
 
-    public const ITEMS_PER_COMPONENT = 10;
+    public int $rowsPerChildComponent = 25;
 
     public int $items = 0;
-
-    public function loadMore(): void
-    {
-        $this->items++;
-    }
-
-    #[Computed]
-    public function canLoadMore(): bool
-    {
-        $count = $this->getCachedData->count();
-
-        $rendered = ($this->items + 1) * static::ITEMS_PER_COMPONENT;
-
-        return $count > $rendered;
-    }
 
     public function mount(): void
     {
@@ -277,11 +265,13 @@ class PowerGridComponent extends Component
     public function updatedPage(): void
     {
         $this->checkboxAll = false;
+        $this->reset('items');
     }
 
     public function updatedSearch(): void
     {
         $this->gotoPage(1);
+        $this->reset('items');
     }
 
     public function toggleFilters(): void
@@ -339,6 +329,21 @@ class PowerGridComponent extends Component
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
+    }
+
+    public function loadMore(): void
+    {
+        $this->items++;
+    }
+
+    #[Computed]
+    public function canLoadMore(): bool
+    {
+        $count = $this->getCachedData->count();
+
+        $rendered = ($this->items + 1) * $this->rowsPerChildComponent;
+
+        return $count > $rendered;
     }
 
     /**
@@ -401,25 +406,11 @@ class PowerGridComponent extends Component
         $store = store($this)->get('powerGridTheme');
 
         if (!$key) {
-            return $this->convertObjectsToArray((array) $store);
+            return convertObjectsToArray((array) $store);
         }
 
-        return $this->convertObjectsToArray((array) data_get($store, $key));
+        return convertObjectsToArray((array) data_get($store, $key));
     }
-
-    protected function convertObjectsToArray(array $data): array
-    {
-        foreach ($data as $key => $value) {
-            if (is_object($value)) {
-                $data[$key] = (array) $value;
-            } elseif (is_array($value)) {
-                $data[$key] = $this->convertObjectsToArray($value);
-            }
-        }
-
-        return $data;
-    }
-
 
     /**
      * @throws Exception|Throwable

@@ -23,7 +23,6 @@
         @else
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
 
-            @ds($this->getTheme())
             @foreach (range(0, $items) as $item)
                 <livewire:load-more-children
                     wire:key="{{ $item }}"
@@ -36,8 +35,8 @@
                     :columns="$this->visibleColumns"
                     :theme="$theme"
                     :data="$this->getCachedData
-                        ->skip($item * static::ITEMS_PER_COMPONENT)
-                        ->take(static::ITEMS_PER_COMPONENT)"
+                        ->skip($item * $this->rowsPerChildComponent)
+                        ->take($this->rowsPerChildComponent)"
                 />
             @endforeach
 

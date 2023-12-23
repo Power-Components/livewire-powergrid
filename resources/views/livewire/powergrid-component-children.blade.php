@@ -27,7 +27,7 @@
             }
         @endphp
 
-        @if (isset($setUp['detail']))
+        @isset($setUp['detail']))
             <tbody
                 wire:key="tbody-{{ $row->{$primaryKey} }}"
                 {{ $trAttributesBag }}

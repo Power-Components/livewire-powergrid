@@ -1,7 +1,5 @@
 <?php
 
-use function Livewire\store;
-
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
 
@@ -39,5 +37,20 @@ if (!function_exists('isTailwind')) {
     function isTailwind(): bool
     {
         return in_array(config('livewire-powergrid.theme'), ['tailwind', Tailwind::class]);
+    }
+}
+
+if (!function_exists('convertObjectsToArray')) {
+    function convertObjectsToArray(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_object($value)) {
+                $data[$key] = (array) $value;
+            } elseif (is_array($value)) {
+                $data[$key] = convertObjectsToArray($value);
+            }
+        }
+
+        return $data;
     }
 }

@@ -55,7 +55,7 @@
 
         @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
             <span @class([$contentClassField, $contentClass])>
-{{--                @include($theme->editable->view ?? null, ['editable' => $column->editable])--}}
+                @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
             </span>
         @elseif(count($column->toggleable) > 0)
             @php
@@ -63,7 +63,7 @@
                 $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
                 $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
             @endphp
-{{--            @include($theme->toggleable->view, ['tableName' => $tableName])--}}
+            @include(data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
                 <div>{!! $column->index ? $rowIndex : $content !!}</div>
