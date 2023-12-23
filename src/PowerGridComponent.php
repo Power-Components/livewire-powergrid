@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
+
+use function Livewire\store;
+
 use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -59,8 +62,6 @@ class PowerGridComponent extends Component
 
     public bool $showErrorBag = false;
 
-    protected ThemeBase $powerGridTheme;
-
     public bool $rowIndex = true;
 
     public int $total = 0;
@@ -80,6 +81,25 @@ class PowerGridComponent extends Component
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
     public array $actions = [];
+
+    public const ITEMS_PER_COMPONENT = 10;
+
+    public int $items = 0;
+
+    public function loadMore(): void
+    {
+        $this->items++;
+    }
+
+    #[Computed]
+    public function canLoadMore(): bool
+    {
+        $count = $this->getCachedData->count();
+
+        $rendered = ($this->items + 1) * static::ITEMS_PER_COMPONENT;
+
+        return $count > $rendered;
+    }
 
     public function mount(): void
     {
@@ -171,7 +191,8 @@ class PowerGridComponent extends Component
         $this->readyToLoad = true;
     }
 
-    private function getCachedData(): mixed
+    #[Computed]
+    public function getCachedData(): mixed
     {
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
             return $this->readyToLoad ? $this->fillData() : collect([]);
@@ -271,6 +292,8 @@ class PowerGridComponent extends Component
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
+        ds($field);
+
         foreach ($this->visibleColumns() as &$column) {
             if (data_get($column, 'field') === $field) {
                 data_set($column, 'hidden', !data_get($column, 'hidden'));
@@ -332,11 +355,11 @@ class PowerGridComponent extends Component
     private function renderView(mixed $data): Application|Factory|View
     {
         /** @phpstan-var view-string $view */
-        $view = $this->powerGridTheme->layout->table;
+        $view = $this->getTheme('layout')['table'];
 
         return view($view, [
             'data'  => $data,
-            'theme' => $this->powerGridTheme,
+            'theme' => $this->getTheme(),
             'table' => 'livewire-powergrid::components.table',
         ]);
     }
@@ -373,6 +396,31 @@ class PowerGridComponent extends Component
             ->where('forceHidden', false);
     }
 
+    public function getTheme(string $key = null): array
+    {
+        $store = store($this)->get('powerGridTheme');
+
+        if (!$key) {
+            return $this->convertObjectsToArray((array) $store);
+        }
+
+        return $this->convertObjectsToArray((array) data_get($store, $key));
+    }
+
+    protected function convertObjectsToArray(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_object($value)) {
+                $data[$key] = (array) $value;
+            } elseif (is_array($value)) {
+                $data[$key] = $this->convertObjectsToArray($value);
+            }
+        }
+
+        return $data;
+    }
+
+
     /**
      * @throws Exception|Throwable
      */
@@ -383,7 +431,9 @@ class PowerGridComponent extends Component
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
 
-        $this->powerGridTheme = $themeBase->apply();
+        if (!store($this)->has('powerGridTheme')) {
+            store($this)->set('powerGridTheme', $themeBase->apply());
+        }
 
         $this->columns = collect($this->columns)->map(function ($column) {
             return (object) $column;

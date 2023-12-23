@@ -18,7 +18,7 @@ trait WithCheckbox
 
     public string $checkboxAttribute = 'id';
 
-    public bool $radio;
+    public bool $radio = false;
 
     public string $radioAttribute = 'id';
 

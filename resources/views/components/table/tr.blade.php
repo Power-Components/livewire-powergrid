@@ -2,12 +2,12 @@
     'loading' => false,
 ])
 <tr
-    class="{{ $theme->table->trClass }}"
-    style="{{ $theme->table->trStyle }}"
+    class="{{ data_get($theme, 'table.trClass') }}"
+    style="{{ data_get($theme, 'table.trStyle') }}"
 >
     @if ($loading)
         <td
-            class="{{ $theme->table->tdBodyEmptyClass }}"
+            class="{{ data_get($theme, 'table.tdBodyEmptyClass') }}"
             colspan="{{ ($checkbox ? 1 : 0) + count($columns) }}"
         >
             @if ($loadingComponent)
@@ -20,8 +20,8 @@
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <th
                 scope="col"
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.trStyle') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -48,7 +48,7 @@
         @if ($checkbox)
             <x-livewire-powergrid::checkbox-all
                 :checkbox="$checkbox"
-                :theme="$theme->checkbox"
+                :theme="data_get($theme, 'checkbox')"
             />
         @endif
 

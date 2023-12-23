@@ -1,5 +1,7 @@
 <?php
 
+use function Livewire\store;
+
 use PowerComponents\LivewirePowerGrid\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
 
