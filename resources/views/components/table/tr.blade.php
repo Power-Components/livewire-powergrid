@@ -31,16 +31,16 @@
             <th
                 fixed
                 x-show="hasHiddenElements"
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.thStyle') }}"
             >
             </th>
         @endisset
 
         @if ($radio)
             <th
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.thStyle') }}"
             >
             </th>
         @endif
@@ -70,9 +70,9 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
+                class="{{ data_get($theme, 'table.thClass') . ' ' . data_get($theme, 'table.thActionClass') }}"
                 scope="col"
-                style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
+                style="{{ data_get($theme, 'table.thStyle') . ' ' . data_get($theme, 'table.thActionStyle') }}"
                 colspan="{{ count($actions) }}"
                 wire:key="{{ md5('actions') }}"
             >

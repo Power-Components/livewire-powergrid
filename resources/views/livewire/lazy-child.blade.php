@@ -5,7 +5,7 @@
         @php
             $rowId = data_get($row, $primaryKey);
 
-            $class = $theme->table->trBodyClass ?? null;
+            $class = data_get($theme, 'table.trBodyClass');
 
             $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
 
@@ -27,50 +27,27 @@
             }
         @endphp
 
-        @isset($setUp['detail']))
-            <tbody
-                wire:key="tbody-{{ $row->{$primaryKey} }}"
-                {{ $trAttributesBag }}
-                x-data="{ detailState: @entangle('setUp.detail.state.' . $row->{$primaryKey}) }"
-            >
+        @if (isset($setUp['detail']))
+            <tr {{ $trAttributesBag }}>
                 @include('livewire-powergrid::components.row', [
                     'rowIndex' => $loop->index + 1,
-                    'radio' => $radio,
-                    'checkbox' => $checkbox,
-                    'setUp' => $setUp,
-                    'radioAttribute' => $radioAttribute,
-                    'checkboxAttribute' => $checkboxAttribute,
-                    'columns' => $columns,
-                    'tableName' => $tableName,
-                    'primaryKey' => $primaryKey,
                 ])
+            </tr>
+            @if (data_get($setUp, 'detail.state.' . $rowId))
                 <tr
-                    x-show="detailState"
                     style="{{ data_get($theme, 'table.trBodyStyle') }}"
                     {{ $trAttributesBag }}
                 >
-                    @include('livewire-powergrid::components.table.detail', [
-                        'setUp' => $setUp,
-                        'primaryKey' => $primaryKey,
-                    ])
+                    @include('livewire-powergrid::components.table.detail')
                 </tr>
-            </tbody>
+            @endif
         @else
             <tr
-                wire:key="tbody-{{ $row->{$primaryKey} }}"
                 style="{{ data_get($theme, 'table.trBodyStyle') }}"
                 {{ $trAttributesBag }}
             >
                 @include('livewire-powergrid::components.row', [
                     'rowIndex' => $loop->index + 1,
-                    'radio' => $radio,
-                    'checkbox' => $checkbox,
-                    'setUp' => $setUp,
-                    'radioAttribute' => $radioAttribute,
-                    'checkboxAttribute' => $checkboxAttribute,
-                    'columns' => $columns,
-                    'tableName' => $tableName,
-                    'primaryKey' => $primaryKey,
                 ])
             </tr>
         @endif

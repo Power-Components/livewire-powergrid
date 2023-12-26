@@ -68,7 +68,7 @@ class RulesController
         ];
     }
 
-    public function loop(array $actionRules, object $loop): bool
+    public function loop(array $actionRules, object|int $loop): bool
     {
         foreach ($actionRules as $actionRule) {
             if (isset($actionRule->rule['loop'])) {

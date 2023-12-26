@@ -10,8 +10,8 @@
                         width="16"
                         height="16"
                         fill="currentColor"
-                        class="{{ $theme->searchBox->iconSearchClass }}"
-                        style="{{ $theme->searchBox->iconSearchStyle }}"
+                        class="{{ data_get($theme, 'searchBox.iconSearchClass') }}"
+                        style="{{ data_get($theme, 'searchBox.iconSearchStyle') }}"
                         viewBox="0 0 16 16"
                     >
                         <path
@@ -22,8 +22,8 @@
                 <input
                     wire:model.live.debounce.600ms="search"
                     type="text"
-                    class="{{ $theme->searchBox->inputClass }}"
-                    style="{{ $theme->searchBox->inputStyle }}"
+                    class="{{ data_get($theme, 'searchBox.inputClass') }}"
+                    style="{{ data_get($theme, 'searchBox.inputStyle') }}"
                     placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}"
                 >
             </div>

@@ -3,7 +3,7 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
-    'theme' => $theme->table ?? null,
+    'theme' => data_get($theme, 'table'),
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
@@ -13,7 +13,7 @@
 @endphp
 
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot() . '.toggle-detail', [
-    'theme' => $theme->table ?? null,
+    'theme' => data_get($theme, 'table'),
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 

@@ -261,7 +261,7 @@ class ProcessDataSource
 
     private function processBatch(BaseCollection $collection): BaseCollection
     {
-        return $collection->map(function ($row) {
+        return $collection->map(function ($row, $index) {
             $addColumns = $this->component->addColumns();
             $columns    = $addColumns->columns;
             $columns    = collect($columns);

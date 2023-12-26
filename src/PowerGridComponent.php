@@ -5,9 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 
@@ -17,6 +15,7 @@ use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
+    LazyManager,
     Listeners,
     PersistData,
     SoftDeletes,
@@ -26,6 +25,8 @@ use Throwable;
 
 /**
  * @property-read mixed $getCachedData
+ * @property-read bool $hasColumnFilters
+ * @property-read array|\Illuminate\Support\Collection $visibleColumns
  */
 class PowerGridComponent extends Component
 {
@@ -36,6 +37,7 @@ class PowerGridComponent extends Component
     use PersistData;
     use Listeners;
     use SoftDeletes;
+    use LazyManager;
 
     public array $headers = [];
 
@@ -48,8 +50,6 @@ class PowerGridComponent extends Component
     public string $primaryKey = 'id';
 
     public string $currentTable = '';
-
-    public Collection|array|EloquentBuilder|QueryBuilder $datasource;
 
     public array $relationSearch = [];
 
@@ -84,10 +84,6 @@ class PowerGridComponent extends Component
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
     public array $actions = [];
-
-    public int $rowsPerChildComponent = 25;
-
-    public int $items = 0;
 
     public function mount(): void
     {
@@ -180,7 +176,7 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    public function getCachedData(): mixed
+    protected function getCachedData(): mixed
     {
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
             return $this->readyToLoad ? $this->fillData() : collect([]);
@@ -265,13 +261,15 @@ class PowerGridComponent extends Component
     public function updatedPage(): void
     {
         $this->checkboxAll = false;
-        $this->reset('items');
+
+        data_set($this->setUp, 'lazy.items', 0);
     }
 
     public function updatedSearch(): void
     {
         $this->gotoPage(1);
-        $this->reset('items');
+
+        data_set($this->setUp, 'lazy.items', 0);
     }
 
     public function toggleFilters(): void
@@ -282,9 +280,7 @@ class PowerGridComponent extends Component
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
-        ds($field);
-
-        foreach ($this->visibleColumns() as &$column) {
+        foreach ($this->visibleColumns as &$column) {
             if (data_get($column, 'field') === $field) {
                 data_set($column, 'hidden', !data_get($column, 'hidden'));
 
@@ -295,6 +291,7 @@ class PowerGridComponent extends Component
         $this->persistState('columns');
     }
 
+    #[On('pg:toggleDetail-{tableName}')]
     public function toggleDetail(string $id): void
     {
         $detailStates = (array) data_get($this->setUp, 'detail.state');
@@ -329,21 +326,6 @@ class PowerGridComponent extends Component
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
-    }
-
-    public function loadMore(): void
-    {
-        $this->items++;
-    }
-
-    #[Computed]
-    public function canLoadMore(): bool
-    {
-        $count = $this->getCachedData->count();
-
-        $rendered = ($this->items + 1) * $this->rowsPerChildComponent;
-
-        return $count > $rendered;
     }
 
     /**
@@ -435,7 +417,9 @@ class PowerGridComponent extends Component
 
         $data = $this->getCachedData();
 
-        $this->resolveDetailRow($data);
+        if (empty(data_get($this->setUp, 'lazy'))) {
+            $this->resolveDetailRow($data);
+        }
 
         /** @phpstan-ignore-next-line */
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();

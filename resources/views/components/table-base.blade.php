@@ -32,20 +32,12 @@
     </table>
 
     {{-- loading indicator --}}
-    <div class="flex justify-center items-center" wire:loading target="loadMore">
+    <div class="justify-center items-center" wire:loading.class="flex" wire:target="loadMore">
         @include(powerGridThemeRoot() . '.header.loading')
     </div>
 
     {{-- infinite pagination handler --}}
     @if ($this->canLoadMore)
-        <div x-init="() => {
-            const observer = new IntersectionObserver(entries => {
-                if (entries[0].isIntersecting) {
-                      $wire.call('loadMore')
-                }
-            })
-
-            observer.observe($el)
-        }"></div>
+        <div x-init="() => {const observer = new IntersectionObserver(entries => {if (entries[0].isIntersecting) {$wire.call('loadMore')}}); observer.observe($el)}"></div>
     @endif
 </div>

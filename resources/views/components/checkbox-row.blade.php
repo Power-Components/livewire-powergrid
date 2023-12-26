@@ -2,7 +2,7 @@
     $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:checkbox');
 
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => $theme->checkbox->inputClass,
+        'class' => data_get($theme, 'checkbox.inputClass'),
     ]);
 
     if (filled($rulesValues['setAttributes'])) {
@@ -16,17 +16,17 @@
 
 @if (filled($rulesValues['hide']))
     <td
-        class="{{ $theme->checkbox->thClass }}"
-        style="{{ $theme->checkbox->thStyle }}"
+        class="{{ data_get($theme, 'checkbox.tdClass') }}"
+        style="{{ data_get($theme, 'checkbox.tdStyle') }}"
     >
     </td>
 @elseif(filled($rulesValues['disable']))
     <td
-        class="{{ $theme->checkbox->thClass }}"
-        style="{{ $theme->checkbox->thStyle }}"
+        class="{{ data_get($theme, 'checkbox.tdClass') }}"
+        style="{{ data_get($theme, 'checkbox.tdStyle') }}"
     >
-        <div class="{{ $theme->checkbox->divClass }}">
-            <label class="{{ $theme->checkbox->labelClass }}">
+        <div class="{{ data_get($theme, 'checkbox.divClass') }}">
+            <label class="{{ data_get($theme, 'checkbox.labelClass') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -37,11 +37,11 @@
     </td>
 @else
     <td
-        class="{{ $theme->checkbox->thClass }}"
-        style="{{ $theme->checkbox->thStyle }}"
+        class="{{ data_get($theme, 'checkbox.tdClass') }}"
+        style="{{ data_get($theme, 'checkbox.tdStyle')  }}"
     >
-        <div class="{{ $theme->checkbox->divClass }}">
-            <label class="{{ $theme->checkbox->labelClass }}">
+        <div class="{{ data_get($theme, 'checkbox.divClass') }}">
+            <label class="{{ data_get($theme, 'checkbox.labelClass') }}">
                 <input
                     x-data="{}"
                     type="checkbox"

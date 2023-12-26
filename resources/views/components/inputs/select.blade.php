@@ -48,8 +48,8 @@
 >
     @if (filled($filter))
         <div
-            @class([$theme->baseClass])
-            style="{{ $theme->baseStyle }}"
+            class="{{ data_get($theme, 'baseClass') }}"
+            style="{{ data_get($theme, 'baseStyle') }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -58,7 +58,7 @@
             @endif
             <select
                 @if ($multiple) multiple @endif
-                class="{{ $theme->selectClass }}"
+                class="{{ data_get($theme, 'selectClass') }}"
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >

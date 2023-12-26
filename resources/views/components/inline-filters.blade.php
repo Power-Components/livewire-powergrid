@@ -10,15 +10,15 @@
     'setUp' => null,
 ])
 @php
-    $trClasses = Arr::toCssClasses([$theme->table->trClass, $theme->table->trFiltersClass]);
-    $tdClasses = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->tdFiltersClass]);
-    $trStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->trFiltersStyle]);
-    $tdStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->tdFiltersStyle]);
+    $trClasses = Arr::toCssClasses([data_get($theme, 'table.trClass'), data_get($theme, 'table.trFiltersClass')]);
+    $tdClasses = Arr::toCssClasses([data_get($theme, 'table.tdBodyClass'), data_get($theme, 'table.tdFiltersClass')]);
+    $trStyles = Arr::toCssClasses([data_get($theme, 'table.trBodyStyle'), data_get($theme, 'table.trFiltersStyle')]);
+    $tdStyles = Arr::toCssClasses([data_get($theme, 'table.tdBodyStyle'), data_get($theme, 'table.tdFiltersStyle')]);
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
         class="{{ $trClasses }}"
-        style="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}"
+        style="{{ data_get($theme, 'table.trStyle') }} {{ data_get($theme, 'table.trFiltersStyle') }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
@@ -36,9 +36,9 @@
 
         @foreach ($this->visibleColumns as $column)
             <td
-                class="{{ $theme->table->tdBodyClass }}"
+                class="{{ data_get($theme, 'table.tdBodyClass') }}"
                 wire:key="column-filter-{{ $column->field }}"
-                style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyle }}"
+                style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle') }}"
             >
 
                 @foreach ($column->filters as $key => $filter)
