@@ -36,7 +36,7 @@
     $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
-        'theme' => $theme->name,
+        'theme' => data_get($theme, 'name'),
         'tableName' => $tableName,
         'id' => data_get($row, $primaryKey),
         'dataField' => $field,

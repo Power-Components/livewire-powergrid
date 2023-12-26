@@ -1,6 +1,9 @@
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
-<x-livewire-powergrid::table-base :ready-to-load="$readyToLoad">
+<x-livewire-powergrid::table-base
+        :ready-to-load="$readyToLoad"
+        :theme="$theme"
+        :lazy="!is_null(data_get($setUp, 'lazy'))">
     <x-slot:header>
         @include('livewire-powergrid::components.table.tr')
     </x-slot:header>
@@ -17,7 +20,7 @@
         @else
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
 
-            @if (blank(data_get($setUp, 'lazy')))
+            @if (empty(data_get($setUp, 'lazy')))
                 @foreach ($data as $row)
                     @if (!isset($row->{$checkboxAttribute}) && $checkbox)
                         @php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp

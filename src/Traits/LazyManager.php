@@ -8,7 +8,7 @@ trait LazyManager
 {
     public function loadMore(): void
     {
-        $items = (int) data_get($this->setUp, 'lazy.items');
+        $items = data_get($this->setUp, 'lazy.items');
 
         data_set($this->setUp, 'lazy.items', $items + 1);
     }
@@ -24,8 +24,8 @@ trait LazyManager
     {
         $count = $this->getCachedData()->count();
 
-        $items           = (int) data_get($this->setUp, 'lazy.items');
-        $rowsPerChildren = (int) data_get($this->setUp, 'lazy.rowsPerChildren');
+        $items           = data_get($this->setUp, 'lazy.items');
+        $rowsPerChildren = data_get($this->setUp, 'lazy.rowsPerChildren');
 
         $rendered = ($items + 1) * $rowsPerChildren;
 
