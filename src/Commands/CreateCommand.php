@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
-use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
@@ -132,8 +131,6 @@ class CreateCommand extends Command
 
     /**
      * @throws CreateCommandException
-     * @throws Exception
-     * @throws \Exception
      */
     protected function askModel(): void
     {
@@ -142,9 +139,9 @@ class CreateCommand extends Command
         if (strtolower($this->datasourceOption) === 'm') {
             $this->model = suggest(
                 label: 'Enter your Model name or file path',
-                required: true,
-                default: 'User',
                 options: Models::list(),
+                default: 'User',
+                required: true,
             );
 
             $this->modelPath = explode('\\', $this->model);

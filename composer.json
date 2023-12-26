@@ -19,8 +19,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "doctrine/dbal": "^3.7",
-        "livewire/livewire": "^3.1.0",
+        "livewire/livewire": "^3.3|dev-feat/l11",
         "laravel/prompts": "^0.1.13"
     },
     "require-dev": {
