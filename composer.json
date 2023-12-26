@@ -20,7 +20,8 @@
     "require": {
         "php": "^8.1",
         "livewire/livewire": "^3.3|dev-feat/l11",
-        "laravel/prompts": "^0.1.13"
+        "laravel/prompts": "^0.1.13",
+        "laradumps/laradumps-core": "^1.0|dev-update-dependencies"
     },
     "require-dev": {
         "composer/composer": "^2.6.6",
