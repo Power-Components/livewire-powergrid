@@ -242,7 +242,7 @@ class PowerGridComponent extends Component
         return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 
-    private function getCacheKeys(): array
+    protected function getCacheKeys(): array
     {
         return [
             json_encode(['page' => $this->getPage()]),
