@@ -14,6 +14,8 @@ final class Lazy implements Wireable
 
     public int $items = 0;
 
+    public string $dispatchAfterToggleDetail;
+
     public static function make(): static
     {
         return new static();
@@ -29,6 +31,13 @@ final class Lazy implements Wireable
     public function inactive(): static
     {
         $this->active = false;
+
+        return $this;
+    }
+
+    public function dispatchAfterToggleDetail(string $event): static
+    {
+        $this->dispatchAfterToggleDetail = $event;
 
         return $this;
     }

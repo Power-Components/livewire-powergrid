@@ -83,7 +83,6 @@
                         'livewire-powergrid::components.expand-container')
                 @endforeach
 
-                @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
             @else
                 @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
                     <livewire:lazy-child
@@ -96,6 +95,7 @@
                         :$checkboxAttribute
                         :$theme
                         :$setUp
+                        :parentId="$this->getName()"
                         :columns="$this->visibleColumns"
                         :data="$this->getCachedData
                             ->skip($item * data_get($setUp, 'lazy.rowsPerChildren'))
@@ -104,6 +104,7 @@
                 @endforeach
             @endif
 
+            @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
         @endif
     </x-slot:body>
 </x-livewire-powergrid::table-base>

@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Livewire;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\{Collection, Collection as BaseCollection};
 use Livewire\Component;
+use Livewire\Mechanisms\ComponentRegistry;
 
 class LazyChild extends Component
 {
@@ -29,6 +30,8 @@ class LazyChild extends Component
     public string $tableName;
 
     public string|int $primaryKey;
+
+    public string $parentId;
 
     public function mount(): void
     {
@@ -75,6 +78,14 @@ class LazyChild extends Component
         }
 
         data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
+
+        $state = boolval(data_get($this->setUp, "detail.state.$id"));
+
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentId);
+
+        $dispatchAfterToggleDetail = (array) data_get($this->setUp, 'lazy.dispatchAfterToggleDetail');
+
+        $this->dispatch($dispatchAfterToggleDetail, id: $id, state: $state)->to($parentComponent);
     }
 
     public function render(): View
