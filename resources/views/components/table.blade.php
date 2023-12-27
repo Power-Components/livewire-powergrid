@@ -95,6 +95,7 @@
                         :$checkboxAttribute
                         :$theme
                         :$setUp
+                        :$tableName
                         :parentId="$this->getName()"
                         :columns="$this->visibleColumns"
                         :data="$this->getCachedData

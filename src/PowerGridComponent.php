@@ -19,6 +19,7 @@ use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     Listeners,
     PersistData,
     SoftDeletes,
+    ToggleDetail,
     WithCheckbox,
     WithSorting};
 use Throwable;
@@ -38,6 +39,7 @@ class PowerGridComponent extends Component
     use Listeners;
     use SoftDeletes;
     use LazyManager;
+    use ToggleDetail;
 
     public array $headers = [];
 
@@ -93,7 +95,6 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
-        $this->throwFeatureDetail();
         $this->throwColumnAction();
 
         $this->columns = $this->columns();
@@ -103,98 +104,9 @@ class PowerGridComponent extends Component
         $this->restoreState();
     }
 
-    protected function getCacheKeys(): array
-    {
-        return [
-            json_encode(['page' => $this->getPage()]),
-            json_encode(['perPage' => data_get($this->setUp, 'footer.perPage')]),
-            json_encode(['search' => $this->search]),
-            json_encode(['sortDirection' => $this->sortDirection]),
-            json_encode(['sortField' => $this->sortField]),
-            json_encode(['filters' => $this->filters]),
-            json_encode(['sortArray' => $this->sortArray]),
-        ];
-    }
-
-    private function throwFeatureDetail(): void
-    {
-        if (
-            array_key_exists('detail', $this->setUp)
-            && array_key_exists('responsive', $this->setUp)
-        ) {
-            throw new Exception('The Feature Responsive cannot be used with Detail');
-        }
-    }
-
-    private function throwColumnAction(): void
-    {
-        $hasColumnAction = collect($this->columns())
-            ->filter(fn ($column) => data_get($column, 'isAction') === true)
-            ->isEmpty();
-
-        if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
-            throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
-        }
-    }
-
-    public function showCheckBox(string $attribute = 'id'): PowerGridComponent
-    {
-        $this->checkbox          = true;
-        $this->checkboxAttribute = $attribute;
-
-        return $this;
-    }
-
-    public function showRadioButton(string $attribute = 'id'): PowerGridComponent
-    {
-        $this->radio          = true;
-        $this->radioAttribute = $attribute;
-
-        return $this;
-    }
-
-    private function resolveTotalRow(): void
-    {
-        collect($this->columns)
-            ->each(function ($column) {
-                $hasHeader = false;
-                $hasFooter = false;
-
-                foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
-                    $hasHeader = $hasHeader || data_get($column, "$operation.header");
-                    $hasFooter = $hasFooter || data_get($column, "$operation.footer");
-                }
-
-                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
-                $this->footerTotalColumn = $this->footerTotalColumn || $hasFooter;
-            });
-    }
-
     public function fetchDatasource(): void
     {
         $this->readyToLoad = true;
-    }
-
-    #[Computed]
-    protected function getCachedData(): mixed
-    {
-        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            return $this->readyToLoad ? $this->fillData() : collect([]);
-        }
-
-        $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
-        $customTag = strval(data_get($this->setUp, 'cache.tag'));
-        $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
-        $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
-
-        $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
-        $cacheKey = join('-', $this->getCacheKeys());
-
-        if ($forever) {
-            return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
-        }
-
-        return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
     }
 
     public function template(): ?string
@@ -217,9 +129,6 @@ class PowerGridComponent extends Component
         return [];
     }
 
-    /**
-     * Apply checkbox, perPage and search view and theme
-     */
     public function setUp(): array
     {
         return [];
@@ -253,9 +162,9 @@ class PowerGridComponent extends Component
         return PowerGrid::columns();
     }
 
-    public function checkedValues(): array
+    public function toggleFilters(): void
     {
-        return $this->checkboxValues;
+        $this->showFilters = !$this->showFilters;
     }
 
     public function updatedPage(): void
@@ -272,11 +181,6 @@ class PowerGridComponent extends Component
         data_set($this->setUp, 'lazy.items', 0);
     }
 
-    public function toggleFilters(): void
-    {
-        $this->showFilters = !$this->showFilters;
-    }
-
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
@@ -289,24 +193,6 @@ class PowerGridComponent extends Component
         }
 
         $this->persistState('columns');
-    }
-
-    #[On('pg:toggleDetail-{tableName}')]
-    public function toggleDetail(string $id): void
-    {
-        $detailStates = (array) data_get($this->setUp, 'detail.state');
-
-        if (boolval(data_get($this->setUp, 'detail.collapseOthers'))) {
-            /** @var \Illuminate\Support\Enumerable<(int|string), (int|string)> $except */
-            $except = $id;
-            collect($detailStates)->except($except)
-                ->filter(fn ($state) => $state)->keys()
-                ->each(
-                    fn ($key) => data_set($this->setUp, "detail.state.$key", false)
-                );
-        }
-
-        data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
     }
 
     #[On('pg:eventRefresh-{tableName}')]
@@ -326,6 +212,87 @@ class PowerGridComponent extends Component
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
+    }
+
+    #[Computed]
+    public function visibleColumns(): BaseCollection
+    {
+        return collect($this->columns)
+            ->where('forceHidden', false);
+    }
+
+    #[Computed]
+    protected function getCachedData(): mixed
+    {
+        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
+            return $this->readyToLoad ? $this->fillData() : collect([]);
+        }
+
+        $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
+        $customTag = strval(data_get($this->setUp, 'cache.tag'));
+        $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
+        $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
+
+        $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
+        $cacheKey = join('-', $this->getCacheKeys());
+
+        if ($forever) {
+            return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
+        }
+
+        return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
+    }
+
+    private function getCacheKeys(): array
+    {
+        return [
+            json_encode(['page' => $this->getPage()]),
+            json_encode(['perPage' => data_get($this->setUp, 'footer.perPage')]),
+            json_encode(['search' => $this->search]),
+            json_encode(['sortDirection' => $this->sortDirection]),
+            json_encode(['sortField' => $this->sortField]),
+            json_encode(['filters' => $this->filters]),
+            json_encode(['sortArray' => $this->sortArray]),
+        ];
+    }
+
+    private function throwColumnAction(): void
+    {
+        $hasColumnAction = collect($this->columns())
+            ->filter(fn ($column) => data_get($column, 'isAction') === true)
+            ->isEmpty();
+
+        if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
+            throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
+        }
+    }
+
+    private function resolveTotalRow(): void
+    {
+        collect($this->columns)
+            ->each(function ($column) {
+                $hasHeader = false;
+                $hasFooter = false;
+
+                foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
+                    $hasHeader = $hasHeader || data_get($column, "$operation.header");
+                    $hasFooter = $hasFooter || data_get($column, "$operation.footer");
+                }
+
+                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
+                $this->footerTotalColumn = $this->footerTotalColumn || $hasFooter;
+            });
+    }
+
+    private function getTheme(string $key = null): array
+    {
+        $store = store($this)->get('powerGridTheme');
+
+        if (!$key) {
+            return convertObjectsToArray((array) $store);
+        }
+
+        return convertObjectsToArray((array) data_get($store, $key));
     }
 
     /**
@@ -349,49 +316,6 @@ class PowerGridComponent extends Component
             'theme' => $this->getTheme(),
             'table' => 'livewire-powergrid::components.table',
         ]);
-    }
-
-    private function resolveDetailRow(mixed $results): void
-    {
-        if (!isset($this->setUp['detail'])) {
-            return;
-        }
-
-        $collection = $results;
-
-        if (!$results instanceof BaseCollection) {
-            /** @phpstan-ignore-next-line */
-            $collection = collect($results->items());
-        }
-
-        /** @phpstan-ignore-next-line */
-        $collection->each(function ($model) {
-            $id = strval($model->{$this->primaryKey});
-
-            data_set($this->setUp, 'detail', (array) $this->setUp['detail']);
-
-            $state = data_get($this->setUp, 'detail.state.' . $id, false);
-
-            data_set($this->setUp, 'detail.state.' . $id, $state);
-        });
-    }
-
-    #[Computed]
-    public function visibleColumns(): BaseCollection
-    {
-        return collect($this->columns)
-            ->where('forceHidden', false);
-    }
-
-    public function getTheme(string $key = null): array
-    {
-        $store = store($this)->get('powerGridTheme');
-
-        if (!$key) {
-            return convertObjectsToArray((array) $store);
-        }
-
-        return convertObjectsToArray((array) data_get($store, $key));
     }
 
     /**

@@ -6,9 +6,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\{Collection, Collection as BaseCollection};
 use Livewire\Component;
 use Livewire\Mechanisms\ComponentRegistry;
+use PowerComponents\LivewirePowerGrid\Traits\ToggleDetail;
 
 class LazyChild extends Component
 {
+    use ToggleDetail;
+
     public bool $checkbox = false;
 
     public bool $checkboxAll = false;
@@ -38,54 +41,13 @@ class LazyChild extends Component
         $this->resolveDetailRow($this->data);
     }
 
-    private function resolveDetailRow(mixed $results): void
+    public function afterToggleDetail(string $id, string $state): void
     {
-        if (!isset($this->setUp['detail'])) {
-            return;
-        }
-
-        $collection = $results;
-
-        if (!$results instanceof BaseCollection) {
-            /** @phpstan-ignore-next-line */
-            $collection = collect($results->items());
-        }
-
-        /** @phpstan-ignore-next-line */
-        $collection->each(function ($model) {
-            $id = strval($model->{$this->primaryKey});
-
-            data_set($this->setUp, 'detail', (array) $this->setUp['detail']);
-
-            $state = data_get($this->setUp, 'detail.state.' . $id, false);
-
-            data_set($this->setUp, 'detail.state.' . $id, $state);
-        });
-    }
-
-    public function toggleDetail(string $id): void
-    {
-        $detailStates = (array) data_get($this->setUp, 'detail.state');
-
-        if (boolval(data_get($this->setUp, 'detail.collapseOthers'))) {
-            /** @var \Illuminate\Support\Enumerable<(int|string), (int|string)> $except */
-            $except = $id;
-            collect($detailStates)->except($except)
-                ->filter(fn ($state) => $state)->keys()
-                ->each(
-                    fn ($key) => data_set($this->setUp, "detail.state.$key", false)
-                );
-        }
-
-        data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
-
-        $state = boolval(data_get($this->setUp, "detail.state.$id"));
-
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentId);
 
         $dispatchAfterToggleDetail = (array) data_get($this->setUp, 'lazy.dispatchAfterToggleDetail');
 
-        $this->dispatch($dispatchAfterToggleDetail, id: $id, state: $state)->to($parentComponent);
+        $this->dispatch($dispatchAfterToggleDetail, id: $id, state: $state ? 'true' : 'false')->to($parentComponent);
     }
 
     public function render(): View
