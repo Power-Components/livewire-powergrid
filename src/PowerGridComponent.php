@@ -12,7 +12,6 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use function Livewire\store;
 
 use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\DataSource\{Collection,};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     LazyManager,
