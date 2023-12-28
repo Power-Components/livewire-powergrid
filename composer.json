@@ -19,14 +19,13 @@
     ],
     "require": {
         "php": "^8.1",
-        "doctrine/dbal": "^3.7",
         "livewire/livewire": "^3.1.0",
         "laravel/prompts": "^0.1.13"
     },
     "require-dev": {
         "composer/composer": "^2.6.6",
         "laravel/pint": "^1.13.7",
-        "laradumps/laradumps-core": "^0.3.0",
+        "laradumps/laradumps-core": "^1.1",
         "spaze/phpstan-disallowed-calls": "^2.16.1",
         "larastan/larastan": "^2.7",
         "pestphp/pest": "^2.28.1",

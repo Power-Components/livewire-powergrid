@@ -2,20 +2,35 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
-use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
 
-use function Laravel\Prompts\{confirm, info, select, suggest, text};
+use function Laravel\Prompts\{confirm, error, info, select, suggest, text};
 
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables, FillableTable, Models, Stubs, TailwindForm};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables,
+    DependenciesCheck,
+    FillableTable,
+    Models,
+    Stubs};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Exceptions\CreateCommandException;
 
 class CreateCommand extends Command
 {
     use RenderAscii;
+
+    public const DATASOURCE_ELOQUENT_BUILDER = 'Eloquent Builder';
+
+    public const DATASOURCE_QUERY_BUILDER = 'Query Builder';
+
+    public const DATASOURCE_COLLECTION = 'Collection';
+
+    public const DATASOURCE_OPTIONS = [
+        self::DATASOURCE_ELOQUENT_BUILDER,
+        self::DATASOURCE_QUERY_BUILDER,
+        self::DATASOURCE_COLLECTION,
+    ];
 
     /** @var string */
     protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
@@ -54,19 +69,17 @@ class CreateCommand extends Command
 
         $this->call('powergrid:update');
 
+        $this->checkDependencies();
+
         try {
             $this->askTableName();
             $this->askDatasource();
             $this->askModel();
         } catch (CreateCommandException $e) {
-            $this->error($e->getMessage());
+            error($e->getMessage());
 
             return self::FAILURE;
         }
-
-        $this->checkTailwindForms();
-
-        $this->showCreated();
 
         return self::SUCCESS;
     }
@@ -106,45 +119,33 @@ class CreateCommand extends Command
         $exists = Schema::hasTable($this->dataBaseTableName);
 
         if (!$exists && !app()->runningUnitTests()) {
-            $this->components->error('The table you provided does not exist!');
+            error('The table you provided does not exist!');
             $this->askDataBaseTableName();
         }
     }
 
     protected function askDatasource(): void
     {
-        $datasourceOption = select(
+        $this->datasourceOption = strval(select(
             label: 'What type of data source will you use?',
-            options: [
-                'Eloquent Builder',
-                'Query Builder',
-                'Collection',
-            ],
-            default: 'Eloquent Builder'
-        );
-
-        $this->datasourceOption = match ($datasourceOption) {
-            'Eloquent Builder' => 'm',
-            'Query Builder'    => 'qb',
-            default            => 'c'
-        };
+            options: self::DATASOURCE_OPTIONS,
+            default: self::DATASOURCE_ELOQUENT_BUILDER
+        ));
     }
 
     /**
      * @throws CreateCommandException
-     * @throws Exception
-     * @throws \Exception
      */
     protected function askModel(): void
     {
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
 
-        if (strtolower($this->datasourceOption) === 'm') {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_ELOQUENT_BUILDER)) {
             $this->model = suggest(
                 label: 'Enter your Model name or file path',
-                required: true,
-                default: 'User',
                 options: Models::list(),
+                default: 'User',
+                required: true,
             );
 
             $this->modelPath = explode('\\', $this->model);
@@ -167,11 +168,11 @@ class CreateCommand extends Command
             }
         }
 
-        if (in_array(strtolower($this->datasourceOption), ['m', 'qb'])) {
+        if (in_array(strtolower($this->datasourceOption), [strtolower(self::DATASOURCE_ELOQUENT_BUILDER), strtolower(self::DATASOURCE_QUERY_BUILDER)])) {
             $this->useFillable = confirm('Create columns based on Model\'s fillable property?');
 
             if ($this->useFillable) {
-                if (strtolower($this->datasourceOption) === 'qb') {
+                if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_QUERY_BUILDER)) {
                     $this->askDataBaseTableName();
 
                     $this->stub = FillableTable::queryBuilder($this->dataBaseTableName, strval($this->option('template')));
@@ -197,14 +198,14 @@ class CreateCommand extends Command
         $this->stub = str_replace('{{ subFolder }}', $subFolder, $this->stub);
         $this->stub = str_replace('{{ componentName }}', $this->componentName, $this->stub);
 
-        if (strtolower($this->datasourceOption) === 'm') {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_ELOQUENT_BUILDER)) {
             $this->stub = str_replace('{{ modelName }}', $this->model, $this->stub);
             $this->stub = str_replace('{{ modelLastName }}', $this->modelName, $this->stub);
             $this->stub = str_replace('{{ modelLowerCase }}', Str::lower($this->modelName), $this->stub);
             $this->stub = str_replace('{{ modelKebabCase }}', Str::kebab($this->modelName), $this->stub);
         }
 
-        if (strtolower($this->datasourceOption) === 'qb') {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_QUERY_BUILDER)) {
             $this->stub = str_replace('{{ databaseTableName }}', $this->dataBaseTableName, $this->stub);
         }
 
@@ -245,7 +246,13 @@ class CreateCommand extends Command
 
         if ($createTable) {
             File::put($path, $this->stub);
+
+            $this->showCreated();
+
+            return;
         }
+
+        info("⭐ <comment>" . self::thanks() . "</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
     }
 
     protected function showCreated(): void
@@ -262,12 +269,22 @@ class CreateCommand extends Command
         return strval(str_replace(',', '!', strval(__('Thanks,'))));
     }
 
-    protected function checkTailwindForms(): void
+    private function checkDependencies(): void
     {
-        $tailwind = TailwindForm::check();
+        $flatpickr     = DependenciesCheck::flatpickr();
+        $openspout     = DependenciesCheck::openspout();
+        $tailwindForms = DependenciesCheck::tailwindForms();
 
-        if (!empty($tailwind)) {
-            $this->components->info($tailwind);
+        if (!empty($flatpickr)) {
+            info($flatpickr);
+        }
+
+        if (!empty($openspout)) {
+            info($openspout);
+        }
+
+        if (!empty($tailwindForms)) {
+            info($tailwindForms);
         }
     }
 }

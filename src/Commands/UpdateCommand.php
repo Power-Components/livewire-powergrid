@@ -25,7 +25,7 @@ class UpdateCommand extends Command
         }
 
         if (!class_exists(\Composer\Factory::class)) {
-            \Laravel\Prompts\error('You need to install composer: <comment>composer require composer/composer --dev</comment>');
+            warning('UpdateCommand: You need to install composer: <info>composer require composer/composer --dev</info>');
 
             return self::SUCCESS;
         }
