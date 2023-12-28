@@ -10,6 +10,23 @@ export default (params) => ({
     element: null,
     selectedDates: null,
     init() {
+        if(typeof flatpickr == "undefined") {
+            console.log('%c%s',
+                'color: #f59e0c; font-size: 1.2em; font-weight: bold; line-height: 1.5',
+                ` PowerGrid`);
+
+            console.error('%c%s',
+                'font-size: 1em; line-height: 1.5',
+                `
+Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.tableName}']
+
+• Install flatpickr: npm install flatpickr
+
+• Add 'import flatpickr from "flatpickr"' in resources/js/app.js file
+  `
+            );
+        }
+
         window.addEventListener(`pg:clear_flatpickr::${this.tableName}:${this.dataField}`, () => {
             if (this.$refs.rangeInput && this.element) {
                 this.element.clear()
@@ -24,13 +41,13 @@ export default (params) => ({
 
         const lang = this.locale.locale;
 
-        if (typeof lang !== 'undefined') {
+        if (typeof lang !== 'undefined' && typeof flatpickr != "undefined") {
             this.locale.locale = require("flatpickr/dist/l10n/"+lang+".js").default[lang];
         }
 
         const options = this.getOptions()
 
-        if(this.$refs.rangeInput) {
+        if(this.$refs.rangeInput && typeof flatpickr != "undefined") {
             this.element = flatpickr(this.$refs.rangeInput, options);
 
             this.selectedDates = this.$wire.get(`filters.${this.type}.${this.dataField}.formatted`)

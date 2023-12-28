@@ -64,7 +64,7 @@ class FillableTable
 
                 $title = Str::of($field)->replace('_', ' ')->ucfirst();
 
-                if (in_array($columnType, ['datetime', 'date', 'timestamp'])) {
+                if (in_array($columnType, ['datetime', 'date'])) {
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->sortable(),' . "\n\n";
                 }
 
@@ -144,7 +144,15 @@ class FillableTable
         $columns    = "[\n";
         $filters    = "[\n";
 
-        foreach ($columnListing as $field) {
+
+        $filteredColumns = collect($columnListing)
+            ->filter(function ($column) {
+                return !in_array($column, ['password', 'remember_token', 'email_verified_at']);
+            })
+            ->toArray();
+
+        /** @var string $field */
+        foreach ($filteredColumns as $field) {
             $columnType = Schema::getColumnType($databaseTableName, $field);
 
             $title = Str::of($field)->replace('_', ' ')->ucfirst();
