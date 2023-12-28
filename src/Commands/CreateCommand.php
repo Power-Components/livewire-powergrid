@@ -140,7 +140,7 @@ class CreateCommand extends Command
     {
         $this->stub = Stubs::load($this->datasourceOption, strval($this->option('template')));
 
-        if (strtolower($this->datasourceOption) === self::DATASOURCE_ELOQUENT_BUILDER) {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_ELOQUENT_BUILDER)) {
             $this->model = suggest(
                 label: 'Enter your Model name or file path',
                 options: Models::list(),
@@ -168,11 +168,11 @@ class CreateCommand extends Command
             }
         }
 
-        if (in_array(strtolower($this->datasourceOption), [self::DATASOURCE_ELOQUENT_BUILDER, self::DATASOURCE_QUERY_BUILDER])) {
+        if (in_array(strtolower($this->datasourceOption), [strtolower(self::DATASOURCE_ELOQUENT_BUILDER), strtolower(self::DATASOURCE_QUERY_BUILDER)])) {
             $this->useFillable = confirm('Create columns based on Model\'s fillable property?');
 
             if ($this->useFillable) {
-                if (strtolower($this->datasourceOption) === self::DATASOURCE_QUERY_BUILDER) {
+                if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_QUERY_BUILDER)) {
                     $this->askDataBaseTableName();
 
                     $this->stub = FillableTable::queryBuilder($this->dataBaseTableName, strval($this->option('template')));
@@ -198,14 +198,14 @@ class CreateCommand extends Command
         $this->stub = str_replace('{{ subFolder }}', $subFolder, $this->stub);
         $this->stub = str_replace('{{ componentName }}', $this->componentName, $this->stub);
 
-        if (strtolower($this->datasourceOption) === self::DATASOURCE_ELOQUENT_BUILDER) {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_ELOQUENT_BUILDER)) {
             $this->stub = str_replace('{{ modelName }}', $this->model, $this->stub);
             $this->stub = str_replace('{{ modelLastName }}', $this->modelName, $this->stub);
             $this->stub = str_replace('{{ modelLowerCase }}', Str::lower($this->modelName), $this->stub);
             $this->stub = str_replace('{{ modelKebabCase }}', Str::kebab($this->modelName), $this->stub);
         }
 
-        if (strtolower($this->datasourceOption) === self::DATASOURCE_QUERY_BUILDER) {
+        if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_QUERY_BUILDER)) {
             $this->stub = str_replace('{{ databaseTableName }}', $this->dataBaseTableName, $this->stub);
         }
 
