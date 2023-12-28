@@ -271,8 +271,8 @@ class CreateCommand extends Command
 
     private function checkDependencies(): void
     {
-        $flatpickr     = DependenciesCheck::flatpickr();
-        $openspout     = DependenciesCheck::openspout();
+        $flatpickr = DependenciesCheck::flatpickr();
+        $openspout = DependenciesCheck::openspout();
 
         if (!empty($flatpickr)) {
             info($flatpickr);
