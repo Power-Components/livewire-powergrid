@@ -2,7 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
-use Doctrine\DBAL\Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\{File, Schema};
 use Illuminate\Support\{Arr, Str};
@@ -13,8 +12,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{DatabaseTables,
     DependenciesCheck,
     FillableTable,
     Models,
-    Stubs,
-    TailwindForm};
+    Stubs};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Exceptions\CreateCommandException;
 
@@ -137,8 +135,6 @@ class CreateCommand extends Command
 
     /**
      * @throws CreateCommandException
-     * @throws Exception
-     * @throws \Exception
      */
     protected function askModel(): void
     {
