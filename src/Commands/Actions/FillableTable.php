@@ -150,6 +150,7 @@ class FillableTable
             })
             ->toArray();
 
+        /** @var string $field */
         foreach ($filteredColumns as $field) {
             $columnType = Schema::getColumnType($databaseTableName, $field);
 
