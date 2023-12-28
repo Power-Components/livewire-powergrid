@@ -144,7 +144,6 @@ class FillableTable
         $columns    = "[\n";
         $filters    = "[\n";
 
-
         $filteredColumns = collect($columnListing)
             ->filter(function ($column) {
                 return !in_array($column, ['password', 'remember_token', 'email_verified_at']);
