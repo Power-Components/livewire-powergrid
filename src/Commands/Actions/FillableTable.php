@@ -64,7 +64,7 @@ class FillableTable
 
                 $title = Str::of($field)->replace('_', ' ')->ucfirst();
 
-                if (in_array($columnType, ['datetime', 'date'])) {
+                if (in_array($columnType, ['datetime', 'date', 'timestamp'])) {
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->sortable(),' . "\n\n";
                 }
 
@@ -156,7 +156,7 @@ class FillableTable
 
             $title = Str::of($field)->replace('_', ' ')->ucfirst();
 
-            if (in_array($columnType, ['datetime', 'date'])) {
+            if (in_array($columnType, ['datetime', 'date', 'timestamp'])) {
                 $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '_formatted\', \'' . $field . '\')' . "\n" . '                ->sortable(),' . "\n\n";
             }
 
