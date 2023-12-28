@@ -51,7 +51,6 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          rm composer.lock
           composer install
 
       - name: Larastan

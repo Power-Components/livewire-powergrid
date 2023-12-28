@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\{Cache, DB, Schema};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
@@ -42,8 +43,57 @@ class Builder
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $filterType => $column) {
-            foreach ($column as $field => $value) {
+        foreach ($this->powerGridComponent->filters as $filterType => $columns) {
+            $columns = Arr::dot($columns);
+
+            // convert array:2 [
+            //    "dishes.produced_at.start" => "2021-03-03",
+            //    "dishes.produced_at.end" => "2021-03-01"
+            //] to
+            // array:2 [
+            //    "dishes.produced_at" => ["start" => "2021-03-03"],
+            //    "dishes.produced_at.end" => ["start" => "2021-03-01"]
+            //] and
+            // convert array:2 [
+            //    "dishes.produced_at.0" => "2021-03-03",
+            //    "dishes.produced_at.1" => "2021-03-01"
+            //] to
+            // array:2 [
+            //    "dishes.produced_at" => [0 => "2021-03-03"],
+            //    "dishes.produced_at" => [1 => "2021-03-01"]
+            //]
+
+            $newColumns = [];
+
+            foreach ($columns as $key => $value) {
+                $parts    = explode('.', $key);
+                $lastPart = end($parts);
+
+                if (is_numeric($lastPart) && intval($lastPart) == $lastPart) {
+                    array_pop($parts);
+                    $prefix = implode('.', $parts);
+
+                    if (!isset($newColumns[$prefix])) {
+                        $newColumns[$prefix] = [];
+                    }
+
+                    $index = intval($lastPart);
+
+                    $newColumns[$prefix][$index] = $value;
+                } elseif ($lastPart === 'start' || $lastPart === 'end') {
+                    $prefix = implode('.', array_slice($parts, 0, -1));
+
+                    if (!isset($newColumns[$prefix])) {
+                        $newColumns[$prefix] = [];
+                    }
+
+                    $newColumns[$prefix][$lastPart] = $value;
+                } else {
+                    $newColumns[$key] = $value;
+                }
+            }
+
+            foreach ($newColumns as $field => $value) {
                 $this->query->where(function ($query) use ($filterType, $field, $value, $filters) {
                     $filter = function ($query, $filters, $filterType, $field, $value) {
                         $filter = $filters->filter(function ($filter) use ($field) {

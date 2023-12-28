@@ -58,7 +58,7 @@ it('properly filters by "between date" using incorrect filter', function (string
         ->set('testFilters', [
             Filter::datepicker('produced_at_formatted', 'produced_at'),
         ])
-        ->set('filters', filterDate('produced_at', ['2021-03-03', '2021-03-01']))
+        ->set('filters', filterDate('dishes.produced_at', ['2021-03-03', '2021-03-01']))
         ->assertSee('No records found');
 })->group('filters', 'filterDatePicker')
     ->with('filter_datetime_themes_with_join', 'filter_datetime_query_builder');
@@ -179,7 +179,10 @@ function filterDate(string $dataField, array $value): array
 {
     return [
         'date' => [
-            $dataField => $value,
+            $dataField => [
+                'start' => $value[0],
+                'end'   => $value[1],
+            ],
         ],
     ];
 }
@@ -188,7 +191,10 @@ function filterDateTime(string $dataField, array $value): array
 {
     return [
         'datetime' => [
-            $dataField => $value,
+            $dataField => [
+                'start' => $value[0],
+                'end'   => $value[1],
+            ],
         ],
     ];
 }
