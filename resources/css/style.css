@@ -186,3 +186,7 @@ table thead {
 .pg-enabled-filters-span {
     @apply outline-none inline-flex justify-center items-center rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5 text-pg-primary-600 dark:text-pg-primary-200 bg-pg-primary-100 dark:bg-pg-primary-600
 }
+
+select {
+    background-image:  unset !important;
+}

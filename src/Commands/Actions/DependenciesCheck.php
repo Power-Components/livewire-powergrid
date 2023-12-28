@@ -47,23 +47,4 @@ class DependenciesCheck
 
         return null;
     }
-
-    /**
-     * Check if TailwindForms is installed
-     *
-     */
-    public static function tailwindForms(): ?string
-    {
-        $file = base_path() . '/' . 'tailwind.config.js';
-
-        if (File::exists($file)) {
-            $content = File::get($file);
-
-            if (Str::contains($content, "require('@tailwindcss/forms')") === true) {
-                return("\n💡 It seems you are using the plugin <comment>Tailwindcss/form</comment>.\n   Please check: <comment>https://livewire-powergrid.com/get-started/configure.html#tailwind-forms</comment> for more information.");
-            }
-        }
-
-        return null;
-    }
 }
