@@ -273,7 +273,6 @@ class CreateCommand extends Command
     {
         $flatpickr     = DependenciesCheck::flatpickr();
         $openspout     = DependenciesCheck::openspout();
-        $tailwindForms = DependenciesCheck::tailwindForms();
 
         if (!empty($flatpickr)) {
             info($flatpickr);
@@ -281,10 +280,6 @@ class CreateCommand extends Command
 
         if (!empty($openspout)) {
             info($openspout);
-        }
-
-        if (!empty($tailwindForms)) {
-            info($tailwindForms);
         }
     }
 }
