@@ -48,6 +48,27 @@ $hideWithRender = new class () extends DishTableBase {
     }
 };
 
+$hidePreventShowHtml = new class () extends DishTableBase {
+    public function actions($row): array
+    {
+        return [
+            Button::add('edit')
+                ->slot('test')
+                ->id()
+                ->dispatch('edit', ['dishId' => $row->id]),
+        ];
+    }
+
+    public function actionRules($row): array
+    {
+        return [
+            Rule::button('edit')
+                ->when(fn ($row) => $row->id === 1)
+                ->hide(),
+        ];
+    }
+};
+
 it('properly displays "hide" on edit button', function (string $component, object $params) {
     livewire($component, [
         'join' => $params->join,
@@ -66,20 +87,20 @@ it('properly displays "hide" on edit button', function (string $component, objec
     ])
     ->group('action');
 
-it('properly displays "hide" on render button', function (string $component, object $params) {
+it('does not show the html of actions when hide is activated', function (string $component, object $params) {
     livewire($component, [
         'join' => $params->join,
     ])
         ->call($params->theme)
         ->set('setUp.footer.perPage', 3)
-        ->assertSeeHtml("render - 1")
-        ->assertSeeHtml("render - 2")
-        ->assertDontSeeHtml("render - 3");
+        ->assertDontSeeHtml("action-1-render-action.0.edit")
+        ->assertSeeHtml("action-2-render-action.0.edit")
+        ->assertSeeHtml("action-3-render-action.0.edit");
 })
     ->with([
-        'tailwind'       => [$hideWithRender::class, (object) ['theme' => 'tailwind', 'join' => false]],
-        'bootstrap'      => [$hideWithRender::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-        'tailwind join'  => [$hideWithRender::class, (object) ['theme' => 'tailwind', 'join' => true]],
-        'bootstrap join' => [$hideWithRender::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+        'tailwind'       => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join' => false]],
+        'bootstrap'      => [$hidePreventShowHtml::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+        'tailwind join'  => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join' => true]],
+        'bootstrap join' => [$hidePreventShowHtml::class, (object) ['theme' => 'bootstrap', 'join' => true]],
     ])
     ->group('action');
