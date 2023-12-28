@@ -128,14 +128,14 @@ class Sql
             return null;
         }
 
+        $tableName = $data[0];
+        $column    = $data[1];
+
         if (!Schema::hasColumn($data[0], $data[1])) {
-            throw new Exception("There is no column with name '$data[1]' on table '$data[0]'. Please see: https://livewire-powergrid.com/#/table/include-columns?id=fieldstring-field-string-datafield");
+            throw new Exception("There is no column with name '$column' on table '$tableName'. Please see: https://livewire-powergrid.com/#/table/include-columns?id=fieldstring-field-string-datafield");
         }
 
-        return Schema::getConnection()
-            ->getDoctrineColumn($data[0], $data[1])
-            ->getType()
-            ->getName();
+        return Schema::getColumnType($tableName, $column);
     }
 
     /**
