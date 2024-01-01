@@ -180,6 +180,16 @@ class PowerGridComponent extends Component
         data_set($this->setUp, 'lazy.items', 0);
     }
 
+    public function updatedSortDirection(): void
+    {
+        data_set($this->setUp, 'lazy.items', 0);
+    }
+
+    public function updatedSortField(): void
+    {
+        data_set($this->setUp, 'lazy.items', 0);
+    }
+
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
