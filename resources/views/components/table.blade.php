@@ -87,7 +87,7 @@
             @else
                 @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
                     <livewire:lazy-child
-                        key="{{ $item }}-{{ $this->getLazyKeys }}"
+                        key="{{ $item }}-{{ $this->getLazyKeys }}-{{ uniqid() }}"
                         :$item
                         :$primaryKey
                         :$radio

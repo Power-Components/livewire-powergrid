@@ -1,10 +1,10 @@
 export default () => ({
     init() {
         Livewire.on('pg:scrollTop', (event) => {
-            this.$nextTick(() => {
-                document.getElementById('table_base_' + event.tableName)
-                    .scrollIntoView({ behavior: 'smooth' })
-            })
+            setTimeout(() => {
+                document.querySelector('body')
+                    .scrollIntoView({ behavior: 'auto' })
+            }, 0)
         })
 
         const observer = new IntersectionObserver(entries => {

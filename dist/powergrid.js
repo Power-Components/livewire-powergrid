@@ -304,11 +304,11 @@ __webpack_require__.r(__webpack_exports__);
     init: function init() {
       var _this = this;
       Livewire.on('pg:scrollTop', function (event) {
-        _this.$nextTick(function () {
-          document.getElementById('table_base_' + event.tableName).scrollIntoView({
-            behavior: 'smooth'
+        setTimeout(function () {
+          document.querySelector('body').scrollIntoView({
+            behavior: 'auto'
           });
-        });
+        }, 0);
       });
       var observer = new IntersectionObserver(function (entries) {
         if (entries[0].isIntersecting) {
