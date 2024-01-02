@@ -170,24 +170,34 @@ class PowerGridComponent extends Component
     {
         $this->checkboxAll = false;
 
-        data_set($this->setUp, 'lazy.items', 0);
+        if ($this->hasLazyEnable) {
+            data_set($this->setUp, 'lazy.items', 0);
+
+            $this->dispatch('pg:scrollTop', tableName: $this->tableName);
+        }
     }
 
     public function updatedSearch(): void
     {
         $this->gotoPage(1);
 
-        data_set($this->setUp, 'lazy.items', 0);
+        if ($this->hasLazyEnable) {
+            data_set($this->setUp, 'lazy.items', 0);
+        }
     }
 
     public function updatedSortDirection(): void
     {
-        data_set($this->setUp, 'lazy.items', 0);
+        if ($this->hasLazyEnable) {
+            data_set($this->setUp, 'lazy.items', 0);
+        }
     }
 
     public function updatedSortField(): void
     {
-        data_set($this->setUp, 'lazy.items', 0);
+        if ($this->hasLazyEnable) {
+            data_set($this->setUp, 'lazy.items', 0);
+        }
     }
 
     #[On('pg:toggleColumn-{tableName}')]

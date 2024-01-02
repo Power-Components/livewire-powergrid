@@ -1,3 +1,144 @@
-[x-cloak]{display:none}table{width:100%}.loader{animation:spinner 1.5s linear infinite;border-top-color:#222}@keyframes spinner{0%{transform:rotate(0)}to{transform:rotate(1turn)}}table thead{color:#6b6a6a;font-size:.75rem;padding-bottom:8px;padding-left:15px;padding-top:8px;text-transform:uppercase}.pg-actions{display:flex;gap:4px;width:100%}
-[x-ref=editable].pg-single-line{overflow:hidden;white-space:nowrap}[x-ref=editable].pg-single-line br{display:none}[x-ref=editable].pg-single-line *{display:inline;white-space:nowrap}[x-ref=editable][placeholder]:empty:before{background-color:transparent;color:gray;content:attr(placeholder);position:absolute}
-.table .checkbox-column{max-width:50px!important;text-align:center;width:50px!important}.btn-light{background-color:#fff;border-color:#d7dbdf;color:#000;font-size:.85rem}.form-control:disabled,.form-control[readonly]{background-color:#fff!important;opacity:1}.btn-light:hover{background-color:#fff;border-color:#d7dbdf;color:#000;font-size:.85rem}.btn-light,.has-search .form-control{padding-left:10px!important}.accordion-button{padding:.7rem}.btn-light,.has-search .form-control{padding-left:2.375rem}.page-link{color:gray!important}.page-item.active .page-link{background-color:gray;border-color:gray;color:#fff!important}@keyframes spinner{0%{transform:rotate(0)}to{transform:rotate(1turn)}}.badge{font-size:.77em}.btn,.form-control{box-shadow:none!important}.btn-group-vertical>.btn,.btn-group>.btn{border-color:#ced4da!important;flex:1 1 auto;position:relative}.bs5-rotate-0{transform:rotate(0deg);transition:all .3s ease}.bs5-rotate-90{transform:rotate(90deg);transition:all .3s ease}.bs5-w-h-1_5em{height:1.5em;width:1.5em}
+[x-cloak] {
+    display: none;
+}
+
+table {
+    width: 100%;
+}
+
+.loader {
+    border-top-color: #222;
+    animation: spinner 1.5s linear infinite
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+table thead {
+    padding-left: 15px;
+    text-transform: uppercase;
+    font-size: .75rem;
+    color: #6b6a6a;
+    padding-top: 8px;
+    padding-bottom: 8px
+}
+
+.pg-actions {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+}
+
+[x-ref="editable"].pg-single-line {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+[x-ref="editable"].pg-single-line br {
+    display:none;
+
+}
+
+[x-ref="editable"].pg-single-line * {
+    display:inline;
+    white-space:nowrap;
+}
+
+[x-ref="editable"][placeholder]:empty:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: gray;
+    background-color: transparent;
+}
+
+.table .checkbox-column {
+    width: 50px !important;
+    max-width: 50px !important;
+    text-align: center
+}
+
+.btn-light {
+    color: #000;
+    background-color: white;
+    border-color: #d7dbdf;
+    font-size: 0.85rem;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: white !important;
+    opacity: 1;
+}
+
+.btn-light:hover {
+    color: #000;
+    background-color: white;
+    border-color: #d7dbdf;
+    font-size: 0.85rem;
+}
+
+.btn-light, .has-search .form-control {
+    padding-left: 10px !important;
+}
+
+.accordion-button {
+    padding: .7rem .7rem
+}
+
+.btn-light, .has-search .form-control {
+    padding-left: 2.375rem
+}
+
+.page-link {
+    color: gray !important
+}
+
+.page-item.active .page-link {
+    color: #fff !important;
+    background-color: gray;
+    border-color: gray
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
+}
+
+.badge {
+    font-size: 0.77em;
+}
+
+.form-control, .btn {
+    box-shadow: none!important;
+}
+
+.btn-group-vertical>.btn, .btn-group>.btn {
+    position: relative;
+    flex: 1 1 auto;
+    border-color: #ced4da !important;
+}
+
+.bs5-rotate-0 {
+    transition: all 0.3s ease;
+    transform: rotate(0deg);
+}
+
+.bs5-rotate-90 {
+    transition: all 0.3s ease;
+    transform: rotate(90deg);
+}
+
+.bs5-w-h-1_5em {
+    width: 1.5em;
+    height: 1.5em;
+}
+

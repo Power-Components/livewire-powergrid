@@ -3,6 +3,7 @@
 <x-livewire-powergrid::table-base
         :ready-to-load="$readyToLoad"
         :theme="$theme"
+        :table-name="$tableName"
         :lazy="!is_null(data_get($setUp, 'lazy'))">
     <x-slot:header>
         @include('livewire-powergrid::components.table.tr')

@@ -3,9 +3,11 @@
     'readyToLoad' => false,
     'items' => null,
     'lazy' => false,
+    'tableName' => null,
 ])
 <div @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset>
     <table
+        id="table_base_{{ $tableName }}"
         class="table power-grid-table {{ data_get($theme, 'tableClass') }}"
         style="{{  data_get($theme, 'tableStyle') }}"
     >
@@ -40,7 +42,7 @@
 
         {{-- infinite pagination handler --}}
         @if ($this->canLoadMore)
-            <div x-init="() => {const observer = new IntersectionObserver(entries => {if (entries[0].isIntersecting) {$wire.call('loadMore')}}); observer.observe($el)}"></div>
+            <div x-data="pgLoadMore"></div>
         @endif
     @endif
 </div>
