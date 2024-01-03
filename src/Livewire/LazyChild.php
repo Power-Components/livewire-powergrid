@@ -34,7 +34,9 @@ class LazyChild extends Component
 
     public string|int $primaryKey;
 
-    public string $parentId;
+    public string $parentName;
+
+    public string|int $childIndex;
 
     public function mount(): void
     {
@@ -43,7 +45,7 @@ class LazyChild extends Component
 
     public function afterToggleDetail(string $id, string $state): void
     {
-        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentId);
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
 
         $dispatchAfterToggleDetail = (array) data_get($this->setUp, 'lazy.dispatchAfterToggleDetail');
 

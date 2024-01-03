@@ -1,5 +1,6 @@
 @props([
     'rowIndex' => 0,
+    'childIndex' => null
 ])
 
 @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
@@ -41,7 +42,7 @@
     <td
         @class([ data_get($theme, 'table.tdBodyClass'), $column->bodyClass])
         style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle'). ' ' . $column->bodyStyle ?? '' }}"
-        wire:key="row-{{ $column->field }}"
+        wire:key="row-{{ $column->field }}-{{ $childIndex }}"
     >
         <div class="pg-actions">
             @if (filled(data_get($row, 'actions')) && $column->isAction)

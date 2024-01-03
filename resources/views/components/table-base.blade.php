@@ -33,16 +33,8 @@
             </tbody>
         @endif
     </table>
-
-    @if($lazy)
-        {{-- loading indicator --}}
-        <div class="justify-center items-center" wire:loading.class="flex" wire:target="loadMore">
-            @include(powerGridThemeRoot() . '.header.loading')
-        </div>
-
-        {{-- infinite pagination handler --}}
-        @if ($this->canLoadMore)
-            <div x-data="pgLoadMore"></div>
-        @endif
+    {{-- infinite pagination handler --}}
+    @if ($this->canLoadMore && $lazy)
+        <div x-data="pgLoadMore"></div>
     @endif
 </div>

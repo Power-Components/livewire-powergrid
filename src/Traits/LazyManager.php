@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Livewire\Attributes\Computed;
 
 /**
- * @property-read bool $hasLazyEnable
+ * @property-read bool $hasLazyEnabled
  */
 trait LazyManager
 {
@@ -17,7 +17,7 @@ trait LazyManager
     }
 
     #[Computed]
-    public function hasLazyEnable(): bool
+    public function hasLazyEnabled(): bool
     {
         return filled(data_get($this->setUp, 'lazy'));
     }
@@ -31,7 +31,7 @@ trait LazyManager
     #[Computed]
     public function canLoadMore(): bool
     {
-        $count = $this->getCachedData()->count();
+        $count = $this->totalCurrentPage;
 
         $items           = data_get($this->setUp, 'lazy.items');
         $rowsPerChildren = data_get($this->setUp, 'lazy.rowsPerChildren');

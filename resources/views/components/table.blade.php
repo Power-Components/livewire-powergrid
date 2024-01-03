@@ -86,9 +86,13 @@
 
             @else
                 @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
+                    @php
+                        $skip = $item * data_get($setUp, 'lazy.rowsPerChildren');
+                        $take = data_get($setUp, 'lazy.rowsPerChildren');
+                    @endphp
                     <livewire:lazy-child
-                        key="{{ $item }}-{{ $this->getLazyKeys }}-{{ uniqid() }}"
-                        :$item
+                        key="{{ $item }}-{{ $this->getLazyKeys }}"
+                        :child-index="$item"
                         :$primaryKey
                         :$radio
                         :$radioAttribute
@@ -97,11 +101,11 @@
                         :$theme
                         :$setUp
                         :$tableName
-                        :parentId="$this->getName()"
+                        :parentName="$this->getName()"
                         :columns="$this->visibleColumns"
-                        :data="$this->getCachedData
-                            ->skip($item * data_get($setUp, 'lazy.rowsPerChildren'))
-                            ->take(data_get($setUp, 'lazy.rowsPerChildren'))"
+                        :data="$this->getCachedData($skip, $take)
+                            ->skip($skip)
+                            ->take($take)"
                     />
                 @endforeach
             @endif

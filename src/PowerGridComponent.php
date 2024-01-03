@@ -170,7 +170,7 @@ class PowerGridComponent extends Component
     {
         $this->checkboxAll = false;
 
-        if ($this->hasLazyEnable) {
+        if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
 
             $this->dispatch('pg:scrollTop', tableName: $this->tableName);
@@ -181,21 +181,21 @@ class PowerGridComponent extends Component
     {
         $this->gotoPage(1);
 
-        if ($this->hasLazyEnable) {
+        if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
         }
     }
 
     public function updatedSortDirection(): void
     {
-        if ($this->hasLazyEnable) {
+        if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
         }
     }
 
     public function updatedSortField(): void
     {
-        if ($this->hasLazyEnable) {
+        if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
         }
     }
@@ -241,10 +241,19 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    protected function getCachedData(): mixed
+    protected function getCachedData($take = null, $skip = null): mixed
     {
+        if (is_null($take) || is_null($skip)) {
+            $take = 15;
+            $skip = 0;
+        }
+
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            return $this->readyToLoad ? $this->fillData() : collect([]);
+            return $this->readyToLoad ? $this->fillData($skip, $take) : collect();
+        }
+
+        if (!$this->readyToLoad) {
+            return collect();
         }
 
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
@@ -255,11 +264,9 @@ class PowerGridComponent extends Component
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = join('-', $this->getCacheKeys());
 
-        if ($forever) {
-            return $this->readyToLoad ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData()) : collect([]);
-        }
-
-        return $this->readyToLoad ? Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData()) : collect([]);
+        return $forever
+            ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData($skip, $take))
+            : Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData($skip, $take));
     }
 
     protected function getCacheKeys(): array
@@ -318,11 +325,11 @@ class PowerGridComponent extends Component
      * @throws Exception
      * @throws Throwable
      */
-    public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
+    public function fillData($skip = null, $take = null): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
     {
-        $this->processDataSourceInstance = ProcessDataSource::fillData($this);
+        $this->processDataSourceInstance = ProcessDataSource::make($this);
 
-        return $this->processDataSourceInstance->get();
+        return $this->processDataSourceInstance->get(skip: $skip, take: $take);
     }
 
     private function renderView(mixed $data): Application|Factory|View

@@ -26,7 +26,7 @@ trait ToggleDetail
 
         if (!$results instanceof BaseCollection) {
             /** @phpstan-ignore-next-line */
-            $collection = collect($results->items());
+            $collection = !is_array($results) && method_exists($results, 'items') ? collect($results->items()) : collect($results);
         }
 
         $collection->pluck($this->primaryKey)

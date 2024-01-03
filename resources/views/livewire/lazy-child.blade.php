@@ -30,7 +30,8 @@
         @if (isset($setUp['detail']))
             <tr {{ $trAttributesBag }}>
                 @include('livewire-powergrid::components.row', [
-                    'rowIndex' => $loop->index + 1,
+                    'rowIndex'   => $loop->index + 1,
+                    'childIndex' => $childIndex
                 ])
             </tr>
             @if (data_get($setUp, 'detail.state.' . $rowId))
