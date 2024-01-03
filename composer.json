@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^8.1",
-        "livewire/livewire": "^3.1.0",
+        "livewire/livewire": "^3.3",
         "laravel/prompts": "^0.1.13"
     },
     "require-dev": {
@@ -29,7 +29,7 @@
         "spaze/phpstan-disallowed-calls": "^2.16.1",
         "larastan/larastan": "^2.7",
         "pestphp/pest": "^2.28.1",
-        "orchestra/testbench": "^8.17"
+        "orchestra/testbench": "^8.17|^9.0"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
