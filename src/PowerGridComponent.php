@@ -241,15 +241,10 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    protected function getCachedData($take = null, $skip = null): mixed
+    protected function getCachedData(): mixed
     {
-        if (is_null($take) || is_null($skip)) {
-            $take = 15;
-            $skip = 0;
-        }
-
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            return $this->readyToLoad ? $this->fillData($skip, $take) : collect();
+            return $this->readyToLoad ? $this->fillData() : collect();
         }
 
         if (!$this->readyToLoad) {
@@ -265,8 +260,8 @@ class PowerGridComponent extends Component
         $cacheKey = join('-', $this->getCacheKeys());
 
         return $forever
-            ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData($skip, $take))
-            : Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData($skip, $take));
+            ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData())
+            : Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData());
     }
 
     protected function getCacheKeys(): array
@@ -325,11 +320,11 @@ class PowerGridComponent extends Component
      * @throws Exception
      * @throws Throwable
      */
-    public function fillData($skip = null, $take = null): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
+    public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
     {
         $this->processDataSourceInstance = ProcessDataSource::make($this);
 
-        return $this->processDataSourceInstance->get(skip: $skip, take: $take);
+        return $this->processDataSourceInstance->get();
     }
 
     private function renderView(mixed $data): Application|Factory|View

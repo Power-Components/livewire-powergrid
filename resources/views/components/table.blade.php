@@ -103,7 +103,7 @@
                         :$tableName
                         :parentName="$this->getName()"
                         :columns="$this->visibleColumns"
-                        :data="$this->getCachedData($skip, $take)
+                        :data="$this->getCachedData
                             ->skip($skip)
                             ->take($take)"
                     />

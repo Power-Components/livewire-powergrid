@@ -34,7 +34,7 @@ class ProcessDataSource
     /**
      * @throws \Throwable
      */
-    public function get($skip = null, $take = null): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
+    public function get(): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         $datasource = $this->prepareDataSource();
 
@@ -45,7 +45,7 @@ class ProcessDataSource
         $this->setCurrentTable($datasource);
 
         /** @phpstan-ignore-next-line  */
-        return $this->processModel($datasource, $skip, $take);
+        return $this->processModel($datasource);
     }
 
     /**
@@ -95,7 +95,7 @@ class ProcessDataSource
     /**
      * @throws \Throwable
      */
-    private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource, $skip = null, $take = null): Paginator|LengthAwarePaginator
+    private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
     {
         if (is_null($datasource)) {
             $datasource = $this->component->datasource();
@@ -106,10 +106,7 @@ class ProcessDataSource
                 fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this->component)
                     ->filterContains()
                     ->filter()
-            )
-            ->when(filled($take), function (EloquentBuilder|QueryBuilder $query) use ($take, $skip) {
-                return $query->skip($skip)->take($take);
-            });
+            );
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
             /** @phpstan-ignore-next-line */
@@ -129,7 +126,6 @@ class ProcessDataSource
 
         /** @phpstan-ignore-next-line */
         $collection = $results->getCollection();
-
 
         /** @phpstan-ignore-next-line */
         return $results->setCollection($this->transform($collection));
