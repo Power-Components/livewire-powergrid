@@ -9,6 +9,8 @@ use Livewire\Attributes\Computed;
  */
 trait LazyManager
 {
+    public string $additionalCacheKey = '';
+
     public function loadMore(): void
     {
         $items = data_get($this->setUp, 'lazy.items');
@@ -25,7 +27,9 @@ trait LazyManager
     #[Computed]
     public function getLazyKeys(): string
     {
-        return 'pg_keys_' . json_encode($this->getCacheKeys());
+        return 'pg_keys_' . json_encode(array_merge($this->getCacheKeys(), [
+            'additionalCacheKey' => $this->additionalCacheKey,
+        ]));
     }
 
     #[Computed]

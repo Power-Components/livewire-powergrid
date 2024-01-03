@@ -12,6 +12,8 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use function Livewire\store;
 
 use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
+
+use PowerComponents\LivewirePowerGrid\Livewire\LazyChild;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     LazyManager,
@@ -223,7 +225,15 @@ class PowerGridComponent extends Component
             return;
         }
 
-        $this->dispatch('$refresh', []);
+        if ($this->hasLazyEnabled) {
+            data_set($this->setUp, 'lazy.items', 0);
+        }
+
+        if ($this->hasLazyEnabled) {
+            $this->additionalCacheKey = uniqid();
+        }
+
+        $this->dispatch('$commit')->self();
     }
 
     #[Computed]
