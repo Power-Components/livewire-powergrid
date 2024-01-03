@@ -1,8 +1,7 @@
 @props([
     'loading' => false,
 ])
-<tr
-    class="{{ data_get($theme, 'table.trClass') }}"
+<tr class="{{ data_get($theme, 'table.trClass') }}"
     style="{{ data_get($theme, 'table.trStyle') }}"
 >
     @if ($loading)

@@ -225,10 +225,6 @@ class PowerGridComponent extends Component
         }
 
         if ($this->hasLazyEnabled) {
-            data_set($this->setUp, 'lazy.items', 0);
-        }
-
-        if ($this->hasLazyEnabled) {
             $this->additionalCacheKey = uniqid();
         }
 
