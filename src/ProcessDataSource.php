@@ -26,7 +26,7 @@ class ProcessDataSource
     ) {
     }
 
-    public static function make(PowerGridComponent $powerGridComponent): ProcessDataSource
+    public static function fillData(PowerGridComponent $powerGridComponent): ProcessDataSource
     {
         return new self($powerGridComponent);
     }

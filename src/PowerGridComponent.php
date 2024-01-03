@@ -322,7 +322,7 @@ class PowerGridComponent extends Component
      */
     public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
     {
-        $this->processDataSourceInstance = ProcessDataSource::make($this);
+        $this->processDataSourceInstance = ProcessDataSource::fillData($this);
 
         return $this->processDataSourceInstance->get();
     }
