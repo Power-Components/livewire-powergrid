@@ -13,7 +13,6 @@ use function Livewire\store;
 
 use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
 
-use PowerComponents\LivewirePowerGrid\Livewire\LazyChild;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
     LazyManager,
