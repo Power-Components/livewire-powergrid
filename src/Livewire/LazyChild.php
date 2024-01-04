@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Livewire;
 
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\{Collection, Collection as BaseCollection};
+use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Mechanisms\ComponentRegistry;
 use PowerComponents\LivewirePowerGrid\Traits\ToggleDetail;
