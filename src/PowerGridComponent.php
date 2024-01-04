@@ -172,9 +172,13 @@ class PowerGridComponent extends Component
         $this->checkboxAll = false;
 
         if ($this->hasLazyEnabled) {
+            $this->additionalCacheKey = uniqid();
+
             data_set($this->setUp, 'lazy.items', 0);
 
-            $this->dispatch('pg:scrollTop', tableName: $this->tableName);
+            $this->render();
+
+            $this->dispatch('pg:scrollTop', name: $this->getName());
         }
     }
 
@@ -183,6 +187,8 @@ class PowerGridComponent extends Component
         $this->gotoPage(1);
 
         if ($this->hasLazyEnabled) {
+            $this->additionalCacheKey = uniqid();
+
             data_set($this->setUp, 'lazy.items', 0);
         }
     }
@@ -191,6 +197,8 @@ class PowerGridComponent extends Component
     {
         if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
+
+            $this->additionalCacheKey = uniqid();
         }
     }
 

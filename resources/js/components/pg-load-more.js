@@ -5,7 +5,6 @@ export default () => ({
                 document.querySelector('body')
                     .scrollIntoView({ behavior: 'auto' })
             }, 0)
-            this.$wire.call('loadMore')
         })
 
         const observer = new IntersectionObserver(entries => {

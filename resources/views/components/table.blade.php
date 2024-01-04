@@ -1,10 +1,11 @@
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
 <x-livewire-powergrid::table-base
-        :ready-to-load="$readyToLoad"
-        :theme="$theme"
-        :table-name="$tableName"
-        :lazy="!is_null(data_get($setUp, 'lazy'))">
+    :ready-to-load="$readyToLoad"
+    :theme="$theme"
+    :table-name="$tableName"
+    :lazy="!is_null(data_get($setUp, 'lazy'))"
+>
     <x-slot:header>
         @include('livewire-powergrid::components.table.tr')
     </x-slot:header>
@@ -28,20 +29,20 @@
                     @endif
                     @php
                         $rowId = data_get($row, $primaryKey);
-
+                        
                         $class = data_get($theme, 'table.trBodyClass');
-
+                        
                         $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-
+                        
                         $applyRulesLoop = true;
-
+                        
                         $trAttributesBag = new \Illuminate\View\ComponentAttributeBag();
                         $trAttributesBag = $trAttributesBag->merge(['class' => $class]);
-
+                        
                         if (method_exists($this, 'actionRules')) {
                             $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                         }
-
+                        
                         if (filled($rulesValues['setAttributes']) && $applyRulesLoop) {
                             foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
                                 $trAttributesBag = $trAttributesBag->merge([
@@ -83,31 +84,30 @@
                     @includeWhen(isset($setUp['responsive']),
                         'livewire-powergrid::components.expand-container')
                 @endforeach
-
             @else
-                @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
-                    @php
-                        $skip = $item * data_get($setUp, 'lazy.rowsPerChildren');
-                        $take = data_get($setUp, 'lazy.rowsPerChildren');
-                    @endphp
-                    <livewire:lazy-child
-                        key="{{ $item }}-{{ $this->getLazyKeys }}"
-                        :child-index="$item"
-                        :$primaryKey
-                        :$radio
-                        :$radioAttribute
-                        :$checkbox
-                        :$checkboxAttribute
-                        :$theme
-                        :$setUp
-                        :$tableName
-                        :parentName="$this->getName()"
-                        :columns="$this->visibleColumns"
-                        :data="$this->getCachedData
-                            ->skip($skip)
-                            ->take($take)"
-                    />
-                @endforeach
+                <div>
+                    @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
+                        @php
+                            $skip = $item * data_get($setUp, 'lazy.rowsPerChildren');
+                            $take = data_get($setUp, 'lazy.rowsPerChildren');
+                        @endphp
+                        <livewire:lazy-child
+                            key="{{ $this->getLazyKeys }}"
+                            :child-index="$item"
+                            :$primaryKey
+                            :$radio
+                            :$radioAttribute
+                            :$checkbox
+                            :$checkboxAttribute
+                            :$theme
+                            :$setUp
+                            :$tableName
+                            :parentName="$this->getName()"
+                            :columns="$this->visibleColumns"
+                            :data="$this->getCachedData->skip($skip)->take($take)"
+                        />
+                    @endforeach
+                </div>
             @endif
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')

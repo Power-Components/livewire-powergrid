@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Computed, On};
 
 /**
  * @property-read bool $hasLazyEnabled
@@ -27,9 +27,10 @@ trait LazyManager
     #[Computed]
     public function getLazyKeys(): string
     {
-        return 'pg_keys_' . json_encode(array_merge($this->getCacheKeys(), [
+        return md5('pg_keys_' . json_encode(array_merge($this->getCacheKeys(), [
             'additionalCacheKey' => $this->additionalCacheKey,
-        ]));
+            'index'              => data_get($this->setUp, 'lazy.items'),
+        ])));
     }
 
     #[Computed]
