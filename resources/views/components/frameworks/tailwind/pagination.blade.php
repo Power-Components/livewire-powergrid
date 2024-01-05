@@ -1,4 +1,4 @@
-<div class="items-center justify-between sm:flex">
+<div class="items-center justify-between sm:flex" wire:loading.class="blur-[2px]" wire:target="loadMore">
     <div class="items-center justify-between w-full sm:flex-1 sm:flex">
         @if ($recordCount === 'full')
             <div>
