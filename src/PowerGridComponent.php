@@ -248,8 +248,13 @@ class PowerGridComponent extends Component
                     ->setColumns($this->columns)
                     ->setSearch($this->search)
                     ->setRelationSearch($this->relationSearch)
+                    ->filterContains();
+            })
+            ->where(function (Eloquent\Builder $query) {
+                Model::query($query)
+                    ->setInputRangeConfig($this->inputRangeConfig)
+                    ->setColumns($this->columns)
                     ->setFilters($this->filters)
-                    ->filterContains()
                     ->filter();
             });
 
