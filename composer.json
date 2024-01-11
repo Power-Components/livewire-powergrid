@@ -29,7 +29,7 @@
         "spaze/phpstan-disallowed-calls": "^2.16.1",
         "larastan/larastan": "^2.8.1",
         "pestphp/pest": "^2.30.0",
-        "orchestra/testbench": "^8.20|^9.0"
+        "orchestra/testbench": "8.19"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
