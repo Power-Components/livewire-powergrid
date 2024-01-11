@@ -16,8 +16,8 @@
 
 @if (filled($rulesValues['hide']))
     <td
-        class="{{ data_get($theme, 'checkbox.tdClass') }}"
-        style="{{ data_get($theme, 'checkbox.tdStyle') }}"
+        class="{{ data_get($theme, 'checkbox.thClass') }}"
+        style="{{ data_get($theme, 'checkbox.thStyle') }}"
     >
     </td>
 @elseif(filled($rulesValues['disable']))
@@ -37,8 +37,8 @@
     </td>
 @else
     <td
-        class="{{ data_get($theme, 'checkbox.tdClass') }}"
-        style="{{ data_get($theme, 'checkbox.tdStyle')  }}"
+        class="{{ data_get($theme, 'checkbox.thClass') }}"
+        style="{{ data_get($theme, 'checkbox.thStyle')  }}"
     >
         <div class="{{ data_get($theme, 'checkbox.divClass') }}">
             <label class="{{ data_get($theme, 'checkbox.labelClass') }}">

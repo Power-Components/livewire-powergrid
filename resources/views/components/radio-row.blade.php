@@ -15,14 +15,14 @@
 @endphp
 @if (filled($rulesValues['hide']))
     <td
-        class="{{ data_get($theme, 'radio.thClass') }}"
-        style="{{ data_get($theme, 'radio.thStyle') }}"
+        class="{{ data_get($theme, 'radio.tdClass') }}"
+        style="{{ data_get($theme, 'radio.tdStyle') }}"
     >
     </td>
 @elseif(filled($rulesValues['disable']))
     <td
-        class="{{ data_get($theme, 'radio.thClass') }}"
-        style="{{ data_get($theme, 'radio.thStyle') }}"
+        class="{{ data_get($theme, 'radio.tdClass') }}"
+        style="{{ data_get($theme, 'radio.tdStyle') }}"
     >
         <div class="{{ data_get($theme, 'radio.divClass') }}">
             <label class="{{ data_get($theme, 'radio.labelClass')  }}">

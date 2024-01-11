@@ -7,7 +7,7 @@
         "test": "tests"
     },
     "scripts": {
-        "watch": "mix watch",
+        "dev": "mix watch",
         "build": "mix --production",
         "blade-formatter": "blade-formatter --write resources/**/*.blade.php"
     },
