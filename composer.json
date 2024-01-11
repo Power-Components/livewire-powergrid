@@ -34,6 +34,9 @@
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
     },
+    "conflict": {
+        "laravel/framework": "10.40.0"
+    },
     "autoload": {
         "psr-4": {
             "PowerComponents\\LivewirePowerGrid\\": "src"
