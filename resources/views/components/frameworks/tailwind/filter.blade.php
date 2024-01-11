@@ -32,62 +32,62 @@
                                 :inline="false"
                                 :tableName="$tableName"
                                 :filter="$filter"
-                                :theme="$theme->filterMultiSelect"
+                                :theme="data_get($theme, 'filterMultiSelect')"
                                 :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"
                             />
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains('FilterDateTimePicker'))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterDatePicker->view, [
+                            @includeIf(data_get($theme, 'filterDatePicker.view'), [
                                 'filter' => $filter,
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
-                                'theme' => $theme->filterDatePicker,
+                                'theme' => data_get($theme, 'filterDatePicker'),
                                 'type' => 'datetime',
                             ])
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains('FilterDatePicker'))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterDatePicker->view, [
+                            @includeIf(data_get($theme, 'filterDatePicker.view'), [
                                 'filter' => $filter,
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
-                                'theme' => $theme->filterDatePicker,
+                                'theme' => data_get($theme, 'filterDatePicker'),
                                 'type' => 'date',
                             ])
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterSelect->view, [
+                            @includeIf(data_get($theme, 'filterSelect.view'), [
                                 'filter' => $filter,
-                                'theme' => $theme->filterSelect,
+                                'theme' => data_get($theme, 'filterSelect'),
                             ])
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains('FilterNumber'))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterNumber->view, [
+                            @includeIf(data_get($theme, 'filterNumber.view'), [
                                 'filter' => $filter,
-                                'theme' => $theme->filterNumber,
+                                'theme' => data_get($theme, 'filterNumber'),
                             ])
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains('FilterInputText'))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterInputText->view, [
+                            @includeIf(data_get($theme, 'filterInputText.view'), [
                                 'filter' => $filter,
-                                'theme' => $theme->filterInputText,
+                                'theme' => data_get($theme, 'filterInputText'),
                             ])
                         </div>
                     @endif
                     @if (str(data_get($filter, 'className'))->contains('FilterBoolean'))
                         <div class="{{ data_get($filter, 'baseClass') }}">
-                            @includeIf($theme->filterBoolean->view, [
+                            @includeIf(data_get($theme, 'filterBoolean.view'), [
                                 'filter' => $filter,
-                                'theme' => $theme->filterBoolean,
+                                'theme' => data_get($theme, 'filterBoolean'),
                             ])
                         </div>
                     @endif

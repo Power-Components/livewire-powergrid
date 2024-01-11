@@ -10,8 +10,8 @@ use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, U
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
+use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild, PowerGridManager};
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -51,6 +51,8 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(ThemeManager::class, 'theme');
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
+
+        Livewire::component('lazy-child', LazyChild::class);
 
         Macros::boot();
     }

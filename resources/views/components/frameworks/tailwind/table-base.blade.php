@@ -11,7 +11,7 @@
             class="p-3 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8"
         >
 
-            @include($theme->layout->header, [
+            @include(data_get($theme, 'layout.header'), [
                 'enabledFilters' => $enabledFilters,
             ])
 
@@ -37,15 +37,14 @@
                 @class([
                     'overflow-auto' => $readyToLoad,
                     'overflow-hidden' => !$readyToLoad,
-                    $theme->table->divClass,
-                    'bg-white dark:bg-pg-primary-900'
+                    data_get($theme, 'table.divClass'),
                 ])
-                style="{{ $theme->table->divStyle }}"
+                style="{{ data_get($theme, 'table.divStyle') }}"
             >
                 @include($table)
             </div>
 
-            @include($theme->footer->view)
+            @include(data_get($theme, 'footer.view'))
         </div>
     </div>
 </div>

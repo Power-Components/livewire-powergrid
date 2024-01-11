@@ -9,11 +9,11 @@
 @php
     $field = strval(data_get($filter, 'field'));
     $title = strval(data_get($filter, 'title'));
-    
+
     $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
-    
-    $filterClasses = Arr::toCssClasses([$theme->selectClass, $class, data_get($column, 'headerClass'), 'power_grid']);
-    
+
+    $filterClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), $class, data_get($column, 'headerClass'), 'power_grid']);
+
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
 
@@ -26,8 +26,8 @@
     />
 @else
     <div
-        class="{{ $theme->baseClass }}"
-        style="{{ $theme->baseStyle }}"
+        class="{{ data_get($theme, 'baseClass') }}"
+        style="{{ data_get($theme, 'baseStyle') }}"
     >
         <select
             class="{{ $filterClasses }}"

@@ -13,36 +13,36 @@
     $resolveContent = function (string $currentTable, string $field, \Illuminate\Database\Eloquent\Model|\stdClass $row): ?string {
         $currentField = $field;
         $replace = fn($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-    
+
         /** @codeCoverageIgnore */
         if (str_contains($currentField, '.')) {
             $data = \Illuminate\Support\Str::of($field)->explode('.');
             $table = $data->get(0);
             $field = $data->get(1);
-    
+
             if ($table === $currentTable) {
                 return $replace($row->{$field});
             }
-    
+
             return $replace($row->{$table}->{$field});
         }
-    
+
         return $replace($row->{$field});
     };
-    
+
     $fallback = html_entity_decode(strval(data_get($editable, 'fallback')), ENT_QUOTES, 'utf-8');
     $value = html_entity_decode(strval($resolveContent($currentTable, $field, $row)), ENT_QUOTES, 'utf-8');
-    
+
     $content = !empty($value) || $value == '0' ? $value : $fallback;
-    
+
     $params = [
-        'theme' => $theme->name,
+        'theme' => data_get($theme, 'name'),
         'tableName' => $tableName,
         'id' => data_get($row, $primaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,
-        'inputClass' => $theme->editable->inputClass,
+        'inputClass' => data_get($theme, 'editable.inputClass'),
         'saveOnMouseOut' => data_get($editable, 'saveOnMouseOut'),
     ];
 @endphp

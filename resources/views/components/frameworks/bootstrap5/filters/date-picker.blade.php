@@ -33,8 +33,8 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        class="{{ $theme->baseClass }}"
-        style="{{ $theme->baseStyle }}"
+        class="{{ data_get($theme, 'baseClass') }}"
+        style="{{ data_get($theme, 'baseStyle') }}"
     >
         <form autocomplete="off">
             <input
@@ -43,8 +43,8 @@
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $column }}"
-                style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
-                class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
+                style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}"
+                class="power_grid {{ data_get($theme, 'inputClass') }} {{ data_get($column, 'headerClass') }}"
                 type="text"
                 readonly
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

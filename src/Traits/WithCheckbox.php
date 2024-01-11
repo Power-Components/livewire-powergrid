@@ -18,7 +18,7 @@ trait WithCheckbox
 
     public string $checkboxAttribute = 'id';
 
-    public bool $radio;
+    public bool $radio = false;
 
     public string $radioAttribute = 'id';
 
@@ -65,5 +65,26 @@ trait WithCheckbox
                 ]);
             }
         });
+    }
+
+    public function showCheckBox(string $attribute = 'id'): self
+    {
+        $this->checkbox          = true;
+        $this->checkboxAttribute = $attribute;
+
+        return $this;
+    }
+
+    public function showRadioButton(string $attribute = 'id'): self
+    {
+        $this->radio          = true;
+        $this->radioAttribute = $attribute;
+
+        return $this;
+    }
+
+    public function checkedValues(): array
+    {
+        return $this->checkboxValues;
     }
 }

@@ -1,13 +1,12 @@
 @props([
     'loading' => false,
 ])
-<tr
-    class="{{ $theme->table->trClass }}"
-    style="{{ $theme->table->trStyle }}"
+<tr class="{{ data_get($theme, 'table.trClass') }}"
+    style="{{ data_get($theme, 'table.trStyle') }}"
 >
     @if ($loading)
         <td
-            class="{{ $theme->table->tdBodyEmptyClass }}"
+            class="{{ data_get($theme, 'table.tdBodyEmptyClass') }}"
             colspan="{{ ($checkbox ? 1 : 0) + count($columns) }}"
         >
             @if ($loadingComponent)
@@ -20,8 +19,8 @@
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <th
                 scope="col"
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.trStyle') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -31,16 +30,16 @@
             <th
                 fixed
                 x-show="hasHiddenElements"
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.thStyle') }}"
             >
             </th>
         @endisset
 
         @if ($radio)
             <th
-                class="{{ $theme->table->thClass }}"
-                style="{{ $theme->table->thStyle }}"
+                class="{{ data_get($theme, 'table.thClass') }}"
+                style="{{ data_get($theme, 'table.thStyle') }}"
             >
             </th>
         @endif
@@ -48,7 +47,7 @@
         @if ($checkbox)
             <x-livewire-powergrid::checkbox-all
                 :checkbox="$checkbox"
-                :theme="$theme->checkbox"
+                :theme="data_get($theme, 'checkbox')"
             />
         @endif
 
@@ -70,9 +69,9 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ $theme->table->thClass . ' ' . $theme->table->thActionClass }}"
+                class="{{ data_get($theme, 'table.thClass') . ' ' . data_get($theme, 'table.thActionClass') }}"
                 scope="col"
-                style="{{ $theme->table->thStyle . ' ' . $theme->table->thActionStyle }}"
+                style="{{ data_get($theme, 'table.thStyle') . ' ' . data_get($theme, 'table.thActionStyle') }}"
                 colspan="{{ count($actions) }}"
                 wire:key="{{ md5('actions') }}"
             >

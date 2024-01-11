@@ -1,8 +1,8 @@
 <td
     x-cloak
     x-show="hasHiddenElements"
-    class="w-0 {{ $theme->tdBodyClass }}"
-    style="{{ $theme->tdBodyStyle }}"
+    class="w-0 {{ data_get($theme, 'tdBodyClass') }}"
+    style="{{  data_get($theme, 'tdBodyStyle') }}"
 >
     <button
         class="flex items-center"

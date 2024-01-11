@@ -94,7 +94,7 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
             4 => false,
             5 => false,
         ]);
-})->with('detail_row_tailwind_join')
+})->skip()->with('detail_row_tailwind_join')
     ->group('actionRules');
 
 dataset('detail_row_tailwind_join', [

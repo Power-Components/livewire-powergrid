@@ -1,10 +1,10 @@
 @php
     $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:radio');
-    
+
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => $theme->radio->inputClass,
+        'class' => data_get($theme, 'radio.inputClass'),
     ]);
-    
+
     if (filled($rulesValues['setAttributes'])) {
         foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
             $inputAttributes = $inputAttributes->merge([
@@ -15,17 +15,17 @@
 @endphp
 @if (filled($rulesValues['hide']))
     <td
-        class="{{ $theme->radio->thClass }}"
-        style="{{ $theme->radio->thStyle }}"
+        class="{{ data_get($theme, 'radio.thClass') }}"
+        style="{{ data_get($theme, 'radio.thStyle') }}"
     >
     </td>
 @elseif(filled($rulesValues['disable']))
     <td
-        class="{{ $theme->radio->thClass }}"
-        style="{{ $theme->radio->thStyle }}"
+        class="{{ data_get($theme, 'radio.thClass') }}"
+        style="{{ data_get($theme, 'radio.thStyle') }}"
     >
-        <div class="{{ $theme->radio->divClass }}">
-            <label class="{{ $theme->radio->labelClass }}">
+        <div class="{{ data_get($theme, 'radio.divClass') }}">
+            <label class="{{ data_get($theme, 'radio.labelClass')  }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -36,11 +36,11 @@
     </td>
 @else
     <td
-        class="{{ $theme->radio->thClass }}"
-        style="{{ $theme->radio->thStyle }}"
+        class="{{ data_get($theme, 'radio.thClass') }}"
+        style="{{ data_get($theme, 'radio.thStyle') }}"
     >
-        <div class="{{ $theme->radio->divClass }}">
-            <label class="{{ $theme->radio->labelClass }}">
+        <div class="{{ data_get($theme, 'radio.divClass') }}">
+            <label class="{{ data_get($theme, 'radio.labelClass') }}">
                 <input
                     type="radio"
                     {{ $inputAttributes }}

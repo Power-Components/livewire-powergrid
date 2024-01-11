@@ -34,8 +34,8 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        class="{{ $theme->baseClass }}"
-        style="{{ $theme->baseStyle }}"
+        class="{{ data_get($theme, 'baseClass') }}"
+        style="{{ data_get($theme, 'baseStyle') }}"
     >
         @if (!$inline)
             <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
@@ -49,8 +49,8 @@
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
-                style="{{ $theme->inputStyle }} {{ data_get($column, 'headerStyle') }}"
-                class="power_grid {{ $theme->inputClass }} {{ data_get($column, 'headerClass') }}"
+                style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}"
+                class="power_grid {{ data_get($theme, 'inputClass') }} {{ data_get($column, 'headerClass') }}"
                 type="text"
                 readonly
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

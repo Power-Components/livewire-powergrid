@@ -14,7 +14,7 @@
             >{{ $label }}</option>
         @endforeach
     </select>
-    <div class="{{ $theme->relativeDivClass }}">
+    <div class="{{ data_get($theme, 'relativeDivClass') }}">
         <x-livewire-powergrid::icons.down />
     </div>
 </div>

@@ -261,13 +261,13 @@ class ProcessDataSource
 
     private function processBatch(BaseCollection $collection): BaseCollection
     {
-        return $collection->map(function ($row) {
+        return $collection->map(function ($row, $index) {
             $addColumns = $this->component->addColumns();
             $columns    = $addColumns->columns;
             $columns    = collect($columns);
 
             /** @phpstan-ignore-next-line */
-            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row)]);
+            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row, $index)]);
 
             $prepareRules = collect();
             $actions      = collect();

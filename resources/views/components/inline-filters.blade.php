@@ -10,15 +10,15 @@
     'setUp' => null,
 ])
 @php
-    $trClasses = Arr::toCssClasses([$theme->table->trClass, $theme->table->trFiltersClass]);
-    $tdClasses = Arr::toCssClasses([$theme->table->tdBodyClass, $theme->table->tdFiltersClass]);
-    $trStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->trFiltersStyle]);
-    $tdStyles = Arr::toCssClasses([$theme->table->tdBodyStyle, $theme->table->tdFiltersStyle]);
+    $trClasses = Arr::toCssClasses([data_get($theme, 'table.trClass'), data_get($theme, 'table.trFiltersClass')]);
+    $tdClasses = Arr::toCssClasses([data_get($theme, 'table.tdBodyClass'), data_get($theme, 'table.tdFiltersClass')]);
+    $trStyles = Arr::toCssClasses([data_get($theme, 'table.trBodyStyle'), data_get($theme, 'table.trFiltersStyle')]);
+    $tdStyles = Arr::toCssClasses([data_get($theme, 'table.tdBodyStyle'), data_get($theme, 'table.tdFiltersStyle')]);
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
         class="{{ $trClasses }}"
-        style="{{ $theme->table->trStyle }} {{ $theme->table->trFiltersStyle }}"
+        style="{{ data_get($theme, 'table.trStyle') }} {{ data_get($theme, 'table.trFiltersStyle') }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
@@ -36,9 +36,9 @@
 
         @foreach ($this->visibleColumns as $column)
             <td
-                class="{{ $theme->table->tdBodyClass }}"
+                class="{{ data_get($theme, 'table.tdBodyClass') }}"
                 wire:key="column-filter-{{ $column->field }}"
-                style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $theme->table->tdBodyStyle }}"
+                style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle') }}"
             >
 
                 @foreach ($column->filters as $key => $filter)
@@ -47,30 +47,30 @@
                             <x-livewire-powergrid::inputs.select
                                 :tableName="$tableName"
                                 :filter="$filter"
-                                :theme="$theme->filterMultiSelect"
+                                :theme="data_get($theme, 'filterMultiSelect')"
                                 :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"
                             />
                         @endif
                         @if (str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
-                            @includeIf($theme->filterSelect->view, [
+                            @includeIf(data_get($theme, 'filterSelect.view'), [
                                 'inline' => true,
                                 'column' => $column,
                                 'filter' => $filter,
-                                'theme' => $theme->filterSelect,
+                                'theme' => data_get($theme, 'filterSelect'),
                             ])
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterInputText'))
-                            @includeIf($theme->filterInputText->view, [
+                            @includeIf(data_get($theme, 'filterInputText.view'), [
                                 'inline' => true,
                                 'filter' => $filter,
-                                'theme' => $theme->filterInputText,
+                                'theme' => data_get($theme, 'filterInputText'),
                             ])
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterNumber'))
-                            @includeIf($theme->filterNumber->view, [
+                            @includeIf(data_get($theme, 'filterNumber.view'), [
                                 'inline' => true,
                                 'filter' => $filter,
-                                'theme' => $theme->filterNumber,
+                                'theme' => data_get($theme, 'filterNumber'),
                             ])
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterDynamic'))
@@ -82,30 +82,30 @@
                             />
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterDateTimePicker'))
-                            @includeIf($theme->filterDatePicker->view, [
+                            @includeIf(data_get($theme, 'filterDatePicker.view'), [
                                 'inline' => true,
                                 'filter' => $filter,
                                 'type' => 'datetime',
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
-                                'theme' => $theme->filterDatePicker,
+                                'theme' => data_get($theme, 'filterDatePicker'),
                             ])
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterDatePicker'))
-                            @includeIf($theme->filterDatePicker->view, [
+                            @includeIf(data_get($theme, 'filterDatePicker.view'), [
                                 'inline' => true,
                                 'filter' => $filter,
                                 'type' => 'date',
                                 'tableName' => $tableName,
                                 'classAttr' => 'w-full',
-                                'theme' => $theme->filterDatePicker,
+                                'theme' => data_get($theme, 'filterDatePicker'),
                             ])
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterBoolean'))
-                            @includeIf($theme->filterBoolean->view, [
+                            @includeIf(data_get($theme, 'filterBoolean.view'), [
                                 'inline' => true,
                                 'filter' => $filter,
-                                'theme' => $theme->filterBoolean,
+                                'theme' => data_get($theme, 'filterBoolean'),
                             ])
                         @endif
                     </div>

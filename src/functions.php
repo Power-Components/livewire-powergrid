@@ -39,3 +39,18 @@ if (!function_exists('isTailwind')) {
         return in_array(config('livewire-powergrid.theme'), ['tailwind', Tailwind::class]);
     }
 }
+
+if (!function_exists('convertObjectsToArray')) {
+    function convertObjectsToArray(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_object($value)) {
+                $data[$key] = (array) $value;
+            } elseif (is_array($value)) {
+                $data[$key] = convertObjectsToArray($value);
+            }
+        }
+
+        return $data;
+    }
+}
