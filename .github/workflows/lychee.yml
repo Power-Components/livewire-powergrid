@@ -1,0 +1,22 @@
+name: Check for broken Links
+on:
+  pull_request:
+    paths:
+      - '**.md'
+  push:
+    paths:
+      - '**.md'
+
+jobs:
+  linkChecker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 🔗 Check Links
+        uses: lycheeverse/lychee-action@v1.6.1
+        with:
+          fail: true
+          args: --config .github/lychee.toml './**/*.md'
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
