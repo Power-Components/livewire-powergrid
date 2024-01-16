@@ -1,8 +1,7 @@
 <?php
 
 use OpenSpout\Reader\XLSX\Reader;
-
-use PowerComponents\LivewirePowerGrid\Tests\ExportTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\ExportTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

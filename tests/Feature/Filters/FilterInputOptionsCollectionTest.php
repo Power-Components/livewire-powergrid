@@ -4,9 +4,8 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable, DishesCollectionTable};
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
+    Concerns\Components\DishesCollectionTable};
 
 it(
     'properly filters by "name is" using collection & array table',

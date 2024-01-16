@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesEnumTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesEnumTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -49,6 +47,6 @@ function filterEnumSelect(string $dataField, ?string $value): array
 }
 
 dataset('enum_themes', [
-    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
     'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);

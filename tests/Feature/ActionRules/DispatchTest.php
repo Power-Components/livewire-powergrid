@@ -2,9 +2,8 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
-
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\{livewire};
 
@@ -37,8 +36,8 @@ it('add rule \'dispatch\' when dishId == 5', function (string $component, object
         ->set('search', 'Francesinha vegana')
         ->assertSeeHtml("\$dispatch(&#039;toggleEvent&#039;, JSON.parse(&#039;{\\u0022dishId\\u0022:5}&#039;))");
 })->with([
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ])->group('actionRules');

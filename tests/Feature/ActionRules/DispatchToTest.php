@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Facades\Rule;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishTableBase, Models\Dish};
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishTableBase, Concerns\Models\Dish};
 
 $component = new class () extends DishTableBase {
     public int $dishId;
@@ -39,8 +39,8 @@ it('add rule \'dispatchTo\' when dishId == 5', function (string $component, obje
 })->with('emit_to_themes_with_join')->group('actionRules');
 
 dataset('emit_to_themes_with_join', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);

@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesRowIndex;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesRowIndex;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

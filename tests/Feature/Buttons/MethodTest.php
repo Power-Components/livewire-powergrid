@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use PowerComponents\LivewirePowerGrid\Button;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -22,9 +20,9 @@ $route = new class () extends DishTableBase {
 };
 
 dataset('action:routeMethod', [
-    'tailwind'       => [$route::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$route::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$route::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$route::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$route::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$route::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$route::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

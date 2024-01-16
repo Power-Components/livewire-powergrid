@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesBeforeSearchTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesBeforeSearchTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

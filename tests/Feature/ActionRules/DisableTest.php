@@ -2,8 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -28,9 +27,9 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('action:disabled', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

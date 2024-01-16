@@ -2,7 +2,10 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{Detail, Footer, Tests\RulesDetailRowTable, Tests\RulesToggleDetailTable};
+use PowerComponents\LivewirePowerGrid\{Detail,
+    Footer,
+    Tests\Concerns\Components\RulesDetailRowTable,
+    Tests\Concerns\Components\RulesToggleDetailTable};
 
 it('collapse detail row', function () {
     livewire(RulesToggleDetailTable::class, [

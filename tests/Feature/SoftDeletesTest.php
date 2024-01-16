@@ -1,12 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
-
-use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
-
-;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishesSoftDeletesTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSoftDeletesTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

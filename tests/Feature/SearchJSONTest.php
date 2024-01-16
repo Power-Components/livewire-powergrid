@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesSearchJSONTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSearchJSONTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

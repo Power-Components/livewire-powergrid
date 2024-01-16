@@ -1,8 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishesCalculationsTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesCalculationsTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -59,9 +58,9 @@ it('calculate "max" on price field', function (string $component, object $params
 })->with('calculations');
 
 dataset('calculations', [
-    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

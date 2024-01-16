@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -18,8 +16,8 @@ it('deferLoading work properly', function (string $component, object $params) {
 })->with('defer_loading_join')->group('action');
 
 dataset('defer_loading_join', [
-    'tailwind'          => [DishesTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'         => [DishesTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind => join'  => [DishesTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'          => [DishesTable::class, (object) ['theme' => 'tailwind', 'join'          => false]],
+    'bootstrap'         => [DishesTable::class, (object) ['theme' => 'bootstrap', 'join'         => false]],
+    'tailwind => join'  => [DishesTable::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap => join' => [DishesTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);

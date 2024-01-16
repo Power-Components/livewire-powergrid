@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 

@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\NestedRelationSearchTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\NestedRelationSearchTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

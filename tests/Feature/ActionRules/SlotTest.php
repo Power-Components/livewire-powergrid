@@ -2,8 +2,8 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -41,8 +41,8 @@ it('add rule \'slot\' when dish out of stock', function (string $component, obje
 })->with('caption_themes_with_join')->group('actionRules');
 
 dataset('caption_themes_with_join', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);

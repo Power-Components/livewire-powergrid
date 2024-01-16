@@ -4,13 +4,11 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
-    DishesCollectionTable,
-    DishesQueryBuilderTable,
-    DishesTable,
-    DishesTableWithJoin};
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
+    Concerns\Components\DishesCollectionTable,
+    Concerns\Components\DishesQueryBuilderTable,
+    Concerns\Components\DishesTable,
+    Concerns\Components\DishesTableWithJoin};
 
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
@@ -375,14 +373,14 @@ it('properly filters by bool "all" - using collection & array table', function (
     ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
 
 dataset('filter_boolean_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'         => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'        => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_boolean_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 

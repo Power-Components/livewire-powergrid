@@ -1,12 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use PowerComponents\LivewirePowerGrid\Button;
-
-;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -22,9 +18,9 @@ $route = new class () extends DishTableBase {
 };
 
 dataset('action:route', [
-    'tailwind'       => [$route::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$route::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$route::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$route::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$route::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$route::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$route::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 
@@ -41,9 +37,9 @@ $routeTarget = new class () extends DishTableBase {
 };
 
 dataset('action:routeTarget', [
-    'tailwind'       => [$routeTarget::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$routeTarget::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$routeTarget::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$routeTarget::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$routeTarget::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$routeTarget::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$routeTarget::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

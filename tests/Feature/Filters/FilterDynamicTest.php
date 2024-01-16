@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesDynamicFiltersTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesDynamicFiltersTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

@@ -4,13 +4,11 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
-    DishesCollectionTable,
-    DishesQueryBuilderTable,
-    DishesTable,
-    DishesTableWithJoin};
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
+    Concerns\Components\DishesCollectionTable,
+    Concerns\Components\DishesQueryBuilderTable,
+    Concerns\Components\DishesTable,
+    Concerns\Components\DishesTableWithJoin};
 
 it('properly renders the number filter', function (string $component, object $params) {
     $number = Filter::number('id', $params->field)
@@ -229,14 +227,14 @@ it('properly filters by "min & max" formatted', function (string $component, obj
 })->group('filters', 'filterNumber')->with('filter_number_themes_with_join');
 
 dataset('filter_number_themes_with_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'         => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'        => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_number_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
