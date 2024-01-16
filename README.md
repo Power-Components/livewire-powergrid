@@ -134,7 +134,7 @@ Please look into our previous Issues and Discussions before submitting a new iss
 
 `🙏` **You can help PowerGrid in a number of ways; contributing goes beyond writing code.**
 
-Please read the [Contributing Guide reports](CONTRIBUTING.md) to see what kind of contributions you can make and what steps you should follow.
+Please read the [Contributing Guide](CONTRIBUTING.md) to see what kind of contributions you can make and what steps you should follow.
 
 <br/>
 
@@ -171,4 +171,4 @@ Please read the [Contributing Guide reports](CONTRIBUTING.md) to see what kind o
 
 <hr>
 
-<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated with, associated with, endorsed by, or in any way officially connected with the <a href="https://laravel-livewire.com" target="_blank">Laravel Livewire</a> - copyright by Caleb Porzio.</sup>
+<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated with, associated with, endorsed by, or in any way officially connected with the <a href="https://laravel-livewire.com" target="_blank">Laravel Livewire</a> - copyright by Caleb Porzio. Laravel is a trademark of Taylor Otwell.</sup>
