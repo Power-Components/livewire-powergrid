@@ -11,6 +11,7 @@
     </p>
     <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
     <a href="#features">🔥 Features</a> |
+    <a href="#-demo" target="_blank"> 🚀 Demo</a> |
     <a href="#get-started">⌨️ Get started</a>
 </div>
 
@@ -20,32 +21,35 @@
 
 <br/>
 
-PowerGrid creates modern, powerful and easy to customize Datatables based on Laravel [Livewire](https://laravel-livewire.com) library.
+PowerGrid creates modern, powerful and easy-to-customize Datatables based on Laravel [Livewire](https://laravel-livewire.com) library.
 
 <br/>
 
-➔  **Zero Configuration**: Tables have basic features activated by default.
+➔  **Simple Configuration**: Tables have all basic features activated by default.
 
-➔  **It fits your needs**: Extend and customize your table including components (checkbox, action buttons, editable fields), global search feature, column data filters and data export tool.
+➔  **It fits your needs**: Extend and customize your table, including components (checkbox, action buttons, editable fields), global search feature, column data filters, and data export tool.
 
 ➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
 <br/>
 
-<p>
-    <img src="art/screenshot_light.png" alt="PowerGrid Dark Screenshot">
-</p>
+## 🚀 Demo
 
-Dark mode:
-<p>
-    <img src="art/screenshot_dark.png" alt="PowerGrid Dark Screenshot">
-</p>
+Explore the <a href="https://demo.livewire-powergrid.com" target="_blank">Demo</a> showcasing PowerGrid's main features across multiple use cases.
 
 <br/>
 
-## 🚀 Instant Demo
+`☀️` Light mode:
 
-### [Online Demo](https://demo.livewire-powergrid.com) (tailwind)
+<p>
+    <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="art/screenshot_light.png" alt="PowerGrid Light Screenshot" width="805"></a>
+</p>
+
+`🌙` Dark mode:
+
+<p>
+    <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="art/screenshot_dark.png" alt="PowerGrid Dark Screenshot" width="805"></a>
+</p>
 
 ## Features
 
@@ -55,7 +59,7 @@ With PowerGrid you get right out of the box:
 
 - **Column Sorting**
 
-- **Column Sum, Count & Average in Header/Footer**
+- **Column Sum, Count and Average in Header/Footer**
 
 - **Pagination**
 
@@ -65,7 +69,7 @@ With PowerGrid you get right out of the box:
 
 - **Bulk Actions**
 
-- **Action Rules: Conditionally disable, hide and modify Action Buttons, Checkboxes and rows**
+- **Action Rules: Conditionally disable, hide, and modify Action Buttons, Checkboxes and rows**
 
 - **Toggle button**
 
@@ -87,54 +91,57 @@ With PowerGrid you get right out of the box:
 
 <br/>
 
- ![Laravel Livewire Tables](https://github.com/Power-Components/powergrid-doc/blob/main/docs/_media/example.gif?raw=true)
-
 ------
 
-# Get started
+## Get started
 
-## 1. Requirements
+### 1. Requirements
 
 - PHP 8.1+
-- [Laravel 10+](https://laravel.com/docs/9.x/installation)
+- [Laravel 10+](https://laravel.com/docs/installation)
 - [Livewire 3.0x](https://livewire.laravel.com)
 - [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
-## 2. Install
+### 2. Install
+
+Require PowerGrid via [composer](https://getcomposer.org).
 
 ```bash
 composer require power-components/livewire-powergrid
 ```
 
-Please follow the steps indicated in our [Documentation - Install](https://livewire-powergrid.com/get-started/install.html) page.
+Then, follow the steps indicated in our documentation's [Install](https://livewire-powergrid.com/get-started/install.html) page.
 
 <br/>
 
-## 3. Support
+## Support & Community
 
-For questions, issues, bug reports and feature requests, please use our [Issues](https://github.com/Power-Components/livewire-powergrid/issues).
+`👥` **Interact with the PowerGrid community at our [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.**
 
-Before submitting a new request, please look into our previous issues.
-
-Verify if your bug/question or feature request has been previously submitted.
+You can share ideas, find questions and answers, and collaborate with other PowerGrid users.
 
 <br/>
 
-## 4. How to contribute
+`🛟` **For technical inquiries, bug reports, and feature requests, please use the [Issues](https://github.com/Power-Components/livewire-powergrid/issues) tab.**
 
-We appreciate your interest in contributing with PowerGrid.
-
-Please read the [Contributing Guide](https://github.com/Power-Components/livewire-powergrid/blob/main/CONTRIBUTING.md).
+Please look into our previous Issues and Discussions before submitting a new issue.
 
 <br/>
 
-## 5. Credits
+## Contribute
 
-Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
+`🙏` **You can help PowerGrid in a number of ways; contributing goes beyond writing code.**
 
-- [Contributors](../../contributors)
+Please read the [Contributing Guide](https://github.com/Power-Components/livewire-powergrid/blob/main/CONTRIBUTING.md) to see what kind of contributions you can make and what steps you should follow.
+
+<br/>
+
+## Credits
+
+- Created by [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
+- [All Contributors](../../contributors)
 - Logo & artwork by [Caneco](https://twitter.com/caneco)
 
 <hr>
@@ -143,14 +150,14 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 <p>
   <!--DevSquad-->
   <a href="https://devsquad.com" target="_blank">
-    <img src="https://livewire-powergrid.com/assets/devsquad.a7795966.png" alt="DevSquad" height="undefined">
+    <img src="https://livewire-powergrid.com/assets/devsquad.a7795966.png" alt="DevSquad" height="64">
   </a>
 </p>
 
 <p></p>
 <p></p>
 
-<p>Supported by:</p>
+<p>With the support of:</p>
 <p>
   <!-- PHPStorm -->
   <a href="https://www.jetbrains.com/phpstorm/" target="_blank">
@@ -164,4 +171,4 @@ Created by: [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnaly
 
 <hr>
 
-<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated, associated, endorsed by, or in any way officially connected with the Laravel Livewire - copyright by Caleb Porzio.</sup>
+<sup><b>Notice of Non-Affiliation and Disclaimer:</b> Livewire PowerGrid is not affiliated with, associated with, endorsed by, or in any way officially connected with the <a href="https://laravel-livewire.com" target="_blank">Laravel Livewire</a> - copyright by Caleb Porzio.</sup>
