@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -19,7 +19,7 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('actionRules:loop', [
-    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join'      => false]],
     'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);
 

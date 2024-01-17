@@ -1,8 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Button;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -17,9 +16,9 @@ $bladeComponent = new class () extends DishTableBase {
 };
 
 dataset('bladeComponent', [
-    'tailwind'       => [$bladeComponent::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$bladeComponent::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$bladeComponent::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$bladeComponent::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$bladeComponent::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$bladeComponent::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$bladeComponent::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

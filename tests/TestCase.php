@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
-use PowerComponents\LivewirePowerGrid\Tests\Actions\TestDatabase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
 class TestCase extends BaseTestCase
 {

@@ -4,15 +4,15 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelectAsync
 use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelect};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
-    DishesCollectionTable,
-    DishesFiltersTable,
-    DishesQueryBuilderTable,
-    DishesTable};
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
+    Concerns\Components\DishesCollectionTable,
+    Concerns\Components\DishesFiltersTable,
+    Concerns\Components\DishesQueryBuilderTable,
+    Concerns\Components\DishesTable};
 
 $customBuilder = new class () extends DishesTable {
     public int $dishId;
@@ -242,14 +242,14 @@ it('properly filter with category_id - multiple select async', function (string 
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 dataset('filter_multi_select_themes_with_join', [
-    'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join'  => false]],
     'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+    'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join'   => true]],
+    'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join'  => true]],
 ]);
 
 dataset('filter_multi_select_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 

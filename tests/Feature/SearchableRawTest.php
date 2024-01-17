@@ -1,8 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesSearchableRawTable;
-
-;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSearchableRawTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

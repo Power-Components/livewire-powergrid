@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Database\Eloquent\Builder;
-
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Models\{Category, Chef};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Chef};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -37,9 +37,9 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('action:depends', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

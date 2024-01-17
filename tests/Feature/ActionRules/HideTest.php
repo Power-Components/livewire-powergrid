@@ -2,8 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -80,9 +79,9 @@ it('properly displays "hide" on edit button', function (string $component, objec
         ->assertDontSeeHtml("\$dispatch(&#039;executeDispatch&#039;, JSON.parse(&#039;{\u0022id\u0022:3}&#039;");
 })
     ->with([
-        'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-        'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-        'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
+        'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+        'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+        'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
         'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
     ])
     ->group('action');
@@ -98,9 +97,9 @@ it('does not show the html of actions when hide is activated', function (string 
         ->assertSeeHtml("action-3-render-action.0.edit");
 })
     ->with([
-        'tailwind'       => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join' => false]],
-        'bootstrap'      => [$hidePreventShowHtml::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-        'tailwind join'  => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join' => true]],
+        'tailwind'       => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join'       => false]],
+        'bootstrap'      => [$hidePreventShowHtml::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
+        'tailwind join'  => [$hidePreventShowHtml::class, (object) ['theme' => 'tailwind', 'join'  => true]],
         'bootstrap join' => [$hidePreventShowHtml::class, (object) ['theme' => 'bootstrap', 'join' => true]],
     ])
     ->group('action');

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace PowerComponents\LivewirePowerGrid\Tests\Plugins;
 
 use Faker\{Factory, Generator};

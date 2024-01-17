@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Pagination\LengthAwarePaginator;
-
-use PowerComponents\LivewirePowerGrid\Tests\DishesSetUpTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSetUpTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

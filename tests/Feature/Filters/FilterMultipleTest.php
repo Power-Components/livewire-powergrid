@@ -6,7 +6,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesQueryBuilderTable, DishesTable, DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuilderTable,
+    Concerns\Components\DishesTable,
+    Concerns\Components\DishesTableWithJoin};
 
 $component = new class () extends DishesTable {
     public function filters(): array
@@ -137,8 +139,8 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         ->toMatchArray([]);
 })->group('filters')
     ->with([
-        'tailwind -> id'         => [$component::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-        'bootstrap -> id'        => [$component::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
-        'tailwind -> dishes.id'  => [$componentJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
+        'tailwind -> id'         => [$component::class, (object) ['theme' => 'tailwind', 'field'         => 'name']],
+        'bootstrap -> id'        => [$component::class, (object) ['theme' => 'bootstrap', 'field'        => 'name']],
+        'tailwind -> dishes.id'  => [$componentJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.name']],
         'bootstrap -> dishes.id' => [$componentJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
     ]);

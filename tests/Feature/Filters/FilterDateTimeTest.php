@@ -4,11 +4,11 @@ use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{DishesArrayTable,
-    DishesCollectionTable,
-    DishesQueryBuilderTable,
-    DishesTable,
-    DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
+    Concerns\Components\DishesCollectionTable,
+    Concerns\Components\DishesQueryBuilderTable,
+    Concerns\Components\DishesTable,
+    Concerns\Components\DishesTableWithJoin};
 
 it('properly filter the produced_at field between two dates', function (string $component, object $params) {
     livewire($component, [
@@ -154,14 +154,14 @@ it('properly filter the produced_at field between another two dates - custom bui
     ]);
 
 dataset('filter_datetime_themes_with_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'         => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'        => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_datetime_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 

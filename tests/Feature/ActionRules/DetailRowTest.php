@@ -1,11 +1,11 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\Models\Dish;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Tests\DishTableBase};
+use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Tests\Concerns\Components\DishTableBase};
 
 $component = new class () extends DishTableBase {
     public function setUp(): array
@@ -98,6 +98,6 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
     ->group('actionRules');
 
 dataset('detail_row_tailwind_join', [
-    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join'      => false]],
     'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

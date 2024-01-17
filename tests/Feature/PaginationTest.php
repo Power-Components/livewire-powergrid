@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\DishesTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 
 it('properly displays "full" showRecordCount')
     ->livewire(DishesTable::class)

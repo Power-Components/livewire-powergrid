@@ -2,9 +2,8 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-;
-
-use PowerComponents\LivewirePowerGrid\Tests\{DishesTableWithJoin, DishesTableWithJoinNames};
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesTableWithJoin,
+    Concerns\Components\DishesTableWithJoinNames};
 
 it('properly sorts ASC/DESC with: string join column', function (string $component, string $theme) {
     livewire($component)
