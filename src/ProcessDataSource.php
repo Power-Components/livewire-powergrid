@@ -14,7 +14,6 @@ use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
-/** @internal  */
 class ProcessDataSource
 {
     use SoftDeletes;
@@ -123,12 +122,15 @@ class ProcessDataSource
         $results = $this->applyPerPage($results);
 
         $this->setTotalCount($results);
-
-        /** @phpstan-ignore-next-line */
-        $collection = $results->getCollection();
-
-        /** @phpstan-ignore-next-line */
-        return $results->setCollection($this->transform($collection));
+//
+//        ds($results);
+        return $results;
+//
+//        /** @phpstan-ignore-next-line */
+//        $collection = $results->getCollection();
+//
+//        /** @phpstan-ignore-next-line */
+//        return $results->setCollection($this->transform($collection));
     }
 
     /**
@@ -246,23 +248,25 @@ class ProcessDataSource
         });
     }
 
-    public function transform(BaseCollection $results): BaseCollection
+    public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
         $processedResults = collect();
 
         $results->chunk(3)
-            ->each(function (BaseCollection $collection) use (&$processedResults) {
-                $processedBatch   = $this->processBatch($collection);
+            ->each(function (BaseCollection $collection) use (&$processedResults, $component) {
+                $processedBatch   = self::processBatch($collection, $component);
                 $processedResults = $processedResults->concat($processedBatch);
             });
+
+        ds($processedResults);
 
         return $processedResults;
     }
 
-    private function processBatch(BaseCollection $collection): BaseCollection
+    private static function processBatch(BaseCollection $collection, $component): BaseCollection
     {
-        return $collection->map(function ($row, $index) {
-            $addColumns = $this->component->addColumns();
+        return $collection->map(function ($row, $index) use ($component) {
+            $addColumns = $component->addColumns();
             $columns    = $addColumns->columns;
             $columns    = collect($columns);
 
@@ -272,14 +276,14 @@ class ProcessDataSource
             $prepareRules = collect();
             $actions      = collect();
 
-            if (method_exists($this->component, 'actionRules')) {
+            if (method_exists($component, 'actionRules')) {
                 $prepareRules = resolve(RulesController::class)
-                    ->execute($this->component->actionRules($row), (object)$row);
+                    ->execute($component->actionRules($row), (object)$row);
             }
 
-            if (method_exists($this->component, 'actions')) {
-                $actions = (new ActionsController($this->component, $prepareRules))
-                    ->execute($this->component->actions($row), (object)$row);
+            if (method_exists($component, 'actions')) {
+                $actions = (new ActionsController($component, $prepareRules))
+                    ->execute($component->actions($row), (object)$row);
             }
 
             $mergedData = $data->merge([

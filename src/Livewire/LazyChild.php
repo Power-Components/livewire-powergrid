@@ -43,6 +43,8 @@ class LazyChild extends Component
         $this->resolveDetailRow($this->data);
     }
 
+
+
     public function afterToggleDetail(string $id, string $state): void
     {
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
