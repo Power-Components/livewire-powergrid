@@ -253,7 +253,7 @@ class PowerGridComponent extends Component
             ->where('forceHidden', false);
     }
 
-    #[Computed]
+    #[Computed(persist: true)]
     protected function getCachedData(): mixed
     {
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {

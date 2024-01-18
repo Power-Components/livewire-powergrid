@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Livewire\Attributes\{Computed, On};
+use Livewire\Attributes\Computed;
 
 /**
  * @property-read bool $hasLazyEnabled

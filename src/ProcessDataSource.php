@@ -14,7 +14,6 @@ use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
 use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
 
-/** @internal  */
 class ProcessDataSource
 {
     use SoftDeletes;
@@ -86,7 +85,7 @@ class ProcessDataSource
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
             $paginated = Collection::paginate($results, intval(data_get($this->component->setUp, 'footer.perPage')));
-            $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
+            $results   = $paginated->setCollection($this->transform($paginated->getCollection(), $this->component));
         };
 
         return $results;
@@ -124,11 +123,15 @@ class ProcessDataSource
 
         $this->setTotalCount($results);
 
+        if (filled(data_get($this->component, 'setUp.lazy'))) {
+            return $results;
+        }
+
         /** @phpstan-ignore-next-line */
         $collection = $results->getCollection();
 
         /** @phpstan-ignore-next-line */
-        return $results->setCollection($this->transform($collection));
+        return $results->setCollection($this->transform($collection, $this->component));
     }
 
     /**
@@ -246,23 +249,23 @@ class ProcessDataSource
         });
     }
 
-    public function transform(BaseCollection $results): BaseCollection
+    public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
         $processedResults = collect();
 
         $results->chunk(3)
-            ->each(function (BaseCollection $collection) use (&$processedResults) {
-                $processedBatch   = $this->processBatch($collection);
+            ->each(function (BaseCollection $collection) use (&$processedResults, $component) {
+                $processedBatch   = self::processBatch($collection, $component);
                 $processedResults = $processedResults->concat($processedBatch);
             });
 
         return $processedResults;
     }
 
-    private function processBatch(BaseCollection $collection): BaseCollection
+    private static function processBatch(BaseCollection $collection, PowerGridComponent $component): BaseCollection
     {
-        return $collection->map(function ($row, $index) {
-            $addColumns = $this->component->addColumns();
+        return $collection->map(function ($row, $index) use ($component) {
+            $addColumns = $component->addColumns();
             $columns    = $addColumns->columns;
             $columns    = collect($columns);
 
@@ -272,14 +275,14 @@ class ProcessDataSource
             $prepareRules = collect();
             $actions      = collect();
 
-            if (method_exists($this->component, 'actionRules')) {
+            if (method_exists($component, 'actionRules')) {
                 $prepareRules = resolve(RulesController::class)
-                    ->execute($this->component->actionRules($row), (object)$row);
+                    ->execute($component->actionRules($row), (object)$row);
             }
 
-            if (method_exists($this->component, 'actions')) {
-                $actions = (new ActionsController($this->component, $prepareRules))
-                    ->execute($this->component->actions($row), (object)$row);
+            if (method_exists($component, 'actions')) {
+                $actions = (new ActionsController($component, $prepareRules))
+                    ->execute($component->actions($row), (object)$row);
             }
 
             $mergedData = $data->merge([

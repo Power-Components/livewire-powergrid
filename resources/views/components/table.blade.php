@@ -29,20 +29,20 @@
                     @endif
                     @php
                         $rowId = data_get($row, $primaryKey);
-                        
+
                         $class = data_get($theme, 'table.trBodyClass');
-                        
+
                         $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-                        
+
                         $applyRulesLoop = true;
-                        
+
                         $trAttributesBag = new \Illuminate\View\ComponentAttributeBag();
                         $trAttributesBag = $trAttributesBag->merge(['class' => $class]);
-                        
+
                         if (method_exists($this, 'actionRules')) {
                             $applyRulesLoop = $actionRulesClass->loop($this->actionRules($row), $loop);
                         }
-                        
+
                         if (filled($rulesValues['setAttributes']) && $applyRulesLoop) {
                             foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
                                 $trAttributesBag = $trAttributesBag->merge([
@@ -91,6 +91,7 @@
                             $skip = $item * data_get($setUp, 'lazy.rowsPerChildren');
                             $take = data_get($setUp, 'lazy.rowsPerChildren');
                         @endphp
+
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
                             :child-index="$item"
@@ -104,7 +105,7 @@
                             :$tableName
                             :parentName="$this->getName()"
                             :columns="$this->visibleColumns"
-                            :data="$this->getCachedData->skip($skip)->take($take)"
+                            :data="\PowerComponents\LivewirePowerGrid\ProcessDataSource::transform($data->skip($skip)->take($take), $this)"
                         />
                     @endforeach
                 </div>
