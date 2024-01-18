@@ -22,7 +22,7 @@ class LazyChild extends Component
 
     public string $radioAttribute = 'id';
 
-    public mixed $data;
+    private Collection $data;
 
     public array $theme;
 
@@ -38,8 +38,10 @@ class LazyChild extends Component
 
     public string|int $childIndex;
 
-    public function mount(): void
+    public function mount(Collection $data): void
     {
+        $this->data = $data;
+
         $this->resolveDetailRow($this->data);
     }
 
@@ -54,6 +56,8 @@ class LazyChild extends Component
 
     public function render(): View
     {
-        return view('livewire-powergrid::livewire.lazy-child');
+        $data = $this->data;
+
+        return view('livewire-powergrid::livewire.lazy-child', compact('data'));
     }
 }

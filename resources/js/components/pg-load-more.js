@@ -11,6 +11,8 @@ export default () => ({
             if (entries[0].isIntersecting) {
                 this.$wire.call('loadMore')
             }
+        }, {
+            rootMargin: '300px'
         });
 
         observer.observe(this.$el)
