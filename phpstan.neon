@@ -3,13 +3,6 @@ includes:
 
 parameters:
 
-    disallowedNamespaces:
-        -
-            class: 'Illuminate\Support\Facades\Log'
-            message: 'PowerGrid should not register any log'
-            allowIn:
-                - 'src/Commands/UpdateCommand.php'
-
     ignoreErrors:
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
