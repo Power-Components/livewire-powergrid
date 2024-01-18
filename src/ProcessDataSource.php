@@ -85,7 +85,7 @@ class ProcessDataSource
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
             $paginated = Collection::paginate($results, intval(data_get($this->component->setUp, 'footer.perPage')));
-            $results   = $paginated->setCollection($this->transform($paginated->getCollection()));
+            $results   = $paginated->setCollection($this->transform($paginated->getCollection(), $this->component));
         };
 
         return $results;
@@ -122,15 +122,16 @@ class ProcessDataSource
         $results = $this->applyPerPage($results);
 
         $this->setTotalCount($results);
-//
-//        ds($results);
-        return $results;
-//
-//        /** @phpstan-ignore-next-line */
-//        $collection = $results->getCollection();
-//
-//        /** @phpstan-ignore-next-line */
-//        return $results->setCollection($this->transform($collection));
+
+        if (filled(data_get($this->component, 'setUp.lazy'))) {
+            return $results;
+        }
+
+        /** @phpstan-ignore-next-line */
+        $collection = $results->getCollection();
+
+        /** @phpstan-ignore-next-line */
+        return $results->setCollection($this->transform($collection, $this->component));
     }
 
     /**
@@ -258,12 +259,10 @@ class ProcessDataSource
                 $processedResults = $processedResults->concat($processedBatch);
             });
 
-        ds($processedResults);
-
         return $processedResults;
     }
 
-    private static function processBatch(BaseCollection $collection, $component): BaseCollection
+    private static function processBatch(BaseCollection $collection, PowerGridComponent $component): BaseCollection
     {
         return $collection->map(function ($row, $index) use ($component) {
             $addColumns = $component->addColumns();

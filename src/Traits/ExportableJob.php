@@ -58,6 +58,6 @@ trait ExportableJob
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 
-        return $processDataSource->transform($results);
+        return $processDataSource->transform($results, $this->componentTable);
     }
 }

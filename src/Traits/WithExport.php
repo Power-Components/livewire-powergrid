@@ -171,10 +171,10 @@ trait WithExport
             if ($inClause) {
                 $results = $processDataSource->get()->whereIn($this->primaryKey, $inClause);
 
-                return $processDataSource->transform($results);
+                return $processDataSource->transform($results, $this);
             }
 
-            return $processDataSource->transform($processDataSource->resolveCollection());
+            return $processDataSource->transform($processDataSource->resolveCollection(), $this);
         }
 
         /** @phpstan-ignore-next-line */
@@ -194,7 +194,7 @@ trait WithExport
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 
-        return $processDataSource->transform($results);
+        return $processDataSource->transform($results, $processDataSource->component);
     }
 
     /**
