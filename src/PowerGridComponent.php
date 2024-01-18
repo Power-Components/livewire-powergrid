@@ -256,7 +256,6 @@ class PowerGridComponent extends Component
     #[Computed(persist: true)]
     protected function getCachedData(): mixed
     {
-       // ds(get_defined_vars());
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
             return $this->readyToLoad ? $this->fillData() : collect();
         }
@@ -373,8 +372,6 @@ class PowerGridComponent extends Component
 
         $this->relationSearch = $this->relationSearch();
         $this->searchMorphs   = $this->searchMorphs();
-
-       // ds(data_get($this->setUp, 'lazy'));
 
         $data = $this->getCachedData();
 

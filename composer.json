@@ -26,7 +26,6 @@
         "composer/composer": "^2.6.6",
         "laravel/pint": "^1.13.8",
         "laradumps/laradumps-core": "^1.1",
-        "spaze/phpstan-disallowed-calls": "^2.16.1",
         "larastan/larastan": "^2.8.1",
         "pestphp/pest": "^2.30.0",
         "orchestra/testbench": "8.19|^9.0"
