@@ -11,7 +11,7 @@ use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
-use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{Exceptions\MissionExportablePackage, Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -27,7 +27,7 @@ trait WithExport
 
     public string $batchId = '';
 
-    public string $batchName = 'Powergrid batch export';
+    public string $batchName = 'PowerGrid batch export';
 
     public int $total = 0;
 
@@ -202,7 +202,13 @@ trait WithExport
      */
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
     {
-        return $this->export(Exportable::TYPE_XLS, $selected);
+        try {
+            return $this->export(Exportable::TYPE_XLS, $selected);
+        } catch (\Error) {
+            $package = config('livewire-powergrid.exportable.default');
+
+            throw new MissionExportablePackage($package);
+        }
     }
 
     /**
@@ -210,7 +216,13 @@ trait WithExport
      */
     public function exportToCsv(bool $selected = false): BinaryFileResponse|bool
     {
-        return $this->export(Exportable::TYPE_CSV, $selected);
+        try {
+            return $this->export(Exportable::TYPE_CSV, $selected);
+        } catch (\Error) {
+            $package = config('livewire-powergrid.exportable.default');
+
+            throw new MissionExportablePackage($package);
+        }
     }
 
     /**
