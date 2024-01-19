@@ -17,38 +17,38 @@
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
-        class="{{ $trClasses }}"
-        style="{{ data_get($theme, 'table.trStyle') }} {{ data_get($theme, 'table.trFiltersStyle') }}"
+            class="{{ $trClasses }}"
+            style="{{ data_get($theme, 'table.trStyle') }} {{ data_get($theme, 'table.trFiltersStyle') }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <td
-                class="{{ $tdClasses }}"
-                style="{{ $tdStyles }}"
+                    class="{{ $tdClasses }}"
+                    style="{{ $tdStyles }}"
             ></td>
         @endif
         @if ($checkbox)
             <td
-                class="{{ $tdClasses }}"
-                style="{{ $tdStyles }}"
+                    class="{{ $tdClasses }}"
+                    style="{{ $tdStyles }}"
             ></td>
         @endif
 
         @foreach ($this->visibleColumns as $column)
             <td
-                class="{{ data_get($theme, 'table.tdBodyClass') }}"
-                wire:key="column-filter-{{ $column->field }}"
-                style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle') }}"
+                    class="{{ data_get($theme, 'table.tdBodyClass') }}"
+                    wire:key="column-filter-{{ data_get($column, 'field') }}"
+                    style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle') }}"
             >
 
-                @foreach ($column->filters as $key => $filter)
-                    <div wire:key="filter-{{ $column->field }}-{{ $key }}">
+                @foreach (data_get($column, 'filters') as $key => $filter)
+                    <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $key }}">
                         @if (str(data_get($filter, 'className'))->contains('FilterMultiSelect'))
                             <x-livewire-powergrid::inputs.select
-                                :tableName="$tableName"
-                                :filter="$filter"
-                                :theme="data_get($theme, 'filterMultiSelect')"
-                                :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"
+                                    :tableName="$tableName"
+                                    :filter="$filter"
+                                    :theme="data_get($theme, 'filterMultiSelect')"
+                                    :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"
                             />
                         @endif
                         @if (str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
@@ -75,8 +75,8 @@
                         @endif
                         @if (str(data_get($filter, 'className'))->contains('FilterDynamic'))
                             <x-dynamic-component
-                                :component="data_get($filter, 'component', '')"
-                                :attributes="new \Illuminate\View\ComponentAttributeBag(
+                                    :component="data_get($filter, 'component', '')"
+                                    :attributes="new \Illuminate\View\ComponentAttributeBag(
                                     data_get($filter, 'attributes', []),
                                 )"
                             />
