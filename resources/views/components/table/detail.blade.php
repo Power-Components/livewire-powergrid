@@ -1,10 +1,8 @@
-@php
-    $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-@endphp
-<template
-        x-cloak
-        x-if="detailState"
->
+@if(data_get($setUp, 'detail.state.' . $rowId))
+    @php
+        $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+    @endphp
+
     <td colspan="999">
         @if (filled($rulesValues['detailView']))
             @includeWhen(data_get($setUp, 'detail.state.' . $row->{$primaryKey}),
@@ -26,4 +24,4 @@
             )
         @endif
     </td>
-</template>
+@endif
