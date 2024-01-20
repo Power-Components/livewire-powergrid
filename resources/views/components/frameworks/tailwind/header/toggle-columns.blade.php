@@ -50,34 +50,5 @@
                 @endforeach
             </div>
         </div>
-
-{{--        <div--}}
-{{--            x-show="open"--}}
-{{--            x-cloak--}}
-{{--            x-transition:enter="transform duration-200"--}}
-{{--            x-transition:enter-start="opacity-0 scale-90"--}}
-{{--            x-transition:enter-end="opacity-100 scale-100"--}}
-{{--            x-transition:leave="transform duration-200"--}}
-{{--            x-transition:leave-start="opacity-100 scale-100"--}}
-{{--            x-transition:leave-end="opacity-0 scale-90"--}}
-{{--            class="mt-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-pg-primary-700"--}}
-{{--        >--}}
-{{--            @foreach ($this->visibleColumns as $column)--}}
-{{--                <div--}}
-{{--                    wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})"--}}
-{{--                    wire:key="toggle-column-{{ data_get($column, 'field') }}"--}}
-{{--                    class="@if (data_get($column, 'hidden')) font-semibold bg-pg-primary-100 dark:bg-pg-primary-800 @endif cursor-pointer flex justify-start block px-4 py-2 text-pg-primary-800 dark:hover:text-pg-primary-200 dark:text-pg-primary-200"--}}
-{{--                >--}}
-{{--                    @if (!data_get($column, 'hidden'))--}}
-{{--                        <x-livewire-powergrid::icons.eye class="text-pg-primary-500 dark:text-pg-primary-300" />--}}
-{{--                    @else--}}
-{{--                        <x-livewire-powergrid::icons.eye-off class="text-pg-primary-500 dark:text-pg-primary-300" />--}}
-{{--                    @endif--}}
-{{--                    <div class="ml-2">--}}
-{{--                        {!! data_get($column, 'title') !!}--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            @endforeach--}}
-{{--        </div>--}}
     </div>
 @endif
