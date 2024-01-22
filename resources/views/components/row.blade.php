@@ -45,10 +45,18 @@
         wire:key="row-{{ $column->field }}-{{ $childIndex }}"
     >
         <div class="pg-actions">
+            @if(empty(data_get($row, 'actions')) && $column->isAction)
+                @if (method_exists($this, 'actionsView') && $actionView = $this->actionsView($row))
+                    <div wire:key="actions-view-{{ data_get($row, $primaryKey) }}">
+                        {!! $actionView !!}
+                    </div>
+                @endif
+            @endif
+
             @if (filled(data_get($row, 'actions')) && $column->isAction)
                 @foreach (data_get($row, 'actions') as $key => $action)
                     @if(filled($action))
-                        <div wire:key="action-{{ data_get($row, $primaryKey) }}-{{ $key }}">
+                        <div wire:key="actions-{{ data_get($row, $primaryKey) }}-{{ $key }}">
                             {!! $action !!}
                         </div>
                     @endif
