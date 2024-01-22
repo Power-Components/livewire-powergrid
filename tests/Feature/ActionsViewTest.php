@@ -35,7 +35,7 @@ $component = new class () extends DishesTable {
     }
 };
 
-it('add contentClasses on dishes name column', function (string $component, object $params) {
+it('can render actionsView property', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeInOrder([
