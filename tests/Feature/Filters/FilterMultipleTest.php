@@ -139,8 +139,8 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
         ->toMatchArray([]);
 })->group('filters')
     ->with([
-        'tailwind -> id'         => [$component::class, (object) ['theme' => 'tailwind', 'field'         => 'name']],
-        'bootstrap -> id'        => [$component::class, (object) ['theme' => 'bootstrap', 'field'        => 'name']],
-        'tailwind -> dishes.id'  => [$componentJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.name']],
+        'tailwind -> id'         => [$component::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+        'bootstrap -> id'        => [$component::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+        'tailwind -> dishes.id'  => [$componentJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
         'bootstrap -> dishes.id' => [$componentJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
     ]);

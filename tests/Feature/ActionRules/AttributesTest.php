@@ -28,7 +28,7 @@ $simple = new class () extends DishTableBase {
 };
 
 dataset('actionRules:simple', [
-    'tailwind'      => [$simple::class, (object) ['theme' => 'tailwind', 'join'      => false]],
+    'tailwind'      => [$simple::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'tailwind join' => [$simple::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);
 
@@ -57,7 +57,7 @@ it('change class to bg-pg-primary-100 when dish-id == 1 -tailwind', function (st
         );
 })->with(
     [
-        'tailwind'      => [$simple::class, (object) ['theme' => 'tailwind', 'join'      => false]],
+        'tailwind'      => [$simple::class, (object) ['theme' => 'tailwind', 'join' => false]],
         'tailwind join' => [$simple::class, (object) ['theme' => 'tailwind', 'join' => true]],
     ]
 )->group('actionRules');
@@ -76,7 +76,7 @@ it('change class to bg-pg-primary-100 when dish-id == 1 - bootstrap', function (
         );
 })->with(
     [
-        'bootstrap'      => [$simple::class, (object) ['theme' => 'bootstrap', 'join'      => false, 'dishId'      => 1]],
+        'bootstrap'      => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 1]],
         'bootstrap join' => [$simple::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 1]],
     ]
 )->group('actionRules');
@@ -142,8 +142,8 @@ HTML
             ]
         );
 })->with([
-    'tailwind'       => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join'       => false, 'dishId'       => 2]],
-    'bootstrap'      => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join'      => false, 'dishId'      => 2]],
-    'tailwind join'  => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join'  => true, 'dishId'  => 2]],
+    'tailwind'       => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => false, 'dishId' => 2]],
+    'bootstrap'      => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => false, 'dishId' => 2]],
+    'tailwind join'  => [$customAttributes::class, (object) ['theme' => 'tailwind', 'join' => true, 'dishId' => 2]],
     'bootstrap join' => [$customAttributes::class, (object) ['theme' => 'bootstrap', 'join' => true, 'dishId' => 2]],
 ])->group('actionRules');

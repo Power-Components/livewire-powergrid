@@ -98,6 +98,6 @@ it('change \'detailRow\' component when dish-id == 1', function (string $compone
     ->group('actionRules');
 
 dataset('detail_row_tailwind_join', [
-    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join'      => false]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);

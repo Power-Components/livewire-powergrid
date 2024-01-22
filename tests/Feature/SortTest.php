@@ -141,9 +141,9 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
 })->with('sort_join');
 
 dataset('sort_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'         => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'        => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
