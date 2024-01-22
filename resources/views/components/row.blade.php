@@ -46,9 +46,9 @@
     >
         <div class="pg-actions">
             @if(empty(data_get($row, 'actions')) && $column->isAction)
-                @if (method_exists($this, 'actionsView') && $actionView = $this->actionsView($row))
+                @if (method_exists($this, 'actionsFromView') && $actionsFromView = $this->actionsFromView($row))
                     <div wire:key="actions-view-{{ data_get($row, $primaryKey) }}">
-                        {!! $actionView !!}
+                        {!! $actionsFromView !!}
                     </div>
                 @endif
             @endif

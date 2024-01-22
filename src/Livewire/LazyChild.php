@@ -52,13 +52,13 @@ class LazyChild extends Component
         $this->dispatch($dispatchAfterToggleDetail, id: $id, state: $state ? 'true' : 'false')->to($parentComponent);
     }
 
-    public function actionsView(mixed $row): ?View
+    public function actionsFromView(mixed $row): ?View
     {
         /** @var string $parentComponent */
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
 
-        if (method_exists($parentComponent, 'actionsView')) {
-            return app($parentComponent)->actionsView($row);
+        if (method_exists($parentComponent, 'actionsFromView')) {
+            return app($parentComponent)->actionsFromView($row);
         }
 
         return null;
