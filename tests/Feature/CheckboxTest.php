@@ -68,7 +68,7 @@ it('selectCheckboxAll works properly', function (string $component, object $para
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+    'tailwind -> id'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 
@@ -116,6 +116,6 @@ it('selectCheckboxAll works properly with actionRules disable', function (string
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id'  => [$componentWithActionRules::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+    'tailwind -> id'  => [$componentWithActionRules::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);

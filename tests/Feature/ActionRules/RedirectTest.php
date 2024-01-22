@@ -38,8 +38,8 @@ it('add rule \'redirect\' when out of stock and dishId === 1', function (string 
     ->group('actionRules');
 
 dataset('redirect', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);

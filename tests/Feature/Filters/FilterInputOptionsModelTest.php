@@ -516,18 +516,18 @@ it('properly filters using custom builder', function (string $component, object 
         ->assertDontSee('Francesinha vegana');
 })->group('filters', 'filterInputText')
     ->with([
-        'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => false]],
+        'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
         'bootstrap' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
     ]);
 
 dataset('filter_input_text_options_model_themes_with_join', [
 
-    'tailwind join'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.name', 'join'  => true]],
+    'tailwind join'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name', 'join' => true]],
     'bootstrap join' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name', 'join' => true]],
 ]);
 
 dataset('filter_input_text_options_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 

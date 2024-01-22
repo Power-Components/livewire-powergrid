@@ -67,7 +67,7 @@ it('add contentClasses on dishes name column', function (string $component, obje
             '</span>',
         ]);
 })->with([
-    'tailwind'  => [$contentClassesString::class, (object) ['theme' => 'tailwind', 'field'  => 'name']],
+    'tailwind'  => [$contentClassesString::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
     'bootstrap' => [$contentClassesString::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
 ]);
 
@@ -114,18 +114,18 @@ it('add contentClasses on dishes name column array', function (string $component
             '</span>',
         ]);
 })->with([
-    'tailwind'  => [$contentClassesArray::class, (object) ['theme' => 'tailwind', 'field'  => 'name']],
+    'tailwind'  => [$contentClassesArray::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
     'bootstrap' => [$contentClassesArray::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
 ]);
 
 dataset('column_join', [
-    'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'       => 'name']],
-    'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'      => 'name']],
-    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.name']],
+    'tailwind'       => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
+    'bootstrap'      => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.name']],
     'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.name']],
 ]);
 
 dataset('column_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);

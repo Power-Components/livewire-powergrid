@@ -52,6 +52,18 @@ class LazyChild extends Component
         $this->dispatch($dispatchAfterToggleDetail, id: $id, state: $state ? 'true' : 'false')->to($parentComponent);
     }
 
+    public function actionsView(mixed $row): ?View
+    {
+        /** @var string $parentComponent */
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+
+        if (method_exists($parentComponent, 'actionsView')) {
+            return app($parentComponent)->actionsView($row);
+        }
+
+        return null;
+    }
+
     public function render(): View
     {
         return view('livewire-powergrid::livewire.lazy-child');
