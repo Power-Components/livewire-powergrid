@@ -29,13 +29,13 @@ $component = new class () extends DishesTable {
         ];
     }
 
-    public function actionsView($row)
+    public function actionsFromView($row)
     {
         return view('livewire-powergrid::tests.actions-view', compact('row'));
     }
 };
 
-it('can render actionsView property', function (string $component, object $params) {
+it('can render actionsFromView property', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeInOrder([
