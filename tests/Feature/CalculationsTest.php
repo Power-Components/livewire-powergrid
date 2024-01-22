@@ -58,9 +58,9 @@ it('calculate "max" on price field', function (string $component, object $params
 })->with('calculations');
 
 dataset('calculations', [
-    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join'       => false]],
-    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
-    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join'  => true]],
+    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

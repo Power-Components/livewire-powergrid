@@ -83,7 +83,7 @@ it('property filter using custom builder', function (string $component, object $
     ;
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
         'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     ]);
 
@@ -95,7 +95,7 @@ it('property filter using custom collection', function (string $component) {
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
         'bootstrap -> id' => [$customCollection::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     ]);
 
@@ -154,14 +154,14 @@ it('properly filters using the same model as the component', function (string $c
     ->with('filter_select_join', 'filter_select_query_builder');
 
 dataset('filter_select_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field'         => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field'        => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field'  => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_select_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field'  => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
 ]);
 

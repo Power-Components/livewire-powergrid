@@ -19,7 +19,7 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('actionRules:loop', [
-    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join'      => false]],
+    'tailwind'      => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
     'tailwind join' => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
 ]);
 

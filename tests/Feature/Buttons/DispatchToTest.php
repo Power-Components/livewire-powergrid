@@ -17,9 +17,9 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('action:dispatchTo', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join'       => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join'      => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join'  => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
 ]);
 

@@ -47,6 +47,6 @@ it('can render actionsView property', function (string $component, object $param
             'Dish From Actions View: 6',
         ]);
 })->with([
-    'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'field'  => 'name']],
+    'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
     'bootstrap' => [$component::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
 ]);

@@ -59,7 +59,6 @@ class LazyChild extends Component
 
         if (method_exists($parentComponent, 'actionsView')) {
             return app($parentComponent)->actionsView($row);
-
         }
 
         return null;
