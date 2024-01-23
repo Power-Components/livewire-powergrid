@@ -102,7 +102,7 @@ final class Column implements \Livewire\Wireable
     public static function make(string $title, string $field, string $dataField = ''): self
     {
         return (new static())
-            ->title($title)
+            ->title(__($title))
             ->field($field, $dataField);
     }
 
@@ -112,7 +112,7 @@ final class Column implements \Livewire\Wireable
     public static function action(string $title): self
     {
         return (new static())
-            ->title($title)
+            ->title(__($title))
             ->isAction();
     }
 
