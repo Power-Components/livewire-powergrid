@@ -12,10 +12,14 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use function Livewire\store;
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Concerns\{SoftDeletes};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
 
+/**
+ * @property-read mixed $getCachedData
+ * @property-read bool $hasColumnFilters
+ * @property-read array|BaseCollection $visibleColumns
+ */
 class PowerGridComponent extends Component
 {
     use WithPagination;
