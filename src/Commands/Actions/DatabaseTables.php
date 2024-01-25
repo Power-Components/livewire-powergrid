@@ -13,7 +13,7 @@ class DatabaseTables
     public static function list(): array
     {
         $driverName = Schema::getConnection()->getDriverName();
-        $tables     = Schema::connection($driverName)->getAllTables();
+        $tables     = Schema::connection($driverName)->getTables();
 
         return collect($tables)
             ->map(fn ($table) => collect($table)->first()) /** @phpstan-ignore-line */
