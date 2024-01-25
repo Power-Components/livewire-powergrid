@@ -311,6 +311,10 @@ class ProcessDataSource
 
     private function applySummaries(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
     {
+        if (!$this->component->headerTotalColumn || !$this->component->footerTotalColumn) {
+            return;
+        }
+
         $format = function ($summarize, $column, $field, $value) {
             if (method_exists($this->component, 'summarizeFormat')) {
                 $summarizeFormat = $this->component->summarizeFormat();
