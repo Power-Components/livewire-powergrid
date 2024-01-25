@@ -1,11 +1,11 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 
-trait WithSorting
+trait Sorting
 {
     public string $sortField = 'id';
 
@@ -108,6 +108,22 @@ trait WithSorting
             } else {
                 echo '&#8595;';
             }
+        }
+    }
+
+    public function updatedSortDirection(): void
+    {
+        if ($this->hasLazyEnabled) {
+            data_set($this->setUp, 'lazy.items', 0);
+
+            $this->additionalCacheKey = uniqid();
+        }
+    }
+
+    public function updatedSortField(): void
+    {
+        if ($this->hasLazyEnabled) {
+            data_set($this->setUp, 'lazy.items', 0);
         }
     }
 }

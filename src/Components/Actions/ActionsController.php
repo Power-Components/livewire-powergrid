@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\ComponentAttributeBag;
-use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent, Traits\UnDot};
+use PowerComponents\LivewirePowerGrid\{Button, Components\Concerns\UnDot, PowerGridComponent};
 
 class ActionsController
 {

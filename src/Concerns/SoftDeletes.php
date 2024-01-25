@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;

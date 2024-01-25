@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Traits\UnDot;
+use PowerComponents\LivewirePowerGrid\Components\Concerns\UnDot;
 
 class RulesController
 {
