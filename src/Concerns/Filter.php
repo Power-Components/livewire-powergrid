@@ -22,7 +22,6 @@ trait Filter
 
     public bool $showFilters = false;
 
-
     public function clearFilter(string $field = '', bool $emit = true): void
     {
         if (str_contains($field, '.')) {
