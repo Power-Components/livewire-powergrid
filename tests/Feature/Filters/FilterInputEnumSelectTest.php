@@ -10,7 +10,7 @@ it(
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
             'wire:model="filters.select.dishes.diet"',
-            'wire:input.debounce.600ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
+            'wire:input.live.debounce.600ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
         ])
         ->assertSeeHtmlInOrder([
             'All',

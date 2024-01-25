@@ -1,11 +1,11 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 /** @codeCoverageIgnore */
-trait PersistData
+trait Persist
 {
     public array $persist = [];
 
@@ -25,11 +25,13 @@ trait PersistData
             $state['enabledFilters'] = $this->enabledFilters;
         }
 
-        if (!empty($this->persist)) {
-            $url  = parse_url(strval(filter_input(INPUT_SERVER, 'HTTP_REFERER')));
-            $path = $url && array_key_exists('path', $url) ? $url['path'] : '/';
-            setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), $path);
+        if (empty($this->persist)) {
+            return;
         }
+
+        $url  = parse_url(strval(filter_input(INPUT_SERVER, 'HTTP_REFERER')));
+        $path = $url && array_key_exists('path', $url) ? $url['path'] : '/';
+        setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), $path);
     }
 
     private function restoreState(): void
@@ -63,7 +65,7 @@ trait PersistData
     }
 
     /**
-     * filters, columns
+     * $tableItems: 'filters', 'columns'
      */
     public function persist(array $tableItems): PowerGridComponent
     {

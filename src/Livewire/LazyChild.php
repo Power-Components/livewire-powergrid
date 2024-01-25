@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Mechanisms\ComponentRegistry;
-use PowerComponents\LivewirePowerGrid\Traits\ToggleDetail;
+use PowerComponents\LivewirePowerGrid\Concerns\ToggleDetail;
 
 class LazyChild extends Component
 {

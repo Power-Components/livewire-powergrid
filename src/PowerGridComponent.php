@@ -11,81 +11,29 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 
 use function Livewire\store;
 
-use Livewire\{Attributes\Computed, Attributes\On, Component, WithPagination};
-
+use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
-use PowerComponents\LivewirePowerGrid\Traits\{HasFilter,
-    LazyManager,
-    Listeners,
-    PersistData,
-    SoftDeletes,
-    ToggleDetail,
-    WithCheckbox,
-    WithSorting};
 use Throwable;
 
 /**
  * @property-read mixed $getCachedData
  * @property-read bool $hasColumnFilters
- * @property-read array|\Illuminate\Support\Collection $visibleColumns
+ * @property-read array|BaseCollection $visibleColumns
  */
 class PowerGridComponent extends Component
 {
     use WithPagination;
-    use WithSorting;
-    use WithCheckbox;
-    use HasFilter;
-    use PersistData;
-    use Listeners;
-    use SoftDeletes;
-    use LazyManager;
-    use ToggleDetail;
-
-    public array $headers = [];
-
-    public string $search = '';
-
-    public array $columns = [];
-
-    public array $filtered = [];
-
-    public string $primaryKey = 'id';
-
-    public string $currentTable = '';
-
-    public array $relationSearch = [];
-
-    public bool $ignoreTablePrefix = true;
-
-    public string $tableName = 'default';
-
-    public bool $headerTotalColumn = false;
-
-    public bool $footerTotalColumn = false;
-
-    public array $setUp = [];
-
-    public bool $showErrorBag = false;
-
-    public bool $rowIndex = true;
-
-    public int $total = 0;
-
-    public int $totalCurrentPage = 0;
-
-    public array $searchMorphs = [];
-
-    public bool $deferLoading = false;
-
-    public bool $readyToLoad = false;
-
-    public string $loadingComponent = '';
-
-    public bool $showFilters = false;
-
-    protected ?ProcessDataSource $processDataSourceInstance = null;
-
-    public array $actions = [];
+    use Concerns\Base;
+    use Concerns\Sorting;
+    use Concerns\Checkbox;
+    use Concerns\Filter;
+    use Concerns\Persist;
+    use Concerns\LazyManager;
+    use Concerns\ToggleDetail;
+    use Concerns\Hooks;
+    use Concerns\Listeners;
+    use Concerns\Summarize;
+    use Concerns\SoftDeletes;
 
     public function mount(): void
     {
@@ -109,62 +57,9 @@ class PowerGridComponent extends Component
         $this->readyToLoad = true;
     }
 
-    public function template(): ?string
-    {
-        return null;
-    }
-
-    public function relationSearch(): array
-    {
-        return [];
-    }
-
-    public function searchMorphs(): array
-    {
-        return [];
-    }
-
-    public function header(): array
-    {
-        return [];
-    }
-
-    public function setUp(): array
-    {
-        return [];
-    }
-
-    public function columns(): array
-    {
-        return [];
-    }
-
-    public function filters(): array
-    {
-        return [];
-    }
-
-    /**
-     * @return null
-     */
-    public function datasource()
-    {
-        return null;
-    }
-
-    public function summarizeFormat(): array
-    {
-        return [];
-    }
-
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns();
-    }
-
-    public function toggleFilters(): void
-    {
-        $this->showFilters = !$this->showFilters;
     }
 
     public function updatedPage(): void
@@ -193,60 +88,14 @@ class PowerGridComponent extends Component
         }
     }
 
-    public function updatedSortDirection(): void
-    {
-        if ($this->hasLazyEnabled) {
-            data_set($this->setUp, 'lazy.items', 0);
-
-            $this->additionalCacheKey = uniqid();
-        }
-    }
-
-    public function updatedSortField(): void
-    {
-        if ($this->hasLazyEnabled) {
-            data_set($this->setUp, 'lazy.items', 0);
-        }
-    }
-
-    #[On('pg:toggleColumn-{tableName}')]
-    public function toggleColumn(string $field): void
-    {
-        foreach ($this->visibleColumns as &$column) {
-            if (data_get($column, 'field') === $field) {
-                data_set($column, 'hidden', !data_get($column, 'hidden'));
-
-                break;
-            }
-        }
-
-        $this->persistState('columns');
-    }
-
-    #[On('pg:eventRefresh-{tableName}')]
-    public function refresh(): void
-    {
-        if (($this->total > 0) && ($this->totalCurrentPage - 1) === 0) {
-            $this->previousPage();
-
-            return;
-        }
-
-        if ($this->hasLazyEnabled) {
-            $this->additionalCacheKey = uniqid();
-        }
-
-        $this->dispatch('$commit')->self();
-    }
-
-    #[Computed]
+    #[Computed(persist: true)]
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
-    #[Computed]
+    #[Computed(persist: true)]
     public function visibleColumns(): BaseCollection
     {
         return collect($this->columns)
@@ -299,23 +148,6 @@ class PowerGridComponent extends Component
         if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
             throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
         }
-    }
-
-    private function resolveTotalRow(): void
-    {
-        collect($this->columns)
-            ->each(function ($column) {
-                $hasHeader = false;
-                $hasFooter = false;
-
-                foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
-                    $hasHeader = $hasHeader || data_get($column, "$operation.header");
-                    $hasFooter = $hasFooter || data_get($column, "$operation.footer");
-                }
-
-                $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
-                $this->footerTotalColumn = $this->footerTotalColumn || $hasFooter;
-            });
     }
 
     private function getTheme(string $key = null): array

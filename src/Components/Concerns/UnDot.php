@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Components\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Arr, Collection};

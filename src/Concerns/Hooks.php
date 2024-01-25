@@ -1,28 +1,9 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Livewire\Attributes\On;
-
-/** @codeCoverageIgnore  */
-trait Listeners
+trait Hooks
 {
-    #[On('pg:editable-{tableName}')]
-    public function inputTextChanged(string|int $id, string $field, string $value): void
-    {
-        data_set($this, "$field.{$id}", $value);
-
-        $this->onUpdatedEditable($id, $field, $value);
-
-        $this->dispatch('pg:editable-close-' . $id);
-    }
-
-    #[On('pg:toggleable-{tableName}')]
-    public function toggleableChanged(string $id, string $field, string $value): void
-    {
-        $this->onUpdatedToggleable($id, $field, $value);
-    }
-
     public function onUpdatedEditable(string|int $id, string $field, string $value): void
     {
     }

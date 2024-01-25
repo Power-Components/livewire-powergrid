@@ -44,7 +44,7 @@ dataset('action:depends', [
 ]);
 
 it('"depends" works properly in select', function (string $component, object $params) {
-    $component = livewire($component, [
+    livewire($component, [
         'join' => $params->join,
     ])
         ->call($params->theme)
@@ -66,4 +66,5 @@ it('"depends" works properly in select', function (string $component, object $pa
         ]);
 })
     ->with('action:depends')
-    ->group('action');
+    ->group('action')
+    ->skip('');

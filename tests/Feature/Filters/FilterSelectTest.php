@@ -26,7 +26,7 @@ it('property displays the results and options', function (string $component, obj
         ->call($params->theme)
         ->assertSeeHtmlInOrder([
             'wire:model="filters.select.category_id"',
-            'wire:input.debounce.600ms="filterSelect(\'category_id\', \'Category\')"',
+            'wire:input.live.debounce.600ms="filterSelect(\'category_id\', \'Category\')"',
             '<option value="">All</option>',
         ]);
 })->group('filters', 'filterSelect')

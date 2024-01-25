@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str};
+use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
-use PowerComponents\LivewirePowerGrid\Traits\SoftDeletes;
+use Throwable;
 
 class ProcessDataSource
 {
-    use SoftDeletes;
+    use Concerns\SoftDeletes;
 
     public bool $isCollection = false;
 
@@ -31,7 +31,7 @@ class ProcessDataSource
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function get(): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
@@ -48,7 +48,7 @@ class ProcessDataSource
     }
 
     /**
-     * @return BaseCollection<(int|string), mixed>|Collection|EloquentBuilder|QueryBuilder|null
+     * @return EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
      */
     public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
     {
@@ -92,7 +92,7 @@ class ProcessDataSource
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
     {
@@ -311,6 +311,10 @@ class ProcessDataSource
 
     private function applySummaries(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
     {
+        if (!$this->component->hasSummarizeInColumns()) {
+            return;
+        }
+
         $format = function ($summarize, $column, $field, $value) {
             if (method_exists($this->component, 'summarizeFormat')) {
                 $summarizeFormat = $this->component->summarizeFormat();

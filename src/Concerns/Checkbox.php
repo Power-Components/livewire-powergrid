@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +8,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RulesController;
 use Throwable;
 
-trait WithCheckbox
+trait Checkbox
 {
     public bool $checkbox = false;
 
