@@ -16,11 +16,6 @@ use PowerComponents\LivewirePowerGrid\Concerns\{SoftDeletes};
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
 
-/**
- * @property-read mixed $getCachedData
- * @property-read bool $hasColumnFilters
- * @property-read array|BaseCollection $visibleColumns
- */
 class PowerGridComponent extends Component
 {
     use WithPagination;
@@ -89,14 +84,14 @@ class PowerGridComponent extends Component
         }
     }
 
-    #[Computed]
+    #[Computed(persist: true)]
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
-    #[Computed]
+    #[Computed(persist: true)]
     public function visibleColumns(): BaseCollection
     {
         return collect($this->columns)
