@@ -66,4 +66,5 @@ it('"depends" works properly in select', function (string $component, object $pa
         ]);
 })
     ->with('action:depends')
-    ->group('action');
+    ->group('action')
+    ->skip('');

@@ -61,7 +61,7 @@
     },
     "scripts": {
         "pint:fix": "./vendor/bin/pint",
-        "test": "@test:sqlite --bail",
+        "test": "@test:sqlite",
         "test:pint": "./vendor/bin/pint --test",
         "test:sqlite": [
             "./vendor/bin/pest --compact"
