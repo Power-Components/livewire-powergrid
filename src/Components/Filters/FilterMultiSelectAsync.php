@@ -4,6 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
 class FilterMultiSelectAsync extends FilterBase
 {
+    public string $key = 'multi_select';
+
     public string $url = '';
 
     public string $method = 'get';

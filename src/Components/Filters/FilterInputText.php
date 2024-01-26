@@ -6,6 +6,8 @@ use Illuminate\View\ComponentAttributeBag;
 
 class FilterInputText extends FilterBase
 {
+    public string $key = 'input_text';
+
     public array $operators = [];
 
     public string $placeholder = '';

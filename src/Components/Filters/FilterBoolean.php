@@ -6,6 +6,8 @@ use Illuminate\View\ComponentAttributeBag;
 
 class FilterBoolean extends FilterBase
 {
+    public string $key = 'boolean';
+
     public string $trueLabel = 'Yes';
 
     public string $falseLabel = 'No';

@@ -50,6 +50,8 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->restoreState();
+
+        $this->resolveFilters();
     }
 
     public function fetchDatasource(): void
@@ -189,8 +191,6 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        $this->resolveFilters();
-
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
 

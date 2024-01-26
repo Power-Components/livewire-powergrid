@@ -7,6 +7,8 @@ use Illuminate\View\ComponentAttributeBag;
 
 class FilterSelect extends FilterBase
 {
+    public string $key = 'select';
+
     public array|Collection|\Closure $dataSource;
 
     public string $optionValue = '';

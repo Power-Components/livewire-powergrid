@@ -33,6 +33,8 @@ trait Filter
 
         $this->clearFilterByTableAndColumn($table, $column);
 
+        ds($field);
+
         unset($this->enabledFilters[$field]);
 
         if ($emit) {
@@ -289,18 +291,14 @@ trait Filter
 
         /** @var Column $column */
         foreach ($this->columns as $column) {
-            if (str(strval(data_get($column, 'dataField')))->contains('.')) {
-                $field = strval(data_get($column, 'field'));
-            } else {
-                $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
-            }
+            $field = $this->getColumnFieldByColumn($column);
 
             $filterForColumn = $filters->filter(
                 fn ($filter) => data_get($filter, 'column') == $field
             );
 
             if ($filterForColumn->count() > 0) {
-                $filterForColumn->transform(function ($filter) use ($column) {
+                $filterForColumn->transform(function ($filter) use ($column, $field) {
                     data_set($filter, 'title', data_get($column, 'title'));
 
                     return $filter;
@@ -330,7 +328,7 @@ trait Filter
                     return (array) $filter;
                 }));
 
-                $filterForColumn->each(function ($filter) {
+                $filterForColumn->each(function ($filter) use ($field) {
                     if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
                         filled(data_get($filter, 'attributes'))) {
                         $attributes = array_values((array) data_get($filter, 'attributes'));
@@ -341,6 +339,13 @@ trait Filter
                             }
                         }
                     }
+
+                    $value = $this->filters[data_get($filter, 'key')][data_get($filter, 'field')] ?? null;
+
+                    if ($value) {
+                        $this->enabledFilters[$field]['id']    = data_get($filter, 'field');
+                        $this->enabledFilters[$field]['label'] = data_get($filter, 'title');
+                    }
                 });
 
                 continue;
@@ -348,5 +353,14 @@ trait Filter
 
             data_set($column, 'filters', collect([]));
         }
+    }
+
+    private function getColumnFieldByColumn(Column $column)
+    {
+        if (str(strval(data_get($column, 'dataField')))->contains('.')) {
+            return strval(data_get($column, 'field'));
+        }
+
+        return filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
     }
 }
