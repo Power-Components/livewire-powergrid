@@ -4,13 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Facades\Filter,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent};
+    PowerGridComponent,
+    PowerGridFields
+};
 
 class DishesRowIndex extends PowerGridComponent
 {
@@ -53,11 +55,11 @@ class DishesRowIndex extends PowerGridComponent
             ->select('dishes.*', 'categories.name as category_name');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name');
     }
 
     public function filters(): array

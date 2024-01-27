@@ -5,14 +5,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Exportable,
     Facades\Rule,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent};
+    PowerGridComponent,
+    PowerGridFields
+};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
@@ -83,50 +85,50 @@ class DishesTableWithJoin extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('dish_name', function (Dish $dish) {
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('dish_name', function (Dish $dish) {
                 return $dish->name;
             })
-            ->addColumn('calories')
-            ->addColumn('serving_at')
-            ->addColumn('calories', function (Dish $dish) {
+            ->add('calories')
+            ->add('serving_at')
+            ->add('calories', function (Dish $dish) {
                 return $dish->calories . ' kcal';
             })
             /*** CATEGORY ***/
-            ->addColumn('category_id', function (Dish $dish) {
+            ->add('category_id', function (Dish $dish) {
                 return $dish->category_id;
             })
-            ->addColumn('category_name', function (Dish $dish) {
+            ->add('category_name', function (Dish $dish) {
                 return $dish->category->name;
             })
             /*** PRICE ***/
-            ->addColumn('price')
-            ->addColumn('price_BRL', function (Dish $dish) {
+            ->add('price')
+            ->add('price_BRL', function (Dish $dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
             /*** SALE'S PRICE ***/
-            ->addColumn('sales_price')
-            ->addColumn('sales_price_BRL', function (Dish $dish) {
+            ->add('sales_price')
+            ->add('sales_price_BRL', function (Dish $dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
                 return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
             })
             /*** STOCK ***/
-            ->addColumn('in_stock')
-            ->addColumn('in_stock_label', function (Dish $dish) {
+            ->add('in_stock')
+            ->add('in_stock_label', function (Dish $dish) {
                 return ($dish->in_stock ? 'sim' : 'não');
             })
             /*** Produced At ***/
-            ->addColumn('created_at')
-            ->addColumn('created_at_formatted', function (Dish $dish) {
+            ->add('created_at')
+            ->add('created_at_formatted', function (Dish $dish) {
                 return \Carbon\Carbon::parse($dish->category->created_at)->format('d/m/Y');
             })
             /*** Produced At ***/
-            ->addColumn('produced_at')
-            ->addColumn('produced_at_formatted', function (Dish $dish) {
+            ->add('produced_at')
+            ->add('produced_at_formatted', function (Dish $dish) {
                 return Carbon::parse($dish->produced_at)->format('d/m/Y');
             });
     }

@@ -5,13 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Facades\Filter,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent};
+    PowerGridComponent,
+    PowerGridFields
+};
 
 class DishesEnumTable extends PowerGridComponent
 {
@@ -44,12 +46,12 @@ class DishesEnumTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('diet', function (Dish $dish) {
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('diet', function (Dish $dish) {
                 return Diet::from($dish->diet)->labels();
             });
     }

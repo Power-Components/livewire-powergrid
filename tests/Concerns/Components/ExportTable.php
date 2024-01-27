@@ -4,14 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
+use PowerComponents\LivewirePowerGrid\{
+    Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
     PowerGridComponent,
-    Traits\WithExport};
+    PowerGridFields,
+    Traits\WithExport
+};
 
 class ExportTable extends PowerGridComponent
 {
@@ -46,11 +48,11 @@ class ExportTable extends PowerGridComponent
         return Dish::with('category');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name');
     }
 
     public function columns(): array

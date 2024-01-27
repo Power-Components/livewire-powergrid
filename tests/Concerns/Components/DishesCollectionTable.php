@@ -3,14 +3,16 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Support\{Carbon, Collection};
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
+    Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent};
+    PowerGridComponent,
+    PowerGridFields
+};
 
 class DishesCollectionTable extends PowerGridComponent
 {
@@ -81,18 +83,18 @@ class DishesCollectionTable extends PowerGridComponent
         ];
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('chef_name')
-            ->addColumn('price')
-            ->addColumn('in_stock')
-            ->addColumn('in_stock_label', function ($entry) {
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('chef_name')
+            ->add('price')
+            ->add('in_stock')
+            ->add('in_stock_label', function ($entry) {
                 return ($entry->in_stock ? 'sim' : 'não');
             })
-            ->addColumn('created_at_formatted', function ($entry) {
+            ->add('created_at_formatted', function ($entry) {
                 return Carbon::parse($entry->created_at)->format('d/m/Y');
             });
     }

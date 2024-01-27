@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridComponent, PowerGridFields};
 
 class DishesTableWithJoinNames extends PowerGridComponent
 {
@@ -25,12 +25,12 @@ class DishesTableWithJoinNames extends PowerGridComponent
             ->select('dishes.*', 'newCategories.name as category_name');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('dish_name', fn (Dish $dish) => $dish->name)
-            ->addColumn('category_name', fn (Dish $dish) => $dish->category->name);
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('dish_name', fn (Dish $dish) => $dish->name)
+            ->add('category_name', fn (Dish $dish) => $dish->category->name);
     }
 
     public function columns(): array
