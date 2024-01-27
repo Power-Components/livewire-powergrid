@@ -13,16 +13,16 @@
                 </div>
             </span>
         @endif
-        @foreach ($enabledFilters as $field => $filter)
+        @foreach ($enabledFilters as $filter)
             @isset($filter['label'])
                 <span
-                    wire:key="enabled-filters-{{ $field }}"
+                    wire:key="enabled-filters-{{ $filter['field'] }}"
                     class="group pg-enabled-filters-span"
                 >
                     {{ $filter['label'] }}
                     <div class="relative flex items-center w-2 h-2">
                         <button
-                            wire:click.prevent="clearFilter('{{ $field }}')"
+                            wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
                             type="button"
                         >
                             <x-livewire-powergrid::icons.x class="w-4 h-4" />

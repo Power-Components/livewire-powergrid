@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 /** @codeCoverageIgnore */
 class FilterDateTimePicker extends FilterBase
 {
-    public string $key = 'date_time';
+    public string $key = 'datetime';
 
     public array $params = [];
 

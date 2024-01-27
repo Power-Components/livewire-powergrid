@@ -2,8 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
-use Illuminate\Support\Collection;
-
 final class Column implements \Livewire\Wireable
 {
     public string $title = '';
@@ -72,7 +70,7 @@ final class Column implements \Livewire\Wireable
         'label'  => null,
     ];
 
-    public ?Collection $filters = null;
+    public mixed $filters = null;
 
     public bool $isAction = false;
 

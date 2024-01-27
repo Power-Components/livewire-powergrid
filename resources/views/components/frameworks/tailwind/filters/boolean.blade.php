@@ -6,10 +6,14 @@
     'filter' => null,
 ])
 @php
-    unset($filter['className']);
-    extract($filter);
+    $fieldClassName = data_get($filter, 'className');
+    $field = data_get($filter, 'field');
+    $title = data_get($column, 'title');
 
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterBoolean::getWireAttributes($field, $title);
+    $trueLabel = data_get($filter, 'trueLabel');
+    $falseLabel = data_get($filter, 'falseLabel');
+
+    $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
     $selectClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), $class, data_get($column, 'headerClass'), 'power_grid']);
 
