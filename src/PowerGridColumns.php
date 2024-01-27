@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Closure;
 use Illuminate\Support\Traits\Macroable;
 
+/** @deprecated  */
 final class PowerGridColumns
 {
     use Macroable;
@@ -14,6 +15,7 @@ final class PowerGridColumns
     /**
      * @param string $field
      * @param Closure|null $closure
+     * @deprecated - Use 'add' instead of addColumn
      * @return $this
      */
     public function addColumn(string $field, Closure $closure = null): PowerGridColumns

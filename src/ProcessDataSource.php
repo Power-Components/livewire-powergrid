@@ -264,13 +264,20 @@ class ProcessDataSource
 
     private static function processBatch(BaseCollection $collection, PowerGridComponent $component): BaseCollection
     {
-        return $collection->map(function ($row, $index) use ($component) {
-            $addColumns = $component->addColumns();
-            $columns    = $addColumns->columns;
-            $columns    = collect($columns);
+        if (method_exists($component, 'addColumns')) {
+            /** @deprecated 6.x */
+            /** @var array $columns */
+            $columns = $component->addColumns()->columns;
+            $fields  = collect($columns);
+        } else {
+            /** @var array $fields */
+            $fields = $component->fields()->fields;
+            $fields = collect($fields);
+        }
 
+        return $collection->map(function ($row, $index) use ($component, $fields) {
             /** @phpstan-ignore-next-line */
-            $data = $columns->mapWithKeys(fn ($column, $columnName) => (object) [$columnName => $column((object) $row, $index)]);
+            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]);
 
             $prepareRules = collect();
             $actions      = collect();
