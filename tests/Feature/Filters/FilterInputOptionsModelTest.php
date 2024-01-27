@@ -104,7 +104,7 @@ it('properly filters by "name is not" using nonexistent record', function (strin
 
     expect($component->filters)
         ->toMatchArray([
-            'input_text'         => [],
+            'input_text' => [],
             //'input_text_options' => [],
         ]);
 })->group('filters', 'filterInputText')
@@ -402,7 +402,7 @@ it('properly filters by "chef name is null"', function (string $component, objec
         ->toMatchArray([
             'input_text'         => [],
             'input_text_options' => [
-                'chef_name' => 'is_null'
+                'chef_name' => 'is_null',
             ],
         ]);
 })->group('filters', 'filterInputText')->with('filter_input_text_options_model_themes_with_join', 'filter_input_text_options_query_builder');

@@ -31,7 +31,6 @@ class InputText extends BuilderBase
             return;
         }
 
-
         /** @var array $values */
         $value        = $values['value'];
         $selected     = $values['selected'];
