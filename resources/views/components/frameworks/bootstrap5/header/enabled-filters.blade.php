@@ -25,10 +25,10 @@
                 </span>
             </div>
         @endif
-        @foreach ($enabledFilters as $field => $filter)
+        @foreach ($enabledFilters as $filter)
             @isset($filter['label'])
                 <div
-                    wire:click.prevent="clearFilter('{{ $field }}')"
+                    wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
                     style="cursor: pointer; padding-right: 4px"
                 >
                     <span class="badge rounded-pill bg-light text-dark">{{ $filter['label'] }}

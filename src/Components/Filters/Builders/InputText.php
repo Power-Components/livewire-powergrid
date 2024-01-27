@@ -31,12 +31,13 @@ class InputText extends BuilderBase
             return;
         }
 
+
         /** @var array $values */
         $value        = $values['value'];
         $selected     = $values['selected'];
         $searchMorphs = $values['searchMorphs'];
 
-        if (is_array($value) && blank($searchMorphs)) {
+        if (is_array($value) && count($value) > 0 && blank($searchMorphs)) {
             $field = $field . '.' . key($value);
             $value = $value[key($value)];
         }

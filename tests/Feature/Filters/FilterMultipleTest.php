@@ -118,7 +118,9 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     $filters = array_merge(
         [
             'input_text'         => [],
-            'input_text_options' => [],
+            'input_text_options' => [
+                $params->field => "contains",
+            ],
         ],
         filterNumber('price', '80.00', '100'),
         filterBoolean('in_stock', 'true')

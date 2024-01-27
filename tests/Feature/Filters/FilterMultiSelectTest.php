@@ -136,7 +136,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
     ])
         ->set('setUp.footer.perPage', '20')
         ->assertSeeHtmlInOrder([
-            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022label\u0022:\u0022Category\u0022,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
+            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022label\u0022:null,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
             'wire:model="filters.multi_select.category_id.values"',
             'x-ref="select_picker_category_id_default"',
         ])
@@ -171,13 +171,12 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
 
     $categories = Category::all();
 
-    expect($column->filters->first())
+    expect((array) $column->filters)
         ->dataSource->toHaveLength($categories->count())
         ->optionValue->toBe($multiSelect->optionValue)
         ->optionLabel->toBe($multiSelect->optionLabel)
         ->className->toBe(FilterMultiSelect::class)
-        ->field->toBe($multiSelect->field)
-        ->title->toBe($column->title);
+        ->field->toBe($multiSelect->field);
 })->group('filters')
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
@@ -229,15 +228,14 @@ it('properly filter with category_id - multiple select async', function (string 
     $column = collect($livewire->columns)
         ->filter(fn ($column) => $column->field === 'category_name')->first();
 
-    expect($column->filters->first())
+    expect((object) $column->filters)
         ->url->toBe('http://localhost/category')
         ->method->toBe('POST')
         ->parameters->toMatchArray([0 => 'Luan'])
         ->optionValue->toBe($multiSelect->optionValue)
         ->optionLabel->toBe($multiSelect->optionLabel)
         ->className->toBe(FilterMultiSelectAsync::class)
-        ->field->toBe($multiSelect->field)
-        ->title->toBe($column->title);
+        ->field->toBe($multiSelect->field);
 })->group('filters')
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 

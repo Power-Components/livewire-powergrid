@@ -46,12 +46,12 @@
                         $filterClass = str(data_get($column, 'filters.className'));
                     @endphp
 
-                    @if (str(data_get($column, 'filters.className'))->contains('FilterMultiSelect'))
+                    @if ($filterClass->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
                                 :tableName="$tableName"
-                                :filter="$filter"
+                                :filter="(array) data_get($column, 'filters')"
                                 :theme="data_get($theme, 'filterMultiSelect')"
-                                :initialValues="data_get(data_get($filters, 'multi_select'), data_get($filter, 'field'), [])"
+                                :initialValues="data_get(data_get($column, 'filters.multi_select'), data_get($column, 'filters.field'), [])"
                         />
                     @endif
 
