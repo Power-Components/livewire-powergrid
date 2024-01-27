@@ -136,7 +136,7 @@ it('properly filter with category_id - Carnes and Peixe selected', function (str
     ])
         ->set('setUp.footer.perPage', '20')
         ->assertSeeHtmlInOrder([
-            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022label\u0022:null,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
+            'x-data="pgTomSelect(JSON.parse(&#039;{\u0022tableName\u0022:\u0022default\u0022,\u0022label\u0022:\u0022Category\u0022,\u0022dataField\u0022:\u0022category_id\u0022,\u0022optionValue\u0022:\u0022id\u0022,\u0022optionLabel\u0022:\u0022name\u0022,\u0022initialValues\u0022:[],\u0022framework\u0022:{\u0022plugins\u0022:{\u0022clear_button\u0022:{\u0022title\u0022:\u0022Remove all selected options\u0022}}}}&#039;))"',
             'wire:model="filters.multi_select.category_id.values"',
             'x-ref="select_picker_category_id_default"',
         ])
