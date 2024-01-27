@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridColumns, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridComponent, PowerGridFields};
 
 class NestedRelationSearchTable extends PowerGridComponent
 {
@@ -39,14 +39,14 @@ class NestedRelationSearchTable extends PowerGridComponent
             ->select('dishes.*', 'chefs.name as chef_name', 'restaurants.name as restaurant_name');
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('chef_name')
-            ->addColumn('restaurant_name')
-            ->addColumn('in_stock');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('chef_name')
+            ->add('restaurant_name')
+            ->add('in_stock');
     }
 
     public function columns(): array

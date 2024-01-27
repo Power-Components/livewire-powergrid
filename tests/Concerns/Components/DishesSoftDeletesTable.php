@@ -4,14 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Button,
+use PowerComponents\LivewirePowerGrid\{
+    Button,
     Column,
     Exportable,
     Footer,
     Header,
     PowerGrid,
-    PowerGridColumns,
-    PowerGridComponent};
+    PowerGridComponent,
+    PowerGridFields
+};
 
 class DishesSoftDeletesTable extends PowerGridComponent
 {
@@ -37,12 +39,12 @@ class DishesSoftDeletesTable extends PowerGridComponent
         return Dish::query();
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns()
-            ->addColumn('id')
-            ->addColumn('name')
-            ->addColumn('deleted_at');
+        return PowerGrid::fields()
+            ->add('id')
+            ->add('name')
+            ->add('deleted_at');
     }
 
     public function columns(): array
