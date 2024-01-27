@@ -105,7 +105,7 @@ it('properly filters by "name is not" using nonexistent record', function (strin
     expect($component->filters)
         ->toMatchArray([
             'input_text' => [],
-            //'input_text_options' => [],
+            'input_text_options' => [],
         ]);
 })->group('filters', 'filterInputText')
     ->with('filter_input_text_options_model_themes_with_join', );
