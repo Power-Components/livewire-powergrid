@@ -12,13 +12,13 @@ final class PowerGridFields
     public array $fields = [];
 
     /**
-     * @param string $field
+     * @param string $fieldName
      * @param Closure|null $closure
      * @return $this
      */
-    public function add(string $field, Closure $closure = null): PowerGridFields
+    public function add(string $fieldName, Closure $closure = null): PowerGridFields
     {
-        $this->fields[$field] = $closure ?? fn ($model) => e(strval(data_get($model, $field)));
+        $this->fields[$fieldName] = $closure ?? fn ($model) => e(strval(data_get($model, $fieldName)));
 
         return $this;
     }
