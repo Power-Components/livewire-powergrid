@@ -6,11 +6,10 @@
     'filter' => null,
 ])
 @php
-    $fieldClassName = data_get($filter, 'className');
     $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
 
-    $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
 
     $filterClasses = \Illuminate\Support\Arr::toCssClasses([data_get($theme, 'selectClass'), $class, data_get($column, 'headerClass'), 'power_grid']);
 

@@ -6,6 +6,9 @@
     'dataField' => null,
 ])
 @php
+    if (!isset($column->dataField)) {
+        dd($column);
+    }
     $field = filled($column->dataField) ? $column->dataField : $column->field;
 
     $isFixedOnResponsive = false;
