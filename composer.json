@@ -28,8 +28,7 @@
         "laradumps/laradumps-core": "^1.1",
         "larastan/larastan": "^2.8.1",
         "pestphp/pest": "^2.30.0",
-        "orchestra/testbench": "8.19|^9.0",
-        "laradumps/laradumps": "^2.3"
+        "orchestra/testbench": "8.19|^9.0"
     },
     "suggest": {
         "openspout/openspout": "Required to export XLS and CSV"
