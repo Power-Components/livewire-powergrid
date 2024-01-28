@@ -36,24 +36,39 @@ class PowerGridComponent extends Component
     use Concerns\Summarize;
     use Concerns\SoftDeletes;
 
-    protected function queryString(): array
+    protected function powerGridQueryString(): array
     {
         $queryString = [];
 
         foreach (Arr::dot($this->filters()) as $filter) {
-            $as = str($filter->field);
+            $as = str($filter->field)
+                ->replace('_id', '');
 
             if ($as->contains('.')) {
                 $as = $as->afterLast('.');
             }
 
+            if ($filter->key === 'input_text') {
+                $queryString['filters.input_text.' . $filter->field] = [
+                    'as'     => $as->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.input_text_options.' . $filter->field] = [
+                    'as'     => $as->append('_operator')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
             if ($filter->key === 'number') {
-                $queryString['filters.' . $filter->key . '.' . $filter->field . '.start'] = [
+                $queryString['filters.number.' . $filter->field . '.start'] = [
                     'as'     => $as->append('_start')->toString(),
                     'except' => '',
                 ];
 
-                $queryString['filters.' . $filter->key . '.' . $filter->field . '.end'] = [
+                $queryString['filters.number.' . $filter->field . '.end'] = [
                     'as'     => $as->append('_end')->toString(),
                     'except' => '',
                 ];
