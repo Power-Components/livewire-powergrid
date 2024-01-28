@@ -311,8 +311,13 @@ trait Filter
 
                     data_set($column, 'filters', (array) $filter);
 
-                    if (isset($this->filters[data_get($filter, 'key')]) && array_values($this->filters[data_get($filter, 'key')])) {
-                        $this->addEnabledFilters(data_get($filter, 'field'), data_get($filter, 'title'));
+                    if (isset($this->filters[data_get($filter, 'key')])
+                        && in_array(data_get($filter, 'field'), array_keys($this->filters[data_get($filter, 'key')]))
+                        && array_values($this->filters[data_get($filter, 'key')])) {
+                        $this->enabledFilters[] = [
+                            'field' => data_get($filter, 'field'),
+                            'label' => data_get($column, 'title'),
+                        ];
                     }
 
                     if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
@@ -332,7 +337,7 @@ trait Filter
         });
     }
 
-    public function addEnabledFilters(string $field, string $label): void
+    public function addEnabledFilters(string $field, ?string $label): void
     {
         if (!collect($this->enabledFilters)
             ->where('field', $field)

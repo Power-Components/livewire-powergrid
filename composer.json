@@ -86,6 +86,7 @@
             "@php vendor/bin/laradumps check --dir=src,resources,tests --text=dump,dd --ignore=dumpTo,Dump stop-on-failure"
         ],
         "verify": [
+            "@ds:check",
             "@test:pint",
             "@test:types",
             "@test"
