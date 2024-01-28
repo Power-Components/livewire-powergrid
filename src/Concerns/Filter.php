@@ -330,8 +330,6 @@ trait Filter
                 return $column;
             })->toArray();
         });
-
-        ds($this->columns);
     }
 
     public function addEnabledFilters(string $field, string $label): void

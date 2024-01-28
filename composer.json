@@ -82,6 +82,9 @@
             "@test:mysql",
             "@test:pgsql"
         ],
+        "ds:check": [
+            "@php vendor/bin/laradumps check --dir=src,resources,tests --text=dump,dd --ignore=dumpTo,Dump stop-on-failure"
+        ],
         "verify": [
             "@test:pint",
             "@test:types",
