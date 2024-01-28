@@ -7,11 +7,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
+use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
 
-use function Livewire\store;
+use Livewire\{Attributes\Computed, Component, Features\SupportQueryString\BaseUrl, WithPagination};
 
-use Livewire\{Attributes\Computed, Component, WithPagination};
+use function Livewire\{invade, store};
+
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
 
@@ -34,6 +35,40 @@ class PowerGridComponent extends Component
     use Concerns\Listeners;
     use Concerns\Summarize;
     use Concerns\SoftDeletes;
+
+    protected function queryString(): array
+    {
+        $queryString = [];
+
+        foreach (Arr::dot($this->filters()) as $filter) {
+            $as = str($filter->field);
+
+            if ($as->contains('.')) {
+                $as = $as->afterLast('.');
+            }
+
+            if ($filter->key === 'number') {
+                $queryString['filters.' . $filter->key . '.' . $filter->field . '.start'] = [
+                    'as'     => $as->append('_start')->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.' . $filter->key . '.' . $filter->field . '.end'] = [
+                    'as'     => $as->append('_end')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
+            $queryString['filters.' . $filter->key . '.' . $filter->field] = [
+                'as'     => $as->toString(),
+                'except' => '',
+            ];
+        }
+
+        return $queryString;
+    }
 
     public function mount(): void
     {

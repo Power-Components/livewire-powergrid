@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon};
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\On;
 
 use function Livewire\store;
@@ -11,6 +11,8 @@ use function Livewire\store;
 trait Filter
 {
     public array $filters = [];
+
+    public array $test = [];
 
     public array $filtered = [];
 
