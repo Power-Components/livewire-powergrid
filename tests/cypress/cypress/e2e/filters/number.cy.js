@@ -1,6 +1,6 @@
 describe('simple', () => {
     beforeEach(() => {
-        cy.visit('/cypress?testType=filters');
+        cy.visit('/examples/cypress?testType=filters');
     });
 
     it('test', () => {

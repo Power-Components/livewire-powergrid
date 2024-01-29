@@ -248,7 +248,7 @@ trait Filter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value): void
+    public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
@@ -269,6 +269,7 @@ trait Filter
         if (!collect($this->enabledFilters)->where('field', $field)->count()) {
             $this->enabledFilters[] = [
                 'field'    => $field,
+                'label'    => $label,
                 'disabled' => $disabled,
             ];
         }

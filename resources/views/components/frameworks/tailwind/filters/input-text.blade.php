@@ -69,6 +69,7 @@
                             <select
                                 class="{{ $selectClasses }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
+                                data-cy="input_text_options_{{ $tableName }}_{{ $field }}"
                                 {{ $defaultAttributes['selectAttributes'] }}
                             >
                                 @foreach ($inputTextOptions as $key => $value)
@@ -91,6 +92,7 @@
                     'pt-1' => !$showSelectOptions,
                 ])>
                     <input
+                        data-cy="input_text_{{ $tableName }}_{{ $field }}"
                         wire:key="input-{{ $field }}"
                         data-id="{{ $field }}"
                         @if (isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled

@@ -1,6 +1,6 @@
 describe('Action Rules::radio', () => {
     beforeEach(() => {
-        cy.visit('/cypress?ruleType=radio');
+        cy.visit('/examples/cypress?ruleType=radio');
     });
 
     it('can visit page', () => {
