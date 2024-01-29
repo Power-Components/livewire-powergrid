@@ -28,9 +28,12 @@
                 @php
                     $filter = data_get($column, 'filters');
                     $title = data_get($column, 'title');
+                    $baseClass = data_get($filter, 'baseClass');
+                    $className = str(data_get($filter, 'className'));
                 @endphp
-                @if (str(data_get($filter, 'className'))->contains('FilterMultiSelect'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+
+                <div class="{{ $baseClass }}">
+                    @if ($className->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
                                 :inline="false"
                                 :tableName="$tableName"
@@ -38,72 +41,41 @@
                                 :theme="data_get($theme, 'filterMultiSelect')"
                                 :initialValues="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
                         />
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterDateTimePicker'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains(['FilterDateTimePicker', 'FilterDatePicker']))
                         @includeIf(data_get($theme, 'filterDatePicker.view'), [
                             'filter' => $filter,
                             'tableName' => $tableName,
                             'classAttr' => 'w-full',
                             'theme' => data_get($theme, 'filterDatePicker'),
-                            'type' => 'datetime',
+                            'type' => $className->contains('FilterDateTimePicker') ? 'datetime' : 'date',
                         ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterDatePicker'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
-                        @includeIf(data_get($theme, 'filterDatePicker.view'), [
-                            'filter' => $filter,
-                            'tableName' => $tableName,
-                            'classAttr' => 'w-full',
-                            'theme' => data_get($theme, 'filterDatePicker'),
-                            'type' => 'date',
-                        ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains(['FilterSelect', 'FilterEnumSelect']))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains(['FilterSelect', 'FilterEnumSelect']))
                         @includeIf(data_get($theme, 'filterSelect.view'), [
                             'filter' => $filter,
                             'theme' => data_get($theme, 'filterSelect'),
                         ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterNumber'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains('FilterNumber'))
                         @includeIf(data_get($theme, 'filterNumber.view'), [
                             'filter' => $filter,
                             'theme' => data_get($theme, 'filterNumber'),
                         ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterInputText'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains('FilterInputText'))
                         @includeIf(data_get($theme, 'filterInputText.view'), [
                             'filter' => $filter,
                             'theme' => data_get($theme, 'filterInputText'),
                         ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterBoolean'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains('FilterBoolean'))
                         @includeIf(data_get($theme, 'filterBoolean.view'), [
                             'filter' => $filter,
                             'theme' => data_get($theme, 'filterBoolean'),
                         ])
-                    </div>
-                @endif
-                @if (str(data_get($filter, 'className'))->contains('FilterDynamic'))
-                    <div class="{{ data_get($filter, 'baseClass') }}">
+                    @elseif ($className->contains('FilterDynamic'))
                         <x-dynamic-component
                                 :component="data_get($filter, 'component', '')"
-                                :attributes="new \Illuminate\View\ComponentAttributeBag(
-                                    data_get($filter, 'attributes', []),
-                                )"
+                                :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))"
                         />
-                    </div>
-                @endif
+                    @endif
+                </div>
             @endforeach
         </div>
     </div>
