@@ -57,9 +57,9 @@ class PowerGridComponent extends Component
         $this->readyToLoad = true;
     }
 
-    public function addColumns(): PowerGridColumns
+    public function fields(): PowerGridFields
     {
-        return PowerGrid::columns();
+        return PowerGrid::fields();
     }
 
     public function updatedPage(): void
