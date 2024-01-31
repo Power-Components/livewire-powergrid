@@ -29,5 +29,4 @@ it('can pass class parameters in batch export.', function () {
         return $getPublicPropertiesDefinedInComponent['filterDataSourceId'] ===
             $properties['filterDataSourceId'];
     });
-
 })->requiresOpenSpout();
