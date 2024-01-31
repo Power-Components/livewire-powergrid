@@ -45,7 +45,7 @@
                         <button
                             type="button"
                             class="page-link"
-                            wire:click="previousPage"
+                            wire:click="previousPage('{{ $paginator->getPageName() }}')"
                             wire:loading.attr="disabled"
                             rel="prev"
                             aria-label="@lang('pagination.previous')"
@@ -84,7 +84,7 @@
                                     <button
                                         type="button"
                                         class="page-link"
-                                        wire:click="gotoPage({{ $page }})"
+                                        wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                     >{{ $page }}</button>
                                 </li>
                             @endif
@@ -98,7 +98,7 @@
                         <button
                             type="button"
                             class="page-link"
-                            wire:click="nextPage"
+                            wire:click="nextPage('{{ $paginator->getPageName() }}')"
                             wire:loading.attr="disabled"
                             rel="next"
                             aria-label="@lang('pagination.next')"

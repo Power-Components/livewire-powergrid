@@ -20,6 +20,8 @@ final class Footer implements Wireable
 
     public string $includeViewOnBottom = '';
 
+    public string $pageName = 'page';
+
     public static function make(): self
     {
         return new Footer();
@@ -69,6 +71,13 @@ final class Footer implements Wireable
     public function includeViewOnBottom(string $viewPath): Footer
     {
         $this->includeViewOnBottom = $viewPath;
+
+        return $this;
+    }
+
+    public function pageName(string $pageName): Footer
+    {
+        $this->pageName = $pageName;
 
         return $this;
     }
