@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesCustomPageNameTable, DishesTable};
 
 it('properly displays "full" showRecordCount')
     ->livewire(DishesTable::class)
@@ -74,6 +74,10 @@ it('searches for something that is not on the current page')
     ->set('search', 'Francesinha vegana')
     ->assertDontSeeHtml('Bife à Parmegiana')
     ->assertSeeHtml('Francesinha vegana');
+
+it('properly sets a custom pageName and clean the string')
+    ->livewire(DishesCustomPageNameTable::class)
+    ->assertSeeHtml("gotoPage(2, 'customPage1234')");
 
 todo('prevents the "division by zero exception" when there is no data and when using toBase');
 

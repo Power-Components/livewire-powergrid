@@ -75,8 +75,14 @@ final class Footer implements Wireable
         return $this;
     }
 
-    public function pageName(string $pageName): Footer
+    public function pageName(string $pageName = 'page'): Footer
     {
+        $pageName = (string) preg_replace('/[^a-z0-9]/i', '', $pageName);
+
+        if (trim($pageName) === '') {
+            $pageName = 'page';
+        }
+
         $this->pageName = $pageName;
 
         return $this;
