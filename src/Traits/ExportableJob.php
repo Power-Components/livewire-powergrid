@@ -31,10 +31,10 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
-    private function prepareToExport(): Eloquent\Collection|Collection
+    private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
         /** @phpstan-ignore-next-line */
-        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable, $properties), fn ($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered ?? [];
 

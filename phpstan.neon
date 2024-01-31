@@ -12,7 +12,7 @@ parameters:
         - '~^Parameter #1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$~'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
-
+        - '#Call to an undefined method PowerComponents\\LivewirePowerGrid\\PowerGridComponent::datasource\(\).#'
     paths:
         - src
 

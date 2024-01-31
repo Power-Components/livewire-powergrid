@@ -6,6 +6,7 @@ use Illuminate\Bus\{Batchable, Queueable};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
+use Illuminate\Support\Facades\Crypt;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
@@ -18,6 +19,8 @@ class ExportJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
     use ExportableJob;
+
+    private array $properties;
 
     /**
      * @param string $componentTable
@@ -34,7 +37,8 @@ class ExportJob implements ShouldQueue
         $this->fileName        = $params['fileName'];
         $this->offset          = $params['offset'];
         $this->limit           = $params['limit'];
-        $this->filters         = $params['filters'];
+        $this->filters         = (array) Crypt::decrypt($params['filters']);
+        $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
         /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
@@ -56,7 +60,7 @@ class ExportJob implements ShouldQueue
         /** @phpstan-ignore-next-line  */
         $exportable
             ->fileName($this->getFilename())
-            ->setData($columnsWithHiddenState, $this->prepareToExport())
+            ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
             ->download([]);
     }
 }

@@ -108,6 +108,13 @@ trait WithExport
         $offset              = 0;
         $limit               = $perPage;
 
+        $properties = collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC))
+            ->where('class', get_class($processDataSource?->component))
+            ->pluck('name')
+            ->intersect(array_keys($this->all()))
+            ->mapWithKeys(fn ($property) => [$property => $this->$property])
+            ->all();
+
         for ($i = 1; $i < ($countQueue + 1); $i++) {
             $fileName = 'powergrid-' . Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
                 '-' . round(($offset + 1), 2) .
@@ -120,7 +127,8 @@ trait WithExport
                 'fileName'        => $fileName,
                 'offset'          => $offset,
                 'limit'           => $limit,
-                'filters'         => $filters,
+                'filters'         => Support\Facades\Crypt::encrypt($filters),
+                'parameters'      => Support\Facades\Crypt::encrypt($properties),
             ];
 
             $queues->push(new $this->exportableJobClass(
