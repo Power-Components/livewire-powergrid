@@ -1,18 +1,18 @@
 <div align="center">
-	<p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
-    <p align="center">
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
-        <a href="https://github.com/Power-Components/livewire-powergrid/actions">
-            <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" />
-        </a>
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
-        <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
-    </p>
-    <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
-    <a href="#features">🔥 Features</a> |
-    <a href="#-demo" target="_blank"> 🚀 Demo</a> |
-    <a href="#get-started">⌨️ Get started</a>
+   <p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
+   <p align="center">
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
+      <a href="https://github.com/Power-Components/livewire-powergrid/actions">
+      <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" /></a>
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/power-components/livewire-powergrid"></a>
+   </p>
+   <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
+   <a href="#features">🔥 Features</a> |
+   <a href="#-demo" target="_blank"> 🚀 Demo</a> |
+   <a href="#get-started">⌨️ Get started</a>
 </div>
 
 ------
@@ -21,7 +21,7 @@
 
 <br/>
 
-PowerGrid creates modern, powerful and easy-to-customize Datatables based on Laravel [Livewire](https://laravel-livewire.com) library.
+PowerGrid creates modern, powerful and easy-to-customize Datatables based on [Laravel Livewire](https://laravel-livewire.com) library.
 
 <br/>
 
@@ -78,6 +78,10 @@ With PowerGrid you get right out of the box:
 - **Responsive**
 
 - **Link inside a table cell**
+
+- **Image inside a table cell**
+
+- **Custom Pagination Field in URL**
 
 - **Livewire Modal Integration ([Wire Elements Modal](https://github.com/wire-elements/modal))**
 
