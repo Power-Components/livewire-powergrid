@@ -45,7 +45,7 @@
                     @if (!$paginator->onFirstPage())
                         <a
                             class="px-2 py-1 pt-2 m-1 text-center text-white bg-pg-primary-600 border-pg-primary-400 rounded cursor-pointer border-1 hover:bg-pg-primary-600 hover:border-pg-primary-800 dark:text-pg-primary-300"
-                            wire:click="gotoPage(1)"
+                            wire:click="gotoPage(1, '{{ $paginator->getPageName() }}')"
                         >
                             <x-livewire-powergrid::icons.chevron-double-left />
                         </a>
@@ -93,7 +93,7 @@
                                         $page === $paginator->currentPage() - 2)
                                     <a
                                         class="px-2 py-1 m-1 text-center text-white bg-pg-primary-600 border-pg-primary-400 rounded cursor-pointer border-1 hover:bg-pg-primary-600 hover:border-pg-primary-800 dark:text-pg-primary-300"
-                                        wire:click="gotoPage({{ $page }})"
+                                        wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                     >{{ $page }}</a>
                                 @endif
 
@@ -132,7 +132,7 @@
                         @endif
                         <a
                             class="px-2 py-1 pt-2 m-1 text-center text-white bg-pg-primary-600 border-pg-primary-400 rounded cursor-pointer border-1 hover:bg-pg-primary-600 hover:border-pg-primary-800 dark:text-pg-primary-300"
-                            wire:click="gotoPage({{ $paginator->lastPage() }})"
+                            wire:click="gotoPage({{ $paginator->lastPage() }}, '{{ $paginator->getPageName() }}')"
                         >
                             <x-livewire-powergrid::icons.chevron-double-right />
                         </a>

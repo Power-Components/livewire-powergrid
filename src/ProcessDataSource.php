@@ -209,6 +209,7 @@ class ProcessDataSource
 
     private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany $results): LengthAwarePaginator|Paginator
     {
+        $pageName    = strval(data_get($this->component->setUp, 'footer.pageName', 'page'));
         $perPage     = intval(data_get($this->component->setUp, 'footer.perPage'));
         $recordCount = strval(data_get($this->component->setUp, 'footer.recordCount'));
 
@@ -218,12 +219,12 @@ class ProcessDataSource
         };
 
         if ($perPage > 0) {
-            return $results->$paginate($perPage);
+            return $results->$paginate($perPage, pageName: $pageName);
         }
 
         $count = $results->count();
 
-        return $results->$paginate($count ?: 10);
+        return $results->$paginate($count ?: 10, pageName: $pageName);
     }
 
     /**
