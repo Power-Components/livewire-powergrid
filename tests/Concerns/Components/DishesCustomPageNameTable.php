@@ -6,7 +6,7 @@ use PowerComponents\LivewirePowerGrid\Footer;
 
 class DishesCustomPageNameTable extends DishTableBase
 {
-    public array $testFilters = [];
+    public string $pageNameCandidate;
 
     public function setUp(): array
     {
@@ -14,7 +14,7 @@ class DishesCustomPageNameTable extends DishTableBase
             Footer::make()
                 ->showPerPage()
                 ->showRecordCount()
-                ->pageName('customPage12Ντόναλντ34'),
+                ->pageName($this->pageNameCandidate),
         ];
     }
 }
