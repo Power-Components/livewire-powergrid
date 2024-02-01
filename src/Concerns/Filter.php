@@ -291,7 +291,8 @@ trait Filter
 
         $filters->each(function ($filter) {
             $this->columns = collect($this->columns)->map(function ($column) use ($filter) {
-                if (data_get($column, 'field') === data_get($filter, 'column')) {
+                if (data_get($column, 'field') === data_get($filter, 'column') ||
+                    data_get($column, 'dataField') === data_get($filter, 'column')) {
                     if (data_get($filter, 'dataSource') instanceof \Closure) {
                         $depends = (array) data_get($filter, 'depends');
                         $closure = data_get($filter, 'dataSource');
