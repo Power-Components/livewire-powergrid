@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 
 class FilterMultiSelect extends FilterBase
 {
+    public string $key = 'multi_select';
+
     public array|Collection $dataSource;
 
     public string $optionValue = '';

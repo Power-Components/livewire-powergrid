@@ -5,10 +5,12 @@
     'column' => null,
     'tableName' => null,
     'type' => 'datetime',
+    'filter' => null,
 ])
 @php
-    unset($filter['className']);
-    extract($filter);
+    $params = data_get($filter, 'params');
+    $field = data_get($filter, 'field');
+    $title = data_get($column, 'title');
 
     $customConfig = [];
     if ($params) {
@@ -44,7 +46,7 @@
         @endif
         <form autocomplete="off">
             <input
-                id="input_{{ $column }}"
+                id="input_{{ $field }}"
                 x-ref="rangeInput"
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"

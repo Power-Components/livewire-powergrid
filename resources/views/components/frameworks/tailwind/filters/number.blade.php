@@ -5,12 +5,12 @@
     'column' => '',
 ])
 @php
-    unset($filter['className']);
-    extract($filter);
+    $fieldClassName = data_get($filter, 'className');
+    $field = data_get($filter, 'field');
 
     $componentAttributes = (array) data_get($filter, 'attributes');
 
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterNumber::getWireAttributes($field, $filter);
+    $defaultAttributes = $fieldClassName::getWireAttributes($field, array_merge($filter, (array)$column));
 
     $filterClasses = Arr::toCssClasses([data_get($theme, 'inputClass'), data_get($column, 'headerClass'), 'power_grid']);
 

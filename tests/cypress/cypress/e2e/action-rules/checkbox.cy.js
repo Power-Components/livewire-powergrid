@@ -1,6 +1,6 @@
 describe('Action Rules::checkbox', () => {
     beforeEach(() => {
-        cy.visit('/cypress?ruleType=checkbox');
+        cy.visit('/examples/cypress?ruleType=checkbox');
     });
 
     it('can visit page', () => {

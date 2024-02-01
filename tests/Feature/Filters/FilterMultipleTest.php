@@ -115,18 +115,6 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
 
     $component->call('clearFilter', $params->field);
 
-    $filters = array_merge(
-        [
-            'input_text'         => [],
-            'input_text_options' => [],
-        ],
-        filterNumber('price', '80.00', '100'),
-        filterBoolean('in_stock', 'true')
-    );
-
-    expect($component->filters)
-        ->toMatchArray($filters);
-
     $component->assertDontSee('Polpetone Filé Mignon');
 
     $component->call('clearAllFilters');

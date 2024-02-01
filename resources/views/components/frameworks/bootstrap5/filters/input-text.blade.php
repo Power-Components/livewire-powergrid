@@ -7,8 +7,10 @@
 ])
 <div>
     @php
+        $fieldClassName = data_get($filter, 'className');
+
         $field = strval(data_get($filter, 'field'));
-        $title = strval(data_get($filter, 'title'));
+        $title = strval(data_get($column, 'title'));
         $operators = (array) data_get($filter, 'operators', []);
         $placeholder = strval(data_get($filter, 'placeholder'));
         $componentAttributes = (array) data_get($filter, 'attributes', []);

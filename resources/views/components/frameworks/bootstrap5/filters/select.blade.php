@@ -7,8 +7,8 @@
 ])
 
 @php
-    $field = strval(data_get($filter, 'field'));
-    $title = strval(data_get($filter, 'title'));
+    $field = data_get($filter, 'field');
+    $title = data_get($column, 'title');
 
     $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
 

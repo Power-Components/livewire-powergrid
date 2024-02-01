@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 
 class FilterEnumSelect extends FilterBase
 {
+    public string $key = 'select';
+
     public array|Collection $dataSource;
 
     public string $optionValue = 'value';

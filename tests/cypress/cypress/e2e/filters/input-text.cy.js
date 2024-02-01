@@ -1,27 +1,149 @@
 describe('simple', () => {
     beforeEach(() => {
-        cy.visit('/cypress?testType=filters');
+        cy.visit('/examples/cypress?testType=filters');
     });
 
-    it('test', () => {
-        const expectedFilter = '{"input_text":{"name":"d","email":"d"}}' // Daniel, Claudio
+    const inputField = '[data-cy="input_text_default_name"]';
+    const optionsField = '[data-cy="input_text_options_default_name"]';
+    const tableRows = '.power-grid-table tbody tr';
 
-        cy.get('[wire\\:model="filters.input_text.name"]')
-            .type('d').should('have.value', 'd');
+    const applyFilter = (filterType, filterValue) => {
+        cy.get(inputField).clear()
+        cy.get(inputField).type(filterValue).should('have.value', filterValue);
+        cy.get(optionsField).select(filterType);
+    };
 
-        cy.get('[wire\\:model="filters.input_text.email"]')
-            .type('d').should('have.value', 'd');
+    const clearFilter = () => {
+        cy.get('[data-cy="enabled-filters"]')
+            .should('contain.text', 'Name')
 
-        cy.get('[data-cy="filters-log"]').should('contain.text', expectedFilter);
+        cy.wait(800) // wait livewire debounce
 
-        cy.get('.power-grid-table tbody tr').then(($el) => {
-            $el.each((index, row) => {
+        cy.get('[data-cy=enabled-filters-clear-name]')
+            .click()
 
-                const name = Cypress.$(row).find('td').eq(1).text();
+        cy.get('[data-cy="enabled-filters"]')
+            .should('not.exist')
+    }
 
-                expect(name).not.to.include('Luan');
-                expect(name).not.to.include('Tio Jobs');
-            });
-        })
+    it('Filter - "contains" works properly', () => {
+        const filterValue = 'Dan';
+        applyFilter('contains', filterValue);
+
+        cy.get(tableRows).should('not.have.text', 'Luan');
+        cy.url().should('include', `name=${filterValue}`);
+    });
+
+    it('Filter - "is" works properly', () => {
+        const filterValue = 'John';
+        applyFilter('is', filterValue);
+    });
+
+    it('Filter - "contains_not" works properly', () => {
+        let filterValue = 'John';
+        applyFilter('contains_not', filterValue);
+
+        cy.get(tableRows).should('contain.text', 'Luan');
+        cy.get(tableRows).should('contain.text', 'Daniel');
+        cy.get(tableRows).should('contain.text', 'Claudio');
+        cy.get(tableRows).should('contain.text', 'Vitor');
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
+
+        cy.get(inputField).should('be.empty')
+
+        filterValue = 'Dan';
+        applyFilter('contains_not', filterValue);
+
+        cy.get(tableRows).should('not.contains.text', 'Dan')
+        cy.get(tableRows).should('contains.text', 'Luan')
+        cy.get(tableRows).should('contains.text', 'Claudio')
+        cy.get(tableRows).should('contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
+
+        cy.get(inputField).should('be.empty')
+
+        filterValue = 'Luan';
+        applyFilter('contains_not', filterValue);
+
+        cy.get(tableRows).should('contains.text', 'Dan')
+        cy.get(tableRows).should('not.contains.text', 'Luan')
+        cy.get(tableRows).should('contains.text', 'Claudio')
+        cy.get(tableRows).should('contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        filterValue = 'an';
+        applyFilter('contains_not', filterValue);
+
+        cy.get(tableRows).should('not.contains.text', 'Dan')
+        cy.get(tableRows).should('not.contains.text', 'Luan')
+        cy.get(tableRows).should('contains.text', 'Claudio')
+        cy.get(tableRows).should('contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+    });
+
+    it('Filter - "starts_with" works properly', () => {
+        let filterValue = 'Lu';
+        applyFilter('starts_with', filterValue);
+
+        cy.get(tableRows).should('not.contains.text', 'Dan')
+        cy.get(tableRows).should('contains.text', 'Luan')
+        cy.get(tableRows).should('not.contains.text', 'Claudio')
+        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('not.contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
+
+        filterValue = 'Cl';
+        applyFilter('starts_with', filterValue);
+
+        cy.get(tableRows).should('not.contains.text', 'Dan')
+        cy.get(tableRows).should('not.contains.text', 'Luan')
+        cy.get(tableRows).should('contains.text', 'Claudio')
+        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('not.contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
+    });
+
+    it('Filter - "ends_with" works properly', () => {
+        let filterValue = 'obs';
+        applyFilter('ends_with', filterValue);
+
+        cy.get(tableRows).should('not.contains.text', 'Dan')
+        cy.get(tableRows).should('not.contains.text', 'Luan')
+        cy.get(tableRows).should('not.contains.text', 'Claudio')
+        cy.get(tableRows).should('contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('not.contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
+
+        filterValue = 'an';
+        applyFilter('starts_with', filterValue);
+
+        cy.get(tableRows).should('contains.text', 'Dan')
+        cy.get(tableRows).should('contains.text', 'Luan')
+        cy.get(tableRows).should('not.contains.text', 'Claudio')
+        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
+        cy.get(tableRows).should('not.contains.text', 'Vitor')
+
+        cy.url().should('include', `name=${filterValue}`);
+
+        clearFilter()
     });
 })

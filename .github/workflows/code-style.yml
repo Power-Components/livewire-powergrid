@@ -58,3 +58,6 @@ jobs:
 
       - name: Pint
         run: composer test:pint
+
+      - name: LaraDumps Check debug
+        run: composer ds:check

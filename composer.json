@@ -19,12 +19,12 @@
     ],
     "require": {
         "php": "^8.1",
-        "livewire/livewire": "^3.3.5",
+        "livewire/livewire": "^3.4.3",
         "laravel/prompts": "^0.1.15"
     },
     "require-dev": {
         "composer/composer": "^2.6.6",
-        "laravel/pint": "^1.13.8",
+        "laravel/pint": "^1.13.10",
         "laradumps/laradumps-core": "^1.1",
         "larastan/larastan": "^2.8.1",
         "pestphp/pest": "2.28.0",
@@ -81,7 +81,11 @@
             "@test:mysql",
             "@test:pgsql"
         ],
+        "ds:check": [
+            "@php vendor/bin/laradumps check --dir=src,resources,tests --text=dump,dd --ignore=dumpTo,Dump stop-on-failure"
+        ],
         "verify": [
+            "@ds:check",
             "@test:pint",
             "@test:types",
             "@test"

@@ -7,6 +7,8 @@ use Illuminate\View\ComponentAttributeBag;
 
 class FilterNumber extends FilterBase
 {
+    public string $key = 'number';
+
     public string $thousands = '';
 
     public string $decimal = '';

@@ -7,11 +7,12 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
+use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
 
-use function Livewire\store;
+use Livewire\{Attributes\Computed, Component, Features\SupportQueryString\BaseUrl, WithPagination};
 
-use Livewire\{Attributes\Computed, Component, WithPagination};
+use function Livewire\{invade, store};
+
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
 
@@ -35,6 +36,55 @@ class PowerGridComponent extends Component
     use Concerns\Summarize;
     use Concerns\SoftDeletes;
 
+    protected function powerGridQueryString(): array
+    {
+        $queryString = [];
+
+        foreach (Arr::dot($this->filters()) as $filter) {
+            $as = str($filter->field)
+                ->replace('_id', '');
+
+            if ($as->contains('.')) {
+                $as = $as->afterLast('.');
+            }
+
+            if ($filter->key === 'input_text') {
+                $queryString['filters.input_text.' . $filter->field] = [
+                    'as'     => $as->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.input_text_options.' . $filter->field] = [
+                    'as'     => $as->append('_operator')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
+            if ($filter->key === 'number') {
+                $queryString['filters.number.' . $filter->field . '.start'] = [
+                    'as'     => $as->append('_start')->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.number.' . $filter->field . '.end'] = [
+                    'as'     => $as->append('_end')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
+            $queryString['filters.' . $filter->key . '.' . $filter->field] = [
+                'as'     => $as->toString(),
+                'except' => '',
+            ];
+        }
+
+        return $queryString;
+    }
+
     public function mount(): void
     {
         $this->readyToLoad = !$this->deferLoading;
@@ -50,6 +100,8 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->restoreState();
+
+        $this->resolveFilters();
     }
 
     public function fetchDatasource(): void
@@ -199,8 +251,6 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        $this->resolveFilters();
-
         /** @var ThemeBase $themeBase */
         $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
 

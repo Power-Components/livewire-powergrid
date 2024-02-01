@@ -8,11 +8,11 @@ use Livewire\Attributes\On;
 
 use function Livewire\store;
 
-use PowerComponents\LivewirePowerGrid\Column;
-
 trait Filter
 {
     public array $filters = [];
+
+    public array $test = [];
 
     public array $filtered = [];
 
@@ -24,27 +24,58 @@ trait Filter
 
     public function clearFilter(string $field = '', bool $emit = true): void
     {
-        if (str_contains($field, '.')) {
-            list($table, $column) = explode('.', $field);
-        } else {
-            $table  = $field;
-            $column = null;
-        }
+        collect($this->filters())
+            ->each(function ($filter) use ($field) {
+                if (isset($this->filters['multi_select'][$field])) {
+                    $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
+                }
 
-        $this->clearFilterByTableAndColumn($table, $column);
+                if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
+                    $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                }
 
-        unset($this->enabledFilters[$field]);
+                $unset = function ($filter, $field, $column) {
+                    $key = data_get($filter, 'key');
+
+                    if (str($field)->contains('.')) {
+                        $explodeField = explode('.', $field);
+
+                        $currentArray = &$this->filters[$key];
+                        $lastIndex    = array_pop($explodeField);
+
+                        foreach ($explodeField as $index) {
+                            if (isset($currentArray[$index]) && is_array($currentArray[$index])) {
+                                $currentArray = &$currentArray[$index];
+                            } else {
+                                return;
+                            }
+                        }
+
+                        unset($currentArray[$lastIndex]);
+                    } else {
+                        unset($this->filters[$key][$field]);
+                    }
+
+                    $this->enabledFilters = array_filter(
+                        $this->enabledFilters,
+                        fn ($filter) => $filter['field'] !== ($column ?? $field)
+                    );
+                };
+
+                if ($field === data_get($filter, 'column')) {
+                    $unset($filter, data_get($filter, 'field'), $field);
+                }
+
+                if ($field === data_get($filter, 'field')) {
+                    $unset($filter, $field, null);
+                };
+            });
 
         if ($emit) {
             $this->dispatch('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
         }
 
         $this->persistState('filters');
-    }
-
-    public function toggleFilters(): void
-    {
-        $this->showFilters = !$this->showFilters;
     }
 
     public function clearAllFilters(): void
@@ -56,6 +87,11 @@ trait Filter
 
         $this->dispatch('pg:clear_all_flatpickr::' . $this->tableName);
         $this->dispatch('pg:clear_all_multi_select::' . $this->tableName);
+    }
+
+    public function toggleFilters(): void
+    {
+        $this->showFilters = !$this->showFilters;
     }
 
     #[On('pg:datePicker-{tableName}')]
@@ -91,8 +127,7 @@ trait Filter
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
-        $this->enabledFilters[$field]['data-field'] = $field;
-        $this->enabledFilters[$field]['label']      = $label;
+        $this->addEnabledFilters($field, $label);
 
         $this->filters[$type][$field]['start'] = $startDate;
         $this->filters[$type][$field]['end']   = $endDate;
@@ -112,8 +147,10 @@ trait Filter
 
         data_set($this->filters, "multi_select.$field", $values);
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->enabledFilters[] = [
+            'field' => $field,
+            'label' => $label,
+        ];
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
@@ -128,8 +165,7 @@ trait Filter
     {
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->addEnabledFilters($field, $label);
 
         $value = data_get($this->filters, "select.$field");
 
@@ -151,8 +187,7 @@ trait Filter
         store($this)->set('filters.number.' . $field . '.thousands', $thousands);
         store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $title;
+        $this->addEnabledFilters($field, $title);
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -172,8 +207,7 @@ trait Filter
         store($this)->set('filters.number.' . $field . '.thousands', $thousands);
         store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $title;
+        $this->addEnabledFilters($field, $title);
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -188,8 +222,7 @@ trait Filter
     {
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->addEnabledFilters($field, $label);
 
         if ($value == 'all') {
             $this->clearFilter($field, emit: false);
@@ -204,8 +237,7 @@ trait Filter
     {
         $this->resetPage();
 
-        $this->enabledFilters[$field]['id']    = $field;
-        $this->enabledFilters[$field]['label'] = $label;
+        $this->addEnabledFilters($field, $label);
 
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
@@ -216,18 +248,16 @@ trait Filter
         $this->persistState('filters');
     }
 
-    public function filterInputTextOptions(string $field, string $value): void
+    public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
         data_set($this->filters, 'input_text_options.' . $field, $value);
 
-        $this->enabledFilters[$field]['id'] = $field;
+        $disabled = false;
 
         $this->resetPage();
 
-        $this->enabledFilters[$field]['disabled'] = false;
-
         if (in_array($value, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'])) {
-            $this->enabledFilters[$field]['disabled'] = true;
+            $disabled = true;
 
             if (str($field)->contains('.')) {
                 $this->filters['input_text'][str($field)->before('.')->toString()][str($field)->after('.')->toString()] = null;
@@ -236,47 +266,19 @@ trait Filter
             }
         }
 
+        if (!collect($this->enabledFilters)->where('field', $field)->count()) {
+            $this->enabledFilters[] = [
+                'field'    => $field,
+                'label'    => $label,
+                'disabled' => $disabled,
+            ];
+        }
+
         if (blank($value)) {
             $this->clearFilter($field, emit: false);
         }
 
         $this->persistState('filters');
-    }
-
-    private function clearFilterByTableAndColumn(string $table, ?string $column): void
-    {
-        $keys = [$table, $table . '.' . $column];
-
-        foreach ($keys as $key) {
-            $this->clearFilterByKey($key, $table, $column);
-        }
-    }
-
-    private function clearFilterByKey(string $key, string $table, ?string $column): void
-    {
-        if (isset($this->filters['multi_select'][$key])) {
-            $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $key);
-        }
-
-        if (isset($this->filters['datetime'][$key]) || isset($this->filters['date'][$key])) {
-            $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $key);
-        }
-
-        $filterTypes = ['input_text', 'input_text_options', 'number', 'boolean', 'datetime', 'date', 'select', 'multi_select'];
-
-        foreach ($filterTypes as $type) {
-            $this->unsetFilter($type, $key, $table, $column);
-        }
-    }
-
-    private function unsetFilter(string $type, string $key, string $table, ?string $column): void
-    {
-        unset($this->filters[$type][$key]);
-        unset($this->filters[$type][$table][$column]);
-
-        if (empty($this->filters[$type][$table])) {
-            unset($this->filters[$type][$table]);
-        }
     }
 
     private function resolveFilters(): void
@@ -287,26 +289,9 @@ trait Filter
             return;
         }
 
-        /** @var Column $column */
-        foreach ($this->columns as $column) {
-            if (str(strval(data_get($column, 'dataField')))->contains('.')) {
-                $field = strval(data_get($column, 'field'));
-            } else {
-                $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
-            }
-
-            $filterForColumn = $filters->filter(
-                fn ($filter) => data_get($filter, 'column') == $field
-            );
-
-            if ($filterForColumn->count() > 0) {
-                $filterForColumn->transform(function ($filter) use ($column) {
-                    data_set($filter, 'title', data_get($column, 'title'));
-
-                    return $filter;
-                });
-
-                data_set($column, 'filters', $filterForColumn->map(function ($filter) {
+        $filters->each(function ($filter) {
+            $this->columns = collect($this->columns)->map(function ($column) use ($filter) {
+                if (data_get($column, 'field') === data_get($filter, 'column')) {
                     if (data_get($filter, 'dataSource') instanceof \Closure) {
                         $depends = (array) data_get($filter, 'depends');
                         $closure = data_get($filter, 'dataSource');
@@ -324,13 +309,20 @@ trait Filter
                     data_forget($filter, 'collection');
 
                     if (!is_array($filter) && method_exists($filter, 'execute')) {
-                        return (array) $filter->execute();
+                        $filter = $filter->execute();
                     }
 
-                    return (array) $filter;
-                }));
+                    data_set($column, 'filters', (array) $filter);
 
-                $filterForColumn->each(function ($filter) {
+                    if (isset($this->filters[data_get($filter, 'key')])
+                        && in_array(data_get($filter, 'field'), array_keys($this->filters[data_get($filter, 'key')]))
+                        && array_values($this->filters[data_get($filter, 'key')])) {
+                        $this->enabledFilters[] = [
+                            'field' => data_get($filter, 'field'),
+                            'label' => data_get($column, 'title'),
+                        ];
+                    }
+
                     if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
                         filled(data_get($filter, 'attributes'))) {
                         $attributes = array_values((array) data_get($filter, 'attributes'));
@@ -341,12 +333,22 @@ trait Filter
                             }
                         }
                     }
-                });
+                }
 
-                continue;
-            }
+                return $column;
+            })->toArray();
+        });
+    }
 
-            data_set($column, 'filters', collect([]));
+    public function addEnabledFilters(string $field, ?string $label): void
+    {
+        if (!collect($this->enabledFilters)
+            ->where('field', $field)
+            ->count()) {
+            $this->enabledFilters[] = [
+                'field' => $field,
+                'label' => $label,
+            ];
         }
     }
 }

@@ -7,8 +7,9 @@
     'type' => 'datetime',
 ])
 @php
-    unset($filter['className']);
-    extract($filter);
+    $params = data_get($filter, 'params');
+    $field = data_get($filter, 'field');
+    $title = data_get($column, 'title');
 
     $customConfig = [];
     if ($params) {
@@ -38,11 +39,11 @@
     >
         <form autocomplete="off">
             <input
-                id="input_{{ $column }}"
+                id="input_{{ $field }}"
                 x-ref="rangeInput"
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
-                data-field="{{ $column }}"
+                data-field="{{ $field }}"
                 style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}"
                 class="power_grid {{ data_get($theme, 'inputClass') }} {{ data_get($column, 'headerClass') }}"
                 type="text"

@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid;
 use Closure;
 use Illuminate\Support\Traits\Macroable;
 
-/** @deprecated  */
+/** @deprecated - Use 'PowerGridFields' instead of PowerGridColumns */
 final class PowerGridColumns
 {
     use Macroable;
