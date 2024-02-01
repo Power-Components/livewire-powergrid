@@ -21,13 +21,14 @@ class ProcessDataSource
     public bool $isCollection = false;
 
     public function __construct(
-        public PowerGridComponent $component
+        public PowerGridComponent $component,
+        public array $properties = [],
     ) {
     }
 
-    public static function fillData(PowerGridComponent $powerGridComponent): ProcessDataSource
+    public static function fillData(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
     {
-        return new self($powerGridComponent);
+        return new self($powerGridComponent, $properties);
     }
 
     /**
@@ -55,7 +56,7 @@ class ProcessDataSource
         $datasource = $this->component->datasource ?? null;
 
         if (empty($datasource)) {
-            $datasource = $this->component->datasource();
+            $datasource = $this->component->datasource($this->properties);
         }
 
         if (is_array($datasource)) {
@@ -108,7 +109,6 @@ class ProcessDataSource
             );
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
-            /** @phpstan-ignore-next-line */
             $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
@@ -116,7 +116,6 @@ class ProcessDataSource
 
         $sortField = $this->makeSortField($this->component->sortField);
 
-        /** @phpstan-ignore-next-line */
         $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
 
         $results = $this->applyPerPage($results);

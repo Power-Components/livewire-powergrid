@@ -120,7 +120,8 @@ trait WithExport
                 'fileName'        => $fileName,
                 'offset'          => $offset,
                 'limit'           => $limit,
-                'filters'         => $filters,
+                'filters'         => Support\Facades\Crypt::encrypt($filters),
+                'parameters'      => Support\Facades\Crypt::encrypt($processDataSource->component->getPublicPropertiesDefinedInComponent()),
             ];
 
             $queues->push(new $this->exportableJobClass(

@@ -79,14 +79,6 @@ trait Base
         return [];
     }
 
-    /**
-     * @return null
-     */
-    public function datasource()
-    {
-        return null;
-    }
-
     public function summarizeFormat(): array
     {
         return [];
