@@ -140,21 +140,21 @@ class PowerGridComponent extends Component
         }
     }
 
-    #[Computed(persist: true)]
+    #[Computed]
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
                 ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
-    #[Computed(persist: true)]
+    #[Computed]
     public function visibleColumns(): BaseCollection
     {
         return collect($this->columns)
             ->where('forceHidden', false);
     }
 
-    #[Computed(persist: true)]
+    #[Computed]
     protected function getCachedData(): mixed
     {
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
