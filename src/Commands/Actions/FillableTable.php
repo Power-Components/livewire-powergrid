@@ -69,21 +69,21 @@ class FillableTable
                 }
 
                 if ($columnType === 'datetime') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
+                    $datasource .= "\n" . '            ->add(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
                     $filters .= '            Filter::datetimepicker(\'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if ($columnType === 'date') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
+                    $datasource .= "\n" . '            ->add(\'' . $field . '_formatted\', fn (' . $modelUnqualifiedName . ' $model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
                     $filters .= '            Filter::datepicker(\'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if ($columnType === 'boolean') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
                     $filters .= '            Filter::boolean(\'' . $field . '\'),' . "\n";
 
@@ -91,26 +91,26 @@ class FillableTable
                 }
 
                 if (in_array($columnType, ['smallint', 'integer', 'bigint'])) {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\'),' . "\n";
 
                     continue;
                 }
 
                 if ($columnType === 'string') {
-                    $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                    $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                     $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
                     $filters .= '            Filter::inputText(\'' . $field . '\')->operators([\'contains\']),' . "\n";
 
                     if (!self::$hasEscapeExample) {
-                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', fn (' . $modelUnqualifiedName . ' $model) => strtolower(e($model->' . $field . ')))' . "\n";
+                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->add(\'' . $field . '_lower\', fn (' . $modelUnqualifiedName . ' $model) => strtolower(e($model->' . $field . ')))' . "\n";
                         self::$hasEscapeExample = true;
                     }
 
                     continue;
                 }
 
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                 $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
             }
         }
@@ -161,21 +161,21 @@ class FillableTable
             }
 
             if ($columnType === 'datetime') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn ($model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
+                $datasource .= "\n" . '            ->add(\'' . $field . '_formatted\', fn ($model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y H:i:s\'))';
                 $filters .= '            Filter::datetimepicker(\'' . $field . '\'),' . "\n";
 
                 continue;
             }
 
             if ($columnType === 'date') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '_formatted\', fn ($model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
+                $datasource .= "\n" . '            ->add(\'' . $field . '_formatted\', fn ($model) => Carbon::parse($model->' . $field . ')->format(\'d/m/Y\'))';
                 $filters .= '            Filter::datepicker(\'' . $field . '\'),' . "\n";
 
                 continue;
             }
 
             if ($columnType === 'boolean') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                 $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->toggleable(),' . "\n\n";
                 $filters .= '            Filter::boolean(\'' . $field . '\'),' . "\n";
 
@@ -183,26 +183,26 @@ class FillableTable
             }
 
             if (in_array($columnType, ['smallint', 'integer', 'bigint'])) {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                 $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\'),' . "\n";
 
                 continue;
             }
 
             if ($columnType === 'string') {
-                $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+                $datasource .= "\n" . '            ->add(\'' . $field . '\')';
                 $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
                 $filters .= '            Filter::inputText(\'' . $field . '\')->operators([\'contains\']),' . "\n";
 
                 if (!self::$hasEscapeExample) {
-                    $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->addColumn(\'' . $field . '_lower\', fn ($model) => strtolower(e($model->' . $field . ')))' . "\n";
+                    $datasource .= "\n\n           /** Example of custom column using a closure **/\n" . '            ->add(\'' . $field . '_lower\', fn ($model) => strtolower(e($model->' . $field . ')))' . "\n";
                     self::$hasEscapeExample = true;
                 }
 
                 continue;
             }
 
-            $datasource .= "\n" . '            ->addColumn(\'' . $field . '\')';
+            $datasource .= "\n" . '            ->add(\'' . $field . '\')';
             $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
         }
 
