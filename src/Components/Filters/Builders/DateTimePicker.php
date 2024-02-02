@@ -14,6 +14,10 @@ class DateTimePicker extends BuilderBase
             return;
         }
 
+        if (!isset($values['start']) || isset($values['end'])) {
+            return;
+        }
+
         /** @var array $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values['start']),
@@ -34,6 +38,10 @@ class DateTimePicker extends BuilderBase
 
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
+        if (!isset($values['start']) || isset($values['end'])) {
+            return $collection;
+        }
+
         /** @var array $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values['start']),
