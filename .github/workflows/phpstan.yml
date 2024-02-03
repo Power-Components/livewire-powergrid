@@ -1,17 +1,7 @@
 name: PHPStan
 
 on:
-  push:
-    branches:
-      - "**"
-    paths-ignore:
-      - "art/**"
-      - "README.md"
-  pull_request:
-    types: [ready_for_review, synchronize, opened]
-    paths-ignore:
-      - "art/**"
-      - "README.md"
+  workflow_dispatch:
 
 jobs:
   build:
