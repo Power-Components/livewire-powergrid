@@ -5,6 +5,7 @@
     'tableName' => null,
     'multiple' => true,
     'initialValues' => [],
+    'title' => ''
 ])
 
 @php
@@ -22,7 +23,7 @@
 
     $params = [
         'tableName' => $tableName,
-        'label' => data_get($filter, 'title'),
+        'label' => $title,
         'dataField' => data_get($filter, 'field'),
         'optionValue' => data_get($filter, 'optionValue'),
         'optionLabel' => data_get($filter, 'optionLabel'),
@@ -53,7 +54,7 @@
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    {{ data_get($filter, 'title') }}
+                    {{ $title }}
                 </label>
             @endif
             <select
@@ -65,7 +66,8 @@
                 <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
                 @if (blank(data_get($params, 'asyncData', [])))
                     @foreach ($collection->toArray() as $item)
-                        <option value="{{ data_get($item, data_get($filter, 'optionValue')) }}">
+                        <option wire:key="multi-select-option-{{ $loop->index }}"
+                                value="{{ data_get($item, data_get($filter, 'optionValue')) }}">
                             {{ data_get($item, data_get($filter, 'optionLabel')) }}
                         </option>
                     @endforeach

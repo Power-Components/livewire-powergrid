@@ -30,6 +30,8 @@
         'noWeekEnds' => data_get($customConfig, 'no_weekends', false),
         'customConfig' => $customConfig,
     ];
+
+    ds($params);
 @endphp
 <div
     wire:ignore

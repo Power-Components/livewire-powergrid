@@ -12,8 +12,6 @@ trait Filter
 {
     public array $filters = [];
 
-    public array $test = [];
-
     public array $filtered = [];
 
     public array $enabledFilters = [];
@@ -147,10 +145,7 @@ trait Filter
 
         data_set($this->filters, "multi_select.$field", $values);
 
-        $this->enabledFilters[] = [
-            'field' => $field,
-            'label' => $label,
-        ];
+        $this->addEnabledFilters($field, $label);
 
         if (count($values) === 0) {
             $this->clearFilter($field, emit: false);
