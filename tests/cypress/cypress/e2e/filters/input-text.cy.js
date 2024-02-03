@@ -1,6 +1,6 @@
 describe('simple', () => {
     beforeEach(() => {
-        cy.visit('/examples/cypress?testType=filters');
+        cy.visit('/filters-input-text');
     });
 
     const inputField = '[data-cy="input_text_default_name"]';

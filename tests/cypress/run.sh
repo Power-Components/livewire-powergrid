@@ -8,15 +8,6 @@ cd tests/cypress/app &&
 
 cp .env.example .env
 
-cat >> .env <<EOF
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3307
-DB_DATABASE=powergridtest
-DB_USERNAME=root
-DB_PASSWORD=password
-EOF
-
 # | ------------------------- |
 # | install local PowerGrid
 # | ------------------------- |
@@ -48,5 +39,3 @@ php artisan key:generate
 npm install
 
 npm run build
-
-php artisan migrate:fresh --seed --force
