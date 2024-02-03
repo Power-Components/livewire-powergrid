@@ -36,10 +36,11 @@
                     @if ($className->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
                                 :inline="false"
-                                :tableName="$tableName"
+                                :table-name="$tableName"
                                 :filter="$filter"
                                 :theme="data_get($theme, 'filterMultiSelect')"
-                                :initialValues="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
+                                :title="$title"
+                                :initial-values="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
                         />
                     @elseif ($className->contains(['FilterDateTimePicker', 'FilterDatePicker']))
                         @includeIf(data_get($theme, 'filterDatePicker.view'), [

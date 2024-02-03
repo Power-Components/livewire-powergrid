@@ -47,14 +47,11 @@
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">
                     @if ($filterClass->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
-                            :tableName="$tableName"
+                            :table-name="$tableName"
+                            :title="data_get($column, 'title')"
                             :filter="(array) data_get($column, 'filters')"
                             :theme="data_get($theme, 'filterMultiSelect')"
-                            :initialValues="data_get(
-                                data_get($column, 'filters.multi_select'),
-                                data_get($column, 'filters.field'),
-                                [],
-                            )"
+                            :initial-values="data_get($filters, 'multi_select.'.data_get($column, 'dataField'))"
                         />
                     @elseif ($filterClass->contains(['FilterSelect', 'FilterEnumSelect']))
                         @includeIf(data_get($theme, 'filterSelect.view'), [
