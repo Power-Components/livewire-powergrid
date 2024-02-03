@@ -308,8 +308,6 @@ trait Filter
                         $filter = $filter->execute();
                     }
 
-                    data_set($filter, 'dataField', data_get($column, 'dataField'));
-
                     data_set($column, 'filters', (array) $filter);
 
                     if (isset($this->filters[data_get($filter, 'key')])
