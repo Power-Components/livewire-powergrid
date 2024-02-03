@@ -14,7 +14,7 @@ class DateTimePicker extends BuilderBase
             return;
         }
 
-        if (!isset($values['start']) || isset($values['end'])) {
+        if (!isset($values['start']) && !isset($values['end'])) {
             return;
         }
 
@@ -38,7 +38,7 @@ class DateTimePicker extends BuilderBase
 
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
-        if (!isset($values['start']) || isset($values['end'])) {
+        if (!isset($values['start']) && !isset($values['end'])) {
             return $collection;
         }
 
