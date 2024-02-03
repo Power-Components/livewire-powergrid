@@ -50,9 +50,9 @@ trait Filter
                         }
 
                         unset($currentArray[$lastIndex]);
-                    } else {
-                        unset($this->filters[$key][$field]);
                     }
+
+                    unset($this->filters[$key][$field]);
 
                     $this->enabledFilters = array_filter(
                         $this->enabledFilters,
@@ -307,6 +307,8 @@ trait Filter
                     if (!is_array($filter) && method_exists($filter, 'execute')) {
                         $filter = $filter->execute();
                     }
+
+                    data_set($filter, 'dataField', data_get($column, 'dataField'));
 
                     data_set($column, 'filters', (array) $filter);
 
