@@ -46,8 +46,6 @@
             >
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">
                     @if ($filterClass->contains('FilterMultiSelect'))
-                        @ds($column)
-
                         <x-livewire-powergrid::inputs.select
                             :table-name="$tableName"
                             :title="data_get($column, 'title')"
