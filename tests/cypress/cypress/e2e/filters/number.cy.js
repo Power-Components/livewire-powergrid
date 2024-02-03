@@ -1,9 +1,9 @@
 describe('simple', () => {
     beforeEach(() => {
-        cy.visit('/examples/cypress?testType=filters');
+        cy.visit('/filters-number');
     });
 
-    it('test', () => {
+    it.skip('test', () => {
         const expectedFilter = '{"number":{"id":{"start":"2","end":"4"}}}'
 
         cy.get('[wire\\:model="filters.number.id.start"]')

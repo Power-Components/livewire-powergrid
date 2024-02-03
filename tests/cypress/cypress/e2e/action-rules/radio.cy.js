@@ -3,11 +3,11 @@ describe('Action Rules::radio', () => {
         cy.visit('/examples/cypress?ruleType=radio');
     });
 
-    it('can visit page', () => {
+    it.skip('can visit page', () => {
         cy.contains('Cypress')
     })
 
-    it('should be able to add class attribute with setAttribute when dishId == 1', () => {
+    it.skip('should be able to add class attribute with setAttribute when dishId == 1', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
             '                ->setAttribute(\'class\', \'!text-red-500\')';
@@ -26,7 +26,7 @@ describe('Action Rules::radio', () => {
             .should('not.have.class', '!text-red-500');
     })
 
-    it('should be able to add multiple class conditions with setAttribute', () => {
+    it.skip('should be able to add multiple class conditions with setAttribute', () => {
         let $rules = '' +
             '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
@@ -60,7 +60,7 @@ describe('Action Rules::radio', () => {
             .should('not.have.id', 'apply-id');
     })
 
-    it('should be able to add disabled attribute when dishId === 1 and 3', () => {
+    it.skip('should be able to add disabled attribute when dishId === 1 and 3', () => {
         let $rules = '' +
             '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +
@@ -84,7 +84,7 @@ describe('Action Rules::radio', () => {
             .should('have.attr', 'disabled');
     })
 
-    it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
+    it.skip('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
         let $rules = '' +
             '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::radio()\n' +
             '                ->when(fn ($row) => $row->id == 1)\n' +

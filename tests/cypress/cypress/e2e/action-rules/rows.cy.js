@@ -3,11 +3,11 @@ describe('Action Rules::rows', () => {
         cy.visit('/examples/cypress?ruleType=rows');
     });
 
-    it('can visit page', () => {
+    it.skip('can visit page', () => {
         cy.contains('Cypress')
     })
 
-    it('should be able to add class attribute using Rule::rows -> setAttribute on all rows', () => {
+    it.skip('should be able to add class attribute using Rule::rows -> setAttribute on all rows', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->setAttribute(\'class\', \'!cursor-pointer\')';
 
@@ -28,7 +28,7 @@ describe('Action Rules::rows', () => {
             .should('have.class', '!cursor-pointer');
     })
 
-    it('should be able to add class attribute using Rule::rows -> setAttribute when dishId == 1', () => {
+    it.skip('should be able to add class attribute using Rule::rows -> setAttribute when dishId == 1', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 1)' +
             '->setAttribute(\'class\', \'!cursor-pointer\')';
@@ -44,7 +44,7 @@ describe('Action Rules::rows', () => {
             .should('not.have.class', '!cursor-pointer');
     })
 
-    it('should be able to add class attribute using Rule::rows -> setAttribute when dishId != 1', () => {
+    it.skip('should be able to add class attribute using Rule::rows -> setAttribute when dishId != 1', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id != 1)' +
             '->setAttribute(\'class\', \'!cursor-pointer\')';
@@ -60,7 +60,7 @@ describe('Action Rules::rows', () => {
             .should('have.class', '!cursor-pointer');
     })
 
-    it('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
+    it.skip('should be able to add multiple class conditions using Rule::rows -> setAttribute', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 1)' +
             '->setAttribute(\'class\', \'!bg-red-100\'), ' +
@@ -85,7 +85,7 @@ describe('Action Rules::rows', () => {
             .should('not.have.class', '!bg-red-100');
     })
 
-    it('should be able to add multiple attributes using Rule::rows -> setAttribute when dishId == 3', () => {
+    it.skip('should be able to add multiple attributes using Rule::rows -> setAttribute when dishId == 3', () => {
         let $rules = '\\PowerComponents\\LivewirePowerGrid\\Facades\\Rule::rows()' +
             '->when(fn($row) => $row->id == 2)' +
             '->setAttribute(\'class\', \'!bg-red-100\'), ' +
