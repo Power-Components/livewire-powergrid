@@ -3,25 +3,33 @@ describe('simple', () => {
         cy.visit('/filters-number');
     });
 
-    it.skip('test', () => {
-        const expectedFilter = '{"number":{"id":{"start":"2","end":"4"}}}'
+    // it('filter between 20 - 25', () => {
+    //     cy.get('[wire\\:model="filters.number.price.start"]')
+    //         .type('20').should('have.value', '20');
+    //
+    //     cy.get('[wire\\:model="filters.number.price.end"]')
+    //         .type('25').should('have.value', '25');
+    //
+    //     cy.get('.power-grid-table tbody tr').should('not.contain.text', '26');
+    // });
+    //
+    // it('filter between 15 - 30', () => {
+    //     cy.get('[wire\\:model="filters.number.price.start"]')
+    //         .type('15').should('have.value', '15');
+    //
+    //     cy.get('[wire\\:model="filters.number.price.end"]')
+    //         .type('30').should('have.value', '30');
+    //
+    //     cy.get('.power-grid-table tbody tr').should('not.contain.text', '31');
+    // });
+    //
+    // it('filter between 5 - 18', () => {
+    //     cy.get('[wire\\:model="filters.number.price.start"]').clear().type('5').should('have.value', '5');
+    //
+    //     cy.get('[wire\\:model="filters.number.price.end"]')
+    //         .type('18').should('have.value', '18');
+    //
+    //     cy.get('.power-grid-table tbody tr').should('not.contain.text', '19');
+    // });
 
-        cy.get('[wire\\:model="filters.number.id.start"]')
-            .type('2').should('have.value', '2');
-
-        cy.get('[wire\\:model="filters.number.id.end"]')
-            .type('4').should('have.value', '4');
-
-        cy.get('[data-cy="filters-log"]').should('contain.text', expectedFilter);
-
-        cy.get('.power-grid-table tbody tr').then(($el) => {
-            $el.each((index, row) => {
-
-                const firstTdText = Cypress.$(row).find('td').eq(0).text();
-                expect(firstTdText).not.to.include('1');
-                expect(firstTdText).not.to.include('5');
-                expect(firstTdText).not.to.include('6');
-            });
-        })
-    });
 })
