@@ -51,8 +51,7 @@ jobs:
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-cypress-base.git tests/cypress/app
-          cd tests/cypress &&
-          chmod +x run.sh
+          chmod +x ./tests/cypress/run.sh
           ./tests/cypress/run.sh
           cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
