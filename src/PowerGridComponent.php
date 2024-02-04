@@ -227,7 +227,6 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        /** @phpstan-var view-string $view */
         $theme = $this->getTheme();
 
         return view($theme['layout']['table'], [
