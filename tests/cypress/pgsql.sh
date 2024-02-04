@@ -12,9 +12,9 @@ cat >> .env <<EOF
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5433
-DB_DATABASE=postgres
-DB_USERNAME=password
-DB_PASSWORD=powergridtest
+DB_DATABASE=powergridtest
+DB_USERNAME=postgres
+DB_PASSWORD=password
 EOF
 
 # | ------------------------- |
