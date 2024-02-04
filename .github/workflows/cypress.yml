@@ -68,11 +68,15 @@ jobs:
         if: matrix.php == '8.2'
         run: composer require openspout/openspout 4.20
 
-      - name: MySQL
+      - name: Build App
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-cypress-base.git tests/cypress/app
           chmod +x ./tests/cypress/mysql.sh
+          chmod +x ./tests/cypress/pgsql.sh
+
+      - name: MySQL
+        run: |
           ./tests/cypress/mysql.sh
           cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
@@ -80,10 +84,7 @@ jobs:
 
       - name: PostGreSQL
         run: |
-          npm install
-          git clone https://github.com/Power-Components/powergrid-cypress-base.git tests/cypress/app
-          chmod +x ./tests/cypress/mysql.sh
-          ./tests/cypress/mysql.sh
+          ./tests/cypress/pgsql.sh
           cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
