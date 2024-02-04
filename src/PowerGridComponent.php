@@ -202,15 +202,16 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function getTheme(string $key = null): array
+    private function getTheme(): array
     {
-        $store = store($this)->get('powerGridTheme');
+        $class = $this->template() ?? powerGridTheme();
 
-        if (!$key) {
-            return convertObjectsToArray((array) $store);
-        }
+        return Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
+            /** @var ThemeBase $themeBase */
+            $themeBase = PowerGrid::theme($class);
 
-        return convertObjectsToArray((array) data_get($store, $key));
+            return convertObjectsToArray((array) $themeBase->apply());
+        });
     }
 
     /**
@@ -226,10 +227,9 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        /** @phpstan-var view-string $view */
-        $view = $this->getTheme('layout')['table'];
+        $theme = $this->getTheme();
 
-        return view($view, [
+        return view($theme['layout']['table'], [
             'data'  => $data,
             'theme' => $this->getTheme(),
             'table' => 'livewire-powergrid::components.table',
@@ -251,13 +251,6 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        /** @var ThemeBase $themeBase */
-        $themeBase = PowerGrid::theme($this->template() ?? powerGridTheme());
-
-        if (!store($this)->has('powerGridTheme')) {
-            store($this)->set('powerGridTheme', $themeBase->apply());
-        }
-
         $this->columns = collect($this->columns)->map(function ($column) {
             return (object) $column;
         })->toArray();
