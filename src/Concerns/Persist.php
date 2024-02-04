@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Illuminate\Support\Facades\Cookie;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 /** @codeCoverageIgnore */
@@ -9,7 +10,17 @@ trait Persist
 {
     public array $persist = [];
 
-    private function persistState(string $tableItem): void
+    /**
+     * $tableItems: 'filters', 'columns', 'sorting'
+     */
+    public function persist(array $tableItems): PowerGridComponent
+    {
+        $this->persist = $tableItems;
+
+        return $this;
+    }
+
+    protected function persistState(string $tableItem): void
     {
         $state = [];
 
@@ -25,13 +36,18 @@ trait Persist
             $state['enabledFilters'] = $this->enabledFilters;
         }
 
+        if (in_array('sorting', $this->persist) || $tableItem === 'sorting') {
+            $state['sortField']     = $this->sortField;
+            $state['sortDirection'] = $this->sortDirection;
+            $state['sortArray']     = $this->sortArray;
+            $state['multiSort']     = $this->multiSort;
+        }
+
         if (empty($this->persist)) {
             return;
         }
 
-        $url  = parse_url(strval(filter_input(INPUT_SERVER, 'HTTP_REFERER')));
-        $path = $url && array_key_exists('path', $url) ? $url['path'] : '/';
-        setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), $path);
+        Cookie::queue('pg:' . $this->tableName, strval(json_encode($state)), now()->addYears(5)->unix());
     }
 
     private function restoreState(): void
@@ -40,7 +56,8 @@ trait Persist
             return;
         }
 
-        $cookie = filter_input(INPUT_COOKIE, 'pg:' . $this->tableName);
+        /** @var null|string $cookie */
+        $cookie = Cookie::get('pg:' . $this->tableName);
 
         if (is_null($cookie)) {
             return;
@@ -62,15 +79,12 @@ trait Persist
             $this->filters        = $state['filters'];
             $this->enabledFilters = $state['enabledFilters'];
         }
-    }
 
-    /**
-     * $tableItems: 'filters', 'columns'
-     */
-    public function persist(array $tableItems): PowerGridComponent
-    {
-        $this->persist = $tableItems;
-
-        return $this;
+        if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {
+            $this->sortField     = $state['sortField'];
+            $this->sortDirection = $state['sortDirection'];
+            $this->sortArray     = $state['sortArray'];
+            $this->multiSort     = $state['multiSort'];
+        }
     }
 }
