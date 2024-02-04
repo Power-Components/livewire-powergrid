@@ -53,21 +53,6 @@ jobs:
         id: composer-cache
         run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: $(composer config cache-files-dir)
-          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
-
-      - name: Install Composer dependencies
-        run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer install
-
-      - name: Install openspout/openspout 4.20
-        if: matrix.php == '8.2'
-        run: composer require openspout/openspout 4.20
-
       - name: Build App
         run: |
           npm install
@@ -78,13 +63,13 @@ jobs:
       - name: MySQL
         run: |
           ./tests/cypress/mysql.sh
-          cd ./tests/cypress/app && php artisan serve & sleep 5 &
+          cd ./tests/cypress/app && php artisan optimize:clear & php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
 
       - name: PostGreSQL
         run: |
           ./tests/cypress/pgsql.sh
-          cd ./tests/cypress/app && php artisan serve & sleep 5 &
+          cd ./tests/cypress/app && php artisan optimize:clear & php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
