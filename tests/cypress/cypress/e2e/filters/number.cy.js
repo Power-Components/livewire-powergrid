@@ -22,12 +22,10 @@ describe('filters number', () => {
         const endInput = '[wire\\:model="filters.number.calories.end"]';
 
         it('filter calories start -> min 400 - ' + route, () => {
-            cy.visit(route).wait(500);
+            cy.visit(route);
 
             cy.get(startInput).type('400');
             cy.get(endInput).clear();
-
-            cy.wait(800) //debounce
 
             cy.get(tableRows).should('not.contains.text', 'Spicy Tofu Stir Fry')
             cy.get(tableRows).should('not.contains.text', 'Quinoa Salad with Avocado')
@@ -38,12 +36,10 @@ describe('filters number', () => {
         });
 
         it('filter calories end -> max 400 - ' + route, () => {
-            cy.visit(route).wait(500);
+            cy.visit(route);
 
             cy.get(startInput).clear();
             cy.get(endInput).type('400');
-
-            cy.wait(800) //debounce
 
             cy.get(tableRows).should('contains.text', 'Spicy Tofu Stir Fry')
             cy.get(tableRows).should('contains.text', 'Quinoa Salad with Avocado')
@@ -54,12 +50,10 @@ describe('filters number', () => {
         });
 
         it('filter calories calories between 200 - 400 - ' + route, () => {
-            cy.visit(route).wait(500);
+            cy.visit(route);
 
             cy.get(startInput).type('200');
             cy.get(endInput).type('400');
-
-            cy.wait(800) //debounce
 
             cy.get(tableRows).should('contains.text', 'Quinoa Salad with Avocado')
             cy.get(tableRows).should('contains.text', 'Mango Chicken Curry')

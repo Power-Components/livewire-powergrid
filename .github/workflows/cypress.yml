@@ -17,6 +17,16 @@ jobs:
           - 3307:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+      postgres:
+        image: postgres:9.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: powergridtest
+        ports:
+          - 5433:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     strategy:
       matrix:
         php: [ 8.2 ]
@@ -58,12 +68,22 @@ jobs:
         if: matrix.php == '8.2'
         run: composer require openspout/openspout 4.20
 
-      - name: Cypress
+      - name: MySQL
         run: |
           npm install
           git clone https://github.com/Power-Components/powergrid-cypress-base.git tests/cypress/app
-          chmod +x ./tests/cypress/run.sh
-          ./tests/cypress/run.sh
+          chmod +x ./tests/cypress/mysql.sh
+          ./tests/cypress/mysql.sh
+          cd ./tests/cypress/app && php artisan serve & sleep 5 &
+          cd ./tests/cypress && npx cypress run
+        shell: bash
+
+      - name: PostGreSQL
+        run: |
+          npm install
+          git clone https://github.com/Power-Components/powergrid-cypress-base.git tests/cypress/app
+          chmod +x ./tests/cypress/mysql.sh
+          ./tests/cypress/mysql.sh
           cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
