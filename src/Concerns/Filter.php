@@ -39,17 +39,7 @@ trait Filter
                         $explodeField = explode('.', $field);
 
                         $currentArray = &$this->filters[$key];
-                        $lastIndex    = array_pop($explodeField);
-
-                        foreach ($explodeField as $index) {
-                            if (isset($currentArray[$index]) && is_array($currentArray[$index])) {
-                                $currentArray = &$currentArray[$index];
-                            } else {
-                                return;
-                            }
-                        }
-
-                        unset($currentArray[$lastIndex]);
+                        unset($currentArray[$explodeField[0]]);
                     }
 
                     unset($this->filters[$key][$field]);
