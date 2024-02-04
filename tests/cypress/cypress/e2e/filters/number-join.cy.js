@@ -1,7 +1,7 @@
-describe('filters number', () => {
+describe('filters number - join', () => {
     [
-        '/filters-number?powerGridTheme=tailwind',
-        '/filters-number?powerGridTheme=bootstrap'
+        '/filters-number-join?powerGridTheme=tailwind',
+        '/filters-number-join?powerGridTheme=bootstrap'
     ].forEach((route) => {
 
         /**
@@ -18,8 +18,8 @@ describe('filters number', () => {
          */
 
         const tableRows = '.power-grid-table tbody tr';
-        const startInput = '[wire\\:model="filters.number.calories.start"]';
-        const endInput = '[wire\\:model="filters.number.calories.end"]';
+        const startInput = '[wire\\:model="filters.number.datasources.calories.start"]';
+        const endInput = '[wire\\:model="filters.number.datasources.calories.end"]';
 
         it('filter calories start -> min 400', () => {
             cy.visit(route).wait(500);
@@ -39,7 +39,6 @@ describe('filters number', () => {
 
         it('filter calories end -> max 400', () => {
             cy.visit(route).wait(500);
-
             cy.get(startInput).clear();
             cy.get(endInput).type('400');
 
@@ -68,4 +67,5 @@ describe('filters number', () => {
             cy.get(tableRows).should('not.contains.text', 'Caprese Salad')
         });
     })
+
 })
