@@ -63,13 +63,13 @@ jobs:
       - name: MySQL
         run: |
           ./tests/cypress/mysql.sh
-          cd ./tests/cypress/app && php artisan optimize:clear & php artisan serve & sleep 5 &
+          cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
 
       - name: PostGreSQL
         run: |
           ./tests/cypress/pgsql.sh
-          cd ./tests/cypress/app && php artisan optimize:clear & php artisan serve & sleep 5 &
+          cd ./tests/cypress/app && php artisan serve & sleep 5 &
           cd ./tests/cypress && npx cypress run
         shell: bash
