@@ -21,7 +21,7 @@ describe('filters number', () => {
         const startInput = '[wire\\:model="filters.number.calories.start"]';
         const endInput = '[wire\\:model="filters.number.calories.end"]';
 
-        it('filter calories start -> min 400', () => {
+        it('filter calories start -> min 400 - ' + route, () => {
             cy.visit(route).wait(500);
 
             cy.get(startInput).type('400');
@@ -37,7 +37,7 @@ describe('filters number', () => {
             cy.get(tableRows).should('contains.text', 'Caprese Salad')
         });
 
-        it('filter calories end -> max 400', () => {
+        it('filter calories end -> max 400 - ' + route, () => {
             cy.visit(route).wait(500);
 
             cy.get(startInput).clear();
@@ -53,7 +53,7 @@ describe('filters number', () => {
             cy.get(tableRows).should('not.contains.text', 'Caprese Salad')
         });
 
-        it('filter calories calories between 200 - 400', () => {
+        it('filter calories calories between 200 - 400 - ' + route, () => {
             cy.visit(route).wait(500);
 
             cy.get(startInput).type('200');
