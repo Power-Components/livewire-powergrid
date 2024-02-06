@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
+namespace PowerComponents\LivewirePowerGrid\Actions;
 
 use Illuminate\Support\Facades\File;
 
