@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\{info,select};
 
-use PowerComponents\LivewirePowerGrid\Actions\DependenciesCheck;
+use PowerComponents\LivewirePowerGrid\Actions\{CheckDependencyFlatPick, CheckDependencyOpenspout};
 
 class CheckDependenciesCommand extends Command
 {
@@ -22,8 +22,8 @@ class CheckDependenciesCommand extends Command
     public function handle(): int
     {
         $this->check([
-            DependenciesCheck::flatpickr(),
-            DependenciesCheck::openspout(),
+            CheckDependencyFlatPick::handle(),
+            CheckDependencyOpenspout::handle(),
         ]);
 
         return self::SUCCESS;
