@@ -167,6 +167,7 @@ class PowerGridComponent extends Component
 
             $queries = $this->processDataSourceInstance?->queryLog() ?? [];
 
+            /** @var float $queriesTime */
             $queriesTime = collect($queries)->sum('time');
 
             app(Dispatcher::class)->dispatch(
