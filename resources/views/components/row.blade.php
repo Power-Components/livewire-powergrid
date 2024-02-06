@@ -56,9 +56,9 @@
             @if (filled(data_get($row, 'actions')) && $column->isAction)
                 @foreach (data_get($row, 'actions') as $key => $action)
                     @if(filled($action))
-                        <div wire:key="action-{{ data_get($row, $primaryKey) }}-{{ $key }}">
+                        <span wire:key="action-{{ data_get($row, $primaryKey) }}-{{ $key }}">
                             {!! $action !!}
-                        </div>
+                        </span>
                     @endif
                 @endforeach
             @endif
