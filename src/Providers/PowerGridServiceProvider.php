@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\Commands\CheckDependenciesCommand;
+use PowerComponents\LivewirePowerGrid\Commands\Create\{AskComponentNameCommand, AskDatabaseTableNameCommand, AskModelNameCommand, ChooseDatasourceCommand};
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
@@ -23,6 +25,11 @@ class PowerGridServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([PublishCommand::class]);
             $this->commands([UpdateCommand::class]);
+            $this->commands([ChooseDatasourceCommand::class]);
+            $this->commands([AskComponentNameCommand::class]);
+            $this->commands([AskDatabaseTableNameCommand::class]);
+            $this->commands([CheckDependenciesCommand::class]);
+            $this->commands([AskModelNameCommand::class]);
             $this->commands([CreateCommand::class]);
         }
 

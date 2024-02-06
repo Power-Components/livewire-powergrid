@@ -19,8 +19,6 @@ class UpdateCommand extends Command
     public function handle(): int
     {
         if (config('livewire-powergrid.check_version') === false) {
-            warning('livewire-powergrid.check_version is false');
-
             return self::SUCCESS;
         }
 
