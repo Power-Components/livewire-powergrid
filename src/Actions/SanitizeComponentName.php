@@ -1,0 +1,27 @@
+<?php
+
+namespace PowerComponents\LivewirePowerGrid\Actions;
+
+class SanitizeComponentName
+{
+    public static function handle($componentName): string
+    {
+        return str($componentName)
+            //Remove anything but alphanumeric, dot, bkack and slashes
+            ->replaceMatches('#[^A-Za-z0-9 .//\\\\]#', '')
+            //Convert multiple spaces into forward slashes
+            ->replaceMatches('/\s+/', '//')
+            //multiple back slashes into forward slashes
+            ->replaceMatches('/\\\{2,}/', "\\")
+            //Multiple forward slashes
+            ->replaceMatches('/\/{2,}/', "\\")
+            //Multile dots
+            ->replaceMatches('/\.{2,}/', ".")
+            //Left over dots into forward slashes
+            ->replace('.', '\\')
+            //Left over backslahes into forward slashes
+            ->replace('/', '\\')
+            ->rtrim('\\')
+            ->toString();
+    }
+}

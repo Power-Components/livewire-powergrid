@@ -6,9 +6,9 @@ use Illuminate\Console\Command;
 
 use Illuminate\Support\Facades\File;
 
-use function Laravel\Prompts\{confirm, text};
+use PowerComponents\LivewirePowerGrid\Actions\SanitizeComponentName;
 
-use PowerComponents\LivewirePowerGrid\Exceptions\InvalidTableNameException;
+use function Laravel\Prompts\{confirm, text};
 
 class AskComponentNameCommand extends Command
 {
@@ -23,40 +23,25 @@ class AskComponentNameCommand extends Command
 
     protected string $componentName = '';
 
-    /**
-     *
-     * @throws InvalidTableNameException
-     */
     public function handle(): string
     {
         while ($this->componentName === '') {
-            $this->componentName = text(
-                label: 'Enter a name for your new PowerGrid Component:',
-                placeholder: 'UserTable',
-                default: 'UserTable',
-                required: true
+            $this->componentName = SanitizeComponentName::handle(
+                text(
+                    label: 'Enter a name for your new PowerGrid Component:',
+                    placeholder: 'UserTable',
+                    default: 'UserTable',
+                    required: true
+                )
             );
 
-            $this->validate();
+            $this->checkIfComponentAlreadyExists();
         }
 
         return $this->componentName;
     }
 
-    private function validate(): void
-    {
-        $this->componentName = str_replace(['.', '\\'], '/', (string) $this->componentName);
-
-        preg_match('/(.*)(\/|\.|\\\\)(.*)/', $this->componentName, $matches);
-
-        if (!is_array($matches)) {
-            InvalidTableNameException::throw("Could not parse the table name [$this->componentName]");
-        }
-
-        $this->checkIfComponentExists();
-    }
-
-    private function checkIfComponentExists(): void
+    private function checkIfComponentAlreadyExists(): void
     {
         if (File::exists(powergrid_components_path($this->componentName . '.php'))) {
             $confirmation = (bool) confirm("Component [{$this->componentName}] already exists. Overwrite it?");
