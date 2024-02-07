@@ -30,13 +30,13 @@ class CheckDependenciesCommand extends Command
     }
 
     /**
-     * @param array<int, DependenciesCheck> $dependencies
+     * @param array<int, string> $dependencies
      */
     private function check(array $dependencies): void
     {
         foreach ($dependencies as $dependency) {
             if (!empty($dependency)) {
-                info((string) $dependency);
+                info($dependency);
                 select('', ['press \<enter\> to continue...'], );
             }
         }
