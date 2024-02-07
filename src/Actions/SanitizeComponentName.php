@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Actions;
 
 class SanitizeComponentName
 {
-    public static function handle($componentName): string
+    public static function handle(string $componentName): string
     {
         return str($componentName)
             //Remove anything but alphanumeric, dot, bkack and slashes

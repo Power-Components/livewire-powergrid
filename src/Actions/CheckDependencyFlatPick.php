@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class CheckDependencyFlatPick
 {
-    public static function handle(): ?string
+    public static function handle(): string
     {
         return self::checkIfFileContains(
             [
@@ -38,7 +38,7 @@ EOD;
     /**
      * @param array<int, string> $filesToCheck
      */
-    private static function checkIfFileContains(array $filesToCheck, string $needle): ?string
+    private static function checkIfFileContains(array $filesToCheck, string $needle): string
     {
         foreach ($filesToCheck as $file) {
             if (File::exists($file) && !Str::contains(File::get($file), $needle)) {
@@ -46,6 +46,6 @@ EOD;
             }
         }
 
-        return null;
+        return '';
     }
 }

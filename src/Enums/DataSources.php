@@ -2,8 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Enums;
 
-use Illuminate\Support\Collection;
-
 enum DataSources: string
 {
     case ELOQUENT_BUILDER = 'Eloquent Builder';
@@ -12,11 +10,10 @@ enum DataSources: string
 
     case COLLECTION = 'Collection';
 
-    /**
-     * @return Collection<string, string>
-     */
-    public static function collect(): Collection
+    public static function options(): array
     {
-        return collect(self::cases())->mapWithKeys(fn ($case): array => [$case->name => $case->value]);
+        return collect(self::cases())
+            ->mapWithKeys(fn ($case): array => [strval($case->name) => strval($case->value)])
+            ->toArray();
     }
 }
