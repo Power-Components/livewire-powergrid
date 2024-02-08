@@ -25,12 +25,13 @@ describe('filters number', () => {
 
             cy.get(select).select(0);
 
-            cy.get(tableRows).should('contains.text', 'Spicy Tofu Stir Fry')
-            cy.get(tableRows).should('contains.text', 'Quinoa Salad with Avocado')
-            cy.get(tableRows).should('contains.text', 'Mango Chicken Curry')
+            cy.get(tableRows)
+                .should('contains.text', 'Spicy Tofu Stir Fry')
+                .should('contains.text', 'Quinoa Salad with Avocado')
+                .should('contains.text', 'Mango Chicken Curry')
 
-            cy.get(tableRows).should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
-            cy.get(tableRows).should('contains.text', 'Caprese Salad')
+                .should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('contains.text', 'Caprese Salad')
         });
 
         it('filter category_id "1 - Meat" - ' + route, () => {
@@ -38,17 +39,18 @@ describe('filters number', () => {
 
             cy.get(select).select(1);
 
-            cy.get(tableRows).should('contains.text', 'Spicy Tofu Stir Fry')
-            cy.get(tableRows).should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
-            cy.get(tableRows).should('contains.text', 'Blueberry Almond Smoothie Bowl')
-            cy.get(tableRows).should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
-            cy.get(tableRows).should('contains.text', 'Caprese Salad')
+            cy.get(tableRows)
+                .should('contains.text', 'Spicy Tofu Stir Fry')
+                .should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('contains.text', 'Blueberry Almond Smoothie Bowl')
+                .should('contains.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('contains.text', 'Caprese Salad')
 
-            cy.get(tableRows).should('not.contains.text', 'Quinoa Salad with Avocado')
-            cy.get(tableRows).should('not.contains.text', 'Mango Chicken Curry')
-            cy.get(tableRows).should('not.contains.text', 'Pasta Primavera')
-            cy.get(tableRows).should('not.contains.text', 'Grilled Vegetable Wrap')
-            cy.get(tableRows).should('not.contains.text', 'Chocolate Avocado Mousse')
+                .should('not.contains.text', 'Quinoa Salad with Avocado')
+                .should('not.contains.text', 'Mango Chicken Curry')
+                .should('not.contains.text', 'Pasta Primavera')
+                .should('not.contains.text', 'Grilled Vegetable Wrap')
+                .should('not.contains.text', 'Chocolate Avocado Mousse')
         });
 
 
@@ -57,17 +59,18 @@ describe('filters number', () => {
 
             cy.get(select).select(2);
 
-            cy.get(tableRows).should('contain.text', 'Quinoa Salad with Avocado');
-            cy.get(tableRows).should('contain.text', 'Vegetarian Buddha Bowl');
-            cy.get(tableRows).should('contain.text', 'Grilled Vegetable Wrap');
+            cy.get(tableRows)
+                .should('contain.text', 'Quinoa Salad with Avocado')
+                .should('contain.text', 'Vegetarian Buddha Bowl')
+                .should('contain.text', 'Grilled Vegetable Wrap')
 
-            cy.get(tableRows).should('not.contain.text', 'Spicy Tofu Stir Fry');
-            cy.get(tableRows).should('not.contain.text', 'Mango Chicken Curry');
-            cy.get(tableRows).should('not.contain.text', 'Blueberry Almond Smoothie Bowl');
-            cy.get(tableRows).should('not.contain.text', 'Pasta Primavera');
-            cy.get(tableRows).should('not.contain.text', 'Grilled Salmon with Lemon Dill Sauce');
-            cy.get(tableRows).should('not.contain.text', 'Chocolate Avocado Mousse');
-            cy.get(tableRows).should('not.contain.text', 'Caprese Salad');
+                .should('not.contain.text', 'Spicy Tofu Stir Fry')
+                .should('not.contain.text', 'Mango Chicken Curry')
+                .should('not.contain.text', 'Blueberry Almond Smoothie Bowl')
+                .should('not.contain.text', 'Pasta Primavera')
+                .should('not.contain.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('not.contain.text', 'Chocolate Avocado Mousse')
+                .should('not.contain.text', 'Caprese Salad');
         });
 
         it('filter category_id "3 - Garnish" - ' + route, () => {
@@ -75,17 +78,18 @@ describe('filters number', () => {
 
             cy.get(select).select(3);
 
-            cy.get(tableRows).should('contain.text', 'Mango Chicken Curry');
-            cy.get(tableRows).should('contain.text', 'Pasta Primavera');
-            cy.get(tableRows).should('contain.text', 'Chocolate Avocado Mousse');
+            cy.get(tableRows)
+                .should('contain.text', 'Mango Chicken Curry')
+                .should('contain.text', 'Pasta Primavera')
+                .should('contain.text', 'Chocolate Avocado Mousse')
 
-            cy.get(tableRows).should('not.contain.text', 'Spicy Tofu Stir Fry');
-            cy.get(tableRows).should('not.contain.text', 'Quinoa Salad with Avocado');
-            cy.get(tableRows).should('not.contain.text', 'Grilled Salmon with Lemon Dill Sauce');
-            cy.get(tableRows).should('not.contain.text', 'Blueberry Almond Smoothie Bowl');
-            cy.get(tableRows).should('not.contain.text', 'Vegetarian Buddha Bowl');
-            cy.get(tableRows).should('not.contain.text', 'Grilled Vegetable Wrap');
-            cy.get(tableRows).should('not.contain.text', 'Caprese Salad');
+                .should('not.contain.text', 'Spicy Tofu Stir Fry')
+                .should('not.contain.text', 'Quinoa Salad with Avocado')
+                .should('not.contain.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('not.contain.text', 'Blueberry Almond Smoothie Bowl')
+                .should('not.contain.text', 'Vegetarian Buddha Bowl')
+                .should('not.contain.text', 'Grilled Vegetable Wrap')
+                .should('not.contain.text', 'Caprese Salad');
         });
     })
 })
