@@ -1,4 +1,4 @@
-describe('simple', () => {
+describe('filter input text', () => {
     beforeEach(() => {
         cy.visit('/filters-input-text');
     });
@@ -43,10 +43,12 @@ describe('simple', () => {
         let filterValue = 'John';
         applyFilter('contains_not', filterValue);
 
-        cy.get(tableRows).should('contain.text', 'Luan');
-        cy.get(tableRows).should('contain.text', 'Daniel');
-        cy.get(tableRows).should('contain.text', 'Claudio');
-        cy.get(tableRows).should('contain.text', 'Vitor');
+        cy.get(tableRows)
+            .should('contain.text', 'Luan')
+            .should('contain.text', 'Daniel')
+            .should('contain.text', 'Claudio')
+            .should('contain.text', 'Vitor');
+
         cy.url().should('include', `name=${filterValue}`);
 
         clearFilter()
@@ -56,11 +58,12 @@ describe('simple', () => {
         filterValue = 'Dan';
         applyFilter('contains_not', filterValue);
 
-        cy.get(tableRows).should('not.contains.text', 'Dan')
-        cy.get(tableRows).should('contains.text', 'Luan')
-        cy.get(tableRows).should('contains.text', 'Claudio')
-        cy.get(tableRows).should('contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('contains.text', 'Luan')
+            .should('contains.text', 'Claudio')
+            .should('contains.text', 'Tio Jobs')
+            .should('contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
@@ -71,22 +74,24 @@ describe('simple', () => {
         filterValue = 'Luan';
         applyFilter('contains_not', filterValue);
 
-        cy.get(tableRows).should('contains.text', 'Dan')
-        cy.get(tableRows).should('not.contains.text', 'Luan')
-        cy.get(tableRows).should('contains.text', 'Claudio')
-        cy.get(tableRows).should('contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('contains.text', 'Dan')
+            .should('not.contains.text', 'Luan')
+            .should('contains.text', 'Claudio')
+            .should('contains.text', 'Tio Jobs')
+            .should('contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
         filterValue = 'an';
         applyFilter('contains_not', filterValue);
 
-        cy.get(tableRows).should('not.contains.text', 'Dan')
-        cy.get(tableRows).should('not.contains.text', 'Luan')
-        cy.get(tableRows).should('contains.text', 'Claudio')
-        cy.get(tableRows).should('contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('not.contains.text', 'Luan')
+            .should('contains.text', 'Claudio')
+            .should('contains.text', 'Tio Jobs')
+            .should('contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
     });
@@ -95,11 +100,12 @@ describe('simple', () => {
         let filterValue = 'Lu';
         applyFilter('starts_with', filterValue);
 
-        cy.get(tableRows).should('not.contains.text', 'Dan')
-        cy.get(tableRows).should('contains.text', 'Luan')
-        cy.get(tableRows).should('not.contains.text', 'Claudio')
-        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('not.contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('contains.text', 'Luan')
+            .should('not.contains.text', 'Claudio')
+            .should('not.contains.text', 'Tio Jobs')
+            .should('not.contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
@@ -108,11 +114,12 @@ describe('simple', () => {
         filterValue = 'Cl';
         applyFilter('starts_with', filterValue);
 
-        cy.get(tableRows).should('not.contains.text', 'Dan')
-        cy.get(tableRows).should('not.contains.text', 'Luan')
-        cy.get(tableRows).should('contains.text', 'Claudio')
-        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('not.contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('not.contains.text', 'Luan')
+            .should('contains.text', 'Claudio')
+            .should('not.contains.text', 'Tio Jobs')
+            .should('not.contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
@@ -123,24 +130,26 @@ describe('simple', () => {
         let filterValue = 'obs';
         applyFilter('ends_with', filterValue);
 
-        cy.get(tableRows).should('not.contains.text', 'Dan')
-        cy.get(tableRows).should('not.contains.text', 'Luan')
-        cy.get(tableRows).should('not.contains.text', 'Claudio')
-        cy.get(tableRows).should('contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('not.contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('not.contains.text', 'Luan')
+            .should('not.contains.text', 'Claudio')
+            .should('contains.text', 'Tio Jobs')
+            .should('not.contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
         clearFilter()
 
         filterValue = 'an';
-        applyFilter('starts_with', filterValue);
+        applyFilter('ends_with', filterValue);
 
-        cy.get(tableRows).should('contains.text', 'Dan')
-        cy.get(tableRows).should('contains.text', 'Luan')
-        cy.get(tableRows).should('not.contains.text', 'Claudio')
-        cy.get(tableRows).should('not.contains.text', 'Tio Jobs')
-        cy.get(tableRows).should('not.contains.text', 'Vitor')
+        cy.get(tableRows)
+            .should('not.contains.text', 'Dan')
+            .should('contains.text', 'Luan')
+            .should('not.contains.text', 'Claudio')
+            .should('not.contains.text', 'Tio Jobs')
+            .should('not.contains.text', 'Vitor')
 
         cy.url().should('include', `name=${filterValue}`);
 
