@@ -16,7 +16,7 @@ class MeasureRetrieveData
         public float $retrieveData,
         public float $queriesTime = 0,
         public bool $cached = false,
-        public array $queries = []
+        public array $queries = [],
     ) {
     }
 }

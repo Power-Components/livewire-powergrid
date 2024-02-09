@@ -175,7 +175,7 @@ class PowerGridComponent extends Component
                     $this->tableName,
                     retrieveData: $retrieveData,
                     queriesTime: $queriesTime,
-                    queries: $queries
+                    queries: $queries,
                 )
             );
 
