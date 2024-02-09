@@ -4,95 +4,131 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 
+use function Laravel\Prompts\{error, info, note};
+
+use PowerComponents\LivewirePowerGrid\Actions\{AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, ConfirmGetFromFillable};
+
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 
-use PowerComponents\LivewirePowerGrid\Support\TempComponent;
+use PowerComponents\LivewirePowerGrid\Enums\Datasource;
 
-use function Laravel\Prompts\{confirm, error, info};
+use PowerComponents\LivewirePowerGrid\Support\PowerGridComponentMaker;
 
 class CreateCommand extends Command
 {
     use RenderAscii;
 
     /** @var string */
-    // protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
-    protected $signature = 'ovo';
+    protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
 
     /** @var string */
     protected $description = 'Make a new PowerGrid table component.';
 
-    protected ?TempComponent $component;
+    private ?PowerGridComponentMaker $component;
 
     public function handle(): int
     {
         $this->renderPowergridAscii();
 
-        $this->call('powergrid:update');
-
-        $this->call('powergrid:check-dependencies'); //enable me
-
         try {
-            $this->create();
+            $this->runChecks()
+            ->step1()
+            ->step2()
+            ->step3()
+            ->step4()
+            ->step5()
+            ->step6()
+            ->save()
+            ->feedback();
+
+            return self::SUCCESS;
         } catch (\Exception $e) {
             error($e->getMessage());
 
             return self::FAILURE;
         }
-
-        return self::SUCCESS;
     }
 
-    protected function create(): void
+    private function runChecks(): self
     {
-        $this->component = TempComponent::make($this->call('powergrid:ask-component-name'));
+        $this->call('powergrid:update');
 
-        $this->component->setDatasource($this->call('powergrid:choose-datasource'));
+        $this->call('powergrid:check-dependencies'); //@TODO: enable me
 
-        $this->component->loadStub($this->option('template'));
-
-        $this->component->setDatabaseTablename($this->call('powergrid:ask-database-table-name')); // not needed here
-
-        list($model, $modelFqn) = $this->call('powergrid:ask-model-name');
-
-        $this->component->setModelFqn($model, $modelFqn);
-
-        $this->COMO_VAI_CHAMAR_ISSO();
+        return $this;
     }
 
-    public function fillable()
+    private function step1(): self
     {
-        $this->useFillable = confirm('Create columns based on Model\'s fillable property?');
+        $this->component = PowerGridComponentMaker::make(AskComponentName::handle());
 
-        if ($this->useFillable) {
-            if (strtolower($this->datasourceOption) === strtolower(self::DATASOURCE_QUERY_BUILDER)) {
-                $this->askDataBaseTableName();
-
-                $this->stub = FillableTable::queryBuilder($this->dataBaseTableName, strval($this->option('template')));
-            } else {
-                $this->stub = FillableTable::eloquentBuilder($this->model, $this->modelName, strval($this->option('template')));
-            }
-        }
+        return $this;
     }
 
-    protected function COMO_VAI_CHAMAR_ISSO(): void
+    private function step2(): self
     {
-        if (in_array(strtolower($this->datasourceOption), [strtolower(self::DATASOURCE_ELOQUENT_BUILDER), strtolower(self::DATASOURCE_QUERY_BUILDER)])) {
-            $this->fillable();
+        $this->component->setDatasource(Datasource::from(AskComponentDatasource::handle()));
+
+        return $this;
+    }
+
+    private function step3(): self
+    {
+        if ($this->component->canHaveModel() === false) {
+            return $this;
         }
 
+        list('model' => $model, 'fqn' => $fqn) = AskModelName::handle();
+
+        $this->component->setModelWithFqn($model, $fqn);
+
+        return $this;
+    }
+
+    private function step4(): self
+    {
+        if ($this->component->canReadFillable() === false || ConfirmGetFromFillable::handle() === false) {
+            return $this;
+        }
+
+        $this->component->setUsesFillable(true);
+
+        return $this;
+    }
+
+    private function step5(): self
+    {
+        if ($this->component->usesFillable() === true && $this->component->requiresDatabaseTableName()) {
+            $this->component->setDatabaseTable(AskDatabaseTableName::handle());
+        }
+
+        return $this;
+    }
+
+    private function step6(): self
+    {
+        if (empty($this->option('template'))) {
+            $this->component->loadPowerGridStub();
+        } else {
+            $this->component->loadCustomStub(base_path($this->option('template')));
+        }
+
+        return $this;
+    }
+
+    private function save(): self
+    {
         $this->component->saveToDisk();
 
-        $this->showCreated();
+        return $this;
     }
 
-    protected function showCreated(): void
+    public function feedback(): void
     {
-        $thanks = strval(str_replace(',', '!', strval(__('Thanks,'))));
+        note("⚡ <comment>{$this->component?->name}</comment> was successfully created at [<comment>{$this->component?->createdPath()}</comment>].");
 
-        info("⚡ <comment>" . $this->component->filename . '</comment> was successfully created at [<comment>app' . $this->component->savedPath . '</comment>].');
+        note("💡 include the <comment>{$this->component?->name}</comment> component using the tag: <comment>{$this->component?->htmlTag}</comment>");
 
-        info("⚡ Your PowerGrid table can be now included with the tag: <comment>" . $this->component->componentName . '</comment>');
-
-        info("⭐ <comment>{$thanks}</comment> Please consider <comment>starring</comment> our repository at <comment>https://github.com/Power-Components/livewire-powergrid</comment> ⭐\n");
+        info("👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>" . PHP_EOL);
     }
 }
