@@ -7,6 +7,14 @@
         <div class="grid grid-cols-1 gap-2">
             @if ($measurements->isEmpty())
                 <x-pulse::no-results />
+            @elseif (!$config['enabled'])
+                <div class="h-full flex flex-col items-center justify-center p-4">
+                    <x-pulse::icons.no-pulse class="h-8 w-8 stroke-gray-300 dark:stroke-gray-700" />
+                    <p class="mt-2 text-sm text-gray-400 dark:text-gray-600">
+                        PowerGrid metering has been disabled.
+                    </p>
+                </div>
+
             @else
                 <div class="grid grid-cols-2 gap-3 text-center">
                     <div class="flex flex-col justify-center sm:block">
