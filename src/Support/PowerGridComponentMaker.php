@@ -21,6 +21,7 @@ use PowerComponents\LivewirePowerGrid\Enums\DataSource;
   * @property-read string $modelFqn
   * @property-read bool $autoCreateColumns
   * @property-read bool $usesCustomStub
+  * @property-read bool $isProcessed
  */
 final class PowerGridComponentMaker
 {
