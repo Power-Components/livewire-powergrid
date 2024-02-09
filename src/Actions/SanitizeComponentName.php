@@ -7,6 +7,7 @@ class SanitizeComponentName
     public static function handle(string $componentName): string
     {
         return str($componentName)
+            ->rtrim('.php')
             // Remove possible prefix
             ->ltrim('//')
             //Remove anything but alphanumeric, dot and all slashes

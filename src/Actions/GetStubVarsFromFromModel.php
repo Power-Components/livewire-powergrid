@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridComponentMaker;
 
-class GetFillableVarsFromModel
+class GetStubVarsFromFromModel
 {
     private static bool $hasEscapeExample = false;
 

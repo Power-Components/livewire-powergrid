@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Actions\{GetFillableVarsFromDbTable, GetFillableVarsFromModel, SanitizeComponentName};
+use PowerComponents\LivewirePowerGrid\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel, SanitizeComponentName};
 use PowerComponents\LivewirePowerGrid\Enums\DataSource;
 
 /**
@@ -19,7 +19,7 @@ use PowerComponents\LivewirePowerGrid\Enums\DataSource;
   * @property-read string $databaseTable
   * @property-read string $model
   * @property-read string $modelFqn
-  * @property-read bool $usesFillable
+  * @property-read bool $autoCreateColumns
   * @property-read bool $usesCustomStub
  */
 final class PowerGridComponentMaker
@@ -46,7 +46,7 @@ final class PowerGridComponentMaker
 
     private string $modelFqn = '';
 
-    private bool $usesFillable = false;
+    private bool $autoCreateColumns = false;
 
     private bool $usesCustomStub = false;
 
@@ -75,14 +75,14 @@ final class PowerGridComponentMaker
         return $this->datasource->canHaveModel();
     }
 
-    public function canReadFillable(): bool
+    public function canAutoImportFields(): bool
     {
-        return $this->datasource->canReadFillable();
+        return $this->datasource->canAutoImportFields();
     }
 
-    public function usesFillable(): bool
+    public function autoCreateColumns(): bool
     {
-        return $this->usesFillable;
+        return $this->autoCreateColumns;
     }
 
     public function isProcessed(): bool
@@ -117,7 +117,7 @@ final class PowerGridComponentMaker
     {
         $path = powergrid_stubs_path($this->datasource->stubTemplate());
 
-        if ($this->usesFillable()) {
+        if ($this->autoCreateColumns()) {
             $path = str_replace('.stub', '.fillable.stub', $path);
         }
 
@@ -128,9 +128,9 @@ final class PowerGridComponentMaker
         return $this;
     }
 
-    public function setUsesFillable(bool $usesFillable = true): self
+    public function setAutoCreateColumns(bool $autoCreateColumns = true): self
     {
-        $this->usesFillable = $usesFillable;
+        $this->autoCreateColumns = $autoCreateColumns;
 
         return $this;
     }
@@ -175,13 +175,13 @@ final class PowerGridComponentMaker
 
         $this->stub->setVar('databaseTableName', $this->databaseTable);
 
-        if ($this->usesFillable()) {
+        if ($this->autoCreateColumns() === true) {
             if ($this->datasource === Datasource::ELOQUENT_BUILDER) {
-                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetFillableVarsFromModel::handle($this);
+                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetStubVarsFromFromModel::handle($this);
             }
 
             if ($this->datasource === Datasource::QUERY_BUILDER) {
-                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetFillableVarsFromDbTable::handle($this);
+                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetStubVarsFromDbTable::handle($this);
             }
         }
 

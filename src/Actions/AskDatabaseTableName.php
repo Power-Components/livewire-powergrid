@@ -14,9 +14,8 @@ final class AskDatabaseTableName
 
         while (!$exists) {
             $tableName = suggest(
-                label: 'Enter or Select a database table to import $fillable columns',
+                label: 'Enter or Select a DB Table',
                 options: ListDatabaseTables::handle(),
-                default: 'users',
                 required: true,
             );
             $exists = true;

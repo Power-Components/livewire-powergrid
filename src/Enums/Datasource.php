@@ -51,7 +51,7 @@ enum DataSource
     /**
      * Can read and source columns from fillable
      */
-    public function canReadFillable(): bool
+    public function canAutoImportFields(): bool
     {
         return match ($this) {
             DataSource::ELOQUENT_BUILDER => true,

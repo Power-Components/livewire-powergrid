@@ -22,7 +22,7 @@ it('can make an eloquent component', function () {
       ->filename->toBe('UserTable.php')
       ->htmlTag->toBe('<livewire:user-table/>')
       ->isProcessed->toBeFalse()
-      ->usesFillable->toBeFalse()
+      ->autoCreateColumns->toBeFalse()
       ->usesCustomStub->toBeFalse();
 
     expect($component->createdPath())->toBe('app/Livewire/UserTable.php');
@@ -33,8 +33,8 @@ it('can make an eloquent component', function () {
 it('can make an query builder component', function () {
     $component = PowerGridComponentMaker::make('UserTable')
       ->setDatasource(Datasource::QUERY_BUILDER)
-      ->loadPowerGridStub()
-      ->setDatabaseTable('users');
+      ->setDatabaseTable('users')
+      ->loadPowerGridStub();
 
     expect($component)->toBeInstanceOf(PowerGridComponentMaker::class)
       ->name->toBe('UserTable')
@@ -49,7 +49,7 @@ it('can make an query builder component', function () {
       ->filename->toBe('UserTable.php')
       ->htmlTag->toBe('<livewire:user-table/>')
       ->isProcessed->toBeFalse()
-      ->usesFillable->toBeFalse()
+      ->autoCreateColumns->toBeFalse()
       ->usesCustomStub->toBeFalse();
 
     expect($component->createdPath())->toBe('app/Livewire/UserTable.php');

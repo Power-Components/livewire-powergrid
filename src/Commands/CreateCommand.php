@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\{error, info, note};
 
-use PowerComponents\LivewirePowerGrid\Actions\{AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, ConfirmGetFromFillable};
+use PowerComponents\LivewirePowerGrid\Actions\{AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, ConfirmAutoImportFields};
 
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 
@@ -87,20 +87,25 @@ class CreateCommand extends Command
 
     private function step4(): self
     {
-        if ($this->component->canReadFillable() === false || ConfirmGetFromFillable::handle() === false) {
-            return $this;
+        if ($this->component->requiresDatabaseTableName()) {
+            $this->component->setDatabaseTable(AskDatabaseTableName::handle());
         }
-
-        $this->component->setUsesFillable(true);
 
         return $this;
     }
 
     private function step5(): self
     {
-        if ($this->component->usesFillable() === true && $this->component->requiresDatabaseTableName()) {
-            $this->component->setDatabaseTable(AskDatabaseTableName::handle());
+        $label = 'Auto-import Data Source fields from '
+            . ($this->component->requiresDatabaseTableName() ?
+                '[' . $this->component?->databaseTable . '] table?' :
+                '$fillable in [' . $this->component?->model . '] Model?');
+
+        if ($this->component->canAutoImportFields() === false || ConfirmAutoImportFields::handle($label) === false) {
+            return $this;
         }
+
+        $this->component->setAutoCreateColumns(true);
 
         return $this;
     }

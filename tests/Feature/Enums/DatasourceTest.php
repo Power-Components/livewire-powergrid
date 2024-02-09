@@ -31,7 +31,7 @@ it('can have model', function (Datasource $case, bool $result) {
 ]);
 
 it('can read fillable', function (Datasource $case, bool $result) {
-    expect($case)->canReadFillable()->toBe($result);
+    expect($case)->canAutoImportFields()->toBe($result);
 })->with([
     [DataSource::ELOQUENT_BUILDER, true],
     [DataSource::QUERY_BUILDER, true],
