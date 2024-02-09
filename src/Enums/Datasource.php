@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Enums;
 
+use Illuminate\Support\Collection;
+
 enum DataSource
 {
     case ELOQUENT_BUILDER;
@@ -68,12 +70,13 @@ enum DataSource
     }
 
     /**
-     * Datasource with labels for dropdown select
+    * Datasource with labels for dropdown select
+     *
+     * @return Collection<string,string>
      */
-    public static function asOptions(): array
+    public static function asOptions(): Collection
     {
         return collect(self::cases())
-            ->mapWithKeys(fn ($case): array => [strval($case->name) => $case->label()])
-            ->toArray();
+            ->mapWithKeys(fn ($case): array => [strval($case->name) => $case->label()]);
     }
 }

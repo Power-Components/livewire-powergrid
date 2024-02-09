@@ -14,9 +14,9 @@ final class ListDatabaseTables
      */
     public static function handle(): array
     {
-        return collect(Schema::getTables())
+        return array_values(collect(Schema::getTables())
             ->pluck('name')
             ->diff(self::HIDDEN_TABLES)
-            ->toArray();
+            ->toArray());
     }
 }

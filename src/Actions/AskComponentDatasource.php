@@ -10,10 +10,19 @@ final class AskComponentDatasource
 {
     public static function handle(): string
     {
-        return strval(select(
+        // Must pass options as array<int, "label"> to
+        // improve users experienc when Laravel prompt falls back.
+        $datasources = DataSource::asOptions();
+
+        $choice = strval(select(
             label: 'Select your preferred Data source:',
-            options: DataSource::asOptions(),
-            default: DataSource::ELOQUENT_BUILDER->name
+            options: $datasources->values()->toArray(), // @phpstan-ignore-line
+            default: 0
         ));
+
+        // Find and return they key based on user's choice.
+        return (string) $datasources->filter(function ($item) use ($choice) {
+            return $item === $choice;
+        })->keys()[0];
     }
 }
