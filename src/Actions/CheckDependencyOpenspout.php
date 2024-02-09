@@ -25,7 +25,9 @@ final class CheckDependencyOpenspout
     {
         return <<<EOD
 
-📣 PowerGrid requires <comment>openspout/openspout</comment> <info>to export table data.
+<info>🤔 It looks like your project is missing a dependency!</info>
+
+PowerGrid requires <comment>openspout/openspout</comment> to export table data.
 
 Please, consider installing the package.
 

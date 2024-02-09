@@ -27,7 +27,9 @@ class CheckDependencyFlatPick
     {
         return <<<EOD
 
-📣 PowerGrid requires <comment>flatpickr</comment> <info>to provide Datetime Filters.
+<info>🤔 It looks like your project is missing a dependency!</info>
+
+PowerGrid requires <comment>flatpickr</comment> for Date filters to work.
 
 Please, consider installing the package.
 

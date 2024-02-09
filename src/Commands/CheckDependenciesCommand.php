@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 
-use function Laravel\Prompts\{info,select};
-
 use PowerComponents\LivewirePowerGrid\Actions\{CheckDependencyFlatPick, CheckDependencyOpenspout};
+
+use function Laravel\Prompts\{note,select};
 
 class CheckDependenciesCommand extends Command
 {
@@ -15,9 +15,6 @@ class CheckDependenciesCommand extends Command
 
     /** @var string */
     protected $description = 'Check PowerGrid dependencies.';
-
-    /** @var bool */
-    protected $hidden = true;
 
     public function handle(): int
     {
@@ -36,8 +33,12 @@ class CheckDependenciesCommand extends Command
     {
         foreach ($dependencies as $dependency) {
             if (!empty($dependency)) {
-                info($dependency);
-                select('', ['press \<enter\> to continue...'], );
+                note($dependency);
+                select(
+                    label: '',
+                    options: ['continue...'],
+                    hint:  'press <comment>\<enter\></comment> to continue...'
+                );
             }
         }
     }
