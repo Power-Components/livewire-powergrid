@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ livewireClassNamespace }}{{ subFolder }};
+namespace {{ namespace }};
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;

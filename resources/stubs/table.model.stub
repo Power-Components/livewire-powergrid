@@ -1,8 +1,8 @@
 <?php
 
-namespace {{ livewireClassNamespace }}{{ subFolder }};
+namespace {{ namespace }};
 
-use {{ modelName }};
+use {{ modelFqn }};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -35,7 +35,7 @@ final class {{ componentName }} extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return {{ modelLastName }}::query();
+        return {{ model }}::query();
     }
 
     public function fields(): PowerGridFields
@@ -43,9 +43,9 @@ final class {{ componentName }} extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('name_lower', fn ({{ modelLastName }} $model) => strtolower(e($model->name)))
+            ->add('name_lower', fn ({{ model }} $model) => strtolower(e($model->name)))
             ->add('created_at')
-            ->add('created_at_formatted', fn ({{ modelLastName }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+            ->add('created_at_formatted', fn ({{ model }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }
 
     public function columns(): array
@@ -83,7 +83,7 @@ final class {{ componentName }} extends PowerGridComponent
         $this->js('alert('.$rowId.')');
     }
 
-    public function actions(\{{ modelName }} $row): array
+    public function actions({{ model }} $row): array
     {
         return [
             Button::add('edit')
@@ -95,7 +95,7 @@ final class {{ componentName }} extends PowerGridComponent
     }
 
     /*
-    public function actionRules(\{{ modelName }} $row): array
+    public function actionRules({{ model }} $row): array
     {
        return [
             // Hide button edit for ID 1
