@@ -18,8 +18,8 @@ describe('filters number - join', () => {
          */
 
         const tableRows = '.power-grid-table tbody tr';
-        const startInput = '[wire\\:model="filters.number.datasources.calories.start"]';
-        const endInput = '[wire\\:model="filters.number.datasources.calories.end"]';
+        const startInput = '[wire\\:model="filters.number.dishes.calories.start"]';
+        const endInput = '[wire\\:model="filters.number.dishes.calories.end"]';
 
         it('filter calories start -> min 400 - ' + route, () => {
             cy.visit(route);
