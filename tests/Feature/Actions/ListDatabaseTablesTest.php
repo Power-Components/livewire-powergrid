@@ -15,5 +15,5 @@ test('list database tables except hidden ones', function () {
         });
     });
 
-    expect(ListDatabaseTables::handle())->toEqualCanonicalizing(['dishes', 'restaurants', ]);
+    expect(ListDatabaseTables::handle())->toEqualCanonicalizing(['dishes', 'restaurants']);
 });

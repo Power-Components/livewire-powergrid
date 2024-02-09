@@ -11,8 +11,10 @@ beforeEach(function () {
 });
 
 test('list models', function () {
-    expect(ListModels::handle())->toBe([
-        'Demo',
-        'App\Models\Demo',
-    ]);
+    expect(ListModels::handle())->toBe(
+        [
+            'Demo',
+            'App\Models\Demo',
+        ]
+    );
 });

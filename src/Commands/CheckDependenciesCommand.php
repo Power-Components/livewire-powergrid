@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
 
-use PowerComponents\LivewirePowerGrid\Actions\{CheckDependencyFlatPick, CheckDependencyOpenspout};
-
 use function Laravel\Prompts\{note,select};
+
+use PowerComponents\LivewirePowerGrid\Actions\{CheckDependencyFlatPick, CheckDependencyOpenspout};
 
 class CheckDependenciesCommand extends Command
 {

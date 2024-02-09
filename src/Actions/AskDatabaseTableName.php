@@ -11,7 +11,7 @@ final class AskDatabaseTableName
     public static function handle(): string
     {
         $exists = false;
-        dump('loop');
+
         while (!$exists) {
             $tableName = suggest(
                 label: 'Enter or Select a database table to import $fillable columns',

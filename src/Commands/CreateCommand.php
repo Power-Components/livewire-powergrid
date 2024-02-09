@@ -53,7 +53,7 @@ class CreateCommand extends Command
     {
         $this->call('powergrid:update');
 
-        $this->call('powergrid:check-dependencies'); //@TODO: enable me
+        //$this->call('powergrid:check-dependencies'); //@TODO: enable me
 
         return $this;
     }

@@ -16,6 +16,7 @@ final class ListDatabaseTables
     {
         return collect(Schema::getTables())
             ->pluck('name')
-            ->diff(self::HIDDEN_TABLES)->toArray();
+            ->diff(self::HIDDEN_TABLES)
+            ->toArray();
     }
 }
