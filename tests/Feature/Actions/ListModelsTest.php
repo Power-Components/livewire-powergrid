@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\File;
 
-use Laravel\Prompts\{Key, Prompt};
 use PowerComponents\LivewirePowerGrid\Actions\ListModels;
 
 beforeEach(function () {

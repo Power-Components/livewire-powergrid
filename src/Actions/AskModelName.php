@@ -18,14 +18,10 @@ final class AskModelName
         {
             while (self::$model === '') {
                 self::setModel(suggest(
-                    label: 'Enter your Model name',
+                    label: 'Select a Model or enter its Name/FQN class.',
                     options: ListModels::handle(),
-                    default: 'User',
                     required: true,
                 ));
-
-                self::parseFqn();
-                self::checkIfModelExists();
             }
 
             return ['model' => self::$model, 'fqn' => self::$fqn];
@@ -35,6 +31,10 @@ final class AskModelName
     private static function setModel(string $model): void
     {
         self::$model = str($model)->replaceMatches('#[^A-Za-z0-9\\\\]#', '')->toString();
+
+        self::parseFqn();
+
+        self::checkIfModelExists();
     }
 
     private static function parseFqn(): void
@@ -50,7 +50,7 @@ final class AskModelName
     private static function checkIfModelExists(): void
     {
         if (!class_exists(self::$fqn)) {
-            error("Could not find [" . self::$fqn . "] class. Try again or press Ctrl+C to abort.");
+            error("Cannot find class [" . self::$fqn . "]. Try again or press Ctrl+C to abort.");
 
             self::$model = '';
 

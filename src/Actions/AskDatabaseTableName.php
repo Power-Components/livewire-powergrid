@@ -11,17 +11,18 @@ final class AskDatabaseTableName
     public static function handle(): string
     {
         $exists = false;
-
+        dump('loop');
         while (!$exists) {
             $tableName = suggest(
-                label: "Select or enter your Database Table's name:",
-                options: DatabaseTables::list(),
-                required: true
+                label: 'Enter or Select a database table to import $fillable columns',
+                options: ListDatabaseTables::handle(),
+                default: 'users',
+                required: true,
             );
-
+            $exists = true;
             $exists = Schema::hasTable($tableName);
 
-            if (!$exists && !app()->runningUnitTests()) {
+            if (!$exists) {
                 error("The table [{$tableName}] does not exist! Try again or press Ctrl+C to abort.");
             }
         }

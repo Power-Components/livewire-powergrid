@@ -7,6 +7,7 @@ class SanitizeComponentName
     public static function handle(string $componentName): string
     {
         return str($componentName)
+            ->ltrim('//')
             //Remove anything but alphanumeric, dot, bkack and slashes
             ->replaceMatches('#[^A-Za-z0-9 .//\\\\]#', '')
             //Convert multiple spaces into forward slashes

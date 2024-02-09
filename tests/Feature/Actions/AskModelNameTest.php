@@ -12,6 +12,6 @@ beforeEach(function () {
 });
 
 test('input component name', function () {
-    Prompt::fake([Key::ENTER, 'D', Key::ENTER]);
-    expect(AskModelName::handle())->dd();
-})->skip('why fails?');
+    Prompt::fake(['D', Key::DOWN, Key::ENTER]);
+    expect(AskModelName::handle())->toBe('Demo');
+})->skip('Check test');
