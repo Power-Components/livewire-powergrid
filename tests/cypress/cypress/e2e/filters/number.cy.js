@@ -27,12 +27,13 @@ describe('filters number', () => {
             cy.get(startInput).type('400');
             cy.get(endInput).clear();
 
-            cy.get(tableRows).should('not.contains.text', 'Spicy Tofu Stir Fry')
-            cy.get(tableRows).should('not.contains.text', 'Quinoa Salad with Avocado')
-            cy.get(tableRows).should('not.contains.text', 'Mango Chicken Curry')
+            cy.get(tableRows)
+                .should('not.contains.text', 'Spicy Tofu Stir Fry')
+                .should('not.contains.text', 'Quinoa Salad with Avocado')
+                .should('not.contains.text', 'Mango Chicken Curry')
 
-            cy.get(tableRows).should('contains.text', 'Vegetarian Buddha Bowl')
-            cy.get(tableRows).should('contains.text', 'Caprese Salad')
+                .should('contains.text', 'Vegetarian Buddha Bowl')
+                .should('contains.text', 'Caprese Salad')
         });
 
         it('filter calories end -> max 400 - ' + route, () => {
@@ -41,12 +42,13 @@ describe('filters number', () => {
             cy.get(startInput).clear();
             cy.get(endInput).type('400');
 
-            cy.get(tableRows).should('contains.text', 'Spicy Tofu Stir Fry')
-            cy.get(tableRows).should('contains.text', 'Quinoa Salad with Avocado')
-            cy.get(tableRows).should('contains.text', 'Mango Chicken Curry')
+            cy.get(tableRows)
+                .should('contains.text', 'Spicy Tofu Stir Fry')
+                .should('contains.text', 'Quinoa Salad with Avocado')
+                .should('contains.text', 'Mango Chicken Curry')
 
-            cy.get(tableRows).should('not.contains.text', 'Grilled Salmon with Lemon Dill Sauce')
-            cy.get(tableRows).should('not.contains.text', 'Caprese Salad')
+                .should('not.contains.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('not.contains.text', 'Caprese Salad')
         });
 
         it('filter calories calories between 200 - 400 - ' + route, () => {
@@ -55,11 +57,12 @@ describe('filters number', () => {
             cy.get(startInput).type('200');
             cy.get(endInput).type('400');
 
-            cy.get(tableRows).should('contains.text', 'Quinoa Salad with Avocado')
-            cy.get(tableRows).should('contains.text', 'Mango Chicken Curry')
+            cy.get(tableRows)
+                .should('contains.text', 'Quinoa Salad with Avocado')
+                .should('contains.text', 'Mango Chicken Curry')
 
-            cy.get(tableRows).should('not.contains.text', 'Grilled Salmon with Lemon Dill Sauce')
-            cy.get(tableRows).should('not.contains.text', 'Caprese Salad')
+                .should('not.contains.text', 'Grilled Salmon with Lemon Dill Sauce')
+                .should('not.contains.text', 'Caprese Salad')
         });
     })
 })
