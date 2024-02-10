@@ -5,11 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Support;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel, SanitizeComponentName};
-use PowerComponents\LivewirePowerGrid\Enums\DataSource;
+use PowerComponents\LivewirePowerGrid\Enums\Datasource;
 
 /**
   * @property-read PowerGridStub $stub;
-  * @property-read DataSource $datasource;
+  * @property-read Datasource $datasource;
   * @property-read string $name;
   * @property-read string $namespace
   * @property-read string $folder
@@ -27,7 +27,7 @@ final class PowerGridComponentMaker
 {
     private ?PowerGridStub $stub;
 
-    private ?DataSource $datasource;
+    private ?Datasource $datasource;
 
     private string $name;
 
@@ -178,11 +178,11 @@ final class PowerGridComponentMaker
 
         if ($this->autoCreateColumns() === true) {
             if ($this->datasource === Datasource::ELOQUENT_BUILDER) {
-                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetStubVarsFromFromModel::handle($this);
+                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromFromModel::handle($this);
             }
 
             if ($this->datasource === Datasource::QUERY_BUILDER) {
-                list('PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns) = GetStubVarsFromDbTable::handle($this);
+                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromDbTable::handle($this);
             }
         }
 

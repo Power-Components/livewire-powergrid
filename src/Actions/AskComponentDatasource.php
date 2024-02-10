@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Actions;
 
 use function Laravel\Prompts\select;
 
-use PowerComponents\LivewirePowerGrid\Enums\DataSource;
+use PowerComponents\LivewirePowerGrid\Enums\Datasource;
 
 final class AskComponentDatasource
 {
@@ -12,7 +12,7 @@ final class AskComponentDatasource
     {
         // Must pass options as array<int, "label"> to
         // improve users experienc when Laravel prompt falls back.
-        $datasources = DataSource::asOptions();
+        $datasources = Datasource::asOptions();
 
         $choice = strval(select(
             label: 'Select your preferred Data source:',

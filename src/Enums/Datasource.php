@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Enums;
 
 use Illuminate\Support\Collection;
 
-enum DataSource
+enum Datasource
 {
     case ELOQUENT_BUILDER;
 
@@ -20,9 +20,9 @@ enum DataSource
     public function label(): string
     {
         return match ($this) {
-            DataSource::ELOQUENT_BUILDER => "Eloquent Builder",
-            DataSource::QUERY_BUILDER    => "Query Builder",
-            DataSource::COLLECTION       => "Collection"
+            Datasource::ELOQUENT_BUILDER => "Eloquent Builder",
+            Datasource::QUERY_BUILDER    => "Query Builder",
+            Datasource::COLLECTION       => "Collection"
         };
     }
 
@@ -32,7 +32,7 @@ enum DataSource
     public function canHaveModel(): bool
     {
         return match ($this) {
-            DataSource::ELOQUENT_BUILDER => true,
+            Datasource::ELOQUENT_BUILDER => true,
             default                      => false
         };
     }
@@ -43,7 +43,7 @@ enum DataSource
     public function requiresDatabaseTableName(): bool
     {
         return match ($this) {
-            DataSource::QUERY_BUILDER => true,
+            Datasource::QUERY_BUILDER => true,
             default                   => false
         };
     }
@@ -54,8 +54,8 @@ enum DataSource
     public function canAutoImportFields(): bool
     {
         return match ($this) {
-            DataSource::ELOQUENT_BUILDER => true,
-            DataSource::QUERY_BUILDER    => true,
+            Datasource::ELOQUENT_BUILDER => true,
+            Datasource::QUERY_BUILDER    => true,
             default                      => false
         };
     }
@@ -63,9 +63,9 @@ enum DataSource
     public function stubTemplate(): string
     {
         return match ($this) {
-            DataSource::ELOQUENT_BUILDER => 'table.model.stub',
-            DataSource::QUERY_BUILDER    => 'table.query-builder.stub',
-            DataSource::COLLECTION       => 'table.collection.stub',
+            Datasource::ELOQUENT_BUILDER => 'table.model.stub',
+            Datasource::QUERY_BUILDER    => 'table.query-builder.stub',
+            Datasource::COLLECTION       => 'table.collection.stub',
         };
     }
 

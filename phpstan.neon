@@ -4,11 +4,6 @@ includes:
 parameters:
 
     ignoreErrors:
-        -
-            message: "#^Enum PowerComponents\\\\LivewirePowerGrid\\\\Enums\\\\DataSource referenced with incorrect case\\: PowerComponents\\\\LivewirePowerGrid\\\\Enums\\\\Datasource\\.$#"
-            count: 2
-            path: src/Commands/CreateCommand.php
-
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
         - '#Variable \$thousands might not be defined.#'
