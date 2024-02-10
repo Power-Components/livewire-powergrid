@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ livewireClassNamespace }}{{ subFolder }};
+
+use {{ modelName }};
+
+return PowerGrid::fields(){{ datasource }};
+
+public function actions(\{{ modelName }} $row): array
+
+return DB::table('{{ databaseTableName }}');

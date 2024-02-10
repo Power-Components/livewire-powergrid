@@ -1,8 +1,8 @@
 <?php
 
-namespace {{ livewireClassNamespace }}{{ subFolder }};
+namespace {{ namespace }};
 
-use {{ modelName }};
+use {{ modelFqn }};
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Button;
@@ -37,7 +37,7 @@ final class {{ componentName }} extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return {{ modelLastName }}::query();
+        return {{ model }}::query();
     }
 
     public function relationSearch(): array
@@ -47,7 +47,7 @@ final class {{ componentName }} extends PowerGridComponent
 
     public function fields(): PowerGridFields
     {
-        return PowerGrid::fields(){{ datasource }};
+        return PowerGrid::fields(){{ PowerGridFields }};
     }
 
     public function columns(): array
@@ -66,7 +66,7 @@ final class {{ componentName }} extends PowerGridComponent
         $this->js('alert('.$rowId.')');
     }
 
-    public function actions(\{{ modelName }} $row): array
+    public function actions({{ model }} $row): array
     {
         return [
             Button::add('edit')

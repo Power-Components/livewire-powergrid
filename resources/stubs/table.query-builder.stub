@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ livewireClassNamespace }}{{ subFolder }};
+namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -33,7 +33,7 @@ final class {{ componentName }} extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        return DB::table('{{ dataBaseTableName }}');
+        return DB::table('{{ databaseTableName }}');
     }
 
     public function fields(): PowerGridFields

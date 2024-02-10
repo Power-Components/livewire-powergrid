@@ -54,3 +54,29 @@ if (!function_exists('convertObjectsToArray')) {
         return $data;
     }
 }
+
+if (!function_exists('powergrid_components_path')) {
+    function powergrid_components_path(string $filename = ''): string
+    {
+        return app_path(
+            str(strval(config('livewire.class_namespace')))
+                ->ltrim('App//')
+                ->append(DIRECTORY_SEPARATOR . $filename)
+                ->replace('\\', '/')
+                ->replace('//', '/')
+                ->replace('/', DIRECTORY_SEPARATOR)
+                ->toString()
+        );
+    }
+}
+
+if (!function_exists('powergrid_stubs_path')) {
+    function powergrid_stubs_path(string $filename = ''): string
+    {
+        return str(__DIR__ . '/../resources/stubs/')
+            ->append($filename)
+            ->replace('/', DIRECTORY_SEPARATOR)
+            ->rtrim(DIRECTORY_SEPARATOR)
+            ->toString();
+    }
+}

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\Commands\CheckDependenciesCommand;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
@@ -21,8 +22,9 @@ class PowerGridServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([PublishCommand::class]);
             $this->commands([UpdateCommand::class]);
+            $this->commands([PublishCommand::class]);
+            $this->commands([CheckDependenciesCommand::class]);
             $this->commands([CreateCommand::class]);
         }
 

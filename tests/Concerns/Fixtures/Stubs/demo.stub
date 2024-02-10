@@ -1,0 +1,16 @@
+<?php
+
+namespace {{ Var1 }}{{ fooBar }};
+
+use {{ FooBarBaz2 }};
+
+// should {{notMe}} { notMeEither } {evenNotMe}
+
+final class MyClass extends anotherClass
+{
+    public function method(): Builder
+    {
+        return {{ SomeVar }}::handle();
+    }
+
+}
