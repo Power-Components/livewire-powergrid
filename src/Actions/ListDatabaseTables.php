@@ -14,9 +14,13 @@ final class ListDatabaseTables
      */
     public static function handle(): array
     {
-        return array_values(collect(Schema::getTables())
-            ->pluck('name')
-            ->diff(self::HIDDEN_TABLES)
-            ->toArray());
+        try {
+            return array_values(collect(Schema::getTables())
+                ->pluck('name')
+                ->diff(self::HIDDEN_TABLES)
+                ->toArray());
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }

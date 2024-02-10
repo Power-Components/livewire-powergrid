@@ -4,25 +4,31 @@ namespace PowerComponents\LivewirePowerGrid\Actions;
 
 use Illuminate\Support\Facades\Schema;
 
-use function Laravel\Prompts\{error, suggest};
+use function Laravel\Prompts\{error, info, suggest};
 
 final class AskDatabaseTableName
 {
     public static function handle(): string
     {
-        $exists = false;
+        $tableExists = false;
 
-        while (!$exists) {
+        while (!$tableExists) {
             $tableName = suggest(
                 label: 'Enter or Select a DB Table',
                 options: ListDatabaseTables::handle(),
                 required: true,
             );
-            $exists = true;
-            $exists = Schema::hasTable($tableName);
 
-            if (!$exists) {
-                error("The table [{$tableName}] does not exist! Try again or press Ctrl+C to abort.");
+            if (CheckIfDatabaseHasTables::handle() === false) {
+                $tableExists = true; // Assuming user is creating component before migrating DB.
+
+                info('🚫 Database seems to be empty. Aborting Database related steps!');
+            } else {
+                $tableExists = Schema::hasTable($tableName);
+
+                if (!$tableExists) {
+                    error("The table [{$tableName}] does not exist! Try again or press Ctrl+C to abort.");
+                }
             }
         }
 

@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\{error, info, note};
 
+use PowerComponents\LivewirePowerGrid\Actions\CheckIfDatabaseHasTables;
+
 use PowerComponents\LivewirePowerGrid\Actions\{AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, ConfirmAutoImportFields};
 
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
@@ -78,7 +80,7 @@ class CreateCommand extends Command
             return $this;
         }
 
-        list('model' => $model, 'fqn' => $fqn) = AskModelName::handle();
+        ['model' => $model, 'fqn' => $fqn] = AskModelName::handle();
 
         $this->component->setModelWithFqn($model, $fqn);
 
@@ -96,12 +98,12 @@ class CreateCommand extends Command
 
     private function step5(): self
     {
-        $label = 'Auto-import Data Source fields from '
-            . ($this->component->requiresDatabaseTableName() ?
-                '[' . $this->component?->databaseTable . '] table?' :
-                '$fillable in [' . $this->component?->model . '] Model?');
+        if (CheckIfDatabaseHasTables::handle() === false) {
+            return $this;
+        }
 
-        if ($this->component->canAutoImportFields() === false || ConfirmAutoImportFields::handle($label) === false) {
+        if ($this->component->canAutoImportFields() === false
+            || ConfirmAutoImportFields::handle($this->AutoImportLabel()) === false) {
             return $this;
         }
 
@@ -135,5 +137,15 @@ class CreateCommand extends Command
         note("💡 include the <comment>{$this->component?->name}</comment> component using the tag: <comment>{$this->component?->htmlTag}</comment>");
 
         info("👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>" . PHP_EOL);
+    }
+
+    private function AutoImportLabel(): string
+    {
+        return 'Auto-import Data Source fields from ' .
+        (
+            $this->component->requiresDatabaseTableName() ?
+                 "[{$this->component?->databaseTable}] table?" :
+                 "\$fillable in [{$this->component?->model}] Model?"
+        );
     }
 }
