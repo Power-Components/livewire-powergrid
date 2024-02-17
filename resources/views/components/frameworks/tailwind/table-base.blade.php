@@ -10,7 +10,6 @@
             id="power-grid-table-base"
             class="p-3 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8"
         >
-
             @include(data_get($theme, 'layout.header'), [
                 'enabledFilters' => $enabledFilters,
             ])

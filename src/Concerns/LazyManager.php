@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Illuminate\Support\Facades\File;
 use Livewire\Attributes\Computed;
 
 /**
@@ -48,5 +49,28 @@ trait LazyManager
         }
 
         return $count > $rendered;
+    }
+
+    private function throwIncompatibilityWithLazyFeature(): void
+    {
+        if (!data_get($this->setUp, 'lazy')) {
+            return;
+        }
+
+        $viewsPath = base_path('resources/views/vendor/livewire-powergrid');
+
+        if (!File::isDirectory($viewsPath)) {
+            return;
+        }
+
+        $files = File::allFiles($viewsPath);
+
+        foreach ($files as $file) {
+            $content = file_get_contents($file);
+
+            if (str($content)->contains('$theme->layout')) {
+                throw new \Exception('Your Livewire PowerGrid views are outdated and incompatible with the "Lazy" feature. See https://livewire-powergrid.com/get-started/troubleshooting.html#theme-layout-and-view-errors');
+            }
+        }
     }
 }

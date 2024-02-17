@@ -8,7 +8,7 @@ final class Lazy implements Wireable
 {
     public string $name = 'lazy';
 
-    public bool $active;
+    public bool $active = true;
 
     public int $rowsPerChildren = 25;
 

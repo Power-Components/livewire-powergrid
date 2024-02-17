@@ -7,7 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
+use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache, Facades\File};
 
 use Livewire\{Attributes\Computed, Component, Features\SupportQueryString\BaseUrl, WithPagination};
 
@@ -92,6 +92,8 @@ class PowerGridComponent extends Component
         foreach ($this->setUp() as $setUp) {
             $this->setUp[$setUp->name] = $setUp;
         }
+
+        $this->throwIncompatibilityWithLazyFeature();
 
         $this->throwColumnAction();
 
@@ -202,15 +204,23 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function getTheme(): array
+    private function getTheme(): object|array
     {
+        $useThemeAsObject = true;
+
         $class = $this->template() ?? powerGridTheme();
 
-        return Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
+        if (!data_get($this->setUp, 'lazy.active')) {
+            $useThemeAsObject = false;
+        }
+
+        return Cache::rememberForever('powerGridTheme_' . $class, function () use ($class, $useThemeAsObject) {
             /** @var ThemeBase $themeBase */
             $themeBase = PowerGrid::theme($class);
 
-            return convertObjectsToArray((array) $themeBase->apply());
+            return $useThemeAsObject
+                ? convertObjectsToArray((array) $themeBase->apply())
+                : $themeBase->apply();
         });
     }
 
@@ -229,7 +239,7 @@ class PowerGridComponent extends Component
     {
         $theme = $this->getTheme();
 
-        return view($theme['layout']['table'], [
+        return view(data_get($theme, 'layout.table'), [
             'data'  => $data,
             'theme' => $this->getTheme(),
             'table' => 'livewire-powergrid::components.table',
