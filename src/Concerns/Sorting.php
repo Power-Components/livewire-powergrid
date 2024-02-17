@@ -28,6 +28,8 @@ trait Sorting
         $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : $direction;
 
         $this->sortField = $field;
+
+        $this->persistState('sorting');
     }
 
     public function reverseSort(): string
