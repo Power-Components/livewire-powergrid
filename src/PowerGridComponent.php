@@ -239,9 +239,9 @@ class PowerGridComponent extends Component
     {
         $theme = $this->getTheme();
 
-        return view(data_get($theme, 'layout.table'), [
+        return view(strval(data_get($theme, 'layout.table')), [
             'data'  => $data,
-            'theme' => $this->getTheme(),
+            'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }

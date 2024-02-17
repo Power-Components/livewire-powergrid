@@ -66,7 +66,7 @@ trait LazyManager
         $files = File::allFiles($viewsPath);
 
         foreach ($files as $file) {
-            $content = file_get_contents($file);
+            $content = (string) file_get_contents($file);
 
             if (str($content)->contains('$theme->layout')) {
                 throw new \Exception('Your Livewire PowerGrid views are outdated and incompatible with the "Lazy" feature. See https://livewire-powergrid.com/get-started/troubleshooting.html#theme-layout-and-view-errors');
