@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str};
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
@@ -20,6 +20,8 @@ class ProcessDataSource
 
     public bool $isCollection = false;
 
+    private array $queryLog = [];
+
     public function __construct(
         public PowerGridComponent $component,
         public array $properties = [],
@@ -29,6 +31,11 @@ class ProcessDataSource
     public static function fillData(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
     {
         return new self($powerGridComponent, $properties);
+    }
+
+    public function queryLog(): array
+    {
+        return $this->queryLog;
     }
 
     /**
@@ -97,6 +104,8 @@ class ProcessDataSource
      */
     private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
     {
+        DB::enableQueryLog();
+
         if (is_null($datasource)) {
             $datasource = $this->component->datasource();
         }
@@ -130,7 +139,13 @@ class ProcessDataSource
         $collection = $results->getCollection();
 
         /** @phpstan-ignore-next-line */
-        return $results->setCollection($this->transform($collection, $this->component));
+        $results = $results->setCollection($this->transform($collection, $this->component));
+
+        $this->queryLog = DB::getQueryLog();
+
+        DB::disableQueryLog();
+
+        return $results;
     }
 
     /**

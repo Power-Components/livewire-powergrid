@@ -3,15 +3,16 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
 
-use Livewire\{Attributes\Computed, Component, Features\SupportQueryString\BaseUrl, WithPagination};
+use Livewire\{Attributes\Computed, Component, WithPagination};
 
-use function Livewire\{invade, store};
+use PowerComponents\LivewirePowerGrid\Events\MeasureRetrieveData;
 
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
@@ -157,8 +158,28 @@ class PowerGridComponent extends Component
     #[Computed]
     protected function getCachedData(): mixed
     {
+        $start = microtime(true);
+
         if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            return $this->readyToLoad ? $this->fillData() : collect();
+            $results = $this->readyToLoad ? $this->fillData() : collect();
+
+            $retrieveData = round((microtime(true) - $start) * 1000);
+
+            $queries = $this->processDataSourceInstance?->queryLog() ?? [];
+
+            /** @var float $queriesTime */
+            $queriesTime = collect($queries)->sum('time');
+
+            app(Dispatcher::class)->dispatch(
+                new MeasureRetrieveData(
+                    $this->tableName,
+                    retrieveData: $retrieveData,
+                    queriesTime: $queriesTime,
+                    queries: $queries,
+                )
+            );
+
+            return $results;
         }
 
         if (!$this->readyToLoad) {
@@ -173,9 +194,21 @@ class PowerGridComponent extends Component
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = join('-', $this->getCacheKeys());
 
-        return $forever
+        $results = $forever
             ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData())
             : Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData());
+
+        $time = round((microtime(true) - $start) * 1000);
+
+        app(Dispatcher::class)->dispatch(
+            new MeasureRetrieveData(
+                $this->tableName,
+                $time,
+                cached: true,
+            )
+        );
+
+        return $results;
     }
 
     protected function getCacheKeys(): array

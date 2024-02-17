@@ -23,11 +23,11 @@
     "laravel/prompts": "^0.1.15"
   },
   "require-dev": {
-    "composer/composer": "^2.6.6",
+    "composer/composer": "^2.7.1",
     "laravel/pint": "^1.13.10",
     "laradumps/laradumps-core": "^1.1",
     "larastan/larastan": "^2.8.1",
-    "pestphp/pest": "2.28.0",
+    "pestphp/pest": "^2.33.0",
     "orchestra/testbench": "8.19|^9.0"
   },
   "suggest": {
