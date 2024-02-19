@@ -5,7 +5,7 @@
 
     <x-pulse::scroll :expand="$expand">
         <div class="grid grid-cols-1 gap-2">
-            @if ($measurements->isEmpty())
+            @if ($records->isEmpty())
                 <x-pulse::no-results />
             @elseif (!$config['enabled'])
                 <div class="h-full flex flex-col items-center justify-center p-4">
@@ -53,26 +53,26 @@
                             </tr>
                         </x-pulse::thead>
                         <tbody>
-                        @foreach ($measurements as $measurement)
+                        @foreach ($records as $record)
                             <tr wire:key="{{ $loop->index }}-spacer" class="h-2 first:h-0"></tr>
                             <tr wire:key="{{ $loop->index }}-row">
                                 <x-pulse::td class="max-w-[1px]">
-                                    <code class="block text-xs text-gray-900 dark:text-gray-100 truncate" title="{{ data_get($measurement, 'tableName') }}">
-                                        {{ data_get($measurement, 'tableName') }}
+                                    <code class="block text-xs text-gray-900 dark:text-gray-100 truncate" title="{{ data_get($record, 'tableName') }}">
+                                        {{ data_get($record, 'tableName') }}
                                     </code>
                                 </x-pulse::td>
                                 <x-pulse::td numeric class="text-gray-700 dark:text-gray-300 font-bold">
-                                    {{ data_get($measurement, 'retrieveData') }} ms
+                                    {{ data_get($record, 'retrieveDataInMs') }} ms
                                 </x-pulse::td>
                                 <x-pulse::td numeric class="text-gray-700 dark:text-gray-300 font-bold">
-                                    {{ data_get($measurement, 'queriesTime') }} ms
+                                    {{ data_get($record, 'queriesTimeInMs') }} ms
                                 </x-pulse::td>
                                 <x-pulse::td numeric class="text-gray-700 dark:text-gray-300 font-bold">
-                                    {{ count(data_get($measurement, 'queries') ) }}
+                                    {{ count(data_get($record, 'queries') ) }}
                                 </x-pulse::td>
                                 <x-pulse::td numeric class="text-gray-700 text-sm dark:text-gray-300 font-bold">
                                     @php
-                                        $createdAt = \Illuminate\Support\Carbon::createFromTimestamp(data_get($measurement, 'timestamp'));
+                                        $createdAt = \Illuminate\Support\Carbon::createFromTimestamp(data_get($record, 'timestamp'));
                                     @endphp
                                     {{ $createdAt->diffForHumans() }}
                                 </x-pulse::td>

@@ -5,11 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Recorders;
 use Carbon\CarbonImmutable;
 use Illuminate\Config\Repository;
 use Laravel\Pulse\Pulse;
-use PowerComponents\LivewirePowerGrid\Events\MeasureRetrieveData;
+use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
-class PowerGridRecorder
+class PowerGridPerformanceRecorder
 {
-    public string $listen = MeasureRetrieveData::class;
+    public string $listen = PowerGridPerformanceData::class;
 
     public function __construct(
         protected Pulse $pulse,
@@ -17,16 +17,16 @@ class PowerGridRecorder
     ) {
     }
 
-    public function record(MeasureRetrieveData $class): void
+    public function record(PowerGridPerformanceData $class): void
     {
         $now = CarbonImmutable::now();
 
-        $measurement = collect($class);
+        $data = collect($class);
 
         $this->pulse->set(
-            type: 'powergrid-measurements',
+            type: 'powergrid-performance',
             key: uniqid(),
-            value: $measurement,
+            value: $data,
             timestamp: $now->getTimestamp()
         );
     }
