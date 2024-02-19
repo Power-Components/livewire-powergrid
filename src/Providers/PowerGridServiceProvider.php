@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
-use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild, Livewire\MeasurementCard, PowerGridManager};
+use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild, Livewire\PerformanceCard, PowerGridManager};
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -57,7 +57,7 @@ class PowerGridServiceProvider extends ServiceProvider
         Livewire::component('lazy-child', LazyChild::class);
 
         if (class_exists(\Laravel\Pulse\Facades\Pulse::class)) {
-            Livewire::component('powergrid-measurement-card', MeasurementCard::class);
+            Livewire::component('powergrid-performance-card', PerformanceCard::class);
         }
 
         Macros::boot();

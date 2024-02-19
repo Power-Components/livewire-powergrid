@@ -12,7 +12,7 @@ use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
 
-use PowerComponents\LivewirePowerGrid\Events\MeasureRetrieveData;
+use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
@@ -171,10 +171,10 @@ class PowerGridComponent extends Component
             $queriesTime = collect($queries)->sum('time');
 
             app(Dispatcher::class)->dispatch(
-                new MeasureRetrieveData(
+                new PowerGridPerformanceData(
                     $this->tableName,
-                    retrieveData: $retrieveData,
-                    queriesTime: $queriesTime,
+                    retrieveDataInMs: $retrieveData,
+                    queriesTimeInMs: $queriesTime,
                     queries: $queries,
                 )
             );
@@ -201,10 +201,10 @@ class PowerGridComponent extends Component
         $time = round((microtime(true) - $start) * 1000);
 
         app(Dispatcher::class)->dispatch(
-            new MeasureRetrieveData(
+            new PowerGridPerformanceData(
                 $this->tableName,
                 $time,
-                cached: true,
+                isCached: true,
             )
         );
 
@@ -264,7 +264,7 @@ class PowerGridComponent extends Component
 
         return view($theme['layout']['table'], [
             'data'  => $data,
-            'theme' => $this->getTheme(),
+            'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }
