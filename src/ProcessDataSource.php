@@ -349,6 +349,7 @@ class ProcessDataSource
                     return;
                 }
 
+                $formatterFound = false;
                 foreach ($summarizeFormat as $field => $format) {
                     $parts = explode('.', $field);
 
@@ -356,10 +357,15 @@ class ProcessDataSource
                         $formats                 = str($parts[1])->replace(['{', '}'], '');
                         $allowedSummarizeFormats = explode(',', $formats);
 
-                        if (in_array($summarize, $allowedSummarizeFormats)) {
+                        if ($column->field === $parts[0] && in_array($summarize, $allowedSummarizeFormats)) {
+                            $formatterFound = true;
                             data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
                         }
                     }
+                }
+
+                if (!$formatterFound) {
+                    data_set($column, 'summarize.' . $summarize, $value);
                 }
             }
         };
