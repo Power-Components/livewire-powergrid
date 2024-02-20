@@ -89,6 +89,8 @@ class ProcessDataSource
 
         $results = $this->component->applySorting($filters);
 
+        $this->applySummaries($results);
+        
         if ($results->count()) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
