@@ -4,11 +4,14 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
+use Livewire\Attributes\Url;
 
 trait Sorting
 {
+    #[Url]
     public string $sortField = 'id';
 
+    #[Url]
     public string $sortDirection = 'asc';
 
     public bool $withSortStringNumber = false;
