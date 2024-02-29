@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\On;
 
-/** @codeCoverageIgnore  */
+/** @codeCoverageIgnore */
 trait Listeners
 {
     #[On('pg:editable-{tableName}')]
@@ -26,13 +26,17 @@ trait Listeners
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
-        foreach ($this->visibleColumns as &$column) {
-            if (data_get($column, 'field') === $field) {
-                data_set($column, 'hidden', !data_get($column, 'hidden'));
-
-                break;
+        $this->visibleColumns = $this->visibleColumns->map(function (\stdClass | array $column) use ($field) {
+            if (is_object($column) && $column->field === $field) {
+                $column->hidden = !$column->hidden;
             }
-        }
+
+            if (is_array($column) && $column['field'] === $field) {
+                $column['hidden'] = !$column['hidden'];
+            }
+
+            return $column;
+        });
 
         $this->persistState('columns');
     }
