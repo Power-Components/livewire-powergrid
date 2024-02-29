@@ -16,10 +16,9 @@ class CheckDependencyFlatPick
     {
         return self::checkIfFileContains(
             [
-                base_path('tailwind.config.js'),
-                base_path('resources/js/app.js'),
+                base_path('package.json'),
             ],
-            'flatpickr',
+            '"flatpickr"',
         );
     }
 
