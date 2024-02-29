@@ -26,16 +26,17 @@ trait Listeners
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
-        $this->visibleColumns = $this->visibleColumns->map(function ($column) use ($field) {
+        $this->visibleColumns = $this->visibleColumns->map(function (\stdClass | array $column) use ($field) {
             if (is_object($column) && $column->field === $field) {
                 $column->hidden = !$column->hidden;
             }
+
             if (is_array($column) && $column['field'] === $field) {
                 $column['hidden'] = !$column['hidden'];
             }
+
             return $column;
         });
-
 
         $this->persistState('columns');
     }
