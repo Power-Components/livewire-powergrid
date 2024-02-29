@@ -300,7 +300,7 @@ trait Filter
 
                     data_set($column, 'filters', (array) $filter);
 
-                    if (isset($this->filters[data_get($filter, 'key')])
+                    if (isset($this->filters[data_get($filter, 'field')])
                         && in_array(data_get($filter, 'field'), array_keys($this->filters[data_get($filter, 'key')]))
                         && array_values($this->filters[data_get($filter, 'key')])) {
                         $this->enabledFilters[] = [
