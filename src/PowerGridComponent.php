@@ -20,7 +20,7 @@ use Throwable;
 /**
  * @property-read mixed $getCachedData
  * @property-read bool $hasColumnFilters
- * @property array|BaseCollection $visibleColumns
+ * @property-read array|BaseCollection $visibleColumns
  */
 class PowerGridComponent extends Component
 {
