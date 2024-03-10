@@ -30,10 +30,10 @@
                         wire:click.prevent="exportToXLS"
                         href="#"
                     >
+                        <span class="export-count">({{ $total }})</span>
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
-                            ({{ $total }})
                             @lang('livewire-powergrid::datatable.labels.filtered')
                         @endif
                     </a>
@@ -59,10 +59,10 @@
                         wire:click.prevent="exportToCsv"
                         href="#"
                     >
+                        <span class="export-count">({{ $total }})</span>
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
-                            ({{ $total }})
                             @lang('livewire-powergrid::datatable.labels.filtered')
                         @endif
                     </a>
