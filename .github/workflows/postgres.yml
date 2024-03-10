@@ -1,4 +1,4 @@
-name: PostGreSQL
+name: PostgreSQL
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:9.6
+        image: postgres:${{ matrix.laravel == '10.*' && '11.0' || 'latest' }}
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ 8.2, 8.1 ]
+        php: [8.3, 8.2, 8.1 ]
         laravel: [ 11.*, 10.* ]
         exclude:
           - php: 8.1
