@@ -27,7 +27,7 @@ it('can make an eloquent component', function () {
 
     expect($component->createdPath())->toBe('app/Livewire/UserTable.php');
 
-    expect($component->savePath())->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/UserTable.php'));
+    expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/UserTable.php'));
 });
 
 it('can make an query builder component', function () {
@@ -54,7 +54,7 @@ it('can make an query builder component', function () {
 
     expect($component->createdPath())->toBe('app/Livewire/UserTable.php');
 
-    expect($component->savePath())->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/UserTable.php'));
+    expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/UserTable.php'));
 });
 
 it('acceptes different subfolder notations', function (string $name) {
@@ -69,13 +69,14 @@ it('acceptes different subfolder notations', function (string $name) {
 
     expect($component->createdPath())->toBe('app/Livewire/Users/Admins/ListTable.php');
 
-    expect($component->savePath())->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/Users/Admins/ListTable.php'));
+    expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/Users/Admins/ListTable.php'));
 })
 ->with(
     ['Users.Admins.ListTable'],
     ['Users\Admins\ListTable'],
     ['Users/Admins/ListTable'],
-    ['Users.Admins/ListTable']
+    ['Users.Admins/ListTable'],
+    ['Users.Admins/ListTable'],
 );
 
 it('can create component with 5 subfolder level', function () {
@@ -90,5 +91,53 @@ it('can create component with 5 subfolder level', function () {
 
     expect($component->createdPath())->toBe("app/Livewire/System/Office/Users/Admin/Active/ListTable.php");
 
-    expect($component->savePath())->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/System/Office/Users/Admin/Active/ListTable.php'));
+    expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/System/Office/Users/Admin/Active/ListTable.php'));
 });
+
+it('creates proper components with different name text cases ', function (array $expected) {
+    expect(PowerGridComponentMaker::make($expected['name']))
+      ->namespace->toBe($expected['namespace'])
+      ->fqn->toBe($expected['fqn'])
+      ->htmlTag->toBe($expected['html_tag'])
+    ->createdPath()->toBe($expected['created_path'])
+     ->not->toBeNull();
+})
+->with(
+    [
+        'SysAdmins' => [[
+            'name'         => 'Users\SysAdmins\UserIndexTable',
+            'fqn'          => 'App\Livewire\Users\SysAdmins\UserIndexTable',
+            'namespace'    => 'App\Livewire\Users\SysAdmins',
+            'html_tag'     => '<livewire:users.sysadmins.user-index-table/>',
+            'created_path' => 'app/Livewire/Users/SysAdmins/UserIndexTable.php',
+        ]],
+        'SYSADMINS' => [[
+            'name'         => 'Users\SYSADMINS\UserIndexTable',
+            'fqn'          => 'App\Livewire\Users\SYSADMINS\UserIndexTable',
+            'namespace'    => 'App\Livewire\Users\SYSADMINS',
+            'html_tag'     => '<livewire:users.sysadmins.user-index-table/>',
+            'created_path' => 'app/Livewire/Users/SYSADMINS/UserIndexTable.php',
+        ]],
+        'sys_admins' => [[
+            'name'         => 'Users\sysadmins\UserIndexTable',
+            'fqn'          => 'App\Livewire\Users\sysadmins\UserIndexTable',
+            'namespace'    => 'App\Livewire\Users\sysadmins',
+            'html_tag'     => '<livewire:users.sysadmins.user-index-table/>',
+            'created_path' => 'app/Livewire/Users/sysadmins/UserIndexTable.php',
+        ]],
+        'sys-admins' => [[
+            'name'         => 'Users\sys-admins\UserIndexTable',
+            'fqn'          => 'App\Livewire\Users\sysadmins\UserIndexTable',
+            'namespace'    => 'App\Livewire\Users\sysadmins',
+            'html_tag'     => '<livewire:users.sysadmins.user-index-table/>',
+            'created_path' => 'app/Livewire/Users/sysadmins/UserIndexTable.php',
+        ]],
+        'sysadmins' => [[
+            'name'         => 'Users\sysadmins\UserIndexTable',
+            'fqn'          => 'App\Livewire\Users\sysadmins\UserIndexTable',
+            'namespace'    => 'App\Livewire\Users\sysadmins',
+            'html_tag'     => '<livewire:users.sysadmins.user-index-table/>',
+            'created_path' => 'app/Livewire/Users/sysadmins/UserIndexTable.php',
+        ]],
+    ],
+);

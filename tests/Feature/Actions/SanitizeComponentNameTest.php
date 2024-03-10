@@ -22,5 +22,12 @@ it('can properly sanitize a component name', function (string $componentName, st
     ['User.Admin.ListTable', 'User\Admin\ListTable'],
     ['List_Table.php', 'ListTable'],
     ['User.Foo', 'User\Foo'],
-
+    ['User\UserTables\ListTable', 'User\UserTables\ListTable'],
+    ['User\user-tables\ListTable', 'User\usertables\ListTable'],
+    ['User\user-tables\ListTable', 'User\usertables\ListTable'],
+    ['User//UserTables//ListTable', 'User\UserTables\ListTable'],
+    ['User//user-tables//ListTable', 'User\usertables\ListTable'],
+    ['User//user-tables//ListTable', 'User\usertables\ListTable'],
+    ['User\tables\ListTable', 'User\tables\ListTable'],
+    ['user\tables\ListTable', 'user\tables\ListTable'],
 ]);
