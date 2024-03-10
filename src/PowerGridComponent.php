@@ -80,7 +80,7 @@ class PowerGridComponent extends Component
             if ($filter->key === 'dynamic') {
                 $wireModel = array_values(
                     Arr::where(
-                        data_get($filter, 'attributes'),
+                        (array) data_get($filter, 'attributes'),
                         fn ($value, $key) => str($key)->contains('wire:model')
                     )
                 );
