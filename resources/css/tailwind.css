@@ -40,11 +40,7 @@
 }
 
 .pg-enabled-filters-span-clear-all {
-    @apply outline-none inline-flex justify-center items-center rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5 text-pg-primary-100 bg-pg-primary-500 dark:bg-pg-primary-700
-}
-
-.pg-enabled-filters-span {
-    @apply outline-none inline-flex justify-center items-center rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5 text-pg-primary-600 dark:text-pg-primary-200 bg-pg-primary-100 dark:bg-pg-primary-600
+    @apply outline-none inline-flex justify-center items-center rounded gap-x-1 text-xs font-semibold px-2.5 py-0.5
 }
 
 #power-grid-table-container select {

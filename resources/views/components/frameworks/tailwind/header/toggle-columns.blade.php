@@ -30,14 +30,17 @@
             @keyup.space.prevent="open = false;"
         >
             <div
-                class="py-1"
                 role="none"
             >
                 @foreach ($this->visibleColumns as $column)
                     <div
                         wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})"
                         wire:key="toggle-column-{{ data_get($column, 'field') }}"
-                        class="@if (data_get($column, 'hidden')) font-semibold bg-pg-primary-100 dark:bg-pg-primary-800 @endif cursor-pointer text-sm flex justify-start block px-4 py-2 text-pg-primary-500 dark:hover:text-pg-primary-200 dark:text-pg-primary-200"
+                        @class([
+                            'font-semibold bg-pg-primary-100 dark:bg-pg-primary-800 ' => data_get($column, 'hidden'),
+                            'py-1' => $loop->first || $loop->last,
+                            ' cursor-pointer text-sm flex justify-start block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800'
+                        ])
                     >
                         @if (!data_get($column, 'hidden'))
                             <x-livewire-powergrid::icons.eye class="text-pg-primary-500 dark:text-pg-primary-300" />

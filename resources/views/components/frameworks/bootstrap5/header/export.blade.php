@@ -30,10 +30,10 @@
                         wire:click.prevent="exportToXLS"
                         href="#"
                     >
-
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
+                            ({{ $total }})
                             @lang('livewire-powergrid::datatable.labels.filtered')
                         @endif
                     </a>
@@ -44,7 +44,7 @@
                             wire:click.prevent="exportToXLS(true)"
                             href="#"
                         >
-                            @lang('livewire-powergrid::datatable.labels.selected')
+                            (<span x-text="$wire.get('checkboxValues').length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
@@ -62,6 +62,7 @@
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
+                            ({{ $total }})
                             @lang('livewire-powergrid::datatable.labels.filtered')
                         @endif
                     </a>
@@ -72,7 +73,7 @@
                             wire:click.prevent="exportToCsv(true)"
                             href="#"
                         >
-                            @lang('livewire-powergrid::datatable.labels.selected')
+                            (<span x-text="$wire.get('checkboxValues').length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
