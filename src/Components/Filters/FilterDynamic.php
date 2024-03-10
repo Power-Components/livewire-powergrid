@@ -4,6 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
 class FilterDynamic extends FilterBase
 {
+    public string $key = 'boolean';
+
     public string $component = '';
 
     public array $attributes = [];
