@@ -20,11 +20,12 @@
             />
         </svg>
     </button>
-    <ul class="dropdown-menu">
+    <ul x-data="{countChecked: @entangle('checkboxValues').live}" class="dropdown-menu">
         @if (in_array('xlsx', data_get($setUp, 'exportable.type')))
             <li class="d-flex">
                 <div class="dropdown-item">
                     <span style="min-width: 25px;">@lang('XLSX')</span>
+
                     <a
                         class="text-black-50"
                         wire:click.prevent="exportToXLS"
@@ -44,7 +45,7 @@
                             wire:click.prevent="exportToXLS(true)"
                             href="#"
                         >
-                            (<span x-text="$wire.get('checkboxValues').length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
+                            (<span x-text="countChecked.length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
@@ -71,9 +72,10 @@
                         <a
                             class="text-black-50"
                             wire:click.prevent="exportToCsv(true)"
+                            x-bind:disabled="countChecked.length === 0"
                             href="#"
                         >
-                            (<span x-text="$wire.get('checkboxValues').length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
+                            (<span x-text="countChecked.length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
                         </a>
                     @endif
                 </div>
