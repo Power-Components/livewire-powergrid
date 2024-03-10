@@ -77,6 +77,24 @@ class PowerGridComponent extends Component
                 continue;
             }
 
+            if ($filter->key === 'dynamic') {
+                $wireModel = array_values(
+                    Arr::where(
+                        (array) data_get($filter, 'attributes'),
+                        fn ($value, $key) => str($key)->contains('wire:model')
+                    )
+                );
+
+                if (count($wireModel)) {
+                    $queryString[$wireModel[0]] = [
+                        'as'     => $as->toString(),
+                        'except' => '',
+                    ];
+                }
+
+                continue;
+            }
+
             $queryString['filters.' . $filter->key . '.' . $filter->field] = [
                 'as'     => $as->toString(),
                 'except' => '',
