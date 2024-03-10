@@ -10,7 +10,7 @@ class SanitizeComponentName
             ->rtrim('.php')
             // Remove possible prefix
             ->ltrim('//')
-            //Remove anything but alphanumeric, dot and all slashes
+            //Remove anything but alphanumeric, dot and slashes
             ->replaceMatches('#[^A-Za-z0-9 .//\\\\]#', '')
             //Convert multiple spaces into forward slashes
             ->replaceMatches('/\s+/', '//')
@@ -20,7 +20,6 @@ class SanitizeComponentName
             ->replaceMatches('/\/{2,}/', "\\")
             //Multile dots
             ->replaceMatches('/\.{2,}/', ".")
-            //Left over dots into forward slashes
             ->replace('.', '\\')
             //Left over backslahes into forward slashes
             ->replace('/', '\\')

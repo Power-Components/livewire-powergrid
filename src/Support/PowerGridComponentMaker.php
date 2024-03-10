@@ -91,9 +91,15 @@ final class PowerGridComponentMaker
         return $this->isProcessed;
     }
 
-    public function savePath(): string
+    public function savePath(string $filename = ''): string
     {
-        return powergrid_components_path($this->folder . DIRECTORY_SEPARATOR . $this->filename);
+        $path = $this->folder;
+
+        if ($filename !== '') {
+            $path .= $this->folder = DIRECTORY_SEPARATOR . $filename;
+        }
+
+        return powergrid_components_path($path);
     }
 
     public function setModelWithFqn(string $model, string $modelFqn): self
@@ -159,9 +165,9 @@ final class PowerGridComponentMaker
 
     public function saveToDisk(): self
     {
-        File::ensureDirectoryExists(powergrid_components_path());
+        File::ensureDirectoryExists($this->savePath());
 
-        File::put($this->savePath(), $this->saveToString());
+        File::put($this->savePath($this->filename), $this->saveToString());
 
         return $this;
     }
@@ -215,7 +221,6 @@ final class PowerGridComponentMaker
         }
 
         return Str::of($name)->beforeLast('\\')
-            ->title()
             ->toString();
     }
 
