@@ -76,3 +76,8 @@ function requiresOpenSpout()
 
     return test();
 }
+
+function fixturePath(string $filepath): string
+{
+    return str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/Concerns/Fixtures/' . ltrim($filepath, '/'));
+}
