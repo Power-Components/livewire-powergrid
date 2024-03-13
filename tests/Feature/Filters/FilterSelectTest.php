@@ -110,6 +110,7 @@ it('property filter using custom builder', function (string $component, object $
 it('property filter using computed datasource', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
+        ->assertSee('Pastel de Nata')
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Almôndegas ao Sugo')
         ->assertDontSee('Pastel de Nata');
