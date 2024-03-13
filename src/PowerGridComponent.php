@@ -119,8 +119,6 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->restoreState();
-
-        $this->resolveFilters();
     }
 
     public function fetchDatasource(): void
@@ -317,6 +315,8 @@ class PowerGridComponent extends Component
 
         /** @phpstan-ignore-next-line */
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
+
+        $this->resolveFilters();
 
         return $this->renderView($data);
     }

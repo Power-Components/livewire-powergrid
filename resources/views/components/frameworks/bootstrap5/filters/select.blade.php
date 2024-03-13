@@ -35,7 +35,15 @@
             {{ $defaultAttributes['selectAttributes'] }}
         >
             <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-            @foreach (data_get($filter, 'dataSource') as $key => $item)
+
+            @php
+                $computedDatasource = data_get($filter, 'computedDatasource');
+                $dataSource = filled($computedDatasource)
+                    ? $this->{$computedDatasource}
+                    : data_get($filter, 'dataSource');
+            @endphp
+
+            @foreach ($dataSource as $key => $item)
                 <option
                     wire:key="select-{{ $tableName }}-{{ $key }}"
                     value="{{ $item[data_get($filter, 'optionValue')] }}"
