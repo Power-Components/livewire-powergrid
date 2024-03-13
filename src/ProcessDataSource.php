@@ -322,7 +322,9 @@ class ProcessDataSource
     protected function setCurrentTable(EloquentBuilder|array|BaseCollection|MorphToMany|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
-            $this->component->currentTable = $datasource->from;
+            /** @var string $from */
+            $from                          = $datasource->from;
+            $this->component->currentTable = $from;
 
             return;
         }

@@ -133,11 +133,8 @@ class Builder
             $search = strtolower($search);
 
             $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
-                if ($query instanceof QueryBuilder) {
-                    $modelTable = $query->from;
-                } else {
-                    $modelTable = $query->getModel()->getTable();
-                }
+                /** @var string $modelTable */
+                $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
 
                 $columnList = $this->getColumnList($modelTable);
 
