@@ -13,10 +13,19 @@
     $collection = collect();
 
     if (filled(data_get($filter, 'dataSource'))) {
-        $collection = collect(data_get($filter, 'dataSource'))->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
-            if (is_array($entry)) {
-                $entry = collect($entry);
-            }
+        $collection = collect(data_get($filter, 'dataSource'))
+            ->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
+                if (is_array($entry)) {
+                    $entry = collect($entry);
+                }
+            return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
+        });
+    } elseif (filled(data_get($filter, 'computedDatasource'))) {
+        $collection = collect(data_get($filter, 'computedDatasource'))
+            ->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
+                if (is_array($entry)) {
+                    $entry = collect($entry);
+                }
             return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
         });
     }

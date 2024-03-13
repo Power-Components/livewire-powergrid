@@ -17,6 +17,8 @@ class FilterSelect extends FilterBase
 
     public array $depends = [];
 
+    public string $computedDatasource = '';
+
     public function depends(array $fields): FilterSelect
     {
         $this->depends = $fields;
@@ -27,6 +29,13 @@ class FilterSelect extends FilterBase
     public function dataSource(Collection|array|\Closure $collection): FilterSelect
     {
         $this->dataSource = $collection;
+
+        return $this;
+    }
+
+    public function computedDatasource(string $computedDatasource): FilterSelect
+    {
+        $this->computedDatasource = $computedDatasource;
 
         return $this;
     }

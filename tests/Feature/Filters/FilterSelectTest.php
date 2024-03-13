@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 
@@ -74,8 +74,28 @@ $customCollection = new class () extends DishesCollectionTable {
     }
 };
 
+$computedDatasource = new class () extends DishTableBase {
+    public int $dishId;
+
+    #[\Livewire\Attributes\Computed]
+    public function getAllCategories(): Collection
+    {
+        return Category::all();
+    }
+
+    public function filters(): array
+    {
+        return [
+            Filter::select('category_name', 'category_id')
+                ->computedDatasource('getAllCategories')
+                ->optionValue('id')
+                ->optionLabel('name'),
+        ];
+    }
+};
+
 it('property filter using custom builder', function (string $component, object $params) {
-    $component = livewire($component)
+    livewire($component)
         ->call($params->theme)
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Pastel de Nata')
@@ -85,6 +105,20 @@ it('property filter using custom builder', function (string $component, object $
     ->with([
         'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
         'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    ]);
+
+it('property filter using computed datasource', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        ->assertSee('Pastel de Nata')
+        ->set('filters', filterSelect('category_id', 1))
+        ->assertSee('Almôndegas ao Sugo')
+        ->assertDontSee('Pastel de Nata');
+    ;
+})->group('filters', 'filterSelect')
+    ->with([
+        'tailwind -> id'  => [$computedDatasource::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
+        'bootstrap -> id' => [$computedDatasource::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
     ]);
 
 it('property filter using custom collection', function (string $component) {
