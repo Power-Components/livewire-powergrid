@@ -57,7 +57,7 @@ We appreciate your help with:
 
 ## Demo Code
 
-- You can help by providing new use cases or improving the existing ones directly in the [Power-Components/powergrid-demo-misc](https://github.com/Power-Components/powergrid-demo-misc).
+- You can help by providing new use cases or improving the existing ones directly in the [Power-Components/powergrid-demo](https://github.com/Power-Components/powergrid-demo).
 
 ### Issues and Support
 
