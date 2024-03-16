@@ -55,7 +55,9 @@ class CreateCommand extends Command
     {
         $this->call('powergrid:update');
 
-        $this->call('powergrid:check-dependencies');
+        if (PHP_OS_FAMILY !== 'Windows') {
+            $this->call('powergrid:check-dependencies');
+        }
 
         return $this;
     }
