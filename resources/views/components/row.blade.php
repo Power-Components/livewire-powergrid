@@ -28,7 +28,7 @@
 
 @foreach ($columns as $column)
     @php
-        $content = $row->{$column->field} ?? null;
+        $content = $row->{$column->field} ?? '';
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
         $field = $column->dataField != '' ? $column->dataField : $column->field;
