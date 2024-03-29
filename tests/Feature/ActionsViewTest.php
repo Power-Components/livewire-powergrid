@@ -2,11 +2,9 @@
 
 use PowerComponents\LivewirePowerGrid\Column;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 
-use PowerComponents\LivewirePowerGrid\Tests\{
-    Concerns\Components\DishesTable
-    };
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $component = new class () extends DishesTable {
     public function columns(): array
