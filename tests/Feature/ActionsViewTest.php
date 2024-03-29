@@ -4,9 +4,9 @@ use PowerComponents\LivewirePowerGrid\Column;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuilderTable,
-    Concerns\Components\DishesTable,
-    Concerns\Components\DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\{
+    Concerns\Components\DishesTable
+    };
 
 $component = new class () extends DishesTable {
     public function columns(): array

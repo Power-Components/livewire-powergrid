@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
     Checkbox,
-    ClickToCopy,
     Cols,
     Editable,
     FilterBoolean,
