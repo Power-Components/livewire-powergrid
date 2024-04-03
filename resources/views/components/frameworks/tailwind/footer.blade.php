@@ -17,7 +17,8 @@
                 <div class="relative h-10">
                     <select
                         wire:model.live="setUp.footer.perPage"
-                        class="pg-select block appearance-none bg-pg-primary-50 border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-700 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-600"
+                        class="pg-select block appearance-none bg-pg-primary-50 border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-700 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-600 {{ data_get($theme, 'footer.selectClass') }}"
+                        style="{{ data_get($theme, 'footer.selectStyle') }}"
                     >
                         @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{ $value }}">

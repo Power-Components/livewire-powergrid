@@ -4,15 +4,16 @@
             count(data_get($setUp, 'footer.perPageValues')) > 1 &&
             blank(data_get($setUp, 'footer.pagination')))
         <footer
-            class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between"
+                class="mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between"
         >
             <div class="col-auto overflow-auto my-sm-2 my-md-0 ms-sm-0">
                 @if (filled(data_get($setUp, 'footer.perPage')) && count(data_get($setUp, 'footer.perPageValues')) > 1)
                     <div class="d-flex flex-lg-row align-items-center">
                         <label class="w-auto">
                             <select
-                                wire:model.live="setUp.footer.perPage"
-                                class="form-select"
+                                    wire:model.live="setUp.footer.perPage"
+                                    class="form-select {{ data_get($theme, 'footer.selectClass') }}"
+                                    style="{{ data_get($theme, 'footer.selectStyle') }}"
                             >
                                 @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                                     <option value="{{ $value }}">
