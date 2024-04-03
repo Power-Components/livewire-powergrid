@@ -92,12 +92,7 @@ class ProcessDataSource
         if ($results->count()) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
-            if ($isExport) {
-                $perPage = $this->component->total;
-            } else {
-                $perPage = intval(data_get($this->component->setUp, 'footer.perPage'));
-            }
-
+            $perPage   = $isExport ? $this->component->total : intval(data_get($this->component->setUp, 'footer.perPage'));
             $paginated = Collection::paginate($results, $perPage);
             $results   = $paginated->setCollection($this->transform($paginated->getCollection(), $this->component));
         };
