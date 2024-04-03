@@ -41,12 +41,12 @@ class ProcessDataSource
     /**
      * @throws Throwable
      */
-    public function get(): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
+    public function get(bool $isExport = false): Paginator|LengthAwarePaginator|\Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         $datasource = $this->prepareDataSource();
 
         if ($datasource instanceof BaseCollection) {
-            return $this->processCollection($datasource);
+            return $this->processCollection($datasource, $isExport);
         }
 
         $this->setCurrentTable($datasource);
@@ -78,7 +78,7 @@ class ProcessDataSource
     /**
      * @throws \Exception
      */
-    private function processCollection(mixed $datasource): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
+    private function processCollection(mixed $datasource, bool $isExport = false): \Illuminate\Pagination\LengthAwarePaginator|BaseCollection
     {
         /** @var BaseCollection $datasource */
         cache()->forget($this->component->getId());
@@ -92,7 +92,8 @@ class ProcessDataSource
         if ($results->count()) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
 
-            $paginated = Collection::paginate($results, intval(data_get($this->component->setUp, 'footer.perPage')));
+            $perPage   = $isExport ? $this->component->total : intval(data_get($this->component->setUp, 'footer.perPage'));
+            $paginated = Collection::paginate($results, $perPage);
             $results   = $paginated->setCollection($this->transform($paginated->getCollection(), $this->component));
         };
 
