@@ -58,9 +58,9 @@ if (!function_exists('convertObjectsToArray')) {
 if (!function_exists('powergrid_components_path')) {
     function powergrid_components_path(string $filename = ''): string
     {
-        return app_path(
+        return base_path(
             str(strval(config('livewire.class_namespace')))
-                ->ltrim('App//')
+                 ->replace('App', 'app')
                 ->append(DIRECTORY_SEPARATOR . $filename)
                 ->replace('\\', '/')
                 ->replace('//', '/')
