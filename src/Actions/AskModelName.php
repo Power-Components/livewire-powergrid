@@ -18,7 +18,7 @@ final class AskModelName
         {
             while (self::$model === '') {
                 self::setModel(suggest(
-                    label: 'Select a Model or enter its Name/FQN class.',
+                    label: 'Select a Model or enter its Fully qualified name.',
                     options: ListModels::handle(),
                     required: true,
                 ));
