@@ -9,22 +9,33 @@ use Symfony\Component\Finder\SplFileInfo;
 final class ListModels
 {
     /**
-     * List files in Models folder
+     * List files in Models
      *
      */
     public static function handle(): array
     {
-        $modelsFolder = app_path('Models');
+        $directories = config('livewire-powergrid.auto_discover_models_paths', [app_path('Models')]);
 
-        return collect(File::allFiles($modelsFolder))
-            ->reject(fn (SplFileInfo $file): bool => $file->getExtension() != 'php')
-            ->map(function (SplFileInfo $file): array {
-                return [
-                    'file' => $file->getFilenameWithoutExtension(),
-                    'path' => 'App\\Models\\' . $file->getFilenameWithoutExtension(),
-                ];
-            })
+        /** @var Array<int,string> $directories */
+        return collect($directories)
+            ->filter(fn (string $directory) => File::exists($directory))
+            ->map(fn (string $directory) => File::allFiles($directory))
             ->flatten()
+            ->reject(fn (SplFileInfo $file): bool => $file->getExtension() != 'php')
+
+            // Get FQN Class from source code
+            /** @phpstan-ignore-next-line */
+            ->map(function (SplFileInfo $file): string {
+                $sourceCode = strval(file_get_contents($file->getPathname()));
+
+                return rescue(fn () => ParseFqnClassInCode::handle($sourceCode), '');
+            })
+            //Remove all unqualified PHP files code
+            ->filter()
+
+            // Remove classes that do not extend an Eloquent Model
+            /** @phpstan-ignore-next-line */
+            ->reject(fn (string $fqnClass) => rescue(fn () => (new \ReflectionClass($fqnClass))->isSubclassOf(\Illuminate\Database\Eloquent\Model::class), false) === false)
             ->toArray();
     }
 }

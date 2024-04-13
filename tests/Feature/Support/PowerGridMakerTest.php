@@ -141,3 +141,23 @@ it('creates proper components with different name text cases ', function (array 
         ]],
     ],
 );
+
+test('Livewire class namespace is App\Livewire')
+  ->expect(fn () => config('livewire.class_namespace'))->toBe('App\Livewire');
+
+it('can create component in a custom Livewire namespace', function () {
+    app()->config->set('livewire.class_namespace', 'Domains');
+
+    $component = PowerGridComponentMaker::make('System/Office/Users/Admin/Active/ListTable');
+
+    expect($component)
+      ->name->toBe('ListTable')
+      ->namespace->toBe('Domains\System\Office\Users\Admin\Active')
+      ->folder->toBe('System\Office\Users\Admin\Active')
+      ->fqn->toBe('Domains\System\Office\Users\Admin\Active\ListTable')
+      ->htmlTag->toBe('<livewire:system.office.users.admin.active.list-table/>');
+
+    expect($component->createdPath())->toBe("Domains/System/Office/Users/Admin/Active/ListTable.php");
+
+    expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'Domains/System/Office/Users/Admin/Active/ListTable.php'));
+});
