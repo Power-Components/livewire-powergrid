@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Illuminate\Support\Facades\Cookie;
+use Exception;
+use Illuminate\Support\Facades\{Cookie, Session};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 /** @codeCoverageIgnore */
@@ -20,6 +21,9 @@ trait Persist
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function persistState(string $tableItem): void
     {
         $state = [];
@@ -47,23 +51,37 @@ trait Persist
             return;
         }
 
-        Cookie::queue('pg:' . $this->tableName, strval(json_encode($state)), now()->addYears(5)->unix());
+        if ($this->getPersistDriverConfig() === 'session') {
+            Session::put('pg:' . $this->tableName, strval(json_encode($state)));
+        } elseif ($this->getPersistDriverConfig() === 'cookies') {
+            Cookie::queue('pg:' . $this->tableName, strval(json_encode($state)), now()->addYears(5)->unix());
+        }
     }
 
+    /**
+     * @throws Exception
+     */
     private function restoreState(): void
     {
         if (empty($this->persist)) {
             return;
         }
 
-        /** @var null|string $cookie */
-        $cookie = Cookie::get('pg:' . $this->tableName);
+        $cookieOrSession = null;
 
-        if (is_null($cookie)) {
+        if ($this->getPersistDriverConfig() === 'session') {
+            /** @var null|string $cookieOrSession */
+            $cookieOrSession = Session::get('pg:' . $this->tableName);
+        } elseif ($this->getPersistDriverConfig() === 'cookies') {
+            /** @var null|string $cookieOrSession */
+            $cookieOrSession = Cookie::get('pg:' . $this->tableName);
+        }
+
+        if (is_null($cookieOrSession)) {
             return;
         }
 
-        $state = (array) json_decode(strval($cookie), true);
+        $state = (array) json_decode(strval($cookieOrSession), true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
             $this->columns = collect($this->columns)->map(function ($column) use ($state) {
@@ -86,5 +104,19 @@ trait Persist
             $this->sortArray     = $state['sortArray'];
             $this->multiSort     = $state['multiSort'];
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getPersistDriverConfig(): string
+    {
+        $persistDriver = strval(config('livewire-powergrid.persist_driver', 'cookies'));
+
+        if (!in_array($persistDriver, ['session', 'cookies'])) {
+            throw new Exception('Invalid persist driver');
+        }
+
+        return $persistDriver;
     }
 }
