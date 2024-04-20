@@ -43,6 +43,6 @@
         @else
             <span style="width: 6px"></span>
         @endif
-        <span>{!! $column->title !!}</span>
+        <span data-value>{!! $column->title !!}</span>
     </div>
 </th>
