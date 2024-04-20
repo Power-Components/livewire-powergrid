@@ -12,7 +12,7 @@
 @php
     $resolveContent = function (string $currentTable, string $field, \Illuminate\Database\Eloquent\Model|\stdClass $row): ?string {
         $currentField = $field;
-        $replace = fn($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        $replace = fn($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
 
         /** @codeCoverageIgnore */
         if (str_contains($currentField, '.')) {

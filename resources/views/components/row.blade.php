@@ -30,7 +30,7 @@
     @php
         $content = $row->{$column->field} ?? '';
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
-        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
         $field = $column->dataField != '' ? $column->dataField : $column->field;
 
         $contentClass = $column->contentClasses;

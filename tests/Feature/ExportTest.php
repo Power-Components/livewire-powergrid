@@ -122,7 +122,7 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
     $actual = collect(explode('<csv-divider>', $content))
         ->filter(fn ($heading) => strlen($heading) > 0)
         ->transform(function ($line) use ($delimiter, $separator) {
-            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line));
+            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line ?? ''));
 
             $rows = collect($arrayLine)
                 ->transform(fn ($row) => trim($row, $delimiter))
@@ -180,7 +180,7 @@ expect()->extend('toBeXLSDownload', function (array $headings, array $rows) {
     $actual = collect($content)
         ->filter(fn ($heading) => strlen($heading) > 0)
         ->transform(function ($line) use ($delimiter, $separator) {
-            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line));
+            $arrayLine = explode($separator, preg_replace('/[^A-Za-z0-9.!?|@,á" ]/', '', $line ?? ''));
 
             $rows = collect($arrayLine)
                 ->transform(fn ($row) => trim($row, $delimiter))
