@@ -30,3 +30,7 @@
 .pg-filter-container {
     @apply py-3;
 }
+
+.pg-enabled-filters-base {
+    @apply flex items-center gap-2 mt-2 md:mt-0 flex-wrap
+}
