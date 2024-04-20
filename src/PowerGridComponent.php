@@ -8,7 +8,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
 
