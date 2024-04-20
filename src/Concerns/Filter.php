@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use DateTimeZone;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\On;
 
@@ -336,5 +337,72 @@ trait Filter
                 'label' => $label,
             ];
         }
+    }
+
+    protected function powerGridQueryString(): array
+    {
+        $queryString = [];
+
+        foreach (Arr::dot($this->filters()) as $filter) {
+            $as = str($filter->field)
+                ->replace('_id', '');
+
+            if ($as->contains('.')) {
+                $as = $as->afterLast('.');
+            }
+
+            if ($filter->key === 'input_text') {
+                $queryString['filters.input_text.' . $filter->field] = [
+                    'as'     => $as->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.input_text_options.' . $filter->field] = [
+                    'as'     => $as->append('_operator')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
+            if ($filter->key === 'number') {
+                $queryString['filters.number.' . $filter->field . '.start'] = [
+                    'as'     => $as->append('_start')->toString(),
+                    'except' => '',
+                ];
+
+                $queryString['filters.number.' . $filter->field . '.end'] = [
+                    'as'     => $as->append('_end')->toString(),
+                    'except' => '',
+                ];
+
+                continue;
+            }
+
+            if ($filter->key === 'dynamic') {
+                $wireModel = array_values(
+                    Arr::where(
+                        (array) data_get($filter, 'attributes'),
+                        fn ($value, $key) => str($key)->contains('wire:model')
+                    )
+                );
+
+                if (count($wireModel)) {
+                    $queryString[$wireModel[0]] = [
+                        'as'     => $as->toString(),
+                        'except' => '',
+                    ];
+                }
+
+                continue;
+            }
+
+            $queryString['filters.' . $filter->key . '.' . $filter->field] = [
+                'as'     => $as->toString(),
+                'except' => '',
+            ];
+        }
+
+        return $queryString;
     }
 }
