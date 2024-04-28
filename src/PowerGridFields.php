@@ -18,7 +18,7 @@ final class PowerGridFields
      */
     public function add(string $fieldName, Closure $closure = null): PowerGridFields
     {
-        $this->fields[$fieldName] = $closure ?? fn ($model) => e(strval(data_get($model, $fieldName)));
+        $this->fields[$fieldName] = $closure ?? fn ($model) => data_get($model, $fieldName);
 
         return $this;
     }
