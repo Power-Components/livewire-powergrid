@@ -207,6 +207,29 @@ class PowerGridComponent extends Component
         return $this->processDataSourceInstance->get();
     }
 
+    public function processNoDataLabel(): string
+    {
+        $noDataLabel = $this->noDataLabel();
+
+        if ($noDataLabel instanceof View) {
+            return $noDataLabel->with(
+                [
+                    'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'),
+                    'theme'       => $this->getTheme(),
+                    'table'       => 'livewire-powergrid::components.table',
+                    'data'        => [],
+                ]
+            )->render();
+        }
+
+        return "<span>{$noDataLabel}</span>";
+    }
+
+    public function noDataLabel(): string|View
+    {
+        return view('livewire-powergrid::components.table.no-data-label');
+    }
+
     private function renderView(mixed $data): Application|Factory|View
     {
         $theme = $this->getTheme();

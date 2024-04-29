@@ -25,7 +25,7 @@ it('can set and unset stub vars', function () {
 });
 
 it('can list all variables in stub file', function () {
-    expect(PowerGridStub::make(_fixtureStubPath('demo.stub')))
+    expect(PowerGridStub::make(fixturePath('Stubs/demo.stub')))
       ->listStubVars()
       ->toArray()
       ->toBe([
@@ -37,7 +37,7 @@ it('can list all variables in stub file', function () {
 });
 
 it('properly replaces legacy variables', function () {
-    $stub = PowerGridStub::make(_fixtureStubPath('legacy.stub'))
+    $stub = PowerGridStub::make(fixturePath('Stubs/legacy.stub'))
       ->setVar('namespace', 'App\Livewire')
       ->setVar('model', 'User')
       ->setVar('modelFqn', 'App\Models\User')
@@ -52,11 +52,6 @@ it('properly replaces legacy variables', function () {
     ->toContain("return PowerGrid::fields()->add('created_at');")
     ->toContain("return DB::table('users');");
 });
-
-function _fixtureStubPath(string $filename): string
-{
-    return str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/../../Concerns/Fixtures/Stubs/' . $filename);
-}
 
 it('throws FileNotFoundException if template does not exist', function (string $invalidTemplate) {
     PowerGridStub::make($invalidTemplate);
