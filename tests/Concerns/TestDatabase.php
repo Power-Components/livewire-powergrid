@@ -31,6 +31,7 @@ class TestDatabase
         Schema::dropIfExists('chefs');
         Schema::dropIfExists('restaurants');
         Schema::dropIfExists('category_chef');
+        Schema::dropIfExists('orders');
     }
 
     public static function migrate(): void
