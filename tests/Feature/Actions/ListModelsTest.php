@@ -13,6 +13,7 @@ it('list all Eloquent Models in a directory', function () {
             'PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category',
             'PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Chef',
             'PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish',
+            'PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order',
             'PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Restaurant',
         ]
     );
