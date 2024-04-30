@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\{DB, Schema};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Chef;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Chef};
 
 class TestDatabase
 {
@@ -85,8 +85,10 @@ class TestDatabase
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('link')->nullable();
             $table->double('tax')->nullable();
             $table->decimal('price')->nullable();
+            $table->boolean('is_active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -127,9 +129,9 @@ class TestDatabase
         ]);
 
         DB::table('orders')->insert([
-            ['name' => 'Order 1', 'price' => 10.00, 'tax' => 127.30],
-            ['name' => 'Order 2', 'price' => 20.00, 'tax' => 259.50],
-            ['name' => 'Order 3', 'price' => null, 'tax' => null],
+            ['name' => 'Order 1', 'price' => 10.00, 'tax' => 127.30, 'is_active' => true],
+            ['name' => 'Order 2', 'price' => 20.00, 'tax' => 259.50, 'is_active' => true],
+            ['name' => 'Order 3', 'price' => null, 'tax' => null, 'is_active' => false],
         ]);
 
         if (empty($dishes)) {
@@ -138,15 +140,10 @@ class TestDatabase
 
         DB::table('dishes')->insert($dishes);
 
-        $chefCategories = [
-            'Luan'    => [1, 3, 4],
-            'Dan'     => [2, 5],
-            'Vitor'   => [5, 6],
-            'Claudio' => [1, 6, 7],
-        ];
+        $chefCategories = Category::all();
 
         Chef::query()->get()->each(function (Chef $chef) use ($chefCategories) {
-            $chef->categories()->attach($chefCategories[$chef->name]);
+            $chef->categories()->attach($chefCategories->shuffle()->take(rand(1, 4)));
         });
     }
 
