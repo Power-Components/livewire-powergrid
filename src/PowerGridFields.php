@@ -18,8 +18,17 @@ final class PowerGridFields
      */
     public function add(string $fieldName, Closure $closure = null): PowerGridFields
     {
-        $this->fields[$fieldName] = $closure ?? fn ($model) => e(strval(data_get($model, $fieldName)));
+        $this->fields[$fieldName] = $closure ?? fn ($model) => $this->valueIsString(data_get($model, $fieldName));
 
         return $this;
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     */
+    private function valueIsString(mixed $value): mixed
+    {
+        return is_string($value) ? e($value) : $value;
     }
 }

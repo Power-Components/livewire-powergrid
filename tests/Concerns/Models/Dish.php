@@ -29,6 +29,13 @@ class Dish extends Model
 
     protected $table = 'dishes';
 
+    protected $casts = [
+        'in_stock'    => 'boolean',
+        'active'      => 'boolean',
+        'price'       => 'float',
+        'produced_at' => 'datetime',
+    ];
+
     public static function servedAt()
     {
         return  self::select('serving_at')->distinct('serving_at')->get();

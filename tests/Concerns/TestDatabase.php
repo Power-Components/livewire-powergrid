@@ -31,6 +31,7 @@ class TestDatabase
         Schema::dropIfExists('chefs');
         Schema::dropIfExists('restaurants');
         Schema::dropIfExists('category_chef');
+        Schema::dropIfExists('orders');
     }
 
     public static function migrate(): void
@@ -80,6 +81,15 @@ class TestDatabase
             $table->foreignId('category_id');
             $table->timestamps();
         });
+
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->double('tax')->nullable();
+            $table->decimal('price')->nullable();
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     public static function seed(array $dishes = []): void
@@ -91,6 +101,7 @@ class TestDatabase
         DB::table('chefs')->truncate();
         DB::table('restaurants')->truncate();
         DB::table('category_chef')->truncate();
+        DB::table('orders')->truncate();
 
         Schema::enableForeignKeyConstraints();
 
@@ -113,6 +124,12 @@ class TestDatabase
 
         DB::table('restaurants')->insert([
             ['name' => 'Not McDonalds'],
+        ]);
+
+        DB::table('orders')->insert([
+            ['name' => 'Order 1', 'price' => 10.00, 'tax' => 127.30],
+            ['name' => 'Order 2', 'price' => 20.00, 'tax' => 259.50],
+            ['name' => 'Order 3', 'price' => null, 'tax' => null],
         ]);
 
         if (empty($dishes)) {
