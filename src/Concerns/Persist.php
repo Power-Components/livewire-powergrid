@@ -11,12 +11,15 @@ trait Persist
 {
     public array $persist = [];
 
+    public string $persistPrefix = '';
+
     /**
      * $tableItems: 'filters', 'columns', 'sorting'
      */
-    public function persist(array $tableItems): PowerGridComponent
+    public function persist(array $tableItems, string $persistPrefix = ''): PowerGridComponent
     {
-        $this->persist = $tableItems;
+        $this->persist       = $tableItems;
+        $this->persistPrefix = $persistPrefix;
 
         return $this;
     }
@@ -52,9 +55,9 @@ trait Persist
         }
 
         if ($this->getPersistDriverConfig() === 'session') {
-            Session::put('pg:' . $this->tableName, strval(json_encode($state)));
+            Session::put($this->getPersistName(), strval(json_encode($state)));
         } elseif ($this->getPersistDriverConfig() === 'cookies') {
-            Cookie::queue('pg:' . $this->tableName, strval(json_encode($state)), now()->addYears(5)->unix());
+            Cookie::queue($this->getPersistName(), strval(json_encode($state)), now()->addYears(5)->unix());
         }
     }
 
@@ -71,10 +74,10 @@ trait Persist
 
         if ($this->getPersistDriverConfig() === 'session') {
             /** @var null|string $cookieOrSession */
-            $cookieOrSession = Session::get('pg:' . $this->tableName);
+            $cookieOrSession = Session::get($this->getPersistName());
         } elseif ($this->getPersistDriverConfig() === 'cookies') {
             /** @var null|string $cookieOrSession */
-            $cookieOrSession = Cookie::get('pg:' . $this->tableName);
+            $cookieOrSession = Cookie::get($this->getPersistName());
         }
 
         if (is_null($cookieOrSession)) {
@@ -118,5 +121,14 @@ trait Persist
         }
 
         return $persistDriver;
+    }
+
+    private function getPersistName(): string
+    {
+        if (!empty($this->persistPrefix)) {
+            return 'pg:' . $this->persistPrefix . '-' . $this->tableName;
+        }
+
+        return 'pg:' . $this->tableName;
     }
 }
