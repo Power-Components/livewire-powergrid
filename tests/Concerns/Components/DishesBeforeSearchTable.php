@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridFields};
 
@@ -29,8 +30,8 @@ class DishesBeforeSearchTable extends PowerGridComponent
     {
         if ($field === 'in_stock') {
             return str($search)
-                ->replace('without_stock', '0')
-                ->replace('with_stock', '1')
+                ->replace('without_stock', DB::getDriverName() === 'pgsql' ? 'false' : '0')
+                ->replace('with_stock', DB::getDriverName() === 'pgsql' ? 'true' : '1')
                 ->toString();
         }
 

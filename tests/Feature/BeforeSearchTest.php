@@ -24,8 +24,8 @@ it('can use beforeSearch in boolean field', function (string $component, object 
         # without_stock => in_stock = 0
         ->set('search', 'without_stock')
         ->assertDontSee('Pastel de Nata')
+        ->assertDontSee('Carne Louca')
         ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Pastel de Nata')
         # with_stock => in_stock = 1
         ->set('search', 'with_stock')
         ->assertSee('Pastel de Nata')
@@ -35,7 +35,8 @@ it('can use beforeSearch in boolean field', function (string $component, object 
         ->set('search', 'without_stock')
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Pastel de Nata');
+        ->assertDontSee('Pastel de Nata')
+    ;
 })->with([
     'tailwind'  => [DishesBeforeSearchTable::class, (object) ['theme' => 'tailwind']],
     'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => 'bootstrap']],
