@@ -299,10 +299,10 @@ class Builder
         return [$table, $field];
     }
 
-    private function getColumnType(string $modelTable, string $field = null): ?string
+    private function getColumnType(string $modelTable, string $field): ?string
     {
         try {
-            return $this->getColumnList($modelTable)[$field];
+            return $this->getColumnList($modelTable)[$field] ?? null;
         } catch (\Throwable $throwable) {
             logger()->warning('PowerGrid [getColumnType] warning: ', [
                 'table'     => $modelTable,
