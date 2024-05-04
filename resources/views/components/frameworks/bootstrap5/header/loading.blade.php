@@ -3,7 +3,7 @@
     style="padding-left: 10px;"
 >
     <div
-        wire:loading.class="spinner-border d-none"
+        wire:loading.class="spinner-border"
         role="status"
         style="color: #656363;"
     >
