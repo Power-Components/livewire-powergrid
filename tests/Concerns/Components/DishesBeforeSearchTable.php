@@ -25,6 +25,18 @@ class DishesBeforeSearchTable extends PowerGridComponent
         return 'Peixada';
     }
 
+    public function beforeSearch(?string $field = null, ?string $search = null): ?string
+    {
+        if ($field === 'in_stock') {
+            return str($search)
+                ->replace('without_stock', '0')
+                ->replace('with_stock', '1')
+                ->toString();
+        }
+
+        return $search;
+    }
+
     public function datasource(): Builder
     {
         return Dish::query();
@@ -47,6 +59,9 @@ class DishesBeforeSearchTable extends PowerGridComponent
             Column::make('Dish', 'name', 'dishes.name')
                 ->searchable()
                 ->sortable(),
+
+            Column::make('Stock', 'in_stock', 'dishes.in_stock')
+                ->searchable(),
 
             Column::action('Action'),
         ];
