@@ -342,33 +342,50 @@ class ProcessDataSource
             return;
         }
 
-        $format = function ($summarize, $column, $field, $value) {
+        $applySummaryFormat = function ($summarizeMethod, $column, $field, $value) {
             if (method_exists($this->component, 'summarizeFormat')) {
-                $summarizeFormat = $this->component->summarizeFormat();
+                $summarizeFormatTasks = $this->component->summarizeFormat();
 
-                if (count($summarizeFormat) === 0) {
-                    data_set($column, 'summarize.' . $summarize, $value);
+                if (count($summarizeFormatTasks) === 0) {
+                    data_set($column, 'summarize.' . $summarizeMethod, $value);
 
                     return;
                 }
 
-                foreach ($summarizeFormat as $field => $format) {
-                    $parts = explode('.', $field);
+                foreach ($summarizeFormatTasks as $field => $applySummaryFormat) {
+                    $fieldAndSummarizeMethods = explode('.', $field);
 
-                    if (isset($parts[1])) {
-                        $formats                 = str($parts[1])->replace(['{', '}'], '');
-                        $allowedSummarizeFormats = explode(',', $formats);
+                    if (count($fieldAndSummarizeMethods) != 2) {
+                        throw new \InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
+                    }
 
-                        if (in_array($summarize, $allowedSummarizeFormats)) {
-                            data_set($column, 'summarize.' . $summarize, $this->component->summarizeFormat()[$field]($value));
+                    $fieldName       = $fieldAndSummarizeMethods[0];
+                    $sumarizeMethods = $fieldAndSummarizeMethods[1];
+
+                    $applyFormatToSummarizeMethods = str($sumarizeMethods)->replaceMatches('/\s+/', '')
+                        ->replace(['{', '}'], '')
+                        ->explode(',')
+                        ->toArray();
+
+                    if (in_array($summarizeMethod, $applyFormatToSummarizeMethods)) {
+                        $formattingClosure = $this->component->summarizeFormat()[$field];
+
+                        if (!is_callable($formattingClosure)) {
+                            throw new \InvalidArgumentException('Summary Formatter expects a callable function, ' . gettype($formattingClosure) . ' given instead.');
                         }
+
+                        if (in_array($fieldName, [$column->field, $column->dataField])) {
+                            $value = $formattingClosure($value);
+                        }
+
+                        data_set($column, 'summarize.' . $summarizeMethod, $value);
                     }
                 }
             }
         };
 
         $this->component->columns = collect($this->component->columns)
-            ->map(function (array|\stdClass|Column $column) use ($results, $format) {
+            ->map(function (array|\stdClass|Column $column) use ($results, $applySummaryFormat) {
                 $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
 
                 $summaries = ['sum', 'count', 'avg', 'min', 'max'];
@@ -376,7 +393,7 @@ class ProcessDataSource
                 foreach ($summaries as $summary) {
                     if (data_get($column, $summary . '.header') || data_get($column, $summary . '.footer')) {
                         $value = $results->{$summary}($field);
-                        $format($summary, $column, $field, $value);
+                        $applySummaryFormat($summary, $column, $field, $value);
                     }
                 }
 
