@@ -11,7 +11,7 @@ beforeEach(
     }
 );
 
-it('calculate "count" on id field', function (string $component, object $params) {
+it('calculates "count" on id field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSee('Count ID: 12')
@@ -19,7 +19,7 @@ it('calculate "count" on id field', function (string $component, object $params)
         ->assertSee('Count ID: 1');
 })->with('calculations');
 
-it('calculate "sum" on price field', function (string $component, object $params) {
+it('calculates "sum" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtml('<span>Sum Price: $15,000.60</span>')
@@ -29,29 +29,30 @@ it('calculate "sum" on price field', function (string $component, object $params
         ->assertSeeHtml('<span>Sum Price: $600.00</span>');
 })->with('calculations')->skip('Refactoring');
 
-it('calculate "count" on price field', function (string $component, object $params) {
+it('calculates "count" and formats on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('Count Price: 12')
+        ->assertSeeHtml('Count Price: 12 item(s)')
         ->set('search', 'Dish C')
-        ->assertSeeHtml('Count Price: 1')
+        ->assertSeeHtml('Count Price: 1 item(s)')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('Count Price: 1');
+        ->assertSeeHtml('Count Price: 1 item(s)');
 })->with('calculations');
 
-it('calculate "avg" on price field', function (string $component, object $params) {
+it('calculates and formats "avg" on price field and calorie fields', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
-        ->assertSeeHtml('<span>Avg Price: $1,250.05</span>');
+        ->assertSeeHtml('<span>Avg Price: $1,250.05</span>')
+        ->assertSeeHtml('<span>Average: 224 kcal</span>');
 })->with('calculations');
 
-it('calculate "min" on price field', function (string $component, object $params) {
+it('calculates "min" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtml('<span>Min Price: $100.00</span>');
 })->with('calculations');
 
-it('calculate "max" on price field', function (string $component, object $params) {
+it('calculates "max" on price field', function (string $component, object $params) {
     livewire($component)
         ->call($params->theme)
         ->assertSeeHtml('<span>Max Price: $7,500.00</span>');

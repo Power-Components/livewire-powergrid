@@ -67,6 +67,7 @@ class DishesCalculationsTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
+            ->add('calories', fn ($dish) => $dish->calories . ' kcal')
             ->add('price');
     }
 
@@ -84,6 +85,10 @@ class DishesCalculationsTable extends PowerGridComponent
                 ->searchable()
                 ->field('name'),
 
+            Column::make('Calories', 'calories', 'calories')
+                ->withAvg('Average', header: true, footer: false)
+                ->sortable(),
+
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
@@ -99,12 +104,16 @@ class DishesCalculationsTable extends PowerGridComponent
 
     public function summarizeFormat(): array
     {
+        $fmt = (new \NumberFormatter('pt-PT', \NumberFormatter::DEFAULT_STYLE));
+
         return [
             'price.{sum,avg,min,max}' => function ($value) {
                 return (new \NumberFormatter('en_US', \NumberFormatter::CURRENCY))
                     ->formatCurrency($value, 'USD');
             },
-            'price.{count}' => fn ($value) => $value,
+            'price.{count}'  => fn ($value) => $fmt->format($value) . ' item(s)',
+            'calories.{avg}' => fn ($value) => $fmt->format($value) . ' kcal',
+
         ];
     }
 
