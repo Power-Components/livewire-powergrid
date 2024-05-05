@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\{Cache, DB, Schema};
+use Illuminate\Support\Facades\{Cache, Schema};
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Boolean,
@@ -147,16 +147,16 @@ class Builder
 
                         $search = $this->getBeforeSearchMethod($field, $search);
 
-                        $hasColumn = in_array($field, $columnList, true);
+                        $hasColumn = isset($columnList[$field]);
 
-                        $query->when($search, function () use ($column, $query, $search, $table, $field, $hasColumn) {
+                        $query->when($search != '', function () use ($column, $query, $search, $table, $field, $hasColumn) {
                             if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
                                 $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' \'%' . $search . '%\'');
                             }
 
-                            if ($hasColumn && blank(data_get($column, 'searchableRaw')) && $search) {
+                            if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
                                 try {
-                                    $columnType = DB::getSchemaBuilder()->getColumnType($table, $field);
+                                    $columnType = $this->getColumnType($table, $field);
 
                                     /** @phpstan-ignore-next-line  */
                                     $driverName = $query->getConnection()->getConfig('driver');
@@ -299,11 +299,37 @@ class Builder
         return [$table, $field];
     }
 
+    private function getColumnType(string $modelTable, string $field): ?string
+    {
+        try {
+            return $this->getColumnList($modelTable)[$field] ?? null;
+        } catch (\Throwable $throwable) {
+            logger()->warning('PowerGrid [getColumnType] warning: ', [
+                'table'     => $modelTable,
+                'field'     => $field,
+                'throwable' => $throwable->getTrace(),
+            ]);
+
+            return null;
+        }
+    }
+
     private function getColumnList(string $modelTable): array
     {
         try {
-            return (array) Cache::remember('powergrid_columns_in_' . $modelTable, 600, fn () => Schema::getColumnListing($modelTable));
-        } catch (\Exception) {
+            return (array) Cache::remember(
+                'powergrid_columns_in_' . $modelTable,
+                60 * 60 * 3,
+                fn () => collect(Schema::getColumns($modelTable))
+                ->pluck('type', 'name')
+                ->toArray()
+            );
+        } catch (\Throwable $throwable) {
+            logger()->warning('PowerGrid [getColumnList] warning: ', [
+                'table'     => $modelTable,
+                'throwable' => $throwable->getTrace(),
+            ]);
+
             return Schema::getColumnListing($modelTable);
         }
     }

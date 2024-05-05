@@ -13,9 +13,30 @@ it('searches data using beforeSearch', function (string $component, object $para
         ->assertSee('Peixada')
         ->set('search', '')
         ->assertSee('Peixada');
-})->with('before_search_themes');
+})->with([
+    'tailwind'  => [DishesBeforeSearchTable::class, (object) ['theme' => 'tailwind']],
+    'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => 'bootstrap']],
+]);
 
-dataset('before_search_themes', [
+it('can use beforeSearch in boolean field', function (string $component, object $params) {
+    livewire($component)
+        ->call($params->theme)
+        # without_stock => in_stock = 0
+        ->set('search', 'without_stock')
+        ->assertDontSee('Pastel de Nata')
+        ->assertDontSee('Carne Louca')
+        ->assertSee('Barco-Sushi Simples')
+        # with_stock => in_stock = 1
+        ->set('search', 'with_stock')
+        ->assertSee('Pastel de Nata')
+        ->assertSee('Carne Louca')
+        ->assertDontSee('Barco-Sushi Simples')
+        # without_stock => in_stock = 0
+        ->set('search', 'without_stock')
+        ->assertDontSee('Pastel de Nata')
+        ->assertSee('Barco-Sushi Simples')
+        ->assertDontSee('Pastel de Nata');
+})->with([
     'tailwind'  => [DishesBeforeSearchTable::class, (object) ['theme' => 'tailwind']],
     'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => 'bootstrap']],
 ]);
