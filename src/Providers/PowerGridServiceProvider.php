@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Database\Events\MigrationStarted;
+use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
@@ -58,7 +58,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         Livewire::component('lazy-child', LazyChild::class);
 
-        Event::listen(MigrationStarted::class, fn () => PowerGridTableCache::forgetAll());
+        Event::listen(MigrationsEnded::class, fn () => PowerGridTableCache::forgetAll());
 
         if (class_exists(\Laravel\Pulse\Facades\Pulse::class)) {
             Livewire::component('powergrid-performance-card', PerformanceCard::class);
