@@ -14,12 +14,13 @@ trait Persist
     public string $persistPrefix = '';
 
     /**
-     * $tableItems: 'filters', 'columns', 'sorting'
+     * $tableItems: 'filters', 'columns', 'sorting',
+     * $prefix: Add prefix to the persist storage key
      */
-    public function persist(array $tableItems, string $persistPrefix = ''): PowerGridComponent
+    public function persist(array $tableItems, string $prefix = ''): PowerGridComponent
     {
         $this->persist       = $tableItems;
-        $this->persistPrefix = $persistPrefix;
+        $this->persistPrefix = $prefix;
 
         return $this;
     }
@@ -54,11 +55,10 @@ trait Persist
             return;
         }
 
-        if ($this->getPersistDriverConfig() === 'session') {
-            Session::put($this->getPersistName(), strval(json_encode($state)));
-        } elseif ($this->getPersistDriverConfig() === 'cookies') {
-            Cookie::queue($this->getPersistName(), strval(json_encode($state)), now()->addYears(5)->unix());
-        }
+        match ($this->getPersistDriverConfig()) {
+            'session' => Session::put($this->getPersistKeyName(), strval(json_encode($state))),
+            default   => Cookie::queue($this->getPersistKeyName(), strval(json_encode($state)), now()->addYears(5)->unix())
+        };
     }
 
     /**
@@ -70,21 +70,12 @@ trait Persist
             return;
         }
 
-        $cookieOrSession = null;
+        $storage = match ($this->getPersistDriverConfig()) {
+            'session' => Session::get($this->getPersistKeyName()),
+            default   => Cookie::get($this->getPersistKeyName())
+        };
 
-        if ($this->getPersistDriverConfig() === 'session') {
-            /** @var null|string $cookieOrSession */
-            $cookieOrSession = Session::get($this->getPersistName());
-        } elseif ($this->getPersistDriverConfig() === 'cookies') {
-            /** @var null|string $cookieOrSession */
-            $cookieOrSession = Cookie::get($this->getPersistName());
-        }
-
-        if (is_null($cookieOrSession)) {
-            return;
-        }
-
-        $state = (array) json_decode(strval($cookieOrSession), true);
+        $state = (array) json_decode(strval($storage), true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
             $this->columns = collect($this->columns)->map(function ($column) use ($state) {
@@ -123,7 +114,7 @@ trait Persist
         return $persistDriver;
     }
 
-    private function getPersistName(): string
+    private function getPersistKeyName(): string
     {
         if (!empty($this->persistPrefix)) {
             return 'pg:' . $this->persistPrefix . '-' . $this->tableName;
