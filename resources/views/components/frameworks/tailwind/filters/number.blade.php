@@ -5,7 +5,9 @@
     'column' => '',
 ])
 @php
+
     $fieldClassName = data_get($filter, 'className');
+
     $field = data_get($filter, 'field');
 
     $componentAttributes = (array) data_get($filter, 'attributes');
@@ -13,6 +15,8 @@
     $defaultAttributes = $fieldClassName::getWireAttributes($field, array_merge($filter, (array)$column));
 
     $filterClasses = Arr::toCssClasses([data_get($theme, 'inputClass'), data_get($column, 'headerClass'), 'power_grid']);
+
+    $placeholder = data_get($filter, 'placeholder');
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes, $filterClasses], $filter);
 @endphp
