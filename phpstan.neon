@@ -13,6 +13,16 @@ parameters:
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
         - '#Call to an undefined method PowerComponents\\LivewirePowerGrid\\PowerGridComponent::datasource\(\).#'
+        -
+            message: "#^Unable to resolve the template type TKey in call to function collect$#"
+            count: 1
+            path: src/Support/PowerGridTableCache.php
+
+        -
+            message: "#^Unable to resolve the template type TValue in call to function collect$#"
+            count: 1
+            path: src/Support/PowerGridTableCache.php
+
     paths:
         - src
 
