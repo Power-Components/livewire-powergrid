@@ -25,7 +25,7 @@ trait PersistData
         if (!empty($this->persist)) {
             $url  = parse_url(strval(filter_input(INPUT_SERVER, 'HTTP_REFERER')));
             $path = $url && array_key_exists('path', $url) ? $url['path'] : '/';
-            setcookie('pg:' . $this->tableName, strval(json_encode($state)), now()->addYear()->unix(), $path);
+            setcookie($this->getPersistKey(), strval(json_encode($state)), now()->addYear()->unix(), $path);
         }
     }
 
@@ -35,7 +35,7 @@ trait PersistData
             return;
         }
 
-        $cookie = filter_input(INPUT_COOKIE, 'pg:' . $this->tableName);
+        $cookie = filter_input(INPUT_COOKIE, $this->getPersistKey());
         if (is_null($cookie)) {
             return;
         }
@@ -56,6 +56,11 @@ trait PersistData
             $this->filters        = $state['filters'];
             $this->enabledFilters = $state['enabledFilters'];
         }
+    }
+
+    protected function getPersistKey(): string
+    {
+        return 'pg:' . md5($this->tableName);
     }
 
     /**
