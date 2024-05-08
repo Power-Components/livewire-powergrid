@@ -6,14 +6,12 @@ use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
-use function Livewire\store;
-
 class Number extends BuilderBase
 {
     public function builder(Builder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
-        $thousands = store($this->component)->get('filters.number.' . $field . '.thousands');
-        $decimal   = store($this->component)->get('filters.number.' . $field . '.decimal');
+        $thousands = data_get($this->filterBase, 'thousands');
+        $decimal   = data_get($this->filterBase, 'decimal');
 
         if (data_get($this->filterBase, 'builder')) {
             /** @var \Closure $closure */
@@ -28,11 +26,11 @@ class Number extends BuilderBase
         if (isset($values['start']) && !isset($values['end'])) {
             $start = $values['start'];
 
-            if (isset($thousands)) {
+            if (is_string($thousands)) {
                 $start = str_replace($thousands, '', $start);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $start = str_replace($decimal, '.', $start);
             }
 
@@ -42,11 +40,11 @@ class Number extends BuilderBase
         if (!isset($values['start']) && isset($values['end'])) {
             $end = $values['end'];
 
-            if (isset($decimal)) {
+            if (is_string($thousands)) {
                 $end = str_replace($thousands, '', $values['end']);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $end = (float) str_replace($decimal, '.', $end);
             }
 
@@ -57,12 +55,12 @@ class Number extends BuilderBase
             $start = $values['start'];
             $end   = $values['end'];
 
-            if (isset($thousands)) {
+            if (is_string($thousands)) {
                 $start = str_replace($thousands, '', $values['start']);
                 $end   = str_replace($thousands, '', $values['end']);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $start = str_replace($decimal, '.', $start);
                 $end   = str_replace($decimal, '.', $end);
             }
@@ -73,8 +71,8 @@ class Number extends BuilderBase
 
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
-        $thousands = store($this->component)->get('filters.number.' . $field . '.thousands');
-        $decimal   = store($this->component)->get('filters.number.' . $field . '.decimal');
+        $thousands = data_get($this->filterBase, 'thousands');
+        $decimal   = data_get($this->filterBase, 'decimal');
 
         if (data_get($this->filterBase, 'collection')) {
             /** @var \Closure $closure */
@@ -87,11 +85,11 @@ class Number extends BuilderBase
         if (isset($values['start']) && !isset($values['end'])) {
             $start = $values['start'];
 
-            if (isset($thousands)) {
+            if (is_string($thousands)) {
                 $start = str_replace($thousands, '', $values['start']);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $start = (float) str_replace($decimal, '.', $start);
             }
 
@@ -101,11 +99,11 @@ class Number extends BuilderBase
         if (!isset($values['start']) && isset($values['end'])) {
             $end = $values['end'];
 
-            if (isset($thousands)) {
+            if (is_string($thousands)) {
                 $end = str_replace($thousands, '', $values['end']);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $end = (float) str_replace($decimal, '.', $end);
             }
 
@@ -116,12 +114,12 @@ class Number extends BuilderBase
             $start = $values['start'];
             $end   = $values['end'];
 
-            if (isset($thousands)) {
+            if (is_string($thousands)) {
                 $start = str_replace($thousands, '', $values['start']);
                 $end   = str_replace($thousands, '', $values['end']);
             }
 
-            if (isset($decimal)) {
+            if (is_string($decimal)) {
                 $start = str_replace($decimal, '.', $start);
                 $end   = str_replace($decimal, '.', $end);
             }

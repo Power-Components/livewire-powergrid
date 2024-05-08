@@ -6,8 +6,6 @@ use DateTimeZone;
 use Illuminate\Support\{Arr, Carbon};
 use Livewire\Attributes\On;
 
-use function Livewire\store;
-
 trait Filter
 {
     public array $filters = [];
@@ -169,9 +167,6 @@ trait Filter
 
         $this->resetPage();
 
-        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
-        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
-
         $this->addEnabledFilters($field, $title);
 
         if (blank($value)) {
@@ -188,9 +183,6 @@ trait Filter
         extract($params);
 
         $this->resetPage();
-
-        store($this)->set('filters.number.' . $field . '.thousands', $thousands);
-        store($this)->set('filters.number.' . $field . '.decimal', $decimal);
 
         $this->addEnabledFilters($field, $title);
 
