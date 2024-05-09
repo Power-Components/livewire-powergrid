@@ -38,6 +38,14 @@ function requiresMySQL()
 
     return test();
 }
+function skipOnMySQL()
+{
+    if (DB::getDriverName() === 'mysql') {
+        test()->markTestSkipped('This test does not run on MySQL');
+    }
+
+    return test();
+}
 
 function requiresSQLite()
 {
@@ -51,7 +59,7 @@ function requiresSQLite()
 function skipOnSQLite()
 {
     if (DB::getDriverName() === 'sqlite') {
-        test()->markTestSkipped('This test requires MYSQL/PGSQL database');
+        test()->markTestSkipped('This test does not run on SQLite');
     }
 
     return test();
@@ -61,6 +69,15 @@ function requiresPostgreSQL()
 {
     if (DB::getDriverName() !== 'pgsql') {
         test()->markTestSkipped('This test requires PostgreSQL database');
+    }
+
+    return test();
+}
+
+function skipOnPostgreSQL()
+{
+    if (DB::getDriverName() === 'pgsql') {
+        test()->markTestSkipped('This test does not run on PostgreSQL');
     }
 
     return test();
