@@ -117,8 +117,8 @@ trait Filter
 
         $this->addEnabledFilters($field, $label);
 
-        $this->filters[$type][$field]['start'] = $startDate;
-        $this->filters[$type][$field]['end']   = $endDate;
+        $this->filters[$type][$field]['start'] = $startDate->toString();
+        $this->filters[$type][$field]['end']   = $endDate->toString();
 
         $this->filters[$type][$field]['formatted'] = $dateStr;
 

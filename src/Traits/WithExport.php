@@ -11,7 +11,7 @@ use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
-use PowerComponents\LivewirePowerGrid\{Exceptions\MissionExportablePackage, Exportable, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{Exportable, ProcessDataSource};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -198,32 +198,14 @@ trait WithExport
         return $processDataSource->transform($results, $processDataSource->component);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
     {
-        try {
-            return $this->export(Exportable::TYPE_XLS, $selected);
-        } catch (\Error) {
-            $package = config('livewire-powergrid.exportable.default');
-
-            throw new MissionExportablePackage($package);
-        }
+        return $this->export(Exportable::TYPE_XLS, $selected);
     }
 
-    /**
-     * @throws Throwable
-     */
     public function exportToCsv(bool $selected = false): BinaryFileResponse|bool
     {
-        try {
-            return $this->export(Exportable::TYPE_CSV, $selected);
-        } catch (\Error) {
-            $package = config('livewire-powergrid.exportable.default');
-
-            throw new MissionExportablePackage($package);
-        }
+        return $this->export(Exportable::TYPE_CSV, $selected);
     }
 
     /**
