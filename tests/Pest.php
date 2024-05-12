@@ -33,7 +33,15 @@ function powergrid(): PowerGridComponent
 function requiresMySQL()
 {
     if (DB::getDriverName() !== 'mysql') {
-        test()->markTestSkipped('This test requires MySQL database');
+        test()->skipWithReason('This test requires MySQL database');
+    }
+
+    return test();
+}
+function skipOnMySQL(string $reason = '')
+{
+    if (DB::getDriverName() === 'mysql') {
+        test()->skipWithReason('Skipping on MySQL', $reason);
     }
 
     return test();
@@ -42,16 +50,16 @@ function requiresMySQL()
 function requiresSQLite()
 {
     if (DB::getDriverName() !== 'sqlite') {
-        test()->markTestSkipped('This test requires SQLite database');
+        test()->skipWithReason('This test requires SQLite database');
     }
 
     return test();
 }
 
-function skipOnSQLite()
+function skipOnSQLite(string $reason = '')
 {
     if (DB::getDriverName() === 'sqlite') {
-        test()->markTestSkipped('This test requires MYSQL/PGSQL database');
+        test()->skipWithReason('Skipping on SQLite', $reason);
     }
 
     return test();
@@ -60,7 +68,16 @@ function skipOnSQLite()
 function requiresPostgreSQL()
 {
     if (DB::getDriverName() !== 'pgsql') {
-        test()->markTestSkipped('This test requires PostgreSQL database');
+        test()->skipWithReason('This test requires PostgreSQL database');
+    }
+
+    return test();
+}
+
+function skipOnPostgreSQL(string $reason = '')
+{
+    if (DB::getDriverName() === 'pgsql') {
+        test()->skipWithReason('Skipping on PostgreSQL', $reason);
     }
 
     return test();
@@ -71,7 +88,7 @@ function requiresOpenSpout()
     $isInstalled = \Composer\InstalledVersions::isInstalled('openspout/openspout');
 
     if (!$isInstalled) {
-        test()->markTestSkipped('This test requires openspout/openspout');
+        test()->skipWithReason('test requires openspout/openspout');
     }
 
     return test();
@@ -80,4 +97,13 @@ function requiresOpenSpout()
 function fixturePath(string $filepath): string
 {
     return str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/Concerns/Fixtures/' . ltrim($filepath, '/'));
+}
+
+function skipWithReason(string $default, string $reason = ''): void
+{
+    $reason = str($reason)->whenNotEmpty(fn ($r) => $r->prepend(': '))
+            ->prepend($default)
+            ->toString();
+
+    test()->markTestSkipped($reason);
 }
