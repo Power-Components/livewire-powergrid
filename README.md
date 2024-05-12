@@ -10,96 +10,72 @@
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/power-components/livewire-powergrid"></a>
    </p>
    <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
-   <a href="#features">🔥 Features</a> |
-   <a href="#-demo" target="_blank"> 🚀 Demo</a> |
+   <a href="#-online-interactive-demo" target="_blank"> 🚀 Online Demo</a> |
+   <a href="#-features">🔥 Features</a> |
    <a href="#get-started">⌨️ Get started</a>
 </div>
 
 ------
 
-# Livewire ⚡PowerGrid⚡
+# ⚡ Livewire PowerGrid ⚡
 
 <br/>
 
-PowerGrid creates modern, powerful and easy-to-customize Datatables based on [Laravel Livewire](https://laravel-livewire.com) library.
+Livewire PowerGrid creates modern, powerful and easy-to-customize data tables based on [Laravel Livewire](https://laravel-livewire.com) library.
 
-<br/>
-
-➔  **Simple Configuration**: Tables have all basic features activated by default.
-
-➔  **It fits your needs**: Extend and customize your table, including components (checkbox, action buttons, editable fields), global search feature, column data filters, and data export tool.
-
-➔  **Full Stubs**: Table components include feature examples. Just uncomment some code, enter your data, and it works!
-
-<br/>
-
-## 🚀 Demo
-
-Explore the <a href="https://demo.livewire-powergrid.com" target="_blank">Demo</a> showcasing PowerGrid's main features across multiple use cases.
-
-<br/>
-
-`☀️` Light mode:
+With PowerGrid, you can effortlessly create advanced data tables one in a matter of minutes.
 
 <p>
-    <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="art/screenshot_light.png" alt="PowerGrid Light Screenshot" width="805"></a>
+    <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805"></a>
 </p>
 
-`🌙` Dark mode:
 
-<p>
-    <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="art/screenshot_dark.png" alt="PowerGrid Dark Screenshot" width="805"></a>
-</p>
+`🚀` **Minimal Configuration**
 
-## Features
+Tables have basic features activated by default. Ready to go!
 
-With PowerGrid you get right out of the box:
+`👍` **Minimal Configuration**
 
-- **Filters & Search**
+Extend and customize your Table including components (checkbox, action buttons, editable fields), global search feature, column data filters and data export tool.
 
-- **Column Sorting**
+`🛠️` **Minimal Configuration**
 
-- **Column Sum, Count and Average in Header/Footer**
+Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
-- **Pagination**
+## 🚀 Online Interactive Demo
 
-- **Action Checkboxes**
+Take a look at our Online Interactive Demo showcasing the latest PowerGrid features. Explore the source code, and get your Data Table up and running in no time.
 
-- **Action Buttons**
+`🌎` <a href="https://demo.livewire-powergrid.com" target="_blank">PowerGrid Online Demo</a>
 
-- **Bulk Actions**
+## 🔥 Features
 
-- **Action Rules: Conditionally disable, hide, and modify Action Buttons, Checkboxes and rows**
+PowerGrid offers a range of features that are readily available:
 
-- **Toggle button**
+| Feature                                                            | PowerGrid                               |
+| :--------------------------------------------------------------------- | :-------------------------------------- |
+| Bootstrap 5 or Tailwind CSS 3x                                         | ✅                                      |
+| Pagination                                                             | ✅                                      |
+| Column Sorting                                                         | ✅                                      |
+| Filters & Global Search                                                | ✅                                      |
+| Custom Filter Builder                                                  | ✅                                      |
+| Inline Editing (Click to edit)                                         | ✅                                      |
+| Row Buttons, Checkboxes, Dropdown menu, and Toggle Switch              | ✅                                      |
+| Custom Cell Content (Links, images, currency formatting)               | ✅                                      |
+| Multi-row Bulk Actions                                                 | ✅                                      |
+| Conditional Action Rules for Rows, Buttons, and Checkboxes             | ✅                                      |
+| Column Summaries (Sum, Count & Average)                                | ✅                                      |
+| Data Export to XLSX/CSV (OpenSpout)                                    | ✅                                      |
+| Queue Export for large datasets                                        | ✅                                      |
+| Responsive                                                             | ✅                                      |
+| Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and more... |
 
-- **Click to edit**
-
-- **Responsive**
-
-- **Link inside a table cell**
-
-- **Image inside a table cell**
-
-- **Custom Pagination Field in URL**
-
-- **Livewire Modal Integration ([Wire Elements Modal](https://github.com/wire-elements/modal))**
-
-- **Data Export to XLSX/CSV ([OpenSpout](https://github.com/openspout/openspout))**
-
-- **Queue Export for large tables**
-
-- **Works with Bootstrap 5 or Tailwind CSS 3x**
-
-- **Translations available for 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and others...**
-
-<br/>
-
-------
+`📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 
 ## Get started
 
-### 1. Requirements
+### Requirements
 
 - PHP 8.1+
 - [Laravel 10+](https://laravel.com/docs/installation)
@@ -108,7 +84,7 @@ With PowerGrid you get right out of the box:
 
 <br/>
 
-### 2. Install
+### Install PowerGrid
 
 Require PowerGrid via [composer](https://getcomposer.org).
 
@@ -116,7 +92,7 @@ Require PowerGrid via [composer](https://getcomposer.org).
 composer require power-components/livewire-powergrid
 ```
 
-Then, follow the steps indicated in our documentation's [Install](https://livewire-powergrid.com/get-started/install.html) page.
+Then, follow the steps indicated in the [Documentation - Install page](https://livewire-powergrid.com/get-started/install.html).
 
 <br/>
 
@@ -154,7 +130,7 @@ Please read the [Contributing Guide](CONTRIBUTING.md) to see what kind of contri
 <p>
   <!--DevSquad-->
   <a href="https://devsquad.com" target="_blank">
-    <img src="https://livewire-powergrid.com/assets/devsquad.a7795966.png" alt="DevSquad" height="64">
+    <img src="https://livewire-powergrid.com/sponsors/devsquad.png" alt="DevSquad" height="64">
   </a>
 </p>
 
@@ -165,11 +141,11 @@ Please read the [Contributing Guide](CONTRIBUTING.md) to see what kind of contri
 <p>
   <!-- PHPStorm -->
   <a href="https://www.jetbrains.com/phpstorm/" target="_blank">
-    <img src="https://livewire-powergrid.com/assets/phpstorm.686d5c70.png" alt="PHPStorm" height="32">
+    <img src="https://livewire-powergrid.com/sponsors/phpstorm.png" alt="PHPStorm" height="32">
   </a>
   <!-- Araxis Merge -->
   <a href="https://www.araxis.com/merge/" target="_blank">
-    <img src="https://livewire-powergrid.com/assets/araxis.c39292c6.png" alt="Araxis Merge" height="32">
+    <img src="https://livewire-powergrid.com/sponsors/araxis.png" alt="Araxis Merge" height="32">
   </a>
 </p>
 
