@@ -29,7 +29,6 @@ With PowerGrid, you can effortlessly create advanced data tables one in a matter
     <a href="https://demo.livewire-powergrid.com" target="_blank"><img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805"></a>
 </p>
 
-
 `🚀` **Minimal Configuration**
 
 Tables have basic features activated by default. Ready to go!
@@ -42,11 +41,15 @@ Extend and customize your Table including components (checkbox, action buttons, 
 
 Table components include feature examples. Just uncomment some code, enter your data, and it works!
 
+<br/>
+
 ## 🚀 Online Interactive Demo
 
 Take a look at our Online Interactive Demo showcasing the latest PowerGrid features. Explore the source code, and get your Data Table up and running in no time.
 
 `🌎` <a href="https://demo.livewire-powergrid.com" target="_blank">PowerGrid Online Demo</a>
+
+<br/>
 
 ## 🔥 Features
 
@@ -72,6 +75,8 @@ PowerGrid offers a range of features that are readily available:
 | Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and more... |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
+
+<br/>
 
 ## Get started
 
