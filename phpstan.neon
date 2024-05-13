@@ -4,6 +4,8 @@ includes:
 parameters:
 
     ignoreErrors:
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
         - '~^Parameter #1 \$value of function strval expects bool\|float\|int\|resource\|string\|null, mixed given\.$~'
@@ -15,8 +17,6 @@ parameters:
         - src
 
     level: max
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
 
     excludePaths:
         - './src/Components/Exports/OpenSpout/*'
