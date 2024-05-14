@@ -6,6 +6,10 @@ table {
     width: 100%;
 }
 
+select {
+    background-color: inherit;
+}
+
 .loader {
     border-top-color: #222;
     -webkit-animation: spinner 1.5s linear infinite;
