@@ -306,7 +306,7 @@ trait Filter
                         $attributes = array_values((array) data_get($filter, 'attributes'));
 
                         foreach ($attributes as $value) {
-                            if (is_string($value) && str_contains($value, 'filters.')) {
+                            if (is_string($value) && str_contains($value, 'filters.') && is_null(data_get($this->filters, str($value)->after('filters.')))) {
                                 data_set($this->filters, str($value)->replace('filters.', ''), null);
                             }
                         }
