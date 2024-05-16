@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Exports;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Components\Rules\RulesController;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleManager, RulesController};
 
 class Export
 {
@@ -60,7 +60,7 @@ class Export
                     $row = $row->withoutRelations()->toArray();
                 }
 
-                $rules        = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+                $rules        = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
                 $isExportable = false;
 
                 if (filled($rules['hide']) || filled($rules['disable'])) {

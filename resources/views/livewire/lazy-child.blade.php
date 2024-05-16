@@ -1,3 +1,4 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
 @inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
 
 <tbody>
@@ -7,7 +8,7 @@
 
             $class = data_get($theme, 'table.trBodyClass');
 
-            $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+            $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
 
             $applyRulesLoop = true;
 

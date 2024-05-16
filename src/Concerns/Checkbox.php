@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Components\Rules\RulesController;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleManager, RulesController};
 use Throwable;
 
 trait Checkbox
@@ -48,7 +48,7 @@ trait Checkbox
 
         /** @phpstan-ignore-next-line  */
         collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction($model, 'pg:checkbox');
+            $rules = $actionRulesClass->recoverFromAction($model, RuleManager::TYPE_CHECKBOX);
 
             if (filled($rules['hide']) || filled($rules['disable'])) {
                 return;

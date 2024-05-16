@@ -1,3 +1,5 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
+
 @props([
     'rowIndex' => 0,
     'childIndex' => null
@@ -70,7 +72,7 @@
             </span>
         @elseif(count($column->toggleable) > 0)
             @php
-                $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+                $rules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
                 $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
                 $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
             @endphp
