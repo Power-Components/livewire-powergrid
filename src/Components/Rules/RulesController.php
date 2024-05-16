@@ -66,13 +66,17 @@ class RulesController
             fn ($value) => !is_null($value),
         );
 
-        return [
-            'setAttributes' => $filterRulesByKey('setAttribute'),
-            'disable'       => $filterRulesByKey('disable'),
-            'hide'          => $filterRulesByKey('hide'),
-            'detailView'    => $filterRulesByKey('detailView'),
-            'loop'          => $filterRulesByKey('loop'),
-        ];
+        /**
+         * Ensures every modifier is handled here *  and avoids Breaking changes in V5
+         */
+        return collect(RuleManager::applicableModifiers())
+                 ->mapWithKeys(function ($rule) use ($filterRulesByKey) {
+                     if ($rule === 'setAttribute') {
+                         return  ['setAttributes' => $filterRulesByKey($rule)];
+                     }
+
+                     return [$rule => $filterRulesByKey($rule)];
+                 })-> toArray();
     }
 
     public function loop(array $actionRules, object|int $loop): bool
