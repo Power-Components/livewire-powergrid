@@ -66,15 +66,46 @@
             @endif
         </div>
 
+        {{-- =============* Get Rules *===================== --}}
+        @php
+            $rowRules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
+            $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
+        @endphp
+
         @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
             <span @class([$contentClassField, $contentClass])>
                 @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
             </span>
+
+        {{-- =============* Toggleable *===================== --}}
         @elseif(count($column->toggleable) > 0)
             @php
-                $rules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
-                $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
-                $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
+                //Default Toggle Permission
+                $showToggleable = data_get($column->toggleable, 'enabled', false);
+
+                $toggleableRowRules = collect(data_get($rowRules, 'ToggleableVisibility', []));
+
+                // Has permission, but Row Action Rule is changing to hide
+                if ($showToggleable && $toggleableRowRules->last() == 'hide')
+                {
+                    $showToggleable = false;
+                }
+
+                // No permission, but Row Action Rule is forcing to show
+                if (!$showToggleable && $toggleableRowRules->last() == 'show')
+                {
+                    $showToggleable = true;
+                }
+
+                // Particular Rule for this field
+                if (isset($hasFieldRules['field_hide_toggleable'])) {
+                    $showToggleable = !$hasFieldRules['field_hide_toggleable'];
+                }
+
+                if (str_contains($field, '.') === true) {
+                    $showToggleable = false;
+                }
+
             @endphp
             @include(data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else

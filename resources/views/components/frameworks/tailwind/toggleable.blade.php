@@ -1,9 +1,4 @@
 @php
-    $showDefaultToggle = false;
-    if (str_contains($primaryKey, '.')) {
-        $showDefaultToggle = true;
-    }
-
     $value = (int) $row->{$column->field};
 
     $trueValue = $column->toggleable['default'][0];
@@ -11,7 +6,7 @@
 
     $params = [
         'id' => data_get($row, $primaryKey),
-        'isHidden' => !$showToggleable ? 'true' : 'false',
+        'isHidden' => !$showToggleable,
         'tableName' => $tableName,
         'field' => $column->field,
         'toggle' => $value,
@@ -20,8 +15,8 @@
     ];
 @endphp
 <div x-data="pgToggleable(@js($params))">
-    @if ($column->toggleable['enabled'] && !$showDefaultToggle && $showToggleable === true)
-        <div class="flex">
+    <div class="flex flex-row justify-center">
+        @if ($showToggleable === true)
             <div
                 :class="{
                     'relative rounded-full w-8 h-4 transition duration-200 ease-linear': true,
@@ -42,9 +37,7 @@
                     x-on:click="save"
                 >
             </div>
-        </div>
     @else
-        <div class="flex flex-row justify-center">
             <div @class([
                 'text-xs px-4 w-auto py-1 text-center rounded-md',
                 'bg-red-200 text-red-800' => $value === 0,
@@ -52,6 +45,6 @@
             ])>
                 {{ $value === 0 ? $falseValue : $trueValue }}
             </div>
-        </div>
     @endif
+    </div>
 </div>
