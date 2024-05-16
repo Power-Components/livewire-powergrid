@@ -86,6 +86,7 @@ return [
     |
     | PowerGrid supports persisting of the filters, columns and sorting.
     | 'session': persist in the session.
+    | 'cache': persist with cache.
     | 'cookies': persist with cookies (default).
     |
     */

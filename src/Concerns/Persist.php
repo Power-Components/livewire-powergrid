@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use Illuminate\Support\Facades\{Cookie, Session};
+use Illuminate\Support\Facades\{Cache, Cookie, Session};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 /** @codeCoverageIgnore */
@@ -57,6 +57,7 @@ trait Persist
 
         match ($this->getPersistDriverConfig()) {
             'session' => Session::put($this->getPersistKeyName(), strval(json_encode($state))),
+            'cache'   => Cache::store($this->getPersistDriverStoreConfig())->put($this->getPersistKeyName(), strval(json_encode($state))),
             default   => Cookie::queue($this->getPersistKeyName(), strval(json_encode($state)), now()->addYears(5)->unix())
         };
     }
@@ -72,6 +73,7 @@ trait Persist
 
         $storage = match ($this->getPersistDriverConfig()) {
             'session' => Session::get($this->getPersistKeyName()),
+            'cache'   => Cache::store($this->getPersistDriverStoreConfig())->get($this->getPersistKeyName()),
             default   => Cookie::get($this->getPersistKeyName())
         };
 
@@ -107,11 +109,16 @@ trait Persist
     {
         $persistDriver = strval(config('livewire-powergrid.persist_driver', 'cookies'));
 
-        if (!in_array($persistDriver, ['session', 'cookies'])) {
+        if (!in_array($persistDriver, ['session', 'cache', 'cookies',])) {
             throw new Exception('Invalid persist driver');
         }
 
         return $persistDriver;
+    }
+
+    private function getPersistDriverStoreConfig(): ?string
+    {
+        return config('livewire-powergrid.persist_driver_store');
     }
 
     private function getPersistKeyName(): string
