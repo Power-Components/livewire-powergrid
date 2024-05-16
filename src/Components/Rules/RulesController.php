@@ -22,9 +22,16 @@ class RulesController
                 $resolveRules = $rule->rule['when']((object) $row);
             }
 
+            if (isset($rule->rule['unless'])) {
+                $resolveRules = !$rule->rule['unless']((object) $row);
+            }
+
             $prepareRule = [
                 /** @phpstan-ignore-next-line */
-                'action' => collect($rule->rule)->forget(['when', 'action.redirect.closure'])->toArray(),
+                'action' => collect($rule->rule)
+                    ->forget(['when', 'action.redirect.closure'])
+                    ->forget(['unless', 'action.redirect.closure'])
+                    ->toArray(),
             ];
 
             if (data_get($rule->rule, 'redirect') && $resolveRules === true) {

@@ -3,13 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Closure;
-use Livewire\Wireable;
 
-class RuleActions implements Wireable
+class RuleActions extends BaseRule
 {
-    public array $rule = [];
-
-    public string $forAction = '';
+    public string $forAction = RuleManager::TYPE_ACTIONS;
 
     public function __construct(string $button)
     {
@@ -17,24 +14,14 @@ class RuleActions implements Wireable
     }
 
     /**
-     * Disables the button.
-     */
-    public function when(Closure $closure = null): RuleActions
-    {
-        $this->rule['when'] = $closure;
-
-        return $this;
-    }
-
-    /**
      * Sets the button's event to be emitted.
      */
-    public function dispatch(string $event = '', array $params = []): RuleActions
+    public function dispatch(string $event = '', array $params = []): self
     {
-        $this->rule['dispatch'] = [
+        $this->setModifier('dispatch', [
             'event'  => $event,
             'params' => $params,
-        ];
+        ]);
 
         return $this;
     }
@@ -42,14 +29,14 @@ class RuleActions implements Wireable
     /**
      * Sets the button's dispatchTo to be emitted.
      */
-    public function dispatchTo(string $to = '', string $event = '', array $params = []): RuleActions
+    public function dispatchTo(string $to = '', string $event = '', array $params = []): self
     {
-        $this->rule['redirect']   = [];
-        $this->rule['dispatchTo'] = [
+        $this->setModifier('redirect', []);
+        $this->setModifier('dispatchTo', [
             'to'     => $to,
             'event'  => $event,
             'params' => $params,
-        ];
+        ]);
 
         return $this;
     }
@@ -57,12 +44,12 @@ class RuleActions implements Wireable
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function setAttribute(string $attribute = null, string|array $value = null): RuleActions
+    public function setAttribute(string $attribute = null, string|array $value = null): self
     {
-        $this->rule['setAttribute'][] = [
+        $this->pushModifier('setAttribute', [
             'attribute' => $attribute,
             'value'     => $value,
-        ];
+        ]);
 
         return $this;
     }
@@ -70,9 +57,19 @@ class RuleActions implements Wireable
     /**
      * Hides the button.
      */
-    public function hide(): RuleActions
+    public function hide(): self
     {
-        $this->rule['hide'] = true;
+        $this->setModifier('hide', true);
+
+        return $this;
+    }
+
+    /**
+     * Shows the button.
+     */
+    public function show(): self
+    {
+        $this->setModifier('show', false);
 
         return $this;
     }
@@ -80,9 +77,19 @@ class RuleActions implements Wireable
     /**
      * Disables the button.
      */
-    public function disable(): RuleActions
+    public function disable(): self
     {
-        $this->rule['disable'] = true;
+        $this->setModifier('disable', true);
+
+        return $this;
+    }
+
+    /**
+     * Enables the button.
+     */
+    public function enable(): self
+    {
+        $this->setModifier('disable', false);
 
         return $this;
     }
@@ -90,13 +97,13 @@ class RuleActions implements Wireable
     /**
      * Sets button's redirect URL.
      */
-    public function redirect(Closure $closure = null, string $target = '_blank'): RuleActions
+    public function redirect(Closure $closure = null, string $target = '_blank'): self
     {
-        $this->rule['emit']     = [];
-        $this->rule['redirect'] = [
+        $this->setModifier('emit', []);
+        $this->setModifier('redirect', [
             'closure' => $closure,
             'target'  => $target,
-        ];
+        ]);
 
         return $this;
     }
@@ -104,30 +111,20 @@ class RuleActions implements Wireable
     /**
      * Sets the button caption value.
      */
-    public function slot(string $slot): RuleActions
+    public function slot(string $slot): self
     {
-        $this->rule['slot'] = $slot;
+        $this->setModifier('slot', $slot);
 
         return $this;
     }
 
-    public function bladeComponent(string $component, array $params): RuleActions
+    public function bladeComponent(string $component, array $params): self
     {
-        $this->rule['bladeComponent'] = [
+        $this->setModifier('bladeComponent', [
             'component' => $component,
             'params'    => $params,
-        ];
+        ]);
 
         return $this;
-    }
-
-    public function toLivewire(): array
-    {
-        return (array) $this;
-    }
-
-    public static function fromLivewire($value)
-    {
-        return $value;
     }
 }

@@ -2,34 +2,19 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
-use Closure;
-use Livewire\Wireable;
-
-class RuleCheckbox implements Wireable
+class RuleCheckbox extends BaseRule
 {
-    public array $rule = [];
-
     public string $forAction = RuleManager::TYPE_CHECKBOX;
-
-    /**
-     * Disables the button.
-     */
-    public function when(Closure $closure = null): RuleCheckbox
-    {
-        $this->rule['when'] = $closure;
-
-        return $this;
-    }
 
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function setAttribute(string $attribute = null, string $value = null): RuleCheckbox
+    public function setAttribute(string $attribute = null, string $value = null): self
     {
-        $this->rule['setAttribute'] = [
+        $this->setModifier('setAttribute', [
             'attribute' => $attribute,
             'value'     => $value,
-        ];
+        ]);
 
         return $this;
     }
@@ -37,9 +22,9 @@ class RuleCheckbox implements Wireable
     /**
      * Hides the button.
      */
-    public function hide(): RuleCheckbox
+    public function hide(): self
     {
-        $this->rule['hide'] = true;
+        $this->setModifier('hide', true);
 
         return $this;
     }
@@ -47,20 +32,17 @@ class RuleCheckbox implements Wireable
     /**
      * Disables the button.
      */
-    public function disable(): RuleCheckbox
+    public function disable(): self
     {
-        $this->rule['disable'] = true;
+        $this->setModifier('disable', true);
 
         return $this;
     }
 
-    public function toLivewire(): array
+    public function applyRowClasses(string $attrClass = ''): self
     {
-        return (array) $this;
-    }
+        $this->setModifier('rowClasses', $attrClass);
 
-    public static function fromLivewire($value)
-    {
-        return $value;
+        return $this;
     }
 }

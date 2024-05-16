@@ -3,35 +3,19 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Closure;
-use Livewire\Wireable;
 
-class RuleRows implements Wireable
+class RuleRows extends BaseRule
 {
-    public array $rule = [];
-
     public string $forAction = RuleManager::TYPE_ROWS;
 
-    public ?string $column = '';
+    protected string $usingLoop = '';
 
-    /**
-     * Disables the button.
-     */
-    public function when(Closure $closure = null): RuleRows
-    {
-        $this->rule['when'] = $closure;
-
-        return $this;
-    }
-
-    /**
-     * Sets the button's given attribute to the given value.
-     */
     public function setAttribute(string $attribute = null, string $value = null): RuleRows
     {
-        $this->rule['setAttribute'] = [
+        $this->setModifier('setAttribute', [
             'attribute' => $attribute,
             'value'     => $value,
-        ];
+        ]);
 
         return $this;
     }
@@ -39,32 +23,52 @@ class RuleRows implements Wireable
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function detailView(string $detailView = null, array $options = []): RuleRows
+    public function detailView(string $detailView = null, array $options = []): self
     {
-        $this->rule['detailView'] = [
+        $this->setModifier('detailView', [
             'detailView' => $detailView,
             'options'    => $options,
-        ];
+        ]);
 
         return $this;
     }
 
     /**
-     * Show the toggleable in current row.
+     * Show all toggleables in current row.
      */
-    public function showToggleable(): RuleRows
+    public function showToggleable(): self
     {
-        $this->rule['showHideToggleable'] = 'show';
+        $this->setModifier('ToggleableVisibility', 'show');
 
         return $this;
     }
 
     /**
-     * Hide the toggleable in current row.
+     * Hide all toggleables in current row.
      */
-    public function hideToggleable(): RuleRows
+    public function hideToggleable(): self
     {
-        $this->rule['showHideToggleable'] = 'hide';
+        $this->setModifier('ToggleableVisibility', 'hide');
+
+        return $this;
+    }
+
+    /**
+     * Show the Detail button in current row.
+     */
+    public function showDetailButton(): self
+    {
+        $this->setModifier('DetailButtonVisibility', 'show');
+
+        return $this;
+    }
+
+    /**
+     * Hide the Detail button in current row.
+     */
+    public function hideDetailButton(): self
+    {
+        $this->setModifier('DetailButtonVisibility', 'hide');
 
         return $this;
     }
@@ -72,20 +76,31 @@ class RuleRows implements Wireable
     /**
      * Interacts with Blade loop.
      */
-    public function loop(Closure $closure = null): RuleRows
+    public function loop(Closure $closure = null): self
     {
-        $this->rule['loop'] = $closure;
+        $this->setCondition('loop', $closure);
 
         return $this;
     }
 
-    public function toLivewire(): array
+    public function firstOnPage(): self
     {
-        return (array) $this;
+        $this->setCondition('loop', fn ($loop) => $loop->first === true);
+
+        return $this;
     }
 
-    public static function fromLivewire($value)
+    public function lastOnPage(): self
     {
-        return $value;
+        $this->setCondition('loop', fn ($loop) => $loop->last === true);
+
+        return $this;
+    }
+
+    public function alternating(): self
+    {
+        $this->setCondition('loop', fn ($loop) => $loop->even);
+
+        return $this;
     }
 }
