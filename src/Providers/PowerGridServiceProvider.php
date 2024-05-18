@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Support\Facades\Blade;
+use Illuminate\Database\Events\MigrationsEnded;
+use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Livewire;
@@ -11,6 +12,7 @@ use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, U
 use PowerComponents\LivewirePowerGrid\Components\Actions\Macros;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
+use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild, Livewire\PerformanceCard, PowerGridManager};
 
@@ -55,6 +57,8 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(FilterManager::class, 'filter');
 
         Livewire::component('lazy-child', LazyChild::class);
+
+        Event::listen(MigrationsEnded::class, fn () => PowerGridTableCache::forgetAll());
 
         if (class_exists(\Laravel\Pulse\Facades\Pulse::class)) {
             Livewire::component('powergrid-performance-card', PerformanceCard::class);

@@ -5,8 +5,10 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\{Cache, Schema};
+use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
+use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
+
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Boolean,
     Components\Filters\Builders\DatePicker,
@@ -317,12 +319,11 @@ class Builder
     private function getColumnList(string $modelTable): array
     {
         try {
-            return (array) Cache::remember(
-                'powergrid_columns_in_' . $modelTable,
-                60 * 60 * 3,
+            return PowerGridTableCache::getOrCreate(
+                $modelTable,
                 fn () => collect(Schema::getColumns($modelTable))
-                ->pluck('type', 'name')
-                ->toArray()
+                            ->pluck('type', 'name')
+                            ->toArray()
             );
         } catch (\Throwable $throwable) {
             logger()->warning('PowerGrid [getColumnList] warning: ', [

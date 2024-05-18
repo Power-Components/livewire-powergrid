@@ -14,10 +14,10 @@
                 count(data_get($setUp, 'footer.perPageValues')) > 1 &&
                 blank(data_get($setUp, 'footer.pagination')))
             <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
-                <div class="relative h-10">
+                <div class="relative">
                     <select
                         wire:model.live="setUp.footer.perPage"
-                        class="pg-select block appearance-none bg-pg-primary-50 border border-pg-primary-300 text-pg-primary-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-pg-primary-500 dark:bg-pg-primary-700 dark:text-pg-primary-200 dark:placeholder-pg-primary-200 dark:border-pg-primary-600 {{ data_get($theme, 'footer.selectClass') }}"
+                        class="{{ data_get($theme, 'footer.selectClass') }}"
                         style="{{ data_get($theme, 'footer.selectStyle') }}"
                     >
                         @foreach (data_get($setUp, 'footer.perPageValues') as $value)
@@ -30,7 +30,6 @@
                             </option>
                         @endforeach
                     </select>
-
                     <div
                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700 dark:text-pg-primary-300">
                         <x-livewire-powergrid::icons.down class="w-4 h-4" />

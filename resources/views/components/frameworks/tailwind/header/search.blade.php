@@ -13,7 +13,7 @@
                 wire:model.live.debounce.700ms="search"
                 type="text"
                 class="{{ data_get($theme, 'searchBox.inputClass') }}"
-                style="{{ data_get($theme, 'searchBox.inputClass') }}"
+                style="{{ data_get($theme, 'searchBox.inputStyle') }}"
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}"
             >
             @if ($search)
