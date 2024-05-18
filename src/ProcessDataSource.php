@@ -89,6 +89,8 @@ class ProcessDataSource
 
         $results = $this->component->applySorting($filters);
 
+        $this->applySummaries($results);
+
         $this->component->total = $results->count();
 
         if ($results->count()) {
