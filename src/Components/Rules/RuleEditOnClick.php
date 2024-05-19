@@ -6,7 +6,7 @@ class RuleEditOnClick extends BaseRule
 {
     public string $forAction = RuleManager::TYPE_EDIT_ON_CLICK;
 
-    public function __construct(public string|null $column)
+    public function __construct(public string $column)
     {
         $this->forAction = $column;
     }

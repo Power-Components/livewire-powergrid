@@ -6,7 +6,7 @@ class RuleToggleable extends BaseRule
 {
     public string $forAction = RuleManager::TYPE_TOGGLEABLE;
 
-    public function __construct(public string|null $column)
+    public function __construct(public string $column)
     {
         $this->forAction = $column;
     }

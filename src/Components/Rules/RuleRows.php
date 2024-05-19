@@ -96,7 +96,7 @@ class RuleRows extends BaseRule
     /**
      * Interacts with Blade loop.
      */
-    public function loop(Closure $closure = null): self
+    public function loop(Closure $closure): self
     {
         $this->setCondition('loop', $closure);
 

@@ -17,7 +17,7 @@ class BaseRule implements Wireable, ConditionalRule
 
     public string $forAction = '';
 
-    public ?string $column = '';
+    public string $column = '';
 
     private bool $hasCondition = false;
 
@@ -69,14 +69,14 @@ class BaseRule implements Wireable, ConditionalRule
         return $value;
     }
 
-    public function when(Closure $closure = null): self
+    public function when(Closure $closure): self
     {
         $this->setCondition('when', $closure);
 
         return $this;
     }
 
-    public function unless(Closure $closure = null): self
+    public function unless(Closure $closure): self
     {
         $this->setCondition('unless', $closure);
 

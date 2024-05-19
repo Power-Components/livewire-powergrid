@@ -106,7 +106,7 @@ class RulesController
                }
            });
 
-        return $rules->toArray() ?? [];
+        return $rules->toArray();
     }
 
     public function loop(array $actionRules, object|int $loop): bool

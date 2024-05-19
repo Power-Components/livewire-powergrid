@@ -14,9 +14,9 @@ interface ConditionalRule
 
     public function pushModifier(string $modifier, array $argument): void;
 
-    public function when(Closure $closure = null): self;
+    public function when(Closure $closure): self;
 
-    public function unless(Closure $closure = null): self;
+    public function unless(Closure $closure): self;
 
     public function toLivewire(): array;
 
