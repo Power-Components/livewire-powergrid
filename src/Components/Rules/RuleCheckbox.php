@@ -20,7 +20,7 @@ class RuleCheckbox extends BaseRule
     }
 
     /**
-     * Hides the button.
+     * Hides the input.
      */
     public function hide(): self
     {
@@ -30,7 +30,7 @@ class RuleCheckbox extends BaseRule
     }
 
     /**
-     * Disables the button.
+     * Disables the input.
      */
     public function disable(): self
     {
