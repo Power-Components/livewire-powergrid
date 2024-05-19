@@ -54,6 +54,26 @@ class RuleRows extends BaseRule
     }
 
     /**
+     * Enable all edit on click in current row.
+     */
+    public function enableEditOnClick(): self
+    {
+        $this->setModifier('EditOnClickVisibility', 'show');
+
+        return $this;
+    }
+
+    /**
+     * Disable all edit on click in current row.
+     */
+    public function disableEditOnClick(): self
+    {
+        $this->setModifier('EditOnClickVisibility', 'hide');
+
+        return $this;
+    }
+
+    /**
      * Show the Detail button in current row.
      */
     public function showDetailButton(): self

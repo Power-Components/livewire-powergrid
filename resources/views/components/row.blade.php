@@ -71,8 +71,44 @@
             $rowRules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
             $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
         @endphp
+    
+        {{-- =============* Edit On Click *===================== --}}
+        @php
+        
+        $showEditOnClick = false;
 
-        @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
+        if (data_get($column->editable, 'hasPermission')) {
+            $showEditOnClick = true;
+        }
+
+        // Check if there is any Role Row for Edit on click
+        $editOnClickRowRules = collect(data_get($rowRules, 'EditOnClickVisibility', []));
+
+        if ($editOnClickRowRules) {
+            // Has permission, but Row Action Rule is changing to hide
+            if ($showEditOnClick && $editOnClickRowRules->last() == 'hide')
+            {
+                $showEditOnClick = false;
+            }
+
+            // No permission, but Row Action Rule is forcing to show
+            if (!$showEditOnClick && $editOnClickRowRules->last() == 'show')
+            {
+                $showEditOnClick = true;
+            }
+        }
+
+        // Particular Rule for this field
+        if (isset($hasFieldRules['field_hide_editonclick'])) {
+            $showEditOnClick = !$hasFieldRules['field_hide_editonclick'];
+        }
+
+        if (str_contains($field, '.') === true) {
+             $showEditOnClick = false;
+        }
+        @endphp
+    
+        @if($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
                 @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
             </span>
