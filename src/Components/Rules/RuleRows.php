@@ -74,21 +74,21 @@ class RuleRows extends BaseRule
     }
 
     /**
-     * Show the Detail button in current row.
+     * Show the Detail toggle in current row.
      */
-    public function showDetailButton(): self
+    public function showToggleDetail(): self
     {
-        $this->setModifier('DetailButtonVisibility', 'show');
+        $this->setModifier('ToggleDetailVisibility', 'show');
 
         return $this;
     }
 
     /**
-     * Hide the Detail button in current row.
+     * Hide the Detail toggle in current row.
      */
-    public function hideDetailButton(): self
+    public function hideToggleDetail(): self
     {
-        $this->setModifier('DetailButtonVisibility', 'hide');
+        $this->setModifier('ToggleDetailVisibility', 'hide');
 
         return $this;
     }

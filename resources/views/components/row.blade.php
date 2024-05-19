@@ -12,10 +12,32 @@
 ])
 
 @php
-    $ruleDetailView = data_get($rulesValues, 'detailView');
+    // =============* Get Rules *=====================
+    $rowRules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
+
+    // =============* Toggle Detail Rules *=====================
+    $showToggleDetail = data_get($setUp, 'detail.showCollapseIcon');
+
+    $toggleDetailVisibilityRowRules = collect(data_get($rowRules, 'ToggleDetailVisibility', []));
+
+    if ($toggleDetailVisibilityRowRules) {
+        // Has permission, but Row Action Rule is changing to hide
+        if ($showToggleDetail && $toggleDetailVisibilityRowRules->last() == 'hide')
+        {
+            $showToggleDetail = false;
+        }
+
+        // No permission, but Row Action Rule is forcing to show
+        if (!$showToggleDetail && $toggleDetailVisibilityRowRules->last() == 'show')
+        {
+            $showToggleDetail = true;
+        }
+    }
+
+    $toggleDetailView = powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail');
 @endphp
 
-@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot() . '.toggle-detail', [
+@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), $toggleDetailView, [
     'theme' => data_get($theme, 'table'),
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
@@ -65,15 +87,11 @@
                 @endforeach
             @endif
         </div>
+        @php
+        // =============* Get Field Rules *=====================
+        $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
 
-        {{-- =============* Get Rules *===================== --}}
-        @php
-            $rowRules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
-            $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
-        @endphp
-    
-        {{-- =============* Edit On Click *===================== --}}
-        @php
+        // =============* Edit On Click *=====================
         
         $showEditOnClick = false;
 
