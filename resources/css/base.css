@@ -48,3 +48,8 @@ table thead {
     gap: 4px;
     width: 100%;
 }
+
+.pg-actions a {
+  display: inline-block;
+}
+
