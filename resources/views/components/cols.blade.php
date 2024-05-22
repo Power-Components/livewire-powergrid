@@ -20,7 +20,9 @@
         }
     }
 
-    $sortOrder = isset($this->setUp['responsive']) ? data_get($this->setUp, "responsive.sortOrder.{$field}", null) : null;
+    $sortOrder = isset($this->setUp['responsive'])
+        ? data_get($this->setUp, "responsive.sortOrder.{$field}", null)
+        : null;
 @endphp
 <th
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
@@ -30,15 +32,15 @@
     style="{{ $column->hidden === true ? 'display:none' : '' }}; width: max-content; @if ($column->sortable) cursor:pointer; @endif {{ data_get($theme, 'table.thStyle') . ' ' . $column->headerStyle }}"
 >
     <div
-        @class([
-            'pl-[11px]' => !$column->sortable && isTailwind(),
-            data_get($theme, 'cols.divClass'),
-        ])
+        class="{{ data_get($theme, 'cols.divClass') }}"
         style="{{ data_get($theme, 'cols.divStyle') }}"
     >
         @if ($column->sortable)
             <span>
-                {{ $this->sortLabel($field) }}
+                <x-dynamic-component
+                    component="{{ $this->sortIcon($field) }}"
+                    class="size-4"
+                />
             </span>
         @else
             <span style="width: 6px"></span>

@@ -113,6 +113,23 @@ trait Sorting
         }
     }
 
+    public function sortIcon(string $field): string
+    {
+        if ($this->multiSort && array_key_exists($field, $this->sortArray)) {
+            return ($this->sortArray[$field] == 'desc') ? 'livewire-powergrid::icons.chevron-up' : 'livewire-powergrid::icons.chevron-down';
+        } elseif ($this->multiSort) {
+            return 'livewire-powergrid::icons.chevron-up-down';
+        } else {
+            if ($this->sortField !== $field) {
+                return 'livewire-powergrid::icons.chevron-up-down';
+            } elseif ($this->sortDirection == 'desc') {
+                return 'livewire-powergrid::icons.chevron-up';
+            } else {
+                return 'livewire-powergrid::icons.chevron-down';
+            }
+        }
+    }
+
     public function updatedSortDirection(): void
     {
         if ($this->hasLazyEnabled) {
