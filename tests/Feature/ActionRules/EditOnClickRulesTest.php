@@ -19,5 +19,4 @@ it('properly enabled EditOnClick with Rule::toggleable for dish #1 in a column t
         'tailwind join using when'  => [$baseRuleComponent::class, (object) ['theme' => 'tailwind', 'join' => true, 'themeName' => 'tailwind']],
         'bootstrap join using when' => [$baseRuleComponent::class, (object) ['theme' => 'bootstrap', 'join' => true, 'themeName' => 'bootstrap5']],
     ])
-    ->only()
     ->group('actionRules');

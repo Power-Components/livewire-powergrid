@@ -119,7 +119,10 @@ class CreateCommand extends Command
         if (empty($this->option('template'))) {
             $this->component->loadPowerGridStub();
         } else {
-            $this->component->loadCustomStub(base_path($this->option('template')));
+            /** @var string $template */
+            $template = $this->option('template');
+
+            $this->component->loadCustomStub(base_path($template));
         }
 
         return $this;
