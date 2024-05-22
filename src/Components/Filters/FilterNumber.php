@@ -41,8 +41,6 @@ class FilterNumber extends FilterBase
 
     public static function getWireAttributes(string $field, array $filter): array
     {
-        ds($filter);
-
         return collect()
             ->put('inputStartAttributes', new ComponentAttributeBag([
                 'wire:model'                     => 'filters.number.' . $field . '.start',
