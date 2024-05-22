@@ -36,11 +36,11 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        class="{{ data_get($theme, 'baseClass') }}"
+        @class([data_get($theme, 'baseClass'), 'space-y-1' => !$inline])
         style="{{ data_get($theme, 'baseStyle') }}"
     >
         @if (!$inline)
-            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                 {{ $title }}
             </label>
         @endif

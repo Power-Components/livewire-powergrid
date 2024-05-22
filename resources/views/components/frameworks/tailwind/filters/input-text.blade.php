@@ -26,7 +26,11 @@
 
         $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-        $selectClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', data_get($theme, 'selectClass'), data_get($column, 'headerClass')]);
+        $selectClasses = \Illuminate\Support\Arr::toCssClasses([
+            'power_grid',
+            data_get($theme, 'selectClass'),
+            data_get($column, 'headerClass'),
+        ]);
         $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', data_get($theme, 'inputClass')]);
 
         $params = array_merge(
@@ -49,21 +53,21 @@
         />
     @else
         <div
-            class="{{ data_get($theme, 'baseClass') }}"
+            @class([data_get($theme, 'baseClass'), 'space-y-1' => !$inline])
             style="{{ data_get($theme, 'baseStyle') }}"
         >
             @if (!$inline)
-                <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+                <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                     {{ $title }}
                 </label>
             @endif
             <div @class([
-                'sm:flex w-full' => !$inline && $showSelectOptions,
-                'flex flex-col' => $inline && $showSelectOptions,
+                'w-full space-y-2 sm:flex sm:space-y-0' => !$inline && $showSelectOptions,
+                'flex flex-col space-y-1.5' => $inline && $showSelectOptions,
             ])>
                 @if ($showSelectOptions)
                     <div @class([
-                        'pl-0 pt-1 w-full sm:pr-3 sm:w-1/2' => !$inline,
+                        'pl-0 w-full sm:pr-3 sm:w-1/2' => !$inline,
                     ])>
                         <div class="relative">
                             <select
@@ -87,8 +91,7 @@
                     </div>
                 @endif
                 <div @class([
-                    'pl-0 pt-1 w-full sm:w-1/2' => !$inline && $showSelectOptions,
-                    'mt-1' => $inline,
+                    'pl-0 w-full sm:w-1/2' => !$inline && $showSelectOptions,
                     'pt-1' => !$showSelectOptions,
                 ])>
                     <input

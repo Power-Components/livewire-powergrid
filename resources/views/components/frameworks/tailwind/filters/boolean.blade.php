@@ -15,7 +15,12 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-    $selectClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), $class, data_get($column, 'headerClass'), 'power_grid']);
+    $selectClasses = Arr::toCssClasses([
+        data_get($theme, 'selectClass'),
+        $class,
+        data_get($column, 'headerClass'),
+        'power_grid',
+    ]);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
@@ -29,11 +34,11 @@
     />
 @else
     <div
-        class="{{ data_get($theme, 'baseClass') }}"
+        @class([data_get($theme, 'baseClass'), 'space-y-1' => !$inline])
         style="{{ data_get($theme, 'baseStyle') }}"
     >
         @if (!$inline)
-            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                 {{ $title }}
             </label>
         @endif

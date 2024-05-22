@@ -6,8 +6,7 @@
     <button
         wire:click="toggleFilters"
         type="button"
-        class="pg-btn-white dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-700
-    dark:ring-offset-pg-primary-800 dark:text-pg-primary-400 dark:bg-pg-primary-700"
+        class="focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-gray-400 focus:outline-none focus:ring-transparent sm:text-sm sm:leading-6 w-auto"
     >
         <x-livewire-powergrid::icons.filter class="h-4 w-4 text-pg-primary-500 dark:text-pg-primary-300" />
     </button>

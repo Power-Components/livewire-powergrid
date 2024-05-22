@@ -9,9 +9,17 @@
     $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
 
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes(
+        $field,
+        $title,
+    );
 
-    $filterClasses = \Illuminate\Support\Arr::toCssClasses([data_get($theme, 'selectClass'), $class, data_get($column, 'headerClass'), 'power_grid']);
+    $filterClasses = \Illuminate\Support\Arr::toCssClasses([
+        data_get($theme, 'selectClass'),
+        $class,
+        data_get($column, 'headerClass'),
+        'power_grid',
+    ]);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
@@ -25,15 +33,15 @@
     />
 @else
     <div
-        class="{{ data_get($theme, 'baseClass') }}"
+        @class([data_get($theme, 'baseClass'), 'space-y-1' => !$inline])
         style="{{ data_get($theme, 'baseStyle') }}"
     >
         @if (!$inline)
-            <label class="block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                 {{ $title }}
             </label>
         @endif
-        <div @class(['pt-1' => !$inline, 'relative'])>
+        <div class="relative">
             <select
                 class="{{ $filterClasses }}"
                 style="{{ data_get($column, 'headerStyle') }}"
