@@ -3,8 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon};
+use Illuminate\Support\{Arr, Carbon, Collection};
 use Livewire\Attributes\On;
+use PowerComponents\LivewirePowerGrid\Column;
 
 trait Filter
 {
@@ -330,16 +331,37 @@ trait Filter
         }
     }
 
+    public function listColumnForFilters(): Collection
+    {
+        $columns = collect();
+
+        collect($this->columns())
+            ->ensure([Column::class])
+            ->each(function ($column) use (&$columns) {
+                if (isset($column->dataField)) {
+                    $columns->put($column->dataField, $column->title ?? $column->dataField);
+                }
+
+                $columns->put($column->field, $column->title ?? $column->field);
+            });
+
+        return $columns;
+    }
+
+    /*
+    @TODO Figure out
+    */
     protected function powerGridQueryString(): array
     {
         $queryString = [];
 
-        foreach (Arr::dot($this->filters()) as $filter) {
-            $as = str($filter->field)
-                ->replace('_id', '');
+        $columns = $this->listColumnForFilters();
 
-            if ($as->contains('.')) {
-                $as = $as->afterLast('.');
+        foreach (Arr::dot($this->filters()) as $filter) {
+            $as = str($filter->field)->replace('.', '_');
+
+            if (!empty(request()->get($as))) {
+                $this->addEnabledFilters($filter->field, strval($columns->get($filter->field, $filter->field)));
             }
 
             if ($filter->key === 'input_text') {
@@ -357,15 +379,26 @@ trait Filter
             }
 
             if ($filter->key === 'number') {
+                $_start = $as->append('_start')->toString();
+                $_end   = $as->append('_end')->toString();
+
                 $queryString['filters.number.' . $filter->field . '.start'] = [
-                    'as'     => $as->append('_start')->toString(),
+                    'as'     => $_start,
                     'except' => '',
                 ];
 
+                if (!is_null(request()->get($_start))) {
+                    $this->addEnabledFilters($filter->field . '_start', strval($columns->get($filter->field, $filter->field)));
+                }
+
                 $queryString['filters.number.' . $filter->field . '.end'] = [
-                    'as'     => $as->append('_end')->toString(),
+                    'as'     => $_end,
                     'except' => '',
                 ];
+
+                if (!is_null(request()->get($_end))) {
+                    $this->addEnabledFilters($filter->field . '_end', strval($columns->get($filter->field, $filter->field)));
+                }
 
                 continue;
             }
