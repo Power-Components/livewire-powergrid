@@ -10,14 +10,14 @@
                     wire:key="{{ $tableName }}-multi-sort-{{ $field }}"
                     wire:click.prevent="sortBy('{{ $field }}')"
                     title="{{ __(':label :sort', ['label' => $label, 'sort' => $sort]) }}"
-                    class="group gap-2 cursor-pointer border border-pg-primary-200 inline-flex rounded-full items-center py-0.5 pl-2.5 pr-1 text-sm font-medium bg-pg-primary-100 text-pg-primary-700 dark:bg-pg-primary-700 dark:text-pg-primary-300"
+                    class="group cursor-pointer select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-pg-primary-300 bg-white dark:border-2 dark:border-pg-primary-600 dark:bg-pg-primary-800 dark:text-pg-primary-300 dark:hover:text-pg-primary-400 text-pg-primary-600 hover:text-pg-primary-500"
                 >
                     {{ $label }}
                     @if ($sort == 'desc')
-                        <x-livewire-powergrid::icons.chevron-down class="w-4 h-4 group-hover:hidden" />
-                        <x-livewire-powergrid::icons.x class="w-4 h-4 hidden group-hover:block transition-all" />
+                        <x-livewire-powergrid::icons.chevron-down class="w-4 h-4 ml-1 group-hover:hidden" />
+                        <x-livewire-powergrid::icons.x class="w-4 h-4 ml-1 hidden group-hover:block transition-all" />
                     @else
-                        <x-livewire-powergrid::icons.chevron-up class="w-4 h-4" />
+                        <x-livewire-powergrid::icons.chevron-up class="w-4 h-4 ml-1" />
                     @endif
                 </span>
             @endforeach
