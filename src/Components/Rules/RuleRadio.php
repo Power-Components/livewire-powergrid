@@ -2,34 +2,18 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
-use Closure;
-use Livewire\Wireable;
-
-class RuleRadio implements Wireable
+class RuleRadio extends BaseRule
 {
-    public array $rule = [];
-
     public string $forAction = RuleManager::TYPE_RADIO;
 
-    /**
-     * Disables the radio.
-     */
-    public function when(Closure $closure = null): RuleRadio
-    {
-        $this->rule['when'] = $closure;
-
-        return $this;
-    }
-
     /**Sets the radio's given attribute to the given value
-     * .
      */
-    public function setAttribute(string $attribute = null, string $value = null): RuleRadio
+    public function setAttribute(string $attribute = null, string $value = null): self
     {
-        $this->rule['setAttribute'] = [
+        $this->setModifier('setAttribute', [
             'attribute' => $attribute,
             'value'     => $value,
-        ];
+        ]);
 
         return $this;
     }
@@ -37,9 +21,9 @@ class RuleRadio implements Wireable
     /**
      * Hides the button.
      */
-    public function hide(): RuleRadio
+    public function hide(): self
     {
-        $this->rule['hide'] = true;
+        $this->setModifier('hide', true);
 
         return $this;
     }
@@ -47,27 +31,17 @@ class RuleRadio implements Wireable
     /**
      * Disables the button.
      */
-    public function disable(): RuleRadio
+    public function disable(): self
     {
-        $this->rule['disable'] = true;
+        $this->setModifier('disable', true);
 
         return $this;
     }
 
-    public function applyRowClasses(string $attrClass = ''): RuleRadio
+    public function applyRowClasses(string $attrClass = ''): self
     {
-        $this->rule['rowClasses'] = $attrClass;
+        $this->setModifier('rowClasses', $attrClass);
 
         return $this;
-    }
-
-    public function toLivewire(): array
-    {
-        return (array) $this;
-    }
-
-    public static function fromLivewire($value)
-    {
-        return $value;
     }
 }

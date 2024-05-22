@@ -1,5 +1,6 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
 @php
-    $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:radio');
+    $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_RADIO);
 
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => data_get($theme, 'radio.inputClass'),

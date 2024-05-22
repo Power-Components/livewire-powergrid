@@ -1,3 +1,5 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
+
 @props([
     'rowIndex' => 0,
     'childIndex' => null
@@ -10,10 +12,32 @@
 ])
 
 @php
-    $ruleDetailView = data_get($rulesValues, 'detailView');
+    // =============* Get Rules *=====================
+    $rowRules = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
+
+    // =============* Toggle Detail Rules *=====================
+    $showToggleDetail = data_get($setUp, 'detail.showCollapseIcon');
+
+    $toggleDetailVisibilityRowRules = collect(data_get($rowRules, 'ToggleDetailVisibility', []));
+
+    if ($toggleDetailVisibilityRowRules) {
+        // Has permission, but Row Action Rule is changing to hide
+        if ($showToggleDetail && $toggleDetailVisibilityRowRules->last() == 'hide')
+        {
+            $showToggleDetail = false;
+        }
+
+        // No permission, but Row Action Rule is forcing to show
+        if (!$showToggleDetail && $toggleDetailVisibilityRowRules->last() == 'show')
+        {
+            $showToggleDetail = true;
+        }
+    }
+
+    $toggleDetailView = powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail');
 @endphp
 
-@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), powerGridThemeRoot() . '.toggle-detail', [
+@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), $toggleDetailView, [
     'theme' => data_get($theme, 'table'),
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
@@ -63,16 +87,79 @@
                 @endforeach
             @endif
         </div>
+        @php
+        // =============* Get Field Rules *=====================
+        $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
 
-        @if (data_get($column->editable, 'hasPermission') && !str_contains($field, '.'))
+        // =============* Edit On Click *=====================
+        
+        $showEditOnClick = false;
+
+        if (data_get($column->editable, 'hasPermission')) {
+            $showEditOnClick = true;
+        }
+
+        // Check if there is any Role Row for Edit on click
+        $editOnClickRowRules = collect(data_get($rowRules, 'EditOnClickVisibility', []));
+
+        if ($editOnClickRowRules) {
+            // Has permission, but Row Action Rule is changing to hide
+            if ($showEditOnClick && $editOnClickRowRules->last() == 'hide')
+            {
+                $showEditOnClick = false;
+            }
+
+            // No permission, but Row Action Rule is forcing to show
+            if (!$showEditOnClick && $editOnClickRowRules->last() == 'show')
+            {
+                $showEditOnClick = true;
+            }
+        }
+
+        // Particular Rule for this field
+        if (isset($hasFieldRules['field_hide_editonclick'])) {
+            $showEditOnClick = !$hasFieldRules['field_hide_editonclick'];
+        }
+
+        if (str_contains($field, '.') === true) {
+             $showEditOnClick = false;
+        }
+        @endphp
+    
+        @if($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
                 @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
             </span>
+
+        {{-- =============* Toggleable *===================== --}}
         @elseif(count($column->toggleable) > 0)
             @php
-                $rules = $actionRulesClass->recoverFromAction($row, 'pg:rows');
-                $toggleableRules = collect(data_get($rules, 'showHideToggleable', []));
-                $showToggleable = $toggleableRules->isEmpty() || $toggleableRules->last() == 'show';
+                //Default Toggle Permission
+                $showToggleable = data_get($column->toggleable, 'enabled', false);
+
+                $toggleableRowRules = collect(data_get($rowRules, 'ToggleableVisibility', []));
+
+                // Has permission, but Row Action Rule is changing to hide
+                if ($showToggleable && $toggleableRowRules->last() == 'hide')
+                {
+                    $showToggleable = false;
+                }
+
+                // No permission, but Row Action Rule is forcing to show
+                if (!$showToggleable && $toggleableRowRules->last() == 'show')
+                {
+                    $showToggleable = true;
+                }
+
+                // Particular Rule for this field
+                if (isset($hasFieldRules['field_hide_toggleable'])) {
+                    $showToggleable = !$hasFieldRules['field_hide_toggleable'];
+                }
+
+                if (str_contains($field, '.') === true) {
+                    $showToggleable = false;
+                }
+
             @endphp
             @include(data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else

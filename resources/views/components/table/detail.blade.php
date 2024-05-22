@@ -1,6 +1,8 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
+
 @if(data_get($setUp, 'detail.state.' . $rowId))
     @php
-        $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:rows');
+        $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
     @endphp
 
     <td colspan="999">

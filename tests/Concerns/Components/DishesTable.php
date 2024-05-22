@@ -84,6 +84,7 @@ class DishesTable extends PowerGridComponent
             ->add('name')
             ->add('storage_room')
             ->add('chef_name')
+            ->add('active')
             ->add('serving_at')
             ->add('calories')
             ->add('calories', function (Dish $dish) {

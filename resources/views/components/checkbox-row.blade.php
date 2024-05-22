@@ -1,5 +1,6 @@
+@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
 @php
-    $rulesValues = $actionRulesClass->recoverFromAction($row, 'pg:checkbox');
+    $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_CHECKBOX);
 
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => data_get($theme, 'checkbox.inputClass'),

@@ -1,7 +1,7 @@
 @php
     $params = [
         'id' => data_get($row, $primaryKey),
-        'isHidden' => !$showToggleable ? 'true' : 'false',
+        'isHidden' => !$showToggleable,
         'tableName' => $tableName,
         'field' => $column->field,
         'toggle' => (int) $row->{$column->field},
