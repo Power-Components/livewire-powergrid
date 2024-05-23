@@ -56,7 +56,7 @@ class Tailwind extends ThemeBase
     public function cols(): Cols
     {
         return Theme::cols()
-            ->div('select-none space-x-1 flex flex-row-reverse justify-end items-center gap-1')
+            ->div('select-none space-x-1 flex flex-row-reverse justify-end items-center gap-2')
             ->clearFilter('', '');
     }
 

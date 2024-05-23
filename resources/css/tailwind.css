@@ -32,7 +32,7 @@
 }
 
 .pg-enabled-filters-base {
-    @apply flex items-center gap-2 mt-2 md:mt-0 flex-wrap
+    @apply flex items-center gap-2 my-3 md:mt-0 flex-wrap
 }
 
 
