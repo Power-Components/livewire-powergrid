@@ -35,16 +35,13 @@
         class="{{ data_get($theme, 'cols.divClass') }}"
         style="{{ data_get($theme, 'cols.divStyle') }}"
     >
-        @if ($column->sortable)
-            <span>
-                <x-dynamic-component
-                    component="{{ $this->sortIcon($field) }}"
-                    class="size-4"
-                />
-            </span>
-        @else
-            <span style="width: 6px"></span>
-        @endif
         <span data-value>{!! $column->title !!}</span>
+
+        @if ($column->sortable)
+            <x-dynamic-component
+                    component="{{ $this->sortIcon($field) }}"
+                    width="16"
+            />
+        @endif
     </div>
 </th>
