@@ -19,13 +19,14 @@
                 @if (config('livewire-powergrid.filter') == 'outside' && count($this->filters()) > 0)
                     @includeIf(powerGridThemeRoot() . '.header.filters')
                 @endif
-                @includeIf(powerGridThemeRoot() . '.header.enabled-filters')
             </div>
             @includeWhen(boolval(data_get($setUp, 'header.wireLoading')),
                 powerGridThemeRoot() . '.header.loading')
         </div>
         @include(powerGridThemeRoot() . '.header.search')
     </div>
+
+    @includeIf(powerGridThemeRoot() . '.header.enabled-filters')
 
     @include(powerGridThemeRoot() . '.header.batch-exporting')
     @include(powerGridThemeRoot() . '.header.multi-sort')
