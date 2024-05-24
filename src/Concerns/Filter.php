@@ -331,7 +331,7 @@ trait Filter
         }
     }
 
-    public function listColumnForFilters(): Collection
+    public function listColumnForQueryString(): Collection
     {
         $columns = collect();
 
@@ -348,17 +348,21 @@ trait Filter
         return $columns;
     }
 
-    /*
-    @TODO Figure out
-    */
-    protected function powerGridQueryString(): array
+    /**
+     *
+     * @param string $prefix Prefix each field in URL
+     */
+    protected function powerGridQueryString(string $prefix = ''): array
     {
         $queryString = [];
 
-        $columns = $this->listColumnForFilters();
+        $columns = $this->listColumnForQueryString();
 
         foreach (Arr::dot($this->filters()) as $filter) {
-            $as = str($filter->field)->replace('.', '_');
+            $as = str($filter->field)
+                ->when(!empty($prefix), fn ($c) => $c->prepend($prefix . '_'))
+                ->replace('.', '_')
+                ->replaceMatches('/\_+/', '_');
 
             if (!empty(request()->get($as))) {
                 $this->addEnabledFilters($filter->field, strval($columns->get($filter->field, $filter->field)));
