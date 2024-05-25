@@ -46,7 +46,7 @@ trait ToggleDetail
             /** @var \Illuminate\Support\Enumerable<(int|string), (int|string)> $except */
             $except = $id;
             collect($detailStates)->except($except)
-                ->filter(fn ($state) => $state)->keys()
+                ->filter(fn ($state) => boolval($state))->keys()
                 ->each(
                     fn ($key) => data_set($this->setUp, "detail.state.$key", false)
                 );

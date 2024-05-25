@@ -23,6 +23,23 @@ trait Filter
     {
         collect($this->filters())
             ->each(function ($filter) use ($field) {
+                /**
+                 * Filter Number will generate FIELD_start and FIELD_end fields,
+                 * and both fields should also be cleaned.
+                 * Here we verify if there are filter numbers and their fields.
+                 */
+
+                $extraFieldsToClear = [];
+
+                if (!empty($this->filters['number'])) {
+                    $numberField = str($field)->beforeLast('_start')->beforeLast('_end')->append('')->toString();
+
+                    if (isset($this->filters['number'][$numberField])) {
+                        $field              = $numberField;
+                        $extraFieldsToClear = [$numberField . '_start', $numberField . '_end'];
+                    }
+                }
+
                 if (isset($this->filters['multi_select'][$field])) {
                     $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
                 }
@@ -55,6 +72,10 @@ trait Filter
 
                 if ($field === data_get($filter, 'field')) {
                     $unset($filter, $field, null);
+
+                    foreach ($extraFieldsToClear as $fieldToClear) {
+                        $unset($filter, $fieldToClear, null);
+                    }
                 };
             });
 
@@ -383,16 +404,19 @@ trait Filter
             }
 
             if ($filter->key === 'number') {
-                $_start = $as->append('_start')->toString();
-                $_end   = $as->append('_end')->toString();
+                $_start         = $as->append('_start')->toString();
+                $_end           = $as->append('_end')->toString();
+                $fieldProcessed = false;
 
                 $queryString['filters.number.' . $filter->field . '.start'] = [
                     'as'     => $_start,
                     'except' => '',
                 ];
 
-                if (!is_null(request()->get($_start))) {
+                if ($fieldProcessed === false && !is_null(request()->get($_start))) {
                     $this->addEnabledFilters($filter->field . '_start', strval($columns->get($filter->field, $filter->field)));
+
+                    $fieldProcessed = true;
                 }
 
                 $queryString['filters.number.' . $filter->field . '.end'] = [
@@ -400,8 +424,10 @@ trait Filter
                     'except' => '',
                 ];
 
-                if (!is_null(request()->get($_end))) {
+                if ($fieldProcessed === false && !is_null(request()->get($_end))) {
                     $this->addEnabledFilters($filter->field . '_end', strval($columns->get($filter->field, $filter->field)));
+
+                    $fieldProcessed = true;
                 }
 
                 continue;
