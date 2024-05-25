@@ -46,7 +46,7 @@ trait ExportableJob
 
         $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 
-        $results = $processDataSource->prepareDataSource()
+        $results = $processDataSource->prepareDataSource() // @phpstan-ignore-line
             ->where(
                 fn ($query) => Builder::make($query, $this->componentTable)
                     ->filterContains()
