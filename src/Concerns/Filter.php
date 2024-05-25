@@ -23,6 +23,23 @@ trait Filter
     {
         collect($this->filters())
             ->each(function ($filter) use ($field) {
+                /**
+                 * Filter Number will generate FIELD_start and FIELD_end fields,
+                 * and both fields should also be cleaned.
+                 * Here we verify if there are filter numbers and their fields.
+                 */
+
+                $extraFieldsToClear = [];
+
+                if (!empty($this->filters['number'])) {
+                    $numberField = str($field)->beforeLast('_start')->beforeLast('_end')->append('')->toString();
+
+                    if (isset($this->filters['number'][$numberField])) {
+                        $field              = $numberField;
+                        $extraFieldsToClear = [$numberField . '_start', $numberField . '_end'];
+                    }
+                }
+
                 if (isset($this->filters['multi_select'][$field])) {
                     $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
                 }
@@ -55,6 +72,10 @@ trait Filter
 
                 if ($field === data_get($filter, 'field')) {
                     $unset($filter, $field, null);
+
+                    foreach ($extraFieldsToClear as $fieldToClear) {
+                        $unset($filter, $fieldToClear, null);
+                    }
                 };
             });
 
