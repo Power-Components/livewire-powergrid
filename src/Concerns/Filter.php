@@ -404,16 +404,19 @@ trait Filter
             }
 
             if ($filter->key === 'number') {
-                $_start = $as->append('_start')->toString();
-                $_end   = $as->append('_end')->toString();
+                $_start         = $as->append('_start')->toString();
+                $_end           = $as->append('_end')->toString();
+                $fieldProcessed = false;
 
                 $queryString['filters.number.' . $filter->field . '.start'] = [
                     'as'     => $_start,
                     'except' => '',
                 ];
 
-                if (!is_null(request()->get($_start))) {
+                if ($fieldProcessed === false && !is_null(request()->get($_start))) {
                     $this->addEnabledFilters($filter->field . '_start', strval($columns->get($filter->field, $filter->field)));
+
+                    $fieldProcessed = true;
                 }
 
                 $queryString['filters.number.' . $filter->field . '.end'] = [
@@ -421,8 +424,10 @@ trait Filter
                     'except' => '',
                 ];
 
-                if (!is_null(request()->get($_end))) {
+                if ($fieldProcessed === false && !is_null(request()->get($_end))) {
                     $this->addEnabledFilters($filter->field . '_end', strval($columns->get($filter->field, $filter->field)));
+
+                    $fieldProcessed = true;
                 }
 
                 continue;
