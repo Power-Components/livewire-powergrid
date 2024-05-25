@@ -14,7 +14,7 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-    $selectClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), data_get($column, 'headerClass'), 'power_grid']);
+    $selectClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), 'power_grid']);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp

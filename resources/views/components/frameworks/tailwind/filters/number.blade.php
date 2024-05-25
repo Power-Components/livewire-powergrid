@@ -19,7 +19,6 @@
 
     $filterClasses = Arr::toCssClasses([
         data_get($theme, 'inputClass'),
-        data_get($column, 'headerClass'),
         'power_grid',
     ]);
 

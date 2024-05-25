@@ -29,7 +29,6 @@
         $selectClasses = \Illuminate\Support\Arr::toCssClasses([
             'power_grid',
             data_get($theme, 'selectClass'),
-            data_get($column, 'headerClass'),
         ]);
         $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', data_get($theme, 'inputClass')]);
 
