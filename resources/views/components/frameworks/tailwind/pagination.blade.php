@@ -5,9 +5,12 @@
 >
     <div class="items-center justify-between w-full sm:flex-1 sm:flex">
         @if ($recordCount === 'full')
-            <div class="mr-3">
-                <div
-                    class="mr-2 leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300 sm:text-right">
+            {{ $paginator->hasPages() }}
+            <div @class(['mr-3' => $paginator->hasPages()])>
+                <div @class([
+                    'mr-2' => $paginator->hasPages(),
+                    'leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300 sm:text-right',
+                ])>
                     {{ trans('livewire-powergrid::datatable.pagination.showing') }}
                     <span class="font-semibold firstItem">{{ $paginator->firstItem() }}</span>
                     {{ trans('livewire-powergrid::datatable.pagination.to') }}
@@ -18,8 +21,11 @@
                 </div>
             </div>
         @elseif($recordCount === 'short')
-            <div class="mr-3">
-                <p class="mr-2 leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300">
+            <div @class(['mr-3' => $paginator->hasPages()])>
+                <p @class([
+                    'mr-2' => $paginator->hasPages(),
+                    'leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300 sm:text-right',
+                ])>
                     <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
                     <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
@@ -28,8 +34,11 @@
                 </p>
             </div>
         @elseif($recordCount === 'min')
-            <div class="mr-3">
-                <p class="mr-2 leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300">
+            <div @class(['mr-3' => $paginator->hasPages()])>
+                <p @class([
+                    'mr-2' => $paginator->hasPages(),
+                    'leading-5 text-center text-pg-primary-700 text-md dark:text-pg-primary-300 sm:text-right',
+                ])>
                     <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                     -
                     <span class="font-semibold lastItem"> {{ $paginator->lastItem() }}</span>
