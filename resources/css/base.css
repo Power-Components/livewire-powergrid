@@ -10,6 +10,10 @@ select {
     background-color: inherit;
 }
 
+#power-grid-table-container > * select {
+    background:transparent;
+}
+
 .loader {
     border-top-color: #222;
     -webkit-animation: spinner 1.5s linear infinite;
