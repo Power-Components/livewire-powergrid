@@ -5,7 +5,6 @@
 >
     <div class="items-center justify-between w-full sm:flex-1 sm:flex">
         @if ($recordCount === 'full')
-            {{ $paginator->hasPages() }}
             <div @class(['mr-3' => $paginator->hasPages()])>
                 <div @class([
                     'mr-2' => $paginator->hasPages(),
