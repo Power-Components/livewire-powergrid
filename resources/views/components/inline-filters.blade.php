@@ -40,9 +40,13 @@
                 $filterClass = str(data_get($column, 'filters.className'));
             @endphp
             <td
-                class="{{ data_get($theme, 'table.tdBodyClass') }}"
+                @class([data_get($theme, 'table.tdBodyClass'), data_get($theme, 'table.tdFiltersClass')])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
-                style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyle') }}"
+                @style([
+                    'display:none' => data_get($column, 'hidden') === true,
+                    data_get($theme, 'table.tdBodyStyle'),
+                    data_get($theme, 'table.tdFiltersStyle')
+                ])
             >
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">
                     @if ($filterClass->contains('FilterMultiSelect'))
