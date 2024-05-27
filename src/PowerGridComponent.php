@@ -188,6 +188,12 @@ class PowerGridComponent extends Component
     {
         $class = $this->template() ?? powerGridTheme();
 
+        if (app()->hasDebugModeEnabled()) {
+            $themeBase = PowerGrid::theme($class);
+
+            return convertObjectsToArray((array) $themeBase->apply());
+        }
+
         return Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
             /** @var ThemeBase $themeBase */
             $themeBase = PowerGrid::theme($class);
