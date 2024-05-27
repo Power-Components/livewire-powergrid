@@ -153,7 +153,7 @@ class Builder
 
                         $query->when($search != '', function () use ($column, $query, $search, $table, $field, $hasColumn) {
                             if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
-                                $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' \'%' . $search . '%\'');
+                                $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' ?', ["%{$search}%"]);
                             }
 
                             if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
@@ -164,7 +164,7 @@ class Builder
                                     $driverName = $query->getConnection()->getConfig('driver');
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . "?", '%' . $search . '%');
+                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . ' ?', ["%{$search}%"]);
                                     } else {
                                         $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                     }
