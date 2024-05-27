@@ -1,5 +1,5 @@
 <div align="center">
-   <p><img src="art/header.jpg" alt="PowerGrid Logo"></p>
+   <p><a href="https://livewire-powergrid.com" target="_blank"><img src="art/header.jpg" alt="PowerGrid Logo"></a></p>
    <p align="center">
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
