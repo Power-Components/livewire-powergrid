@@ -239,7 +239,7 @@
                                     <button
                                         wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                         wire:loading.attr="disabled"
-                                        class="btn"
+                                        class="select-none focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-pg-primary-500 bg-pg-primary-50 ring-0 ring-inset ring-pg-primary-300 hover:bg-pg-primary-100 dark:bg-pg-primary-800 dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-900 dark:text-pg-primary-300 focus-visible:outline-offset-0 rounded-md"
                                     >
                                         @lang('Next')
                                     </button>
@@ -247,7 +247,7 @@
                             @else
                                 <button
                                     disabled
-                                    class="btn"
+                                    class="focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-pg-primary-500 bg-pg-primary-50 ring-0 ring-inset ring-pg-primary-300 hover:bg-pg-primary-100 dark:bg-pg-primary-800 dark:ring-pg-primary-600 dark:border-pg-primary-600 dark:hover:bg-pg-primary-900 dark:text-pg-primary-300 focus-visible:outline-offset-0 rounded-md"
                                 >
                                     @lang('Next')
                                 </button>
