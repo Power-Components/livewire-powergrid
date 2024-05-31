@@ -33,7 +33,7 @@ jobs:
         php: [8.3]
         laravel: [11.*]
         dependency-version: [ prefer-stable ]
-        typesense-version: [0.26]
+        typesense-version: [26.0]
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
 
