@@ -34,7 +34,7 @@ jobs:
           TYPESENSE_API_KEY: xyz
         ports:
           - 8108:8108
-        options: --health-cmd="curl --fail http://localhost:8108/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --entrypoint "/bin/sh -c 'mkdir -p /data && exec typesense-server --data-dir /data'" --health-cmd="curl --fail http://localhost:8108/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
 
     strategy:
       fail-fast: false
