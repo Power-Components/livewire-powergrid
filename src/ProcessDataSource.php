@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str};
+use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str, Stringable};
+use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
@@ -17,8 +18,6 @@ use Throwable;
 class ProcessDataSource
 {
     use Concerns\SoftDeletes;
-
-    public bool $isCollection = false;
 
     private array $queryLog = [];
 
@@ -49,16 +48,46 @@ class ProcessDataSource
             return $this->processCollection($datasource, $isExport);
         }
 
+        if ($datasource instanceof ScoutBuilder) {
+            return $this->processScoutCollection($datasource);
+        }
+
         $this->setCurrentTable($datasource);
 
-        /** @phpstan-ignore-next-line  */
-        return $this->processModel($datasource);
+        return $this->processModel($datasource); // @phpstan-ignore-line
     }
 
-    /**
-     * @return EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
-     */
-    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|null
+    public function processScoutCollection(ScoutBuilder $datasource): Paginator|LengthAwarePaginator
+    {
+        $datasource->query = Str::of($datasource->query)
+            ->when($this->component->search != '', fn (Stringable $self) => $self
+                ->prepend($this->component->search . ','))
+            ->toString();
+
+        collect($this->component->filters)->each(fn (array $filters) => collect($filters)
+            ->each(fn (string $value, string $field) => $datasource
+                ->where($field, $value)));
+
+        if ($this->component->multiSort) {
+            foreach ($this->component->sortArray as $sortField => $direction) {
+                $datasource->orderBy($sortField, $direction);
+            }
+        } else {
+            $datasource->orderBy($this->component->sortField, $this->component->sortDirection);
+        }
+
+        $results = self::applyPerPage($datasource);
+
+        if (method_exists($results, 'total')) {
+            $this->component->total = $results->total();
+        }
+
+        return $results->setCollection( // @phpstan-ignore-line
+            $this->transform($results->getCollection(), $this->component) // @phpstan-ignore-line
+        );
+    }
+
+    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|ScoutBuilder|null
     {
         $datasource = $this->component->datasource ?? null;
 
@@ -69,8 +98,6 @@ class ProcessDataSource
         if (is_array($datasource)) {
             $datasource = collect($datasource);
         }
-
-        $this->isCollection = $datasource instanceof BaseCollection;
 
         return $datasource;
     }
@@ -226,7 +253,7 @@ class ProcessDataSource
         return $results;
     }
 
-    private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany $results): LengthAwarePaginator|Paginator
+    private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany|ScoutBuilder $results): LengthAwarePaginator|Paginator
     {
         $pageName    = strval(data_get($this->component->setUp, 'footer.pageName', 'page'));
         $perPage     = intval(data_get($this->component->setUp, 'footer.perPage'));
@@ -236,6 +263,10 @@ class ProcessDataSource
             'min'   => 'simplePaginate',
             default => 'paginate',
         };
+
+        if ($results instanceof ScoutBuilder) {
+            return $results->paginateSafe($perPage, pageName: $pageName); // @phpstan-ignore-line
+        }
 
         if ($perPage > 0) {
             return $results->$paginate($perPage, pageName: $pageName);
