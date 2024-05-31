@@ -1,17 +1,19 @@
-name: PostgreSQL
+name: PostGreSQL
 
-on:
-  push:
-    branches:
-      - "**"
-    paths-ignore:
-      - "art/**"
-      - "README.md"
-  pull_request:
-    types: [ready_for_review, synchronize, opened]
-    paths-ignore:
-      - "art/**"
-      - "README.md"
+on: workflow_dispatch
+#
+#on:
+#  push:
+#    branches:
+#      - "**"
+#    paths-ignore:
+#      - "art/**"
+#      - "README.md"
+#  pull_request:
+#    types: [ready_for_review, synchronize, opened]
+#    paths-ignore:
+#      - "art/**"
+#      - "README.md"
 
 jobs:
   build:

@@ -64,8 +64,8 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer require typesense/typesense-laravel-scout
           composer require laravel/scout
+          composer require typesense/typesense-php
           composer install
 
       - name: Start Typesense
