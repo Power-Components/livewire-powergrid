@@ -63,8 +63,8 @@ jobs:
       - name: Install Typesense
         run: |
           curl -O https://dl.typesense.org/releases/26.0/typesense-server-26.0-arm64.deb
-          sudo apt install ./typesense-server-26.0-arm64.deb
-          sudo systemctl start typesense-server.service
+          curl -O https://dl.typesense.org/releases/26.0/typesense-server-26.0-amd64.deb
+          sudo apt install ./typesense-server-26.0-amd64.deb
 
       - name: Install Composer dependencies
         run: |
