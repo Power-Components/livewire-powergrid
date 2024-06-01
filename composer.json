@@ -29,7 +29,8 @@
     "larastan/larastan": "^2.9.0",
     "pestphp/pest": "^2.34.0",
     "orchestra/testbench": "8.19|^9.0",
-    "laradumps/laradumps": "^3.1"
+    "laradumps/laradumps": "^3.1",
+    "laravel/scout": "^10.9"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"
@@ -75,6 +76,9 @@
     ],
     "test:sqlsrv": [
       "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
+    ],
+    "test:typesense": [
+      "curl http://localhost:8108/health"
     ],
     "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
     "test:dbs": [

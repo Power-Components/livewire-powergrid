@@ -168,7 +168,7 @@ trait WithExport
             $inClause = $processDataSource->component->checkboxValues;
         }
 
-        if ($processDataSource->isCollection) {
+        if ($processDataSource->component->datasource() instanceof Collection) {
             if ($inClause) {
                 $results = $processDataSource->get(isExport: true)->whereIn($this->primaryKey, $inClause);
 
