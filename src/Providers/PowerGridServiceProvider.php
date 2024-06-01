@@ -111,9 +111,12 @@ class PowerGridServiceProvider extends ServiceProvider
                 $perPage = $perPage ?: $this->model->getPerPage();
 
                 $results = $this->model->newCollection(
-                    $engine->map($this, $rawResults = $engine->paginate($this, $perPage, $page),
-                    $this->model
-                )->all());
+                    $engine->map(
+                        $this,
+                        $rawResults = $engine->paginate($this, $perPage, $page),
+                        $this->model
+                    )->all()
+                );
 
                 return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
                     'items'       => $results,
