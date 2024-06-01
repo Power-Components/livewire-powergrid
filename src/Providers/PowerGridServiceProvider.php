@@ -100,7 +100,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         if (class_exists(\Laravel\Scout\Builder::class)) {
             Builder::macro('paginateSafe', function ($perPage = null, $pageName = 'page', $page = null) {
-                $engine = $this->engine();
+                $engine = $this->engine(); // @phpstan-ignore-line
 
                 if ($engine instanceof PaginatesEloquentModels) {
                     return $engine->paginate($this, $perPage, $page)->appends('query', $this->query);
