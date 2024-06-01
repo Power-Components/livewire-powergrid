@@ -30,11 +30,11 @@ jobs:
       typesense:
         image: typesense/typesense:26.0
         env:
-          TYPESENSE_DATA_DIR: /data
+          TYPESENSE_DATA_DIR: /tmp/typesense/data
           TYPESENSE_API_KEY: xyz
         ports:
           - 8108:8108
-        options: --entrypoint "/bin/sh -c 'mkdir -p /data && exec typesense-server --data-dir /data'" --health-cmd="curl --fail http://localhost:8108/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="curl --fail http://localhost:8108/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
 
     strategy:
       fail-fast: false
