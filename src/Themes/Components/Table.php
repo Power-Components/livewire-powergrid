@@ -4,6 +4,14 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class Table
 {
+    public string $containerClass = '';
+
+    public string $containerStyle = '';
+
+    public string $baseClass = '';
+
+    public string $baseStyle = '';
+
     public string $divClass = '';
 
     public string $divStyle = '';
@@ -73,6 +81,22 @@ class Table
     {
         $this->tableClass = $tableClass;
         $this->tableStyle = $tableStyle;
+    }
+
+    public function container(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->containerClass = $attrClass;
+        $this->containerStyle = $attrStyle;
+
+        return $this;
+    }
+
+    public function base(string $attrClass, string $attrStyle = ''): Table
+    {
+        $this->baseClass = $attrClass;
+        $this->baseStyle = $attrStyle;
+
+        return $this;
     }
 
     public function div(string $attrClass, string $attrStyle = ''): Table
