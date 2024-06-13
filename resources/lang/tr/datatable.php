@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter'            => 'Filtre',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'Tümünü Temizle',
     ],
     'labels' => [
         'action'           => 'İşlemler',
@@ -16,7 +16,7 @@ return [
     ],
     'placeholders' => [
         'search' => 'Arama yap...',
-        'select' => 'Dönem seç',
+        'select' => 'Seç',
     ],
     'pagination' => [
         'showing' => 'Gösterilen:',
@@ -41,28 +41,27 @@ return [
         'is_not'       => 'Eşit olmayan',
         'contains'     => 'İçeren',
         'contains_not' => 'İçermeyen',
-        'starts_with'  => 'Başlayan',
-        'ends_with'    => 'Biten',
+        'starts_with'  => 'ile Başlayan',
+        'ends_with'    => 'ile Biten',
         'is_null'      => 'Yok olan',
         'is_not_null'  => 'Yok olmayan',
         'is_blank'     => 'Boş olan',
         'is_not_blank' => 'Boş olmayan',
         'is_empty'     => 'Boş olan',
         'is_not_empty' => 'Boş olmayan',
-
     ],
     'export' => [
-        'exporting' => 'Lütfen bekleyin!',
+        'exporting' => 'Dışarı aktarılıyor, lütfen bekleyin!',
         'completed' => 'Dışa aktarım tamamlandı! Dosyalarınız indirmek için hazır',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'Silinenler dahil tüm kayıtlar listeleniyor.',
+        'message_only_trashed' => 'Sadece silinenler listeleniyor.',
+        'without_trashed'      => 'Silinenler hariç',
+        'with_trashed'         => 'Silinenlerle birlikte',
+        'only_trashed'         => 'Sadece silinenler',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Çoklu sıralama etkin',
     ],
 ];
