@@ -64,4 +64,12 @@ return [
     'multi_sort' => [
         'message' => 'Multiple sort is active',
     ],
+    'buttons-macros' => [
+        'confirm' => [
+            'message'   => 'Are you sure you want to perform this action?',
+        ],
+        'confirm-prompt' => [
+            'message'   => "Are you sure you want to perform this action? \n\n Enter :confirm_value to confirm.",
+        ]
+    ],
 ];
