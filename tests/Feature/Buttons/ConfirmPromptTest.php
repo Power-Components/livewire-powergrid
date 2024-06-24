@@ -29,11 +29,11 @@ it('properly displays "confirm" on button click', function (string $component, o
     ])
         ->call($params->theme)
         ->set('search', 'Pastel de Nata')
-        ->assertSeeHtml('wire:confirm.prompt="1 Are you sure? Enter CONFIRM to confirm | CONFIRM"')
-        ->assertDontSeeHtml('wire:confirm.prompt="2 Are you sure? Enter CONFIRM to confirm | CONFIRM"')
+        ->assertSeeHtml('wire:confirm.prompt="1 Are you sure? Enter CONFIRM to confirm |CONFIRM"')
+        ->assertDontSeeHtml('wire:confirm.prompt="2 Are you sure? Enter CONFIRM to confirm |CONFIRM"')
         ->set('search', 'Peixada da chef Nábia')
-        ->assertSeeHtml('wire:confirm.prompt="2 Are you sure? Enter CONFIRM to confirm | CONFIRM"')
-        ->assertDontSeeHtml('wire:confirm.prompt="1 Are you sure? Enter CONFIRM to confirm | CONFIRM"');
+        ->assertSeeHtml('wire:confirm.prompt="2 Are you sure? Enter CONFIRM to confirm |CONFIRM"')
+        ->assertDontSeeHtml('wire:confirm.prompt="1 Are you sure? Enter CONFIRM to confirm |CONFIRM"');
 })
     ->with('action:confirm-prompt')
     ->group('action');
