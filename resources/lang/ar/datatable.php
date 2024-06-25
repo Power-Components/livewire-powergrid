@@ -62,4 +62,7 @@ return [
         'with_trashed'         => 'مع المحذوف',
         'only_trashed'         => 'فقط محذوف',
     ],
+    'multi_sort' => [
+        'message' => 'Multiple sort is active',
+    ],
 ];

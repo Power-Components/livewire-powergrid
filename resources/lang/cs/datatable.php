@@ -62,4 +62,7 @@ return [
         'with_trashed'         => 'Se smazanými',
         'only_trashed'         => 'Pouze smazané',
     ],
+    'multi_sort' => [
+        'message' => 'Multiple sort is active',
+    ],
 ];
