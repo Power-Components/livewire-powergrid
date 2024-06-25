@@ -205,13 +205,13 @@ class Macros
             return $this;
         });
 
-        Button::macro('confirmPrompt', function (?string $message = null, string $confirm_value = 'Confirm') {
-            $message = $message ?? trans('livewire-powergrid::datatable.buttons-macros.confirm-prompt.message', ['confirm_value' => $confirm_value]);
-            $confirm_value = trim($confirm_value);
+        Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm') {
+            $message = $message ?? trans('livewire-powergrid::datatable.buttons-macros.confirm-prompt.message', ['confirm_value' => $confirmValue]);
+            $confirm_value = trim($confirmValue);
             $this->dynamicProperties['confirmPrompt'] = [
                 'component' => 'button',
                 'attribute' => 'wire:confirm.prompt',
-                'value'     => "$message |$confirm_value",
+                'value'     => "$message |$confirmValue",
             ];
 
             return $this;
