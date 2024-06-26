@@ -11,7 +11,7 @@ $component = new class () extends DishTableBase {
         return [
             Button::make('confirm-prompt')
                 ->slot('confirm-prompt: ' . $row->id)
-                ->confirmPrompt("$row->id Are you sure? Enter CONFIRM to confirm","CONFIRM"),
+                ->confirmPrompt("$row->id Are you sure? Enter CONFIRM to confirm", "CONFIRM"),
         ];
     }
 };
