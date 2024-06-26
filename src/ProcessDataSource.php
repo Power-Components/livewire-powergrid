@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\{MorphToMany, BelongsToMany};
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
@@ -87,7 +87,7 @@ class ProcessDataSource
         );
     }
 
-    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|ScoutBuilder|null
+    public function prepareDataSource(): EloquentBuilder|BaseCollection|Collection|QueryBuilder|MorphToMany|BelongsToMany|ScoutBuilder|null
     {
         $datasource = $this->component->datasource ?? null;
 
@@ -134,7 +134,7 @@ class ProcessDataSource
     /**
      * @throws Throwable
      */
-    private function processModel(EloquentBuilder|MorphToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
+    private function processModel(EloquentBuilder|MorphToMany|BelongsToMany|QueryBuilder|BaseCollection|null $datasource): Paginator|LengthAwarePaginator
     {
         DB::enableQueryLog();
 
@@ -149,7 +149,7 @@ class ProcessDataSource
                     ->filter()
             );
 
-        if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
+        if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany || $datasource instanceof BelongsToMany) {
             $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
@@ -183,7 +183,7 @@ class ProcessDataSource
     /**
      * @throws \Exception
      */
-    private function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany $results): EloquentBuilder|QueryBuilder|MorphToMany
+    private function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany $results): EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany
     {
         foreach ($this->component->sortArray as $sortField => $direction) {
             $sortField = $this->makeSortField($sortField);
@@ -200,7 +200,7 @@ class ProcessDataSource
     /**
      * @throws \Exception
      */
-    private function applySingleSort(EloquentBuilder|QueryBuilder|MorphToMany|BaseCollection $results, string $sortField): MorphToMany|EloquentBuilder|QueryBuilder
+    private function applySingleSort(EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany|BaseCollection $results, string $sortField): MorphToMany|BelongsToMany|EloquentBuilder|QueryBuilder
     {
         /** @phpstan-ignore-next-line */
         $results = $this->applyWithSortStringNumber($results, $sortField);
@@ -208,7 +208,7 @@ class ProcessDataSource
         return $results->orderBy($sortField, $this->component->sortDirection);
     }
 
-    private function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
+    private function setTotalCount(EloquentBuilder|MorphToMany|BelongsToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
     {
         if (!method_exists($results, 'total')) {
             return;
@@ -230,10 +230,10 @@ class ProcessDataSource
      * @throws \Exception
      */
     private function applyWithSortStringNumber(
-        EloquentBuilder|QueryBuilder|MorphToMany $results,
+        EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany $results,
         string $sortField,
         string $multiSortDirection = null
-    ): EloquentBuilder|QueryBuilder|MorphToMany {
+    ): EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany {
         if (!$this->component->withSortStringNumber) {
             return $results;
         }
@@ -253,7 +253,7 @@ class ProcessDataSource
         return $results;
     }
 
-    private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany|ScoutBuilder $results): LengthAwarePaginator|Paginator
+    private function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany|BelongsToMany|ScoutBuilder $results): LengthAwarePaginator|Paginator
     {
         $pageName    = strval(data_get($this->component->setUp, 'footer.pageName', 'page'));
         $perPage     = intval(data_get($this->component->setUp, 'footer.perPage'));
@@ -355,7 +355,7 @@ class ProcessDataSource
         });
     }
 
-    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|MorphToMany|Collection|QueryBuilder|null $datasource): void
+    protected function setCurrentTable(EloquentBuilder|array|BaseCollection|MorphToMany|BelongsToMany|Collection|QueryBuilder|null $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {
             /** @var string $from */
@@ -369,7 +369,7 @@ class ProcessDataSource
         $this->component->currentTable = $datasource->getModel()->getTable();
     }
 
-    private function applySummaries(MorphToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
+    private function applySummaries(MorphToMany|BelongsToMany|EloquentBuilder|BaseCollection|QueryBuilder $results): void
     {
         if (!$this->component->hasSummarizeInColumns()) {
             return;

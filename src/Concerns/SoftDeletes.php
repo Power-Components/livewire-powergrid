@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\{MorphToMany, BelongsToMany};
 use Livewire\Attributes\On;
 use Throwable;
 
@@ -21,7 +21,7 @@ trait SoftDeletes
     /**
      * @throws Throwable
      */
-    public function applySoftDeletes(Builder|MorphToMany $results, string $softDeletes): Builder|MorphToMany
+    public function applySoftDeletes(Builder|BelongsToMany|MorphToMany $results, string $softDeletes): Builder|BelongsToMany|MorphToMany
     {
         throw_if(
             $softDeletes && !in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses(get_class($results->getModel())), true),
