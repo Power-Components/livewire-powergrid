@@ -21,6 +21,8 @@ use Livewire\Wireable;
  * @method static bladeComponent(string $component, array $params)
  * @method static can(bool|\Closure $allowed = true)
  * @method static id(string $id = null)
+ * @method static confirm(string $message = 'Are you sure you want to perform this action?')
+ * @method static confirmPrompt(string $message = 'Are you sure you want to perform this action?', string $confirmValue = 'Confirm')
  *
  */
 final class Button implements Wireable

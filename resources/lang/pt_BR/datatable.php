@@ -64,4 +64,12 @@ return [
     'multi_sort' => [
         'message' => 'A classificação múltipla está ativa',
     ],
+    'buttons_macros' => [
+        'confirm' => [
+            'message' => 'Are you sure you want to perform this action?',
+        ],
+        'confirm_prompt' => [
+            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+        ],
+    ],
 ];
