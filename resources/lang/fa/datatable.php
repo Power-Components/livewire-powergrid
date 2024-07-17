@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter'            => 'فیلتر',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'حذف همه',
     ],
     'labels' => [
         'action'           => 'اقدام ها',
@@ -55,21 +55,21 @@ return [
         'completed' => 'صادرات به پایان رسید! فایل های شما آماده بارگیری هستند',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'نمایش همه سطرها همراه با حذف شده ها.',
+        'message_only_trashed' => 'نمایش حذف شده ها.',
+        'without_trashed'      => 'بدون حذف شده ها',
+        'with_trashed'         => 'همراه حذف شده ها',
+        'only_trashed'         => 'فقط حذف شده ها',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'سطح چند مدله فعال شد',
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'آیا از انجام این اقدام اطمینان دارید؟',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "آیا از انجام این کار اطمینان دارید؟\n\n  برای تایید :confirmValue را وارد کنید.",
         ],
     ],
 ];
