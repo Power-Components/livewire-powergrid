@@ -29,9 +29,7 @@ trait ToggleDetail
             $collection = !is_array($results) && method_exists($results, 'items') ? collect($results->items()) : collect($results);
         }
 
-        $primaryKey = $this->primaryKeyAlias ?? $this->primaryKey;
-
-        $collection->pluck($primaryKey)
+        $collection->pluck($this->primaryKey)
             ->map(fn ($id) => strval($id))
             ->each(function ($id) {
                 $state = data_get($this->setUp, "detail.state.$id", false);

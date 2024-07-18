@@ -1,6 +1,6 @@
 <x-livewire-powergrid::editable
     :tableName="$tableName"
-    :primaryKey="$this->realPrimaryKey"
+    :primaryKey="$primaryKey"
     :row="$row"
     :field="$field"
     :theme="$theme"

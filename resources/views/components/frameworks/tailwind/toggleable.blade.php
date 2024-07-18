@@ -5,7 +5,7 @@
     $falseValue = $column->toggleable['default'][1];
 
     $params = [
-        'id' => data_get($row, $this->realPrimaryKey),
+        'id' => data_get($row, $primaryKey),
         'isHidden' => !$showToggleable,
         'tableName' => $tableName,
         'field' => $column->field,

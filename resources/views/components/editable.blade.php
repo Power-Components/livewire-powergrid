@@ -38,7 +38,7 @@
     $params = [
         'theme' => data_get($theme, 'name'),
         'tableName' => $tableName,
-        'id' => data_get($row, $this->realPrimaryKey),
+        'id' => data_get($row, $primaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,
@@ -74,9 +74,9 @@
         <div x-html="editableInput"></div>
     </template>
     @if ($showErrorBag)
-        @error($field . '.' . $row->{$this->realPrimaryKey})
+        @error($field . '.' . $row->{$primaryKey})
             <div class="text-sm text-red-800 p-1 transition-all duration-200">
-                {{ str($message)->replace($field . '.' . $row->{$this->realPrimaryKey}, $field) }}
+                {{ str($message)->replace($field . '.' . $row->{$primaryKey}, $field) }}
             </div>
         @enderror
     @endif

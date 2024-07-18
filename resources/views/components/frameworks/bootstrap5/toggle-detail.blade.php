@@ -4,7 +4,7 @@
 >
     <div
         class="cursor-pointer"
-        x-on:click.prevent="$wire.toggleDetail('{{ $row->{$this->realPrimaryKey} }}')"
+        x-on:click.prevent="$wire.toggleDetail('{{ $row->{$primaryKey} }}')"
     >
         @includeIf(data_get($setUp, 'detail.viewIcon'))
 
