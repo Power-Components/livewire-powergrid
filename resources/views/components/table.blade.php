@@ -29,7 +29,7 @@
                         @php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp
                     @endif
                     @php
-                        $rowId = data_get($row, $primaryKey);
+                        $rowId = data_get($row, $this->realPrimaryKey);
 
                         $class = data_get($theme, 'table.trBodyClass');
 
@@ -96,7 +96,7 @@
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
                             :child-index="$item"
-                            :$primaryKey
+                            :$this->realPrimaryKey
                             :$radio
                             :$radioAttribute
                             :$checkbox

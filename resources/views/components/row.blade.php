@@ -71,7 +71,7 @@
         <div class="pg-actions">
             @if(empty(data_get($row, 'actions')) && $column->isAction)
                 @if (method_exists($this, 'actionsFromView') && $actionsFromView = $this->actionsFromView($row))
-                    <div wire:key="actions-view-{{ data_get($row, $primaryKey) }}">
+                    <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
                         {!! $actionsFromView !!}
                     </div>
                 @endif
@@ -80,7 +80,7 @@
             @if (filled(data_get($row, 'actions')) && $column->isAction)
                 @foreach (data_get($row, 'actions') as $key => $action)
                     @if(filled($action))
-                        <span wire:key="action-{{ data_get($row, $primaryKey) }}-{{ $key }}">
+                        <span wire:key="action-{{ data_get($row, $this->realPrimaryKey) }}-{{ $key }}">
                             {!! $action !!}
                         </span>
                     @endif
@@ -92,7 +92,7 @@
         $hasFieldRules = $actionRulesClass->recoverActionForField($row, $field);
 
         // =============* Edit On Click *=====================
-        
+
         $showEditOnClick = false;
 
         if (data_get($column->editable, 'hasPermission')) {
@@ -125,7 +125,7 @@
              $showEditOnClick = false;
         }
         @endphp
-    
+
         @if($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
                 @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
