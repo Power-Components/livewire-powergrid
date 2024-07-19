@@ -1,4 +1,4 @@
-<div align="center">
+\<div align="center">
    <p><a href="https://livewire-powergrid.com" target="_blank"><img src="art/header.jpg" alt="PowerGrid Logo"></a></p>
    <p align="center">
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
@@ -72,7 +72,7 @@ PowerGrid offers a range of features that are readily available:
 | Queue Export for large datasets                                        | ✅                                      |
 | Responsive                                                             | ✅                                      |
 | Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
-| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and more... |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/5.x/resources/lang) |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 
