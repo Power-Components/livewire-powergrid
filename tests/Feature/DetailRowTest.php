@@ -110,7 +110,7 @@ it('render x-data correctly for detail row state', function () {
     }
 
     $component->assertSeeHtmlInOrder($xData);
-})->skip();
+});
 
 it('collapse detail row with collapseOthers', function () {
     livewire(RulesToggleDetailTable::class, [
@@ -184,4 +184,4 @@ it('collapse detail row with collapseOthers', function () {
             4 => false,
             5 => false,
         ]);
-})->skip();
+});
