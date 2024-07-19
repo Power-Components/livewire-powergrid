@@ -53,17 +53,17 @@ it('displays next links ">" and ">>"')
     ->livewire(DishesTable::class)
     ->set('setUp.footer.perPage', '4')
 
-    ->assertSeeHtml('wire:click="nextPage"')
+    ->assertSeeHtml('wire:click="nextPage(\'page\')"')
     //page #2
     ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="nextPage"');
+    ->assertSeeHtml('wire:click="nextPage(\'page\')"');
 
 it('displays previous links "<" and "<<"')
     ->livewire(DishesTable::class)
-    ->assertDontSeeHtml('wire:click="previousPage"')
+    ->assertDontSeeHtml('wire:click="previousPage(\'page\')"')
     //page #2
     ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="previousPage"');
+    ->assertSeeHtml('wire:click="previousPage(\'page\')"');
 
 it('searches for something that is not on the current page')
     ->livewire(DishesTable::class)
