@@ -30,8 +30,7 @@ $routeTarget = new class () extends DishTableBase {
         return [
             Button::make('route')
                 ->slot('route: ' . $row->id)
-                ->route('testing.route', ['dishId' => $row->id])
-                ->target('_blank'),
+                ->route('testing.route', ['dishId' => $row->id], '_blank'),
         ];
     }
 };

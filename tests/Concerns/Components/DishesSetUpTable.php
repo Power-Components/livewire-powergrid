@@ -92,12 +92,12 @@ class DishesSetUpTable extends PowerGridComponent
         ];
     }
 
-    public function actions(): array
+    public function actions($row): array
     {
         return [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
-                ->toggleDetail(),
+                ->toggleDetail($row->id),
         ];
     }
 }

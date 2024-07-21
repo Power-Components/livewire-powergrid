@@ -12,6 +12,7 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
 
+use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -24,18 +25,18 @@ use Throwable;
  */
 class PowerGridComponent extends Component
 {
-    use WithPagination;
     use Concerns\Base;
-    use Concerns\Sorting;
     use Concerns\Checkbox;
     use Concerns\Filter;
-    use Concerns\Persist;
-    use Concerns\LazyManager;
-    use Concerns\ToggleDetail;
     use Concerns\Hooks;
+    use Concerns\LazyManager;
     use Concerns\Listeners;
-    use Concerns\Summarize;
+    use Concerns\Persist;
     use Concerns\SoftDeletes;
+    use Concerns\Sorting;
+    use Concerns\Summarize;
+    use Concerns\ToggleDetail;
+    use WithPagination;
 
     public function mount(): void
     {
@@ -52,6 +53,13 @@ class PowerGridComponent extends Component
         $this->resolveTotalRow();
 
         $this->restoreState();
+    }
+
+    public function hydrate(): void
+    {
+        $this->actionsHtml               = [];
+        $this->processDataSourceInstance = null;
+        $this->actionRulesByRow          = [];
     }
 
     public function fetchDatasource(): void
@@ -94,7 +102,7 @@ class PowerGridComponent extends Component
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
-                ->filter(fn ($column) => filled($column->filters))->count() > 0;
+            ->filter(fn ($column) => filled($column->filters))->count() > 0;
     }
 
     #[Computed]
@@ -141,7 +149,7 @@ class PowerGridComponent extends Component
         $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
 
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
-        $cacheKey = join('-', $this->getCacheKeys());
+        $cacheKey = implode('-', $this->getCacheKeys());
 
         $results = $forever
             ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData())
@@ -258,6 +266,47 @@ class PowerGridComponent extends Component
             ->all();
     }
 
+    public function renderActions(mixed $data): void
+    {
+        $data->each(function ($row) {
+            if (!isset($_COOKIE['pg_cookie_for_' . $this->tableName . '_action_row_' . data_get($row, $this->realPrimaryKey)])) {
+                $this->actionsHtml[data_get($row, $this->realPrimaryKey)] = view('livewire-powergrid::components.action-content', [
+                    'id'      => data_get($row, $this->realPrimaryKey),
+                    'row'     => $row,
+                    'actions' => method_exists($this, 'actions') ? $this->actions($row) : [],
+                    'rules'   => method_exists($this, 'actionRules') ? $this->actionRules($row) : [],
+                ])->toHtml();
+            }
+        });
+    }
+
+    public function prepareActionRules(mixed $row, $loop): array
+    {
+        return collect($this->actionRules($row))
+            ->where('forAction', RuleManager::TYPE_ROWS)
+            ->transform(function ($rule) use ($row, $loop) {
+                $closureWhen = data_get($rule, 'rule.when');
+                $closureLoop = data_get($rule, 'rule.loop');
+                $attributes  = data_get($rule, 'rule.setAttribute');
+
+                $apply     = !is_null($closureWhen) ? $closureWhen($row) : false;
+                $applyLoop = !is_null($closureLoop) ? $closureLoop($loop) : false;
+
+                if (is_array($attributes) && isset($attributes['attribute']) && isset($attributes['value'])) {
+                    $attributes = [
+                        $attributes['attribute'] => $attributes['value'],
+                    ];
+                }
+
+                return [
+                    'apply'      => (bool) $apply,
+                    'applyLoop'  => (bool) $applyLoop,
+                    'attributes' => $attributes,
+                ];
+            })
+            ->toArray();
+    }
+
     /**
      * @throws Exception|Throwable
      */
@@ -269,6 +318,8 @@ class PowerGridComponent extends Component
         $this->searchMorphs   = $this->searchMorphs();
 
         $data = $this->getCachedData();
+
+        $this->renderActions($data);
 
         if (empty(data_get($this->setUp, 'lazy'))) {
             $this->resolveDetailRow($data);

@@ -10,7 +10,7 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 $component = new class () extends DishTableBase {
     public int $dishId;
 
-    public function actions(Dish $row): array
+    public function actions($row): array
     {
         return [
             Button::add('edit')

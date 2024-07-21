@@ -30,7 +30,7 @@ $component = new class () extends DishTableBase {
         return [
             Button::make('toggleDetail', 'Toggle Detail')
                 ->class('text-center')
-                ->toggleDetail(),
+                ->toggleDetail($row->id),
         ];
     }
 

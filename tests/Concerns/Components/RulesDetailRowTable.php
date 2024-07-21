@@ -28,13 +28,13 @@ class RulesDetailRowTable extends DishTableBase
         ];
     }
 
-    public function actions(): array
+    public function actions($row): array
     {
         return [
             Button::add('edit')
                 ->slot('<div id="edit">Toggle</div>')
                 ->class('text-center')
-                ->toggleDetail(),
+                ->toggleDetail($row->id),
         ];
     }
 

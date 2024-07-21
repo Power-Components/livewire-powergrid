@@ -38,7 +38,7 @@ $dotNotationPrimaryKeyComponent = new class () extends DishTableBase {
         return [
             Button::make('toggleDetail')
                 ->slot('toggleDetail: ' . $row->id)
-                ->toggleDetail(),
+                ->toggleDetail($row->id),
         ];
     }
 };

@@ -10,7 +10,7 @@ class RuleRows extends BaseRule
 
     protected string $usingLoop = '';
 
-    public function setAttribute(string $attribute = null, string $value = null): RuleRows
+    public function setAttribute(?string $attribute = null, ?string $value = null): RuleRows
     {
         $this->setModifier('setAttribute', [
             'attribute' => $attribute,
@@ -23,7 +23,7 @@ class RuleRows extends BaseRule
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function detailView(string $detailView = null, array $options = []): self
+    public function detailView(?string $detailView = null, array $options = []): self
     {
         $this->setModifier('detailView', [
             'detailView' => $detailView,
@@ -34,7 +34,7 @@ class RuleRows extends BaseRule
     }
 
     /**
-     * Show all toggleables in current row.
+     * Show all toggleable in current row.
      */
     public function showToggleable(): self
     {
@@ -44,7 +44,7 @@ class RuleRows extends BaseRule
     }
 
     /**
-     * Hide all toggleables in current row.
+     * Hide all toggleable in current row.
      */
     public function hideToggleable(): self
     {

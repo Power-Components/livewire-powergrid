@@ -47,6 +47,10 @@ trait Base
 
     public int $totalCurrentPage = 0;
 
+    public array $actionsHtml = [];
+
+    public array $actionRulesByRow = [];
+
     #[Computed]
     public function realPrimaryKey(): string
     {

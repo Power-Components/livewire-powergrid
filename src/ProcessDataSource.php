@@ -4,13 +4,11 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str, Stringable};
 use Laravel\Scout\Builder as ScoutBuilder;
-use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
 use Throwable;
@@ -303,56 +301,17 @@ class ProcessDataSource
 
     public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $processedResults = collect();
-
-        $results->chunk(3)
-            ->each(function (BaseCollection $collection) use (&$processedResults, $component) {
-                $processedBatch   = self::processBatch($collection, $component);
-                $processedResults = $processedResults->concat($processedBatch);
-            });
-
-        return $processedResults;
+        return self::processRows($results, $component);
     }
 
-    private static function processBatch(BaseCollection $collection, PowerGridComponent $component): BaseCollection
+    private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        if (method_exists($component, 'addColumns')) {
-            /** @deprecated 6.x */
-            /** @var array $columns */
-            $columns = $component->addColumns()->columns;
-            $fields  = collect($columns);
-        } else {
-            /** @var array $fields */
-            $fields = $component->fields()->fields;
-            $fields = collect($fields);
-        }
+        $fields = collect(once(fn () => $component->fields()->fields)); //@phpstan-ignore-line
 
-        return $collection->map(function ($row, $index) use ($component, $fields) {
-            /** @phpstan-ignore-next-line */
-            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]);
-
-            $prepareRules = collect();
-            $actions      = collect();
-
-            if (method_exists($component, 'actionRules')) {
-                $prepareRules = resolve(RulesController::class)
-                    ->execute($component->actionRules($row), (object)$row);
-            }
-
-            if (method_exists($component, 'actions')) {
-                $actions = (new ActionsController($component, $prepareRules))
-                    ->execute($component->actions($row), (object)$row);
-            }
-
-            $mergedData = $data->merge([
-                'rules' => $prepareRules,
-            ])->merge([
-                'actions' => $actions,
-            ]);
-
-            return $row instanceof Model
-                ? tap($row)->forceFill($mergedData->toArray())
-                : (object) $mergedData->toArray();
+        return $results->map(function ($row, $index) use ($component, $fields) { //@phpstan-ignore-line
+            return (object) $fields //@phpstan-ignore-line
+            ->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]) //@phpstan-ignore-line
+            ->toArray();
         });
     }
 

@@ -162,7 +162,7 @@ class DishesMakeTable extends PowerGridComponent
         ];
     }
 
-    public function actions(Dish $dish): array
+    public function actions($dish): array
     {
         return [
             Button::make('edit-stock', '<div id="edit">Edit</div>')
@@ -171,8 +171,7 @@ class DishesMakeTable extends PowerGridComponent
 
             Button::make('destroy', 'Delete')
                 ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $dish->id])
-                ->method('delete'),
+                ->dispatch('deletedEvent', ['dishId' => $dish->id]),
         ];
     }
 
