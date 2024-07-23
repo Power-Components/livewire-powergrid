@@ -12,21 +12,21 @@ class RuleToggleable extends BaseRule
     }
 
     /**
-    * Hides the Toggleable.
-    */
+     * Hides the Toggleable.
+     */
     public function hide(): self
     {
-        $this->setModifier('field_hide_toggleable', true);
+        $this->setModifier('fieldHideToggleable', true);
 
         return $this;
     }
 
     /**
-    * Shows the Toggleable.
-    */
+     * Shows the Toggleable.
+     */
     public function show(): self
     {
-        $this->setModifier('field_hide_toggleable', false);
+        $this->setModifier('fieldHideToggleable', false);
 
         return $this;
     }

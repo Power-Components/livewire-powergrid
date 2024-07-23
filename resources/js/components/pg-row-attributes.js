@@ -5,7 +5,7 @@ export default (params) => ({
     attributes: [],
     theme: [],
     init() {
-        this.rules = this.$wire.actionRulesByRow[this.rowId]
+        this.rules = this.$wire.actionRulesForRows[this.rowId]
 
         Object.values(this.rules).forEach((rule) => {
             if (rule.applyLoop) {

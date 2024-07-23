@@ -406,7 +406,7 @@ __webpack_require__.r(__webpack_exports__);
     theme: [],
     init: function init() {
       var _this = this;
-      this.rules = this.$wire.actionRulesByRow[this.rowId];
+      this.rules = this.$wire.actionRulesForRows[this.rowId];
       Object.values(this.rules).forEach(function (rule) {
         if (rule.applyLoop) {
           _this.attributes.push(rule.attributes);

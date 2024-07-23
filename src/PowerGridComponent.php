@@ -12,7 +12,6 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
 
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
 use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
@@ -22,12 +21,14 @@ use Throwable;
  * @property-read mixed $getCachedData
  * @property-read bool $hasColumnFilters
  * @property-read array|BaseCollection $visibleColumns
+ * @property-read string $realPrimaryKey
  */
 class PowerGridComponent extends Component
 {
     use Concerns\Base;
     use Concerns\Checkbox;
     use Concerns\Filter;
+    use Concerns\HasActions;
     use Concerns\Hooks;
     use Concerns\LazyManager;
     use Concerns\Listeners;
@@ -40,7 +41,7 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
-        $this->readyToLoad = !$this->deferLoading;
+        $this->readyToLoad = ! $this->deferLoading;
 
         foreach ($this->setUp() as $setUp) {
             $this->setUp[$setUp->name] = $setUp;
@@ -59,7 +60,7 @@ class PowerGridComponent extends Component
     {
         $this->actionsHtml               = [];
         $this->processDataSourceInstance = null;
-        $this->actionRulesByRow          = [];
+        $this->actionRulesForRows        = [];
     }
 
     public function fetchDatasource(): void
@@ -117,7 +118,7 @@ class PowerGridComponent extends Component
     {
         $start = microtime(true);
 
-        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
+        if (! Cache::supportsTags() || ! boolval(data_get($this->setUp, 'cache.enabled'))) {
             $results = $this->readyToLoad ? $this->fillData() : collect();
 
             $retrieveData = round((microtime(true) - $start) * 1000);
@@ -139,7 +140,7 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        if (!$this->readyToLoad) {
+        if (! $this->readyToLoad) {
             return collect();
         }
 
@@ -269,7 +270,7 @@ class PowerGridComponent extends Component
     public function renderActions(mixed $data): void
     {
         $data->each(function ($row) {
-            if (!isset($_COOKIE['pg_cookie_for_' . $this->tableName . '_action_row_' . data_get($row, $this->realPrimaryKey)])) {
+            if (! isset($_COOKIE['pg_cookie_for_' . $this->tableName . '_action_row_' . data_get($row, $this->realPrimaryKey)])) {
                 $this->actionsHtml[data_get($row, $this->realPrimaryKey)] = view('livewire-powergrid::components.action-content', [
                     'id'      => data_get($row, $this->realPrimaryKey),
                     'row'     => $row,
@@ -278,33 +279,6 @@ class PowerGridComponent extends Component
                 ])->toHtml();
             }
         });
-    }
-
-    public function prepareActionRules(mixed $row, $loop): array
-    {
-        return collect($this->actionRules($row))
-            ->where('forAction', RuleManager::TYPE_ROWS)
-            ->transform(function ($rule) use ($row, $loop) {
-                $closureWhen = data_get($rule, 'rule.when');
-                $closureLoop = data_get($rule, 'rule.loop');
-                $attributes  = data_get($rule, 'rule.setAttribute');
-
-                $apply     = !is_null($closureWhen) ? $closureWhen($row) : false;
-                $applyLoop = !is_null($closureLoop) ? $closureLoop($loop) : false;
-
-                if (is_array($attributes) && isset($attributes['attribute']) && isset($attributes['value'])) {
-                    $attributes = [
-                        $attributes['attribute'] => $attributes['value'],
-                    ];
-                }
-
-                return [
-                    'apply'      => (bool) $apply,
-                    'applyLoop'  => (bool) $applyLoop,
-                    'attributes' => $attributes,
-                ];
-            })
-            ->toArray();
     }
 
     /**

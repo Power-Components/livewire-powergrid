@@ -6,6 +6,7 @@
             $actionRules = collect($rules)->where('forAction', data_get($action, 'action'));
             $attributesBag = new ComponentAttributeBag([]);
             $hideFromRules = false;
+            $bladeComponentFromRules = [];
 
             foreach ($actionRules as $rule) {
                 $closure = data_get($rule, 'rule.when');
@@ -21,6 +22,8 @@
                     if ($hide = data_get($rule, 'rule.hide')) {
                         $hideFromRules = true;
                     }
+
+                    $bladeComponentFromRules = data_get($rule, 'rule.bladeComponent');
                 }
             }
 
@@ -37,23 +40,33 @@
             }
         @endphp
 
-        @if (data_get($action, 'view') && $show && !$hideFromRules)
+        @if ($bladeComponentFromRules)
             <x-dynamic-component
-                    :component="data_get($action, 'view')"
-                    :attributes="$attributes"
+                :component="data_get($bladeComponentFromRules, 'component')"
+                :attributes="new ComponentAttributeBag(
+                    array_merge($attributes->getAttributes(), data_get($bladeComponentFromRules, 'params')),
+                )"
             >
                 {{ data_get($action, 'slot') }}
             </x-dynamic-component>
         @else
+            @if (data_get($action, 'view') && $show && !$hideFromRules)
+                <x-dynamic-component
+                    :component="data_get($action, 'view')"
+                    :attributes="$attributes"
+                >
+                    {{ data_get($action, 'slot') }}
+                </x-dynamic-component>
+            @else
+                @if ($tag = data_get($action, 'tag'))
+                    @php
+                        $slot = data_get($action, 'slot');
+                        $element = "<{$tag} {$attributes->toHtml()}>{$slot}</{$tag}>";
+                    @endphp
 
-            @if ($tag = data_get($action, 'tag'))
-                @php
-                    $slot = data_get($action, 'slot');
-                    $element = "<{$tag} {$attributes->toHtml()}>{$slot}</{$tag}>";
-                @endphp
-
-                @if ($show && !$hideFromRules)
-                    {!! Blade::render($element) !!}
+                    @if ($show && !$hideFromRules)
+                        {!! Blade::render($element) !!}
+                    @endif
                 @endif
             @endif
 

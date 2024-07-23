@@ -32,7 +32,7 @@
                         $rowId = data_get($row, $this->realPrimaryKey);
                         $class = data_get($theme, 'table.trBodyClass');
 
-                        $this->actionRulesByRow[$rowId] = $this->prepareActionRules($row, $loop);
+                        $this->actionRulesForRows[$rowId] = $this->prepareActionRulesForRows($row, $loop);
                     @endphp
 
                     @if (isset($setUp['detail']))
@@ -54,7 +54,7 @@
                         </tbody>
                     @else
                         <tr
-                            x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class)})"
+                            x-data="pgRowAttributes({rowId: '@js($rowId)', defaultClasses: @js($class)})"
                             wire:key="tbody-{{ $rowId }}"
                             x-bind="getAttributes"
                         >

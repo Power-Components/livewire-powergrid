@@ -306,7 +306,7 @@ class ProcessDataSource
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields = collect(once(fn () => $component->fields()->fields)); //@phpstan-ignore-line
+        $fields = collect(once(fn () => $component->fields()->fields));
 
         return $results->map(function ($row, $index) use ($component, $fields) { //@phpstan-ignore-line
             return (object) $fields //@phpstan-ignore-line

@@ -49,7 +49,7 @@ trait Base
 
     public array $actionsHtml = [];
 
-    public array $actionRulesByRow = [];
+    public array $actionRulesForRows = [];
 
     #[Computed]
     public function realPrimaryKey(): string
