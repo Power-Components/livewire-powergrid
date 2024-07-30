@@ -80,3 +80,10 @@ if (!function_exists('powergrid_stubs_path')) {
             ->toString();
     }
 }
+
+if (!function_exists('once')) {
+    function once(callable $callback): mixed
+    {
+        return $callback();
+    }
+}

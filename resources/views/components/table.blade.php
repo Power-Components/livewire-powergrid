@@ -55,7 +55,6 @@
                     @else
                         <tr
                             x-data="pgRowAttributes({rowId: '@js($rowId)', defaultClasses: @js($class)})"
-                            wire:key="tbody-{{ $rowId }}"
                             x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [
@@ -78,7 +77,7 @@
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
                             :child-index="$item"
-                            :$this->realPrimaryKey
+                            reak-primary-key="{{ $this->realPrimaryKey }}"
                             :$radio
                             :$radioAttribute
                             :$checkbox

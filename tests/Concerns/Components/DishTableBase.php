@@ -59,7 +59,7 @@ class DishTableBase extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('chef_name', function (Dish $dish) {
+            ->add('chef_name', function ($dish) {
                 return $dish->chef->name;
             })
             ->add('category_id');

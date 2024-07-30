@@ -22,6 +22,8 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public array $testFilters = [];
 
+    public ?string $primaryKeyAlias = 'id';
+
     protected function getListeners()
     {
         return array_merge(
@@ -89,46 +91,46 @@ class DishesTableWithJoin extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('dish_name', function (Dish $dish) {
+            ->add('dish_name', function ($dish) {
                 return $dish->name;
             })
             ->add('calories')
             ->add('serving_at')
-            ->add('calories', function (Dish $dish) {
+            ->add('calories', function ($dish) {
                 return $dish->calories . ' kcal';
             })
             /*** CATEGORY ***/
-            ->add('category_id', function (Dish $dish) {
+            ->add('category_id', function ($dish) {
                 return $dish->category_id;
             })
-            ->add('category_name', function (Dish $dish) {
+            ->add('category_name', function ($dish) {
                 return $dish->category->name;
             })
             /*** PRICE ***/
             ->add('price')
-            ->add('price_BRL', function (Dish $dish) {
+            ->add('price_BRL', function ($dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
             /*** SALE'S PRICE ***/
             ->add('sales_price')
-            ->add('sales_price_BRL', function (Dish $dish) {
+            ->add('sales_price_BRL', function ($dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
                 return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
             })
             /*** STOCK ***/
             ->add('in_stock')
-            ->add('in_stock_label', function (Dish $dish) {
+            ->add('in_stock_label', function ($dish) {
                 return ($dish->in_stock ? 'sim' : 'não');
             })
             /*** Produced At ***/
             ->add('created_at')
-            ->add('created_at_formatted', function (Dish $dish) {
+            ->add('created_at_formatted', function ($dish) {
                 return \Carbon\Carbon::parse($dish->category->created_at)->format('d/m/Y');
             })
             /*** Produced At ***/
             ->add('produced_at')
-            ->add('produced_at_formatted', function (Dish $dish) {
+            ->add('produced_at_formatted', function ($dish) {
                 return Carbon::parse($dish->produced_at)->format('d/m/Y');
             });
     }
@@ -204,10 +206,6 @@ class DishesTableWithJoin extends PowerGridComponent
             Rule::button('edit-stock-for-rules')
                 ->when(fn ($dish) => $dish->id == 4)
                 ->slot('cation edit for id 4'),
-
-            Rule::button('edit-stock-for-rules')
-                ->when(fn ($dish) => (bool) $dish->in_stock === false && $dish->id !== 8)
-                ->redirect(fn ($dish) => 'https://www.dish.test/sorry-out-of-stock?dish=' . $dish->id),
 
             // Set a row red background for when dish is out of stock
             Rule::rows()

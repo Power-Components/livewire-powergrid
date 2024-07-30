@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Header};
 
 class RulesDetailRowTable extends DishTableBase
@@ -42,7 +41,7 @@ class RulesDetailRowTable extends DishTableBase
     {
         return [
             Rule::rows()
-                ->when(fn (Dish $dish) => $dish->id == 1)
+                ->when(fn ($dish) => $dish->id == 1)
                 ->detailView('components.detail-rules', ['test' => 1]),
         ];
     }

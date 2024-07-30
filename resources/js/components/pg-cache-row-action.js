@@ -12,8 +12,8 @@ export default (params) => ({
     },
 
     setKeys() {
-        this.storageKey = `pg_s_${this.$wire.tableName}_row_${this.rowId}`;
-        this.cookieKey = `pg_c_${this.$wire.tableName}_row_${this.rowId}`;
+        this.storageKey = `pg_session_${this.$wire.tableName}_row_${this.rowId}`;
+        this.cookieKey = `pg_cookie_${this.$wire.tableName}_row_${this.rowId}`;
     },
 
     toHtml() {
@@ -21,9 +21,81 @@ export default (params) => ({
             return localStorage.getItem(this.storageKey);
         }
 
-        const html = this.$wire.actionsHtml[this.rowId];
+        const actions = window[`pgActions-${this.$wire.id}`][this.rowId];
 
-        if (this.checkSpace()) {
+        if (typeof actions !== "object") {
+            return '';
+        }
+
+        let html = ''
+
+        actions.forEach((action) => {
+            let hideAction = false;
+            let replaceHtml = null;
+
+            if (action.rules && action.rules.length > 0) {
+                action.rules.forEach((ruleObj) => {
+                    if (ruleObj.apply) {
+                        if (ruleObj.rule.hide) {
+                            hideAction = true;
+                        } else if (ruleObj.rule.setAttribute) {
+                            ruleObj.rule.setAttribute.forEach(attrRule => {
+                                if (action.attributes[attrRule.attribute]) {
+                                    action.attributes[attrRule.attribute] += ` ${attrRule.value}`;
+                                } else {
+                                    action.attributes[attrRule.attribute] = attrRule.value;
+                                }
+                            });
+                        }
+                        if (ruleObj.replaceHtml) {
+                            replaceHtml = ruleObj.replaceHtml;
+                        }
+                    }
+                });
+            }
+
+            if (!hideAction) {
+                if (replaceHtml) {
+                    html += replaceHtml;
+                } else {
+                    let attributesStr = '';
+
+                    Object.entries(action.attributes).forEach(([key, value]) => {
+                        attributesStr += ` ${key}="${value}"`;
+                    });
+
+                    if (action.icon) {
+                        const iconAttributesStr = Object.entries(action.iconAttributes)
+                            .filter(([key, value]) => value != null)
+                            .map(([key, value]) => `${key}="${value}"`)
+                            .join(' ');
+
+                        let iconHtml = window.pgResourceIcons[action.icon];
+
+                        iconHtml = iconHtml.replace(/<([^\s>]+)([^>]*)>/, (match, tagName, existingAttributes) => {
+                            let updatedAttributes = existingAttributes.trim();
+                            const newAttributes = iconAttributesStr.replace(/class="([^"]*)"/, (classMatch, newClass) => {
+                                if (updatedAttributes.includes('class=')) {
+                                    updatedAttributes = updatedAttributes.replace(/class="([^"]*)"/, (classMatch, existingClass) =>
+                                        `class="${existingClass} ${newClass.trim()}"`
+                                    );
+                                } else {
+                                    updatedAttributes += ` ${classMatch}`;
+                                }
+                                return '';
+                            });
+                            return `<${tagName} ${updatedAttributes} ${newAttributes}>`;
+                        });
+
+                        html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml} ${action.slot}</${action.tag ?? 'button'}>`;
+                    } else {
+                        html += `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
+                    }
+                }
+            }
+        });
+
+        if (this.checkLocalStorageFreeSpace()) {
             localStorage.setItem(this.storageKey, html);
 
             document.cookie = this.cookieKey + '=true; path=/';
@@ -32,7 +104,7 @@ export default (params) => ({
         return html;
     },
 
-    checkSpace() {
+    checkLocalStorageFreeSpace() {
         const maxLocalStorageSize = 2 * 1024 * 1024; // 2MB
         let totalSize = 0;
 

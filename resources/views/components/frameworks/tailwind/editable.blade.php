@@ -12,8 +12,8 @@
         <div
             x-ref="editable"
             x-text="content"
-            value="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
-            placeholder="{{ html_entity_decode($row->{$field}, ENT_QUOTES, 'utf-8') }}"
+            value="{{ html_entity_decode(data_get($row, $field), ENT_QUOTES, 'utf-8') }}"
+            placeholder="{{ html_entity_decode(data_get($row, $field), ENT_QUOTES, 'utf-8') }}"
             contenteditable
             class="pg-single-line {{ data_get($theme, 'editable.inputClass') }}"
             @if (data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif

@@ -15,6 +15,10 @@
             $isFixedOnResponsive = true;
         }
 
+        if ($column->isAction && in_array(\PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME, data_get($this->setUp, 'responsive.fixedColumns'))) {
+            $isFixedOnResponsive = true;
+        }
+
         if ($column->fixedOnResponsive) {
             $isFixedOnResponsive = true;
         }
@@ -25,6 +29,7 @@
         : null;
 @endphp
 <th
+    x-data="{ sortable: @js($column->sortable) }"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     class="{{ data_get($theme, 'table.thClass') . ' ' . $column->headerClass }}"
     @if ($isFixedOnResponsive) fixed @endif

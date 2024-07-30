@@ -47,8 +47,6 @@ trait Base
 
     public int $totalCurrentPage = 0;
 
-    public array $actionsHtml = [];
-
     public array $actionRulesForRows = [];
 
     #[Computed]

@@ -51,7 +51,7 @@ class DishesEnumTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('diet', function (Dish $dish) {
+            ->add('diet', function ($dish) {
                 return Diet::from($dish->diet)->labels();
             });
     }

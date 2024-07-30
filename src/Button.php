@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Traits\Macroable;
-use Illuminate\View\ComponentAttributeBag;
 use Livewire\Wireable;
 
 /**
@@ -18,8 +17,6 @@ use Livewire\Wireable;
  * @method static route(string $route, array $params, string $target)
  * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
- * @method static render(\Closure $closure)
- * @method static bladeComponent(string $component, array $params)
  * @method static can(bool|\Closure $allowed = true)
  * @method static id(string $id = null)
  * @method static confirm(string $message = 'Are you sure you want to perform this action?')
@@ -31,11 +28,15 @@ final class Button implements Wireable
 
     public string $view = '';
 
-    public ComponentAttributeBag $attributes;
+    public array $attributes = [];
 
     public ?string $slot = '';
 
     public ?string $tag = 'button';
+
+    public ?string $icon = '';
+
+    public array $iconAttributes = [];
 
     public ?\Closure $hideWhen = null;
 
@@ -43,7 +44,6 @@ final class Button implements Wireable
 
     public function __construct(public string $action)
     {
-        $this->attributes = new ComponentAttributeBag([]);
     }
 
     public static function add(string $action = ''): Button
@@ -80,7 +80,15 @@ final class Button implements Wireable
 
     public function attributes(array $attributes): Button
     {
-        $this->attributes->setAttributes($attributes);
+        $this->attributes = array_merge($attributes, $this->attributes);
+
+        return $this;
+    }
+
+    public function icon(string $icon, array $iconAttributes = []): Button
+    {
+        $this->icon           = $icon;
+        $this->iconAttributes = $iconAttributes;
 
         return $this;
     }

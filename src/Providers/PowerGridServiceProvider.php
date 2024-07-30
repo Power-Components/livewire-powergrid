@@ -17,7 +17,11 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
-use PowerComponents\LivewirePowerGrid\{Button, Livewire\LazyChild, Livewire\PerformanceCard, PowerGridManager};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Components\Rules\RuleActions,
+    Livewire\LazyChild,
+    Livewire\PerformanceCard,
+    PowerGridManager};
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -133,7 +137,7 @@ class PowerGridServiceProvider extends ServiceProvider
     public function actionMacros(): void
     {
         Button::macro('class', function (string $classes) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'class' => $classes,
                 ...$this->attributes,
             ]);
@@ -142,7 +146,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('call', function (string $method, array $params) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$call('{$method}', " . Js::from($params) . ")",
                 ...$this->attributes,
             ]);
@@ -151,7 +155,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('dispatch', function (string $event, array $params) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")",
                 ...$this->attributes,
             ]);
@@ -160,7 +164,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('dispatchTo', function (string $component, string $event, array $params) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$dispatchTo('{$component}', '{$event}', " . Js::from($params) . ")",
                 ...$this->attributes,
             ]);
@@ -169,7 +173,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('dispatchSelf', function (string $event, array $params) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$dispatchSelf('{$event}', " . Js::from($params) . ")",
                 ...$this->attributes,
             ]);
@@ -178,7 +182,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('parent', function (string $method, array $params) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$parent.{$method}(" . Js::from($params) . ")",
                 ...$this->attributes,
             ]);
@@ -192,7 +196,7 @@ class PowerGridServiceProvider extends ServiceProvider
                 'arguments' => $params,
             ]);
 
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "\$dispatch('openModal', $encoded)",
                 ...$this->attributes,
             ]);
@@ -201,7 +205,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('disable', function () {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'disabled' => 'disabled',
                 ...$this->attributes,
             ]);
@@ -210,7 +214,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('tooltip', function (string $value) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'title' => $value,
                 ...$this->attributes,
             ]);
@@ -219,7 +223,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('route', function (string $route, array $params, string $target) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'href'   => route($route, $params),
                 'target' => $target,
                 ...$this->attributes,
@@ -229,7 +233,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('id', function (string $id) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'id' => $id,
                 ...$this->attributes,
             ]);
@@ -250,7 +254,7 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('confirm', function (?string $message = null) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:confirm' => $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm.message'),
                 ...$this->attributes,
             ]);
@@ -262,7 +266,7 @@ class PowerGridServiceProvider extends ServiceProvider
             $message      = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
             $confirmValue = trim($confirmValue);
 
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:confirm.prompt' => "$message | $confirmValue",
                 ...$this->attributes,
             ]);
@@ -271,10 +275,20 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('toggleDetail', function (int|string $rowId) {
-            $this->attributes->setAttributes([
+            $this->attributes = array_merge([
                 'wire:click' => "toggleDetail('$rowId')",
                 ...$this->attributes,
             ]);
+
+            return $this;
+        });
+
+        RuleActions::macro('dispatch', function (string $event, array $params) {
+            $params = Js::from($params);
+
+            $value = "\$dispatch('{$event}', {$params})";
+
+            $this->setAttribute('wire:click', $value);
 
             return $this;
         });

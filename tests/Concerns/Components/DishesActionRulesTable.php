@@ -118,7 +118,7 @@ class DishesActionRulesTable extends PowerGridComponent
     {
         return [
             Rule::button('edit-stock-for-rules')
-                ->when(fn (Dish $dish) => $dish->id == 9)
+                ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
     }

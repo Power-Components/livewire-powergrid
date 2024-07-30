@@ -41,7 +41,9 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
-        $this->readyToLoad = ! $this->deferLoading;
+        $this->prepareActionsResources();
+
+        $this->readyToLoad = !$this->deferLoading;
 
         foreach ($this->setUp() as $setUp) {
             $this->setUp[$setUp->name] = $setUp;
@@ -58,7 +60,6 @@ class PowerGridComponent extends Component
 
     public function hydrate(): void
     {
-        $this->actionsHtml               = [];
         $this->processDataSourceInstance = null;
         $this->actionRulesForRows        = [];
     }
@@ -118,7 +119,7 @@ class PowerGridComponent extends Component
     {
         $start = microtime(true);
 
-        if (! Cache::supportsTags() || ! boolval(data_get($this->setUp, 'cache.enabled'))) {
+        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
             $results = $this->readyToLoad ? $this->fillData() : collect();
 
             $retrieveData = round((microtime(true) - $start) * 1000);
@@ -140,7 +141,7 @@ class PowerGridComponent extends Component
             return $results;
         }
 
-        if (! $this->readyToLoad) {
+        if (!$this->readyToLoad) {
             return collect();
         }
 
@@ -267,20 +268,6 @@ class PowerGridComponent extends Component
             ->all();
     }
 
-    public function renderActions(mixed $data): void
-    {
-        $data->each(function ($row) {
-            if (! isset($_COOKIE['pg_cookie_for_' . $this->tableName . '_action_row_' . data_get($row, $this->realPrimaryKey)])) {
-                $this->actionsHtml[data_get($row, $this->realPrimaryKey)] = view('livewire-powergrid::components.action-content', [
-                    'id'      => data_get($row, $this->realPrimaryKey),
-                    'row'     => $row,
-                    'actions' => method_exists($this, 'actions') ? $this->actions($row) : [],
-                    'rules'   => method_exists($this, 'actionRules') ? $this->actionRules($row) : [],
-                ])->toHtml();
-            }
-        });
-    }
-
     /**
      * @throws Exception|Throwable
      */
@@ -293,7 +280,7 @@ class PowerGridComponent extends Component
 
         $data = $this->getCachedData();
 
-        $this->renderActions($data);
+        $this->storeActionsInJSWindow($data);
 
         if (empty(data_get($this->setUp, 'lazy'))) {
             $this->resolveDetailRow($data);

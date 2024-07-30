@@ -11,10 +11,13 @@
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 
-@includeWhen(data_get($setUp, 'detail.showCollapseIcon'), data_get(collect($this->actionRulesForRows[$rowId])->last(), 'toggleDetailView'), [
-    'theme' => data_get($theme, 'table'),
-    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
-])
+@includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
+    data_get(collect($this->actionRulesForRows[$rowId])->last(), 'toggleDetailView'),
+    [
+        'theme' => data_get($theme, 'table'),
+        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+    ]
+)
 
 @includeWhen($radio, 'livewire-powergrid::components.radio-row', [
     'attribute' => $row->{$radioAttribute},
@@ -43,7 +46,7 @@
     <td
         @class([data_get($theme, 'table.tdBodyClass'), $column->bodyClass])
         style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $column->bodyStyle ?? '' }}"
-        wire:key="row-{{ $column->field }}-{{ $childIndex }}"
+        wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
         <div class="pg-actions">
 
@@ -58,8 +61,8 @@
             @if (data_get($column, 'isAction'))
                 <div x-data="pgCacheRowAction({ rowId: '@js(data_get($row, $this->realPrimaryKey))' })">
                     <span
+                        class="pg-actions-row"
                         x-html="toHtml"
-                        :key="'action' + rowId"
                     ></span>
                 </div>
             @endif
@@ -73,7 +76,10 @@
                 $showEditOnClick = true;
             }
 
-            $editOnClickVisibility = data_get(collect($this->actionRulesForRows[$rowId])->last(), 'editOnClickVisibility');
+            $editOnClickVisibility = data_get(
+                collect($this->actionRulesForRows[$rowId])->last(),
+                'editOnClickVisibility',
+            );
 
             if ($editOnClickVisibility === 'hide') {
                 $showEditOnClick = false;
@@ -83,7 +89,10 @@
                 $showEditOnClick = true;
             }
 
-            $fieldHideEditOnClick = (bool) data_get(collect($this->actionRulesForRows[$rowId])->last(), 'fieldHideEditOnClick');
+            $fieldHideEditOnClick = (bool) data_get(
+                collect($this->actionRulesForRows[$rowId])->last(),
+                'fieldHideEditOnClick',
+            );
 
             if ($fieldHideEditOnClick) {
                 $showEditOnClick = false;
@@ -101,7 +110,10 @@
                 //Default Toggle Permission
                 $showToggleable = data_get($column->toggleable, 'enabled', false);
 
-                $toggleableRowRules = data_get(collect($this->actionRulesForRows[$rowId])->last(), 'toggleableVisibility');
+                $toggleableRowRules = data_get(
+                    collect($this->actionRulesForRows[$rowId])->last(),
+                    'toggleableVisibility',
+                );
 
                 // Has permission, but Row Action Rule is changing to hide
                 if ($showToggleable && $toggleableRowRules == 'hide') {
@@ -114,7 +126,10 @@
                 }
 
                 // Particular Rule for this field
-                $fieldHideToggleable = (bool) data_get(collect($this->actionRulesForRows[$rowId])->last(), 'fieldHideToggleable');
+                $fieldHideToggleable = (bool) data_get(
+                    collect($this->actionRulesForRows[$rowId])->last(),
+                    'fieldHideToggleable',
+                );
 
                 if ($fieldHideToggleable) {
                     $showToggleable = !$fieldHideToggleable;

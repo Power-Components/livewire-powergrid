@@ -32,11 +32,13 @@ class LazyChild extends Component
 
     public string $tableName;
 
-    public string|int $primaryKey;
+    public string|int $realPrimaryKey = '';
 
     public string $parentName;
 
     public string|int $childIndex;
+
+    public array $actionRulesForRows = [];
 
     public function mount(): void
     {
@@ -62,6 +64,14 @@ class LazyChild extends Component
         }
 
         return null;
+    }
+
+    public function prepareActionRulesForRows(mixed $row, object $loop)
+    {
+        /** @var string $parentComponent */
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+
+        return app($parentComponent)->prepareActionRulesForRows($row, $loop);
     }
 
     public function render(): View
