@@ -5,7 +5,7 @@ import pgResponsive from './pgResponsive';
 import pgTomSelect from "./select/tomSelect";
 import pgSlimSelect from "./select/slimSelect";
 import pgLoadMore from "./pg-load-more";
-import pgCacheRowAction from "./pg-cache-row-action";
+import pgRenderActions from "./pg-render-actions";
 import pgRowAttributes from "./pg-row-attributes";
 
 window.pgToggleable = pgToggleable
@@ -15,7 +15,7 @@ window.pgResponsive = pgResponsive
 window.pgTomSelect = pgTomSelect
 window.pgSlimSelect = pgSlimSelect
 window.pgLoadMore = pgLoadMore
-window.pgCacheRowAction = pgCacheRowAction
+window.pgRenderActions = pgRenderActions
 window.pgRowAttributes = pgRowAttributes
 
 Livewire.hook('commit', ({ component, succeed, fail }) => {

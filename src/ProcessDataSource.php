@@ -301,34 +301,23 @@ class ProcessDataSource
 
     public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        if (config('livewire-powergrid.legacy_model_binding')) {
-            return self::processLegacyRows($results, $component);
-        }
-
         return self::processRows($results, $component);
     }
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields = collect(once(fn () => $component->fields()->fields)); // @phpstan-ignore-line
+        $fields = collect(once(fn () => $component->fields()->fields)); //@phpstan-ignore-line
 
-        return $results->map(function ($row, $index) use ($component, $fields) { //@phpstan-ignore-line
-            return (object) $fields //@phpstan-ignore-line
-            ->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]) //@phpstan-ignore-line
-            ->toArray();
-        });
-    }
+        return $results->map(function ($row, $index) use ($component, $fields) {
+            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]); //@phpstan-ignore-line
 
-    private static function processLegacyRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
-    {
-        $fields = collect(once(fn () => $component->fields()->fields)); // @phpstan-ignore-line
+            if ($component->supportModel) {
+                return $row instanceof Model
+                    ? tap($row)->forceFill($data->toArray())
+                    : (object) $data->toArray();
+            }
 
-        return $results->map(function ($row, $index) use ($component, $fields) { //@phpstan-ignore-line
-            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]);
-
-            return $row instanceof Model
-                ? tap($row)->forceFill($data->toArray())
-                : (object) $data->toArray();
+            return (object) $data->toArray();
         });
     }
 

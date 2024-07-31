@@ -33,6 +33,7 @@
                         $class = data_get($theme, 'table.trBodyClass');
 
                         $this->actionRulesForRows[$rowId] = $this->prepareActionRulesForRows($row, $loop);
+
                     @endphp
 
                     @if (isset($setUp['detail']))
@@ -76,8 +77,10 @@
 
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
+                            :parentId="$this->getId()"
                             :child-index="$item"
-                            reak-primary-key="{{ $this->realPrimaryKey }}"
+                            :primary-key="$primaryKey"
+                            real-primary-key="{{ $this->realPrimaryKey }}"
                             :$radio
                             :$radioAttribute
                             :$checkbox

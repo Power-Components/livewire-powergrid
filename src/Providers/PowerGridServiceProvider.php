@@ -112,7 +112,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
                 $perPage = $perPage ?: $this->model->getPerPage();
 
-                $results = $this->model->newCollection( //@phpstan-ignore-line
+                $results = $this->model->newCollection(
                     $engine->map(
                         $this,
                         $rawResults = $engine->paginate($this, $perPage, $page),

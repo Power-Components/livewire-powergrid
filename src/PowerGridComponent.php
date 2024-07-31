@@ -280,7 +280,8 @@ class PowerGridComponent extends Component
 
         $data = $this->getCachedData();
 
-        $this->storeActionsInJSWindow($data);
+        $this->storeActionsRowInJSWindow($data);
+        $this->storeActionsHeaderInJSWindow();
 
         if (empty(data_get($this->setUp, 'lazy'))) {
             $this->resolveDetailRow($data);

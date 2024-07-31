@@ -32,6 +32,8 @@ class LazyChild extends Component
 
     public string $tableName;
 
+    public string $primaryKey = '';
+
     public string|int $realPrimaryKey = '';
 
     public string $parentName;
@@ -39,6 +41,8 @@ class LazyChild extends Component
     public string|int $childIndex;
 
     public array $actionRulesForRows = [];
+
+    public ?string $parentId = null;
 
     public function mount(): void
     {
@@ -66,7 +70,7 @@ class LazyChild extends Component
         return null;
     }
 
-    public function prepareActionRulesForRows(mixed $row, object $loop)
+    public function prepareActionRulesForRows(mixed $row, object $loop): array
     {
         /** @var string $parentComponent */
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);

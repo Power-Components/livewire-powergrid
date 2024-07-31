@@ -13,6 +13,7 @@
                 @include('livewire-powergrid::components.row', [
                     'rowIndex' => $loop->index + 1,
                     'childIndex' => $childIndex,
+                    'parentId' => $parentId
                 ])
             </tr>
             @if (data_get($setUp, 'detail.state.' . $rowId))

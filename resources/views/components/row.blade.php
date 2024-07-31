@@ -3,6 +3,7 @@
 @props([
     'rowIndex' => 0,
     'childIndex' => null,
+    'parentId' => null,
 ])
 
 @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
@@ -59,7 +60,7 @@
             @endif
 
             @if (data_get($column, 'isAction'))
-                <div x-data="pgCacheRowAction({ rowId: '@js(data_get($row, $this->realPrimaryKey))' })">
+                <div x-data="pgCacheRowAction({ rowId: '@js(data_get($row, $this->realPrimaryKey))', parentId: @js($parentId) })">
                     <span
                         class="pg-actions-row"
                         x-html="toHtml"

@@ -9,9 +9,17 @@ use PowerComponents\LivewirePowerGrid\Button;
 
 trait HasActions
 {
-    public function prepareActionsResources(): string
+    public bool $withoutResourcesActions = false;
+
+    public function prepareActionsResources(): ?string
     {
-        $records = $this->getResourceIconsJson();
+        if ($this->withoutResourcesActions) {
+            return null;
+        }
+
+        $records = Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), function (): string {
+            return $this->getResourceIconsJson();
+        });
 
         $this->js(<<<JS
             this.pgResourceIcons = $records
@@ -45,10 +53,10 @@ trait HasActions
             }
         }
 
-        return json_encode($icons);
+        return strval(json_encode($icons));
     }
 
-    public function storeActionsInJSWindow(mixed $data): void
+    public function storeActionsRowInJSWindow(mixed $data): void
     {
         if (!method_exists($this, 'actions')) {
             return;
@@ -105,10 +113,34 @@ trait HasActions
         $actionsHtml = json_encode($actionsHtml);
 
         $this->js(<<<JS
-            this[`pgActions-\${\$wire.id}`] = $actionsHtml
+            this[`pgActions_\${\$wire.id}`] = $actionsHtml
         JS);
 
         $actionsHtml = [];
+    }
+
+    public function storeActionsHeaderInJSWindow(): void
+    {
+        if (!method_exists($this, 'header')) {
+            return;
+        }
+
+        $actionsHtml = collect($this->header())
+        ->transform(function (Button $action) {
+            return [
+                'slot'           => $action->slot,
+                'icon'           => $action->icon,
+                'iconAttributes' => $action->iconAttributes,
+                'attributes'     => $action->attributes,
+                'rules'          => [],
+            ];
+        });
+
+        $actionsHtml = json_encode($actionsHtml);
+
+        $this->js(<<<JS
+            this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
+        JS);
     }
 
     public function prepareActionRulesForRows(mixed $row, object $loop): array

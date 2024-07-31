@@ -1,7 +1,8 @@
 export default (params) => ({
-    rowId: params.rowId,
+    rowId: params?.rowId ?? null,
     storageKey: null,
     cookieKey: null,
+    parentId: params?.parentId ?? null,
     init() {
         this.setKeys();
 
@@ -21,7 +22,14 @@ export default (params) => ({
             return localStorage.getItem(this.storageKey);
         }
 
-        const actions = window[`pgActions-${this.$wire.id}`][this.rowId];
+        let actions
+        if (this.rowId) {
+            actions = window[`pgActions_${this.parentId ?? this.$wire.id}`][this.rowId];
+        } else {
+            actions = window[`pgActionsHeader_${this.$wire.id}`];
+        }
+
+        console.log(actions)
 
         if (typeof actions !== "object") {
             return '';
