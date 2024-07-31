@@ -57,7 +57,7 @@
             @endif
 
             @if (data_get($column, 'isAction'))
-                <div x-data="pgCacheRowAction({ rowId: '@js(data_get($row, $this->realPrimaryKey))', parentId: @js($parentId) })">
+                <div x-data="pgRenderActions({ rowId: '@js(data_get($row, $this->realPrimaryKey))', parentId: @js($parentId) })">
                     <span
                         class="pg-actions-row"
                         x-html="toHtml"
