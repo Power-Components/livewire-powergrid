@@ -13,6 +13,8 @@ use PowerComponents\LivewirePowerGrid\{
 
 class OrderTable extends PowerGridComponent
 {
+    public bool $supportModel = true;
+
     public function datasource(): Builder
     {
         return Order::query();

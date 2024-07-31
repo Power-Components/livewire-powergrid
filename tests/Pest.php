@@ -23,9 +23,10 @@ function powergrid(): PowerGridComponent
             ->sortable(),
     ];
 
-    $component             = new PowerGridComponent(1);
-    $component->datasource = Dish::query();
-    $component->columns    = $columns;
+    $component               = new PowerGridComponent(1);
+    $component->supportModel = true;
+    $component->datasource   = Dish::query();
+    $component->columns      = $columns;
 
     return $component;
 }

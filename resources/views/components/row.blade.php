@@ -30,18 +30,15 @@
 
 @foreach ($columns as $column)
     @php
-        $field = $column->dataField != '' ? $column->dataField : $column->field;
-
-        $content = $row->{$field} ?? '';
+        $content = $row->{$column->field} ?? '';
         $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
+        $field = $column->dataField != '' ? $column->dataField : $column->field;
 
         $contentClass = $column->contentClasses;
 
         if (is_array($column->contentClasses)) {
-            $contentClass = array_key_exists($content, $column->contentClasses)
-                ? $column->contentClasses[$content]
-                : '';
+            $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
         }
     @endphp
     <td
