@@ -29,8 +29,6 @@ export default (params) => ({
             actions = window[`pgActionsHeader_${this.$wire.id}`];
         }
 
-        console.log(actions)
-
         if (typeof actions !== "object") {
             return '';
         }
