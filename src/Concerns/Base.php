@@ -49,7 +49,7 @@ trait Base
 
     public array $actionRulesForRows = [];
 
-    public bool $supportModel = false;
+    public bool $supportModel = true;
 
     #[Computed]
     public function realPrimaryKey(): string

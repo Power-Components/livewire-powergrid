@@ -1,32 +1,43 @@
-@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
 @php
-    $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_RADIO);
-
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => data_get($theme, 'radio.inputClass'),
     ]);
 
-    if (filled($rulesValues['setAttributes'])) {
-        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
-            $inputAttributes = $inputAttributes->merge([
-                $rulesAttributes['attribute'] => $rulesAttributes['value'],
-            ]);
-        }
-    }
+    //    if (filled($rulesValues['setAttributes'])) {
+    //        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
+    //            $inputAttributes = $inputAttributes->merge([
+    //                $rulesAttributes['attribute'] => $rulesAttributes['value'],
+    //            ]);
+    //        }
+    //    }
+
+    $hide = (bool) data_get(
+        collect($this->actionRulesForRows[$rowId])
+            ->where('apply', true)
+            ->last(),
+        'hide',
+    );
+
+    $disable = (bool) data_get(
+        collect($this->actionRulesForRows[$rowId])
+            ->where('apply', true)
+            ->last(),
+        'disable',
+    );
 @endphp
-@if (filled($rulesValues['hide']))
+@if ($hide)
     <td
         class="{{ data_get($theme, 'radio.tdClass') }}"
         style="{{ data_get($theme, 'radio.tdStyle') }}"
     >
     </td>
-@elseif(filled($rulesValues['disable']))
+@elseif($disable)
     <td
         class="{{ data_get($theme, 'radio.tdClass') }}"
         style="{{ data_get($theme, 'radio.tdStyle') }}"
     >
         <div class="{{ data_get($theme, 'radio.divClass') }}">
-            <label class="{{ data_get($theme, 'radio.labelClass')  }}">
+            <label class="{{ data_get($theme, 'radio.labelClass') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled

@@ -136,10 +136,6 @@ class ProcessDataSource
     {
         DB::enableQueryLog();
 
-        if (is_null($datasource)) {
-            $datasource = $this->component->datasource();
-        }
-
         $results = $datasource
             ->where(
                 fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this->component)
@@ -148,14 +144,14 @@ class ProcessDataSource
             );
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
-            $results = $this->applySoftDeletes($results, $this->component->softDeletes);
+            $results = $this->applySoftDeletes($results, $this->component->softDeletes);// @phpstan-ignore-line
         }
 
         $this->applySummaries($results);
 
         $sortField = $this->makeSortField($this->component->sortField);
 
-        $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
+        $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField); // @phpstan-ignore-line
 
         $results = $this->applyPerPage($results);
 
@@ -165,11 +161,9 @@ class ProcessDataSource
             return $results;
         }
 
-        /** @phpstan-ignore-next-line */
-        $collection = $results->getCollection();
+        $collection = $results->getCollection(); // @phpstan-ignore-line
 
-        /** @phpstan-ignore-next-line */
-        $results = $results->setCollection($this->transform($collection, $this->component));
+        $results = $results->setCollection($this->transform($collection, $this->component)); // @phpstan-ignore-line
 
         $this->queryLog = DB::getQueryLog();
 
@@ -306,7 +300,7 @@ class ProcessDataSource
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields = collect(once(fn () => $component->fields()->fields)); //@phpstan-ignore-line
+        $fields = collect(once(fn () => $component->fields()->fields));
 
         return $results->map(function ($row, $index) use ($component, $fields) {
             $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]); //@phpstan-ignore-line

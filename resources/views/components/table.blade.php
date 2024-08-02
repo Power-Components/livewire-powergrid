@@ -1,6 +1,3 @@
-@inject('actionRulesClass', 'PowerComponents\LivewirePowerGrid\Components\Rules\RulesController')
-@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
-
 <x-livewire-powergrid::table-base
     :ready-to-load="$readyToLoad"
     :theme="$theme"
@@ -25,37 +22,33 @@
 
             @if (empty(data_get($setUp, 'lazy')))
                 @foreach ($data as $row)
-                    @if (!isset($row->{$checkboxAttribute}) && $checkbox)
-                        @php throw new Exception('To use checkboxes, you must define a unique key attribute in your data source.') @endphp
-                    @endif
                     @php
                         $rowId = data_get($row, $this->realPrimaryKey);
                         $class = data_get($theme, 'table.trBodyClass');
 
                         $this->actionRulesForRows[$rowId] = $this->prepareActionRulesForRows($row, $loop);
-
                     @endphp
 
                     @if (isset($setUp['detail']))
                         <tbody
                             wire:key="tbody-{{ $rowId }}"
-                            {{ $class }}
-                            x-data="{ detailState: @entangle('setUp.detail.state.' . $rowId) }"
+                            class="{{ $class }}"
                         >
                             @include('livewire-powergrid::components.row', [
                                 'rowIndex' => $loop->index + 1,
                             ])
-                            <tr
-                                x-show="detailState"
-                                style="{{ data_get($theme, 'table.trBodyStyle') }}"
-                                {{ $class }}
-                            >
-                                @include('livewire-powergrid::components.table.detail')
-                            </tr>
+                            @if(data_get($setUp, 'detail.state.' . $rowId))
+                                <tr
+                                    style="{{ data_get($theme, 'table.trBodyStyle') }}"
+                                    class="{{ $class }}"
+                                >
+                                    @include('livewire-powergrid::components.table.detail')
+                                </tr>
+                            @endif
                         </tbody>
                     @else
                         <tr
-                            x-data="pgRowAttributes({rowId: '@js($rowId)', defaultClasses: @js($class)})"
+                            x-data="pgRowAttributes({rowId: '@js($rowId)', defaultClasses: @js($class), rules: @js($this->actionRulesForRows[$rowId])})"
                             x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [
@@ -66,6 +59,10 @@
 
                     @includeWhen(isset($setUp['responsive']),
                         'livewire-powergrid::components.expand-container')
+
+                    @php
+                        unset($this->actionRulesForRows[$rowId]);
+                    @endphp
                 @endforeach
             @else
                 <div>

@@ -1,17 +1,18 @@
 export default (params) => ({
     rowId: params.rowId,
-    rules: [],
+    rules: params.rules,
     defaultClasses: params.defaultClasses,
     attributes: [],
     theme: [],
     init() {
-        this.rules = this.$wire.actionRulesForRows[this.rowId]
+        if (this.rules) {
+            Object.values(this.rules).forEach((rule) => {
+                if (rule.applyLoop) {
+                    this.attributes.push(rule.attributes)
+                }
+            })
+        }
 
-        Object.values(this.rules).forEach((rule) => {
-            if (rule.applyLoop) {
-                this.attributes.push(rule.attributes)
-            }
-        })
     },
 
     getAttributes() {

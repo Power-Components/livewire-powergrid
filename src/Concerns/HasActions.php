@@ -143,7 +143,7 @@ trait HasActions
         JS);
     }
 
-    public function prepareActionRulesForRows(mixed $row, object $loop): array
+    public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
     {
         if (!method_exists($this, 'actionRules')) {
             return [];
@@ -168,29 +168,46 @@ trait HasActions
                         ];
                     }
 
-                    $showToggleDetail      = data_get($rule, 'rule.toggleableVisibility') === 'show' && (bool) data_get($this->setUp, 'detail.showCollapseIcon');
+                    $showToggleDetail      = data_get($rule, 'rule.toggleableVisibility') === 'show' || (bool) data_get($this->setUp, 'detail.showCollapseIcon');
                     $toggleableVisibility  = $apply ? data_get($rule, 'rule.toggleableVisibility') : [];
                     $editOnClickVisibility = $apply ? data_get($rule, 'rule.editOnClickVisibility') : [];
                     $fieldHideEditOnClick  = $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick');
                     $fieldHideToggleable   = $apply && (bool) data_get($rule, 'rule.fieldHideToggleable');
+                    $disabled              = $apply && (bool) data_get($rule, 'rule.disable');
+                    $hide                  = $apply && (bool) data_get($rule, 'rule.hide');
+
+                    if ($apply || $applyLoop) {
+                        return [
+                            'apply'                 => (bool) $apply,
+                            'applyLoop'             => (bool) $applyLoop,
+                            'attributes'            => $attributes,
+                            'disable'               => $disabled,
+                            'hide'                  => $hide,
+                            'toggleableVisibility'  => $toggleableVisibility,
+                            'toggleDetailView'      => powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                            'editOnClickVisibility' => $editOnClickVisibility,
+                            'fieldHideEditOnClick'  => $fieldHideEditOnClick,
+                            'fieldHideToggleable'   => $fieldHideToggleable,
+                        ];
+                    }
 
                     return [
-                        'apply'      => (bool) $apply,
-                        'applyLoop'  => (bool) $applyLoop,
-                        'attributes' => $attributes,
-
-                        'toggleableVisibility'  => $toggleableVisibility,
-                        'toggleDetailView'      => powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
-                        'editOnClickVisibility' => $editOnClickVisibility,
-                        'fieldHideEditOnClick'  => $fieldHideEditOnClick,
-                        'fieldHideToggleable'   => $fieldHideToggleable,
+                        'toggleableVisibility' => $toggleableVisibility,
+                        'toggleDetailView'     => powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                     ];
                 })
                 ->toArray();
         };
 
-        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$row->{$this->realPrimaryKey}}";
+        $value    = strval(data_get($row, $this->realPrimaryKey));
+        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
 
-        return Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), fn () => $closure($row, $loop));
+        return Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
+            $value = $closure($row, $loop);
+
+            return array_filter($value, function ($item) {
+                return !empty($item);
+            });
+        });
     }
 }

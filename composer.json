@@ -30,7 +30,8 @@
     "pestphp/pest": "^2.34.0",
     "orchestra/testbench": "^9.0",
     "laradumps/laradumps": "^3.1",
-    "laravel/scout": "^10.9"
+    "laravel/scout": "^10.9",
+    "openspout/openspout": "^4.24"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"

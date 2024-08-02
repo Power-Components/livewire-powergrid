@@ -39,8 +39,9 @@ export default (params) => ({
             let hideAction = false;
             let replaceHtml = null;
 
-            if (action.rules && action.rules.length > 0) {
-                action.rules.forEach((ruleObj) => {
+            if (action.rules && Object.values(action.rules).length > 0) {
+                Object.values(action.rules).forEach((ruleObj) => {
+
                     if (ruleObj.apply) {
                         if (ruleObj.rule.hide) {
                             hideAction = true;

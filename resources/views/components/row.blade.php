@@ -11,7 +11,6 @@
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
-
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($this->actionRulesForRows[$rowId])->last(), 'toggleDetailView'),
     [
@@ -75,7 +74,9 @@
             }
 
             $editOnClickVisibility = data_get(
-                collect($this->actionRulesForRows[$rowId])->last(),
+                collect($this->actionRulesForRows[$rowId])
+                    ->where('apply', true)
+                    ->last(),
                 'editOnClickVisibility',
             );
 
@@ -88,7 +89,9 @@
             }
 
             $fieldHideEditOnClick = (bool) data_get(
-                collect($this->actionRulesForRows[$rowId])->last(),
+                collect($this->actionRulesForRows[$rowId])
+                    ->where('apply', true)
+                    ->last(),
                 'fieldHideEditOnClick',
             );
 
@@ -109,7 +112,9 @@
                 $showToggleable = data_get($column->toggleable, 'enabled', false);
 
                 $toggleableRowRules = data_get(
-                    collect($this->actionRulesForRows[$rowId])->last(),
+                    collect($this->actionRulesForRows[$rowId])
+                        ->where('apply', true)
+                        ->last(),
                     'toggleableVisibility',
                 );
 
@@ -125,7 +130,9 @@
 
                 // Particular Rule for this field
                 $fieldHideToggleable = (bool) data_get(
-                    collect($this->actionRulesForRows[$rowId])->last(),
+                    collect($this->actionRulesForRows[$rowId])
+                        ->where('apply', true)
+                        ->last(),
                     'fieldHideToggleable',
                 );
 

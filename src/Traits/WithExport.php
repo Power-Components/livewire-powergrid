@@ -243,7 +243,10 @@ trait WithExport
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
         /** @phpstan-ignore-next-line  */
-        return $exportable->download($this->setUp['exportable']);
+        return $exportable->download(
+            exportOptions: $this->setUp['exportable'],
+            powerGridComponent: $this,
+        );
     }
 
     private function getExportableClassFromConfig(string $exportType): string

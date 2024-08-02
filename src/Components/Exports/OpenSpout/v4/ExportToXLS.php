@@ -9,7 +9,7 @@ use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\{Options, Writer};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Components\Exports\{Export};
-use PowerComponents\LivewirePowerGrid\Exportable;
+use PowerComponents\LivewirePowerGrid\{Exportable, PowerGridComponent};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
@@ -18,7 +18,7 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws \Exception
      */
-    public function download(Exportable|array $exportOptions): BinaryFileResponse
+    public function download(Exportable|array $exportOptions, PowerGridComponent $powerGridComponent): BinaryFileResponse
     {
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
         $this->striped       = strval(data_get($exportOptions, 'striped'));
@@ -27,7 +27,7 @@ class ExportToXLS extends Export implements ExportInterface
         $columnWidth       = data_get($exportOptions, 'columnWidth', []);
         $this->columnWidth = $columnWidth;
 
-        $this->build($exportOptions);
+        $this->build($exportOptions, $powerGridComponent);
 
         return response()
             ->download(storage_path($this->fileName . '.xlsx'))
@@ -37,9 +37,9 @@ class ExportToXLS extends Export implements ExportInterface
     /**
      * @throws WriterNotOpenedException|IOException
      */
-    public function build(Exportable|array $exportOptions): void
+    public function build(Exportable|array $exportOptions, PowerGridComponent $powerGridComponent): void
     {
-        $data = $this->prepare($this->data, $this->columns);
+        $data = $this->prepare($this->data, $this->columns, $powerGridComponent);
 
         $options = new Options();
         $writer  = new Writer($options);
