@@ -70,6 +70,7 @@ trait HasActions
                     ->transform(function (Button $action) use ($row) {
                         return [
                             'slot'           => $action->slot,
+                            'tag'            => $action->tag,
                             'icon'           => $action->icon,
                             'iconAttributes' => $action->iconAttributes,
                             'attributes'     => $action->attributes,
@@ -129,6 +130,7 @@ trait HasActions
         ->transform(function (Button $action) {
             return [
                 'slot'           => $action->slot,
+                'tag'            => $action->tag,
                 'icon'           => $action->icon,
                 'iconAttributes' => $action->iconAttributes,
                 'attributes'     => $action->attributes,

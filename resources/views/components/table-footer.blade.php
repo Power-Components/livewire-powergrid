@@ -14,30 +14,30 @@
     @endif
     @foreach ($this->visibleColumns as $column)
         <td
-            class="{{ data_get($theme, 'table.tdBodyClassTotalColumns') . ' ' . $column->bodyClass ?? '' }}"
-            style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyleTotalColumns') . ' ' . $column->bodyStyle ?? '' }}"
+            class="{{ data_get($theme, 'table.tdBodyClassTotalColumns') . ' ' . data_get($column, 'bodyClass') ?? '' }}"
+            style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyleTotalColumns') . ' ' . data_get($column, 'bodyStyle') ?? '' }}"
         >
             @include('livewire-powergrid::components.summarize', [
-                'sum' => $column->sum['footer'] ? data_get($column, 'summarize.sum') : null,
-                'labelSum' => $column->sum['label'],
+                'sum' => data_get($column, 'sum.footer') ? data_get($column, 'summarize.sum') : null,
+                'labelSum' =>  data_get($column, 'sum.label'),
 
-                'count' => $column->count['footer'] ? data_get($column, 'summarize.count') : null,
-                'labelCount' => $column->count['label'],
+                'count' =>  data_get($column, 'count.footer') ? data_get($column, 'summarize.count') : null,
+                'labelCount' =>  data_get($column, 'count.footer'),
 
-                'min' => $column->min['footer'] ? data_get($column, 'summarize.min') : null,
-                'labelMin' => $column->min['label'],
+                'min' =>  data_get($column, 'min.footer') ? data_get($column, 'summarize.min') : null,
+                'labelMin' =>  data_get($column, 'min.footer'),
 
-                'max' => $column->max['footer'] ? data_get($column, 'summarize.max') : null,
-                'labelMax' => $column->max['label'],
+                'max' =>  data_get($column, 'max.footer') ? data_get($column, 'summarize.max') : null,
+                'labelMax' =>  data_get($column, 'max.label'),
 
-                'avg' => $column->avg['footer'] ? data_get($column, 'summarize.avg') : null,
-                'labelAvg' => $column->avg['label'],
+                'avg' =>  data_get($column, 'avg.footer') ? data_get($column, 'summarize.avg') : null,
+                'labelAvg' =>  data_get($column, 'avg.label'),
             ])
         </td>
     @endforeach
     @if (isset($actions) && count($actions))
         <th
-            class="{{ data_get($theme, 'table.thClass') . ' ' . $column->headerClass }}"
+            class="{{ data_get($theme, 'table.thClass') . ' ' .  data_get($column, 'headerClass') }}"
             scope="col"
             style="{{ data_get($theme, 'table.thStyle') }}"
             colspan="{{ count($actions) }}"

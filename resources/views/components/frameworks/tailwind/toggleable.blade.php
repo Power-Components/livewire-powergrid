@@ -1,8 +1,8 @@
 @php
-    $value = (int) $row->{$column->field};
+    $value = (int) $row->{data_get($column, 'field')};
 
-    $trueValue = $column->toggleable['default'][0];
-    $falseValue = $column->toggleable['default'][1];
+    $trueValue = data_get($column, 'toggleable')['default'][0];
+    $falseValue = data_get($column, 'toggleable')['default'][1];
 @endphp
 
 <div class="flex flex-row justify-center">
@@ -13,7 +13,7 @@
                 'id' => data_get($row, $this->realPrimaryKey),
                 'isHidden' => !$showToggleable,
                 'tableName' => $tableName,
-                'field' => $column->field,
+                'field' => data_get($column, 'field'),
                 'toggle' => $value,
                 'trueValue' => $trueValue,
                 'falseValue' => $falseValue,

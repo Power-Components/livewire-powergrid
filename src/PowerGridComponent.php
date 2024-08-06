@@ -104,7 +104,7 @@ class PowerGridComponent extends Component
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
-            ->filter(fn ($column) => filled($column->filters))->count() > 0;
+            ->filter(fn ($column) => filled(data_get($column, 'filters')))->count() > 0;
     }
 
     #[Computed]
@@ -273,7 +273,7 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        $this->columns = collect($this->columns)->map(fn ($column) => (object) $column)->toArray();
+        // $this->columns = collect($this->columns)->map(fn ($column) => (object) $column)->toArray();
 
         $this->relationSearch = $this->relationSearch();
         $this->searchMorphs   = $this->searchMorphs();

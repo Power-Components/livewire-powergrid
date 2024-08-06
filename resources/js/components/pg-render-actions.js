@@ -94,7 +94,11 @@ export default (params) => ({
                             return `<${tagName} ${updatedAttributes} ${newAttributes}>`;
                         });
 
-                        html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml} ${action.slot}</${action.tag ?? 'button'}>`;
+                        if (action.slot) {
+                            html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml} ${action.slot}</${action.tag ?? 'button'}>`;
+                        } else {
+                            html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml}</${action.tag ?? 'button'}>`;
+                        }
                     } else {
                         html += `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
                     }

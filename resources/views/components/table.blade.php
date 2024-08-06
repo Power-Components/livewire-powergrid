@@ -48,7 +48,7 @@
                         </tbody>
                     @else
                         <tr
-                            x-data="pgRowAttributes({rowId: '@js($rowId)', defaultClasses: @js($class), rules: @js($this->actionRulesForRows[$rowId])})"
+                            x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class), rules: @js($this->actionRulesForRows[$rowId])})"
                             x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [

@@ -307,7 +307,7 @@ class ProcessDataSource
 
             if ($component->supportModel) {
                 return $row instanceof Model
-                    ? tap($row)->forceFill($data->toArray())
+                    ? (object) tap($row)->forceFill($data->toArray())
                     : (object) $data->toArray();
             }
 

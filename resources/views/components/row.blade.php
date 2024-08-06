@@ -29,47 +29,51 @@
 
 @foreach ($columns as $column)
     @php
-        $content = $row->{$column->field} ?? '';
-        $contentClassField = $column->contentClassField != '' ? $row->{$column->contentClassField} : '';
+        $content = $row->{data_get($column, 'field')} ?? '';
+        $contentClassField = data_get($column, 'contentClassField');
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
-        $field = $column->dataField != '' ? $column->dataField : $column->field;
+        $field = data_get($column, 'dataField', data_get($column, 'field'));
 
-        $contentClass = $column->contentClasses;
+        $contentClass = data_get($column, 'contentClasses');
 
-        if (is_array($column->contentClasses)) {
-            $contentClass = array_key_exists($content, $column->contentClasses) ? $column->contentClasses[$content] : '';
+        if (is_array(data_get($column, 'contentClasses'))) {
+            $contentClass = array_key_exists($content, data_get($column, 'contentClasses'))
+                ? data_get($column, 'contentClasses')[$content]
+                : '';
         }
     @endphp
     <td
-        @class([data_get($theme, 'table.tdBodyClass'), $column->bodyClass])
-        style="{{ $column->hidden === true ? 'display:none' : '' }}; {{ $column->bodyStyle ?? '' }}"
+        @class([data_get($theme, 'table.tdBodyClass'), data_get($column, 'bodyClass')])
+        style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($column, 'bodyStyle') ?? '' }}"
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
-        <div class="pg-actions">
-
-            @if (empty(data_get($row, 'actions')) && $column->isAction)
+        @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
+            <div class="pg-actions">
                 @if (method_exists($this, 'actionsFromView') && ($actionsFromView = $this->actionsFromView($row)))
                     <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
                         {!! $actionsFromView !!}
                     </div>
                 @endif
-            @endif
 
-            @if (data_get($column, 'isAction'))
-                <div x-data="pgRenderActions({ rowId: '@js(data_get($row, $this->realPrimaryKey))', parentId: @js($parentId) })">
-                    <span
-                        class="pg-actions-row"
-                        x-html="toHtml"
-                    ></span>
-                </div>
-            @endif
-        </div>
+                @if (data_get($column, 'isAction'))
+                    <div
+                        test
+                        x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
+                    >
+                        <span
+                            class="pg-actions-row"
+                            x-html="toHtml"
+                        ></span>
+                    </div>
+                @endif
+            </div>
+        @endif
 
         @php
             // =============* Edit On Click *=====================
             $showEditOnClick = false;
 
-            if (data_get($column->editable, 'hasPermission')) {
+            if (data_get(data_get($column, 'editable'), 'hasPermission')) {
                 $showEditOnClick = true;
             }
 
@@ -102,14 +106,14 @@
 
         @if ($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
-                @include(data_get($theme, 'editable.view') ?? null, ['editable' => $column->editable])
+                @include(data_get($theme, 'editable.view') ?? null, ['editable' => data_get($column, 'editable')])
             </span>
 
             {{-- =============* Toggleable *===================== --}}
-        @elseif(count($column->toggleable) > 0)
+        @elseif(count(data_get($column, 'toggleable')) > 0)
             @php
                 //Default Toggle Permission
-                $showToggleable = data_get($column->toggleable, 'enabled', false);
+                $showToggleable = data_get($column, 'toggleable.enabled', false);
 
                 $toggleableRowRules = data_get(
                     collect($this->actionRulesForRows[$rowId])
@@ -147,7 +151,7 @@
             @include(data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
-                <div>{!! $column->index ? $rowIndex : $content !!}</div>
+                <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
             </span>
         @endif
     </td>

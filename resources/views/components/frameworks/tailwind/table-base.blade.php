@@ -20,7 +20,7 @@
             @if (config('livewire-powergrid.filter') === 'outside')
                 @php
                     $filtersFromColumns = collect($columns)
-                        ->filter(fn($column) => filled($column->filters));
+                        ->filter(fn($column) => filled(data_get($column, 'filters')));
                 @endphp
 
                 @if ($filtersFromColumns->count() > 0)
