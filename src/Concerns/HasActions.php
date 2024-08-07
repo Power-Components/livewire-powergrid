@@ -17,6 +17,7 @@ trait HasActions
             return null;
         }
 
+        /** @var string $records */
         $records = Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), function (): string {
             return $this->getResourceIconsJson();
         });
@@ -204,12 +205,15 @@ trait HasActions
         $value    = strval(data_get($row, $this->realPrimaryKey));
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
 
-        return Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
+        /** @var array $formattedRules */
+        $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
             $value = $closure($row, $loop);
 
             return array_filter($value, function ($item) {
                 return !empty($item);
             });
         });
+
+        return $formattedRules;
     }
 }

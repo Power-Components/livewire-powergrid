@@ -205,12 +205,15 @@ class PowerGridComponent extends Component
             return convertObjectsToArray((array) $themeBase->apply());
         }
 
-        return Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
+        /** @var array $themes */
+        $themes = Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
             /** @var ThemeBase $themeBase */
             $themeBase = PowerGrid::theme($class);
 
             return convertObjectsToArray((array) $themeBase->apply());
         });
+
+        return $themes;
     }
 
     /**
