@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\{MorphToMany, BelongsToMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, MorphToMany};
 use Livewire\Attributes\On;
 use Throwable;
 

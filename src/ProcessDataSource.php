@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\{MorphToMany, BelongsToMany};
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, MorphToMany};
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
@@ -286,6 +286,7 @@ class ProcessDataSource
             return new BaseCollection($this->component->datasource());
         }
 
+        /** @phpstan-ignore-next-line  */
         return cache()->rememberForever($this->component->getId(), function () use ($datasource) {
             if (is_array($datasource)) {
                 return new BaseCollection($datasource);
