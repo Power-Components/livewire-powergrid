@@ -75,7 +75,7 @@
 
                         <a
                             class="cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-pg-primary-500 dark:text-pg-primary-300 bg-white dark:bg-pg-primary-600 border border-pg-primary-300 dark:border-transparent leading-5 hover:text-pg-primary-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-pg-primary-100 active:text-pg-primary-500 transition ease-in-out duration-150"
-                            wire:click="previousPage"
+                            wire:click="previousPage('{{ $paginator->getPageName() }}')"
                             rel="next"
                         >
                             <svg
@@ -120,7 +120,7 @@
                         @if ($paginator->lastPage() - $paginator->currentPage() >= 2)
                             <a
                                 class="select-none cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-pg-primary-500 dark:text-pg-primary-300 bg-white dark:bg-pg-primary-600 border border-pg-primary-300 dark:border-transparent leading-5 hover:text-pg-primary-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-pg-primary-100 active:text-pg-primary-500 transition ease-in-out duration-150"
-                                wire:click="nextPage"
+                                wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                 rel="next"
                             >
                                 <svg

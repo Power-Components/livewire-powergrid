@@ -2,11 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Livewire\Attributes\Computed;
 use PowerComponents\LivewirePowerGrid\ProcessDataSource;
 
 trait Base
 {
     public string $primaryKey = 'id';
+
+    public ?string $primaryKeyAlias = null;
 
     public bool $ignoreTablePrefix = true;
 
@@ -43,6 +46,12 @@ trait Base
     public int $total = 0;
 
     public int $totalCurrentPage = 0;
+
+    #[Computed]
+    public function realPrimaryKey(): string
+    {
+        return $this->primaryKeyAlias ?? $this->primaryKey;
+    }
 
     public function template(): ?string
     {
