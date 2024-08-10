@@ -72,7 +72,7 @@ PowerGrid offers a range of features that are readily available:
 | Queue Export for large datasets                                        | ✅                                      |
 | Responsive                                                             | ✅                                      |
 | Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
-| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and more... |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/5.x/resources/lang) |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 

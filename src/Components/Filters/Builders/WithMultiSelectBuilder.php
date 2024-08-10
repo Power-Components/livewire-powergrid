@@ -21,11 +21,11 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
-        /** @var array $values */
-        if (count($values) === 0) {
+        if (!is_array($values) || count($values) === 0) {
             return;
         }
 
+        /** @var array $values */
         foreach ($values as $value) {
             if ($value === '') {
                 $empty = true;
@@ -46,13 +46,13 @@ trait WithMultiSelectBuilder
             return $closure($collection, $values);
         }
 
-        /** @var array $values */
         $empty = false;
 
         if (!is_array($values) || count($values) === 0) {
             return $collection;
         }
 
+        /** @var array $values */
         foreach ($values as $value) {
             if ($value === '') {
                 $empty = true;

@@ -42,13 +42,13 @@ document.addEventListener('alpine:init', () => {
                this.selected[tableName] = []
             }
 
-            if(!this.selected[tableName].includes(parseFloat(value))) {
-                this.selected[tableName].push(parseFloat(value))
+            if(!this.selected[tableName].includes(value)) {
+                this.selected[tableName].push(value)
 
                 return;
             }
 
-            this.remove(parseFloat(value), tableName)
+            this.remove(value, tableName)
         },
         remove(value, tableName) {
             const index = this.selected[tableName].indexOf(value);

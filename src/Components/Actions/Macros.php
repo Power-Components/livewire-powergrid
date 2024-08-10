@@ -80,7 +80,7 @@ class Macros
                 "component" => "button",
                 "attribute" => "wire:click",
                 "value"     => function ($component, $row) {
-                    return 'toggleDetail(\'' . data_get($row, $component->primaryKey) . '\')';
+                    return 'toggleDetail(\'' . data_get($row, $component->realPrimaryKey) . '\')';
                 },
             ];
 
