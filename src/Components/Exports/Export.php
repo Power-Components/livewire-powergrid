@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Exports;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column};
 use stdClass;
 
 class Export
@@ -35,14 +35,14 @@ class Export
         return $this;
     }
 
-    public function prepare(Collection $data, array $columns, PowerGridComponent $powerGridComponent): array
+    public function prepare(Collection $data, array $columns): array
     {
         $header = collect([]);
 
-        $data = $data->transform(function ($row) use ($columns, $header, $powerGridComponent) {
+        $data = $data->transform(function ($row) use ($columns, $header) {
             $item = collect([]);
 
-            collect($columns)->each(function ($column) use ($row, $header, $item, $powerGridComponent) {
+            collect($columns)->each(function ($column) use ($row, $header, $item) {
                 /** @var Model|stdClass $row */
                 if (method_exists($row, 'withoutRelations')) {
                     $row = $row->withoutRelations()->toArray();
@@ -51,14 +51,14 @@ class Export
                 $isExportable = false;
 
                 $hide = (bool) data_get(
-                    collect($powerGridComponent->prepareActionRulesForRows($row))
+                    collect((array) data_get($row, '__powergrid_rules'))
                         ->where('apply', true)
                         ->last(),
                     'disable',
                 );
 
                 $disable = (bool) data_get(
-                    collect($powerGridComponent->prepareActionRulesForRows($row))
+                    collect((array) data_get($row, '__powergrid_rules'))
                         ->where('apply', true)
                         ->last(),
                     'disable',

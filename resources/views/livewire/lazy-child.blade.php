@@ -2,10 +2,7 @@
     @foreach ($data as $row)
         @php
             $rowId = data_get($row, $this->realPrimaryKey);
-
             $class = data_get($theme, 'table.trBodyClass');
-
-            $this->actionRulesForRows[$rowId] = $this->prepareActionRulesForRows($row, $loop);
         @endphp
 
         @if (isset($setUp['detail']))

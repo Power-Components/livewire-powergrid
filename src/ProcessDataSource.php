@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str, Stringable};
+use Illuminate\View\Concerns\ManagesLoops;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
@@ -16,6 +17,7 @@ use Throwable;
 class ProcessDataSource
 {
     use Concerns\SoftDeletes;
+    use ManagesLoops;
 
     private array $queryLog = [];
 
@@ -251,20 +253,25 @@ class ProcessDataSource
         $perPage     = intval(data_get($this->component->setUp, 'footer.perPage'));
         $recordCount = strval(data_get($this->component->setUp, 'footer.recordCount'));
 
-        $paginate = match ($recordCount) {
-            'min'   => 'simplePaginate',
-            default => 'paginate',
-        };
-
         if ($results instanceof ScoutBuilder) {
-            return $results->paginateSafe($perPage, pageName: $pageName); // @phpstan-ignore-line
+            $paginate = match (true) {
+                $recordCount == 'min'                                    => 'simplePaginate',
+                ($this->component->paginateRaw && $recordCount == 'min') => 'simplePaginateRaw', // @phpstan-ignore-line
+                $this->component->paginateRaw                            => 'paginateRaw',
+                default                                                  => 'paginateSafe',
+            };
+        } else {
+            $paginate = match (true) {
+                $recordCount === 'min' => 'simplePaginate',
+                default                => 'paginate',
+            };
         }
 
         if ($perPage > 0) {
             return $results->$paginate($perPage, pageName: $pageName);
         }
 
-        $count = $results->count();
+        $count = $results->count(); // @phpstan-ignore-line
 
         return $results->$paginate($count ?: 10, pageName: $pageName);
     }
@@ -274,23 +281,16 @@ class ProcessDataSource
      */
     protected function resolveCollection(array|BaseCollection|EloquentBuilder|QueryBuilder|null $datasource = null): BaseCollection
     {
-        if (!boolval(config('livewire-powergrid.cached_data', false))) {
-            return new BaseCollection($this->component->datasource());
+        if (is_array($datasource)) {
+            return new BaseCollection($datasource);
         }
 
-        //@phpstan-ignore-next-line
-        return cache()->rememberForever($this->component->getId(), function () use ($datasource) {
-            if (is_array($datasource)) {
-                return new BaseCollection($datasource);
-            }
+        if (is_a((object) $datasource, BaseCollection::class)) {
+            return $datasource;
+        }
 
-            if (is_a((object) $datasource, BaseCollection::class)) {
-                return $datasource;
-            }
-
-            /** @var array $datasource */
-            return new BaseCollection($datasource);
-        });
+        /** @var array $datasource */
+        return new BaseCollection($datasource);
     }
 
     public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
@@ -300,18 +300,30 @@ class ProcessDataSource
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields = collect(once(fn () => $component->fields()->fields));//@phpstan-ignore-line
+        $fields = collect($component->fields()->fields);
 
-        return $results->map(function ($row, $index) use ($component, $fields) {
-            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]); //@phpstan-ignore-line
+        if ($component->paginateRaw) {
+            $results = collect((array) data_get($results, 'hits'))->pluck('document');
+        }
 
-            if ($component->supportModel) {
-                return $row instanceof Model
-                    ? (object) tap($row)->forceFill($data->toArray())
-                    : (object) $data->toArray();
+        $loopInstance = app(ManageLoops::class);
+        $loopInstance->addLoop($results);
+
+        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance) {
+            $data = $fields->map(fn ($field) => $field((object) $row, $index));
+
+            $loopInstance->incrementLoopIndices();
+
+            $mergedData = $data->merge([
+                '__powergrid_loop'  => $loop = $loopInstance->getLastLoop(),
+                '__powergrid_rules' => $component->prepareActionRulesForRows($row, $loop),
+            ]);
+
+            if ($component->supportModel && $row instanceof Model) {
+                return (object) tap($row)->forceFill($mergedData->toArray());
             }
 
-            return (object) $data->toArray();
+            return (object) $mergedData->toArray();
         });
     }
 

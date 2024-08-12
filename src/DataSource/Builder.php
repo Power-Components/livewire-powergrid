@@ -113,7 +113,7 @@ class Builder
                             'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
                                 'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                                 'value'        => $value,
-                                'searchMorphs' => $this->powerGridComponent->searchMorphs,
+                                'searchMorphs' => $this->powerGridComponent->searchMorphs(),
                             ]),
                             default => null
                         };
@@ -181,7 +181,7 @@ class Builder
             return $query;
         });
 
-        if (count($this->powerGridComponent->relationSearch) && $this->query instanceof EloquentBuilder) {
+        if (count($this->powerGridComponent->relationSearch()) && $this->query instanceof EloquentBuilder) {
             $this->filterRelation($search);
         }
 
@@ -193,7 +193,7 @@ class Builder
         /** @var EloquentBuilder $query */
         $query = $this->query;
 
-        foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
+        foreach ($this->powerGridComponent->relationSearch() as $table => $columns) {
             if (is_array($columns)) {
                 $this->filterNestedRelation($table, $columns, $search);
 

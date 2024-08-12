@@ -244,8 +244,7 @@ trait WithExport
 
         /** @phpstan-ignore-next-line  */
         return $exportable->download(
-            exportOptions: $this->setUp['exportable'],
-            powerGridComponent: $this,
+            exportOptions: $this->setUp['exportable']
         );
     }
 

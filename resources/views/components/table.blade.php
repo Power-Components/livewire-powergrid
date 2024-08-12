@@ -25,8 +25,6 @@
                     @php
                         $rowId = data_get($row, $this->realPrimaryKey);
                         $class = data_get($theme, 'table.trBodyClass');
-
-                        $this->actionRulesForRows[$rowId] = $this->prepareActionRulesForRows($row, $loop);
                     @endphp
 
                     @if (isset($setUp['detail']))
@@ -48,7 +46,7 @@
                         </tbody>
                     @else
                         <tr
-                            x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class), rules: @js($this->actionRulesForRows[$rowId])})"
+                            x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules)})"
                             x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [
@@ -59,10 +57,6 @@
 
                     @includeWhen(isset($setUp['responsive']),
                         'livewire-powergrid::components.expand-container')
-
-                    @php
-                        unset($this->actionRulesForRows[$rowId]);
-                    @endphp
                 @endforeach
             @else
                 <div>

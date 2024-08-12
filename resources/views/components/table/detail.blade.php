@@ -1,7 +1,7 @@
 @if (data_get($setUp, 'detail.state.' . $rowId))
     @php
         $detailView = (bool) data_get(
-            collect($this->actionRulesForRows[$rowId])
+            collect($row->__powergrid_rules)
                 ->where('apply', true)
                 ->last(),
             'detailView',

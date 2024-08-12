@@ -12,14 +12,14 @@
 //    }
 
     $disable = (bool) data_get(
-                collect($this->actionRulesForRows[$rowId])
+                collect($row->__powergrid_rules)
                     ->where('apply', true)
                     ->last(),
                 'disable',
             );
 
     $hide = (bool) data_get(
-                collect($this->actionRulesForRows[$rowId])
+                collect($row->__powergrid_rules)
                     ->where('apply', true)
                     ->last(),
                 'hide',

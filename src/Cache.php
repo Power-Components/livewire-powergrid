@@ -10,8 +10,6 @@ final class Cache implements Wireable
 
     public bool $enabled = true;
 
-    public bool $forever = false;
-
     public string $tag = '';
 
     public int $ttl = 300;
@@ -21,13 +19,6 @@ final class Cache implements Wireable
     public static function make(): self
     {
         return new Cache();
-    }
-
-    public function forever(): Cache
-    {
-        $this->forever = true;
-
-        return $this;
     }
 
     public function disabled(): Cache

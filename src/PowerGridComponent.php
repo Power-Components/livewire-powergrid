@@ -18,7 +18,7 @@ use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
 use Throwable;
 
 /**
- * @property-read mixed $getCachedData
+ * @property-read mixed $getRecords
  * @property-read bool $hasColumnFilters
  * @property-read array|BaseCollection $visibleColumns
  * @property-read string $realPrimaryKey
@@ -37,11 +37,14 @@ class PowerGridComponent extends Component
     use Concerns\Sorting;
     use Concerns\Summarize;
     use Concerns\ToggleDetail;
+    use Concerns\ManageRow;
     use WithPagination;
 
     public function mount(): void
     {
         $this->prepareActionsResources();
+
+        $this->prepareRowTemplates();
 
         $this->readyToLoad = !$this->deferLoading;
 
@@ -61,17 +64,11 @@ class PowerGridComponent extends Component
     public function hydrate(): void
     {
         $this->processDataSourceInstance = null;
-        $this->actionRulesForRows        = [];
     }
 
     public function fetchDatasource(): void
     {
         $this->readyToLoad = true;
-    }
-
-    public function fields(): PowerGridFields
-    {
-        return PowerGrid::fields();
     }
 
     public function updatedPage(): void
@@ -115,7 +112,7 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    protected function getCachedData(): mixed
+    protected function getRecords(): mixed
     {
         $start = microtime(true);
 
@@ -147,15 +144,12 @@ class PowerGridComponent extends Component
 
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
-        $forever   = boolval(data_get($this->setUp, 'cache.forever', false));
         $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
 
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = implode('-', $this->getCacheKeys());
 
-        $results = $forever
-            ? Cache::tags($tag)->rememberForever($cacheKey, fn () => $this->fillData())
-            : Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData());
+        $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData());
 
         $time = round((microtime(true) - $start) * 1000);
 
@@ -276,12 +270,7 @@ class PowerGridComponent extends Component
      */
     public function render(): Application|Factory|View
     {
-        // $this->columns = collect($this->columns)->map(fn ($column) => (object) $column)->toArray();
-
-        $this->relationSearch = $this->relationSearch();
-        $this->searchMorphs   = $this->searchMorphs();
-
-        $data = $this->getCachedData();
+        $data = $this->getRecords();
 
         $this->storeActionsRowInJSWindow($data);
         $this->storeActionsHeaderInJSWindow();

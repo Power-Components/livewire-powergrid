@@ -12,7 +12,7 @@
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
-    data_get(collect($this->actionRulesForRows[$rowId])->last(), 'toggleDetailView'),
+    data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
     [
         'theme' => data_get($theme, 'table'),
         'view' => data_get($setUp, 'detail.viewIcon') ?? null,
@@ -29,7 +29,16 @@
 
 @foreach ($columns as $column)
     @php
-        $content = $row->{data_get($column, 'field')} ?? '';
+        $field          = data_get($column, 'field');
+        $content         = $row->{$field} ?? '';
+        $templateContent = null;
+
+        if (is_array($content)) {
+            $template = data_get($column, 'template');
+            $templateContent = $content;
+            $content = '';
+        }
+
         $contentClassField = data_get($column, 'contentClassField');
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
         $field = data_get($column, 'dataField', data_get($column, 'field'));
@@ -43,7 +52,10 @@
         }
     @endphp
     <td
-        @class([data_get($theme, 'table.tdBodyClass'), data_get($column, 'bodyClass')])
+        @class([
+            data_get($theme, 'table.tdBodyClass'),
+            data_get($column, 'bodyClass'),
+        ])
         style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($column, 'bodyStyle') ?? '' }}"
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
@@ -70,88 +82,37 @@
         @endif
 
         @php
-            // =============* Edit On Click *=====================
-            $showEditOnClick = false;
-
-            if (data_get(data_get($column, 'editable'), 'hasPermission')) {
-                $showEditOnClick = true;
-            }
-
-            $editOnClickVisibility = data_get(
-                collect($this->actionRulesForRows[$rowId])
-                    ->where('apply', true)
-                    ->last(),
-                'editOnClickVisibility',
-            );
-
-            if ($editOnClickVisibility === 'hide') {
-                $showEditOnClick = false;
-            }
-
-            if ($editOnClickVisibility === 'show') {
-                $showEditOnClick = true;
-            }
-
-            $fieldHideEditOnClick = (bool) data_get(
-                collect($this->actionRulesForRows[$rowId])
-                    ->where('apply', true)
-                    ->last(),
-                'fieldHideEditOnClick',
-            );
-
-            if ($fieldHideEditOnClick) {
-                $showEditOnClick = false;
-            }
+            $showEditOnClick = once(fn () => $this->shouldShowEditOnClick($column, $row));
         @endphp
 
         @if ($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
-                @include(data_get($theme, 'editable.view') ?? null, ['editable' => data_get($column, 'editable')])
+                @include(data_get($theme, 'editable.view') ?? null, [
+                    'editable' => data_get($column, 'editable'),
+                ])
             </span>
 
-            {{-- =============* Toggleable *===================== --}}
         @elseif(count(data_get($column, 'toggleable')) > 0)
             @php
-                //Default Toggle Permission
-                $showToggleable = data_get($column, 'toggleable.enabled', false);
-
-                $toggleableRowRules = data_get(
-                    collect($this->actionRulesForRows[$rowId])
-                        ->where('apply', true)
-                        ->last(),
-                    'toggleableVisibility',
-                );
-
-                // Has permission, but Row Action Rule is changing to hide
-                if ($showToggleable && $toggleableRowRules == 'hide') {
-                    $showToggleable = false;
-                }
-
-                // No permission, but Row Action Rule is forcing to show
-                if (!$showToggleable && $toggleableRowRules == 'show') {
-                    $showToggleable = true;
-                }
-
-                // Particular Rule for this field
-                $fieldHideToggleable = (bool) data_get(
-                    collect($this->actionRulesForRows[$rowId])
-                        ->where('apply', true)
-                        ->last(),
-                    'fieldHideToggleable',
-                );
-
-                if ($fieldHideToggleable) {
-                    $showToggleable = !$fieldHideToggleable;
-                }
-
-                if (str_contains($field, '.') === true) {
-                    $showToggleable = false;
-                }
+                $showToggleable = once(fn () => $this->shouldShowToggleable($column, $row));
             @endphp
-            @include(data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
+            @includeWhen($showToggleable, data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
-                <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                @if (filled($templateContent))
+                    <div
+                        x-data="pgRenderRow({
+                            rowId: @js(data_get($row, $this->realPrimaryKey)),
+                            parentId: @js($parentId),
+                            field: @js($field),
+                            templateContent: @js($templateContent)
+                        })"
+                        x-html="rendered"
+                    >
+                    </div>
+                @else
+                    <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                @endif
             </span>
         @endif
     </td>

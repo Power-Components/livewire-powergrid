@@ -2,12 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Exports\Contracts;
 
-use PowerComponents\LivewirePowerGrid\{Exportable, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Exportable};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 interface ExportInterface
 {
-    public function download(array $exportOptions, PowerGridComponent $powerGridComponent): BinaryFileResponse;
+    public function download(array $exportOptions): BinaryFileResponse;
 
-    public function build(Exportable|array $exportOptions, PowerGridComponent $powerGridComponent): void;
+    public function build(Exportable|array $exportOptions): void;
 }

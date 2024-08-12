@@ -79,6 +79,11 @@ export default (params) => ({
 
                         let iconHtml = window.pgResourceIcons[action.icon];
 
+                        if (typeof iconHtml === "undefined") {
+                            console.warn(`PowerGrid: Unable to load icons in javascript window in row: [${this.rowId}]`)
+                            return;
+                        }
+
                         iconHtml = iconHtml.replace(/<([^\s>]+)([^>]*)>/, (match, tagName, existingAttributes) => {
                             let updatedAttributes = existingAttributes.trim();
                             const newAttributes = iconAttributesStr.replace(/class="([^"]*)"/, (classMatch, newClass) => {

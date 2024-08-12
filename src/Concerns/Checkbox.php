@@ -48,14 +48,14 @@ trait Checkbox
             $value = $model->{$this->checkboxAttribute};
 
             $hide = (bool) data_get(
-                collect($this->prepareActionRulesForRows($model))
+                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
                     ->where('apply', true)
                     ->last(),
                 'disable',
             );
 
             $disable = (bool) data_get(
-                collect($this->prepareActionRulesForRows($model))
+                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
                     ->where('apply', true)
                     ->last(),
                 'disable',
