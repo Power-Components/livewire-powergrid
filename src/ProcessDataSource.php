@@ -286,6 +286,7 @@ class ProcessDataSource
         }
 
         if (is_a((object) $datasource, BaseCollection::class)) {
+            /** @var BaseCollection $datasource */
             return $datasource;
         }
 

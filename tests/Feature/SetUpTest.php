@@ -35,8 +35,7 @@ it('cache work properly with tags - rememberForever', function () {
     /** @var DishesSetUpTable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
         Cache::make()
-            ->prefix('test-')
-            ->forever(),
+            ->prefix('test-'),
         Footer::make()
             ->showPerPage(15),
     ]]);
@@ -45,7 +44,6 @@ it('cache work properly with tags - rememberForever', function () {
         ->name->toBe('cache')
         ->prefix->toBe('test-')
         ->enabled->toBe(true)
-        ->forever->toBe(true)
         ->ttl->toBe(300);
 
     $tag      = 'test-powergrid-dishes-default';
@@ -93,7 +91,6 @@ it('cache work properly with tags - remember', function () {
     expect($component->setUp['cache'])
         ->name->toBe('cache')
         ->enabled->toBe(true)
-        ->forever->toBe(false)
         ->ttl->toBe(360);
 
     $tag      = 'powergrid-dishes-default';
@@ -142,7 +139,6 @@ it('cache work properly with tags - customTag', function () {
     expect($component->setUp['cache'])
         ->name->toBe('cache')
         ->enabled->toBe(true)
-        ->forever->toBe(false)
         ->ttl->toBe(360);
 
     $tag      = 'my-custom-tag';
