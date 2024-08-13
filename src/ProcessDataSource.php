@@ -294,9 +294,13 @@ class ProcessDataSource
         return new BaseCollection($datasource);
     }
 
-    public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
+    public static function transform(BaseCollection $results, PowerGridComponent $component, bool $fromLazyChild = false): BaseCollection
     {
-        return self::processRows($results, $component);
+        if ($fromLazyChild && $component->paginateRaw) {
+            return $results;
+        }
+
+        return static::processRows($results, $component);
     }
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
