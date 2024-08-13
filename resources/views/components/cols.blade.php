@@ -15,6 +15,14 @@
             $isFixedOnResponsive = true;
         }
 
+        if (data_get($column, 'isAction') &&
+            in_array(
+                    \PowerComponents\LivewirePowerGrid\Responsive::ACTIONS_COLUMN_NAME,
+                    data_get($this->setUp, 'responsive.fixedColumns')
+            )) {
+            $isFixedOnResponsive = true;
+        }
+
         if ($column->fixedOnResponsive) {
             $isFixedOnResponsive = true;
         }
