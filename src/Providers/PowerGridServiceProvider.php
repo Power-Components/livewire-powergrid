@@ -137,54 +137,48 @@ class PowerGridServiceProvider extends ServiceProvider
     public function actionMacros(): void
     {
         Button::macro('class', function (string $classes) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'class' => $classes,
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('call', function (string $method, array $params) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$call('{$method}', " . Js::from($params) . ")",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('dispatch', function (string $event, array $params) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('dispatchTo', function (string $component, string $event, array $params) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$dispatchTo('{$component}', '{$event}', " . Js::from($params) . ")",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('dispatchSelf', function (string $event, array $params) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$dispatchSelf('{$event}', " . Js::from($params) . ")",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('parent', function (string $method, array $params) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$parent.{$method}(" . Js::from($params) . ")",
-                ...$this->attributes,
             ]);
 
             return $this;
@@ -196,46 +190,41 @@ class PowerGridServiceProvider extends ServiceProvider
                 'arguments' => $params,
             ]);
 
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "\$dispatch('openModal', $encoded)",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('disable', function () {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'disabled' => 'disabled',
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('tooltip', function (string $value) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'title' => $value,
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('route', function (string $route, array $params, string $target) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'href'   => route($route, $params),
                 'target' => $target,
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('id', function (string $id) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'id' => $id,
-                ...$this->attributes,
             ]);
 
             return $this;
@@ -254,9 +243,8 @@ class PowerGridServiceProvider extends ServiceProvider
         });
 
         Button::macro('confirm', function (?string $message = null) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:confirm' => $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm.message'),
-                ...$this->attributes,
             ]);
 
             return $this;
@@ -266,18 +254,16 @@ class PowerGridServiceProvider extends ServiceProvider
             $message      = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
             $confirmValue = trim($confirmValue);
 
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:confirm.prompt' => "$message | $confirmValue",
-                ...$this->attributes,
             ]);
 
             return $this;
         });
 
         Button::macro('toggleDetail', function (int|string $rowId) {
-            $this->attributes = array_merge([
+            $this->attributes([
                 'wire:click' => "toggleDetail('$rowId')",
-                ...$this->attributes,
             ]);
 
             return $this;
