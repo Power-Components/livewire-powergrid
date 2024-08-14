@@ -19,6 +19,8 @@ class ProcessDataSource
     use Concerns\SoftDeletes;
     use ManagesLoops;
 
+    public static float $transformTime;
+
     private array $queryLog = [];
 
     public function __construct(
@@ -294,13 +296,22 @@ class ProcessDataSource
         return new BaseCollection($datasource);
     }
 
-    public static function transform(BaseCollection $results, PowerGridComponent $component, bool $fromLazyChild = false): BaseCollection
-    {
+    public static function transform(
+        BaseCollection $results,
+        PowerGridComponent $component,
+        bool $fromLazyChild = false
+    ): BaseCollection {
         if ($fromLazyChild && $component->paginateRaw) {
             return $results;
         }
 
-        return static::processRows($results, $component);
+        $start = microtime(true);
+
+        $process = self::processRows($results, $component);
+
+        self::$transformTime = round((microtime(true) - $start) * 1000);
+
+        return $process;
     }
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
@@ -369,10 +380,10 @@ class ProcessDataSource
                         throw new \InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
                     }
 
-                    $fieldName       = $fieldAndSummarizeMethods[0];
-                    $sumarizeMethods = $fieldAndSummarizeMethods[1];
+                    $fieldName        = $fieldAndSummarizeMethods[0];
+                    $summarizeMethods = $fieldAndSummarizeMethods[1];
 
-                    $applyFormatToSummarizeMethods = str($sumarizeMethods)->replaceMatches('/\s+/', '')
+                    $applyFormatToSummarizeMethods = str($summarizeMethods)->replaceMatches('/\s+/', '')
                         ->replace(['{', '}'], '')
                         ->explode(',')
                         ->toArray();
@@ -409,5 +420,10 @@ class ProcessDataSource
 
                 return (object) $column;
             })->toArray();
+    }
+
+    public function transformTime(): float
+    {
+        return self::$transformTime;
     }
 }

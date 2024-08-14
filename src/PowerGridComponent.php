@@ -130,6 +130,7 @@ class PowerGridComponent extends Component
                 new PowerGridPerformanceData(
                     $this->tableName,
                     retrieveDataInMs: $retrieveData,
+                    transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
                     queriesTimeInMs: $queriesTime,
                     queries: $queries,
                 )

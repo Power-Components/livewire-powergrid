@@ -66,45 +66,18 @@ trait HasActions
         $actionsHtml = [];
 
         $data->each(function ($row) use (&$actionsHtml) {
-            if (!isset($_COOKIE['pg_cookie_' . $this->tableName . '_row_' . data_get($row, $this->realPrimaryKey)])) {
+            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $this->tableName . '_row_' . data_get($row, $this->realPrimaryKey)]);
+
+            if (!$hasCookieActionsForRow) {
                 $actions = collect($this->actions($row)) // @phpstan-ignore-line
-                    ->transform(function (Button $action) use ($row) {
+                    ->transform(function (Button|array $action) use ($row) {
                         return [
-                            'slot'           => $action->slot,
-                            'tag'            => $action->tag,
-                            'icon'           => $action->icon,
-                            'iconAttributes' => $action->iconAttributes,
-                            'attributes'     => $action->attributes,
-                            'rules'          => method_exists($this, 'actionRules') ? collect($this->actionRules($row)) // @phpstan-ignore-line
-                                ->where('forAction', $action->action)
-                                ->transform(function ($rule) use ($row) {
-                                    $when  = data_get($rule, 'rule.when');
-                                    $apply = $when($row); // @phpstan-ignore-line
-
-                                    data_forget($rule, 'rule.when');
-
-                                    if ($bladeComponent = data_get($rule, 'rule.bladeComponent')) {
-                                        $html = Blade::render(
-                                            '<x-dynamic-component
-                                                    :component="$component"
-                                                    :attributes="$params"
-                                                    />',
-                                            [
-                                                'component' => data_get($bladeComponent, 'component'),
-                                                'params'    => new ComponentAttributeBag(
-                                                    array_merge((array) data_get($bladeComponent, 'params'))
-                                                ),
-                                            ],
-                                        );
-                                    }
-
-                                    return [
-                                        'apply'       => $apply,
-                                        'column'      => $rule->column,
-                                        'rule'        => data_get($rule, 'rule'),
-                                        'replaceHtml' => $html ?? '',
-                                    ];
-                                }) : [],
+                            'slot'           => data_get($action, 'slot'),
+                            'tag'            => data_get($action, 'tag'),
+                            'icon'           => data_get($action, 'icon'),
+                            'iconAttributes' => data_get($action, 'iconAttributes'),
+                            'attributes'     => data_get($action, 'attributes'),
+                            'rules'          => $this->resolveActionRules($action, $row),
                         ];
                     });
 
@@ -215,5 +188,41 @@ trait HasActions
         });
 
         return $formattedRules;
+    }
+
+    public function resolveActionRules(Button|array $action, mixed $row): array
+    {
+        if (!method_exists($this, 'actionRules')) {
+            return [];
+        }
+
+        return collect($this->actionRules($row)) // @phpstan-ignore-line
+            ->where('forAction', data_get($action, 'action'))
+            ->transform(function ($rule) use ($row) {
+                $when  = data_get($rule, 'rule.when');
+                $apply = $when($row); // @phpstan-ignore-line
+
+                data_forget($rule, 'rule.when');
+
+                if ($bladeComponent = data_get($rule, 'rule.bladeComponent')) {
+                    $html = Blade::render(
+                        '<x-dynamic-component :component="$component" :attributes="$params" />',
+                        [
+                            'component' => data_get($bladeComponent, 'component'),
+                            'params'    => new ComponentAttributeBag(
+                                array_merge((array)data_get($bladeComponent, 'params'))
+                            ),
+                        ],
+                    );
+                }
+
+                return [
+                    'apply'       => $apply,
+                    'column'      => $rule->column,
+                    'rule'        => data_get($rule, 'rule'),
+                    'replaceHtml' => $html ?? '',
+                ];
+            })
+            ->toArray();
     }
 }
