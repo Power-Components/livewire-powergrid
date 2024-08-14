@@ -19,7 +19,7 @@ class ProcessDataSource
     use Concerns\SoftDeletes;
     use ManagesLoops;
 
-    public static float $transformTime;
+    public static float $transformTime = 0;
 
     private array $queryLog = [];
 
