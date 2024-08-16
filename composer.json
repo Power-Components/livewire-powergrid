@@ -24,7 +24,7 @@
   },
   "require-dev": {
     "composer/composer": "^2.7.7",
-    "laravel/pint": "^1.17.2",
+    "laravel/pint": "1.17",
     "laradumps/laradumps-core": "^2.1.1",
     "larastan/larastan": "^2.9.8",
     "pestphp/pest": "^2.35.0",
