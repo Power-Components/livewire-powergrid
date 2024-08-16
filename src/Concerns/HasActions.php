@@ -18,9 +18,9 @@ trait HasActions
         }
 
         /** @var string $records */
-        $records = Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), function (): string {
+        $records = !app()->hasDebugModeEnabled() ? Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), function (): string {
             return $this->getResourceIconsJson();
-        });
+        }) : $this->getResourceIconsJson();
 
         $this->js(<<<JS
             this.pgResourceIcons = $records

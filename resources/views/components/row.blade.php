@@ -1,5 +1,3 @@
-@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
-
 @props([
     'rowIndex' => 0,
     'childIndex' => null,
@@ -11,6 +9,7 @@
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
+
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
     [
@@ -29,8 +28,8 @@
 
 @foreach ($columns as $column)
     @php
-        $field          = data_get($column, 'field');
-        $content         = $row->{$field} ?? '';
+        $field = data_get($column, 'field');
+        $content = $row->{$field} ?? '';
         $templateContent = null;
 
         if (is_array($content)) {
@@ -56,7 +55,10 @@
             data_get($theme, 'table.tdBodyClass'),
             data_get($column, 'bodyClass'),
         ])
-        style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($column, 'bodyStyle') ?? '' }}"
+        @style([
+            'display:none' => data_get($column, 'hidden'),
+            data_get($column, 'bodyStyle'),
+        ])
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
         @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
@@ -68,10 +70,7 @@
                 @endif
 
                 @if (data_get($column, 'isAction'))
-                    <div
-                        test
-                        x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                    >
+                    <div x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })">
                         <span
                             class="pg-actions-row"
                             x-html="toHtml"
@@ -82,7 +81,7 @@
         @endif
 
         @php
-            $showEditOnClick = once(fn () => $this->shouldShowEditOnClick($column, $row));
+            $showEditOnClick = once(fn() => $this->shouldShowEditOnClick($column, $row));
         @endphp
 
         @if ($showEditOnClick === true)
@@ -91,17 +90,16 @@
                     'editable' => data_get($column, 'editable'),
                 ])
             </span>
-
         @elseif(count(data_get($column, 'toggleable')) > 0)
             @php
-                $showToggleable = once(fn () => $this->shouldShowToggleable($column, $row));
+                $showToggleable = once(fn() => $this->shouldShowToggleable($column, $row));
             @endphp
             @includeWhen($showToggleable, data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
                 @if (filled($templateContent))
                     <div
-                        x-data="pgRenderRow({
+                        x-data="pgRenderRowTemplate({
                             rowId: @js(data_get($row, $this->realPrimaryKey)),
                             parentId: @js($parentId),
                             field: @js($field),

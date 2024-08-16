@@ -6,7 +6,7 @@ import pgTomSelect from "./select/tomSelect";
 import pgSlimSelect from "./select/slimSelect";
 import pgLoadMore from "./pg-load-more";
 import pgRenderActions from "./pg-render-actions";
-import pgRenderRow from "./pg-render-row";
+import pgRenderRowTemplate from "./pg-render-row-template";
 import pgRowAttributes from "./pg-row-attributes";
 
 window.pgToggleable = pgToggleable
@@ -18,7 +18,7 @@ window.pgSlimSelect = pgSlimSelect
 window.pgLoadMore = pgLoadMore
 window.pgRenderActions = pgRenderActions
 window.pgRowAttributes = pgRowAttributes
-window.pgRenderRow = pgRenderRow
+window.pgRenderRowTemplate = pgRenderRowTemplate
 
 Livewire.hook('commit', ({ component, succeed, fail }) => {
     if (component.ephemeral.setUp && component.ephemeral.setUp.hasOwnProperty('responsive')) {

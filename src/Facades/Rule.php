@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleRows;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleActions, RuleCheckbox, RuleEditOnClick, RuleRadio, RuleRows, RuleToggleable};
 
 /**
  * @method static RuleActions button(string $action)
@@ -12,14 +12,7 @@ use PowerComponents\LivewirePowerGrid\Components\Rules\RuleRows;
  * @method static RuleRows rows()
  * @method static RuleCheckbox checkbox()
  * @method static RuleRadio radio()
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\BaseRule
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleActions
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleCheckbox
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleEditOnClick
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleRadio
- * @mixin RuleRows
- * @mixin \PowerComponents\LivewirePowerGrid\Components\Rules\RuleToggleable
+
  * @see RuleManager
  */
 class Rule extends Facade
