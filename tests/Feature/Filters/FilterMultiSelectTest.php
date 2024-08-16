@@ -167,9 +167,9 @@ it('properly filter with category_id - multiple select async', function (string 
         ->assertDontSee('Peixada da chef Nábia');
 
     $column = collect($livewire->columns)
-        ->filter(fn ($column) => $column->field === 'category_name')->first();
+        ->filter(fn ($column) => data_get($column, 'field') === 'category_name')->first();
 
-    expect((object) $column->filters)
+    expect((object) data_get($column, 'filters'))
         ->url->toBe('http://localhost/category')
         ->method->toBe('POST')
         ->parameters->toMatchArray([0 => 'Luan'])

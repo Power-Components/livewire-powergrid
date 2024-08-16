@@ -20,7 +20,7 @@ class RuleManager
 
     public static function applicableModifiers(): array
     {
-        return ['bladeComponent', 'detailView', 'disable', 'dispatch', 'dispatchTo', 'emit', 'hide', 'loop', 'redirect', 'rowClasses', 'setAttribute', 'slot', 'ToggleableVisibility', 'ToggleDetailVisibility', 'EditOnClickVisibility', 'field_hide_editonclick', 'field_hide_toggleable'];
+        return ['bladeComponent', 'detailView', 'disable', 'dispatch', 'dispatchTo', 'emit', 'hide', 'loop', 'redirect', 'rowClasses', 'setAttribute', 'slot', 'toggleableVisibility', 'toggleDetailVisibility', 'editOnClickVisibility', 'fieldHideEditOnClick', 'field_hide_toggleable'];
     }
 
     public function button(string $button): RuleActions

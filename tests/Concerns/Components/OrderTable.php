@@ -21,6 +21,7 @@ class OrderTable extends PowerGridComponent
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
+            ->add('id')
             ->add('name')
             ->add('tax')
             ->add('price')

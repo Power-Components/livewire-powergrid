@@ -155,7 +155,7 @@ class DishesArrayTable extends PowerGridComponent
         ];
     }
 
-    public function actions(): array
+    public function actions($row): array
     {
         return [
             Button::add('edit-stock')

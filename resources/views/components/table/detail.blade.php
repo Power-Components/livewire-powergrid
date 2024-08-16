@@ -1,12 +1,15 @@
-@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
-
-@if(data_get($setUp, 'detail.state.' . $rowId))
+@if (data_get($setUp, 'detail.state.' . $rowId))
     @php
-        $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_ROWS);
+        $detailView = (bool) data_get(
+            collect($row->__powergrid_rules)
+                ->where('apply', true)
+                ->last(),
+            'detailView',
+        );
     @endphp
 
     <td colspan="999">
-        @if (filled($rulesValues['detailView']))
+        @if ($detailView)
             @includeWhen(data_get($setUp, 'detail.state.' . $row->{$this->realPrimaryKey}),
                 $rulesValues['detailView'][0]['detailView'],
                 [

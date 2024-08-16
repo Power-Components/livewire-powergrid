@@ -47,6 +47,7 @@ class DishesBeforeSearchTable extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
+            ->add('in_stock')
             ->add('name');
     }
 
@@ -57,11 +58,11 @@ class DishesBeforeSearchTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Dish', 'name', 'dishes.name')
+            Column::make('Dish', 'name', 'name')
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Stock', 'in_stock', 'dishes.in_stock')
+            Column::make('Stock', 'in_stock', 'in_stock')
                 ->searchable(),
 
             Column::action('Action'),

@@ -14,6 +14,22 @@ return [
     'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
     //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
+    'cache_ttl' => 3600,
+
+    'icon_resources' => [
+        'paths' => [
+            // 'default' => 'resources/views/components/icons',
+            // 'outline' => 'vendor/wireui/wireui/resources/views/components/icons/outline',
+            // 'solid'   => 'vendor/wireui/wireui/resources/views/components/icons/solid',
+        ],
+
+        'allowed' => [
+            // 'pencil',
+        ],
+
+        'attributes' => ['class' => 'w-5 text-red-600'],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Plugins
@@ -95,18 +111,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cache
-    |--------------------------------------------------------------------------
-    |
-    | Cache is enabled by default to improve search performance when using collections.
-    | When enabled, data is reloaded whenever the page is refreshed or a field is updated.
-    |
-    */
-
-    'cached_data' => true,
-
-    /*
-    |--------------------------------------------------------------------------
     | New Release Notification
     |--------------------------------------------------------------------------
     |
@@ -132,10 +136,6 @@ return [
         'openspout_v4' => [
             'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
             'csv'  => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
-        ],
-        'openspout_v3' => [
-            'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v3\ExportToXLS::class,
-            'csv'  => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v3\ExportToCsv::class,
         ],
     ],
 

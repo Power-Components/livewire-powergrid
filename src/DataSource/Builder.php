@@ -113,7 +113,7 @@ class Builder
                             'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
                                 'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
                                 'value'        => $value,
-                                'searchMorphs' => $this->powerGridComponent->searchMorphs,
+                                'searchMorphs' => $this->powerGridComponent->searchMorphs(),
                             ]),
                             default => null
                         };
@@ -129,58 +129,60 @@ class Builder
 
     public function filterContains(): Builder
     {
-        if ($this->powerGridComponent->search != '') {
-            $search = $this->powerGridComponent->search;
-            $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-            $search = strtolower($search);
+        if ($this->powerGridComponent->search == '') {
+            return $this;
+        }
 
-            $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
-                /** @var string $modelTable */
-                $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
+        $search = $this->powerGridComponent->search;
+        $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        $search = strtolower($search);
 
-                $columnList = $this->getColumnList($modelTable);
+        $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
+            /** @var string $modelTable */
+            $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
 
-                collect($this->powerGridComponent->columns)
-                    ->filter(fn ($column) => $this->isSearchableColumn($column))
-                    ->each(function ($column) use ($query, $search, $columnList) {
-                        $field = $this->getDataField($column);
+            $columnList = $this->getColumnList($modelTable);
 
-                        [$table, $field] = $this->splitField($field);
+            collect($this->powerGridComponent->columns)
+                ->filter(fn ($column) => $this->isSearchableColumn($column))
+                ->each(function ($column) use ($query, $search, $columnList) {
+                    $field = $this->getDataField($column);
 
-                        $search = $this->getBeforeSearchMethod($field, $search);
+                    [$table, $field] = $this->splitField($field);
 
-                        $hasColumn = isset($columnList[$field]);
+                    $search = $this->getBeforeSearchMethod($field, $search);
 
-                        $query->when($search != '', function () use ($column, $query, $search, $table, $field, $hasColumn) {
-                            if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
-                                $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' ?', ["%{$search}%"]);
-                            }
+                    $hasColumn = isset($columnList[$field]);
 
-                            if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
-                                try {
-                                    $columnType = $this->getColumnType($table, $field);
+                    $query->when($search != '', function () use ($column, $query, $search, $table, $field, $hasColumn) {
+                        if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
+                            $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' ?', ["%{$search}%"]);
+                        }
 
-                                    /** @phpstan-ignore-next-line  */
-                                    $driverName = $query->getConnection()->getConfig('driver');
+                        if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
+                            try {
+                                $columnType = $this->getColumnType($table, $field);
 
-                                    if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                        $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . ' ?', ["%{$search}%"]);
-                                    } else {
-                                        $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                                    }
-                                } catch (\Throwable) {
+                                /** @phpstan-ignore-next-line  */
+                                $driverName = $query->getConnection()->getConfig('driver');
+
+                                if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
+                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . ' ?', ["%{$search}%"]);
+                                } else {
                                     $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                 }
+                            } catch (\Throwable) {
+                                $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                             }
-                        });
+                        }
                     });
+                });
 
-                return $query;
-            });
+            return $query;
+        });
 
-            if (count($this->powerGridComponent->relationSearch) && $this->query instanceof EloquentBuilder) {
-                $this->filterRelation($search);
-            }
+        if (count($this->powerGridComponent->relationSearch()) && $this->query instanceof EloquentBuilder) {
+            $this->filterRelation($search);
         }
 
         return $this;
@@ -191,7 +193,7 @@ class Builder
         /** @var EloquentBuilder $query */
         $query = $this->query;
 
-        foreach ($this->powerGridComponent->relationSearch as $table => $columns) {
+        foreach ($this->powerGridComponent->relationSearch() as $table => $columns) {
             if (is_array($columns)) {
                 $this->filterNestedRelation($table, $columns, $search);
 

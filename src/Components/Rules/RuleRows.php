@@ -10,7 +10,7 @@ class RuleRows extends BaseRule
 
     protected string $usingLoop = '';
 
-    public function setAttribute(string $attribute = null, string $value = null): RuleRows
+    public function setAttribute(?string $attribute = null, ?string $value = null): RuleRows
     {
         $this->setModifier('setAttribute', [
             'attribute' => $attribute,
@@ -23,7 +23,7 @@ class RuleRows extends BaseRule
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function detailView(string $detailView = null, array $options = []): self
+    public function detailView(?string $detailView = null, array $options = []): self
     {
         $this->setModifier('detailView', [
             'detailView' => $detailView,
@@ -34,21 +34,21 @@ class RuleRows extends BaseRule
     }
 
     /**
-     * Show all toggleables in current row.
+     * Show all toggleable in current row.
      */
     public function showToggleable(): self
     {
-        $this->setModifier('ToggleableVisibility', 'show');
+        $this->setModifier('toggleableVisibility', 'show');
 
         return $this;
     }
 
     /**
-     * Hide all toggleables in current row.
+     * Hide all toggleable in current row.
      */
     public function hideToggleable(): self
     {
-        $this->setModifier('ToggleableVisibility', 'hide');
+        $this->setModifier('toggleableVisibility', 'hide');
 
         return $this;
     }
@@ -58,7 +58,7 @@ class RuleRows extends BaseRule
      */
     public function enableEditOnClick(): self
     {
-        $this->setModifier('EditOnClickVisibility', 'show');
+        $this->setModifier('editOnClickVisibility', 'show');
 
         return $this;
     }
@@ -68,7 +68,7 @@ class RuleRows extends BaseRule
      */
     public function disableEditOnClick(): self
     {
-        $this->setModifier('EditOnClickVisibility', 'hide');
+        $this->setModifier('editOnClickVisibility', 'hide');
 
         return $this;
     }
@@ -78,7 +78,7 @@ class RuleRows extends BaseRule
      */
     public function showToggleDetail(): self
     {
-        $this->setModifier('ToggleDetailVisibility', 'show');
+        $this->setModifier('toggleDetailVisibility', 'show');
 
         return $this;
     }
@@ -88,7 +88,7 @@ class RuleRows extends BaseRule
      */
     public function hideToggleDetail(): self
     {
-        $this->setModifier('ToggleDetailVisibility', 'hide');
+        $this->setModifier('toggleDetailVisibility', 'hide');
 
         return $this;
     }

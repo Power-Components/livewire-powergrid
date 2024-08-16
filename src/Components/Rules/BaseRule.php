@@ -5,13 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 use Closure;
 
 use Livewire\Wireable;
-use PowerComponents\LivewirePowerGrid\Contracts\ConditionalRule;
 
 /**
  * @codeCoverageIgnore
 */
-
-class BaseRule implements Wireable, ConditionalRule
+class BaseRule implements Wireable
 {
     public array $rule = [];
 
@@ -34,24 +32,15 @@ class BaseRule implements Wireable, ConditionalRule
         return $this;
     }
 
-    public function isValidModifier(string $modifier): bool
-    {
-        return in_array($modifier, RuleManager::applicableModifiers());
-    }
-
     public function setModifier(string $modifier, mixed $arguments): void
     {
-        if ($this->isValidModifier($modifier) === false) {
-            throw new \InvalidArgumentException('Invalid Modifier for Row [' . $modifier . ']');
-        }
-
         $this->rule[$modifier] = $arguments;
     }
 
     public function pushModifier(string $modifier, array $argument): void
     {
         if (isset($this->rule[$modifier]) && is_array($this->rule[$modifier])) {
-            array_push($this->rule[$modifier], $argument);
+            $this->rule[$modifier][] = $argument;
 
             return;
         }

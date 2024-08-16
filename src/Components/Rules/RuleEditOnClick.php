@@ -12,21 +12,21 @@ class RuleEditOnClick extends BaseRule
     }
 
     /**
-    * Disable the Edit On Click.
-    */
+     * Disable the Edit On Click.
+     */
     public function disable(): self
     {
-        $this->setModifier('field_hide_editonclick', true);
+        $this->setModifier('fieldHideEditOnClick', true);
 
         return $this;
     }
 
     /**
-    * Enable the Edit On Click.
-    */
+     * Enable the Edit On Click.
+     */
     public function enable(): self
     {
-        $this->setModifier('field_hide_editonclick', false);
+        $this->setModifier('fieldHideEditOnClick', false);
 
         return $this;
     }

@@ -14,7 +14,7 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes(
         $field,
-        array_merge($filter, ['title' => $column->title, 'placeholder' => $column->placeholder])
+        array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')])
     );
 
     $filterClasses = Arr::toCssClasses([

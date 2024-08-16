@@ -19,18 +19,19 @@
   ],
   "require": {
     "php": "^8.2",
-    "livewire/livewire": "^3.5.0",
-    "laravel/prompts": "^0.1.15"
+    "livewire/livewire": "^3.5.4",
+    "laravel/prompts": "^0.1.24"
   },
   "require-dev": {
-    "composer/composer": "^2.7.1",
-    "laravel/pint": "^1.14.0",
-    "laradumps/laradumps-core": "^2.0",
-    "larastan/larastan": "^2.9.0",
-    "pestphp/pest": "^2.34.0",
-    "orchestra/testbench": "^9.0",
-    "laradumps/laradumps": "^3.1",
-    "laravel/scout": "^10.9"
+    "composer/composer": "^2.7.7",
+    "laravel/pint": "1.17",
+    "laradumps/laradumps-core": "^2.1.1",
+    "larastan/larastan": "^2.9.8",
+    "pestphp/pest": "^2.35.0",
+    "orchestra/testbench": "^9.2",
+    "laradumps/laradumps": "^3.1.5",
+    "laravel/scout": "^10.11.1",
+    "openspout/openspout": "^4.24.5"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"

@@ -1,30 +1,36 @@
-@use('PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager')
 @php
-    $rulesValues = $actionRulesClass->recoverFromAction($row, RuleManager::TYPE_CHECKBOX);
-
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => data_get($theme, 'checkbox.inputClass'),
     ]);
 
-    if (filled($rulesValues['setAttributes'])) {
-        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
+    $rules = collect($row->__powergrid_rules)
+        ->where('apply', true)
+        ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_CHECKBOX)
+        ->last();
+
+    if (isset($rules['attributes'])) {
+        foreach ($rules['attributes'] as $key => $value) {
             $inputAttributes = $inputAttributes->merge([
-                $rulesAttributes['attribute'] => $rulesAttributes['value'],
+                $key => $value,
             ]);
         }
     }
+
+    $disable = (bool) data_get($rules, 'disable');
+    $hide = (bool) data_get($rules, 'hide');
+
 @endphp
 
-@if (filled($rulesValues['hide']))
+@if ($hide)
     <td
         class="{{ data_get($theme, 'checkbox.thClass') }}"
         style="{{ data_get($theme, 'checkbox.thStyle') }}"
     >
     </td>
-@elseif(filled($rulesValues['disable']))
+@elseif($disable)
     <td
-        class="{{ data_get($theme, 'checkbox.tdClass') }}"
-        style="{{ data_get($theme, 'checkbox.tdStyle') }}"
+        class="{{ data_get($theme, 'checkbox.thClass') }}"
+        style="{{ data_get($theme, 'checkbox.thStyle') }}"
     >
         <div class="{{ data_get($theme, 'checkbox.divClass') }}">
             <label class="{{ data_get($theme, 'checkbox.labelClass') }}">
@@ -39,7 +45,7 @@
 @else
     <td
         class="{{ data_get($theme, 'checkbox.thClass') }}"
-        style="{{ data_get($theme, 'checkbox.thStyle')  }}"
+        style="{{ data_get($theme, 'checkbox.thStyle') }}"
     >
         <div class="{{ data_get($theme, 'checkbox.divClass') }}">
             <label class="{{ data_get($theme, 'checkbox.labelClass') }}">

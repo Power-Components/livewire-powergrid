@@ -95,7 +95,7 @@ final class CypressTable extends PowerGridComponent
         ];
     }
 
-    public function actions(User $row): array
+    public function actions($row): array
     {
         return [
             Button::add('edit')

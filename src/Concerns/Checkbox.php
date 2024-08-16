@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleManager, RulesController};
 use Throwable;
 
 trait Checkbox
@@ -40,21 +39,31 @@ trait Checkbox
         /** @var AbstractPaginator $data */
         $data = $this->fillData();
 
-        $actionRulesClass = resolve(RulesController::class);
-
         if ($data->isEmpty()) {
             return;
         }
 
         /** @phpstan-ignore-next-line  */
-        collect($data->items())->each(function (array|Model|\stdClass $model) use ($actionRulesClass) {
-            $rules = $actionRulesClass->recoverFromAction($model, RuleManager::TYPE_CHECKBOX);
+        collect($data->items())->each(function (array|Model|\stdClass $model) {
+            $value = $model->{$this->checkboxAttribute};
 
-            if (filled($rules['hide']) || filled($rules['disable'])) {
+            $hide = (bool) data_get(
+                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                    ->where('apply', true)
+                    ->last(),
+                'disable',
+            );
+
+            $disable = (bool) data_get(
+                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                    ->where('apply', true)
+                    ->last(),
+                'disable',
+            );
+
+            if ($hide || $disable) {
                 return;
             }
-
-            $value = $model->{$this->checkboxAttribute};
 
             if (!in_array($value, $this->checkboxValues)) {
                 $this->checkboxValues[] = (string) $value;

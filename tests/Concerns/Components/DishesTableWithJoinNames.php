@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Header, PowerGrid, PowerGridCompo
 
 class DishesTableWithJoinNames extends PowerGridComponent
 {
+    public ?string $primaryKeyAlias = 'id';
+
     public function setUp(): array
     {
         return [
@@ -29,8 +31,8 @@ class DishesTableWithJoinNames extends PowerGridComponent
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('dish_name', fn (Dish $dish) => $dish->name)
-            ->add('category_name', fn (Dish $dish) => $dish->category->name);
+            ->add('dish_name', fn ($dish) => $dish->name)
+            ->add('category_name', fn ($dish) => $dish->category->name);
     }
 
     public function columns(): array

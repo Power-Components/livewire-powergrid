@@ -2,10 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
-use Closure;
+use Illuminate\Support\Traits\Macroable;
 
 class RuleActions extends BaseRule
 {
+    use Macroable;
+
     public string $forAction = RuleManager::TYPE_ACTIONS;
 
     public function __construct(string $button)
@@ -14,37 +16,9 @@ class RuleActions extends BaseRule
     }
 
     /**
-     * Sets the button's event to be emitted.
-     */
-    public function dispatch(string $event = '', array $params = []): self
-    {
-        $this->setModifier('dispatch', [
-            'event'  => $event,
-            'params' => $params,
-        ]);
-
-        return $this;
-    }
-
-    /**
-     * Sets the button's dispatchTo to be emitted.
-     */
-    public function dispatchTo(string $to = '', string $event = '', array $params = []): self
-    {
-        $this->setModifier('redirect', []);
-        $this->setModifier('dispatchTo', [
-            'to'     => $to,
-            'event'  => $event,
-            'params' => $params,
-        ]);
-
-        return $this;
-    }
-
-    /**
      * Sets the button's given attribute to the given value.
      */
-    public function setAttribute(string $attribute = null, string|array $value = null): self
+    public function setAttribute(?string $attribute = null, string|array|null $value = null): self
     {
         $this->pushModifier('setAttribute', [
             'attribute' => $attribute,
@@ -90,20 +64,6 @@ class RuleActions extends BaseRule
     public function enable(): self
     {
         $this->setModifier('disable', false);
-
-        return $this;
-    }
-
-    /**
-     * Sets button's redirect URL.
-     */
-    public function redirect(Closure $closure = null, string $target = '_blank'): self
-    {
-        $this->setModifier('emit', []);
-        $this->setModifier('redirect', [
-            'closure' => $closure,
-            'target'  => $target,
-        ]);
 
         return $this;
     }

@@ -85,34 +85,34 @@ class DishesMakeTable extends PowerGridComponent
             ->add('chef_name')
             ->add('serving_at')
             ->add('calories')
-            ->add('calories', function (Dish $dish) {
+            ->add('calories', function ($dish) {
                 return $dish->calories . ' kcal';
             })
-            ->add('category_id', function (Dish $dish) {
+            ->add('category_id', function ($dish) {
                 return $dish->category_id;
             })
-            ->add('category_name', function (Dish $dish) {
+            ->add('category_name', function ($dish) {
                 return $dish->category->name;
             })
             ->add('price')
-            ->add('price_EUR', function (Dish $dish) use ($fmt) {
+            ->add('price_EUR', function ($dish) use ($fmt) {
                 return $fmt->formatCurrency($dish->price, 'EUR');
             })
-            ->add('price_BRL', function (Dish $dish) {
+            ->add('price_BRL', function ($dish) {
                 return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
             })
             ->add('sales_price')
-            ->add('sales_price_BRL', function (Dish $dish) {
+            ->add('sales_price_BRL', function ($dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
                 return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
             })
             ->add('in_stock')
-            ->add('in_stock_label', function (Dish $dish) {
+            ->add('in_stock_label', function ($dish) {
                 return ($dish->in_stock ? 'sim' : 'não');
             })
             ->add('produced_at')
-            ->add('produced_at_formatted', function (Dish $dish) {
+            ->add('produced_at_formatted', function ($dish) {
                 return Carbon::parse($dish->produced_at)->format('d/m/Y');
             });
     }
@@ -162,7 +162,7 @@ class DishesMakeTable extends PowerGridComponent
         ];
     }
 
-    public function actions(Dish $dish): array
+    public function actions($dish): array
     {
         return [
             Button::make('edit-stock', '<div id="edit">Edit</div>')
@@ -171,8 +171,7 @@ class DishesMakeTable extends PowerGridComponent
 
             Button::make('destroy', 'Delete')
                 ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $dish->id])
-                ->method('delete'),
+                ->dispatch('deletedEvent', ['dishId' => $dish->id]),
         ];
     }
 

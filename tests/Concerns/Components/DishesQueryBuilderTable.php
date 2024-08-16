@@ -170,19 +170,18 @@ class DishesQueryBuilderTable extends PowerGridComponent
         ];
     }
 
-    public function actions(object $dish): array
+    public function actions($row): array
     {
         return [
             Button::add('edit-stock')
                 ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $dish->id]),
+                ->openModal('edit-stock', ['dishId' => $row->id]),
 
             Button::add('destroy')
                 ->slot(__('Delete'))
                 ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $dish->id])
-                ->method('delete'),
+                ->dispatch('deletedEvent', ['dishId' => $row->id]),
         ];
     }
 

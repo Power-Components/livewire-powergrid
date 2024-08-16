@@ -53,7 +53,7 @@
 
         @foreach ($columns as $column)
             <x-livewire-powergrid::cols
-                wire:key="cols-{{ $column->field }} }}"
+                wire:key="cols-{{ data_get($column, 'field') }} }}"
                 :column="$column"
                 :theme="$theme"
                 :enabledFilters="$enabledFilters"

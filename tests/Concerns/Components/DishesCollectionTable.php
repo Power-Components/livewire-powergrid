@@ -144,18 +144,17 @@ class DishesCollectionTable extends PowerGridComponent
             Button::add('edit-stock')
                 ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $row['id']]),
+                ->openModal('edit-stock', ['dishId' => $row->id]),
 
             Button::add('edit-stock-for-rules')
                 ->slot('<div id="edit">Edit for Rules</div>')
                 ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => $row['id']]),
+                ->openModal('edit-stock-for-rules', ['dishId' => $row->id]),
 
             Button::add('destroy')
                 ->slot(__('Delete'))
                 ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $row['id']])
-                ->method('delete'),
+                ->dispatch('deletedEvent', ['dishId' => $row->id]),
         ];
     }
 

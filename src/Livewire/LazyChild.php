@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
 use Livewire\Component;
 use Livewire\Mechanisms\ComponentRegistry;
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Concerns\ToggleDetail;
 
 class LazyChild extends Component
@@ -32,11 +33,15 @@ class LazyChild extends Component
 
     public string $tableName;
 
-    public string|int $primaryKey;
+    public string $primaryKey = '';
+
+    public string|int $realPrimaryKey = '';
 
     public string $parentName;
 
     public string|int $childIndex;
+
+    public ?string $parentId = null;
 
     public function mount(): void
     {
@@ -62,6 +67,22 @@ class LazyChild extends Component
         }
 
         return null;
+    }
+
+    public function shouldShowEditOnClick(array|Column|\stdClass $column, mixed $row): bool
+    {
+        /** @var string $parentComponent */
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+
+        return app($parentComponent)->shouldShowEditOnClick($column, $row);
+    }
+
+    public function shouldShowToggleable(array|Column|\stdClass $column, mixed $row): bool
+    {
+        /** @var string $parentComponent */
+        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+
+        return app($parentComponent)->shouldShowToggleable($column, $row);
     }
 
     public function render(): View

@@ -12,35 +12,36 @@ use Livewire\Wireable;
  * @method static openModal(string $component, array $params)
  * @method static parent(string $method, array $params)
  * @method static call(string $method, array $params)
- * @method static toggleDetail()
+ * @method static toggleDetail(int|string $rowId)
  * @method static tooltip(string $title)
- * @method static route(string $route, array $params)
+ * @method static route(string $route, array $params, string $target)
  * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
- * @method static render(\Closure $closure)
- * @method static bladeComponent(string $component, array $params)
  * @method static can(bool|\Closure $allowed = true)
  * @method static id(string $id = null)
  * @method static confirm(string $message = 'Are you sure you want to perform this action?')
  * @method static confirmPrompt(string $message = 'Are you sure you want to perform this action?', string $confirmValue = 'Confirm')
- *
  */
 final class Button implements Wireable
 {
     use Macroable;
 
+    public string $view = '';
+
+    public array $attributes = [];
+
     public ?string $slot = '';
 
-    public string $class = '';
+    public ?string $tag = 'button';
 
-    public array|\Closure $params = [];
+    public ?string $icon = '';
 
-    public array $dynamicProperties = [];
+    public array $iconAttributes = [];
 
-    /**
-     * Button constructor.
-     * @param string $action
-     */
+    public ?\Closure $hideWhen = null;
+
+    public ?\Closure $can = null;
+
     public function __construct(public string $action)
     {
     }
@@ -50,18 +51,19 @@ final class Button implements Wireable
         return new Button($action);
     }
 
-    /**
-     * Make a new Column
-     */
     public static function make(string $action, ?string $slot = null): self
     {
-        return (new static($action))
+        return (new self($action))
             ->slot($slot);
     }
 
-    /**
-     * Button text in view
-     */
+    public function tag(?string $tag = null): Button
+    {
+        $this->tag = $tag;
+
+        return $this;
+    }
+
     public function slot(?string $slot = null): Button
     {
         $this->slot = $slot;
@@ -69,12 +71,24 @@ final class Button implements Wireable
         return $this;
     }
 
-    /**
-     * Class string in view: class="foo"
-     */
-    public function class(string $classAttr): Button
+    public function view(string $view): Button
     {
-        $this->class = $classAttr;
+        $this->view = $view;
+
+        return $this;
+    }
+
+    public function attributes(array $attributes): Button
+    {
+        $this->attributes = array_merge($attributes, $this->attributes);
+
+        return $this;
+    }
+
+    public function icon(string $icon, array $iconAttributes = []): Button
+    {
+        $this->icon           = $icon;
+        $this->iconAttributes = $iconAttributes;
 
         return $this;
     }

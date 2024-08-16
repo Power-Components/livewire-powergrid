@@ -4,15 +4,14 @@
 >
     <div
         id="power-grid-table-container"
-        class="{{ data_get($theme, 'table.containerClass', '-my-2 overflow-x-auto sm:-mx-3 lg:-mx-8') }}"
+        class="{{ data_get($theme, 'table.containerClass') }}"
         style="{{ data_get($theme, 'table.containerStyle') }}"
     >
         <div
             id="power-grid-table-base"
-            class="{{ data_get($theme, 'table.baseClass', 'p-3 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8') }}"
+            class="{{ data_get($theme, 'table.baseClass') }}"
             style="{{ data_get($theme, 'table.baseStyle') }}"
         >
-
             @include(data_get($theme, 'layout.header'), [
                 'enabledFilters' => $enabledFilters,
             ])
@@ -20,7 +19,7 @@
             @if (config('livewire-powergrid.filter') === 'outside')
                 @php
                     $filtersFromColumns = collect($columns)
-                        ->filter(fn($column) => filled($column->filters));
+                        ->filter(fn($column) => filled(data_get($column, 'filters')));
                 @endphp
 
                 @if ($filtersFromColumns->count() > 0)

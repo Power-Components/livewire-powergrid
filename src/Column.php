@@ -84,6 +84,8 @@ final class Column implements \Livewire\Wireable
 
     public bool $fixedOnResponsive = false;
 
+    public bool $template = false;
+
     /**
      * Adds a new Column
      *
@@ -382,6 +384,13 @@ final class Column implements \Livewire\Wireable
     public function contentClasses(string|array $contentClasses): Column
     {
         $this->contentClasses = $contentClasses;
+
+        return $this;
+    }
+
+    public function template(): Column
+    {
+        $this->template = true;
 
         return $this;
     }

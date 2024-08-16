@@ -8,9 +8,8 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Facades\DB, Str, Stringable};
+use Illuminate\View\Concerns\ManagesLoops;
 use Laravel\Scout\Builder as ScoutBuilder;
-use PowerComponents\LivewirePowerGrid\Components\Actions\ActionsController;
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RulesController};
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\DataSource\{Support\Sql};
 use Throwable;
@@ -18,6 +17,9 @@ use Throwable;
 class ProcessDataSource
 {
     use Concerns\SoftDeletes;
+    use ManagesLoops;
+
+    public static float $transformTime = 0;
 
     private array $queryLog = [];
 
@@ -138,10 +140,6 @@ class ProcessDataSource
     {
         DB::enableQueryLog();
 
-        if (is_null($datasource)) {
-            $datasource = $this->component->datasource();
-        }
-
         $results = $datasource
             ->where(
                 fn (EloquentBuilder|QueryBuilder $query) => Builder::make($query, $this->component)
@@ -150,14 +148,14 @@ class ProcessDataSource
             );
 
         if ($datasource instanceof EloquentBuilder || $datasource instanceof MorphToMany) {
-            $results = $this->applySoftDeletes($results, $this->component->softDeletes);
+            $results = $this->applySoftDeletes($results, $this->component->softDeletes);// @phpstan-ignore-line
         }
 
         $this->applySummaries($results);
 
         $sortField = $this->makeSortField($this->component->sortField);
 
-        $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField);
+        $results = $this->component->multiSort ? $this->applyMultipleSort($results) : $this->applySingleSort($results, $sortField); // @phpstan-ignore-line
 
         $results = $this->applyPerPage($results);
 
@@ -167,11 +165,9 @@ class ProcessDataSource
             return $results;
         }
 
-        /** @phpstan-ignore-next-line */
-        $collection = $results->getCollection();
+        $collection = $results->getCollection(); // @phpstan-ignore-line
 
-        /** @phpstan-ignore-next-line */
-        $results = $results->setCollection($this->transform($collection, $this->component));
+        $results = $results->setCollection($this->transform($collection, $this->component)); // @phpstan-ignore-line
 
         $this->queryLog = DB::getQueryLog();
 
@@ -259,20 +255,25 @@ class ProcessDataSource
         $perPage     = intval(data_get($this->component->setUp, 'footer.perPage'));
         $recordCount = strval(data_get($this->component->setUp, 'footer.recordCount'));
 
-        $paginate = match ($recordCount) {
-            'min'   => 'simplePaginate',
-            default => 'paginate',
-        };
-
         if ($results instanceof ScoutBuilder) {
-            return $results->paginateSafe($perPage, pageName: $pageName); // @phpstan-ignore-line
+            $paginate = match (true) {
+                $recordCount == 'min'                                    => 'simplePaginate',
+                ($this->component->paginateRaw && $recordCount == 'min') => 'simplePaginateRaw', // @phpstan-ignore-line
+                $this->component->paginateRaw                            => 'paginateRaw',
+                default                                                  => 'paginateSafe',
+            };
+        } else {
+            $paginate = match (true) {
+                $recordCount === 'min' => 'simplePaginate',
+                default                => 'paginate',
+            };
         }
 
         if ($perPage > 0) {
             return $results->$paginate($perPage, pageName: $pageName);
         }
 
-        $count = $results->count();
+        $count = $results->count(); // @phpstan-ignore-line
 
         return $results->$paginate($count ?: 10, pageName: $pageName);
     }
@@ -282,77 +283,63 @@ class ProcessDataSource
      */
     protected function resolveCollection(array|BaseCollection|EloquentBuilder|QueryBuilder|null $datasource = null): BaseCollection
     {
-        if (!boolval(config('livewire-powergrid.cached_data', false))) {
-            return new BaseCollection($this->component->datasource());
-        }
-
-        //@phpstan-ignore-next-line
-        return cache()->rememberForever($this->component->getId(), function () use ($datasource) {
-            if (is_array($datasource)) {
-                return new BaseCollection($datasource);
-            }
-
-            if (is_a((object) $datasource, BaseCollection::class)) {
-                return $datasource;
-            }
-
-            /** @var array $datasource */
+        if (is_array($datasource)) {
             return new BaseCollection($datasource);
-        });
-    }
-
-    public static function transform(BaseCollection $results, PowerGridComponent $component): BaseCollection
-    {
-        $processedResults = collect();
-
-        $results->chunk(3)
-            ->each(function (BaseCollection $collection) use (&$processedResults, $component) {
-                $processedBatch   = self::processBatch($collection, $component);
-                $processedResults = $processedResults->concat($processedBatch);
-            });
-
-        return $processedResults;
-    }
-
-    private static function processBatch(BaseCollection $collection, PowerGridComponent $component): BaseCollection
-    {
-        if (method_exists($component, 'addColumns')) {
-            /** @deprecated 6.x */
-            /** @var array $columns */
-            $columns = $component->addColumns()->columns;
-            $fields  = collect($columns);
-        } else {
-            /** @var array $fields */
-            $fields = $component->fields()->fields;
-            $fields = collect($fields);
         }
 
-        return $collection->map(function ($row, $index) use ($component, $fields) {
-            /** @phpstan-ignore-next-line */
-            $data = $fields->mapWithKeys(fn ($field, $fieldName) => (object) [$fieldName => $field((object) $row, $index)]);
+        if (is_a((object) $datasource, BaseCollection::class)) {
+            /** @var BaseCollection $datasource */
+            return $datasource;
+        }
 
-            $prepareRules = collect();
-            $actions      = collect();
+        /** @var array $datasource */
+        return new BaseCollection($datasource);
+    }
 
-            if (method_exists($component, 'actionRules')) {
-                $prepareRules = resolve(RulesController::class)
-                    ->execute($component->actionRules($row), (object)$row);
-            }
+    public static function transform(
+        BaseCollection $results,
+        PowerGridComponent $component,
+        bool $fromLazyChild = false
+    ): BaseCollection {
+        if ($fromLazyChild && $component->paginateRaw) {
+            return $results;
+        }
 
-            if (method_exists($component, 'actions')) {
-                $actions = (new ActionsController($component, $prepareRules))
-                    ->execute($component->actions($row), (object)$row);
-            }
+        $start = microtime(true);
+
+        $process = self::processRows($results, $component);
+
+        self::$transformTime = round((microtime(true) - $start) * 1000);
+
+        return $process;
+    }
+
+    private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
+    {
+        $fields = collect($component->fields()->fields);
+
+        if ($component->paginateRaw) {
+            $results = collect((array) data_get($results, 'hits'))->pluck('document');
+        }
+
+        $loopInstance = app(ManageLoops::class);
+        $loopInstance->addLoop($results);
+
+        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance) {
+            $data = $fields->map(fn ($field) => $field((object) $row, $index));
+
+            $loopInstance->incrementLoopIndices();
 
             $mergedData = $data->merge([
-                'rules' => $prepareRules,
-            ])->merge([
-                'actions' => $actions,
+                '__powergrid_loop'  => $loop = $loopInstance->getLastLoop(),
+                '__powergrid_rules' => $component->prepareActionRulesForRows($row, $loop),
             ]);
 
-            return $row instanceof Model
-                ? tap($row)->forceFill($mergedData->toArray())
-                : (object) $mergedData->toArray();
+            if ($component->supportModel && $row instanceof Model) {
+                return (object) tap($row)->forceFill($mergedData->toArray());
+            }
+
+            return (object) $mergedData->toArray();
         });
     }
 
@@ -393,10 +380,10 @@ class ProcessDataSource
                         throw new \InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
                     }
 
-                    $fieldName       = $fieldAndSummarizeMethods[0];
-                    $sumarizeMethods = $fieldAndSummarizeMethods[1];
+                    $fieldName        = $fieldAndSummarizeMethods[0];
+                    $summarizeMethods = $fieldAndSummarizeMethods[1];
 
-                    $applyFormatToSummarizeMethods = str($sumarizeMethods)->replaceMatches('/\s+/', '')
+                    $applyFormatToSummarizeMethods = str($summarizeMethods)->replaceMatches('/\s+/', '')
                         ->replace(['{', '}'], '')
                         ->explode(',')
                         ->toArray();
@@ -433,5 +420,10 @@ class ProcessDataSource
 
                 return (object) $column;
             })->toArray();
+    }
+
+    public function transformTime(): float
+    {
+        return self::$transformTime;
     }
 }
