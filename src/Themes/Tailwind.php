@@ -32,10 +32,10 @@ class Tailwind extends ThemeBase
             ->tdAction('')
             ->tr('')
             ->trFilters('bg-white shadow-sm dark:bg-pg-primary-800')
-            ->th('font-extrabold px-2 pr-4 py-3 text-left text-xs text-pg-primary-700 tracking-wider whitespace-nowrap dark:text-pg-primary-300')
+            ->th('font-extrabold px-3 py-3 text-left text-xs text-pg-primary-700 tracking-wider whitespace-nowrap dark:text-pg-primary-300')
             ->tbody('text-pg-primary-800')
             ->trBody('border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700')
-            ->tdBody('p-2 whitespace-nowrap dark:text-pg-primary-200')
+            ->tdBody('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
             ->tdBodyEmpty('p-2  whitespace-nowrap dark:text-pg-primary-200')
             ->trBodyClassTotalColumns('')
             ->tdBodyTotalColumns('p-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2');

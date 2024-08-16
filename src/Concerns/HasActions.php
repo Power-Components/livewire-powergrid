@@ -85,6 +85,7 @@ trait HasActions
             }
         });
 
+        ds($actionsHtml);
         $actionsHtml = json_encode($actionsHtml);
 
         $this->js(<<<JS
@@ -154,6 +155,7 @@ trait HasActions
 
                     if ($apply || $applyLoop) {
                         return [
+                            'forAction'             => data_get($rule, 'forAction'),
                             'apply'                 => (bool) $apply,
                             'applyLoop'             => (bool) $applyLoop,
                             'attributes'            => $attributes,
@@ -197,10 +199,12 @@ trait HasActions
         }
 
         return collect($this->actionRules($row)) // @phpstan-ignore-line
-            ->where('forAction', data_get($action, 'action'))
             ->transform(function ($rule) use ($row) {
-                $when  = data_get($rule, 'rule.when');
-                $apply = $when($row); // @phpstan-ignore-line
+                $when = data_get($rule, 'rule.when');
+                $loop = data_get($rule, 'rule.loop');
+
+                $apply = $when ? $when($row) : false; // @phpstan-ignore-line
+                $apply = $loop ? $loop($row) : false;
 
                 data_forget($rule, 'rule.when');
 
@@ -217,6 +221,7 @@ trait HasActions
                 }
 
                 return [
+                    'action'      => data_get($rule, 'forAction'),
                     'apply'       => $apply,
                     'column'      => $rule->column,
                     'rule'        => data_get($rule, 'rule'),

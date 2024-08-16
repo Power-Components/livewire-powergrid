@@ -2,28 +2,22 @@
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
         'class' => data_get($theme, 'checkbox.inputClass'),
     ]);
-//
-//    if (filled($rulesValues['setAttributes'])) {
-//        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
-//            $inputAttributes = $inputAttributes->merge([
-//                $rulesAttributes['attribute'] => $rulesAttributes['value'],
-//            ]);
-//        }
-//    }
 
-    $disable = (bool) data_get(
-                collect($row->__powergrid_rules)
-                    ->where('apply', true)
-                    ->last(),
-                'disable',
-            );
+    $rules = collect($row->__powergrid_rules)
+        ->where('apply', true)
+        ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_CHECKBOX)
+        ->last();
 
-    $hide = (bool) data_get(
-                collect($row->__powergrid_rules)
-                    ->where('apply', true)
-                    ->last(),
-                'hide',
-            );
+    if (isset($rules['attributes'])) {
+        foreach ($rules['attributes'] as $key => $value) {
+            $inputAttributes = $inputAttributes->merge([
+                $key => $value,
+            ]);
+        }
+    }
+
+    $disable = (bool) data_get($rules, 'disable');
+    $hide = (bool) data_get($rules, 'hide');
 
 @endphp
 
@@ -51,7 +45,7 @@
 @else
     <td
         class="{{ data_get($theme, 'checkbox.thClass') }}"
-        style="{{ data_get($theme, 'checkbox.thStyle')  }}"
+        style="{{ data_get($theme, 'checkbox.thStyle') }}"
     >
         <div class="{{ data_get($theme, 'checkbox.divClass') }}">
             <label class="{{ data_get($theme, 'checkbox.labelClass') }}">

@@ -3,27 +3,21 @@
         'class' => data_get($theme, 'radio.inputClass'),
     ]);
 
-    //    if (filled($rulesValues['setAttributes'])) {
-    //        foreach ($rulesValues['setAttributes'] as $rulesAttributes) {
-    //            $inputAttributes = $inputAttributes->merge([
-    //                $rulesAttributes['attribute'] => $rulesAttributes['value'],
-    //            ]);
-    //        }
-    //    }
+    $rules = collect($row->__powergrid_rules)
+        ->where('apply', true)
+        ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_RADIO)
+        ->last();
 
-    $hide = (bool) data_get(
-        collect($row->__powergrid_rules)
-            ->where('apply', true)
-            ->last(),
-        'hide',
-    );
+    if (isset($rules['attributes'])) {
+        foreach ($rules['attributes'] as $key => $value) {
+            $inputAttributes = $inputAttributes->merge([
+                $key => $value,
+            ]);
+        }
+    }
 
-    $disable = (bool) data_get(
-        collect($row->__powergrid_rules)
-            ->where('apply', true)
-            ->last(),
-        'disable',
-    );
+    $disable = (bool) data_get($rules, 'disable');
+    $hide = (bool) data_get($rules, 'hide');
 @endphp
 @if ($hide)
     <td
