@@ -85,7 +85,6 @@ trait HasActions
             }
         });
 
-        ds($actionsHtml);
         $actionsHtml = json_encode($actionsHtml);
 
         $this->js(<<<JS
