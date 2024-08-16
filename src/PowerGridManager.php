@@ -13,7 +13,7 @@ class PowerGridManager
 
     /**
      * @param string $class
-     * @return object|Themes\ThemeBase
+     * @return object|Themes\Theme
      */
     public static function theme(string $class)
     {

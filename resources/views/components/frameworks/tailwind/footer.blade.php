@@ -17,8 +17,8 @@
                 <div class="relative">
                     <select
                         wire:model.live="setUp.footer.perPage"
-                        class="{{ data_get($theme, 'footer.selectClass') }}"
-                        style="{{ data_get($theme, 'footer.selectStyle') }}"
+                        class="{{ theme_style($this->theme, 'footer.select') }}"
+                        style="{{ theme_style($this->theme, 'footer.select.1') }}"
                     >
                         @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{ $value }}">

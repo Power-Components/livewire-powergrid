@@ -34,3 +34,4 @@ parameters:
         - './src/Helpers/Actions.php'
         - './src/Livewire/PerformanceCard.php'
         - './src/Recorders/PowerGridPerformanceRecorder.php'
+        - './src/Themes/Theme.php'

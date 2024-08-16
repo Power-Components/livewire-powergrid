@@ -1,6 +1,5 @@
 <x-livewire-powergrid::table-base
     :ready-to-load="$readyToLoad"
-    :theme="$theme"
     :table-name="$tableName"
     :lazy="!is_null(data_get($setUp, 'lazy'))"
 >
@@ -24,7 +23,7 @@
                 @foreach ($data as $row)
                     @php
                         $rowId = data_get($row, $this->realPrimaryKey);
-                        $class = data_get($theme, 'table.trBodyClass');
+                        $class = theme_style($this->theme, 'table.body.tr');
                     @endphp
 
                     @if (isset($setUp['detail']))
@@ -37,7 +36,7 @@
                             ])
                             @if(data_get($setUp, 'detail.state.' . $rowId))
                                 <tr
-                                    style="{{ data_get($theme, 'table.trBodyStyle') }}"
+                                    style="{{ theme_style($this->theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
                                 >
                                     @include('livewire-powergrid::components.table.detail')

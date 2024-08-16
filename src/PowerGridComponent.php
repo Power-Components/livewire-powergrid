@@ -14,7 +14,7 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
-use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
+use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Throwable;
 
 /**
@@ -22,6 +22,7 @@ use Throwable;
  * @property-read bool $hasColumnFilters
  * @property-read array|BaseCollection $visibleColumns
  * @property-read string $realPrimaryKey
+ * @property-read array $theme
  */
 class PowerGridComponent extends Component
 {
@@ -112,6 +113,17 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
+    public function theme(): array
+    {
+        $class = $this->template() ?? powerGridTheme();
+
+        /** @var Theme $themeBase */
+        $themeBase = PowerGrid::theme($class);
+
+        return $themeBase->apply();
+    }
+
+    #[Computed]
     protected function getRecords(): mixed
     {
         $start = microtime(true);
@@ -189,28 +201,6 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function getTheme(): array
-    {
-        $class = $this->template() ?? powerGridTheme();
-
-        if (app()->hasDebugModeEnabled()) {
-            /** @var ThemeBase $themeBase */
-            $themeBase = PowerGrid::theme($class);
-
-            return convertObjectsToArray((array) $themeBase->apply());
-        }
-
-        /** @var array $themes */
-        $themes = Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
-            /** @var ThemeBase $themeBase */
-            $themeBase = PowerGrid::theme($class);
-
-            return convertObjectsToArray((array) $themeBase->apply());
-        });
-
-        return $themes;
-    }
-
     /**
      * @throws Exception
      * @throws Throwable
@@ -230,7 +220,6 @@ class PowerGridComponent extends Component
             return $noDataLabel->with(
                 [
                     'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'),
-                    'theme'       => $this->getTheme(),
                     'table'       => 'livewire-powergrid::components.table',
                     'data'        => [],
                 ]
@@ -247,11 +236,8 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        $theme = $this->getTheme();
-
-        return view($theme['layout']['table'], [
+        return view(theme_style($this->theme, 'layout.table'), [
             'data'  => $data,
-            'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }

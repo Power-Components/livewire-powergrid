@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, Theme};
 
 if (!function_exists('powerGridThemeRoot')) {
     /**
@@ -9,7 +9,7 @@ if (!function_exists('powerGridThemeRoot')) {
      */
     function powerGridThemeRoot(): string
     {
-        /** @var ThemeBase $theme */
+        /** @var Theme $theme */
         $theme = PowerGrid::theme(strval(config('livewire-powergrid.theme')));
 
         return $theme->root();
@@ -86,4 +86,11 @@ if (!function_exists('once')) {
     {
         return $callback();
     }
+}
+
+function theme_style(array $theme, string $name): string
+{
+    return strval(once(function () use ($theme, $name) {
+        return strval(data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name));
+    }));
 }

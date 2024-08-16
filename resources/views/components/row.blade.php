@@ -5,7 +5,6 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
-    'theme' => data_get($theme, 'table'),
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
@@ -13,7 +12,6 @@
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
     [
-        'theme' => data_get($theme, 'table'),
         'view' => data_get($setUp, 'detail.viewIcon') ?? null,
     ]
 )
@@ -52,12 +50,13 @@
     @endphp
     <td
         @class([
-            data_get($theme, 'table.tdBodyClass'),
+            theme_style($this->theme, 'table.body.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
+            theme_style($this->theme, 'table.cell.tdBody.1')
         ])
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
@@ -86,7 +85,7 @@
 
         @if ($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
-                @include(data_get($theme, 'editable.view') ?? null, [
+                @include(theme_style($this->theme, 'editable.view') ?? null, [
                     'editable' => data_get($column, 'editable'),
                 ])
             </span>
@@ -94,7 +93,7 @@
             @php
                 $showToggleable = once(fn() => $this->shouldShowToggleable($column, $row));
             @endphp
-            @includeWhen($showToggleable, data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
+            @includeWhen($showToggleable, theme_style($this->theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
                 @if (filled($templateContent))

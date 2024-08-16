@@ -36,13 +36,13 @@
     $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
-        'theme' => data_get($theme, 'name'),
+        'theme' => data_get($theme, 'name'), // @todo
         'tableName' => $tableName,
         'id' => data_get($row, $this->realPrimaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,
-        'inputClass' => data_get($theme, 'editable.inputClass'),
+        'inputClass' => theme_style($this->theme, 'editable.input'),
         'saveOnMouseOut' => data_get($editable, 'saveOnMouseOut'),
     ];
 @endphp
