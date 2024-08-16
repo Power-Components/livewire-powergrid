@@ -155,7 +155,7 @@ trait HasActions
 
                     if ($apply || $applyLoop) {
                         return [
-                            'forAction'             => data_get($rule, 'forAction'),
+                            'forAction'             => strval(data_get($rule, 'forAction')),
                             'apply'                 => (bool) $apply,
                             'applyLoop'             => (bool) $applyLoop,
                             'attributes'            => $attributes,
@@ -204,7 +204,7 @@ trait HasActions
                 $loop = data_get($rule, 'rule.loop');
 
                 $apply = $when ? $when($row) : false; // @phpstan-ignore-line
-                $apply = $loop ? $loop($row) : false;
+                $apply = !$apply && $loop ? $loop($row) : false; // @phpstan-ignore-line
 
                 data_forget($rule, 'rule.when');
 
