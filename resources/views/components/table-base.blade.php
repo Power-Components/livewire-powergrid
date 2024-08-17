@@ -36,7 +36,7 @@
     {{-- infinite pagination handler --}}
     @if ($this->canLoadMore && $lazy)
         <div class="justify-center items-center" wire:loading.class="flex" wire:target="loadMore">
-            @include(powerGridThemeRoot() . '.header.loading')
+            @include(data_get($this->theme, 'root') . '.header.loading')
         </div>
 
         <div x-data="pgLoadMore"></div>

@@ -75,7 +75,7 @@
                             :$radioAttribute
                             :$checkbox
                             :$checkboxAttribute
-                            :$theme
+                            :theme="$this->theme"
                             :$setUp
                             :$tableName
                             :parentName="$this->getName()"

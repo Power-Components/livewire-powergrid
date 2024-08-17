@@ -36,7 +36,7 @@
     $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
-        'theme' => data_get($theme, 'name'), // @todo
+        'theme' => theme_style($this->theme, 'name'),
         'tableName' => $tableName,
         'id' => data_get($row, $this->realPrimaryKey),
         'dataField' => $field,

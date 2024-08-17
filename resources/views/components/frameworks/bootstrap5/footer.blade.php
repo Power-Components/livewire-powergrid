@@ -34,7 +34,7 @@
             </div>
             <div class="col-auto overflow-auto mt-2 mt-sm-0">
                 @if (method_exists($data, 'links'))
-                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: powerGridThemeRoot() . '.pagination', [
+                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($this->theme, 'root') . '.pagination', [
                         'recordCount' => data_get($setUp, 'footer.recordCount'),
                     ]) !!}
                 @endif

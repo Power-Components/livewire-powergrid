@@ -26,15 +26,15 @@ $component = new class () extends DishTableBase {
 };
 
 $params = [
-    'tailwind -> id'  => [$component::class, 'tailwind', 'name'],
-    'bootstrap -> id' => [$component::class, 'bootstrap', 'name'],
+    'tailwind -> id'  => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'name'],
+    'bootstrap -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'name'],
 ];
 
 it('should be able to set persist_driver for session', function (string $componentString, string $theme, string $field) {
     config()->set('livewire-powergrid.persist_driver', 'session');
 
     $component = livewire($componentString)
-        ->call($theme);
+        ->call('setTestThemeClass', $theme);
 
     /** @var PowerGridComponent $component */
     expect($component->filters)
@@ -51,7 +51,7 @@ it('should be able to set persist_driver for cookies', function (string $compone
     config()->set('livewire-powergrid.persist_driver', 'cookies');
 
     $component = livewire($componentString)
-        ->call($theme);
+        ->call('setTestThemeClass', $theme);
 
     /** @var PowerGridComponent $component */
     expect($component->filters)
@@ -70,7 +70,7 @@ it('should not be able to set invalid persist driver', function (string $compone
 
     expect(static function () use ($componentString, $theme) {
         livewire($componentString)
-            ->call($theme);
+            ->call('setTestThemeClass', $theme);
     })->toThrow(Exception::class);
 })
     ->with($params);

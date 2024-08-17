@@ -14,7 +14,6 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
-use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Throwable;
 
 /**
@@ -115,12 +114,9 @@ class PowerGridComponent extends Component
     #[Computed]
     public function theme(): array
     {
-        $class = $this->template() ?? powerGridTheme();
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
-        /** @var Theme $themeBase */
-        $themeBase = PowerGrid::theme($class);
-
-        return $themeBase->apply();
+        return (new $themeClass())->apply();
     }
 
     #[Computed]
@@ -128,33 +124,19 @@ class PowerGridComponent extends Component
     {
         $start = microtime(true);
 
-        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            $results = $this->readyToLoad ? $this->fillData() : collect();
-
-            $retrieveData = round((microtime(true) - $start) * 1000);
-
-            $queries = $this->processDataSourceInstance?->queryLog() ?? [];
-
-            /** @var float $queriesTime */
-            $queriesTime = collect($queries)->sum('time');
-
-            app(Dispatcher::class)->dispatch(
-                new PowerGridPerformanceData(
-                    $this->tableName,
-                    retrieveDataInMs: $retrieveData,
-                    transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
-                    queriesTimeInMs: $queriesTime,
-                    queries: $queries,
-                )
-            );
-
-            return $results;
-        }
-
         if (!$this->readyToLoad) {
             return collect();
         }
 
+        if (boolval(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
+            return $this->getRecordsFromCache($start);
+        }
+
+        return $this->getRecordsDataSource($start);
+    }
+
+    private function getRecordsFromCache(float $start)
+    {
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
         $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
@@ -168,9 +150,34 @@ class PowerGridComponent extends Component
 
         app(Dispatcher::class)->dispatch(
             new PowerGridPerformanceData(
-                $this->tableName,
-                $time,
+                tableName: $this->tableName,
+                retrieveDataInMs: $time,
+                transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
                 isCached: true,
+            )
+        );
+
+        return $results;
+    }
+
+    private function getRecordsDataSource(float $start): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
+    {
+        $results = $this->readyToLoad ? $this->fillData() : collect();
+
+        $retrieveData = round((microtime(true) - $start) * 1000);
+
+        $queries = $this->processDataSourceInstance?->queryLog() ?? [];
+
+        /** @var float $queriesTime */
+        $queriesTime = collect($queries)->sum('time');
+
+        app(Dispatcher::class)->dispatch(
+            new PowerGridPerformanceData(
+                $this->tableName,
+                retrieveDataInMs: $retrieveData,
+                transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
+                queriesTimeInMs: $queriesTime,
+                queries: $queries,
             )
         );
 

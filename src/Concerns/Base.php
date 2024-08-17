@@ -58,7 +58,7 @@ trait Base
         return $this->primaryKeyAlias ?? $this->primaryKey;
     }
 
-    public function template(): ?string
+    public function customThemeClass(): ?string
     {
         return null;
     }

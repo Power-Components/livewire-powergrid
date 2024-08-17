@@ -142,13 +142,8 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
         ];
     }
 
-    public function bootstrap(): void
+    public function setTestThemeClass(string $themeClass): void
     {
-        config(['livewire-powergrid.theme' => 'bootstrap']);
-    }
-
-    public function tailwind(): void
-    {
-        config(['livewire-powergrid.theme' => 'tailwind']);
+        config(['livewire-powergrid.theme' => $themeClass]);
     }
 }

@@ -15,7 +15,7 @@ beforeEach(
 
 it('should display softDeletes button', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '10')
         ->set('softDeletes', '')
         ->assertSeeHtml('M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16')
@@ -26,7 +26,7 @@ it('should display softDeletes button', function (string $component, string $the
 
 it('should list only undeleted records', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '10')
         ->set('softDeletes', '')
         ->assertSeeHtml('Dish C')
@@ -42,7 +42,7 @@ it('should list only undeleted records', function (string $component, string $th
 
 it('should list all records including excluded', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '20')
         ->set('softDeletes', 'withTrashed')
         ->assertSeeHtml('Dish A')
@@ -56,7 +56,7 @@ it('should list all records including excluded', function (string $component, st
 
 it('should list only deleted records', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '10')
         ->set('softDeletes', 'onlyTrashed')
         ->assertDontSeeHtml('Dish C')
@@ -72,7 +72,7 @@ it('should list only deleted records', function (string $component, string $them
 
 it('should be able to see a warning message when showMessageSoftDeletes is true and softDeletes === withTrashed or onlyTrashed', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '10')
         ->set('setUp.header.showMessageSoftDeletes', true)
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
@@ -92,8 +92,8 @@ it('should be able to see a warning message when showMessageSoftDeletes is true 
 })->with('soft_deletes');
 
 dataset('soft_deletes', [
-    [DishesSoftDeletesTable::class, 'tailwind'],
-    [DishesSoftDeletesTable::class, 'bootstrap'],
+    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);
 
 /**

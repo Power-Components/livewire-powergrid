@@ -20,7 +20,7 @@ $componentWithActionRules = new class () extends DishTableBase {
 
 it('selectCheckboxAll works properly', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
@@ -68,13 +68,13 @@ it('selectCheckboxAll works properly', function (string $component, object $para
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id'  => [DishTableBase::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> id'  => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);
 
 it('selectCheckboxAll works properly with actionRules disable', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
@@ -116,6 +116,6 @@ it('selectCheckboxAll works properly with actionRules disable', function (string
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id'  => [$componentWithActionRules::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> id'  => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);

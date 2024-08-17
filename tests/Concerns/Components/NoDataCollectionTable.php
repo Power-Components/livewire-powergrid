@@ -53,13 +53,8 @@ class NoDataCollectionTable extends PowerGridComponent
         return [];
     }
 
-    public function bootstrap()
+    public function setTestThemeClass(string $themeClass): void
     {
-        config(['livewire-powergrid.theme' => 'bootstrap']);
-    }
-
-    public function tailwind()
-    {
-        config(['livewire-powergrid.theme' => 'tailwind']);
+        config(['livewire-powergrid.theme' => $themeClass]);
     }
 }

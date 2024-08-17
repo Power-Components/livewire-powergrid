@@ -4,7 +4,7 @@
     'parentId' => null,
 ])
 
-@includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
+@includeWhen(isset($setUp['responsive']), data_get($this->theme, 'root') . '.toggle-detail-responsive', [
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])

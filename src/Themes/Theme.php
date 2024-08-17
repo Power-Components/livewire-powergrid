@@ -33,6 +33,8 @@ class Theme
     public function apply(): array
     {
         return [
+            'name'              => $this->name,
+            'root'              => $this->root(),
             'table'             => $this->table(),
             'footer'            => $this->footer(),
             'cols'              => $this->cols(),

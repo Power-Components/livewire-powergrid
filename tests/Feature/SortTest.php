@@ -14,7 +14,7 @@ beforeEach(
 
 it('properly sorts ASC/DESC with: date', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'produced_at')
         ->set('sortDirection', 'desc')
@@ -45,7 +45,7 @@ it('properly sorts ASC/DESC with: date', function (string $component, object $pa
 
 it('properly sorts ASC/DESC with: int', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'id')
         ->set('sortDirection', 'desc')
@@ -62,7 +62,7 @@ it('properly sorts ASC/DESC with: int', function (string $component, object $par
 
 it('properly sorts ASC/DESC with: string', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'name')
         ->set('sortDirection', 'desc')
@@ -79,7 +79,7 @@ it('properly sorts ASC/DESC with: string', function (string $component, object $
 
 it('properly sorts ASC/DESC with: float', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'price')
         ->set('sortDirection', 'desc')
@@ -96,7 +96,7 @@ it('properly sorts ASC/DESC with: float', function (string $component, object $p
 
 it('properly sorts ASC/DESC with: boolean', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'in_stock')
         ->set('sortDirection', 'asc')
@@ -109,7 +109,7 @@ it('properly sorts ASC/DESC with: boolean', function (string $component, object 
 
 it('properly sorts ASC/DESC with: string-number', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', '10')
         ->set('withSortStringNumber', true)
         ->set('ignoreTablePrefix', false)
@@ -141,10 +141,10 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
 })->with('sort_join');
 
 dataset('sort_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
 ]);
 
 /**

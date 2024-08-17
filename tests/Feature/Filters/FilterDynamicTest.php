@@ -7,7 +7,7 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 it(
     'properly filters using dynamic filter feature',
     fn (string $component, object $params) => livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtmlInOrder([
             '<div>class: min-w-[170px]</div>',
             '<div>options: [{&quot;name&quot;:&quot;Active&quot;,&quot;value&quot;:true},{&quot;name&quot;:&quot;Inactive&quot;,&quot;value&quot;:false}]</div>',
@@ -18,6 +18,6 @@ it(
 )->group('filters')->with('dynamic_themes');
 
 dataset('dynamic_themes', [
-    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => 'tailwind']],
-    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => 'bootstrap']],
+    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
 ]);

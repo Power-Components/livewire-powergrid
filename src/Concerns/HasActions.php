@@ -161,7 +161,7 @@ trait HasActions
                             'disable'               => $disabled,
                             'hide'                  => $hide,
                             'toggleableVisibility'  => $toggleableVisibility,
-                            'toggleDetailView'      => powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                            'toggleDetailView'      => data_get($this->theme, 'root') . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                             'editOnClickVisibility' => $editOnClickVisibility,
                             'fieldHideEditOnClick'  => $fieldHideEditOnClick,
                             'fieldHideToggleable'   => $fieldHideToggleable,
@@ -170,7 +170,7 @@ trait HasActions
 
                     return [
                         'toggleableVisibility' => $toggleableVisibility,
-                        'toggleDetailView'     => powerGridThemeRoot() . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                        'toggleDetailView'     => data_get($this->theme, 'root') . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                     ];
                 })
                 ->toArray();

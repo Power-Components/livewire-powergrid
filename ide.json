@@ -5,11 +5,6 @@
             "complete": "cssClassNames",
             "condition": [
                 {
-                    "methodNames": ["div", "thead", "tr", "trFilters", "th", "tbody", "trBody", "tdBody", "tdBodyTotalColumns"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Table"],
-                    "parameters": [1]
-                },
-                {
                     "methodNames": ["class"],
                     "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Button"],
                     "parameters": [1]
@@ -20,67 +15,15 @@
                     "parameters": [1]
                 },
                 {
-                    "methodNames": ["select"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Footer"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["rowsBtn", "tdBody", "headerBtn"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Actions"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["div", "clearFilter"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Cols"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base", "span", "button", "input"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Editable"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["span"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\ClickToCopy"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["th", "label", "input", "div"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Checkbox"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base", "select"],
-                    "classFqn": [
-                        "\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterBoolean",
-                        "\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterSelect"
+                    "methodNames": [
+                        "select"
                     ],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base", "input"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterDatePicker"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterMultiSelect"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base", "input"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterNumber"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["base", "input", "select"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\FilterInputText"],
-                    "parameters": [1]
-                },
-                {
-                    "methodNames": ["setAttribute"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Rules\\RuleRows"],
-                    "parameters": [2]
+                    "classFqn": [
+                        "\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Footer"
+                    ],
+                    "parameters": [
+                        1
+                    ]
                 }
             ]
         },

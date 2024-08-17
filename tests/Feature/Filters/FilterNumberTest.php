@@ -6,7 +6,7 @@ require(__DIR__ . '/../../Concerns/Components/ComponentsForFilterTest.php');
 
 it('properly filters by filter Number', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme);
+        ->call('setTestThemeClass', $params->theme);
 
     $filters = array_merge($component->filters, filterNumber('price', min: '1\'500.20', max: '3\'000.00'));
 
@@ -24,7 +24,7 @@ it('properly filters by filter Number', function (string $component, object $par
 
 it('properly filters by filter Number with wrong separators', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme);
+        ->call('setTestThemeClass', $params->theme);
 
     // Use wrong separators
     $filters = array_merge($component->filters, filterNumber('price', min: '1@500#20', max: '3@000#00'));
