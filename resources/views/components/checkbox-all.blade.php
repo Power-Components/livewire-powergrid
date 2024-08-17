@@ -11,20 +11,20 @@
     <th
         @if ($isCheckboxFixedOnResponsive) fixed @endif
         scope="col"
-        class="{{ theme_style($this->theme, 'checkbox.th') }}"
-        style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
         wire:key="{{ md5('checkbox-all') }}"
     >
         <div
-            class="{{ theme_style($this->theme, 'checkbox.base') }}"
-            style="{{ theme_style($this->theme, 'checkbox.base.1') }}"
+            class="{{ theme_style($theme, 'checkbox.base') }}"
+            style="{{ theme_style($theme, 'checkbox.base.1') }}"
         >
             <label
-                class="{{ theme_style($this->theme, 'checkbox.label') }}"
-                style="{{ theme_style($this->theme, 'checkbox.label.1') }}"
+                class="{{ theme_style($theme, 'checkbox.label') }}"
+                style="{{ theme_style($theme, 'checkbox.label.1') }}"
             >
                 <input
-                    class="{{ theme_style($this->theme, 'checkbox.input') }}"
+                    class="{{ theme_style($theme, 'checkbox.input') }}"
                     type="checkbox"
                     wire:click="selectCheckboxAll"
                     wire:model="checkboxAll"

@@ -36,32 +36,33 @@
                     @if ($className->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
                                 :inline="false"
+                                :theme="$theme"
                                 :table-name="$tableName"
                                 :filter="$filter"
                                 :title="$title"
                                 :initial-values="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
                         />
                     @elseif ($className->contains(['FilterDateTimePicker', 'FilterDatePicker']))
-                        @includeIf(theme_style($this->theme, 'filterDatePicker.view'), [
+                        @includeIf(theme_style($theme, 'filterDatePicker.view'), [
                             'filter' => $filter,
                             'tableName' => $tableName,
                             'classAttr' => 'w-full',
                             'type' => $className->contains('FilterDateTimePicker') ? 'datetime' : 'date',
                         ])
                     @elseif ($className->contains(['FilterSelect', 'FilterEnumSelect']))
-                        @includeIf(theme_style($this->theme, 'filterSelect.view'), [
+                        @includeIf(theme_style($theme, 'filterSelect.view'), [
                             'filter' => $filter,
                         ])
                     @elseif ($className->contains('FilterNumber'))
-                        @includeIf(theme_style($this->theme, 'filterNumber.view'), [
+                        @includeIf(theme_style($theme, 'filterNumber.view'), [
                             'filter' => $filter,
                         ])
                     @elseif ($className->contains('FilterInputText'))
-                        @includeIf(theme_style($this->theme, 'filterInputText.view'), [
+                        @includeIf(theme_style($theme, 'filterInputText.view'), [
                             'filter' => $filter,
                         ])
                     @elseif ($className->contains('FilterBoolean'))
-                        @includeIf(theme_style($this->theme, 'filterBoolean.view'), [
+                        @includeIf(theme_style($theme, 'filterBoolean.view'), [
                             'filter' => $filter,
                         ])
                     @elseif ($className->contains('FilterDynamic'))

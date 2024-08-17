@@ -1,6 +1,6 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => theme_style($this->theme, 'radio.input'),
+        'class' => theme_style($theme, 'radio.input'),
     ]);
 
     $rules = collect($row->__powergrid_rules)
@@ -21,17 +21,17 @@
 @endphp
 @if ($hide)
     <td
-        class="{{ theme_style($this->theme, 'radio.td') }}"
-        style="{{ theme_style($this->theme, 'radio.td.1') }}"
+        class="{{ theme_style($theme, 'radio.td') }}"
+        style="{{ theme_style($theme, 'radio.td.1') }}"
     >
     </td>
 @elseif($disable)
     <td
-        class="{{ theme_style($this->theme, 'radio.td') }}"
-        style="{{ theme_style($this->theme, 'radio.td.1') }}"
+        class="{{ theme_style($theme, 'radio.td') }}"
+        style="{{ theme_style($theme, 'radio.td.1') }}"
     >
-        <div class="{{ theme_style($this->theme, 'radio.base') }}" style="{{ theme_style($this->theme, 'radio.base.1') }}">
-            <label class="{{ theme_style($this->theme, 'radio.label') }}">
+        <div class="{{ theme_style($theme, 'radio.base') }}" style="{{ theme_style($theme, 'radio.base.1') }}">
+            <label class="{{ theme_style($theme, 'radio.label') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -42,11 +42,11 @@
     </td>
 @else
     <td
-        class="{{ theme_style($this->theme, 'radio.th') }}"
-        style="{{ theme_style($this->theme, 'radio.th') }}"
+        class="{{ theme_style($theme, 'radio.th') }}"
+        style="{{ theme_style($theme, 'radio.th') }}"
     >
-        <div class="{{ theme_style($this->theme, 'radio.base') }}" style="{{ theme_style($this->theme, 'radio.base.1') }}">
-            <label class="{{ theme_style($this->theme, 'radio.label') }}" style="{{ theme_style($this->theme, 'radio.label.1') }}">
+        <div class="{{ theme_style($theme, 'radio.base') }}" style="{{ theme_style($theme, 'radio.base.1') }}">
+            <label class="{{ theme_style($theme, 'radio.label') }}" style="{{ theme_style($theme, 'radio.label.1') }}">
                 <input
                     type="radio"
                     {{ $inputAttributes }}

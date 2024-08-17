@@ -22,7 +22,6 @@ use Throwable;
  * @property-read bool $hasColumnFilters
  * @property-read array|BaseCollection $visibleColumns
  * @property-read string $realPrimaryKey
- * @property-read array $theme
  */
 class PowerGridComponent extends Component
 {
@@ -43,6 +42,15 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
+
+        /** @var Theme $theme */
+        $theme = new $themeClass();
+
+        $this->theme = $theme->apply();
+
+        $this->themeRoot = data_get($this->theme, 'root');
+
         $this->prepareActionsResources();
 
         $this->prepareRowTemplates();
@@ -110,17 +118,6 @@ class PowerGridComponent extends Component
     {
         return collect($this->columns)
             ->where('forceHidden', false);
-    }
-
-    #[Computed]
-    public function theme(): array
-    {
-        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
-
-        /** @var Theme $theme */
-        $theme = new $themeClass();
-
-        return $theme->apply();
     }
 
     #[Computed]
@@ -248,6 +245,7 @@ class PowerGridComponent extends Component
     {
         return view(theme_style($this->theme, 'layout.table'), [
             'data'  => $data,
+            'theme' => $this->theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }

@@ -26,9 +26,9 @@
         $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
         $selectClasses = \Illuminate\Support\Arr::toCssClasses([
-            theme_style($this->theme, 'filterInputText.select'),
+            theme_style($theme, 'filterInputText.select'),
         ]);
-        $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', theme_style($this->theme, 'filterInputText.input')]);
+        $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', theme_style($theme, 'filterInputText.input')]);
 
         $params = array_merge(
             [
@@ -50,8 +50,8 @@
         />
     @else
         <div
-            @class([theme_style($this->theme, 'filterInputText.base'), 'space-y-1' => !$inline])
-            style="{{ theme_style($this->theme, 'filterInputText.base.1') }}"
+            @class([theme_style($theme, 'filterInputText.base'), 'space-y-1' => !$inline])
+            style="{{ theme_style($theme, 'filterInputText.base.1') }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">

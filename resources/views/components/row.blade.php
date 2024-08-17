@@ -4,7 +4,7 @@
     'parentId' => null,
 ])
 
-@includeWhen(isset($setUp['responsive']), data_get($this->theme, 'root') . '.toggle-detail-responsive', [
+@includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
     'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
@@ -50,13 +50,13 @@
     @endphp
     <td
         @class([
-            theme_style($this->theme, 'table.body.td'),
+            theme_style($theme, 'table.body.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
-            theme_style($this->theme, 'table.body.td.1')
+            theme_style($theme, 'table.body.td.1')
         ])
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >
@@ -85,7 +85,7 @@
 
         @if ($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
-                @include(theme_style($this->theme, 'editable.view') ?? null, [
+                @include(theme_style($theme, 'editable.view') ?? null, [
                     'editable' => data_get($column, 'editable'),
                 ])
             </span>
@@ -93,7 +93,7 @@
             @php
                 $showToggleable = once(fn() => $this->shouldShowToggleable($column, $row));
             @endphp
-            @includeWhen($showToggleable, theme_style($this->theme, 'toggleable.view'), ['tableName' => $tableName])
+            @includeWhen($showToggleable, theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
                 @if (filled($templateContent))

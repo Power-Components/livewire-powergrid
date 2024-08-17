@@ -4,15 +4,15 @@
 >
     <div
         id="power-grid-table-container"
-        class="{{ theme_style($this->theme, 'table.layout.container') }}"
-        style="{{ theme_style($this->theme, 'table.layout.container.1') }}"
+        class="{{ theme_style($theme, 'table.layout.container') }}"
+        style="{{ theme_style($theme, 'table.layout.container.1') }}"
     >
         <div
             id="power-grid-table-base"
-            class="{{ theme_style($this->theme, 'table.layout.base') }}"
-            style="{{ theme_style($this->theme, 'table.layout.base.1') }}"
+            class="{{ theme_style($theme, 'table.layout.base') }}"
+            style="{{ theme_style($theme, 'table.layout.base.1') }}"
         >
-            @include(theme_style($this->theme, 'layout.header'), [
+            @include(theme_style($theme, 'layout.header'), [
                 'enabledFilters' => $enabledFilters,
             ])
 
@@ -37,14 +37,14 @@
                 @class([
                     'overflow-auto' => $readyToLoad,
                     'overflow-hidden' => !$readyToLoad,
-                    theme_style($this->theme, 'table.layout.div'),
+                    theme_style($theme, 'table.layout.div'),
                 ])
-                style="{{ theme_style($this->theme, 'table.layout.div.1') }}"
+                style="{{ theme_style($theme, 'table.layout.div.1') }}"
             >
                 @include($table)
             </div>
 
-            @include(theme_style($this->theme, 'footer.view'))
+            @include(theme_style($theme, 'footer.view'))
         </div>
     </div>
 </div>

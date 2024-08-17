@@ -33,8 +33,8 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        class="{{ theme_style($this->theme, 'filterDatePicker.base') }}"
-        style="{{ theme_style($this->theme, 'filterDatePicker.base.1') }}"
+        class="{{ theme_style($theme, 'filterDatePicker.base') }}"
+        style="{{ theme_style($theme, 'filterDatePicker.base.1') }}"
     >
         <form autocomplete="off">
             <input
@@ -43,8 +43,8 @@
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
-                style="{{ theme_style($this->theme, 'filterDatePicker.input') }} {{ data_get($column, 'headerStyle') }}"
-                class="{{ theme_style($this->theme, 'filterDatePicker.input.1') }} {{ data_get($column, 'headerClass') }}"
+                style="{{ theme_style($theme, 'filterDatePicker.input') }} {{ data_get($column, 'headerStyle') }}"
+                class="{{ theme_style($theme, 'filterDatePicker.input.1') }} {{ data_get($column, 'headerClass') }}"
                 type="text"
                 readonly
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

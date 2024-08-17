@@ -4,16 +4,16 @@
             <span class="absolute inset-y-0 left-0 flex items-center pl-1">
                 <span class="p-1 focus:outline-none focus:shadow-outline">
                     <x-livewire-powergrid::icons.search
-                        class="{{ theme_style($this->theme, 'searchBox.iconSearch') }}"
-                        style="{{ theme_style($this->theme, 'searchBox.iconSearch.1') }}"
+                        class="{{ theme_style($theme, 'searchBox.iconSearch') }}"
+                        style="{{ theme_style($theme, 'searchBox.iconSearch.1') }}"
                     />
                 </span>
             </span>
             <input
                 wire:model.live.debounce.700ms="search"
                 type="text"
-                class="{{ theme_style($this->theme, 'searchBox.input') }}"
-                style="{{ theme_style($this->theme, 'searchBox.input.1') }}"
+                class="{{ theme_style($theme, 'searchBox.input') }}"
+                style="{{ theme_style($theme, 'searchBox.input.1') }}"
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}"
             >
             @if ($search)
@@ -23,8 +23,8 @@
                     <span class="p-2 rounded-full focus:outline-none focus:shadow-outline cursor-pointer">
                         <a wire:click.prevent="$set('search','')">
                             <x-livewire-powergrid::icons.x
-                                class="w-4 h-4 {{ theme_style($this->theme, 'searchBox.iconClose') }}"
-                                style="{{ theme_style($this->theme, 'searchBox.iconClose.1') }}"
+                                class="w-4 h-4 {{ theme_style($theme, 'searchBox.iconClose') }}"
+                                style="{{ theme_style($theme, 'searchBox.iconClose.1') }}"
                             />
                         </a>
                     </span>

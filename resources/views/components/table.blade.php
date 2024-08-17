@@ -1,6 +1,7 @@
 <x-livewire-powergrid::table-base
-    :ready-to-load="$readyToLoad"
-    :table-name="$tableName"
+    :$readyToLoad
+    :$tableName
+    :$theme
     :lazy="!is_null(data_get($setUp, 'lazy'))"
 >
     <x-slot:header>
@@ -23,7 +24,7 @@
                 @foreach ($data as $row)
                     @php
                         $rowId = data_get($row, $this->realPrimaryKey);
-                        $class = theme_style($this->theme, 'table.body.tr');
+                        $class = theme_style($theme, 'table.body.tr');
                     @endphp
 
                     @if (isset($setUp['detail']))
@@ -36,7 +37,7 @@
                             ])
                             @if(data_get($setUp, 'detail.state.' . $rowId))
                                 <tr
-                                    style="{{ theme_style($this->theme, 'table.body.tr.1') }}"
+                                    style="{{ theme_style($theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
                                 >
                                     @include('livewire-powergrid::components.table.detail')
@@ -75,7 +76,7 @@
                             :$radioAttribute
                             :$checkbox
                             :$checkboxAttribute
-                            :theme="$this->theme"
+                            :theme="$theme"
                             :$setUp
                             :$tableName
                             :parentName="$this->getName()"

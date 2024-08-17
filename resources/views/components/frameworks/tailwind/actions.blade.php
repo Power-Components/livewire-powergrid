@@ -8,12 +8,12 @@
     <div class="flex flex-row justify-center items-center text-sm">
         @if (count($exportOptions) > 0)
             <div class="mr-2 mt-2 sm:mt-0">
-                @include(data_get($this->theme, 'root') . '.export')
+                @include(data_get($theme, 'root') . '.export')
             </div>
         @endif
-        @includeIf(data_get($this->theme, 'root') . '.toggle-columns')
+        @includeIf(data_get($theme, 'root') . '.toggle-columns')
     </div>
 
     <!-- LOADING -->
-    @include(data_get($this->theme, 'root') . '.loading')
+    @include(data_get($theme, 'root') . '.loading')
 </div>

@@ -3,7 +3,7 @@
     <div class="mb-3 md:flex md:flex-row w-full justify-between items-center">
         <div class="md:flex md:flex-row w-full">
             <div>
-                @include(data_get($this->theme, 'root') . '.header.actions')
+                @include(data_get($theme, 'root') . '.header.actions')
             </div>
             <div class="flex flex-row items-center text-sm flex-wrap">
                 @if (data_get($setUp, 'exportable'))
@@ -11,25 +11,25 @@
                         class="mr-2 mt-2 sm:mt-0"
                         id="pg-header-export"
                     >
-                        @include(data_get($this->theme, 'root') . '.header.export')
+                        @include(data_get($theme, 'root') . '.header.export')
                     </div>
                 @endif
-                @includeIf(data_get($this->theme, 'root') . '.header.toggle-columns')
-                @includeIf(data_get($this->theme, 'root') . '.header.soft-deletes')
+                @includeIf(data_get($theme, 'root') . '.header.toggle-columns')
+                @includeIf(data_get($theme, 'root') . '.header.soft-deletes')
                 @if (config('livewire-powergrid.filter') == 'outside' && count($this->filters()) > 0)
-                    @includeIf(data_get($this->theme, 'root') . '.header.filters')
+                    @includeIf(data_get($theme, 'root') . '.header.filters')
                 @endif
             </div>
             @includeWhen(boolval(data_get($setUp, 'header.wireLoading')),
-                data_get($this->theme, 'root') . '.header.loading')
+                data_get($theme, 'root') . '.header.loading')
         </div>
-        @include(data_get($this->theme, 'root') . '.header.search')
+        @include(data_get($theme, 'root') . '.header.search')
     </div>
 
-    @includeIf(data_get($this->theme, 'root') . '.header.enabled-filters')
+    @includeIf(data_get($theme, 'root') . '.header.enabled-filters')
 
-    @include(data_get($this->theme, 'root') . '.header.batch-exporting')
-    @include(data_get($this->theme, 'root') . '.header.multi-sort')
+    @include(data_get($theme, 'root') . '.header.batch-exporting')
+    @include(data_get($theme, 'root') . '.header.multi-sort')
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
-    @includeIf(data_get($this->theme, 'root') . '.header.message-soft-deletes')
+    @includeIf(data_get($theme, 'root') . '.header.message-soft-deletes')
 </div>

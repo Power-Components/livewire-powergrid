@@ -13,7 +13,7 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-    $selectClasses = Arr::toCssClasses([theme_style($this->theme, 'filterBoolean.select')]);
+    $selectClasses = Arr::toCssClasses([theme_style($theme, 'filterBoolean.select')]);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
@@ -27,8 +27,8 @@
     />
 @else
     <div
-        class="{{ theme_style($this->theme, 'filterBoolean.base') }}"
-        style="{{ theme_style($this->theme, 'filterBoolean.base.1') }}"
+        class="{{ theme_style($theme, 'filterBoolean.base') }}"
+        style="{{ theme_style($theme, 'filterBoolean.base.1') }}"
     >
         <select
             style="{{ data_get($column, 'headerStyle') }}"

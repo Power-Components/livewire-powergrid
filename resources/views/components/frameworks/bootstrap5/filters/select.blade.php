@@ -12,7 +12,7 @@
 
     $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes($field, $title);
 
-    $filterClasses = Arr::toCssClasses([theme_style($this->theme, 'filterSelect.select'), $class]);
+    $filterClasses = Arr::toCssClasses([theme_style($theme, 'filterSelect.select'), $class]);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
@@ -26,8 +26,8 @@
     />
 @else
     <div
-        class="{{ theme_style($this->theme, 'filterSelect.base') }}"
-        style="{{ theme_style($this->theme, 'filterNumber.base.1') }}"
+        class="{{ theme_style($theme, 'filterSelect.base') }}"
+        style="{{ theme_style($theme, 'filterNumber.base.1') }}"
     >
         <select
             class="{{ $filterClasses }}"

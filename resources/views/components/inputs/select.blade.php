@@ -4,7 +4,8 @@
     'tableName' => null,
     'multiple' => true,
     'initialValues' => [],
-    'title' => ''
+    'title' => '',
+    'theme' => null,
 ])
 
 @php
@@ -57,8 +58,8 @@
 >
     @if (filled($filter))
         <div
-            class="{{ theme_style($this->theme, 'filterSelect.base') }}"
-            style="{{ theme_style($this->theme, 'filterSelect.base.1') }}"
+            class="{{ theme_style($theme, 'filterSelect.base') }}"
+            style="{{ theme_style($theme, 'filterSelect.base.1') }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -67,7 +68,7 @@
             @endif
             <select
                 @if ($multiple) multiple @endif
-                class="{{ theme_style($this->theme, 'filterSelect.select') }}"
+                class="{{ theme_style($theme, 'filterSelect.select') }}"
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >

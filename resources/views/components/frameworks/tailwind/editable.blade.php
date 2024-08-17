@@ -1,11 +1,12 @@
 <x-livewire-powergrid::editable
-    :tableName="$tableName"
+    :$tableName
+    :$theme
     :primaryKey="$this->realPrimaryKey"
-    :row="$row"
-    :field="$field"
-    :currentTable="$currentTable"
-    :showErrorBag="$showErrorBag"
-    :editable="$editable"
+    :$row
+    :$field
+    :$currentTable
+    :$showErrorBag
+    :$editable
 >
     <x-slot name="input">
         <div
@@ -14,8 +15,8 @@
             value="{{ html_entity_decode(data_get($row, $field), ENT_QUOTES, 'utf-8') }}"
             placeholder="{{ html_entity_decode(data_get($row, $field), ENT_QUOTES, 'utf-8') }}"
             contenteditable
-            class="pg-single-line {{ theme_style($this->theme, 'editable.input') }}"
-            style="{{ theme_style($this->theme, 'editable.input.1')  }}"
+            class="pg-single-line {{ theme_style($theme, 'editable.input') }}"
+            style="{{ theme_style($theme, 'editable.input.1')  }}"
             @if (data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             x-on:keydown.enter="save()"
             :id="`editable-` + dataField + `-` + id"

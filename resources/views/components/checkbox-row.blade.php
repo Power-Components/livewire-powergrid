@@ -1,6 +1,6 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => theme_style($this->theme, 'checkbox.input'),
+        'class' => theme_style($theme, 'checkbox.input'),
     ]);
 
     $rules = collect($row->__powergrid_rules)
@@ -23,17 +23,17 @@
 
 @if ($hide)
     <td
-        class="{{ theme_style($this->theme, 'checkbox.th') }}"
-        style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
     </td>
 @elseif($disable)
     <td
-        class="{{ theme_style($this->theme, 'checkbox.th') }}"
-        style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($this->theme, 'checkbox.base') }}" style="{{ theme_style($this->theme, 'checkbox.base.1') }}">
-            <label class="{{ theme_style($this->theme, 'checkbox.label') }}" style="{{ theme_style($this->theme, 'checkbox.label.1') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -44,11 +44,11 @@
     </td>
 @else
     <td
-        class="{{ theme_style($this->theme, 'checkbox.th') }}"
-        style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($this->theme, 'checkbox.base') }}" style="{{ theme_style($this->theme, 'checkbox.base.1') }}">
-            <label class="{{ theme_style($this->theme, 'checkbox.label') }}" style="{{ theme_style($this->theme, 'checkbox.label.1') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
                 <input
                     x-data="{}"
                     type="checkbox"
