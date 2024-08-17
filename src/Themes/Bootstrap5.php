@@ -27,11 +27,10 @@ class Bootstrap5 extends Theme
                 'tbody'       => '',
                 'tbodyEmpty'  => '',
                 'tr'          => 'border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700',
-                'trSummarize' => '',
                 'td'          => ['', 'vertical-align: middle; line-height: normal; white-space: nowrap;'],
                 'tdEmpty'     => '',
                 'tdSummarize' => ['', 'font-size: 0.875rem; line-height: 1.25rem; --tw-text-opacity: 1; color: rgb(76 79 82 / var(--tw-text-opacity)); padding-left: 0.75rem; padding-right: 0.75rem; padding-top: 0.5rem; padding-bottom: 0.5rem;'],
-                'tdAction'    => '',
+                'trSummarize' => '',
                 'tdFilters'   => '',
             ],
         ];

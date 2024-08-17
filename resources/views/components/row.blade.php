@@ -56,7 +56,7 @@
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
-            theme_style($this->theme, 'table.cell.tdBody.1')
+            theme_style($this->theme, 'table.body.td.1')
         ])
         wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
     >

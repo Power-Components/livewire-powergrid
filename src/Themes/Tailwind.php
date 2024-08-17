@@ -27,11 +27,10 @@ class Tailwind extends Theme
                 'tbody'       => 'text-pg-primary-800',
                 'tbodyEmpty'  => '',
                 'tr'          => 'border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700',
-                'trSummarize' => '',
                 'td'          => 'px-3 py-2 whitespace-nowrap dark:text-pg-primary-200',
                 'tdEmpty'     => 'p-2 whitespace-nowrap dark:text-pg-primary-200',
                 'tdSummarize' => 'p-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2',
-                'tdAction'    => '',
+                'trSummarize' => '',
                 'tdFilters'   => '',
             ],
         ];

@@ -40,12 +40,12 @@
                 $filterClass = str(data_get($column, 'filters.className'));
             @endphp
             <td
-                @class([theme_style($this->theme, 'table.body.td'), theme_style($this->theme, 'table.cell.tdFilters')])
+                @class([theme_style($this->theme, 'table.body.td'), theme_style($this->theme, 'table.body.tdFilters')])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
                 @style([
                     'display:none' => data_get($column, 'hidden') === true,
-                    theme_style($this->theme, 'table.cell.tdBody.1'),
-                    theme_style($this->theme, 'table.cell.tdFilters.1')
+                    theme_style($this->theme, 'table.body.td.1'),
+                    theme_style($this->theme, 'table.body.tdFilters.1')
                 ])
             >
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">
