@@ -9,7 +9,7 @@
         <option value="">{{ $empty }}</option>
         @foreach ($data as $value => $label)
             <option
-                wire:key="{{ md5($field->key . $value) }}"
+                wire:key="{{ $field->key . $value }}"
                 value="{{ $value }}"
             >{{ $label }}</option>
         @endforeach

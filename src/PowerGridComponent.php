@@ -47,9 +47,7 @@ class PowerGridComponent extends Component
         /** @var Theme $theme */
         $theme = new $themeClass();
 
-        $this->theme = $theme->apply();
-
-        $this->themeRoot = data_get($this->theme, 'root');
+        $this->themeRoot = $theme->root();
 
         $this->prepareActionsResources();
 
@@ -243,9 +241,16 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        return view(theme_style($this->theme, 'layout.table'), [
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
+
+        /** @var Theme $theme */
+        $theme = new $themeClass();
+
+        $theme = $theme->apply();
+
+        return view(theme_style($theme, 'layout.table'), [
             'data'  => $data,
-            'theme' => $this->theme,
+            'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }

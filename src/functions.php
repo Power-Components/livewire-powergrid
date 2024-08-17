@@ -49,9 +49,9 @@ if (!function_exists('once')) {
     }
 }
 
-function theme_style(array $theme, string $name): string
-{
-    return strval(once(function () use ($theme, $name) {
+if (!function_exists('theme_style')) {
+    function theme_style(array $theme, string $name): string
+    {
         return strval(data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name));
-    }));
+    }
 }

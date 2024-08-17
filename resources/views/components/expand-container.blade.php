@@ -1,7 +1,7 @@
 <tbody
     x-cloak
     expand
-    wire:key="{{ md5('expand-' . $rowId) }}"
+    wire:key="{{ 'expand-' . substr($rowId, 0, 6) }}"
     x-show="hasHiddenElements"
 >
     <tr

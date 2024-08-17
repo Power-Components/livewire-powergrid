@@ -5,7 +5,6 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
-    'rowId' => $rowId,
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 
@@ -58,7 +57,7 @@
             data_get($column, 'bodyStyle'),
             theme_style($theme, 'table.body.td.1')
         ])
-        wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
+        wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
     >
         @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
             <div class="pg-actions">
@@ -80,7 +79,7 @@
         @endif
 
         @php
-            $showEditOnClick = once(fn() => $this->shouldShowEditOnClick($column, $row));
+            $showEditOnClick = $this->shouldShowEditOnClick($column, $row);
         @endphp
 
         @if ($showEditOnClick === true)
@@ -91,7 +90,7 @@
             </span>
         @elseif(count(data_get($column, 'toggleable')) > 0)
             @php
-                $showToggleable = once(fn() => $this->shouldShowToggleable($column, $row));
+                $showToggleable = $this->shouldShowToggleable($column, $row);
             @endphp
             @includeWhen($showToggleable, theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else

@@ -13,6 +13,7 @@
     </x-slot:loading>
 
     <x-slot:body>
+
         @includeWhen($this->hasColumnFilters, 'livewire-powergrid::components.inline-filters')
 
         @if (is_null($data) || count($data) === 0)
@@ -29,7 +30,7 @@
 
                     @if (isset($setUp['detail']))
                         <tbody
-                            wire:key="tbody-{{ $rowId }}"
+                            wire:key="tbody-{{ substr($rowId, 0, 6) }}"
                             class="{{ $class }}"
                         >
                             @include('livewire-powergrid::components.row', [
@@ -89,5 +90,6 @@
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
         @endif
+
     </x-slot:body>
 </x-livewire-powergrid::table-base>

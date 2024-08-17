@@ -47,8 +47,6 @@ trait Base
 
     public bool $paginateRaw = false;
 
-    public array $theme = [];
-
     public string $themeRoot = '';
 
     public function fields(): PowerGridFields
