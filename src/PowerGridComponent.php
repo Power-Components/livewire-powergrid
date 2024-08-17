@@ -14,6 +14,7 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
+use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Throwable;
 
 /**
@@ -116,7 +117,10 @@ class PowerGridComponent extends Component
     {
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
-        return (new $themeClass())->apply();
+        /** @var Theme $theme */
+        $theme = new $themeClass();
+
+        return $theme->apply();
     }
 
     #[Computed]
@@ -135,7 +139,7 @@ class PowerGridComponent extends Component
         return $this->getRecordsDataSource($start);
     }
 
-    private function getRecordsFromCache(float $start)
+    private function getRecordsFromCache(float $start): mixed
     {
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
@@ -152,7 +156,6 @@ class PowerGridComponent extends Component
             new PowerGridPerformanceData(
                 tableName: $this->tableName,
                 retrieveDataInMs: $time,
-                transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
                 isCached: true,
             )
         );
