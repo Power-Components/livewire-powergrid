@@ -16,8 +16,8 @@
         wire:key="{{ md5('checkbox-all') }}"
     >
         <div
-            class="{{ theme_style($this->theme, 'checkbox.div') }}"
-            style="{{ theme_style($this->theme, 'checkbox.div.1') }}"
+            class="{{ theme_style($this->theme, 'checkbox.base') }}"
+            style="{{ theme_style($this->theme, 'checkbox.base.1') }}"
         >
             <label
                 class="{{ theme_style($this->theme, 'checkbox.label') }}"

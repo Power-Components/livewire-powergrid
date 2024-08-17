@@ -32,7 +32,7 @@
         class="{{ theme_style($this->theme, 'checkbox.th') }}"
         style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($this->theme, 'checkbox.div') }}" style="{{ theme_style($this->theme, 'checkbox.div.1') }}">
+        <div class="{{ theme_style($this->theme, 'checkbox.base') }}" style="{{ theme_style($this->theme, 'checkbox.base.1') }}">
             <label class="{{ theme_style($this->theme, 'checkbox.label') }}" style="{{ theme_style($this->theme, 'checkbox.label.1') }}">
                 <input
                     {{ $inputAttributes }}
@@ -47,7 +47,7 @@
         class="{{ theme_style($this->theme, 'checkbox.th') }}"
         style="{{ theme_style($this->theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($this->theme, 'checkbox.div') }}" style="{{ theme_style($this->theme, 'checkbox.label.1') }}">
+        <div class="{{ theme_style($this->theme, 'checkbox.base') }}" style="{{ theme_style($this->theme, 'checkbox.base.1') }}">
             <label class="{{ theme_style($this->theme, 'checkbox.label') }}" style="{{ theme_style($this->theme, 'checkbox.label.1') }}">
                 <input
                     x-data="{}"

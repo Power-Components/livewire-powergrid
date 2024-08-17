@@ -17,10 +17,10 @@ class Bootstrap5 extends Theme
             ],
 
             'header' => [
-                'thead'  => '',
-                'tr'     => '',
-                'th'     => ['', 'white-space: nowrap; min-width: 50px; font-size: 0.75rem; color: #6b6a6a; padding-top: 8px; padding-bottom: 8px;'],
-                'action' => '',
+                'thead'    => '',
+                'tr'       => '',
+                'th'       => ['', 'white-space: nowrap; min-width: 50px; font-size: 0.75rem; color: #6b6a6a; padding-top: 8px; padding-bottom: 8px;'],
+                'thAction' => '',
             ],
 
             'body' => [
@@ -70,7 +70,7 @@ class Bootstrap5 extends Theme
     {
         return [
             'th'    => ['', 'font-size: 1rem !important;text-align:center'],
-            'div'   => 'form-check',
+            'base'  => 'form-check',
             'label' => 'form-check-label',
             'input' => 'form-check-input shadow-none',
         ];
@@ -80,7 +80,7 @@ class Bootstrap5 extends Theme
     {
         return [
             'th'    => '',
-            'div'   => '',
+            'base'  => '',
             'label' => 'form-check-label',
             'input' => 'form-check-input',
         ];
