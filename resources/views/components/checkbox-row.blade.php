@@ -1,6 +1,6 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => data_get($theme, 'checkbox.inputClass'),
+        'class' => theme_style($theme, 'checkbox.input'),
     ]);
 
     $rules = collect($row->__powergrid_rules)
@@ -23,17 +23,17 @@
 
 @if ($hide)
     <td
-        class="{{ data_get($theme, 'checkbox.thClass') }}"
-        style="{{ data_get($theme, 'checkbox.thStyle') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
     </td>
 @elseif($disable)
     <td
-        class="{{ data_get($theme, 'checkbox.thClass') }}"
-        style="{{ data_get($theme, 'checkbox.thStyle') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ data_get($theme, 'checkbox.divClass') }}">
-            <label class="{{ data_get($theme, 'checkbox.labelClass') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -44,11 +44,11 @@
     </td>
 @else
     <td
-        class="{{ data_get($theme, 'checkbox.thClass') }}"
-        style="{{ data_get($theme, 'checkbox.thStyle') }}"
+        class="{{ theme_style($theme, 'checkbox.th') }}"
+        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ data_get($theme, 'checkbox.divClass') }}">
-            <label class="{{ data_get($theme, 'checkbox.labelClass') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
                 <input
                     x-data="{}"
                     type="checkbox"

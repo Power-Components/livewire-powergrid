@@ -35,7 +35,7 @@ $component = new class () extends DishesTable {
 
 it('can render actionsFromView property', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeInOrder([
             'Dish From Actions View: 1',
             'Dish From Actions View: 2',
@@ -45,6 +45,6 @@ it('can render actionsFromView property', function (string $component, object $p
             'Dish From Actions View: 6',
         ]);
 })->with([
-    'tailwind'  => [$component::class, (object) ['theme' => 'tailwind', 'field' => 'name']],
-    'bootstrap' => [$component::class, (object) ['theme' => 'bootstrap', 'field' => 'name']],
+    'tailwind'  => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
+    'bootstrap' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
 ]);

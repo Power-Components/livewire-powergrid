@@ -37,17 +37,17 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('action:depends', [
-    'tailwind'       => [$component::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [$component::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+    'tailwind'       => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => false]],
+    'bootstrap'      => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
+    'tailwind join'  => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
+    'bootstrap join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
 ]);
 
 it('"depends" works properly in select', function (string $component, object $params) {
     livewire($component, [
         'join' => $params->join,
     ])
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('setUp.footer.perPage', 6)
         ->assertSeeHtmlInOrder([
             'Luan',

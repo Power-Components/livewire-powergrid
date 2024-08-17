@@ -6,7 +6,7 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('sorts by "name" and then by "id"', function (string $component, string $theme) {
     livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSeeHtmlInOrder([
             '<div>1</div>',
             '<div>Pastel de Nata</div>',
@@ -44,6 +44,6 @@ it('sorts by "name" and then by "id"', function (string $component, string $them
 })->with('row_index');
 
 dataset('row_index', [
-    'tailwind'  => [DishesRowIndex::class, 'tailwind'],
-    'bootstrap' => [DishesRowIndex::class, 'bootstrap'],
+    'tailwind'  => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'bootstrap' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);

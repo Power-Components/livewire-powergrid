@@ -9,7 +9,7 @@ require(__DIR__ . '/../../Concerns/Components/ComponentsForFilterTest.php');
 
 it('properly filters by inputText', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme);
+        ->call('setTestThemeClass', $params->theme);
 
     /** @var PowerGridComponent $component */
     expect($component->filters)

@@ -1,5 +1,4 @@
 @props([
-    'theme' => '',
     'column' => null,
     'inline' => null,
     'filter' => null,
@@ -14,7 +13,7 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-    $selectClasses = Arr::toCssClasses([data_get($theme, 'selectClass'), 'power_grid']);
+    $selectClasses = Arr::toCssClasses([theme_style($theme, 'filterBoolean.select')]);
 
     $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
 @endphp
@@ -28,8 +27,8 @@
     />
 @else
     <div
-        class="{{ data_get($theme, 'baseClass') }}"
-        style="{{ data_get($theme, 'baseStyle') }}"
+        class="{{ theme_style($theme, 'filterBoolean.base') }}"
+        style="{{ theme_style($theme, 'filterBoolean.base.1') }}"
     >
         <select
             style="{{ data_get($column, 'headerStyle') }}"

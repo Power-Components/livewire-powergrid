@@ -1,5 +1,4 @@
 @props([
-    'theme' => '',
     'inline' => null,
     'date' => null,
     'column' => null,
@@ -36,8 +35,8 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        @class([data_get($theme, 'baseClass'), 'space-y-1' => !$inline])
-        style="{{ data_get($theme, 'baseStyle') }}"
+        @class([theme_style($theme, 'filterDatePicker.base'), 'space-y-1' => !$inline])
+        style="{{ theme_style($theme, 'filterDatePicker.base.1') }}"
     >
         @if (!$inline)
             <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
@@ -51,8 +50,8 @@
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
-                style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}"
-                class="power_grid {{ data_get($theme, 'inputClass') }} {{ data_get($column, 'headerClass') }}"
+                style="{{ theme_style($theme, 'filterDatePicker.input') }} {{ data_get($column, 'headerStyle') }}"
+                class="power_grid {{ theme_style($theme, 'filterDatePicker.input') }} {{ data_get($column, 'headerClass') }}"
                 type="text"
                 readonly
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

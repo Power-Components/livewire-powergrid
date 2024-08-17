@@ -1,5 +1,4 @@
 @props([
-    'theme' => '',
     'enabledFilters' => [],
     'column' => null,
     'inline' => null,
@@ -26,8 +25,8 @@
 
         $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-        $selectClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', data_get($theme, 'selectClass')]);
-        $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', data_get($theme, 'inputClass')]);
+        $selectClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', theme_style($theme, 'filterInputText.select')]);
+        $inputClasses = \Illuminate\Support\Arr::toCssClasses(['power_grid', theme_style($theme, 'filterInputText.input')]);
 
         $params = array_merge(
             [
@@ -49,8 +48,8 @@
         />
     @else
         <div
-            class="{{ data_get($theme, 'baseClass') }}"
-            style="{{ data_get($theme, 'baseStyle') }}"
+            class="{{ theme_style($theme, 'filterInputText.base') }}"
+            style="{{ theme_style($theme, 'filterInputText.base.1') }}"
         >
             @if ($showSelectOptions)
                 <div class="relative">

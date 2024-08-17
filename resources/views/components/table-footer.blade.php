@@ -1,12 +1,12 @@
 {{-- blade-formatter-enable --}}
 <tr
-    class="{{ data_get($theme, 'table.trBodyClass') }}"
-    style="{{ data_get($theme, 'table.trBodyStyle') }}"
+    class="{{ theme_style($theme, 'table.header.tr') }}"
+    style="{{theme_style($theme, 'table.header.tr.1') }}"
 >
     @if (data_get($setUp, 'detail.showCollapseIcon'))
         <td
-            class="{{ data_get($theme, 'table.tdBodyClass') }}"
-            style="{{ data_get($theme, 'table.tdBodyStyle') }}"
+            class="{{ theme_style($theme, 'table.body.td') }}"
+            style="{{ theme_style($theme, 'table.body.td.1')  }}"
         ></td>
     @endif
     @if ($checkbox)
@@ -14,8 +14,8 @@
     @endif
     @foreach ($this->visibleColumns as $column)
         <td
-            class="{{ data_get($theme, 'table.tdBodyClassTotalColumns') . ' ' . data_get($column, 'bodyClass') ?? '' }}"
-            style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ data_get($theme, 'table.tdBodyStyleTotalColumns') . ' ' . data_get($column, 'bodyStyle') ?? '' }}"
+            class="{{ theme_style($theme, 'table.body.tdSummarize') . ' ' . data_get($column, 'bodyClass') ?? '' }}"
+            style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ theme_style($theme, 'table.body.tdSummarize.1') . ' ' . data_get($column, 'bodyStyle') ?? '' }}"
         >
             @include('livewire-powergrid::components.summarize', [
                 'sum' => data_get($column, 'sum.footer') ? data_get($column, 'summarize.sum') : null,
@@ -37,9 +37,9 @@
     @endforeach
     @if (isset($actions) && count($actions))
         <th
-            class="{{ data_get($theme, 'table.thClass') . ' ' .  data_get($column, 'headerClass') }}"
+            class="{{ theme_style($theme, 'table.header.th') . ' ' .  data_get($column, 'headerClass') }}"
             scope="col"
-            style="{{ data_get($theme, 'table.thStyle') }}"
+            style="{{ theme_style($theme, 'table.header.th.1') }}"
             colspan="{{ count($actions) }}"
         >
         </th>

@@ -17,8 +17,8 @@
                 <div class="relative">
                     <select
                         wire:model.live="setUp.footer.perPage"
-                        class="{{ data_get($theme, 'footer.selectClass') }}"
-                        style="{{ data_get($theme, 'footer.selectStyle') }}"
+                        class="{{ theme_style($theme, 'footer.select') }}"
+                        style="{{ theme_style($theme, 'footer.select.1') }}"
                     >
                         @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{ $value }}">
@@ -46,7 +46,7 @@
         @if (filled($data))
             <div>
                 @if (method_exists($data, 'links'))
-                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: powerGridThemeRoot() . '.pagination', [
+                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'root') . '.pagination', [
                         'recordCount' => data_get($setUp, 'footer.recordCount'),
                         'perPage' => data_get($setUp, 'footer.perPage'),
                         'perPageValues' => data_get($setUp, 'footer.perPageValues'),

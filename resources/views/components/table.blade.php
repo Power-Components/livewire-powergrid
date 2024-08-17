@@ -1,7 +1,7 @@
 <x-livewire-powergrid::table-base
-    :ready-to-load="$readyToLoad"
-    :theme="$theme"
-    :table-name="$tableName"
+    :$readyToLoad
+    :$tableName
+    :$theme
     :lazy="!is_null(data_get($setUp, 'lazy'))"
 >
     <x-slot:header>
@@ -13,6 +13,7 @@
     </x-slot:loading>
 
     <x-slot:body>
+
         @includeWhen($this->hasColumnFilters, 'livewire-powergrid::components.inline-filters')
 
         @if (is_null($data) || count($data) === 0)
@@ -24,12 +25,12 @@
                 @foreach ($data as $row)
                     @php
                         $rowId = data_get($row, $this->realPrimaryKey);
-                        $class = data_get($theme, 'table.trBodyClass');
+                        $class = theme_style($theme, 'table.body.tr');
                     @endphp
 
                     @if (isset($setUp['detail']))
                         <tbody
-                            wire:key="tbody-{{ $rowId }}"
+                            wire:key="tbody-{{ substr($rowId, 0, 6) }}"
                             class="{{ $class }}"
                         >
                             @include('livewire-powergrid::components.row', [
@@ -37,7 +38,7 @@
                             ])
                             @if(data_get($setUp, 'detail.state.' . $rowId))
                                 <tr
-                                    style="{{ data_get($theme, 'table.trBodyStyle') }}"
+                                    style="{{ theme_style($theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
                                 >
                                     @include('livewire-powergrid::components.table.detail')
@@ -76,7 +77,7 @@
                             :$radioAttribute
                             :$checkbox
                             :$checkboxAttribute
-                            :$theme
+                            :theme="$theme"
                             :$setUp
                             :$tableName
                             :parentName="$this->getName()"
@@ -89,5 +90,6 @@
 
             @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
         @endif
+
     </x-slot:body>
 </x-livewire-powergrid::table-base>

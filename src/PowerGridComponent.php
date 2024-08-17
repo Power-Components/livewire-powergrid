@@ -14,7 +14,7 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
-use PowerComponents\LivewirePowerGrid\Themes\ThemeBase;
+use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Throwable;
 
 /**
@@ -42,6 +42,13 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
+
+        /** @var Theme $theme */
+        $theme = new $themeClass();
+
+        $this->themeRoot = $theme->root();
+
         $this->prepareActionsResources();
 
         $this->prepareRowTemplates();
@@ -116,33 +123,19 @@ class PowerGridComponent extends Component
     {
         $start = microtime(true);
 
-        if (!Cache::supportsTags() || !boolval(data_get($this->setUp, 'cache.enabled'))) {
-            $results = $this->readyToLoad ? $this->fillData() : collect();
-
-            $retrieveData = round((microtime(true) - $start) * 1000);
-
-            $queries = $this->processDataSourceInstance?->queryLog() ?? [];
-
-            /** @var float $queriesTime */
-            $queriesTime = collect($queries)->sum('time');
-
-            app(Dispatcher::class)->dispatch(
-                new PowerGridPerformanceData(
-                    $this->tableName,
-                    retrieveDataInMs: $retrieveData,
-                    transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
-                    queriesTimeInMs: $queriesTime,
-                    queries: $queries,
-                )
-            );
-
-            return $results;
-        }
-
         if (!$this->readyToLoad) {
             return collect();
         }
 
+        if (boolval(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
+            return $this->getRecordsFromCache($start);
+        }
+
+        return $this->getRecordsDataSource($start);
+    }
+
+    private function getRecordsFromCache(float $start): mixed
+    {
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
         $ttl       = intval(data_get($this->setUp, 'cache.ttl'));
@@ -156,9 +149,33 @@ class PowerGridComponent extends Component
 
         app(Dispatcher::class)->dispatch(
             new PowerGridPerformanceData(
-                $this->tableName,
-                $time,
+                tableName: $this->tableName,
+                retrieveDataInMs: $time,
                 isCached: true,
+            )
+        );
+
+        return $results;
+    }
+
+    private function getRecordsDataSource(float $start): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
+    {
+        $results = $this->readyToLoad ? $this->fillData() : collect();
+
+        $retrieveData = round((microtime(true) - $start) * 1000);
+
+        $queries = $this->processDataSourceInstance?->queryLog() ?? [];
+
+        /** @var float $queriesTime */
+        $queriesTime = collect($queries)->sum('time');
+
+        app(Dispatcher::class)->dispatch(
+            new PowerGridPerformanceData(
+                $this->tableName,
+                retrieveDataInMs: $retrieveData,
+                transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
+                queriesTimeInMs: $queriesTime,
+                queries: $queries,
             )
         );
 
@@ -189,28 +206,6 @@ class PowerGridComponent extends Component
         }
     }
 
-    private function getTheme(): array
-    {
-        $class = $this->template() ?? powerGridTheme();
-
-        if (app()->hasDebugModeEnabled()) {
-            /** @var ThemeBase $themeBase */
-            $themeBase = PowerGrid::theme($class);
-
-            return convertObjectsToArray((array) $themeBase->apply());
-        }
-
-        /** @var array $themes */
-        $themes = Cache::rememberForever('powerGridTheme_' . $class, function () use ($class) {
-            /** @var ThemeBase $themeBase */
-            $themeBase = PowerGrid::theme($class);
-
-            return convertObjectsToArray((array) $themeBase->apply());
-        });
-
-        return $themes;
-    }
-
     /**
      * @throws Exception
      * @throws Throwable
@@ -230,7 +225,6 @@ class PowerGridComponent extends Component
             return $noDataLabel->with(
                 [
                     'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'),
-                    'theme'       => $this->getTheme(),
                     'table'       => 'livewire-powergrid::components.table',
                     'data'        => [],
                 ]
@@ -247,9 +241,14 @@ class PowerGridComponent extends Component
 
     private function renderView(mixed $data): Application|Factory|View
     {
-        $theme = $this->getTheme();
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
-        return view($theme['layout']['table'], [
+        /** @var Theme $theme */
+        $theme = new $themeClass();
+
+        $theme = $theme->apply();
+
+        return view(theme_style($theme, 'layout.table'), [
             'data'  => $data,
             'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',

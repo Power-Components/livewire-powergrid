@@ -2,7 +2,7 @@
     @foreach ($data as $row)
         @php
             $rowId = data_get($row, $this->realPrimaryKey);
-            $class = data_get($theme, 'table.trBodyClass');
+            $class = theme_style($theme, 'table.body.tr');
         @endphp
 
         @if (isset($setUp['detail']))

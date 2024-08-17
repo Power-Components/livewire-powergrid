@@ -21,22 +21,22 @@ $componentCustomView = new class () extends NoDataCollectionTable {
 
 it('shows the Powergrid default "no data" message', function (string $theme) {
     livewire(NoDataCollectionTable::class)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSeeHtml('<span>No records found</span>');
-})->with(['bootstrap', 'tailwind']);
+})->with([\PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]);
 
 it('shows a custom string message', function ($component, $theme) {
     livewire($component)
-           ->call($theme)
+           ->call('setTestThemeClass', $theme)
            ->assertSeeHtml('<span>foo bar 1234</span>');
 })->with(['string' => [$componentCustomMessage::class]])
-->with(['bootstrap', 'tailwind']);
+->with([\PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]);
 
 it('show a view', function ($component, $theme) {
     $this->app['view']->addLocation(fixturePath('views'));
 
     livewire($component)
-           ->call($theme)
+           ->call('setTestThemeClass', $theme)
            ->assertSeeHtml('<div><span class="custom">No Data Here!!!</span></div>');
 })->with(['view' => [$componentCustomView::class]])
-->with(['bootstrap', 'tailwind']);
+->with([\PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]);

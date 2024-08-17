@@ -1,12 +1,12 @@
 <tr
-    class="{{ data_get($theme, 'table.trBodyClass') }}"
-    style="{{ data_get($theme, 'table.trBodyStyle') }}"
+    class="{{ theme_style($theme, 'table.header.tr') }}"
+    style="{{ theme_style($theme, 'table.header.tr.1') }}"
 >
     <th
-        class="{{ data_get($theme, 'table.tdBodyEmptyClass') }}"
-        style="{{ data_get($theme, 'table.tdBodyEmptyStyle') }}"
+        class="{{ theme_style($theme, 'table.body.tdEmpty') }}"
+        style="{{ theme_style($theme, 'table.body.tdEmpty.1') }}"
         colspan="999"
     >
-            {!! $this->processNoDataLabel() !!}
+        {!! $this->processNoDataLabel() !!}
     </th>
 </tr>

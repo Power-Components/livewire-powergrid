@@ -11,15 +11,15 @@
 ])
 
 @php
-    $trClasses = Arr::toCssClasses([data_get($theme, 'table.trClass'), data_get($theme, 'table.trFiltersClass')]);
-    $tdClasses = Arr::toCssClasses([data_get($theme, 'table.tdBodyClass'), data_get($theme, 'table.tdFiltersClass')]);
-    $trStyles = Arr::toCssClasses([data_get($theme, 'table.trBodyStyle'), data_get($theme, 'table.trFiltersStyle')]);
-    $tdStyles = Arr::toCssClasses([data_get($theme, 'table.tdBodyStyle'), data_get($theme, 'table.tdFiltersStyle')]);
+    $trClasses = Arr::toCssClasses([ theme_style($theme, 'table.body.tr'),  theme_style($theme, 'table.body.trFilters')]);
+    $tdClasses = Arr::toCssClasses([ theme_style($theme, 'table.body.td'),  theme_style($theme, 'table.body.tdFilters')]);
+    $trStyles = Arr::toCssClasses([ theme_style($theme, 'table.body.tr.1'),  theme_style($theme, 'table.body.trFilters.1')]);
+    $tdStyles = Arr::toCssClasses([ theme_style($theme, 'table.body.td.1'),  theme_style($theme, 'table.body.tdFilters.1')]);
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
         class="{{ $trClasses }}"
-        style="{{ data_get($theme, 'table.trStyle') }} {{ data_get($theme, 'table.trFiltersStyle') }}"
+        style="{{ $trStyles }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
@@ -40,63 +40,57 @@
                 $filterClass = str(data_get($column, 'filters.className'));
             @endphp
             <td
-                @class([data_get($theme, 'table.tdBodyClass'), data_get($theme, 'table.tdFiltersClass')])
+                @class([theme_style($theme, 'table.body.td'), theme_style($theme, 'table.body.tdFilters')])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
                 @style([
                     'display:none' => data_get($column, 'hidden') === true,
-                    data_get($theme, 'table.tdBodyStyle'),
-                    data_get($theme, 'table.tdFiltersStyle')
+                    theme_style($theme, 'table.body.td.1'),
+                    theme_style($theme, 'table.body.tdFilters.1')
                 ])
             >
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">
                     @if ($filterClass->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
                             :table-name="$tableName"
+                            :theme="$theme"
                             :title="data_get($column, 'title')"
                             :filter="(array) data_get($column, 'filters')"
-                            :theme="data_get($theme, 'filterMultiSelect')"
                             :initial-values="data_get($filters, 'multi_select.'.data_get($column, 'dataField'))"
                         />
                     @elseif ($filterClass->contains(['FilterSelect', 'FilterEnumSelect']))
-                        @includeIf(data_get($theme, 'filterSelect.view'), [
+                        @includeIf(theme_style($theme, 'filterSelect.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
-                            'theme' => data_get($theme, 'filterSelect'),
                         ])
                     @elseif ($filterClass->contains('FilterInputText'))
-                        @includeIf(data_get($theme, 'filterInputText.view'), [
+                        @includeIf(theme_style($theme, 'filterInputText.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
-                            'theme' => data_get($theme, 'filterInputText'),
                         ])
                     @elseif ($filterClass->contains('FilterNumber'))
-                        @includeIf(data_get($theme, 'filterNumber.view'), [
+                        @includeIf(theme_style($theme, 'filterNumber.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
-                            'theme' => data_get($theme, 'filterNumber'),
                         ])
                     @elseif ($filterClass->contains('FilterDateTimePicker'))
-                        @includeIf(data_get($theme, 'filterDatePicker.view'), [
+                        @includeIf(theme_style($theme, 'filterDatePicker.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
                             'type' => 'datetime',
                             'tableName' => $tableName,
                             'classAttr' => 'w-full',
-                            'theme' => data_get($theme, 'filterDatePicker'),
                         ])
                     @elseif ($filterClass->contains('FilterDatePicker'))
-                        @includeIf(data_get($theme, 'filterDatePicker.view'), [
+                        @includeIf(theme_style($theme, 'filterDatePicker.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
                             'type' => 'date',
                             'classAttr' => 'w-full',
-                            'theme' => data_get($theme, 'filterDatePicker'),
                         ])
                     @elseif ($filterClass->contains('FilterBoolean'))
-                        @includeIf(data_get($theme, 'filterBoolean.view'), [
+                        @includeIf(theme_style($theme, 'filterBoolean.view'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
-                            'theme' => data_get($theme, 'filterBoolean'),
                         ])
                     @elseif ($filterClass->contains('FilterDynamic'))
                         <x-dynamic-component

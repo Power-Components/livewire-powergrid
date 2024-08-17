@@ -2,47 +2,54 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Themes\Components\{Actions,
-    Checkbox,
-    Cols,
-    Editable,
-    FilterBoolean,
-    FilterDatePicker,
-    FilterInputText,
-    FilterMultiSelect,
-    FilterNumber,
-    FilterSelect,
-    Footer,
-    Layout,
-    Radio,
-    SearchBox,
-    Table,
-    Toggleable};
-
-/**
- * @method static Table table(string $attrClass, string $attrStyle='')
- * @method static Footer footer()
- * @method static Toggleable toggleable()
- * @method static Layout layout()
- * @method static Cols cols()
- * @method static Actions actions()
- * @method static Checkbox checkbox()
- * @method static Radio radio()
- * @method static Editable editable()
- * @method static FilterBoolean filterBoolean()
- * @method static FilterDatePicker filterDatePicker()
- * @method static FilterMultiSelect filterMultiSelect()
- * @method static FilterNumber filterNumber()
- * @method static FilterSelect filterSelect()
- * @method static FilterInputText filterInputText()
- * @method static SearchBox searchBox()
- * @see ThemeManager
- */
-class Theme extends Facade
+class Theme
 {
-    public static function getFacadeAccessor(): string
+    public string $name = '';
+
+    public string $base = 'livewire-powergrid::components.frameworks.';
+
+    public function root(): string
     {
-        return ThemeManager::class;
+        return $this->base . $this->name;
+    }
+
+    public function toggleable(): array
+    {
+        return [
+            'view' => $this->root() . '.toggleable',
+        ];
+    }
+
+    public function layout(): array
+    {
+        return [
+            'table'      => $this->root() . '.table-base',
+            'header'     => $this->root() . '.header',
+            'pagination' => $this->root() . '.pagination',
+            'footer'     => $this->root() . '.footer',
+        ];
+    }
+
+    public function apply(): array
+    {
+        return [
+            'name'              => $this->name,
+            'root'              => $this->root(),
+            'table'             => $this->table(),
+            'footer'            => $this->footer(),
+            'cols'              => $this->cols(),
+            'editable'          => $this->editable(),
+            'layout'            => $this->layout(),
+            'toggleable'        => $this->toggleable(),
+            'checkbox'          => $this->checkbox(),
+            'radio'             => $this->radio(),
+            'filterBoolean'     => $this->filterBoolean(),
+            'filterDatePicker'  => $this->filterDatePicker(),
+            'filterMultiSelect' => $this->filterMultiSelect(),
+            'filterNumber'      => $this->filterNumber(),
+            'filterSelect'      => $this->filterSelect(),
+            'filterInputText'   => $this->filterInputText(),
+            'searchBox'         => $this->searchBox(),
+        ];
     }
 }

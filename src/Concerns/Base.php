@@ -47,6 +47,8 @@ trait Base
 
     public bool $paginateRaw = false;
 
+    public string $themeRoot = '';
+
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields();
@@ -58,7 +60,7 @@ trait Base
         return $this->primaryKeyAlias ?? $this->primaryKey;
     }
 
-    public function template(): ?string
+    public function customThemeClass(): ?string
     {
         return null;
     }

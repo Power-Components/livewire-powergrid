@@ -13,7 +13,7 @@ beforeEach(
 
 it('calculates "count" on id field', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSee('Count ID: 12')
         ->set('search', 'Dish C')
         ->assertSee('Count ID: 1');
@@ -21,7 +21,7 @@ it('calculates "count" on id field', function (string $component, object $params
 
 it('calculates "sum" on price field', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('<span>Sum Price: $15,000.60</span>')
         ->set('search', 'Dish C')
         ->assertSeeHtml('<span>Sum Price: $300.50</span>')
@@ -31,7 +31,7 @@ it('calculates "sum" on price field', function (string $component, object $param
 
 it('calculates "count" and formats on price field', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('Count Price: 12 item(s)')
         ->set('search', 'Dish C')
         ->assertSeeHtml('Count Price: 1 item(s)')
@@ -41,28 +41,28 @@ it('calculates "count" and formats on price field', function (string $component,
 
 it('calculates and formats "avg" on price field and calorie fields', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('<span>Avg Price: $1,250.05</span>')
         ->assertSeeHtml('<span>Average: 224 kcal</span>');
 })->with('calculations');
 
 it('calculates "min" on price field', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('<span>Min Price: $100.00</span>');
 })->with('calculations');
 
 it('calculates "max" on price field', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('<span>Max Price: $7,500.00</span>');
 })->with('calculations');
 
 dataset('calculations', [
-    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+    'tailwind'       => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => false]],
+    'bootstrap'      => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
+    'tailwind join'  => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
+    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
 ]);
 
 /**

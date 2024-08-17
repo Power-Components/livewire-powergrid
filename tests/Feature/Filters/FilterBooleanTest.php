@@ -16,7 +16,7 @@ it('properly filters by bool true', function (string $component, object $params)
             Filter::boolean('in_stock')->label('sim', 'não'),
         ],
     ])
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSee('Em Estoque')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
 
@@ -76,7 +76,7 @@ $customBuilder = new class () extends DishesTable {
 
 it('properly filters by bool true - custom builder', function (string $component, object $params) {
     $component = livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSee('Em Estoque')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
 
@@ -88,8 +88,8 @@ it('properly filters by bool true - custom builder', function (string $component
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
-        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
     ]);
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
@@ -98,7 +98,7 @@ it('properly filters by bool true - using collection & array table', function (s
             Filter::boolean('in_stock')->label('sim', 'não'),
         ],
     ])
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSee('In Stock')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -136,7 +136,7 @@ it('properly filters by bool true - using collection', function (string $compone
     $component = livewire($component, [
         'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSee('In Stock')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -177,7 +177,7 @@ it('properly filters by bool true - using collection - custom builder', function
                 ->label('yes', 'no'),
         ],
     ])
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
         ->assertSeeHtml('wire:model="filters.boolean.in_stock"');
 
@@ -213,7 +213,7 @@ $customCollection = new class () extends DishesCollectionTable {
 
 it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
     $component = livewire($component)
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
     expect($component->filters)
@@ -238,15 +238,15 @@ it('properly filters by bool true - using collection - custom builder - using ta
         ]);
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind -> id'  => [$customCollection::class, 'tailwind'],
-        'bootstrap -> id' => [$customCollection::class, 'bootstrap'],
+        'tailwind -> id'  => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+        'bootstrap -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
     ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
-        ->call($params->theme);
+        ->call('setTestThemeClass', $params->theme);
 
     expect($component->filters)
         ->toMatchArray([]);
@@ -286,7 +286,7 @@ it('properly filters by bool false - using collection & array', function (string
     $component = livewire($component, [
         'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
-        ->call($theme)
+        ->call('setTestThemeClass', $theme)
         ->assertSee('In Stock')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -323,7 +323,7 @@ it('properly filters by bool "all"', function (string $component, object $params
     $component = livewire($component, [
         'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
     ])
-        ->call($params->theme);
+        ->call('setTestThemeClass', $params->theme);
 
     expect($component->filters)
         ->toMatchArray([]);
@@ -351,7 +351,7 @@ it('properly filters by bool "all"', function (string $component, object $params
 
 it('properly filters by bool "all" - using collection & array table', function (string $component, string $theme) {
     $component = livewire($component)
-        ->call($theme);
+        ->call('setTestThemeClass', $theme);
 
     expect($component->filters)
         ->toMatchArray([]);
@@ -373,23 +373,23 @@ it('properly filters by bool "all" - using collection & array table', function (
     ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
 
 dataset('filter_boolean_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => 'tailwind', 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => 'bootstrap', 'field' => 'dishes.id']],
+    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_boolean_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);
 
 dataset('filter_boolean_themes_array', [
-    [DishesArrayTable::class, 'tailwind'],
-    [DishesArrayTable::class, 'bootstrap'],
+    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);
 
 dataset('filter_boolean_themes_collection', [
-    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
-    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
+    'tailwind'  => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'bootstrap' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);

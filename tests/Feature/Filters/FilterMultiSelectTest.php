@@ -85,7 +85,7 @@ it('properly filter with category_id - Carnes selected', function (string $compo
 
 it('properly filter with id using custom builder', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('filters', [
             'multi_select' => [
                 'category_id' => [
@@ -97,13 +97,13 @@ it('properly filter with id using custom builder', function (string $component, 
         ->assertDontSee('Francesinha vegana');
 })->group('filters')
     ->with([
-        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => 'tailwind']],
-        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => 'bootstrap']],
+        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
     ]);
 
 it('properly filter with category_id using custom collection', function (string $component, object $params) {
     livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('filters', [
             'multi_select' => [
                 'id' => [
@@ -117,8 +117,8 @@ it('properly filter with category_id using custom collection', function (string 
         ->assertDontSee('Name 2');
 })->group('filters')
     ->with([
-        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => 'tailwind']],
-        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => 'bootstrap']],
+        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
     ]);
 
 it('properly filter with category_id - multiple select async', function (string $component) {
@@ -181,23 +181,23 @@ it('properly filter with category_id - multiple select async', function (string 
     ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
 
 dataset('filter_multi_select_themes_with_join', [
-    'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => false]],
-    'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => false]],
-    'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => 'tailwind', 'join' => true]],
-    'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => 'bootstrap', 'join' => true]],
+    'tailwind -> id'  => [DishesFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => false]],
+    'bootstrap -> id' => [DishesFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
+    'tailwind join'   => [DishesFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
+    'bootstrap join'  => [DishesFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
 ]);
 
 dataset('filter_multi_select_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);
 
 dataset('filter_multi_select_themes_array', [
-    [DishesArrayTable::class, 'tailwind'],
-    [DishesArrayTable::class, 'bootstrap'],
+    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);
 
 dataset('filter_multi_select_themes_collection', [
-    'tailwind'  => [DishesCollectionTable::class, 'tailwind'],
-    'bootstrap' => [DishesCollectionTable::class, 'bootstrap'],
+    'tailwind'  => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'bootstrap' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);

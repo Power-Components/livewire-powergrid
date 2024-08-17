@@ -1,11 +1,11 @@
 @props([
-    'theme' => '',
     'inline' => true,
     'filter' => null,
     'tableName' => null,
     'multiple' => true,
     'initialValues' => [],
-    'title' => ''
+    'title' => '',
+    'theme' => null,
 ])
 
 @php
@@ -58,8 +58,8 @@
 >
     @if (filled($filter))
         <div
-            class="{{ data_get($theme, 'baseClass') }}"
-            style="{{ data_get($theme, 'baseStyle') }}"
+            class="{{ theme_style($theme, 'filterSelect.base') }}"
+            style="{{ theme_style($theme, 'filterSelect.base.1') }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -68,7 +68,7 @@
             @endif
             <select
                 @if ($multiple) multiple @endif
-                class="{{ data_get($theme, 'selectClass') }}"
+                class="{{ theme_style($theme, 'filterSelect.select') }}"
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >

@@ -6,7 +6,7 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('searches data using whereRaw on sqlite', function (string $component, object $params) {
     livewire($component, ['database' => 'sqlite'])
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('search', '09/09/2021')
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
@@ -22,8 +22,8 @@ it('searches data using whereRaw on sqlite', function (string $component, object
 
 it('searches data using whereRaw on mysql', function (string $component, object $params) {
     livewire($component, ['database' => 'mysql'])
-        ->call($params->theme)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('search', '09/09/2021')
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
@@ -39,7 +39,7 @@ it('searches data using whereRaw on mysql', function (string $component, object 
 
 it('searches data using whereRaw on pgsql', function (string $component, object $params) {
     livewire($component, ['database' => 'pgsql'])
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('search', '09/09/2021')
         ->assertSee('Polpetone Filé Mignon')
         ->assertDontSee('Barco-Sushi Simples')
@@ -54,6 +54,6 @@ it('searches data using whereRaw on pgsql', function (string $component, object 
 })->with('searchable_raw_themes')->requiresPostgreSQL();
 
 dataset('searchable_raw_themes', [
-    'tailwind'  => [DishesSearchableRawTable::class, (object) ['theme' => 'tailwind']],
-    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => 'bootstrap']],
+    'tailwind'  => [DishesSearchableRawTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
 ]);

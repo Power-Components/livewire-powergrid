@@ -12,8 +12,8 @@
                         <label class="w-auto">
                             <select
                                     wire:model.live="setUp.footer.perPage"
-                                    class="form-select {{ data_get($theme, 'footer.selectClass') }}"
-                                    style="{{ data_get($theme, 'footer.selectStyle') }}"
+                                    class="form-select {{ theme_style($theme, 'footer.select') }}"
+                                    style="{{ theme_style($theme, 'footer.select.1') }}"
                             >
                                 @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                                     <option value="{{ $value }}">
@@ -34,7 +34,7 @@
             </div>
             <div class="col-auto overflow-auto mt-2 mt-sm-0">
                 @if (method_exists($data, 'links'))
-                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: powerGridThemeRoot() . '.pagination', [
+                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'root') . '.pagination', [
                         'recordCount' => data_get($setUp, 'footer.recordCount'),
                     ]) !!}
                 @endif

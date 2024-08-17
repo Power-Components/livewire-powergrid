@@ -1,33 +1,33 @@
 @props([
-    'theme' => null,
     'readyToLoad' => false,
     'items' => null,
     'lazy' => false,
     'tableName' => null,
+    'theme' => null,
 ])
 <div @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset>
     <table
         id="table_base_{{ $tableName }}"
-        class="table power-grid-table {{ data_get($theme, 'table.tableClass') }}"
-        style="{{  data_get($theme, 'tableStyle') }}"
+        class="table power-grid-table {{ theme_style($theme, 'table.layout.table') }}"
+        style="{{ theme_style($theme, 'table.layout.table.1') }}"
     >
         <thead
-            class="{{ data_get($theme, 'table.theadClass') }}"
-            style="{{ data_get($theme, 'table.theadStyle') }}"
+            class="{{ theme_style($theme, 'table.header.thead') }}"
+            style="{{ theme_style($theme, 'table.header.thead.1') }}"
         >
             {{ $header }}
         </thead>
         @if ($readyToLoad)
             <tbody
-                class="{{  data_get($theme, 'table.tbodyClass') }}"
-                style="{{  data_get($theme, 'table.tbodyStyle') }}"
+                class="{{ theme_style($theme, 'table.body.tbody') }}"
+                style="{{ theme_style($theme, 'table.body.tbody.1') }}"
             >
                 {{ $body }}
             </tbody>
         @else
             <tbody
-                class="{{  data_get($theme, 'table.tbodyClass') }}"
-                style="{{  data_get($theme, 'table.tbodyStyle') }}"
+                class="{{ theme_style($theme, 'table.body.tbody') }}"
+                style="{{ theme_style($theme, 'table.body.tbody.1') }}"
             >
                 {{ $loading }}
             </tbody>
@@ -37,7 +37,7 @@
     {{-- infinite pagination handler --}}
     @if ($this->canLoadMore && $lazy)
         <div class="justify-center items-center" wire:loading.class="flex" wire:target="loadMore">
-            @include(powerGridThemeRoot() . '.header.loading')
+            @include(data_get($theme, 'root') . '.header.loading')
         </div>
 
         <div x-data="pgLoadMore"></div>

@@ -9,12 +9,12 @@
         <option value="">{{ $empty }}</option>
         @foreach ($data as $value => $label)
             <option
-                wire:key="{{ md5($field->key . $value) }}"
+                wire:key="{{ $field->key . $value }}"
                 value="{{ $value }}"
             >{{ $label }}</option>
         @endforeach
     </select>
-    <div class="{{ data_get($theme, 'relativeDivClass') }}">
+    <div>
         <x-livewire-powergrid::icons.down />
     </div>
 </div>

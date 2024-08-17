@@ -7,7 +7,7 @@ use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 it(
     'property displays the results and options',
     fn (string $component, object $params) => livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtmlInOrder([
             'wire:model="filters.select.dishes.diet"',
             'wire:input.live.debounce.600ms="filterSelect(\'dishes.diet\', \'Dieta\')"',
@@ -29,7 +29,7 @@ it(
 it(
     'properly filter with diet',
     fn (string $component, object $params) => livewire($component)
-        ->call($params->theme)
+        ->call('setTestThemeClass', $params->theme)
         ->set('filters', filterEnumSelect('diet', 1))
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
@@ -47,6 +47,6 @@ function filterEnumSelect(string $dataField, ?string $value): array
 }
 
 dataset('enum_themes', [
-    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => 'tailwind', 'field' => 'id']],
-    'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => 'bootstrap', 'field' => 'id']],
+    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);

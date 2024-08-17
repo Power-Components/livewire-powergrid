@@ -1,15 +1,15 @@
 {{-- blade-formatter-disable --}}
-<tr class="{{ data_get($theme, 'table.trBodyClass'). ' '.data_get($theme, 'table.trBodyClassTotalColumns') }}"
-    style="{{ data_get($theme, 'table.trBodyStyle'). ' '.data_get($theme, 'table.trBodyStyleTotalColumns') }}">
+<tr class="{{ theme_style($theme, 'table.body.tr'). ' '.theme_style($theme, 'table.body.trSummarize') }}"
+    style="{{ theme_style($theme, 'table.body.tr.1'). ' '.theme_style($theme, 'table.body.trSummarize.1') }}">
     @if(data_get($setUp, 'detail.showCollapseIcon'))
-        <td class="{{ data_get($theme, 'table.tdBodyClass') }}" style="{{ data_get($theme, 'table.tdBodyStyle') }}"></td>
+        <td class="{{ theme_style($theme, 'table.body.td') }}" style="{{ theme_style($theme, 'table.body.td.1') }}"></td>
     @endif
     @if($checkbox)
-        <td class="{{ data_get($theme, 'table.tdBodyClass') }}" style="{{ data_get($theme, 'table.tdBodyStyle') }}"></td>
+        <td class="{{ theme_style($theme, 'table.body.td') }}" style="{{ theme_style($theme, 'table.body.td.1') }}"></td>
     @endif
     @foreach ($this->visibleColumns as $column)
-        <td class="{{ data_get($theme, 'table.tdBodyClassTotalColumns') . ' '.data_get($column, 'bodyClass') ?? '' }}"
-            style="{{ data_get($column, 'hidden') === true ? 'display:none': '' }}; {{ data_get($theme, 'table.tdBodyStyleTotalColumns') . ' '.data_get($column, 'bodyStyle') ?? ''  }}">
+        <td class="{{ theme_style($theme, 'table.body.tdSummarize') . ' '.data_get($column, 'bodyClass') ?? '' }}"
+            style="{{ data_get($column, 'hidden') === true ? 'display:none': '' }}; {{ theme_style($theme, 'table.body.tdSummarize') . ' '.data_get($column, 'bodyStyle') ?? ''  }}">
             @include('livewire-powergrid::components.summarize', [
                 'sum' => data_get($column, 'sum.header') ? data_get($column, 'summarize.sum') : null,
                 'labelSum' => data_get($column, 'sum.label'),
@@ -29,8 +29,8 @@
         </td>
     @endforeach
     @if(isset($actions) && count($actions))
-        <th class="{{ data_get($theme, 'table.thClass') .' '. data_get($column, 'headerClass') }}" scope="col"
-            style="{{ data_get($theme, 'table.thStyle') }}" colspan="{{count($actions)}}">
+        <th class="{{ theme_style($theme, 'table.header.th') .' '. data_get($column, 'headerClass') }}" scope="col"
+            style="{{ theme_style($theme, 'table.header.th.1') }}" colspan="{{count($actions)}}">
         </th>
     @endif
 </tr>

@@ -1,5 +1,4 @@
 @props([
-    'theme' => '',
     'inline' => null,
     'filter' => null,
     'column' => '',
@@ -18,7 +17,7 @@
     );
 
     $filterClasses = Arr::toCssClasses([
-        data_get($theme, 'inputClass'),
+        theme_style($theme, 'filterNumber.input'),
         'power_grid',
     ]);
 
@@ -37,6 +36,7 @@
 @else
     <div @class([
         'space-y-1' => !$inline,
+        theme_style($theme, 'filterNumber.base')
     ])>
         @if (!$inline)
             <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
@@ -50,7 +50,7 @@
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline])>
                 <input
                     {{ $defaultAttributes['inputStartAttributes'] }}
-                    style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}"
+                    style="{{ theme_style($theme, 'filterInputText.input.1') }} {{ data_get($column, 'headerStyle') }}"
                     type="text"
                     class="{{ $filterClasses }}"
                     placeholder="{{ $placeholder['min'] ?? __('Min') }}"
@@ -59,7 +59,7 @@
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline, 'mt-1' => $inline])>
                 <input
                     {{ $defaultAttributes['inputEndAttributes'] }}
-                    @if ($inline) style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}" @endif
+                    @if ($inline) style="{{ theme_style($theme, 'filterNumber.input') }} {{ data_get($column, 'headerStyle') }}" @endif
                     type="text"
                     class="{{ $filterClasses }}"
                     placeholder="{{ $placeholder['max'] ?? __('Max') }}"

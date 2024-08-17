@@ -4,16 +4,13 @@
     'parentId' => null,
 ])
 
-@includeWhen(isset($setUp['responsive']), powerGridThemeRoot() . '.toggle-detail-responsive', [
-    'theme' => data_get($theme, 'table'),
-    'rowId' => $rowId,
+@includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
     [
-        'theme' => data_get($theme, 'table'),
         'view' => data_get($setUp, 'detail.viewIcon') ?? null,
     ]
 )
@@ -52,14 +49,15 @@
     @endphp
     <td
         @class([
-            data_get($theme, 'table.tdBodyClass'),
+            theme_style($theme, 'table.body.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
+            theme_style($theme, 'table.body.td.1')
         ])
-        wire:key="row-{{ data_get($row, $this->realPrimaryKey) }}-{{ $childIndex ?? 0 }}"
+        wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
     >
         @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
             <div class="pg-actions">
@@ -81,20 +79,20 @@
         @endif
 
         @php
-            $showEditOnClick = once(fn() => $this->shouldShowEditOnClick($column, $row));
+            $showEditOnClick = $this->shouldShowEditOnClick($column, $row);
         @endphp
 
         @if ($showEditOnClick === true)
             <span @class([$contentClassField, $contentClass])>
-                @include(data_get($theme, 'editable.view') ?? null, [
+                @include(theme_style($theme, 'editable.view') ?? null, [
                     'editable' => data_get($column, 'editable'),
                 ])
             </span>
         @elseif(count(data_get($column, 'toggleable')) > 0)
             @php
-                $showToggleable = once(fn() => $this->shouldShowToggleable($column, $row));
+                $showToggleable = $this->shouldShowToggleable($column, $row);
             @endphp
-            @includeWhen($showToggleable, data_get($theme, 'toggleable.view'), ['tableName' => $tableName])
+            @includeWhen($showToggleable, theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
         @else
             <span @class([$contentClassField, $contentClass])>
                 @if (filled($templateContent))

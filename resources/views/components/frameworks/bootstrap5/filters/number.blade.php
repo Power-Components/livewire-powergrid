@@ -14,7 +14,7 @@
 
     $defaultAttributes = $fieldClassName::getWireAttributes($field, array_merge($filter, (array)$column));
 
-    $filterClasses = Arr::toCssClasses([data_get($theme, 'inputClass'), 'power_grid']);
+    $filterClasses = Arr::toCssClasses([theme_style($theme, 'filterNumber.input')]);
 
     $placeholder = data_get($filter, 'placeholder');
 
@@ -30,13 +30,13 @@
     />
 @else
     <div
-        class="{{ data_get($theme, 'baseClass') }}"
-        style="{{ data_get($theme, 'baseStyle') }}"
+        class="{{ theme_style($theme, 'filterNumber.base') }}"
+        style="{{ theme_style($theme, 'filterNumber.base.1') }}"
     >
         <div>
             <input
                 {{ $defaultAttributes['inputStartAttributes'] }}
-                @if ($inline) style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}" @endif
+                @if ($inline) style="{{ theme_style($theme, 'filterNumber.input.1') }} {{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
                 placeholder="{{ $placeholder['min'] ?? __('Min') }}"
@@ -45,7 +45,7 @@
         <div class="mt-1">
             <input
                 {{ $defaultAttributes['inputEndAttributes'] }}
-                @if ($inline) style="{{ data_get($theme, 'inputStyle') }} {{ data_get($column, 'headerStyle') }}" @endif
+                @if ($inline) style="{{ theme_style($theme, 'filterNumber.input.1') }} {{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
                 placeholder="{{ $placeholder['max'] ?? __('Max') }}"

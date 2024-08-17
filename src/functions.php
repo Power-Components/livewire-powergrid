@@ -1,30 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind, ThemeBase};
-
-if (!function_exists('powerGridThemeRoot')) {
-    /**
-     * @throws Exception
-     */
-    function powerGridThemeRoot(): string
-    {
-        /** @var ThemeBase $theme */
-        $theme = PowerGrid::theme(strval(config('livewire-powergrid.theme')));
-
-        return $theme->root();
-    }
-}
-
-if (!function_exists('powerGridTheme')) {
-    /**
-     * @throws Exception
-     */
-    function powerGridTheme(): string
-    {
-        return strval(config('livewire-powergrid.theme'));
-    }
-}
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 
 if (!function_exists('isBootstrap5')) {
     function isBootstrap5(): bool
@@ -37,21 +13,6 @@ if (!function_exists('isTailwind')) {
     function isTailwind(): bool
     {
         return in_array(config('livewire-powergrid.theme'), ['tailwind', Tailwind::class]);
-    }
-}
-
-if (!function_exists('convertObjectsToArray')) {
-    function convertObjectsToArray(array $data): array
-    {
-        foreach ($data as $key => $value) {
-            if (is_object($value)) {
-                $data[$key] = (array) $value;
-            } elseif (is_array($value)) {
-                $data[$key] = convertObjectsToArray($value);
-            }
-        }
-
-        return $data;
     }
 }
 
@@ -85,5 +46,12 @@ if (!function_exists('once')) {
     function once(callable $callback): mixed
     {
         return $callback();
+    }
+}
+
+if (!function_exists('theme_style')) {
+    function theme_style(array $theme, string $name): string
+    {
+        return strval(data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name));
     }
 }

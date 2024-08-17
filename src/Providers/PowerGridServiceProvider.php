@@ -16,7 +16,6 @@ use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, U
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
-use PowerComponents\LivewirePowerGrid\Themes\ThemeManager;
 use PowerComponents\LivewirePowerGrid\{Button,
     Components\Rules\RuleActions,
     Livewire\LazyChild,
@@ -59,7 +58,6 @@ class PowerGridServiceProvider extends ServiceProvider
         }
 
         $this->app->alias(PowerGridManager::class, 'powergrid');
-        $this->app->alias(ThemeManager::class, 'theme');
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
 
