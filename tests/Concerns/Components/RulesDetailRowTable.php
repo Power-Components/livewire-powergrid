@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\{Button, Detail, Footer, Header};
+use PowerComponents\LivewirePowerGrid\{Button, PowerGrid};
 
 class RulesDetailRowTable extends DishTableBase
 {
@@ -12,15 +12,15 @@ class RulesDetailRowTable extends DishTableBase
         config()->set('livewire.inject_morph_markers', false);
 
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
 
-            Detail::make()
+            PowerGrid::detail()
                 ->view('livewire-powergrid::tests.detail')
                 ->options(['name' => 'Luan'])
                 ->showCollapseIcon(),

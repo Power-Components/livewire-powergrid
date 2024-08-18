@@ -5,14 +5,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\{Carbon, Collection, Number};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    Footer,
-    Header,
+use PowerComponents\LivewirePowerGrid\{Column,
     PowerGrid,
     PowerGridComponent,
-    PowerGridFields
-};
+    PowerGridFields};
 
 class DishesCalculationsCollectionTable extends PowerGridComponent
 {
@@ -20,16 +16,22 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
 
     public bool $join = false;
 
+    public function start(): void
+    {
+        PowerGrid::start()
+            ->summarize();
+    }
+
     public function setUp(): array
     {
         $this->showCheckBox();
 
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

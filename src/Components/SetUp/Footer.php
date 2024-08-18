@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -21,11 +21,6 @@ final class Footer implements Wireable
     public string $includeViewOnBottom = '';
 
     public string $pageName = 'page';
-
-    public static function make(): self
-    {
-        return new Footer();
-    }
 
     public function showPerPage(int $perPage = 10, array $perPageValues = [10, 25, 50, 100, 0]): Footer
     {

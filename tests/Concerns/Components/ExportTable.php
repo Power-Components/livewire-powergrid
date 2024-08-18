@@ -4,16 +4,12 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    Exportable,
-    Footer,
-    Header,
+use PowerComponents\LivewirePowerGrid\{Column,
+    Components\SetUp\Exportable,
     PowerGrid,
     PowerGridComponent,
     PowerGridFields,
-    Traits\WithExport
-};
+    Traits\WithExport};
 
 class ExportTable extends PowerGridComponent
 {
@@ -28,16 +24,16 @@ class ExportTable extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
+            PowerGrid::exportable('export')
                 ->striped()
                 ->csvSeparator($this->separator)
                 ->csvDelimiter($this->delimiter)
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
-            Header::make()
+            PowerGrid::header()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

@@ -7,7 +7,6 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Facades\Filter,
-    Header,
     PowerGrid,
     PowerGridComponent,
     PowerGridFields};
@@ -19,7 +18,7 @@ class DishesDynamicFiltersTable extends PowerGridComponent
     public function setUp(): array
     {
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showSearchInput(),
         ];
     }

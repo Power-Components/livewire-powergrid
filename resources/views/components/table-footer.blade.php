@@ -18,20 +18,20 @@
             style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; {{ theme_style($theme, 'table.body.tdSummarize.1') . ' ' . data_get($column, 'bodyStyle') ?? '' }}"
         >
             @include('livewire-powergrid::components.summarize', [
-                'sum' => data_get($column, 'sum.footer') ? data_get($column, 'summarize.sum') : null,
-                'labelSum' =>  data_get($column, 'sum.label'),
+                'sum' => data_get($column, 'properties.summarize.sum.footer') ? data_get($column, 'properties.summarize_values.sum') : null,
+                'labelSum' =>  data_get($column, 'properties.summarize.sum.label'),
 
-                'count' =>  data_get($column, 'count.footer') ? data_get($column, 'summarize.count') : null,
-                'labelCount' =>  data_get($column, 'count.footer'),
+                'count' =>  data_get($column, 'properties.summarize.count.footer') ? data_get($column, 'properties.summarize_values.count') : null,
+                'labelCount' =>  data_get($column, 'properties.summarize.count.footer'),
 
-                'min' =>  data_get($column, 'min.footer') ? data_get($column, 'summarize.min') : null,
-                'labelMin' =>  data_get($column, 'min.footer'),
+                'min' =>  data_get($column, 'properties.summarize.min.footer') ? data_get($column, 'properties.summarize_values.min') : null,
+                'labelMin' =>  data_get($column, 'properties.summarize.min.footer'),
 
-                'max' =>  data_get($column, 'max.footer') ? data_get($column, 'summarize.max') : null,
-                'labelMax' =>  data_get($column, 'max.label'),
+                'max' =>  data_get($column, 'properties.summarize.max.footer') ? data_get($column, 'properties.summarize_values.max') : null,
+                'labelMax' =>  data_get($column, 'properties.summarize.max.label'),
 
-                'avg' =>  data_get($column, 'avg.footer') ? data_get($column, 'summarize.avg') : null,
-                'labelAvg' =>  data_get($column, 'avg.label'),
+                'avg' =>  data_get($column, 'properties.summarize.avg.footer') ? data_get($column, 'properties.summarize_values.avg') : null,
+                'labelAvg' =>  data_get($column, 'properties.summarize.avg.label'),
             ])
         </td>
     @endforeach

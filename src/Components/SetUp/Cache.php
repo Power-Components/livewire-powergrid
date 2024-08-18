@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -15,11 +15,6 @@ final class Cache implements Wireable
     public int $ttl = 300;
 
     public string $prefix = '';
-
-    public static function make(): self
-    {
-        return new Cache();
-    }
 
     public function disabled(): Cache
     {

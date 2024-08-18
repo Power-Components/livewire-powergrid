@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -15,11 +15,6 @@ final class Lazy implements Wireable
     public int $items = 0;
 
     public string $dispatchAfterToggleDetail;
-
-    public static function make(): static
-    {
-        return new static();
-    }
 
     public function rowsPerChildren(int $qty): static
     {

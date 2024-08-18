@@ -82,7 +82,7 @@
                             :$tableName
                             :parentName="$this->getName()"
                             :columns="$this->visibleColumns"
-                            :data="\PowerComponents\LivewirePowerGrid\ProcessDataSource::transform($data->skip($skip)->take($take), $this, true)"
+                            :data="\PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase::transform($data->skip($skip)->take($take), $this, true)"
                         />
                     @endforeach
                 </div>

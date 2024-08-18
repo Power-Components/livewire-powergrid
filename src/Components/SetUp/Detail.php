@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -19,11 +19,6 @@ final class Detail implements Wireable
     public string $viewIcon = '';
 
     public bool $collapseOthers = false;
-
-    public static function make(): self
-    {
-        return new Detail();
-    }
 
     public function view(string $view): Detail
     {

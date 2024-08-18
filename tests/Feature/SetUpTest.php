@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSetUpTable
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{Cache, Footer};
+use PowerComponents\LivewirePowerGrid\{PowerGrid};
 
 it('show includeViewOnTop/Bottom - Header', function () {
     livewire(DishesSetUpTable::class, ['testHeader' => true])
@@ -34,9 +34,9 @@ it('cache work properly with tags - rememberForever', function () {
 
     /** @var DishesSetUpTable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
-        Cache::make()
+        PowerGrid::cache()
             ->prefix('test-'),
-        Footer::make()
+        PowerGrid::footer()
             ->showPerPage(15),
     ]]);
 
@@ -82,9 +82,9 @@ it('cache work properly with tags - remember', function () {
 
     /** @var DishesSetUpTable|\Livewire\Features\SupportTesting\Testable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
-        Cache::make()
+        PowerGrid::cache()
             ->ttl(360),
-        Footer::make()
+        PowerGrid::footer()
             ->showPerPage(15),
     ]]);
 
@@ -129,10 +129,10 @@ it('cache work properly with tags - customTag', function () {
 
     /** @var DishesSetUpTable|\Livewire\Features\SupportTesting\Testable $component */
     $component = livewire(DishesSetUpTable::class, ['testCache' => [
-        Cache::make()
+        PowerGrid::cache()
             ->customTag('my-custom-tag')
             ->ttl(360),
-        Footer::make()
+        PowerGrid::footer()
             ->showPerPage(15),
     ]]);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -21,11 +21,6 @@ final class Header implements Wireable
     public string $includeViewOnBottom = '';
 
     public bool $wireLoading = true;
-
-    public static function make(): self
-    {
-        return new Header();
-    }
 
     /**
      * @return $this

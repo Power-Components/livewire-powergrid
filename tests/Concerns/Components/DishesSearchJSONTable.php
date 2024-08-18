@@ -4,17 +4,20 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridFields};
 
 class DishesSearchJSONTable extends PowerGridComponent
 {
     public function setUp(): array
     {
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

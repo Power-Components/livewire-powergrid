@@ -6,16 +6,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Dish};
-use PowerComponents\LivewirePowerGrid\{
-    Button,
+use PowerComponents\LivewirePowerGrid\{Button,
     Column,
-    Exportable,
-    Footer,
-    Header,
+    Components\SetUp\Exportable,
     PowerGrid,
     PowerGridComponent,
-    PowerGridFields
-};
+    PowerGridFields};
 
 class DishesMakeTable extends PowerGridComponent
 {
@@ -46,15 +42,15 @@ class DishesMakeTable extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
+            PowerGrid::exportable('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

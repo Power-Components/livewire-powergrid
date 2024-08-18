@@ -5,15 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     Facades\Filter,
-    Footer,
-    Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridFields
-};
+    PowerGridFields};
 
 class DishesEnumTable extends PowerGridComponent
 {
@@ -22,11 +18,11 @@ class DishesEnumTable extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

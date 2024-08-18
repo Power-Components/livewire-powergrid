@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Detail};
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGrid};
 
 $baseRuleComponent = new class () extends DishesTable {
     public function setUp(): array
@@ -12,7 +12,7 @@ $baseRuleComponent = new class () extends DishesTable {
         return [
             ...parent::setUp(),
 
-            Detail::make()
+            PowerGrid::detail()
                 ->view('components.detail')
                 ->showCollapseIcon()
                 ->params(['name' => 'Luan']),
