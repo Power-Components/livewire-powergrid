@@ -1,9 +1,10 @@
 <div>
     @includeIf(data_get($setUp, 'header.includeViewOnTop'))
+
     <div class="mb-3 md:flex md:flex-row w-full justify-between items-center">
-        <div class="md:flex md:flex-row w-full">
-            <div>
-                @include(data_get($theme, 'root') . '.header.actions')
+        <div class="md:flex md:flex-row w-full gap-1">
+            <div x-data="pgRenderActions">
+                <span class="pg-actions-row" x-html="toHtml"></span>
             </div>
             <div class="flex flex-row items-center text-sm flex-wrap">
                 @if (data_get($setUp, 'exportable'))
@@ -28,8 +29,8 @@
 
     @includeIf(data_get($theme, 'root') . '.header.enabled-filters')
 
-    @include(data_get($theme, 'root') . '.header.batch-exporting')
-    @include(data_get($theme, 'root') . '.header.multi-sort')
+    @includeIf(data_get($setUp, 'exportable.batchExport.queues', 0), data_get($theme, 'root') . '.header.batch-exporting')
+    @includeIf($multiSort, data_get($theme, 'root') . '.header.multi-sort')
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
     @includeIf(data_get($theme, 'root') . '.header.message-soft-deletes')
 </div>
