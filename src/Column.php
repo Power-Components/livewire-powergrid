@@ -2,27 +2,21 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Support\Traits\Macroable;
+
 final class Column implements \Livewire\Wireable
 {
+    use Macroable;
+
     public string $title = '';
 
     public string $field = '';
 
-    public string $headerClass = '';
-
-    public string $headerStyle = '';
-
-    public string $bodyClass = '';
-
-    public string $contentClassField = '';
-
-    public string|array $contentClasses = [];
-
-    public string $bodyStyle = '';
-
     public string $dataField = '';
 
     public string $placeholder = '';
+
+    public bool $searchable = false;
 
     public bool $hidden = false;
 
@@ -30,61 +24,37 @@ final class Column implements \Livewire\Wireable
 
     public ?bool $visibleInExport = null;
 
-    public array $editable = [];
-
-    public bool $searchable = false;
-
     public string $searchableRaw = '';
 
     public bool $sortable = false;
 
-    public array $summarize = [];
+    public bool $index = false;
 
-    public array $sum = [
-        'header' => false,
-        'footer' => false,
-        'label'  => null,
-    ];
-
-    public array $count = [
-        'header' => false,
-        'footer' => false,
-        'label'  => null,
-    ];
-
-    public array $avg = [
-        'header' => false,
-        'footer' => false,
-        'label'  => null,
-    ];
-
-    public array $min = [
-        'header' => false,
-        'footer' => false,
-        'label'  => null,
-    ];
-
-    public array $max = [
-        'header' => false,
-        'footer' => false,
-        'label'  => null,
-    ];
-
-    public mixed $filters = null;
+    public array $properties = [];
 
     public bool $isAction = false;
-
-    /**
-     *
-     * @var array<string, array<int, string>|bool> $toggleable
-     */
-    public array $toggleable = [];
-
-    public bool $index = false;
 
     public bool $fixedOnResponsive = false;
 
     public bool $template = false;
+
+    public string $contentClassField = '';
+
+    public string|array $contentClasses = [];
+
+    public string $headerClass = '';
+
+    public string $headerStyle = '';
+
+    public string $bodyClass = '';
+
+    public string $bodyStyle = '';
+
+    public array $toggleable = [];
+
+    public array $editable = [];
+
+    public mixed $filters = null;
 
     /**
      * Adds a new Column
@@ -193,86 +163,6 @@ final class Column implements \Livewire\Wireable
     public function sortable(): Column
     {
         $this->sortable = true;
-
-        return $this;
-    }
-
-    /**
-     * Display Column Sum Summary
-     *
-     */
-    public function withSum(
-        string $label = 'Sum',
-        bool $header = true,
-        bool $footer = true,
-    ): Column {
-        $this->sum['label']  = $label;
-        $this->sum['header'] = $header;
-        $this->sum['footer'] = $footer;
-
-        return $this;
-    }
-
-    /**
-     * Display Column Count Summary
-     *
-     */
-    public function withCount(
-        string $label = 'Count',
-        bool $header = true,
-        bool $footer = true
-    ): Column {
-        $this->count['label']  = $label;
-        $this->count['header'] = $header;
-        $this->count['footer'] = $footer;
-
-        return $this;
-    }
-
-    /**
-     * Display Column Average Summary
-     *
-     */
-    public function withAvg(
-        string $label = 'Avg',
-        bool $header = true,
-        bool $footer = true,
-    ): Column {
-        $this->avg['label']  = $label;
-        $this->avg['header'] = $header;
-        $this->avg['footer'] = $footer;
-
-        return $this;
-    }
-
-    /**
-     * Display Column Minimum Summary
-     *
-     */
-    public function withMin(
-        string $label = 'Min',
-        bool $header = true,
-        bool $footer = true,
-    ): Column {
-        $this->min['label']  = $label;
-        $this->min['header'] = $header;
-        $this->min['footer'] = $footer;
-
-        return $this;
-    }
-
-    /**
-     * Display Column Maximum Summary
-     *
-     */
-    public function withMax(
-        string $label = 'Max',
-        bool $header = true,
-        bool $footer = true
-    ): Column {
-        $this->max['label']  = $label;
-        $this->max['header'] = $header;
-        $this->max['footer'] = $footer;
 
         return $this;
     }

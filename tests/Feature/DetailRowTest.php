@@ -2,18 +2,18 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{Detail,
-    Footer,
+use PowerComponents\LivewirePowerGrid\{Components\SetUp\Detail,
+    PowerGrid,
     Tests\Concerns\Components\RulesDetailRowTable,
     Tests\Concerns\Components\RulesToggleDetailTable};
 
 it('collapse detail row', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage(5),
 
-            Detail::make()
+            PowerGrid::detail()
                 ->view('livewire-powergrid::tests.detail')
                 ->params([
                     'name' => 'Luan',
@@ -93,10 +93,10 @@ it('collapse detail row', function () {
 it('render x-data correctly for detail row state', function () {
     $component = livewire(RulesDetailRowTable::class, [
         'setUpTest' => [
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage(5),
 
-            Detail::make()
+            PowerGrid::detail()
                 ->view('livewire-powergrid::tests.detail')
                 ->collapseOthers(),
         ],
@@ -115,10 +115,10 @@ it('render x-data correctly for detail row state', function () {
 it('collapse detail row with collapseOthers', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage(5),
 
-            Detail::make()
+            PowerGrid::detail()
                 ->view('livewire-powergrid::tests.detail')
                 ->collapseOthers(),
         ],

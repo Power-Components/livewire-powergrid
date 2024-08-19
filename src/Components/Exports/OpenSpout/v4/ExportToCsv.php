@@ -8,7 +8,7 @@ use OpenSpout\Writer\CSV\{Options, Writer};
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
-use PowerComponents\LivewirePowerGrid\{Exportable};
+use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */

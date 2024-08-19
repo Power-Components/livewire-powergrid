@@ -5,16 +5,12 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    Exportable,
+use PowerComponents\LivewirePowerGrid\{Column,
+    Components\SetUp\Exportable,
     Facades\Rule,
-    Footer,
-    Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridFields
-};
+    PowerGridFields};
 
 class DishesTableWithJoin extends PowerGridComponent
 {
@@ -55,15 +51,15 @@ class DishesTableWithJoin extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Exportable::make('export')
+            PowerGrid::exportable('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
-            Header::make()
+            PowerGrid::header()
                 ->showToggleColumns()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

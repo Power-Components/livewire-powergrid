@@ -4,15 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
+use PowerComponents\LivewirePowerGrid\{Column,
     Facades\Filter,
-    Footer,
-    Header,
     PowerGrid,
     PowerGridComponent,
-    PowerGridFields
-};
+    PowerGridFields};
 
 class DishesRowIndex extends PowerGridComponent
 {
@@ -23,10 +19,10 @@ class DishesRowIndex extends PowerGridComponent
         $this->showCheckBox();
 
         return [
-            Header::make()
+            PowerGrid::header()
                 ->showSearchInput(),
 
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

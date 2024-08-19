@@ -8,7 +8,12 @@ use Illuminate\Support\Carbon;
 use Livewire\Attributes\Url;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Exportable, Footer, Header, PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    Components\SetUp\Exportable,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridFields};
 
 final class CypressTable extends PowerGridComponent
 {
@@ -36,23 +41,23 @@ final class CypressTable extends PowerGridComponent
 
         $headerTest = match ($this->testType) {
             'filters' => [
-                Header::make()
+                PowerGrid::header()
                     ->includeViewOnTop('components.header.filters-controllers')
                     ->showSearchInput(),
             ],
             default => [
-                Header::make()
+                PowerGrid::header()
                     ->includeViewOnTop('components.header.rules-controllers')
                     ->showSearchInput(),
             ],
         };
 
         return [
-            Exportable::make('export')
+            PowerGrid::exportable('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             ...$headerTest,
-            Footer::make()
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount(),
         ];

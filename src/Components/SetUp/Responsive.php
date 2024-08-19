@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -15,11 +15,6 @@ final class Responsive implements Wireable
     public array $fixedColumns = ['id', self::CHECKBOX_COLUMN_NAME, self::ACTIONS_COLUMN_NAME];
 
     public array $sortOrder = [];
-
-    public static function make(): static
-    {
-        return new static();
-    }
 
     public function fixedColumns(string ...$columnNames): static
     {

@@ -49,6 +49,10 @@ trait Base
 
     public string $themeRoot = '';
 
+    public function start(): void
+    {
+    }
+
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields();

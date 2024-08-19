@@ -2,13 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use PowerComponents\LivewirePowerGrid\Column;
+
 trait Summarize
 {
     public bool $headerTotalColumn = false;
 
     public bool $footerTotalColumn = false;
 
-    private function resolveTotalRow(): void
+    private function resolveSummarizeColumn(): void
     {
         collect($this->columns)
             ->each(function ($column) {
@@ -16,8 +18,8 @@ trait Summarize
                 $hasFooter = false;
 
                 foreach (['sum', 'count', 'min', 'avg', 'max'] as $operation) {
-                    $hasHeader = $hasHeader || data_get($column, "$operation.header");
-                    $hasFooter = $hasFooter || data_get($column, "$operation.footer");
+                    $hasHeader = $hasHeader || data_get($column, "properties.summarize.$operation.header");
+                    $hasFooter = $hasFooter || data_get($column, "properties.summarize.$operation.footer");
                 }
 
                 $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
@@ -27,20 +29,9 @@ trait Summarize
 
     public function hasSummarizeInColumns(): bool
     {
-        return collect($this->columns)->contains(function ($column) {
-            $operations = ['sum', 'count', 'min', 'avg', 'max'];
-
-            foreach ($operations as $operation) {
-                if (data_get($column, "$operation.header")) {
-                    return true;
-                }
-
-                if (data_get($column, "$operation.footer")) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
+        return collect($this->columns)
+            ->filter(function (array|\stdClass|Column $column) { // @phpstan-ignore-line
+                return data_get($column, 'properties.summarize');
+            })->count() > 0;
     }
 }

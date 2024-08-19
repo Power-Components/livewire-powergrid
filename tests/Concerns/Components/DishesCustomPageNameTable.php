@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use PowerComponents\LivewirePowerGrid\Footer;
+use PowerComponents\LivewirePowerGrid\PowerGrid;
 
 class DishesCustomPageNameTable extends DishTableBase
 {
@@ -10,8 +10,9 @@ class DishesCustomPageNameTable extends DishTableBase
 
     public function setUp(): array
     {
-        return [...parent::setup(),
-            Footer::make()
+        return [
+            ...parent::setup(),
+            PowerGrid::footer()
                 ->showPerPage()
                 ->showRecordCount()
                 ->pageName($this->pageNameCandidate),

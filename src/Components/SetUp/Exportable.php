@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
@@ -27,11 +27,6 @@ final class Exportable implements Wireable
 
     public function __construct(public string $fileName = 'export')
     {
-    }
-
-    public static function make(string $fileName): self
-    {
-        return new Exportable($fileName);
     }
 
     public function type(string ...$types): self

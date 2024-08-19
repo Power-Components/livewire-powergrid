@@ -4,7 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Footer, Header, PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button,
+    Column,
+    PowerGrid,
+    PowerGridComponent,
+    PowerGridFields};
 
 class DishesSetUpTable extends PowerGridComponent
 {
@@ -26,7 +30,7 @@ class DishesSetUpTable extends PowerGridComponent
 
         if ($this->testHeader) {
             return [
-                Header::make()
+                PowerGrid::header()
                     ->showSearchInput()
                     ->includeViewOnTop('livewire-powergrid::tests.header-top')
                     ->includeViewOnBottom('livewire-powergrid::tests.header-bottom'),
@@ -36,7 +40,7 @@ class DishesSetUpTable extends PowerGridComponent
 
         if ($this->testFooter) {
             return [
-                Footer::make()
+                PowerGrid::footer()
                     ->includeViewOnTop('livewire-powergrid::tests.footer-top')
                     ->includeViewOnBottom('livewire-powergrid::tests.footer-bottom'),
             ];

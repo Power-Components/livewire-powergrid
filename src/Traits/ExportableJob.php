@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
-use PowerComponents\LivewirePowerGrid\{PowerGridComponent, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{DataSource\Processors\DataSourceBase, PowerGridComponent, ProcessDataSource};
 
 /** @codeCoverageIgnore */
 trait ExportableJob
@@ -58,6 +58,6 @@ trait ExportableJob
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 
-        return $processDataSource->transform($results, $this->componentTable);
+        return DataSourceBase::transform($results, $this->componentTable);
     }
 }

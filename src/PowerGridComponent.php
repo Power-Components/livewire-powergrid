@@ -8,10 +8,11 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
 
 use Livewire\{Attributes\Computed, Component, WithPagination};
 
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
@@ -42,6 +43,8 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
+        $this->start();
+
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
         /** @var Theme $theme */
@@ -63,9 +66,9 @@ class PowerGridComponent extends Component
 
         $this->columns = $this->columns();
 
-        $this->resolveTotalRow();
-
         $this->restoreState();
+
+        $this->resolveSummarizeColumn();
     }
 
     public function hydrate(): void
@@ -160,11 +163,15 @@ class PowerGridComponent extends Component
 
     private function getRecordsDataSource(float $start): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
     {
+        DB::enableQueryLog();
+
         $results = $this->readyToLoad ? $this->fillData() : collect();
 
-        $retrieveData = round((microtime(true) - $start) * 1000);
+        $queries = DB::getQueryLog();
 
-        $queries = $this->processDataSourceInstance?->queryLog() ?? [];
+        DB::disableQueryLog();
+
+        $retrieveData = round((microtime(true) - $start) * 1000);
 
         /** @var float $queriesTime */
         $queriesTime = collect($queries)->sum('time');
@@ -173,7 +180,7 @@ class PowerGridComponent extends Component
             new PowerGridPerformanceData(
                 $this->tableName,
                 retrieveDataInMs: $retrieveData,
-                transformDataInMs: $this->processDataSourceInstance?->transformTime() ?? 0,
+                transformDataInMs: app(DataSourceBase::class)->transformTime(),
                 queriesTimeInMs: $queriesTime,
                 queries: $queries,
             )
