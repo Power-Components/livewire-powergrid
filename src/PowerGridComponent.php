@@ -81,7 +81,7 @@ class PowerGridComponent extends Component
 
     public function updatedSearch(): void
     {
-        $this->gotoPage(1);
+        $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
         if ($this->hasLazyEnabled) {
             $this->additionalCacheKey = uniqid();
