@@ -117,27 +117,29 @@
                     @endforeach
 
                     @if ($paginator->hasMorePages())
-                        @if ($paginator->lastPage() - $paginator->currentPage() >= 2)
-                            <a
-                                class="select-none cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-pg-primary-500 dark:text-pg-primary-300 bg-white dark:bg-pg-primary-600 border border-pg-primary-300 dark:border-transparent leading-5 hover:text-pg-primary-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-pg-primary-100 active:text-pg-primary-500 transition ease-in-out duration-150"
-                                wire:click="nextPage('{{ $paginator->getPageName() }}')"
-                                rel="next"
-                            >
-                                <svg
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke-width="1.5"
-                                    stroke="currentColor"
-                                    class="w-5 h-5"
+                        <div>
+                            @if ($paginator->lastPage() - $paginator->currentPage() >= 2)
+                                <a
+                                    class="select-none cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-pg-primary-500 dark:text-pg-primary-300 bg-white dark:bg-pg-primary-600 border border-pg-primary-300 dark:border-transparent leading-5 hover:text-pg-primary-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-pg-primary-100 active:text-pg-primary-500 transition ease-in-out duration-150"
+                                    wire:click="nextPage('{{ $paginator->getPageName() }}')"
+                                    rel="next"
                                 >
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                                    />
-                                </svg>
-                            </a>
-                        @endif
+                                    <svg
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        class="w-5 h-5"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                                        />
+                                    </svg>
+                                </a>
+                           @endif
+                        </div>
                         <a
                             class="select-none cursor-pointer cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-pg-primary-500 dark:text-pg-primary-300 bg-white dark:bg-pg-primary-600 border border-pg-primary-300 dark:border-transparent rounded-r-md leading-5 hover:text-pg-primary-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-pg-primary-100 active:text-pg-primary-500 transition ease-in-out duration-150"
                             wire:click="gotoPage({{ $paginator->lastPage() }}, '{{ $paginator->getPageName() }}')"

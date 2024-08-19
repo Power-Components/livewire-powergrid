@@ -28,24 +28,7 @@
                         $class = theme_style($theme, 'table.body.tr');
                     @endphp
 
-                    @if (isset($setUp['detail']))
-                        <tbody
-                            wire:key="tbody-{{ substr($rowId, 0, 6) }}"
-                            class="{{ $class }}"
-                        >
-                            @include('livewire-powergrid::components.row', [
-                                'rowIndex' => $loop->index + 1,
-                            ])
-                            @if(data_get($setUp, 'detail.state.' . $rowId))
-                                <tr
-                                    style="{{ theme_style($theme, 'table.body.tr.1') }}"
-                                    class="{{ $class }}"
-                                >
-                                    @include('livewire-powergrid::components.table.detail')
-                                </tr>
-                            @endif
-                        </tbody>
-                    @else
+
                         <tr
                             x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules)})"
                             x-bind="getAttributes"
@@ -54,7 +37,6 @@
                                 'rowIndex' => $loop->index + 1,
                             ])
                         </tr>
-                    @endif
 
                     @includeWhen(isset($setUp['responsive']),
                         'livewire-powergrid::components.expand-container')

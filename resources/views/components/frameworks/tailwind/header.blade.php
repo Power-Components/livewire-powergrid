@@ -29,8 +29,8 @@
 
     @includeIf(data_get($theme, 'root') . '.header.enabled-filters')
 
-    @includeIf(data_get($setUp, 'exportable.batchExport.queues', 0), data_get($theme, 'root') . '.header.batch-exporting')
-    @includeIf($multiSort, data_get($theme, 'root') . '.header.multi-sort')
+    @includeWhen(data_get($setUp, 'exportable.batchExport.queues', 0), data_get($theme, 'root') . '.header.batch-exporting')
+    @includeWhen($multiSort, data_get($theme, 'root') . '.header.multi-sort')
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
     @includeIf(data_get($theme, 'root') . '.header.message-soft-deletes')
 </div>
