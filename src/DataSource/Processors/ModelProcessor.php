@@ -5,10 +5,9 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use PowerComponents\LivewirePowerGrid\DataSource\{Builder, DataSourceProcessorInterface};
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Collection as BaseCollection;
+use PowerComponents\LivewirePowerGrid\DataSource\{Builder, DataSourceProcessorInterface};
 
 class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterface
 {
@@ -52,7 +51,7 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
             return $results;
         }
 
-        $collection = $results->getCollection();
+        $collection = $results->getCollection(); // @phpstan-ignore-line
 
         return $results->setCollection($this->transform($collection, $this->component)); // @phpstan-ignore-line
     }

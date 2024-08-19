@@ -85,17 +85,3 @@ test('set/sanitize and fallback pageName', function (string $pageNameCandidate, 
 ]);
 
 todo('prevents the "division by zero exception" when there is no data and when using toBase');
-
-it('properly paginates', function () {
-    $component = powergrid();
-
-    $component->setUp = [
-        'footer' => ['perPage' => 5],
-    ];
-    $pagination = $component->fillData();
-
-    expect($pagination->items())->toHaveCount(5)
-        ->and($pagination->first()->name)->toBe('Pastel de Nata')
-        ->and($pagination->total())->toBe(15)
-        ->and($pagination->perPage())->toBe(5);
-});

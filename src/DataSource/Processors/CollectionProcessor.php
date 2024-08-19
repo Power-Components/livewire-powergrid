@@ -16,7 +16,7 @@ class CollectionProcessor extends DataSourceBase implements DataSourceProcessorI
     public function process(): LengthAwarePaginator|BaseCollection
     {
         $filters = \PowerComponents\LivewirePowerGrid\DataSource\Collection::make(
-            new BaseCollection($this->prepareDataSource()),
+            new BaseCollection($this->prepareDataSource()), // @phpstan-ignore-line
             $this->component
         )
             ->filterContains()

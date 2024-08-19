@@ -2,15 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
+use Illuminate\Support\Collection as BaseCollection;
 use PowerComponents\LivewirePowerGrid\DataSource\{DataSourceProcessorInterface,
     Processors\CollectionProcessor,
     Processors\ModelProcessor,
     Processors\ScoutBuilderProcessor
 };
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection as BaseCollection;
 
 class ProcessDataSource
 {
