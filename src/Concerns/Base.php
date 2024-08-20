@@ -49,6 +49,8 @@ trait Base
 
     public string $themeRoot = '';
 
+    public bool $measurePerformance = false;
+
     public function start(): void
     {
     }
