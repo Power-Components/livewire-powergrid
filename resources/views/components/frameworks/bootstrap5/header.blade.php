@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center">
                 <div x-data="pgRenderActions">
-                    <span class="pg-actions-row" x-html="toHtml"></span>
+                    <span class="pg-actions" x-html="toHtml"></span>
                 </div>
 
                 <div class="me-1">

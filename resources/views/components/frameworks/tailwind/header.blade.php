@@ -4,7 +4,7 @@
     <div class="mb-3 md:flex md:flex-row w-full justify-between items-center">
         <div class="md:flex md:flex-row w-full gap-1">
             <div x-data="pgRenderActions">
-                <span class="pg-actions-row" x-html="toHtml"></span>
+                <span class="pg-actions" x-html="toHtml"></span>
             </div>
             <div class="flex flex-row items-center text-sm flex-wrap">
                 @if (data_get($setUp, 'exportable'))

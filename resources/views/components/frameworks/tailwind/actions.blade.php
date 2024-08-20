@@ -1,9 +1,6 @@
 <div class="md:flex md:flex-row w-full">
-    <div>
-        <x-livewire-powergrid::frameworks.tailwind.header.actions
-            :theme="$theme"
-            :actions="$this->headers"
-        />
+    <div x-data="pgRenderActions">
+        <span class="pg-actions" x-html="toHtml"></span>
     </div>
     <div class="flex flex-row justify-center items-center text-sm">
         @if (count($exportOptions) > 0)
