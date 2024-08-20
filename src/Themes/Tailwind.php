@@ -14,6 +14,7 @@ class Tailwind extends Theme
                 'div'       => 'rounded-t-lg relative border-x border-t border-pg-primary-200 dark:bg-pg-primary-700 dark:border-pg-primary-600',
                 'table'     => 'min-w-full dark:!bg-primary-800',
                 'container' => '-my-2 overflow-x-auto sm:-mx-3 lg:-mx-8',
+                'actions'   => 'flex gap-2',
             ],
 
             'header' => [
@@ -24,14 +25,15 @@ class Tailwind extends Theme
             ],
 
             'body' => [
-                'tbody'       => 'text-pg-primary-800',
-                'tbodyEmpty'  => '',
-                'tr'          => 'border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700',
-                'td'          => 'px-3 py-2 whitespace-nowrap dark:text-pg-primary-200',
-                'tdEmpty'     => 'p-2 whitespace-nowrap dark:text-pg-primary-200',
-                'tdSummarize' => 'p-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2',
-                'trSummarize' => '',
-                'tdFilters'   => '',
+                'tbody'              => 'text-pg-primary-800',
+                'tbodyEmpty'         => '',
+                'tr'                 => 'border-b border-pg-primary-100 dark:border-pg-primary-600 hover:bg-pg-primary-50 dark:bg-pg-primary-800 dark:hover:bg-pg-primary-700',
+                'td'                 => 'px-3 py-2 whitespace-nowrap dark:text-pg-primary-200',
+                'tdEmpty'            => 'p-2 whitespace-nowrap dark:text-pg-primary-200',
+                'tdSummarize'        => 'p-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2',
+                'trSummarize'        => '',
+                'tdFilters'          => '',
+                'tdActionsContainer' => 'flex gap-2',
             ],
         ];
     }

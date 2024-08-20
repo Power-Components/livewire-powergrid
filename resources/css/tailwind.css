@@ -34,8 +34,3 @@
 .pg-enabled-filters-base {
     @apply flex items-center gap-2 my-3 md:mt-0 flex-wrap
 }
-
-.pg-actions-row {
-    @apply flex gap-2
-}
-

@@ -31,8 +31,6 @@ trait Base
 
     protected ?ProcessDataSource $processDataSourceInstance = null;
 
-    public array $actions = [];
-
     public array $headers = [];
 
     public string $search = '';

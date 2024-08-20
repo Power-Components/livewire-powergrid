@@ -163,14 +163,6 @@ table thead {
     height: 1.5em;
 }
 
-.pg-actions {
-    @apply flex gap-2 w-full
-}
-
-.pg-filter-container {
-    @apply py-3;
-}
-
 select {
     background-image:  unset !important;
 }

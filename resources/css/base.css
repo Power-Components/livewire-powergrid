@@ -43,13 +43,3 @@ table thead {
     padding-bottom: 8px
 }
 
-.pg-actions {
-    display: flex;
-    gap: 4px;
-    width: 100%;
-}
-
-.pg-actions a {
-  display: inline-block;
-}
-

@@ -172,7 +172,7 @@ class DataSourceBase
             $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . data_get($row, $component->realPrimaryKey)]);
 
             if (method_exists($component, 'actions') && !$hasCookieActionsForRow) {
-                $actions = collect($component->actions((object) $data->toArray())) // @phpstan-ignore-line
+                $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
                     ->transform(function (Button|array $action) use ($row, $component) {
                         return [
                             'slot'           => data_get($action, 'slot'),
@@ -184,7 +184,7 @@ class DataSourceBase
                         ];
                     });
 
-                static::$actionsHtml[data_get((object) $data->toArray(), $component->realPrimaryKey)] = $actions->toArray();
+                static::$actionsHtml[data_get($row, $component->realPrimaryKey)] = $actions->toArray();
             }
 
             $mergedData = $data->merge([
