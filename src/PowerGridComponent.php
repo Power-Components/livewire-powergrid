@@ -74,6 +74,7 @@ class PowerGridComponent extends Component
     public function hydrate(): void
     {
         $this->processDataSourceInstance = null;
+        DataSourceBase::$actionsHtml = [];
     }
 
     public function fetchDatasource(): void
@@ -246,14 +247,13 @@ class PowerGridComponent extends Component
         return view('livewire-powergrid::components.table.no-data-label');
     }
 
-    private function renderView(mixed $data): Application|Factory|View
+    private function renderView(mixed $data)
     {
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
-        /** @var Theme $theme */
-        $theme = new $themeClass();
+        $theme = app($themeClass)->apply();
 
-        $theme = $theme->apply();
+  //      return '<div><button wire:click="sortBy(\'id\', \'desc\')">Test</button></div>';
 
         return view(theme_style($theme, 'layout.table'), [
             'data'  => $data,
@@ -275,11 +275,12 @@ class PowerGridComponent extends Component
     /**
      * @throws Exception|Throwable
      */
-    public function render(): Application|Factory|View
+    public function render()
     {
         $data = $this->getRecords();
 
-        $this->storeActionsRowInJSWindow($data);
+        $this->storeActionsRowInJSWindow();
+
         $this->storeActionsHeaderInJSWindow();
 
         if (empty(data_get($this->setUp, 'lazy'))) {

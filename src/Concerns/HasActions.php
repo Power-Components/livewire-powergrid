@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\{Blade, Cache, File, View};
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase;
 
 trait HasActions
 {
@@ -57,35 +58,13 @@ trait HasActions
         return strval(json_encode($icons));
     }
 
-    public function storeActionsRowInJSWindow(mixed $data): void
+    public function storeActionsRowInJSWindow(): void
     {
         if (!method_exists($this, 'actions')) {
             return;
         }
 
-        $actionsHtml = [];
-
-        $data->each(function ($row) use (&$actionsHtml) {
-            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $this->tableName . '_row_' . data_get($row, $this->realPrimaryKey)]);
-
-            if (!$hasCookieActionsForRow) {
-                $actions = collect($this->actions($row)) // @phpstan-ignore-line
-                    ->transform(function (Button|array $action) use ($row) {
-                        return [
-                            'slot'           => data_get($action, 'slot'),
-                            'tag'            => data_get($action, 'tag'),
-                            'icon'           => data_get($action, 'icon'),
-                            'iconAttributes' => data_get($action, 'iconAttributes'),
-                            'attributes'     => data_get($action, 'attributes'),
-                            'rules'          => $this->resolveActionRules($action, $row),
-                        ];
-                    });
-
-                $actionsHtml[data_get($row, $this->realPrimaryKey)] = $actions->toArray();
-            }
-        });
-
-        $actionsHtml = json_encode($actionsHtml);
+        $actionsHtml = json_encode(DataSourceBase::$actionsHtml);
 
         $this->js(<<<JS
             this[`pgActions_\${\$wire.id}`] = $actionsHtml

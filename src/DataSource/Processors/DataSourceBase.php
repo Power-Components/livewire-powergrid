@@ -11,7 +11,7 @@ use Illuminate\Support\{Collection as BaseCollection, Str};
 use Illuminate\View\Concerns\ManagesLoops;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use PowerComponents\LivewirePowerGrid\{Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Button, Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
 
 class DataSourceBase
 {
@@ -19,6 +19,8 @@ class DataSourceBase
     use ManagesLoops;
 
     public static float $transformTime = 0;
+
+    public static array $actionsHtml = [];
 
     public function __construct(
         public PowerGridComponent $component,
@@ -166,6 +168,24 @@ class DataSourceBase
             $data = $fields->map(fn ($field) => $field((object) $row, $index));
 
             $loopInstance->incrementLoopIndices();
+
+            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . data_get($row, $component->realPrimaryKey)]);
+
+            if (!$hasCookieActionsForRow) {
+                $actions = collect($component->actions($row)) // @phpstan-ignore-line
+                    ->transform(function (Button|array $action) use ($row, $component) {
+                        return [
+                            'slot'           => data_get($action, 'slot'),
+                            'tag'            => data_get($action, 'tag'),
+                            'icon'           => data_get($action, 'icon'),
+                            'iconAttributes' => data_get($action, 'iconAttributes'),
+                            'attributes'     => data_get($action, 'attributes'),
+                            'rules'          => $component->resolveActionRules($action, $row),
+                        ];
+                    });
+
+                static::$actionsHtml[data_get($row, $component->realPrimaryKey)] = $actions->toArray();
+            }
 
             $mergedData = $data->merge([
                 '__powergrid_loop'  => $loop = $loopInstance->getLastLoop(),
