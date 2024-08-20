@@ -173,18 +173,18 @@ class DataSourceBase
 
             if (method_exists($component, 'actions') && !$hasCookieActionsForRow) {
                 $actions = collect($component->actions((object) $data->toArray())) // @phpstan-ignore-line
-                    ->transform(function (Button|array $action) use ($data, $component) {
+                    ->transform(function (Button|array $action) use ($row, $component) {
                         return [
                             'slot'           => data_get($action, 'slot'),
                             'tag'            => data_get($action, 'tag'),
                             'icon'           => data_get($action, 'icon'),
                             'iconAttributes' => data_get($action, 'iconAttributes'),
                             'attributes'     => data_get($action, 'attributes'),
-                            'rules'          => $component->resolveActionRules($action, $data->toArray()),
+                            'rules'          => $component->resolveActionRules($action, $row),
                         ];
                     });
 
-                static::$actionsHtml[data_get($data->toArray(), $component->realPrimaryKey)] = $actions->toArray();
+                static::$actionsHtml[data_get((object) $data->toArray(), $component->realPrimaryKey)] = $actions->toArray();
             }
 
             $mergedData = $data->merge([
