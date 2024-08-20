@@ -100,7 +100,7 @@ trait WithExport
 
     private function putQueuesToBus(string $exportableClass, string $fileExtension): Collection
     {
-        $processDataSource = tap(ProcessDataSource::fillData($this), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::make($this), fn ($datasource) => $datasource->get());
 
         $this->exportedFiles = [];
         $filters             = $processDataSource?->component?->filters ?? [];
@@ -162,7 +162,7 @@ trait WithExport
      */
     public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
     {
-        $processDataSource = tap(ProcessDataSource::fillData($this), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::make($this), fn ($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered;
 

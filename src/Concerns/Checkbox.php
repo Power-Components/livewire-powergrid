@@ -17,12 +17,6 @@ trait Checkbox
 
     public string $checkboxAttribute = 'id';
 
-    public bool $radio = false;
-
-    public string $radioAttribute = 'id';
-
-    public string $selectedRow = '';
-
     /**
      * @throws Exception|Throwable
      */
@@ -37,7 +31,7 @@ trait Checkbox
         }
 
         /** @var AbstractPaginator $data */
-        $data = $this->fillData();
+        $data = $this->getRecords();
 
         if ($data->isEmpty()) {
             return;
@@ -80,14 +74,6 @@ trait Checkbox
     {
         $this->checkbox          = true;
         $this->checkboxAttribute = $attribute;
-
-        return $this;
-    }
-
-    public function showRadioButton(string $attribute = 'id'): self
-    {
-        $this->radio          = true;
-        $this->radioAttribute = $attribute;
 
         return $this;
     }

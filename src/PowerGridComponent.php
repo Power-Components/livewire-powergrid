@@ -27,6 +27,7 @@ class PowerGridComponent extends Component
 {
     use Concerns\Base;
     use Concerns\Checkbox;
+    use Concerns\Radio;
     use Concerns\Filter;
     use Concerns\HasActions;
     use Concerns\Hooks;
@@ -68,8 +69,7 @@ class PowerGridComponent extends Component
 
     public function hydrate(): void
     {
-        $this->processDataSourceInstance = null;
-        DataSourceBase::$actionsHtml     = [];
+        DataSourceBase::$actionsHtml = [];
     }
 
     public function fetchDatasource(): void
@@ -142,7 +142,7 @@ class PowerGridComponent extends Component
         $tag      = $prefix . ($customTag ?: 'powergrid-' . $this->datasource()->getModel()->getTable() . '-' . $this->tableName);
         $cacheKey = implode('-', $this->getCacheKeys());
 
-        $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => $this->fillData());
+        $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
         if ($this->measurePerformance) {
             $time = round((microtime(true) - $start) * 1000);
@@ -165,7 +165,7 @@ class PowerGridComponent extends Component
             DB::enableQueryLog();
         }
 
-        $results = $this->readyToLoad ? $this->fillData() : collect();
+        $results = ProcessDataSource::make($this)->get();
 
         if ($this->measurePerformance) {
             $queries = DB::getQueryLog();
@@ -213,17 +213,6 @@ class PowerGridComponent extends Component
         if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
             throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
         }
-    }
-
-    /**
-     * @throws Exception
-     * @throws Throwable
-     */
-    public function fillData(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
-    {
-        $this->processDataSourceInstance = ProcessDataSource::fillData($this);
-
-        return $this->processDataSourceInstance->get();
     }
 
     public function processNoDataLabel(): string

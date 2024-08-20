@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\Computed;
-use PowerComponents\LivewirePowerGrid\{PowerGrid, PowerGridFields, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{PowerGrid, PowerGridFields};
 
 trait Base
 {
@@ -28,8 +28,6 @@ trait Base
     public string $loadingComponent = '';
 
     public array $columns = [];
-
-    protected ?ProcessDataSource $processDataSourceInstance = null;
 
     public array $headers = [];
 

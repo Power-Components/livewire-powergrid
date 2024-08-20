@@ -34,7 +34,7 @@ trait ExportableJob
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
         /** @phpstan-ignore-next-line */
-        $processDataSource = tap(ProcessDataSource::fillData($this->componentTable, $properties), fn ($datasource) => $datasource->get());
+        $processDataSource = tap(ProcessDataSource::make($this->componentTable, $properties), fn ($datasource) => $datasource->get());
 
         $inClause = $processDataSource->component->filtered ?? [];
 
