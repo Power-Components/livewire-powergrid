@@ -18,7 +18,7 @@ trait ToggleDetail
 
     private function resolveDetailRow(mixed $results): void
     {
-        if (!isset($this->setUp['detail'])) {
+        if (!isset($this->setUp['detail']) && !isset($this->setUp['lazy'])) {
             return;
         }
 

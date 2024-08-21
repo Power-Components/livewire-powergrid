@@ -4,9 +4,9 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Foundation\Application;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
 
@@ -14,8 +14,6 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
-
-use Throwable;
 
 /**
  * @property-read mixed $getRecords
@@ -237,19 +235,6 @@ class PowerGridComponent extends Component
         return view('livewire-powergrid::components.table.no-data-label');
     }
 
-    private function renderView(mixed $data): Application|Factory|View
-    {
-        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
-
-        $theme = app($themeClass)->apply();
-
-        return view(theme_style($theme, 'layout.table'), [
-            'data'  => $data,
-            'theme' => $theme,
-            'table' => 'livewire-powergrid::components.table',
-        ]);
-    }
-
     public function getPublicPropertiesDefinedInComponent(): array
     {
         return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC))
@@ -260,26 +245,29 @@ class PowerGridComponent extends Component
             ->all();
     }
 
-    /**
-     * @throws Exception|Throwable
-     */
     public function render(): Application|Factory|View
     {
         $data = $this->getRecords();
+
+        /** @phpstan-ignore-next-line */
+        $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
 
         $this->storeActionsRowInJSWindow();
 
         $this->storeActionsHeaderInJSWindow();
 
-        if (empty(data_get($this->setUp, 'lazy'))) {
-            $this->resolveDetailRow($data);
-        }
-
-        /** @phpstan-ignore-next-line */
-        $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
+        $this->resolveDetailRow($data);
 
         $this->resolveFilters();
 
-        return $this->renderView($data);
+        $theme = app(
+            $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'))
+        )->apply();
+
+        return view(theme_style($theme, 'layout.table'), [
+            'data'  => $data,
+            'theme' => $theme,
+            'table' => 'livewire-powergrid::components.table',
+        ]);
     }
 }

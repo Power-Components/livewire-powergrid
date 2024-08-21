@@ -164,14 +164,22 @@ class DataSourceBase
         $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($results);
 
-        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance) {
+        $renderActions = false;
+
+        if (method_exists($component, 'actions')) {
+            $renderActions = true;
+        }
+
+        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance, $renderActions) {
             $data = $fields->map(fn ($field) => $field((object) $row, $index));
 
             $loopInstance->incrementLoopIndices();
 
-            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . data_get($row, $component->realPrimaryKey)]);
+            $rowId = data_get($row, $component->realPrimaryKey);
 
-            if (method_exists($component, 'actions') && !$hasCookieActionsForRow) {
+            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . $rowId]);
+
+            if ($renderActions && !$hasCookieActionsForRow) {
                 $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
                     ->transform(function (Button|array $action) use ($row, $component) {
                         return [
@@ -184,7 +192,7 @@ class DataSourceBase
                         ];
                     });
 
-                static::$actionsHtml[data_get($row, $component->realPrimaryKey)] = $actions->toArray();
+                static::$actionsHtml[$rowId] = $actions->toArray();
             }
 
             $mergedData = $data->merge([
