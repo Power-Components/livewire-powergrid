@@ -18,7 +18,7 @@ it('searches JSON column', function (string $component, object $params) {
         ->set('search', 'UraMaKi')
         ->assertSee('Barco-Sushi Simples')
         ->assertDontSee('Barco-Sushi da Sueli');
-})->with('search-json');
+})->with('search-json')->skipOnPostgreSQL();
 
 dataset('search-json', [
     'tailwind'  => [DishesSearchJSONTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],

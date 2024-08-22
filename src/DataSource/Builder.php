@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundEx
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
-use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 
+use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Boolean,
     Components\Filters\Builders\DatePicker,
@@ -18,7 +17,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Components\Filters\Builders\Select,
     DataSource\Support\InputOperators,
     DataSource\Support\Sql,
-    PowerGridComponent};
+    PowerGridComponent,
+    Support\PowerGridTableCache};
 
 class Builder
 {
@@ -26,26 +26,26 @@ class Builder
 
     public function __construct(
         private EloquentBuilder|QueryBuilder $query,
-        private readonly PowerGridComponent $powerGridComponent
+        private readonly PowerGridComponent $component
     ) {
     }
 
     public static function make(
         EloquentBuilder|QueryBuilder $query,
-        PowerGridComponent $powerGridComponent
+        PowerGridComponent $component
     ): Builder {
-        return new Builder($query, $powerGridComponent);
+        return new Builder($query, $component);
     }
 
     public function filter(): EloquentBuilder|QueryBuilder
     {
-        $filters = collect($this->powerGridComponent->filters());
+        $filters = collect($this->component->filters());
 
         if ($filters->isEmpty()) {
             return $this->query;
         }
 
-        foreach ($this->powerGridComponent->filters as $filterType => $columns) {
+        foreach ($this->component->filters as $filterType => $columns) {
             $columns = Arr::dot($columns);
 
             // convert array:2 [
@@ -104,16 +104,16 @@ class Builder
                             ->first();
 
                         match ($filterType) {
-                            'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'date'         => (new DatePicker($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'select'       => (new Select($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'boolean'      => (new Boolean($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'number'       => (new Number($this->powerGridComponent, $filter))->builder($query, $field, $value),
-                            'input_text'   => (new InputText($this->powerGridComponent, $filter))->builder($query, $field, [
-                                'selected'     => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
+                            'datetime'     => (new DateTimePicker($this->component, $filter))->builder($query, $field, $value),
+                            'date'         => (new DatePicker($this->component, $filter))->builder($query, $field, $value),
+                            'multi_select' => (new MultiSelect($this->component, $filter))->builder($query, $field, $value),
+                            'select'       => (new Select($this->component, $filter))->builder($query, $field, $value),
+                            'boolean'      => (new Boolean($this->component, $filter))->builder($query, $field, $value),
+                            'number'       => (new Number($this->component, $filter))->builder($query, $field, $value),
+                            'input_text'   => (new InputText($this->component, $filter))->builder($query, $field, [
+                                'selected'     => $this->validateInputTextOptions($this->component->filters, $field),
                                 'value'        => $value,
-                                'searchMorphs' => $this->powerGridComponent->searchMorphs(),
+                                'searchMorphs' => $this->component->searchMorphs(),
                             ]),
                             default => null
                         };
@@ -129,13 +129,11 @@ class Builder
 
     public function filterContains(): Builder
     {
-        if ($this->powerGridComponent->search == '') {
+        if ($this->component->search == '') {
             return $this;
         }
 
-        $search = $this->powerGridComponent->search;
-        $search = htmlspecialchars($search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        $search = strtolower($search);
+        $search = strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
         $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
             /** @var string $modelTable */
@@ -143,9 +141,11 @@ class Builder
 
             $columnList = $this->getColumnList($modelTable);
 
-            collect($this->powerGridComponent->columns)
-                ->filter(fn ($column) => $this->isSearchableColumn($column))
-                ->each(function ($column) use ($query, $search, $columnList) {
+            collect($this->component->columns)
+                ->filter(function (\stdClass|array|Column $column) {
+                    return (bool) data_get($column, 'searchable');
+                })
+                ->each(function (\stdClass|array|Column $column) use ($query, $search, $columnList) {
                     $field = $this->getDataField($column);
 
                     [$table, $field] = $this->splitField($field);
@@ -154,34 +154,19 @@ class Builder
 
                     $hasColumn = isset($columnList[$field]);
 
-                    $query->when($search != '', function () use ($column, $query, $search, $table, $field, $hasColumn) {
-                        if (($sqlRaw = strval(data_get($column, 'searchableRaw')))) {
-                            $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' ?', ["%{$search}%"]);
+                    if ($hasColumn) {
+                        try {
+                            $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
+                        } catch (\Throwable) {
+                            $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                         }
-
-                        if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
-                            try {
-                                $columnType = $this->getColumnType($table, $field);
-
-                                /** @phpstan-ignore-next-line  */
-                                $driverName = $query->getConnection()->getConfig('driver');
-
-                                if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
-                                    $query->orWhereRaw("LOWER(`{$table}`.`{$field}`)" . Sql::like($query) . ' ?', ["%{$search}%"]);
-                                } else {
-                                    $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                                }
-                            } catch (\Throwable) {
-                                $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                            }
-                        }
-                    });
+                    }
                 });
 
             return $query;
         });
 
-        if (count($this->powerGridComponent->relationSearch()) && $this->query instanceof EloquentBuilder) {
+        if (count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder) {
             $this->filterRelation($search);
         }
 
@@ -193,7 +178,7 @@ class Builder
         /** @var EloquentBuilder $query */
         $query = $this->query;
 
-        foreach ($this->powerGridComponent->relationSearch() as $table => $columns) {
+        foreach ($this->component->relationSearch() as $table => $columns) {
             if (is_array($columns)) {
                 $this->filterNestedRelation($table, $columns, $search);
 
@@ -261,9 +246,23 @@ class Builder
         $this->query = $query;
     }
 
-    private function isSearchableColumn(Column|\stdClass|array $column): bool
+    private function getColumnList(string $modelTable): array
     {
-        return boolval(data_get($column, 'searchable')) || strval(data_get($column, 'searchableRaw')) !== '';
+        try {
+            return PowerGridTableCache::getOrCreate(
+                $modelTable,
+                fn () => collect(Schema::getColumns($modelTable))
+                    ->pluck('type', 'name')
+                    ->toArray()
+            );
+        } catch (\Throwable $throwable) {
+            logger()->warning('PowerGrid [getColumnList] warning: ', [
+                'table'     => $modelTable,
+                'throwable' => $throwable->getTrace(),
+            ]);
+
+            return Schema::getColumnListing($modelTable);
+        }
     }
 
     private function getDataField(Column|\stdClass|array $column): string
@@ -275,12 +274,12 @@ class Builder
     {
         $method = 'beforeSearch' . str($field)->headline()->replace(' ', '');
 
-        if (method_exists($this->powerGridComponent, $method)) {
-            return $this->powerGridComponent->$method($search);
+        if (method_exists($this->component, $method)) {
+            return $this->component->$method($search);
         }
 
-        if (method_exists($this->powerGridComponent, 'beforeSearch')) {
-            return $this->powerGridComponent->beforeSearch($field, $search);
+        if (method_exists($this->component, 'beforeSearch')) {
+            return $this->component->beforeSearch($field, $search);
         }
 
         return $search;
@@ -301,39 +300,5 @@ class Builder
         }
 
         return [$table, $field];
-    }
-
-    private function getColumnType(string $modelTable, string $field): ?string
-    {
-        try {
-            return $this->getColumnList($modelTable)[$field] ?? null;
-        } catch (\Throwable $throwable) {
-            logger()->warning('PowerGrid [getColumnType] warning: ', [
-                'table'     => $modelTable,
-                'field'     => $field,
-                'throwable' => $throwable->getTrace(),
-            ]);
-
-            return null;
-        }
-    }
-
-    private function getColumnList(string $modelTable): array
-    {
-        try {
-            return PowerGridTableCache::getOrCreate(
-                $modelTable,
-                fn () => collect(Schema::getColumns($modelTable))
-                            ->pluck('type', 'name')
-                            ->toArray()
-            );
-        } catch (\Throwable $throwable) {
-            logger()->warning('PowerGrid [getColumnList] warning: ', [
-                'table'     => $modelTable,
-                'throwable' => $throwable->getTrace(),
-            ]);
-
-            return Schema::getColumnListing($modelTable);
-        }
     }
 }
