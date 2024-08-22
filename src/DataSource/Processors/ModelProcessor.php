@@ -59,7 +59,7 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
     {
         collect($this->component->columns())
             ->filter(fn ($column) => filled(data_get($column, 'rawQueries')))
-            ->each(function ($column) use ($results) {
+            ->map(function ($column) use ($results) {
                 foreach ((array) data_get($column, 'rawQueries', []) as $rawQuery) {
                     /** @var array $rawQuery */
                     $method   = $rawQuery['method'];
@@ -95,6 +95,8 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
                     if ($sql && $enabled) {
                         $results->{$method}($sql, $bindings);
                     }
+
+                    return $rawQuery;
                 }
             });
     }
