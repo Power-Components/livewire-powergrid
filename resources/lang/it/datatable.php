@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter'            => 'Filtra',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'Svuota filtri',
     ],
     'labels' => [
         'action'           => 'Azioni',
@@ -55,21 +55,21 @@ return [
         'completed' => 'Esportazione completata! I tuoi file sono pronti per il download',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed'      => 'Without deleted',
-        'with_trashed'         => 'With deleted',
-        'only_trashed'         => 'Only deleted',
+        'message_with_trashed' => 'Visualizza tutti i risultati, includendo quelli eliminati.',
+        'message_only_trashed' => 'Visualizza solo i risultati eliminati.',
+        'without_trashed'      => 'Senza eliminati',
+        'with_trashed'         => 'Con eliminati',
+        'only_trashed'         => 'Solo eliminati',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'E\' attivo l\'ordinamento multiplo',
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'Si è sicuri di voler eseguire questa azione?',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "Si è sicuri di voler eseguire questa azione? \n\n Scrivi :confirmValue per confermare.",
         ],
     ],
 ];

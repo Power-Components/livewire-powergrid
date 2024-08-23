@@ -127,6 +127,9 @@ class DishesTable extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
+                ->field('stored_at'),
+
+            Column::add()
                 ->title(__('Stored at'))
                 ->field('storage_room')
                 ->sortable(),

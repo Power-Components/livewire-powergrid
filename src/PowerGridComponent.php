@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
-
 use Livewire\{Attributes\Computed, Component, WithPagination};
-
+use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
@@ -41,8 +40,6 @@ class PowerGridComponent extends Component
 
     public function mount(): void
     {
-        $this->start();
-
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
         $this->themeRoot = app($themeClass)->root();
@@ -92,7 +89,7 @@ class PowerGridComponent extends Component
 
     public function updatedSearch(): void
     {
-        $this->gotoPage(1);
+        $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
         if ($this->hasLazyEnabled) {
             $this->additionalCacheKey = uniqid();
@@ -112,7 +109,12 @@ class PowerGridComponent extends Component
     public function visibleColumns(): BaseCollection
     {
         return collect($this->columns)
-            ->where('forceHidden', false);
+            ->where('forceHidden', false)
+            ->map(function ($column) {
+                data_forget($column, 'rawQueries');
+
+                return $column;
+            });
     }
 
     #[Computed]

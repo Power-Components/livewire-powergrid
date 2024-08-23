@@ -10,7 +10,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Illuminate\View\Concerns\ManagesLoops;
 use Laravel\Scout\Builder as ScoutBuilder;
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
 
 class DataSourceBase
@@ -39,26 +38,13 @@ class DataSourceBase
     protected function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany $results): EloquentBuilder|QueryBuilder|MorphToMany
     {
         foreach ($this->component->sortArray as $sortField => $direction) {
-            $sortField = $this->makeSortField($sortField);
-
-            if ($this->component->withSortStringNumber) {
-                $results = $this->applyWithSortStringNumber($results, $sortField, $direction);
-            }
-            $results = $results->orderBy($sortField, $direction);
+            $results = $results->orderBy(
+                $this->makeSortField($sortField),
+                $direction
+            );
         }
 
         return $results;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function applySingleSort(EloquentBuilder|QueryBuilder|MorphToMany|BaseCollection $results, string $sortField): MorphToMany|EloquentBuilder|QueryBuilder
-    {
-        /** @phpstan-ignore-next-line */
-        $results = $this->applyWithSortStringNumber($results, $sortField);
-
-        return $results->orderBy($sortField, $this->component->sortDirection);
     }
 
     protected function makeSortField(string $sortField): string
@@ -68,33 +54,6 @@ class DataSourceBase
         }
 
         return $this->component->currentTable . '.' . $sortField;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    protected function applyWithSortStringNumber(
-        EloquentBuilder|QueryBuilder|MorphToMany $results,
-        string $sortField,
-        string $multiSortDirection = null
-    ): EloquentBuilder|QueryBuilder|MorphToMany {
-        if (!$this->component->withSortStringNumber) {
-            return $results;
-        }
-
-        $direction = $this->component->sortDirection;
-
-        if ($multiSortDirection) {
-            $direction = $multiSortDirection;
-        }
-
-        $sortFieldType = Sql::getSortFieldType($sortField);
-
-        if (Sql::isValidSortFieldType($sortFieldType)) {
-            $results->orderByRaw(Sql::sortStringAsNumber($sortField) . ' ' . $direction);
-        }
-
-        return $results;
     }
 
     protected function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany|ScoutBuilder $results): LengthAwarePaginator|Paginator

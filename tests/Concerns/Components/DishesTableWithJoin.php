@@ -44,8 +44,6 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public string $primaryKey = 'dishes.id';
 
-    public bool $withSortStringNumber = true;
-
     public function setUp(): array
     {
         $this->showCheckBox();

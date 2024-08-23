@@ -70,21 +70,21 @@ class Sql
         |  x.x.x => version which the syntax was implemented.
         */
 
-        $default = "$sortField+0"; //default, fallback
+        $default = "$sortField+0 {sortDirection}"; //default, fallback
 
         $supportedVersions = [
             'mysql' => [
                 '0'     => $default,
-                '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER)",
+                '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER) {sortDirection}",
             ],
             'sqlite' => [
-                '0' => "CAST($sortField AS INTEGER)",
+                '0' => "CAST($sortField AS INTEGER) {sortDirection}",
             ],
             'pgsql' => [
-                '0' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER)",
+                '0' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '\D', '', 'g'), '') AS INTEGER) {sortDirection}",
             ],
             'sqlsrv' => [
-                '0' => "CAST(SUBSTRING($sortField, PATINDEX('%[a-z]%', $sortField), LEN($sortField)-PATINDEX('%[a-z]%', $sortField)) AS INT)",
+                '0' => "CAST(SUBSTRING($sortField, PATINDEX('%[a-z]%', $sortField), LEN($sortField)-PATINDEX('%[a-z]%', $sortField)) AS INT) {sortDirection}",
             ],
         ];
 

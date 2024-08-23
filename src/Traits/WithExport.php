@@ -12,8 +12,8 @@ use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
-    DataSource\Processors\DataSourceBase,
-    ProcessDataSource};
+    DataSource\ProcessDataSource,
+    DataSource\Processors\DataSourceBase};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 

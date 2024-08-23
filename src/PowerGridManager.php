@@ -8,16 +8,11 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Footer,
     Header,
     Lazy,
-    Responsive,
-    Start};
+    Responsive
+};
 
 class PowerGridManager
 {
-    public function start(): Start
-    {
-        return app(Start::class);
-    }
-
     public function fields(): PowerGridFields
     {
         return app(PowerGridFields::class);

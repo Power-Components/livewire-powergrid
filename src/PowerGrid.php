@@ -9,12 +9,11 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Footer,
     Header,
     Lazy,
-    Responsive,
-    Start};
+    Responsive
+};
 
 /**
  * @method static PowerGridFields fields()
- * @method static Start start()
  * @method static Header header()
  * @method static Footer footer()
  * @method static Lazy lazy()

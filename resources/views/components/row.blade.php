@@ -23,7 +23,7 @@
     'attribute' => $row->{$checkboxAttribute},
 ])
 
-@foreach ($columns as $column)
+@foreach ($this->visibleColumns as $column)
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';

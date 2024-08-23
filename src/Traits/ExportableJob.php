@@ -5,7 +5,9 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\DataSource\Builder;
-use PowerComponents\LivewirePowerGrid\{DataSource\Processors\DataSourceBase, PowerGridComponent, ProcessDataSource};
+use PowerComponents\LivewirePowerGrid\{DataSource\ProcessDataSource,
+    DataSource\Processors\DataSourceBase,
+    PowerGridComponent};
 
 /** @codeCoverageIgnore */
 trait ExportableJob
