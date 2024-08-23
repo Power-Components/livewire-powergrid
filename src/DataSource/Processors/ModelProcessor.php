@@ -34,16 +34,15 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
             $results = $this->applySoftDeletes($results, $this->component->softDeletes);
         }
 
+        $this->applyColumnRawQueries($results);
+
         $this->applySummaries($results);
 
-        $sortField = $this->makeSortField($this->component->sortField);
-
         $results = $this->component->multiSort
-            ? $this->applyMultipleSort($results)
-            : $this->applySingleSort($results, $sortField);
+                    ? $this->applyMultipleSort($results)
+                    : $results->orderBy($this->makeSortField($this->component->sortField), $this->component->sortDirection);
 
-        $results = $this
-            ->applyPerPage($results);
+        $results = $this->applyPerPage($results);
 
         $this->setTotalCount($results);
 
@@ -54,5 +53,51 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
         $collection = $results->getCollection(); // @phpstan-ignore-line
 
         return $results->setCollection($this->transform($collection, $this->component)); // @phpstan-ignore-line
+    }
+
+    private function applyColumnRawQueries(MorphToMany|EloquentBuilder|QueryBuilder $results): void
+    {
+        collect($this->component->columns())
+            ->filter(fn ($column) => filled(data_get($column, 'rawQueries')))
+            ->map(function ($column) use ($results) {
+                foreach ((array) data_get($column, 'rawQueries', []) as $rawQuery) {
+                    /** @var array $rawQuery */
+                    $method   = $rawQuery['method'];
+                    $sql      = $rawQuery['sql'];
+                    $bindings = $rawQuery['bindings'];
+                    $enabled  = false;
+
+                    if (isset($rawQuery['enabled'])) {
+                        $enabled = $rawQuery['enabled'];
+                        $enabled = is_callable($enabled) ? $enabled($this->component) : $enabled;
+                    }
+
+                    $bindings = array_map(function ($param) {
+                        if ($param instanceof \Closure) {
+                            $param = $param($this->component);
+                        } else {
+                            $param = preg_replace_callback('/\{(\w+)\}/', function ($matches) {
+                                $property = trim($matches[1]);
+
+                                return $this->component->{$property};
+                            }, $param);
+                        }
+
+                        return $param;
+                    }, $bindings);
+
+                    $sql = preg_replace_callback('/\{(\w+)\}/', function ($matches) {
+                        $property = trim($matches[1]);
+
+                        return $this->component->{$property};
+                    }, $sql);
+
+                    if ($sql && $enabled) {
+                        $results->{$method}($sql, $bindings);
+                    }
+
+                    return $rawQuery;
+                }
+            });
     }
 }

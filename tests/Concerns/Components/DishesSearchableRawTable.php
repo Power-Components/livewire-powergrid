@@ -55,9 +55,9 @@ class DishesSearchableRawTable extends PowerGridComponent
     public function columns(): array
     {
         $searchableRaw = match ($this->database) {
-            'sqlite' => 'STRFTIME("%d/%m/%Y", dishes.produced_at)',
-            'mysql'  => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y")',
-            'pgsql'  => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text',
+            'sqlite' => 'STRFTIME("%d/%m/%Y", dishes.produced_at) like ?',
+            'mysql'  => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y") like ?',
+            'pgsql'  => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text ilike ?',
             default  => ''
         };
 

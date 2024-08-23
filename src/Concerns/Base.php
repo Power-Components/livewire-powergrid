@@ -47,10 +47,6 @@ trait Base
 
     public bool $measurePerformance = false;
 
-    public function start(): void
-    {
-    }
-
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields();

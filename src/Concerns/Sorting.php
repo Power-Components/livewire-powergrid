@@ -11,8 +11,6 @@ trait Sorting
 
     public string $sortDirection = 'asc';
 
-    public bool $withSortStringNumber = false;
-
     public bool $multiSort = false;
 
     public array $sortArray = [];
@@ -89,7 +87,7 @@ trait Sorting
     public function getLabelFromColumn(string $field): string
     {
         $filter = collect($this->columns)->filter(
-            fn (Column|\stdClass $column) => $column->dataField == $field
+            fn (Column|\stdClass|array $column) => data_get($column, 'dataField') == $field
         )->map(fn ($column) => (array) $column)
             ->first();
 

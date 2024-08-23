@@ -4,6 +4,12 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Traits\Macroable;
 
+/**
+ * Macros
+ * @method static naturalSort()
+ * @method static searchableRaw(string $sql)
+ * @method static searchableJson(string $tableName) // sqlite, mysql
+ */
 final class Column implements \Livewire\Wireable
 {
     use Macroable;
@@ -18,19 +24,21 @@ final class Column implements \Livewire\Wireable
 
     public bool $searchable = false;
 
+    public bool $enableSort = false;
+
     public bool $hidden = false;
 
     public bool $forceHidden = false;
 
     public ?bool $visibleInExport = null;
 
-    public string $searchableRaw = '';
-
     public bool $sortable = false;
 
     public bool $index = false;
 
     public array $properties = [];
+
+    public array $rawQueries = [];
 
     public bool $isAction = false;
 
@@ -144,13 +152,9 @@ final class Column implements \Livewire\Wireable
         return $this;
     }
 
-    /**
-     * Makes the column searchable with SQL Raw
-     *
-    */
-    public function searchableRaw(string $sql): Column
+    public function enableSort(): Column
     {
-        $this->searchableRaw = $sql;
+        $this->enableSort = true;
 
         return $this;
     }
@@ -162,6 +166,8 @@ final class Column implements \Livewire\Wireable
      */
     public function sortable(): Column
     {
+        $this->enableSort();
+
         $this->sortable = true;
 
         return $this;
