@@ -22,13 +22,14 @@
             @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
 
             @if (empty(data_get($setUp, 'lazy')))
-                @foreach ($data as $row)
-                    @php
-                        $rowId = data_get($row, $this->realPrimaryKey);
-                        $class = theme_style($theme, 'table.body.tr');
-                    @endphp
 
-                    @if (isset($setUp['detail']))
+                @if (isset($setUp['detail']))
+                    @foreach ($data as $row)
+                        @php
+                            $rowId = data_get($row, $this->realPrimaryKey);
+                            $class = theme_style($theme, 'table.body.tr');
+                        @endphp
+
                         <tbody
                             wire:key="tbody-{{ substr($rowId, 0, 6) }}"
                             class="{{ $class }}"
@@ -45,7 +46,17 @@
                                 </tr>
                             @endif
                         </tbody>
-                    @else
+
+                        @includeWhen(isset($setUp['responsive']),
+                            'livewire-powergrid::components.expand-container')
+                    @endforeach
+                @else
+                    @foreach ($data as $row)
+                        @php
+                            $rowId = data_get($row, $this->realPrimaryKey);
+                            $class = theme_style($theme, 'table.body.tr');
+                        @endphp
+
                         <tr
                             x-data="pgRowAttributes({ rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
@@ -54,11 +65,11 @@
                                 'rowIndex' => $loop->index + 1,
                             ])
                         </tr>
-                    @endif
 
-                    @includeWhen(isset($setUp['responsive']),
-                        'livewire-powergrid::components.expand-container')
-                @endforeach
+                        @includeWhen(isset($setUp['responsive']),
+                            'livewire-powergrid::components.expand-container')
+                    @endforeach
+                @endif
             @else
                 <div>
                     @foreach (range(0, data_get($setUp, 'lazy.items')) as $item)
