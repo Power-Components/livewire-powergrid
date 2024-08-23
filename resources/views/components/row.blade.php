@@ -23,7 +23,11 @@
     'attribute' => $row->{$checkboxAttribute},
 ])
 
-@foreach ($this->visibleColumns as $column)
+@foreach (collect($columns)->map(function ($column) {
+        data_forget($column, 'rawQueries');
+
+        return $column;
+    }) as $column)
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
