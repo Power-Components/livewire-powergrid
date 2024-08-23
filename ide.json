@@ -13,17 +13,6 @@
                     "methodNames": ["headerAttribute", "bodyAttribute", "contentClasses"],
                     "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Column"],
                     "parameters": [1]
-                },
-                {
-                    "methodNames": [
-                        "select"
-                    ],
-                    "classFqn": [
-                        "\\PowerComponents\\LivewirePowerGrid\\Themes\\Components\\Footer"
-                    ],
-                    "parameters": [
-                        1
-                    ]
                 }
             ]
         },

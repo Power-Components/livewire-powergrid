@@ -1,8 +1,8 @@
 <x-livewire-powergrid::table-base
-        :$readyToLoad
-        :$tableName
-        :$theme
-        :lazy="!is_null(data_get($setUp, 'lazy'))"
+    :$readyToLoad
+    :$tableName
+    :$theme
+    :lazy="!is_null(data_get($setUp, 'lazy'))"
 >
     <x-slot:header>
         @include('livewire-powergrid::components.table.tr')
@@ -30,25 +30,25 @@
 
                     @if (isset($setUp['detail']))
                         <tbody
-                                wire:key="tbody-{{ substr($rowId, 0, 6) }}"
-                                class="{{ $class }}"
+                            wire:key="tbody-{{ substr($rowId, 0, 6) }}"
+                            class="{{ $class }}"
                         >
-                        @include('livewire-powergrid::components.row', [
-                            'rowIndex' => $loop->index + 1,
-                        ])
-                        @if(data_get($setUp, 'detail.state.' . $rowId))
-                            <tr
+                            @include('livewire-powergrid::components.row', [
+                                'rowIndex' => $loop->index + 1,
+                            ])
+                            @if (data_get($setUp, 'detail.state.' . $rowId))
+                                <tr
                                     style="{{ theme_style($theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
-                            >
-                                @include('livewire-powergrid::components.table.detail')
-                            </tr>
-                        @endif
+                                >
+                                    @include('livewire-powergrid::components.table.detail')
+                                </tr>
+                            @endif
                         </tbody>
                     @else
                         <tr
-                                x-data="pgRowAttributes({rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules)})"
-                                x-bind="getAttributes"
+                            x-data="pgRowAttributes({ rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules) })"
+                            x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [
                                 'rowIndex' => $loop->index + 1,
@@ -68,21 +68,25 @@
                         @endphp
 
                         <livewire:lazy-child
-                                key="{{ $this->getLazyKeys }}"
-                                :parentId="$this->getId()"
-                                :child-index="$item"
-                                :primary-key="$primaryKey"
-                                real-primary-key="{{ $this->realPrimaryKey }}"
-                                :$radio
-                                :$radioAttribute
-                                :$checkbox
-                                :$checkboxAttribute
-                                :theme="$theme"
-                                :$setUp
-                                :$tableName
-                                :parentName="$this->getName()"
-                                :columns="$this->visibleColumns"
-                                :data="\PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase::transform($data->skip($skip)->take($take), $this, true)"
+                            key="{{ $this->getLazyKeys }}"
+                            :parentId="$this->getId()"
+                            :child-index="$item"
+                            :primary-key="$primaryKey"
+                            real-primary-key="{{ $this->realPrimaryKey }}"
+                            :$radio
+                            :$radioAttribute
+                            :$checkbox
+                            :$checkboxAttribute
+                            :theme="$theme"
+                            :$setUp
+                            :$tableName
+                            :parentName="$this->getName()"
+                            :columns="$this->visibleColumns"
+                            :data="\PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase::transform(
+                                $data->skip($skip)->take($take),
+                                $this,
+                                true,
+                            )"
                         />
                     @endforeach
                 </div>

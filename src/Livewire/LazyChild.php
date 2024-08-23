@@ -17,11 +17,11 @@ class LazyChild extends Component
 
     public bool $checkboxAll = false;
 
-    public string $checkboxAttribute = 'id';
+    public string $checkboxAttribute = '';
 
     public bool $radio = false;
 
-    public string $radioAttribute = 'id';
+    public string $radioAttribute = '';
 
     public Collection $data;
 

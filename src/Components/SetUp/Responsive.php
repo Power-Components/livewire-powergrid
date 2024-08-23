@@ -8,9 +8,9 @@ final class Responsive implements Wireable
 {
     public string $name = 'responsive';
 
-    public const ACTIONS_COLUMN_NAME = 'actions';
+    public const string ACTIONS_COLUMN_NAME = 'actions';
 
-    public const CHECKBOX_COLUMN_NAME = 'checkbox';
+    public const string CHECKBOX_COLUMN_NAME = 'checkbox';
 
     public array $fixedColumns = ['id', self::CHECKBOX_COLUMN_NAME, self::ACTIONS_COLUMN_NAME];
 

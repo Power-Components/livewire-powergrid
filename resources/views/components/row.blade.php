@@ -15,11 +15,11 @@
     ]
 )
 
-@includeWhen($radio, 'livewire-powergrid::components.radio-row', [
+@includeWhen($radio && $radioAttribute, 'livewire-powergrid::components.radio-row', [
     'attribute' => $row->{$radioAttribute},
 ])
 
-@includeWhen($checkbox, 'livewire-powergrid::components.checkbox-row', [
+@includeWhen($checkbox && $checkboxAttribute, 'livewire-powergrid::components.checkbox-row', [
     'attribute' => $row->{$checkboxAttribute},
 ])
 
@@ -98,9 +98,7 @@
                 @if (filled($templateContent))
                     <div
                         x-data="pgRenderRowTemplate({
-                            rowId: @js(data_get($row, $this->realPrimaryKey)),
                             parentId: @js($parentId),
-                            field: @js($field),
                             templateContent: @js($templateContent)
                         })"
                         x-html="rendered"
