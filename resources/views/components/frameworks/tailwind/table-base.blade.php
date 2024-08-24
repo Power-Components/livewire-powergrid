@@ -18,7 +18,11 @@
 
             @if (config('livewire-powergrid.filter') === 'outside')
                 @php
-                    $filtersFromColumns = collect($columns)
+                    $filtersFromColumns = collect(collect($columns)->map(function ($column) {
+        data_forget($column, 'rawQueries');
+
+        return $column;
+    }))
                         ->filter(fn($column) => filled(data_get($column, 'filters')));
                 @endphp
 
@@ -26,7 +30,11 @@
                     <x-livewire-powergrid::frameworks.tailwind.filter
                         :enabled-filters="$enabledFilters"
                         :tableName="$tableName"
-                        :columns="$columns"
+                        :columns="collect($columns)->map(function ($column) {
+        data_forget($column, 'rawQueries');
+
+        return $column;
+    })"
                         :filtersFromColumns="$filtersFromColumns"
                         :theme="$theme"
                     />

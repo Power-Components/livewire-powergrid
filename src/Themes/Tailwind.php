@@ -49,7 +49,7 @@ class Tailwind extends Theme
     public function cols(): array
     {
         return [
-            'div' => 'select-none flex items-center gap-2',
+            'div' => 'select-none flex items-center gap-1',
         ];
     }
 

@@ -8,7 +8,7 @@
     @if ($loading)
         <td
             class="{{ theme_style($theme, 'table.body.tbodyEmpty') }}"
-            colspan="{{ ($checkbox ? 1 : 0) + count($columns) }}"
+            colspan="999"
         >
             @if ($loadingComponent)
                 @include($loadingComponent)
