@@ -34,7 +34,6 @@
         ? data_get($this->setUp, "responsive.sortOrder.{$field}", null)
         : null;
 @endphp
-@ds($column)
 <th
     x-data="{ sortable: @js(data_get($column, 'sortable')) }"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
