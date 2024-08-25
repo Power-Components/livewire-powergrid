@@ -38,11 +38,13 @@ class PowerGridComponent extends Component
     use Concerns\ManageRow;
     use WithPagination;
 
+    public array $theme = [];
+
     public function mount(): void
     {
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
 
-        $this->themeRoot = app($themeClass)->root();
+        $this->theme = app($themeClass)->apply();
 
         $this->prepareActionsResources();
         $this->prepareRowTemplates();
@@ -215,6 +217,7 @@ class PowerGridComponent extends Component
         }
     }
 
+    #[Computed]
     public function processNoDataLabel(): string
     {
         $noDataLabel = $this->noDataLabel();
@@ -249,7 +252,13 @@ class PowerGridComponent extends Component
 
     public function render(): Application|Factory|View
     {
-        $data = $this->getRecords();
+        if (isset($this->setUp['lazy'])) {
+            $cacheKey = 'lazy-tmp-' . $this->getId() . '-' . implode('-', $this->getCacheKeys());
+
+            $data = Cache::remember($cacheKey, 60, fn () => $this->getRecords());
+        } else {
+            $data = $this->getRecords();
+        }
 
         /** @phpstan-ignore-next-line */
         $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
@@ -262,13 +271,8 @@ class PowerGridComponent extends Component
 
         $this->resolveFilters();
 
-        $theme = app(
-            $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'))
-        )->apply();
-
-        return view(theme_style($theme, 'layout.table'), [
+        return view(theme_style($this->theme, 'layout.table'), [
             'data'  => $data,
-            'theme' => $theme,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }

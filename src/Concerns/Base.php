@@ -43,8 +43,6 @@ trait Base
 
     public bool $paginateRaw = false;
 
-    public string $themeRoot = '';
-
     public bool $measurePerformance = false;
 
     public function fields(): PowerGridFields

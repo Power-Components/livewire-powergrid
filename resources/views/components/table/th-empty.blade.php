@@ -7,6 +7,6 @@
         style="{{ theme_style($theme, 'table.body.tdEmpty.1') }}"
         colspan="999"
     >
-        {!! $this->processNoDataLabel() !!}
+        {!! $this->processNoDataLabel !!}
     </th>
 </tr>
