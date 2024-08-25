@@ -61,7 +61,6 @@ class Tailwind extends Theme
         ];
     }
 
-
     public function toggleable(): array
     {
         return [
