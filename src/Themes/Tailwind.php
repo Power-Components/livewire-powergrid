@@ -61,6 +61,13 @@ class Tailwind extends Theme
         ];
     }
 
+    public function toggleable(): array
+    {
+        return [
+            'view' => $this->root() . '.toggleable',
+        ];
+    }
+
     public function checkbox(): array
     {
         return [

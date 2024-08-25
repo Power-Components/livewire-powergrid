@@ -111,20 +111,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | New Release Notification
-    |--------------------------------------------------------------------------
-    |
-    | PowerGrid can verify if a new release is available when you create a new PowerGrid Table.
-    |
-    | This feature depends on composer/composer.
-    | To install, run: `composer require composer/composer --dev`
-    |
-    */
-
-    'check_version' => false,
-
-    /*
-    |--------------------------------------------------------------------------
     | Exportable class
     |--------------------------------------------------------------------------
     |

@@ -18,10 +18,6 @@ class UpdateCommand extends Command
 
     public function handle(): int
     {
-        if (config('livewire-powergrid.check_version') === false) {
-            return self::SUCCESS;
-        }
-
         if (!class_exists(\Composer\Factory::class)) {
             warning('UpdateCommand: You need to install composer: <info>composer require composer/composer --dev</info>');
 

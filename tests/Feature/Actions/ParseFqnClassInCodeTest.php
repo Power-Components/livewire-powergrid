@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Actions\ParseFqnClassInCode;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\ParseFqnClassInCode;
 
 it('can find the namespace in a PHP file source code', function () {
     $code = <<<EOD

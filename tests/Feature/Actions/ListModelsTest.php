@@ -1,7 +1,7 @@
 
 <?php
 
-use PowerComponents\LivewirePowerGrid\Actions\ListModels;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\ListModels;
 
 it('list all Eloquent Models in a directory', function () {
     app()->config->set('livewire-powergrid.auto_discover_models_paths', [

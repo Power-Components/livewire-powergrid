@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-
 use Laravel\Prompts\{Key, Prompt};
-use PowerComponents\LivewirePowerGrid\Actions\AskModelName;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskModelName;
 
 beforeEach(function () {
     File::cleanDirectory(base_path('app/Models'));

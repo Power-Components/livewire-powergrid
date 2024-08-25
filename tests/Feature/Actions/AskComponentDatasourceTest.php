@@ -1,8 +1,7 @@
 <?php
 
 use Laravel\Prompts\{Key, Prompt};
-
-use PowerComponents\LivewirePowerGrid\Actions\AskComponentDatasource;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 
 test('selecting component data source', function () {
     Prompt::fake(['us', Key::DOWN, Key::ENTER]);

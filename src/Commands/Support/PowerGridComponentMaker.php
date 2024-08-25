@@ -1,11 +1,12 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Support;
+namespace PowerComponents\LivewirePowerGrid\Commands\Support;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel, SanitizeComponentName};
-use PowerComponents\LivewirePowerGrid\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{SanitizeComponentName};
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 
 /**
   * @property-read PowerGridStub $stub;

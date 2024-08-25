@@ -6,15 +6,15 @@ use Illuminate\Console\Command;
 
 use function Laravel\Prompts\{error, info, note};
 
-use PowerComponents\LivewirePowerGrid\Actions\CheckIfDatabaseHasTables;
-
-use PowerComponents\LivewirePowerGrid\Actions\{AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, ConfirmAutoImportFields};
-
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentDatasource};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
+    AskDatabaseTableName,
+    AskModelName,
+    CheckIfDatabaseHasTables,
+    ConfirmAutoImportFields};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
-
-use PowerComponents\LivewirePowerGrid\Enums\Datasource;
-
-use PowerComponents\LivewirePowerGrid\Support\PowerGridComponentMaker;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 class CreateCommand extends Command
 {
@@ -33,7 +33,7 @@ class CreateCommand extends Command
         $this->renderPowergridAscii();
 
         try {
-            $this->runChecks()
+            $this
             ->step1()
             ->step2()
             ->step3()
@@ -49,17 +49,6 @@ class CreateCommand extends Command
 
             return self::FAILURE;
         }
-    }
-
-    private function runChecks(): self
-    {
-        $this->call('powergrid:update');
-
-        if (PHP_OS_FAMILY !== 'Windows') {
-            $this->call('powergrid:check-dependencies');
-        }
-
-        return $this;
     }
 
     private function step1(): self

@@ -1,10 +1,8 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-
 use Illuminate\Support\Facades\Schema;
-
-use PowerComponents\LivewirePowerGrid\Actions\ListDatabaseTables;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\ListDatabaseTables;
 
 test('list database tables except hidden ones', function () {
     Schema::dropAllTables();

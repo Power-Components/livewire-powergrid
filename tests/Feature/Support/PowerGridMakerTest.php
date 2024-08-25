@@ -1,7 +1,8 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Enums\Datasource;
-use PowerComponents\LivewirePowerGrid\Support\{PowerGridComponentMaker, PowerGridStub};
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
+use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridStub};
 
 it('can make an eloquent component', function () {
     $component = PowerGridComponentMaker::make('UserTable')

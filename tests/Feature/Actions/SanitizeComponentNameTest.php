@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Actions\SanitizeComponentName;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\SanitizeComponentName;
 
 it('can properly sanitize a component name', function (string $componentName, string $result) {
     expect(SanitizeComponentName::handle($componentName))->toBe($result);

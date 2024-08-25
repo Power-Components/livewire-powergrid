@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Enums;
+namespace PowerComponents\LivewirePowerGrid\Commands\Enums;
 
 use Illuminate\Support\Collection;
 

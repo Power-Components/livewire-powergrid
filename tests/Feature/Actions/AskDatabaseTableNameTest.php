@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Database\Schema\Blueprint;
-
 use Illuminate\Support\Facades\Schema;
 use Laravel\Prompts\{Key, Prompt};
-
-use PowerComponents\LivewirePowerGrid\Actions\AskDatabaseTableName;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskDatabaseTableName;
 
 test('input component name', function () {
     Schema::dropAllTables();

@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 
 test('cases', function () {
     expect(Datasource::cases())->toBe([
