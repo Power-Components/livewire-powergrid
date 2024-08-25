@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridComponentMaker;
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 class GetStubVarsFromFromModel
 {

@@ -13,13 +13,6 @@ class Theme
         return $this->base . $this->name;
     }
 
-    public function toggleable(): array
-    {
-        return [
-            'view' => $this->root() . '.toggleable',
-        ];
-    }
-
     public function layout(): array
     {
         return [

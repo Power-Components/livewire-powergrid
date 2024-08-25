@@ -3,6 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Illuminate\Console\Command;
+
+use function Laravel\Prompts\{error, info, note};
+
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentDatasource};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
     AskDatabaseTableName,
@@ -11,8 +14,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
     ConfirmAutoImportFields};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridComponentMaker;
-use function Laravel\Prompts\{error, info, note};
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 class CreateCommand extends Command
 {

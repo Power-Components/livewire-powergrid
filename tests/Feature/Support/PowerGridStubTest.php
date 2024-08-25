@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridStub;
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridStub;
 
 it('can make and render a stub', function () {
     $stub = PowerGridStub::make(powergrid_stubs_path('table.model.stub'))
