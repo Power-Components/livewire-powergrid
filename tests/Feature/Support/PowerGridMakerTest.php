@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 use PowerComponents\LivewirePowerGrid\Support\{PowerGridComponentMaker, PowerGridStub};
 
 it('can make an eloquent component', function () {
