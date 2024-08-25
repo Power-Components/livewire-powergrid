@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Actions;
+namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use function Laravel\Prompts\select;
 
@@ -11,7 +11,7 @@ final class AskComponentDatasource
     public static function handle(): string
     {
         // Must pass options as array<int, "label"> to
-        // improve users experienc when Laravel prompt falls back.
+        // improve users experience when Laravel prompt falls back.
         $datasources = Datasource::asOptions();
 
         $choice = strval(select(

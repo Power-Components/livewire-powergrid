@@ -4,7 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel, SanitizeComponentName};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{SanitizeComponentName};
 use PowerComponents\LivewirePowerGrid\Enums\Datasource;
 
 /**

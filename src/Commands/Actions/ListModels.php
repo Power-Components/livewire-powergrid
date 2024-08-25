@@ -1,9 +1,8 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Actions;
+namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Support\Facades\File;
-
 use Symfony\Component\Finder\SplFileInfo;
 
 final class ListModels
