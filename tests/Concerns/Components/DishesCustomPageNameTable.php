@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use PowerComponents\LivewirePowerGrid\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 class DishesCustomPageNameTable extends DishTableBase
 {

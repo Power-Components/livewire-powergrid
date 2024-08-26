@@ -41,7 +41,6 @@ export default (params) => ({
 
             if (action.rules && Object.values(action.rules).length > 0) {
                 Object.values(action.rules).forEach((ruleObj) => {
-
                     if (ruleObj.apply) {
                         if (ruleObj.rule.hide) {
                             hideAction = true;

@@ -8,7 +8,7 @@ use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\SetUp\Exportable,
-    PowerGrid,
+    Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 

@@ -1,7 +1,7 @@
 {
-    "/powergrid.js": "/powergrid.js?id=4dca90656b0681f252821ac585281e87",
-    "/bootstrap5.css": "/bootstrap5.css?id=a27af22343149104b2aa3283d8fd502b",
-    "/tailwind.css": "/tailwind.css?id=924477e2afcb2cb56aa392e266ee56ca",
-    "/tom-select.css": "/tom-select.css?id=7feeb634924554f9e57ce1e09edcabcb",
-    "/powergrid.css": "/powergrid.css?id=c2648f9d0d2b90371db3b914ef05450e"
+    "/powergrid.js": "/powergrid.js",
+    "/bootstrap5.css": "/bootstrap5.css",
+    "/tailwind.css": "/tailwind.css",
+    "/tom-select.css": "/tom-select.css",
+    "/powergrid.css": "/powergrid.css"
 }

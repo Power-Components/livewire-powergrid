@@ -7,7 +7,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Facades\Filter,
-    PowerGrid,
+    Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 

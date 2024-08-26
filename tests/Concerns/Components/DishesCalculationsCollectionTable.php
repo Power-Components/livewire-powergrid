@@ -5,10 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\{Carbon, Collection, Number};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
 class DishesCalculationsCollectionTable extends PowerGridComponent
 {

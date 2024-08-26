@@ -3,12 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\{
-    Column,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridFields
-};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
 class NoDataCollectionTable extends PowerGridComponent
 {

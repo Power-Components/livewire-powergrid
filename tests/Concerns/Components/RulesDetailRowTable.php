@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\{Button, PowerGrid};
+use PowerComponents\LivewirePowerGrid\{Button, Facades\PowerGrid};
 
 class RulesDetailRowTable extends DishTableBase
 {

@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\Computed;
-use PowerComponents\LivewirePowerGrid\{PowerGrid, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid, PowerGridFields};
 
 trait Base
 {

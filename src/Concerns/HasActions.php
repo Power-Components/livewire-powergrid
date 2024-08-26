@@ -69,8 +69,6 @@ trait HasActions
         $this->js(<<<JS
             this[`pgActions_\${\$wire.id}`] = $actionsHtml
         JS);
-
-        $actionsHtml = [];
     }
 
     public function storeActionsHeaderInJSWindow(): void
@@ -170,7 +168,7 @@ trait HasActions
         return $formattedRules;
     }
 
-    public function resolveActionRules(Button|array $action, mixed $row): array
+    public function resolveActionRules(mixed $row): array
     {
         if (!method_exists($this, 'actionRules')) {
             return [];
@@ -182,7 +180,10 @@ trait HasActions
                 $loop = data_get($rule, 'rule.loop');
 
                 $apply = $when ? $when($row) : false; // @phpstan-ignore-line
-                $apply = !$apply && $loop ? $loop($row) : false; // @phpstan-ignore-line
+
+                if (data_get($rule, 'rule.loop')) {
+                    $apply = $loop ? $loop($row) : false; // @phpstan-ignore-line
+                }
 
                 data_forget($rule, 'rule.when');
 
@@ -196,6 +197,8 @@ trait HasActions
                             ),
                         ],
                     );
+
+                    data_forget($rule, 'rule.bladeComponent');
                 }
 
                 return [

@@ -63,7 +63,7 @@ trait Checkbox
                 $this->checkboxValues[] = (string) $value;
 
                 $this->dispatch('pgBulkActions::addMore', [
-                    'value'     => $value,
+                    'value'     => strval($value),
                     'tableName' => $this->tableName,
                 ]);
             }

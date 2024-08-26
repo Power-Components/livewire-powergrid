@@ -7,8 +7,8 @@ use Illuminate\Support\Carbon;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\SetUp\Exportable,
+    Facades\PowerGrid,
     Facades\Rule,
-    PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 

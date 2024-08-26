@@ -2,8 +2,7 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{Components\SetUp\Detail,
-    PowerGrid,
+use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid,
     Tests\Concerns\Components\RulesDetailRowTable,
     Tests\Concerns\Components\RulesToggleDetailTable};
 

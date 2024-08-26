@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSetUpTable
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{PowerGrid};
+use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid};
 
 it('show includeViewOnTop/Bottom - Header', function () {
     livewire(DishesSetUpTable::class, ['testHeader' => true])

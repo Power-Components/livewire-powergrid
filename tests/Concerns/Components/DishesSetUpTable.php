@@ -4,11 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
 class DishesSetUpTable extends PowerGridComponent
 {

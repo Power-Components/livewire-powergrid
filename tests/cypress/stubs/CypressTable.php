@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Components\SetUp\Exportable,
-    PowerGrid,
+    Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 

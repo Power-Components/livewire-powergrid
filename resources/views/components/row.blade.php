@@ -71,14 +71,16 @@
                     </div>
                 @endif
 
-                @if (data_get($column, 'isAction'))
-                    <div
-                        x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                        class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
-                        x-html="toHtml"
-                    >
-                    </div>
-                @endif
+                <div wire:replace.self>
+                    @if (data_get($column, 'isAction'))
+                        <div
+                            x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
+                            class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
+                            x-html="toHtml"
+                        >
+                        </div>
+                    @endif
+                </div>
             </div>
         @endif
 

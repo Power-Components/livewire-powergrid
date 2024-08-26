@@ -1,16 +1,10 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid;
+namespace PowerComponents\LivewirePowerGrid\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
-    Detail,
-    Exportable,
-    Footer,
-    Header,
-    Lazy,
-    Responsive
-};
+use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache, Detail, Exportable, Footer, Header, Lazy, Responsive};
+use PowerComponents\LivewirePowerGrid\{PowerGridFields, PowerGridManager};
 
 /**
  * @method static PowerGridFields fields()

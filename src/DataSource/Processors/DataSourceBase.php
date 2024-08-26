@@ -147,7 +147,7 @@ class DataSourceBase
                             'icon'           => data_get($action, 'icon'),
                             'iconAttributes' => data_get($action, 'iconAttributes'),
                             'attributes'     => data_get($action, 'attributes'),
-                            'rules'          => $component->resolveActionRules($action, $row),
+                            'rules'          => $component->resolveActionRules($row),
                         ];
                     });
 

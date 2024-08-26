@@ -9,7 +9,7 @@ use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Components\SetUp\Exportable,
-    PowerGrid,
+    Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 

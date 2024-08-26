@@ -5,11 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Enums\Diet;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
-use PowerComponents\LivewirePowerGrid\{Column,
-    Facades\Filter,
-    PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
 class DishesEnumTable extends PowerGridComponent
 {

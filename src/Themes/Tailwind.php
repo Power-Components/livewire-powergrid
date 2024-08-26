@@ -33,6 +33,7 @@ class Tailwind extends Theme
                 'tdSummarize'        => 'p-2 whitespace-nowrap dark:text-pg-primary-200 text-sm text-pg-primary-600 text-right space-y-2',
                 'trSummarize'        => '',
                 'tdFilters'          => '',
+                'trFilters'          => '',
                 'tdActionsContainer' => 'flex gap-2',
             ],
         ];

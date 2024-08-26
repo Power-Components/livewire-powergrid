@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
+    Facades\PowerGrid,
     Facades\Rule,
-    PowerGrid,
     PowerGridComponent,
     PowerGridFields};
 
