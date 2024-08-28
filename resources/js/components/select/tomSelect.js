@@ -5,7 +5,6 @@ export default (params) => ({
     init() {
         const element = this.$refs[`select_picker_${params.dataField}_${params.tableName}`];
 
-        console.log(params)
         const defaultParams = {
             items: params.initialValues,
             ...params.framework,
