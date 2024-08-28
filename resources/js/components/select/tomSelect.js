@@ -49,7 +49,6 @@ export default (params) => ({
 
                     const csrfToken = document.head.querySelector('[name="csrf-token"]')?.getAttribute('content')
 
-                    console.log(csrfToken)
                     if (csrfToken) {
                         request.headers.set('X-CSRF-TOKEN', csrfToken)
                     }
