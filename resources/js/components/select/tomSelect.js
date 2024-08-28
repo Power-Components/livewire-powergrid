@@ -5,6 +5,7 @@ export default (params) => ({
     init() {
         const element = this.$refs[`select_picker_${params.dataField}_${params.tableName}`];
 
+        console.log(params)
         const defaultParams = {
             items: params.initialValues,
             ...params.framework,
@@ -37,7 +38,7 @@ export default (params) => ({
 
                     const request = new Request(url, {
                         method,
-                        body: method === 'POST' ? JSON.stringify({
+                        body: method.toLowerCase() === 'post' ? JSON.stringify({
                             search: query,
                             ...parameters
                         }) : undefined,
@@ -49,6 +50,7 @@ export default (params) => ({
 
                     const csrfToken = document.head.querySelector('[name="csrf-token"]')?.getAttribute('content')
 
+                    console.log(csrfToken)
                     if (csrfToken) {
                         request.headers.set('X-CSRF-TOKEN', csrfToken)
                     }
