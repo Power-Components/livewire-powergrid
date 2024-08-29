@@ -4,6 +4,10 @@ export default (params) => ({
     cookieKey: null,
     parentId: params?.parentId ?? null,
     init() {
+        if (this.rowId == null) {
+            return;
+        }
+
         this.setKeys();
 
         window.addEventListener('beforeunload', () => {
@@ -22,12 +26,9 @@ export default (params) => ({
             return localStorage.getItem(this.storageKey);
         }
 
-        let actions
-        if (this.rowId) {
-            actions = window[`pgActions_${this.parentId ?? this.$wire.id}`][this.rowId];
-        } else {
-            actions = window[`pgActionsHeader_${this.$wire.id}`];
-        }
+        const actions = this.rowId
+            ? window[`pgActions_${this.parentId ?? this.$wire.id}`][this.rowId]
+            : window[`pgActionsHeader_${this.$wire.id}`];
 
         if (typeof actions !== "object") {
             return '';
@@ -36,75 +37,22 @@ export default (params) => ({
         let html = ''
 
         actions.forEach((action) => {
-            let hideAction = false;
-            let replaceHtml = null;
-
-            if (action.rules && Object.values(action.rules).length > 0) {
-                Object.values(action.rules).forEach((ruleObj) => {
-                    if (ruleObj.apply) {
-                        if (ruleObj.rule.hide) {
-                            hideAction = true;
-                        } else if (ruleObj.rule.setAttribute) {
-                            ruleObj.rule.setAttribute.forEach(attrRule => {
-                                if (action.attributes[attrRule.attribute]) {
-                                    action.attributes[attrRule.attribute] += ` ${attrRule.value}`;
-                                } else {
-                                    action.attributes[attrRule.attribute] = attrRule.value;
-                                }
-                            });
-                        }
-                        if (ruleObj.replaceHtml) {
-                            replaceHtml = ruleObj.replaceHtml;
-                        }
-                    }
-                });
-            }
+            let hideAction = this.shouldHideAction(action);
+            let replaceHtml = this.getReplaceHtml(action);
 
             if (!hideAction) {
                 if (replaceHtml) {
                     html += replaceHtml;
                 } else {
-                    let attributesStr = '';
-
-                    Object.entries(action.attributes).forEach(([key, value]) => {
-                        attributesStr += ` ${key}="${value}"`;
-                    });
+                    let attributesStr = this.buildAttributesString(action.attributes);
 
                     if (action.icon) {
-                        const iconAttributesStr = Object.entries(action.iconAttributes)
-                            .filter(([key, value]) => value != null)
-                            .map(([key, value]) => `${key}="${value}"`)
-                            .join(' ');
+                        let iconHtml = this.processIcon(action);
+                        if (!iconHtml) return;
 
-                        let iconHtml = window.pgResourceIcons[action.icon];
-
-                        if (typeof iconHtml === "undefined") {
-                            console.warn(`PowerGrid: Unable to load icons in javascript window in row: [${this.rowId}]`)
-                            return;
-                        }
-
-                        iconHtml = iconHtml.replace(/<([^\s>]+)([^>]*)>/, (match, tagName, existingAttributes) => {
-                            let updatedAttributes = existingAttributes.trim();
-                            const newAttributes = iconAttributesStr.replace(/class="([^"]*)"/, (classMatch, newClass) => {
-                                if (updatedAttributes.includes('class=')) {
-                                    updatedAttributes = updatedAttributes.replace(/class="([^"]*)"/, (classMatch, existingClass) =>
-                                        `class="${existingClass} ${newClass.trim()}"`
-                                    );
-                                } else {
-                                    updatedAttributes += ` ${classMatch}`;
-                                }
-                                return '';
-                            });
-                            return `<${tagName} ${updatedAttributes} ${newAttributes}>`;
-                        });
-
-                        if (action.slot) {
-                            html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml} ${action.slot}</${action.tag ?? 'button'}>`;
-                        } else {
-                            html += `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml}</${action.tag ?? 'button'}>`;
-                        }
+                        html += this.buildActionHtmlWithIcon(action, attributesStr, iconHtml);
                     } else {
-                        html += `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
+                        html += this.buildActionHtml(action, attributesStr);
                     }
                 }
             }
@@ -117,6 +65,77 @@ export default (params) => ({
         }
 
         return html;
+    },
+
+    shouldHideAction(action) {
+        let hideAction = false;
+        if (action.rules && Object.values(action.rules).length > 0) {
+            Object.values(action.rules).forEach((ruleObj) => {
+                if (ruleObj.apply && ruleObj.rule.hide) {
+                    hideAction = true;
+                }
+            });
+        }
+        return hideAction;
+    },
+
+     getReplaceHtml(action) {
+        let replaceHtml = null;
+        if (action.rules && Object.values(action.rules).length > 0) {
+            Object.values(action.rules).forEach((ruleObj) => {
+                if (ruleObj.apply && ruleObj.replaceHtml) {
+                    replaceHtml = ruleObj.replaceHtml;
+                }
+            });
+        }
+        return replaceHtml;
+    },
+
+     buildAttributesString(attributes) {
+        return Object.entries(attributes)
+            .map(([key, value]) => ` ${key}="${value}"`)
+            .join('');
+    },
+
+     processIcon(action) {
+        const iconAttributesStr = this.buildAttributesString(action.iconAttributes);
+        let iconHtml = window.pgResourceIcons[action.icon];
+
+        if (typeof iconHtml === "undefined") {
+            console.warn(`PowerGrid: Unable to load icons in javascript window in row: [${this.rowId}]`);
+            return null;
+        }
+
+        return this.replaceIconAttributes(iconHtml, iconAttributesStr);
+    },
+
+    replaceIconAttributes(iconHtml, iconAttributesStr) {
+        return iconHtml.replace(/<([^\s>]+)([^>]*)>/, (match, tagName, existingAttributes) => {
+            let updatedAttributes = existingAttributes.trim();
+            const newAttributes = iconAttributesStr.replace(/class="([^"]*)"/, (classMatch, newClass) => {
+                if (updatedAttributes.includes('class=')) {
+                    updatedAttributes = updatedAttributes.replace(/class="([^"]*)"/, (classMatch, existingClass) =>
+                        `class="${existingClass} ${newClass.trim()}"`
+                    );
+                } else {
+                    updatedAttributes += ` ${classMatch}`;
+                }
+                return '';
+            });
+            return `<${tagName} ${updatedAttributes} ${newAttributes}>`;
+        });
+    },
+
+    buildActionHtmlWithIcon(action, attributesStr, iconHtml) {
+        if (action.slot) {
+            return `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml} ${action.slot}</${action.tag ?? 'button'}>`;
+        }
+
+        return `<${action.tag ?? 'button'} ${attributesStr}>${iconHtml}</${action.tag ?? 'button'}>`;
+    },
+
+    buildActionHtml(action, attributesStr) {
+        return `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
     },
 
     checkLocalStorageFreeSpace() {

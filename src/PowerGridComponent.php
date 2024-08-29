@@ -126,16 +126,14 @@ class PowerGridComponent extends Component
             return collect();
         }
 
-        $start = microtime(true);
-
         if (boolval(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
-            return $this->getRecordsFromCache($start);
+            return $this->getRecordsFromCache();
         }
 
-        return $this->getRecordsDataSource($start);
+        return $this->getRecordsDataSource();
     }
 
-    private function getRecordsFromCache(float $start): mixed
+    private function getRecordsFromCache(): mixed
     {
         $prefix    = strval(data_get($this->setUp, 'cache.prefix'));
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
@@ -147,12 +145,10 @@ class PowerGridComponent extends Component
         $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
         if ($this->measurePerformance) {
-            $time = round((microtime(true) - $start) * 1000);
-
             app(Dispatcher::class)->dispatch(
                 new PowerGridPerformanceData(
                     tableName: $this->tableName,
-                    retrieveDataInMs: $time,
+                    retrieveDataInMs: 0,
                     isCached: true,
                 )
             );
@@ -161,20 +157,20 @@ class PowerGridComponent extends Component
         return $results;
     }
 
-    private function getRecordsDataSource(float $start): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
+    private function getRecordsDataSource(): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
     {
         if ($this->measurePerformance) {
             DB::enableQueryLog();
         }
 
-        $results = ProcessDataSource::make($this)->get();
+        $start        = microtime(true);
+        $results      = ProcessDataSource::make($this)->get();
+        $retrieveData = round((microtime(true) - $start) * 1000);
 
         if ($this->measurePerformance) {
             $queries = DB::getQueryLog();
 
             DB::disableQueryLog();
-
-            $retrieveData = round((microtime(true) - $start) * 1000);
 
             /** @var float $queriesTime */
             $queriesTime = collect($queries)->sum('time');
@@ -256,12 +252,12 @@ class PowerGridComponent extends Component
             $cacheKey = 'lazy-tmp-' . $this->getId() . '-' . implode('-', $this->getCacheKeys());
 
             $data = Cache::remember($cacheKey, 60, fn () => $this->getRecords());
+
+            /** @phpstan-ignore-next-line */
+            $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
         } else {
             $data = $this->getRecords();
         }
-
-        /** @phpstan-ignore-next-line */
-        $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
 
         $this->storeActionsRowInJSWindow();
 
