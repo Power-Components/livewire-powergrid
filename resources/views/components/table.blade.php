@@ -58,6 +58,7 @@
                         @endphp
 
                         <tr
+                            wire:replace.self
                             x-data="pgRowAttributes({ rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
                         >
