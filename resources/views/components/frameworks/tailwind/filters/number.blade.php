@@ -16,10 +16,7 @@
         array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')])
     );
 
-    $filterClasses = Arr::toCssClasses([
-        theme_style($theme, 'filterNumber.input'),
-        'power_grid',
-    ]);
+    $filterClasses = theme_style($theme, 'filterNumber.input');
 
     $placeholder = data_get($filter, 'placeholder');
 
@@ -50,7 +47,7 @@
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline])>
                 <input
                     {{ $defaultAttributes['inputStartAttributes'] }}
-                    style="{{ theme_style($theme, 'filterInputText.input.1') }} {{ data_get($column, 'headerStyle') }}"
+                    style="{{ data_get($column, 'headerStyle') }}"
                     type="text"
                     class="{{ $filterClasses }}"
                     placeholder="{{ $placeholder['min'] ?? __('Min') }}"
@@ -59,7 +56,7 @@
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline, 'mt-1' => $inline])>
                 <input
                     {{ $defaultAttributes['inputEndAttributes'] }}
-                    @if ($inline) style="{{ theme_style($theme, 'filterNumber.input') }} {{ data_get($column, 'headerStyle') }}" @endif
+                    @if ($inline) style="{{ data_get($column, 'headerStyle') }}" @endif
                     type="text"
                     class="{{ $filterClasses }}"
                     placeholder="{{ $placeholder['max'] ?? __('Max') }}"

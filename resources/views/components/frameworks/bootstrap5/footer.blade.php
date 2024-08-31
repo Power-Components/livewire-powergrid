@@ -13,7 +13,6 @@
                             <select
                                     wire:model.live="setUp.footer.perPage"
                                     class="form-select {{ theme_style($theme, 'footer.select') }}"
-                                    style="{{ theme_style($theme, 'footer.select.1') }}"
                             >
                                 @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                                     <option value="{{ $value }}">

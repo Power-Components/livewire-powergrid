@@ -16,7 +16,6 @@
             placeholder="{{ html_entity_decode(data_get($row, $field), ENT_QUOTES, 'utf-8') }}"
             contenteditable
             class="pg-single-line {{ theme_style($theme, 'editable.input') }}"
-            style="{{ theme_style($theme, 'editable.input.1')  }}"
             @if (data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             x-on:keydown.enter="save()"
             :id="`editable-` + dataField + `-` + id"

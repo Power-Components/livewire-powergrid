@@ -22,15 +22,13 @@
 @if ($hide)
     <td
         class="{{ theme_style($theme, 'radio.td') }}"
-        style="{{ theme_style($theme, 'radio.td.1') }}"
     >
     </td>
 @elseif($disable)
     <td
         class="{{ theme_style($theme, 'radio.td') }}"
-        style="{{ theme_style($theme, 'radio.td.1') }}"
     >
-        <div class="{{ theme_style($theme, 'radio.base') }}" style="{{ theme_style($theme, 'radio.base.1') }}">
+        <div class="{{ theme_style($theme, 'radio.base') }}">
             <label class="{{ theme_style($theme, 'radio.label') }}">
                 <input
                     {{ $inputAttributes }}
@@ -43,10 +41,9 @@
 @else
     <td
         class="{{ theme_style($theme, 'radio.th') }}"
-        style="{{ theme_style($theme, 'radio.th') }}"
     >
-        <div class="{{ theme_style($theme, 'radio.base') }}" style="{{ theme_style($theme, 'radio.base.1') }}">
-            <label class="{{ theme_style($theme, 'radio.label') }}" style="{{ theme_style($theme, 'radio.label.1') }}">
+        <div class="{{ theme_style($theme, 'radio.base') }}">
+            <label class="{{ theme_style($theme, 'radio.label') }}">
                 <input
                     type="radio"
                     {{ $inputAttributes }}

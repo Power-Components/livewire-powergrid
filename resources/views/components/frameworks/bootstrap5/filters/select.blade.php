@@ -27,7 +27,6 @@
 @else
     <div
         class="{{ theme_style($theme, 'filterSelect.base') }}"
-        style="{{ theme_style($theme, 'filterNumber.base.1') }}"
     >
         <select
             class="{{ $filterClasses }}"

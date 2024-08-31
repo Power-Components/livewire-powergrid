@@ -3,7 +3,6 @@
 ])
 <tr
     class="{{ theme_style($theme, 'table.header.tr') }}"
-    style="{{ theme_style($theme, 'table.header.tr.1') }}"
 >
     @if ($loading)
         <td
@@ -21,7 +20,6 @@
             <th
                 scope="col"
                 class="{{ theme_style($theme, 'table.header.th') }}"
-                style="{{ theme_style($theme, 'table.header.th.1') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -32,7 +30,6 @@
                 fixed
                 x-show="hasHiddenElements"
                 class="{{ theme_style($theme, 'table.header.th') }}"
-                style="{{ theme_style($theme, 'table.header.th.1') }}"
             >
             </th>
         @endisset
@@ -40,7 +37,6 @@
         @if ($radio)
             <th
                 class="{{ theme_style($theme, 'table.header.th') }}"
-                style="{{ theme_style($theme, 'table.header.th.1') }}"
             >
             </th>
         @endif

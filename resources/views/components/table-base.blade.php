@@ -9,25 +9,21 @@
     <table
         id="table_base_{{ $tableName }}"
         class="table power-grid-table {{ theme_style($theme, 'table.layout.table') }}"
-        style="{{ theme_style($theme, 'table.layout.table.1') }}"
     >
         <thead
             class="{{ theme_style($theme, 'table.header.thead') }}"
-            style="{{ theme_style($theme, 'table.header.thead.1') }}"
         >
             {{ $header }}
         </thead>
         @if ($readyToLoad)
             <tbody
                 class="{{ theme_style($theme, 'table.body.tbody') }}"
-                style="{{ theme_style($theme, 'table.body.tbody.1') }}"
             >
                 {{ $body }}
             </tbody>
         @else
             <tbody
                 class="{{ theme_style($theme, 'table.body.tbody') }}"
-                style="{{ theme_style($theme, 'table.body.tbody.1') }}"
             >
                 {{ $loading }}
             </tbody>

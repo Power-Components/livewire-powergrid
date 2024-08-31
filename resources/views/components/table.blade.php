@@ -39,7 +39,6 @@
                             ])
                             @if (data_get($setUp, 'detail.state.' . $rowId))
                                 <tr
-                                    style="{{ theme_style($theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
                                 >
                                     @include('livewire-powergrid::components.table.detail')

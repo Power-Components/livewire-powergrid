@@ -59,7 +59,6 @@
     @if (filled($filter))
         <div
             class="{{ theme_style($theme, 'filterSelect.base') }}"
-            style="{{ theme_style($theme, 'filterSelect.base.1') }}"
         >
             @if (!$inline)
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">

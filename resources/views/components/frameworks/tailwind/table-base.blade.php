@@ -5,12 +5,10 @@
     <div
         id="power-grid-table-container"
         class="{{ theme_style($theme, 'table.layout.container') }}"
-        style="{{ theme_style($theme, 'table.layout.container.1') }}"
     >
         <div
             id="power-grid-table-base"
             class="{{ theme_style($theme, 'table.layout.base') }}"
-            style="{{ theme_style($theme, 'table.layout.base.1') }}"
         >
             @include(theme_style($theme, 'layout.header'), [
                 'enabledFilters' => $enabledFilters,
@@ -47,7 +45,6 @@
                     'overflow-hidden' => !$readyToLoad,
                     theme_style($theme, 'table.layout.div'),
                 ])
-                style="{{ theme_style($theme, 'table.layout.div.1') }}"
             >
                 @include($table)
             </div>
