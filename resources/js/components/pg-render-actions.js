@@ -4,10 +4,6 @@ export default (params) => ({
     cookieKey: null,
     parentId: params?.parentId ?? null,
     init() {
-        if (this.rowId == null) {
-            return;
-        }
-
         this.setKeys();
 
         window.addEventListener('beforeunload', () => {
@@ -17,13 +13,22 @@ export default (params) => ({
     },
 
     setKeys() {
-        this.storageKey = `pg_session_${this.$wire.tableName}_row_${this.rowId}`;
-        this.cookieKey = `pg_cookie_${this.$wire.tableName}_row_${this.rowId}`;
+        if (this.rowId) {
+            this.storageKey = `pg_session_${this.$wire.tableName}_row_${this.rowId}`;
+            this.cookieKey = `pg_cookie_${this.$wire.tableName}_row_${this.rowId}`;
+
+            return;
+        }
+
+        this.storageKey = `pg_session_${this.$wire.tableName}_header_actions`;
+        this.cookieKey = `pg_cookie_${this.$wire.tableName}_header_actions`;
     },
 
     toHtml() {
-        if (localStorage.getItem(this.storageKey)) {
-            return localStorage.getItem(this.storageKey);
+        const value = localStorage.getItem(this.storageKey)
+
+        if (typeof value === 'string' && value.length > 0) {
+            return value;
         }
 
         const actions = this.rowId
