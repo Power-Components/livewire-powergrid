@@ -31,12 +31,11 @@
 @else
     <div
         class="{{ theme_style($theme, 'filterNumber.base') }}"
-        style="{{ theme_style($theme, 'filterNumber.base.1') }}"
     >
         <div>
             <input
                 {{ $defaultAttributes['inputStartAttributes'] }}
-                @if ($inline) style="{{ theme_style($theme, 'filterNumber.input.1') }} {{ data_get($column, 'headerStyle') }}" @endif
+                @if ($inline) style="{{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
                 placeholder="{{ $placeholder['min'] ?? __('Min') }}"
@@ -45,7 +44,7 @@
         <div class="mt-1">
             <input
                 {{ $defaultAttributes['inputEndAttributes'] }}
-                @if ($inline) style="{{ theme_style($theme, 'filterNumber.input.1') }} {{ data_get($column, 'headerStyle') }}" @endif
+                @if ($inline) style="{{ data_get($column, 'headerStyle') }}" @endif
                 type="text"
                 class="{{ $filterClasses }}"
                 placeholder="{{ $placeholder['max'] ?? __('Max') }}"

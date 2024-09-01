@@ -24,16 +24,14 @@
 @if ($hide)
     <td
         class="{{ theme_style($theme, 'checkbox.th') }}"
-        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
     </td>
 @elseif($disable)
     <td
         class="{{ theme_style($theme, 'checkbox.th') }}"
-        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
-            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -45,10 +43,9 @@
 @else
     <td
         class="{{ theme_style($theme, 'checkbox.th') }}"
-        style="{{ theme_style($theme, 'checkbox.th.1') }}"
     >
-        <div class="{{ theme_style($theme, 'checkbox.base') }}" style="{{ theme_style($theme, 'checkbox.base.1') }}">
-            <label class="{{ theme_style($theme, 'checkbox.label') }}" style="{{ theme_style($theme, 'checkbox.label.1') }}">
+        <div class="{{ theme_style($theme, 'checkbox.base') }}">
+            <label class="{{ theme_style($theme, 'checkbox.label') }}">
                 <input
                     x-data="{}"
                     type="checkbox"

@@ -6,7 +6,6 @@
     </div>
     <div
         class="{{ theme_style($theme, 'table.layout.div') }}"
-        style="{{ theme_style($theme, 'table.layout.div.1') }}"
     >
         @include($table)
     </div>

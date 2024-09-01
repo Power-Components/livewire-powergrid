@@ -45,7 +45,6 @@
 >
     <div
         class="{{ theme_style($theme, 'cols.div') }}"
-        style="{{ theme_style($theme, 'cols.div.1') }}"
     >
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
