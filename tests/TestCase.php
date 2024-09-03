@@ -82,7 +82,7 @@ class TestCase extends BaseTestCase
         return [
             LivewireServiceProvider::class,
             PowerGridServiceProvider::class,
-            LaraDumpsServiceProvider::class
+            LaraDumpsServiceProvider::class,
         ];
     }
 }
