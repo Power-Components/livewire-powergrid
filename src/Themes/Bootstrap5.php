@@ -11,7 +11,7 @@ class Bootstrap5 extends Theme
         return [
             'layout' => [
                 'base'      => 'pt-3 px-sm-3 px-lg-5 align-middle d-inline-block',
-                'div'       => ['table-responsive col-md-12 my-2 mx-0'],
+                'div'       => 'table-responsive col-md-12 my-2 mx-0',
                 'table'     => 'table-hover w-100',
                 'container' => 'my-0 mx-sm-n1 mx-lg-n3 overflow-x-auto',
                 'actions'   => 'd-flex gap-2',
@@ -20,7 +20,7 @@ class Bootstrap5 extends Theme
             'header' => [
                 'thead'    => 'table-light shadow-sm',
                 'tr'       => '',
-                'th'       => ['fw-bold text-secondary text-nowrap small py-2'],
+                'th'       => 'fw-bold text-secondary text-nowrap small py-2',
                 'thAction' => '',
             ],
 
@@ -28,9 +28,9 @@ class Bootstrap5 extends Theme
                 'tbody'              => 'table-group-divider',
                 'tbodyEmpty'         => '',
                 'tr'                 => '',
-                'td'                 => ['align-middle text-nowrap px-3 py-2 lh-sm'],
+                'td'                 => 'align-middle text-nowrap px-3 py-2 lh-sm',
                 'tdEmpty'            => 'p-2 text-nowrap',
-                'tdSummarize'        => ['text-dark-emphasis small px-3 py-2 lh-sm'],
+                'tdSummarize'        => 'text-dark-emphasis small px-3 py-2 lh-sm',
                 'trSummarize'        => '',
                 'tdFilters'          => '',
                 'trFilters'          => '',
@@ -58,6 +58,10 @@ class Bootstrap5 extends Theme
     {
         return [
             'view' => $this->root() . '.toggleable',
+            'base'  => 'form-check form-switch',
+            'label' => 'form-check-label',
+            'input' => 'form-check-input',
+             'role' => 'switch',
         ];
     }
 
@@ -65,17 +69,17 @@ class Bootstrap5 extends Theme
     {
         return [
             'view'  => $this->root() . '.editable',
-            'input' => 'form-control shadow-none',
+            'input' => 'form-control',
         ];
     }
 
     public function checkbox(): array
     {
         return [
-            'th'    => ['fs-6 text-center'],
+            'th'    => 'fs-6 text-center',
             'base'  => 'form-check',
             'label' => 'form-check-label',
-            'input' => 'form-check-input shadow-none',
+            'input' => 'form-check-input',
         ];
     }
 
@@ -94,7 +98,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.boolean',
             'base'   => '',
-            'select' => 'form-control form-select shadow-none',
+            'select' => 'form-control form-select',
         ];
     }
 
@@ -103,7 +107,7 @@ class Bootstrap5 extends Theme
         return [
             'base'  => '',
             'view'  => $this->root() . '.filters.date-picker',
-            'input' => 'form-control shadow-none',
+            'input' => 'form-control',
         ];
     }
 
@@ -112,7 +116,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.multi-select',
             'base'   => '',
-            'select' => 'form-control form-select shadow-none',
+            'select' => 'form-control form-select',
         ];
     }
 
@@ -120,7 +124,7 @@ class Bootstrap5 extends Theme
     {
         return [
             'view'  => $this->root() . '.filters.number',
-            'input' => 'form-control shadow-none',
+            'input' => 'form-control',
         ];
     }
 
@@ -129,7 +133,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.select',
             'base'   => '',
-            'select' => 'form-control form-select shadow-none',
+            'select' => 'form-control form-select',
         ];
     }
 
@@ -138,8 +142,8 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.input-text',
             'base'   => ['', 'min-width: 165px !important'],
-            'select' => 'form-control mb-1 shadow-none form-select',
-            'input'  => 'form-control shadow-none',
+            'select' => 'form-control mb-1 form-select',
+            'input'  => 'form-control',
         ];
     }
 
