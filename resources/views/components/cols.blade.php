@@ -41,7 +41,7 @@
     @if ($isFixedOnResponsive) fixed @endif
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $this->getId() }}"
         wire:click="sortBy('{{ $field }}')" @endif
-    style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; width: max-content !important; @if (data_get($column, 'enableSort')) cursor:pointer; @endif {{ theme_style($theme, 'table.header.th.1') . ' ' . data_get($column, 'headerStyle') }}"
+    style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; width: max-content !important; @if (data_get($column, 'enableSort')) cursor:pointer; @endif {{ data_get($column, 'headerStyle') }}"
 >
     <div
         class="{{ theme_style($theme, 'cols.div') }}"

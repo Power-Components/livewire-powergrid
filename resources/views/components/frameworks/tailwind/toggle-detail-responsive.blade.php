@@ -2,7 +2,6 @@
     x-cloak
     x-show="hasHiddenElements"
     class="w-0 {{ theme_style($theme, 'table.body.td') }}"
-    style="{{  theme_style($theme, 'table.body.td.1') }}"
 >
     <button
         class="flex items-center"

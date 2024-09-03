@@ -13,31 +13,20 @@
 @php
     $trClasses = Arr::toCssClasses([theme_style($theme, 'table.body.tr'), theme_style($theme, 'table.body.trFilters')]);
     $tdClasses = Arr::toCssClasses([theme_style($theme, 'table.body.td'), theme_style($theme, 'table.body.tdFilters')]);
-    $trStyles = Arr::toCssClasses([
-        theme_style($theme, 'table.body.tr.1'),
-        theme_style($theme, 'table.body.trFilters.1'),
-    ]);
-    $tdStyles = Arr::toCssClasses([
-        theme_style($theme, 'table.body.td.1'),
-        theme_style($theme, 'table.body.tdFilters.1'),
-    ]);
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
         class="{{ $trClasses }}"
-        style="{{ $trStyles }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <td
                 class="{{ $tdClasses }}"
-                style="{{ $tdStyles }}"
             ></td>
         @endif
         @if ($checkbox)
             <td
                 class="{{ $tdClasses }}"
-                style="{{ $tdStyles }}"
             ></td>
         @endif
 
@@ -57,8 +46,6 @@
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
                 @style([
                     'display:none' => data_get($column, 'hidden') === true,
-                    theme_style($theme, 'table.body.td.1'),
-                    theme_style($theme, 'table.body.tdFilters.1'),
                 ])
             >
                 <div wire:key="filter-{{ data_get($column, 'field') }}-{{ $loop->index }}">

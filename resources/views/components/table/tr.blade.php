@@ -70,7 +70,6 @@
                 @if ($isActionFixedOnResponsive) fixed @endif
                 class="{{ theme_style($theme, 'table.header.th') . ' ' . theme_style($theme, 'table.header.thAction') }}"
                 scope="col"
-                class="{{ theme_style($theme, 'table.header.th.1') . ' ' . theme_style($theme, 'table.header.thAction.1') }}"
                 colspan="999"
                 wire:key="{{ md5('actions') }}"
             >

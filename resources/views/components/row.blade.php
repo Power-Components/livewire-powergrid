@@ -59,7 +59,6 @@
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
-            theme_style($theme, 'table.body.td.1'),
         ])
         wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
     >
@@ -76,8 +75,7 @@
                         <div
                             x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
                             class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
-                            x-html="toHtml"
-                        >
+                            x-html="toHtml">
                         </div>
                     @endif
                 </div>

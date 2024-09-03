@@ -1,7 +1,6 @@
 {{-- blade-formatter-enable --}}
 <tr
     class="{{ theme_style($theme, 'table.header.tr') }}"
-    style="{{theme_style($theme, 'table.header.tr.1') }}"
 >
     @if (data_get($setUp, 'detail.showCollapseIcon'))
         <td

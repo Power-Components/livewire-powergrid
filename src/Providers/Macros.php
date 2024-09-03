@@ -190,7 +190,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (string $id) {
+        Button::macro('id', function (string $id = null) {
             $this->attributes([
                 'id' => $id,
             ]);
