@@ -181,7 +181,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('route', function (string $route, array $params, string $target) {
+        Button::macro('route', function (string $route, array $params, string $target = '_self') {
             $this->attributes([
                 'href'   => route($route, $params),
                 'target' => $target,
