@@ -73,6 +73,11 @@ export default (params) => ({
     },
 
     shouldHideAction(action) {
+
+        if (action.can === false) {
+            return true;
+        }
+
         let hideAction = false;
         if (action.rules && Object.values(action.rules).length > 0) {
             Object.values(action.rules).forEach((ruleObj) => {
