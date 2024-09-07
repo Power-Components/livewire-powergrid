@@ -142,7 +142,7 @@ class DataSourceBase
                 try {
                     $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
                         ->transform(function (Button|array $action) use ($row, $component) {
-                            if (data_get($action, 'can') ?? null instanceof \Closure) {
+                            if (data_get($action, 'can') instanceof \Closure) {
                                 $closure = data_get($action, 'can');
                                 $can     = $closure($row);
                             }
