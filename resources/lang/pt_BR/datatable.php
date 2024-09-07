@@ -66,10 +66,10 @@ return [
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'Tem a certeza que pretende executar esta ação?',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "Tem a certeza que pretende executar esta ação? \n\n Escreva :confirmValue para confirmar.",
         ],
     ],
 ];
