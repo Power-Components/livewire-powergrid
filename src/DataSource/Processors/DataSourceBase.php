@@ -146,8 +146,7 @@ class DataSourceBase
                             $can = data_get($action, 'can');
 
                             if ($can instanceof \Closure) {
-                                $closure = data_get($action, 'can');
-                                $allowed = $closure($row);
+                                $allowed = $can($row);
                             }
 
                             return [
