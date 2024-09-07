@@ -139,7 +139,8 @@ class DataSourceBase
             $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . $rowId]);
 
             if ($renderActions && !$hasCookieActionsForRow) {
-                $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
+                try {
+                    $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
                     ->transform(function (Button|array $action) use ($row, $component) {
                         return [
                             'slot'           => data_get($action, 'slot'),
@@ -151,7 +152,20 @@ class DataSourceBase
                         ];
                     });
 
-                static::$actionsHtml[$rowId] = $actions->toArray();
+                    static::$actionsHtml[$rowId] = $actions->toArray();
+                } catch (\ArgumentCountError $exception) {
+                    $trace = $exception->getTrace();
+
+                    if (str(strval(data_get($trace, '0.file')))->contains('Macroable')) {
+                        $file = str(
+                            data_get($trace, '1.file') . ':' . data_get($trace, '1.line')
+                        )->after(base_path() . DIRECTORY_SEPARATOR);
+
+                        $method = strval(data_get($trace, '1.args.0'));
+
+                        throw new \Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
+                    }
+                }
             }
 
             $mergedData = $data->merge([
