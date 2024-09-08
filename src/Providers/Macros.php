@@ -165,10 +165,12 @@ class Macros
             return $this;
         });
 
-        Button::macro('disable', function () {
-            $this->attributes([
-                'disabled' => 'disabled',
-            ]);
+        Button::macro('disable', function (bool $disable = true) {
+            if ($disable) {
+                $this->attributes([
+                    'disabled' => 'disabled',
+                ]);
+            }
 
             return $this;
         });
@@ -194,12 +196,6 @@ class Macros
             $this->attributes([
                 'id' => $id,
             ]);
-
-            return $this;
-        });
-
-        Button::macro('hideWhen', function (\Closure $closure) {
-            $this->hideWhen = $closure;
 
             return $this;
         });
