@@ -141,16 +141,24 @@ class DataSourceBase
             if ($renderActions && !$hasCookieActionsForRow) {
                 try {
                     $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
-                    ->transform(function (Button|array $action) use ($row, $component) {
-                        return [
-                            'slot'           => data_get($action, 'slot'),
-                            'tag'            => data_get($action, 'tag'),
-                            'icon'           => data_get($action, 'icon'),
-                            'iconAttributes' => data_get($action, 'iconAttributes'),
-                            'attributes'     => data_get($action, 'attributes'),
-                            'rules'          => $component->resolveActionRules($row),
-                        ];
-                    });
+                        ->transform(function (Button|array $action) use ($row, $component) {
+                            /** @var bool|\Closure $can */
+                            $can = data_get($action, 'can');
+
+                            if ($can instanceof \Closure) {
+                                $allowed = $can($row);
+                            }
+
+                            return [
+                                'can'            => $allowed ?? $can,
+                                'slot'           => data_get($action, 'slot'),
+                                'tag'            => data_get($action, 'tag'),
+                                'icon'           => data_get($action, 'icon'),
+                                'iconAttributes' => data_get($action, 'iconAttributes'),
+                                'attributes'     => data_get($action, 'attributes'),
+                                'rules'          => $component->resolveActionRules($row),
+                            ];
+                        });
 
                     static::$actionsHtml[$rowId] = $actions->toArray();
                 } catch (\ArgumentCountError $exception) {

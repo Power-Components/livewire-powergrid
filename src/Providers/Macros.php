@@ -204,7 +204,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('can', function (\Closure $closure) {
+        Button::macro('can', function (bool|\Closure $closure) {
             $this->can = $closure;
 
             return $this;
