@@ -7,22 +7,22 @@ return [
     ],
     'labels' => [
         'action'           => 'Ações',
-        'results_per_page' => 'Registros por página',
+        'results_per_page' => 'Registos por página',
         'clear_filter'     => 'Limpar filtro',
-        'no_data'          => 'Nenhum registro encontrado',
+        'no_data'          => 'Nenhum registo encontrado',
         'all'              => 'Todos',
         'selected'         => 'Selecionados',
         'filtered'         => 'Filtrados',
     ],
     'placeholders' => [
-        'search' => 'Buscar ...',
+        'search' => 'Pesquisar ...',
         'select' => 'Selecione um período',
     ],
     'pagination' => [
-        'showing' => 'Mostrando',
+        'showing' => 'A mostrar',
         'to'      => 'até',
         'of'      => 'de',
-        'results' => 'Registros',
+        'results' => 'resultados',
         'all'     => 'Todos',
     ],
     'multi_select' => [
@@ -52,11 +52,11 @@ return [
     ],
     'export' => [
         'exporting' => 'Por favor, aguarde!',
-        'completed' => 'Exportação concluída! Seus arquivos estão prontos para download',
+        'completed' => 'Exportação concluída! Os seus ficheiros estão prontos para download',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Exibindo todos os registros, incluindo os excluídos.',
-        'message_only_trashed' => 'Exibindo apenas os registros excluídos.',
+        'message_with_trashed' => 'A mostrar todos os registos, incluindo os excluídos.',
+        'message_only_trashed' => 'A mostrar apenas os registos excluídos.',
         'without_trashed'      => 'Sem excluídos',
         'with_trashed'         => 'Com excluídos',
         'only_trashed'         => 'Apenas excluídos',
