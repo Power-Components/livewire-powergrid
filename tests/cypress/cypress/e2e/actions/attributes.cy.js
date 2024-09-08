@@ -1,12 +1,14 @@
-describe('can render actions buttons with icons', () => {
+describe('render javascript actions attributes', () => {
     beforeEach(() => {
-        cy.visit('/actions-buttons');
+        cy.visit('/actions-attributes');
     });
 
     it('can render view button and click for row 1', () => {
         cy.get('.power-grid-table tbody tr').eq(0)
             .should('contain.html', 'pgRenderActions({ rowId: 1, parentId: null })')
             .should('contain.html', 'wire:click="$dispatch(\'clickToEdit\'')
+            .should('contain.html', 'data-cy="btn-view-1"')
+            .should('contain.html', 'class="text-slate-500 items-center flex gap-2 hover:text-slate-700 hover:bg-slate-100 p-1 px-2 rounded"')
             // Eye icon
             .should('contain.html', '<svg class="w-5 text-red-600 !text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
                 '    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>\n' +
@@ -45,9 +47,11 @@ describe('can render actions buttons with icons', () => {
     it('can render "Edit" button and click for row 1', () => {
         cy.get('.power-grid-table tbody tr').eq(0)
             .should('contain.html', 'pgRenderActions({ rowId: 1, parentId: null })')
+            .should('contain.html', 'data-cy="btn-edit-1"')
+            .should('contain.html', 'class="text-slate-500 items-center flex gap-2 hover:text-slate-700 hover:bg-slate-100 p-1 px-2 rounded"')
             .should('contain.html', 'wire:click="$dispatch(\'clickToEdit\'')
             // Pencil icon
-            .should('contain.html', '<svg class="w-5 text-red-600 !text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+            .should('contain.html', '<svg class="w-5 text-red-600 !text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
                 '    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>\n' +
                 '</svg>')
             .should('contain.text', 'Edit')
@@ -116,11 +120,13 @@ describe('can render actions buttons with icons', () => {
     })
 
     it('can render "Edit" button and click for row 2', () => {
-        cy.get('.power-grid-table tbody tr').eq(0)
-            .should('contain.html', 'pgRenderActions({ rowId: 1, parentId: null })')
+        cy.get('.power-grid-table tbody tr').eq(1)
+            .should('contain.html', 'pgRenderActions({ rowId: 2, parentId: null })')
+            .should('contain.html', 'data-cy="btn-edit-2"')
+            .should('contain.html', 'class="text-slate-500 items-center flex gap-2 hover:text-slate-700 hover:bg-slate-100 p-1 px-2 rounded"')
             .should('contain.html', 'wire:click="$dispatch(\'clickToEdit\'')
             // Pencil icon
-            .should('contain.html', '<svg class="w-5 text-red-600 !text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+            .should('contain.html', '<svg class="w-5 text-red-600 !text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
                 '    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>\n' +
                 '</svg>')
             .should('contain.text', 'Edit')
