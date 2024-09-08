@@ -81,16 +81,16 @@ trait HasActions
         }
 
         $actionsHtml = collect($this->header())
-        ->transform(function (Button $action) {
-            return [
-                'slot'           => $action->slot,
-                'tag'            => $action->tag,
-                'icon'           => $action->icon,
-                'iconAttributes' => $action->iconAttributes,
-                'attributes'     => $action->attributes,
-                'rules'          => [],
-            ];
-        });
+            ->transform(function (Button $action) {
+                return [
+                    'slot'           => $action->slot,
+                    'tag'            => $action->tag,
+                    'icon'           => $action->icon,
+                    'iconAttributes' => $action->iconAttributes,
+                    'attributes'     => $action->attributes,
+                    'rules'          => [],
+                ];
+            });
 
         $actionsHtml = json_encode($actionsHtml);
 
