@@ -49,7 +49,7 @@ export default (params) => ({
                 if (replaceHtml) {
                     html += replaceHtml;
                 } else {
-                    let attributesStr = this.buildAttributesString(action.attributes);
+                    let attributesStr = this.buildAttributesString(action);
 
                     if (action.icon) {
                         let iconHtml = this.processIcon(action);
@@ -81,7 +81,7 @@ export default (params) => ({
         if (action.rules && Object.values(action.rules).length > 0) {
             Object.values(action.rules).forEach((ruleObj) => {
                 if (
-                    !ruleObj.action.includes('pg:')
+                    !ruleObj.action.includes(action.action)
                     && ruleObj.apply
                     && ruleObj.rule.hide) {
                     hideAction = true;
@@ -94,9 +94,13 @@ export default (params) => ({
 
      getReplaceHtml(action) {
         let replaceHtml = null;
+
         if (action.rules && Object.values(action.rules).length > 0) {
             Object.values(action.rules).forEach((ruleObj) => {
-                if (ruleObj.apply && ruleObj.replaceHtml) {
+                if (
+                    ruleObj.apply
+                    && ruleObj.action.includes(action.action)
+                    && ruleObj.replaceHtml) {
                     replaceHtml = ruleObj.replaceHtml;
                 }
             });
@@ -104,14 +108,34 @@ export default (params) => ({
         return replaceHtml;
     },
 
-     buildAttributesString(attributes) {
+     buildAttributesString(action) {
+        let attributes = action.attributes ?? []
+
+         if (action.rules && Object.values(action.rules).length > 0) {
+             Object.values(action.rules).forEach((ruleObj) => {
+                 if (
+                     ruleObj.apply
+                     && ruleObj.action.includes(action.action)
+                 ) {
+                     if (ruleObj.rule.setAttribute && ruleObj.rule.setAttribute.length > 0) {
+                         Object.values(ruleObj.rule.setAttribute).forEach((attribute) => {
+                             attributes[attribute.attribute] = attribute.value
+                         })
+                     }
+                 }
+             });
+         }
+
         return Object.entries(attributes)
             .map(([key, value]) => ` ${key}="${value}"`)
             .join('');
     },
 
      processIcon(action) {
-        const iconAttributesStr = this.buildAttributesString(action.iconAttributes);
+        const iconAttributesStr = Object.entries(action.iconAttributes ?? [])
+            .map(([key, value]) => ` ${key}="${value}"`)
+            .join('');
+
         let iconHtml = window.pgResourceIcons[action.icon];
 
         if (typeof iconHtml === "undefined") {

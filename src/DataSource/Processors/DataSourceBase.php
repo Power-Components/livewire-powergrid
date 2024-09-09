@@ -150,6 +150,7 @@ class DataSourceBase
                             }
 
                             return [
+                                'action'         => data_get($action, 'action'),
                                 'can'            => $allowed ?? $can,
                                 'slot'           => data_get($action, 'slot'),
                                 'tag'            => data_get($action, 'tag'),
