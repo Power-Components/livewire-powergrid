@@ -83,6 +83,7 @@ trait HasActions
         $actionsHtml = collect($this->header())
             ->transform(function (Button $action) {
                 return [
+                    'action'         => $action->action,
                     'slot'           => $action->slot,
                     'tag'            => $action->tag,
                     'icon'           => $action->icon,

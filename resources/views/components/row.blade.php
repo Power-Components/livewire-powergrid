@@ -5,8 +5,8 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
-    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
-])
+        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+    ])
 
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
@@ -23,11 +23,7 @@
     'attribute' => $row->{$checkboxAttribute},
 ])
 
-@foreach (collect($columns)->map(function ($column) {
-        data_forget($column, 'rawQueries');
-
-        return $column;
-    }) as $column)
+@foreach ($columns as $column)
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
@@ -75,7 +71,8 @@
                         <div
                             x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
                             class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
-                            x-html="toHtml">
+                            x-html="toHtml"
+                        >
                         </div>
                     @endif
                 </div>

@@ -1,3 +1,8 @@
+@php
+    $columns = collect($columns)->map(function ($column) {
+        return data_forget($column, 'rawQueries');
+    });
+@endphp
 <div @if ($deferLoading) wire:init="fetchDatasource" @endif>
     <div class="col-md-12">
         @include(theme_style($theme, 'layout.header'), [

@@ -242,6 +242,12 @@ class Macros
 
             return $this;
         });
+
+        RuleActions::macro('disable', function () {
+            $this->setAttribute('disabled', 'disabled');
+
+            return $this;
+        });
     }
 
     public static function builder(): void

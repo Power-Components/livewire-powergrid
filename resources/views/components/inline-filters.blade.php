@@ -30,11 +30,7 @@
             ></td>
         @endif
 
-        @foreach (collect($columns)->map(function ($column) {
-        data_forget($column, 'rawQueries');
-
-        return $column;
-    }) as $column)
+        @foreach ($columns as $column)
             @php
                 $filterClass = str(data_get($column, 'filters.className'));
             @endphp

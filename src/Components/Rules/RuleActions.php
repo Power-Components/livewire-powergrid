@@ -39,36 +39,6 @@ class RuleActions extends BaseRule
     }
 
     /**
-     * Shows the button.
-     */
-    public function show(): self
-    {
-        $this->setModifier('show', false);
-
-        return $this;
-    }
-
-    /**
-     * Disables the button.
-     */
-    public function disable(): self
-    {
-        $this->setModifier('disable', true);
-
-        return $this;
-    }
-
-    /**
-     * Enables the button.
-     */
-    public function enable(): self
-    {
-        $this->setModifier('disable', false);
-
-        return $this;
-    }
-
-    /**
      * Sets the button caption value.
      */
     public function slot(string $slot): self
