@@ -1,3 +1,9 @@
+@php
+    $columns = collect($columns)->map(function ($column) {
+        return data_forget($column, 'rawQueries');
+    });
+@endphp
+
 <div
     class="flex flex-col"
     @if ($deferLoading) wire:init="fetchDatasource" @endif
@@ -16,11 +22,7 @@
 
             @if (config('livewire-powergrid.filter') === 'outside')
                 @php
-                    $filtersFromColumns = collect(collect($columns)->map(function ($column) {
-        data_forget($column, 'rawQueries');
-
-        return $column;
-    }))
+                    $filtersFromColumns = $columns
                         ->filter(fn($column) => filled(data_get($column, 'filters')));
                 @endphp
 
@@ -28,11 +30,7 @@
                     <x-livewire-powergrid::frameworks.tailwind.filter
                         :enabled-filters="$enabledFilters"
                         :tableName="$tableName"
-                        :columns="collect($columns)->map(function ($column) {
-        data_forget($column, 'rawQueries');
-
-        return $column;
-    })"
+                        :columns="$columns"
                         :filtersFromColumns="$filtersFromColumns"
                         :theme="$theme"
                     />

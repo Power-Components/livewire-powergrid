@@ -27,7 +27,7 @@
     "laravel/pint": "1.17",
     "laradumps/laradumps-core": "^2.1.1",
     "larastan/larastan": "^2.9.8",
-    "pestphp/pest": "^2.35.0",
+    "pestphp/pest": "^3.0",
     "orchestra/testbench": "^9.2",
     "laradumps/laradumps": "^3.1",
     "laravel/scout": "^10.11.1",

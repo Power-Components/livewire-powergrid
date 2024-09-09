@@ -13,7 +13,6 @@
     </x-slot:loading>
 
     <x-slot:body>
-
         @includeWhen($this->hasColumnFilters, 'livewire-powergrid::components.inline-filters')
 
         @if (is_null($data) || count($data) === 0)
