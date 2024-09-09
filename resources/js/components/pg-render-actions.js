@@ -73,7 +73,6 @@ export default (params) => ({
     },
 
     shouldHideAction(action) {
-
         if (action.can === false) {
             return true;
         }
@@ -81,11 +80,15 @@ export default (params) => ({
         let hideAction = false;
         if (action.rules && Object.values(action.rules).length > 0) {
             Object.values(action.rules).forEach((ruleObj) => {
-                if (ruleObj.apply && ruleObj.rule.hide) {
+                if (
+                    !ruleObj.action.includes('pg:')
+                    && ruleObj.apply
+                    && ruleObj.rule.hide) {
                     hideAction = true;
                 }
             });
         }
+
         return hideAction;
     },
 
