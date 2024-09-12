@@ -23,7 +23,8 @@ class FilterEnumSelect extends FilterBase
 
     public function execute(): FilterEnumSelect
     {
-        $optionLabel = 'value';
+        // use previously set optionLabel is set by the user
+        $optionLabel = $this->optionLabel ?? 'value';
 
         $collection = collect($this->dataSource)->map(function ($case) use (&$optionLabel) {
             $option = (array) $case;
