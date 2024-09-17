@@ -12,13 +12,13 @@ class Bootstrap5 extends Theme
             'layout' => [
                 'base'      => 'pt-3 px-sm-3 px-lg-5 align-middle d-inline-block',
                 'div'       => 'table-responsive col-md-12 my-2 mx-0',
-                'table'     => 'table-hover w-100',
+                'table'     => 'table-hover table-striped w-100',
                 'container' => 'my-0 mx-sm-n1 mx-lg-n3 overflow-x-auto',
-                'actions'   => 'd-flex gap-2',
+                'actions'   => 'd-flex gap-1',
             ],
 
             'header' => [
-                'thead'    => 'table-light shadow-sm',
+                'thead'    => '',
                 'tr'       => '',
                 'th'       => 'fw-bold text-secondary text-nowrap small py-2',
                 'thAction' => '',
@@ -34,7 +34,7 @@ class Bootstrap5 extends Theme
                 'trSummarize'        => '',
                 'tdFilters'          => '',
                 'trFilters'          => '',
-                'tdActionsContainer' => 'd-flex gap-2',
+                'tdActionsContainer' => 'd-flex gap-1',
             ],
         ];
     }
@@ -61,7 +61,7 @@ class Bootstrap5 extends Theme
             'base'  => 'form-check form-switch',
             'label' => 'form-check-label',
             'input' => 'form-check-input',
-             'role' => 'switch',
+            'role' => 'switch',
         ];
     }
 
@@ -98,7 +98,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.boolean',
             'base'   => '',
-            'select' => 'form-control form-select',
+            'select' => 'form-control form-select form-select-sm',
         ];
     }
 
@@ -107,7 +107,7 @@ class Bootstrap5 extends Theme
         return [
             'base'  => '',
             'view'  => $this->root() . '.filters.date-picker',
-            'input' => 'form-control',
+            'input' => 'form-control form-control-sm',
         ];
     }
 
@@ -116,7 +116,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.multi-select',
             'base'   => '',
-            'select' => 'form-control form-select',
+            'select' => 'form-control form-select form-select-sm',
         ];
     }
 
@@ -124,7 +124,7 @@ class Bootstrap5 extends Theme
     {
         return [
             'view'  => $this->root() . '.filters.number',
-            'input' => 'form-control',
+            'input' => 'form-control form-control-sm text-12',
         ];
     }
 
@@ -133,7 +133,7 @@ class Bootstrap5 extends Theme
         return [
             'view'   => $this->root() . '.filters.select',
             'base'   => '',
-            'select' => 'form-control form-select',
+            'select' => 'form-control form-select-sm form-select',
         ];
     }
 
@@ -141,9 +141,9 @@ class Bootstrap5 extends Theme
     {
         return [
             'view'   => $this->root() . '.filters.input-text',
-            'base'   => ['', 'min-width: 165px !important'],
-            'select' => 'form-control mb-1 form-select',
-            'input'  => 'form-control',
+            'base'   => '',
+            'select' => 'form-control form-select-sm mb-1 form-select',
+            'input'  => 'form-control form-control-sm',
         ];
     }
 
