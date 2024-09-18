@@ -45,9 +45,9 @@
                             {!! data_get($column, 'title') !!}
                         </div>
                         @if (!data_get($column, 'hidden'))
-                            <x-livewire-powergrid::icons.eye class="text-pg-primary-200 dark:text-pg-primary-300" />
+                            <x-livewire-powergrid::icons.eye class="h-5 w-5 text-pg-primary-200 dark:text-pg-primary-300" />
                         @else
-                            <x-livewire-powergrid::icons.eye-off class="text-pg-primary-500 dark:text-pg-primary-300" />
+                            <x-livewire-powergrid::icons.eye-off class="h-5 w-5 text-pg-primary-500 dark:text-pg-primary-300" />
                         @endif
                     </div>
                 @endforeach
