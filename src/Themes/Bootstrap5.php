@@ -57,11 +57,11 @@ class Bootstrap5 extends Theme
     public function toggleable(): array
     {
         return [
-            'view' => $this->root() . '.toggleable',
+            'view'  => $this->root() . '.toggleable',
             'base'  => 'form-check form-switch',
             'label' => 'form-check-label',
             'input' => 'form-check-input',
-            'role' => 'switch',
+            'role'  => 'switch',
         ];
     }
 
