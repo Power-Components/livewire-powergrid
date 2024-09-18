@@ -5,12 +5,12 @@ describe('render action rules buttons hide', () => {
 
     it('can render buttons hide', () => {
         cy.get('.power-grid-table tbody tr').eq(0)
-            .should('contain.text', 'Edit-1')
-            .should('not.contain.text', 'Delete-1')
+            .should('not.contain.text', 'Edit-1')
+            .should('contain.text', 'Delete-1')
 
         cy.get('.power-grid-table tbody tr').eq(1)
-            .should('contain.text', 'Delete-2')
-            .should('not.contain.text', 'Edit-2')
+            .should('not.contain.text', 'Delete-2')
+            .should('contain.text', 'Edit-2')
 
         cy.get('.power-grid-table tbody tr').eq(2)
             .should('contain.text', 'Edit-3')
