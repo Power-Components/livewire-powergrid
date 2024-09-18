@@ -1,15 +1,15 @@
 @if (count($enabledFilters))
     <div
-        class="col-md-12 d-flex table-responsive"
-        style="margin-top: 5px"
+        class="col-md-12 d-flex table-responsive mt-1"
     >
         @if (count($enabledFilters) > 1)
             <div
                 wire:click.prevent="clearAllFilters()"
-                style="cursor: pointer; padding-right: 4px"
+                class="pe-1"
+                role="button"
             >
                 <span
-                    class="badge rounded-pill bg-secondary">{{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
+                    class="badge bg-secondary">{{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
                     <svg
                         width="10"
                         stroke="currentColor"
@@ -29,9 +29,10 @@
             @isset($filter['label'])
                 <div
                     wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
-                    style="cursor: pointer; padding-right: 4px"
+                    class="pe-1"
+                    role="button"
                 >
-                    <span class="badge rounded-pill bg-light text-dark">{{ $filter['label'] }}
+                    <span class="badge text-bg-light">{{ $filter['label'] }}
                         <svg
                             width="10"
                             stroke="currentColor"
