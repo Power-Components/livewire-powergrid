@@ -139,19 +139,42 @@ class DataSourceBase
             $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . $rowId]);
 
             if ($renderActions && !$hasCookieActionsForRow) {
-                $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
-                    ->transform(function (Button|array $action) use ($row, $component) {
-                        return [
-                            'slot'           => data_get($action, 'slot'),
-                            'tag'            => data_get($action, 'tag'),
-                            'icon'           => data_get($action, 'icon'),
-                            'iconAttributes' => data_get($action, 'iconAttributes'),
-                            'attributes'     => data_get($action, 'attributes'),
-                            'rules'          => $component->resolveActionRules($row),
-                        ];
-                    });
+                try {
+                    $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
+                        ->transform(function (Button|array $action) use ($row, $component) {
+                            /** @var bool|\Closure $can */
+                            $can = data_get($action, 'can');
 
-                static::$actionsHtml[$rowId] = $actions->toArray();
+                            if ($can instanceof \Closure) {
+                                $allowed = $can($row);
+                            }
+
+                            return [
+                                'action'         => data_get($action, 'action'),
+                                'can'            => $allowed ?? $can,
+                                'slot'           => data_get($action, 'slot'),
+                                'tag'            => data_get($action, 'tag'),
+                                'icon'           => data_get($action, 'icon'),
+                                'iconAttributes' => data_get($action, 'iconAttributes'),
+                                'attributes'     => data_get($action, 'attributes'),
+                                'rules'          => $component->resolveActionRules($row),
+                            ];
+                        });
+
+                    static::$actionsHtml[$rowId] = $actions->toArray();
+                } catch (\ArgumentCountError $exception) {
+                    $trace = $exception->getTrace();
+
+                    if (str(strval(data_get($trace, '0.file')))->contains('Macroable')) {
+                        $file = str(
+                            data_get($trace, '1.file') . ':' . data_get($trace, '1.line')
+                        )->after(base_path() . DIRECTORY_SEPARATOR);
+
+                        $method = strval(data_get($trace, '1.args.0'));
+
+                        throw new \Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
+                    }
+                }
             }
 
             $mergedData = $data->merge([

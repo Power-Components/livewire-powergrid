@@ -13,7 +13,6 @@
     </x-slot:loading>
 
     <x-slot:body>
-
         @includeWhen($this->hasColumnFilters, 'livewire-powergrid::components.inline-filters')
 
         @if (is_null($data) || count($data) === 0)
@@ -39,7 +38,6 @@
                             ])
                             @if (data_get($setUp, 'detail.state.' . $rowId))
                                 <tr
-                                    style="{{ theme_style($theme, 'table.body.tr.1') }}"
                                     class="{{ $class }}"
                                 >
                                     @include('livewire-powergrid::components.table.detail')
@@ -58,6 +56,7 @@
                         @endphp
 
                         <tr
+                            wire:replace.self
                             x-data="pgRowAttributes({ rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
                         >

@@ -18,10 +18,13 @@ trait HasActions
             return null;
         }
 
-        /** @var string $records */
-        $records = !app()->hasDebugModeEnabled() ? Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), function (): string {
-            return $this->getResourceIconsJson();
-        }) : $this->getResourceIconsJson();
+        $closure = fn () => $this->getResourceIconsJson();
+
+        if (intval(config('livewire-powergrid.cache_ttl')) > 0) {
+            $records = strval(Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), $closure));
+        } else {
+            $records = (string) $closure();
+        }
 
         $this->js(<<<JS
             this.pgResourceIcons = $records
@@ -78,16 +81,17 @@ trait HasActions
         }
 
         $actionsHtml = collect($this->header())
-        ->transform(function (Button $action) {
-            return [
-                'slot'           => $action->slot,
-                'tag'            => $action->tag,
-                'icon'           => $action->icon,
-                'iconAttributes' => $action->iconAttributes,
-                'attributes'     => $action->attributes,
-                'rules'          => [],
-            ];
-        });
+            ->transform(function (Button $action) {
+                return [
+                    'action'         => $action->action,
+                    'slot'           => $action->slot,
+                    'tag'            => $action->tag,
+                    'icon'           => $action->icon,
+                    'iconAttributes' => $action->iconAttributes,
+                    'attributes'     => $action->attributes,
+                    'rules'          => [],
+                ];
+            });
 
         $actionsHtml = json_encode($actionsHtml);
 
@@ -156,14 +160,22 @@ trait HasActions
         $value    = strval(data_get($row, $this->realPrimaryKey));
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
 
-        /** @var array $formattedRules */
-        $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
+        if (intval(config('livewire-powergrid.cache_ttl') > 0)) {
+            /** @var array $formattedRules */
+            $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
+                $value = $closure($row, $loop);
+
+                return array_filter($value, function ($item) {
+                    return !empty($item);
+                });
+            });
+        } else {
             $value = $closure($row, $loop);
 
-            return array_filter($value, function ($item) {
+            $formattedRules = array_filter($value, function ($item) {
                 return !empty($item);
             });
-        });
+        }
 
         return $formattedRules;
     }

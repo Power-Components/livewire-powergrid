@@ -38,9 +38,7 @@ final class Button implements Wireable
 
     public array $iconAttributes = [];
 
-    public ?\Closure $hideWhen = null;
-
-    public ?\Closure $can = null;
+    public bool | \Closure $can = true;
 
     public function __construct(public string $action)
     {

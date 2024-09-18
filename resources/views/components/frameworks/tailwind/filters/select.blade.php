@@ -31,7 +31,6 @@
 @else
     <div
         @class([theme_style($theme, 'filterSelect.base'), 'space-y-1' => !$inline])
-        style="{{ theme_style($theme, 'filterSelect.base.1') }}"
     >
         @if (!$inline)
             <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">

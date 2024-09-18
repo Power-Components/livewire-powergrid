@@ -165,10 +165,12 @@ class Macros
             return $this;
         });
 
-        Button::macro('disable', function () {
-            $this->attributes([
-                'disabled' => 'disabled',
-            ]);
+        Button::macro('disable', function (bool $disable = true) {
+            if ($disable) {
+                $this->attributes([
+                    'disabled' => 'disabled',
+                ]);
+            }
 
             return $this;
         });
@@ -181,7 +183,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('route', function (string $route, array $params, string $target) {
+        Button::macro('route', function (string $route, array $params, string $target = '_self') {
             $this->attributes([
                 'href'   => route($route, $params),
                 'target' => $target,
@@ -190,7 +192,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (string $id) {
+        Button::macro('id', function (string $id = null) {
             $this->attributes([
                 'id' => $id,
             ]);
@@ -198,13 +200,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('hideWhen', function (\Closure $closure) {
-            $this->hideWhen = $closure;
-
-            return $this;
-        });
-
-        Button::macro('can', function (\Closure $closure) {
+        Button::macro('can', function (bool|\Closure $closure) {
             $this->can = $closure;
 
             return $this;
@@ -243,6 +239,12 @@ class Macros
             $value = "\$dispatch('{$event}', {$params})";
 
             $this->setAttribute('wire:click', $value);
+
+            return $this;
+        });
+
+        RuleActions::macro('disable', function () {
+            $this->setAttribute('disabled', 'disabled');
 
             return $this;
         });

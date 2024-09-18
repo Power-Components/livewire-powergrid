@@ -28,7 +28,6 @@
 @else
     <div
         class="{{ theme_style($theme, 'filterBoolean.base') }}"
-        style="{{ theme_style($theme, 'filterBoolean.base.1') }}"
     >
         <select
             style="{{ data_get($column, 'headerStyle') }}"

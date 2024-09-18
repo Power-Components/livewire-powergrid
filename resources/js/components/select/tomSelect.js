@@ -37,7 +37,7 @@ export default (params) => ({
 
                     const request = new Request(url, {
                         method,
-                        body: method === 'POST' ? JSON.stringify({
+                        body: method.toLowerCase() === 'post' ? JSON.stringify({
                             search: query,
                             ...parameters
                         }) : undefined,

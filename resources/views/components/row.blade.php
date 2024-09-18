@@ -5,8 +5,8 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
-    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
-])
+        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+    ])
 
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
@@ -23,11 +23,7 @@
     'attribute' => $row->{$checkboxAttribute},
 ])
 
-@foreach (collect($columns)->map(function ($column) {
-        data_forget($column, 'rawQueries');
-
-        return $column;
-    }) as $column)
+@foreach ($columns as $column)
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
@@ -59,7 +55,6 @@
         @style([
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
-            theme_style($theme, 'table.body.td.1'),
         ])
         wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
     >

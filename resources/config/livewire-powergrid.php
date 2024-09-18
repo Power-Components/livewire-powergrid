@@ -14,7 +14,7 @@ return [
     'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
     //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
-    'cache_ttl' => 3600,
+    'cache_ttl' => null,
 
     'icon_resources' => [
         'paths' => [
