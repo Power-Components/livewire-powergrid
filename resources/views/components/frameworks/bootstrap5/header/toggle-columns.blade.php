@@ -7,7 +7,7 @@
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
             >
-                <x-livewire-powergrid::icons.eye-off width="20" />
+                <x-livewire-powergrid::icons.eye-off width="18" />
             </button>
             <ul class="dropdown-menu">
                 @foreach ($this->visibleColumns as $column)
@@ -20,9 +20,9 @@
                             href="#"
                         >
                             @if (data_get($column, 'hidden') === false)
-                                <x-livewire-powergrid::icons.eye width="20" />
+                                <x-livewire-powergrid::icons.eye width="18" />
                             @else
-                                <x-livewire-powergrid::icons.eye-off width="20" />
+                                <x-livewire-powergrid::icons.eye-off width="18" />
                             @endif
                             {!! data_get($column, 'title') !!}
                         </a>
