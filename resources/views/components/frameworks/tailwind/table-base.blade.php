@@ -45,7 +45,11 @@
                 @include($table)
             </div>
 
-            @include(data_get($theme, 'footer.view'))
+            @if (!data_get($setUp, 'footer.hideIfResultIsMoreThenTotal') ||
+                $total > data_get($setUp, 'footer.defaultPerPage') ||
+                $total > data_get($setUp, 'footer.perPage'))
+                    @include(data_get($theme, 'footer.view'))
+            @endif
         </div>
     </div>
 </div>

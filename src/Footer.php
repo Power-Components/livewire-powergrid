@@ -8,6 +8,8 @@ final class Footer implements Wireable
 {
     public string $name = 'footer';
 
+    public int $defaultPerPage;
+
     public int $perPage;
 
     public array $perPageValues = [];
@@ -22,6 +24,8 @@ final class Footer implements Wireable
 
     public string $pageName = 'page';
 
+    public bool $hideIfResultIsMoreThenTotal = false;
+
     public static function make(): self
     {
         return new Footer();
@@ -29,8 +33,16 @@ final class Footer implements Wireable
 
     public function showPerPage(int $perPage = 10, array $perPageValues = [10, 25, 50, 100, 0]): Footer
     {
-        $this->perPage       = $perPage;
-        $this->perPageValues = $perPageValues;
+        $this->defaultPerPage = $perPage;
+        $this->perPage        = $perPage;
+        $this->perPageValues  = $perPageValues;
+
+        return $this;
+    }
+
+    public function hideIfResultIsMoreThenTotal(bool $hideIfNoFooIsSet = true): Footer
+    {
+        $this->hideIfResultIsMoreThenTotal = $hideIfNoFooIsSet;
 
         return $this;
     }
