@@ -12,6 +12,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesCollectionTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-collection-table';
+
     public array $testFilters = [];
 
     public function datasource(): Collection

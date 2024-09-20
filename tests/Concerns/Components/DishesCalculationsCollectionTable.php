@@ -9,6 +9,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishesCalculationsCollectionTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-calculation-collection-table';
+
     public array $eventId = [];
 
     public bool $join = false;

@@ -12,6 +12,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
 
 class DishesCalculationsTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-calculations-table';
+
     public array $eventId = [];
 
     public bool $join = false;

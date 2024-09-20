@@ -12,6 +12,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesArrayTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-array-table';
+
     public array $eventId = [];
 
     public array $testFilters = [];

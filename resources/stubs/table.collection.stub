@@ -11,7 +11,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class {{ componentName }} extends PowerGridComponent
 {
-    public function datasource(): ?Collection
+    public string $tableName = '{{ tableName }}';
+
+    public function datasource(): Collection
     {
         return collect([
             ['id' => 1, 'name' => 'Name 1', 'price' => 1.58, 'created_at' => now(),],

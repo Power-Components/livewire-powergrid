@@ -48,6 +48,8 @@ final class PowerGridComponentMaker
 
     private string $modelFqn = '';
 
+    private string $tableName = '';
+
     private bool $autoCreateColumns = false;
 
     private bool $usesCustomStub = false;
@@ -59,7 +61,8 @@ final class PowerGridComponentMaker
         $this->resolveNameFolderFilename(SanitizeComponentName::handle($name))
             ->resolveNamespace()
             ->resolveFqn()
-            ->resolveHtmlTag();
+            ->resolveHtmlTag()
+            ->resolveTableName();
     }
 
     public static function make(string $name): self
@@ -177,6 +180,7 @@ final class PowerGridComponentMaker
     {
         $this->stub->setVar('namespace', $this->namespace);
         $this->stub->setVar('componentName', $this->name);
+        $this->stub->setVar('tableName', $this->tableName);
 
         $this->stub->setVar('model', $this->model);
         $this->stub->setVar('modelFqn', $this->modelFqn);
@@ -242,9 +246,9 @@ final class PowerGridComponentMaker
     public function createdPath(): string
     {
         return str($this->namespace)
-                    ->replace('App', 'app')
-                    ->append('\\' . $this->filename)
-                    ->replace('\\', '/');
+            ->replace('App', 'app')
+            ->append('\\' . $this->filename)
+            ->replace('\\', '/');
     }
 
     private function resolveHtmlTag(): self
@@ -257,6 +261,17 @@ final class PowerGridComponentMaker
             ->ltrim('.')
             ->prepend('<livewire:')
             ->append('/>');
+
+        return $this;
+    }
+
+    private function resolveTableName(): self
+    {
+        $this->tableName = str($this->name)
+            ->kebab()
+            ->append('-' . Str::random(6))
+            ->append('-table')
+            ->lower();
 
         return $this;
     }

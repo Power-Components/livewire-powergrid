@@ -9,6 +9,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishesBeforeSearchTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-before-search-table';
+
     public function setUp(): array
     {
         return [

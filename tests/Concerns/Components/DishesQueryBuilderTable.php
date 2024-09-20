@@ -15,6 +15,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesQueryBuilderTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-query-builder-table';
+
     public string $primaryKey = 'dishes.id';
 
     public array $testFilters = [];

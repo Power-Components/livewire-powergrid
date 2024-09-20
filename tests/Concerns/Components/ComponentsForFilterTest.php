@@ -7,6 +7,8 @@ use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuil
     Concerns\Components\DishesTableWithJoin};
 
 $component = new class () extends DishesTable {
+    public string $tableName = 'testing-components-for-filter-table';
+
     public function filters(): array
     {
         return [
@@ -20,6 +22,8 @@ $component = new class () extends DishesTable {
 };
 
 $componentQueryBuilder = new class () extends DishesQueryBuilderTable {
+    public string $tableName = 'testing-components-for-builder-filter-table';
+
     public function filters(): array
     {
         return [
@@ -33,6 +37,8 @@ $componentQueryBuilder = new class () extends DishesQueryBuilderTable {
 };
 
 $componentJoin = new class () extends DishesTableWithJoin {
+    public string $tableName = 'testing-components-for-filter-join-table';
+
     public function filters(): array
     {
         return [

@@ -46,7 +46,7 @@ it('cache work properly with tags - rememberForever', function () {
         ->enabled->toBe(true)
         ->ttl->toBe(300);
 
-    $tag      = 'test-powergrid-dishes-default';
+    $tag      = 'test-powergrid-dishes-testing-dishes-setup-table';
     $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);
@@ -93,7 +93,7 @@ it('cache work properly with tags - remember', function () {
         ->enabled->toBe(true)
         ->ttl->toBe(360);
 
-    $tag      = 'powergrid-dishes-default';
+    $tag      = 'powergrid-dishes-testing-dishes-setup-table';
     $cacheKey = '{"page":1}-{"perPage":15}-{"search":""}-{"sortDirection":"asc"}-{"sortField":"id"}-{"filters":[]}-{"sortArray":[]}';
 
     $tags = \Illuminate\Support\Facades\Cache::tags($tag);

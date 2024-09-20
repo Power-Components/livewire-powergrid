@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishesSearchJSONTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-search-json-table';
+
     public function setUp(): array
     {
         return [

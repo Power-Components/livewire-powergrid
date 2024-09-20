@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class OrderTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-order-table';
+
     public function datasource(): Builder
     {
         return Order::query();

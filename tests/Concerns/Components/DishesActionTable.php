@@ -4,6 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 class DishesActionTable extends DishTableBase
 {
+    public string $tableName = 'testing-dishes-action-table';
+
     public array $eventId = [];
 
     public bool $join = false;

@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, Facades\PowerGrid
 
 class DishesRowIndex extends PowerGridComponent
 {
+    public string $tableName = 'testing-row-index-table';
+
     public bool $join = false;
 
     public function setUp(): array

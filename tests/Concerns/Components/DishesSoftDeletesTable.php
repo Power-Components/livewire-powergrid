@@ -13,6 +13,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesSoftDeletesTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-soft-deletes-table';
+
     public function setUp(): array
     {
         return [

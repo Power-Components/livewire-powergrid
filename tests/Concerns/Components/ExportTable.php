@@ -15,6 +15,8 @@ class ExportTable extends PowerGridComponent
 {
     use WithExport;
 
+    public string $tableName = 'testing-export-table';
+
     public string $separator = ',';
 
     public string $delimiter = '"';

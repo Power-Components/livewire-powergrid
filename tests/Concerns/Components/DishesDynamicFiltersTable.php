@@ -13,6 +13,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesDynamicFiltersTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-dynamic-filters-table';
+
     public bool $join = false;
 
     public function setUp(): array

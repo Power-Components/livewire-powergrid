@@ -134,37 +134,38 @@ it('properly filter with category_id - multiple select async', function (string 
         'testFilters' => [
             $multiSelect,
         ],
-    ])
+    ]);
+    $livewire
         ->set('setUp.footer.perPage', '20')
-        ->assertSeeHtmlInOrder([
-            'wire:model="filters.multi_select.category_id.values"',
-            'x-ref="select_picker_category_id_default"',
-        ])
-        ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    1, // Carnes
-                ],
+    ->assertSeeHtmlInOrder([
+        'wire:model="filters.multi_select.category_id.values"',
+        'x-ref="select_picker_category_id_' . $livewire->tableName . '"',
+    ])
+    ->set('filters', [
+        'multi_select' => [
+            'category_id' => [
+                1, // Carnes
             ],
-        ])
-        ->assertDontSee('Pastel de Nata')
-        ->assertDontSee('борщ')
-        ->assertDontSee('Francesinha vegana')
-        ->assertSeeHtmlInOrder([
-            'Peixada da chef Nábia',
-            'Carne Louca',
-            'Bife à Rolê',
-        ])
-        ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    3, // Tortas
-                    7, // Sobremesas
-                ],
+        ],
+    ])
+    ->assertDontSee('Pastel de Nata')
+    ->assertDontSee('борщ')
+    ->assertDontSee('Francesinha vegana')
+    ->assertSeeHtmlInOrder([
+        'Peixada da chef Nábia',
+        'Carne Louca',
+        'Bife à Rolê',
+    ])
+    ->set('filters', [
+        'multi_select' => [
+            'category_id' => [
+                3, // Tortas
+                7, // Sobremesas
             ],
-        ])
-        ->assertSee('борщ')
-        ->assertDontSee('Peixada da chef Nábia');
+        ],
+    ])
+    ->assertSee('борщ')
+    ->assertDontSee('Peixada da chef Nábia');
 
     $column = collect($livewire->columns)
         ->filter(fn ($column) => data_get($column, 'field') === 'category_name')->first();

@@ -31,11 +31,23 @@ export default (params) => ({
             return value;
         }
 
-        const actions = this.rowId
-            ? window[`pgActions_${this.parentId ?? this.$wire.id}`][this.rowId]
-            : window[`pgActionsHeader_${this.$wire.id}`];
+        let actions = null;
 
-        if (typeof actions !== "object") {
+        if (this.rowId) {
+            const wireId = this.parentId ?? this.$wire.id;
+            const pgActions = window[`pgActions_${wireId}`];
+
+            if (pgActions && pgActions[this.rowId] !== undefined) {
+                actions = pgActions[this.rowId];
+            }
+
+            const pgActionsHeader = window[`pgActionsHeader_${this.$wire.id}`];
+            if (!actions && pgActionsHeader !== undefined) {
+                actions = pgActionsHeader;
+            }
+        }
+
+        if (typeof actions !== "object" || actions === null) {
             return '';
         }
 
