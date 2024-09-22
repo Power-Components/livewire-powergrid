@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishTableBase extends PowerGridComponent
 {
+    public string $tableName = 'testing-dish-table';
+
     public bool $join = false;
 
     public function setUp(): array

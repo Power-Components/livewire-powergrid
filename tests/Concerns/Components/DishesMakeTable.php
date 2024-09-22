@@ -15,6 +15,8 @@ use PowerComponents\LivewirePowerGrid\{Button,
 
 class DishesMakeTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-make-table';
+
     public array $eventId = [];
 
     protected function getListeners()

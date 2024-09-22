@@ -5,6 +5,8 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid};
 
 $baseRuleComponent = new class () extends DishesTable {
+    public string $tableName = 'testing-components-for-test-rule-table';
+
     public function setUp(): array
     {
         $this->showCheckBox();

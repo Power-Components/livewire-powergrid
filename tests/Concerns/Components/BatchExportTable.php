@@ -15,6 +15,8 @@ class BatchExportTable extends PowerGridComponent
 {
     use WithExport;
 
+    public string $tableName = 'testing-batch-export-table';
+
     public int $filterDataSourceId;
 
     public ?int $idFromBatch = null;

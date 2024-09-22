@@ -14,6 +14,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
 
 class DishesTableWithJoin extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-with-join-names-table';
+
     public array $eventId = [];
 
     public array $testFilters = [];

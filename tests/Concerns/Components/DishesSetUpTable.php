@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerG
 
 class DishesSetUpTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-setup-table';
+
     public bool $join = false;
 
     public bool $testHeader = false;

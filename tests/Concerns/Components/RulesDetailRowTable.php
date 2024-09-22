@@ -7,6 +7,8 @@ use PowerComponents\LivewirePowerGrid\{Button, Facades\PowerGrid};
 
 class RulesDetailRowTable extends DishTableBase
 {
+    public string $tableName = 'testing-rules-detail-row-table';
+
     public function setUp(): array
     {
         config()->set('livewire.inject_morph_markers', false);

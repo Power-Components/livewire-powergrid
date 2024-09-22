@@ -9,6 +9,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishesSearchableRawTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-searchable-raw-table';
+
     public string $database = '';
 
     public function setUp(): array

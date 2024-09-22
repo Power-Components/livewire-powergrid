@@ -13,7 +13,7 @@ trait Base
 
     public bool $ignoreTablePrefix = true;
 
-    public string $tableName = 'default';
+    public string $tableName = '';
 
     public array $setUp = [];
 

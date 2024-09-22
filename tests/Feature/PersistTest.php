@@ -43,7 +43,7 @@ it('should be able to set persist_driver for session', function (string $compone
     /** @var Testable $component */
     $component->call('filterInputText', $field, 'ba', 'test');
 
-    expect(session('pg:default'))->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
+    expect(session('pg:testing-dish-table'))->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
 })->group('filters')
     ->with($params);
 
@@ -60,7 +60,7 @@ it('should be able to set persist_driver for cookies', function (string $compone
     /** @var Testable $component */
     $component->call('filterInputText', $field, 'ba', 'test');
 
-    expect(Cookie::queued('pg:default')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
+    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
 })
     ->with($params);
 

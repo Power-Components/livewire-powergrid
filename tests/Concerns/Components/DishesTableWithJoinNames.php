@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class DishesTableWithJoinNames extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-with-join-names-table';
+
     public ?string $primaryKeyAlias = 'id';
 
     public function setUp(): array

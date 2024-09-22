@@ -8,6 +8,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class NestedRelationSearchTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-nested-relation-search-table';
+
     public bool $join = false;
 
     public function setUp(): array

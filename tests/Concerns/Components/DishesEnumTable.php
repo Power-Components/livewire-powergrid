@@ -9,6 +9,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, Facades\PowerGrid
 
 class DishesEnumTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-dishes-enum-table';
+
     public function setUp(): array
     {
         $this->showCheckBox();

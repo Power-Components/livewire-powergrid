@@ -7,6 +7,8 @@ use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridCompo
 
 class NoDataCollectionTable extends PowerGridComponent
 {
+    public string $tableName = 'testing-no-data-collection-table';
+
     public function datasource(): Collection
     {
         return collect([]);

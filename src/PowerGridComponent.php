@@ -13,6 +13,7 @@ use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
+use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
 
 /**
  * @property-read mixed $getRecords
@@ -55,6 +56,7 @@ class PowerGridComponent extends Component
             $this->setUp[$setUp->name] = $setUp;
         }
 
+        $this->throwTableName();
         $this->throwColumnAction();
 
         $this->columns = $this->columns();
@@ -210,6 +212,13 @@ class PowerGridComponent extends Component
 
         if ($hasColumnAction && method_exists(get_called_class(), 'actions')) {
             throw new Exception('To display \'actions\' you must define `Column::action(\'Action\')` in the columns method');
+        }
+    }
+
+    private function throwTableName(): void
+    {
+        if (blank($this->tableName) || $this->tableName === "default") {
+            throw new TableNameCannotCalledDefault();
         }
     }
 
