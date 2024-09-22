@@ -3,8 +3,8 @@ describe('filter input text', () => {
         cy.visit('/filters-input-text');
     });
 
-    const inputField = '[data-cy="input_text_default_name"]';
-    const optionsField = '[data-cy="input_text_options_default_name"]';
+    const inputField = '[data-cy="input_text_filters-input-text_name"]';
+    const optionsField = '[data-cy="input_text_options_filters-input-text_name"]';
     const tableRows = '.power-grid-table tbody tr';
 
     const applyFilter = (filterType, filterValue) => {
