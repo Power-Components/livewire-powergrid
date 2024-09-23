@@ -8,8 +8,12 @@
         'view' => data_get($setUp, 'detail.viewIcon') ?? null,
     ])
 
+@php
+    $defaultCollapseIcon = data_get($theme, 'root') . '.toggle-detail';
+@endphp
+
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
-    data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView'),
+    data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView') ?? $defaultCollapseIcon,
     [
         'view' => data_get($setUp, 'detail.viewIcon') ?? null,
     ]
