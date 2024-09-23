@@ -14,6 +14,8 @@ class FilterMultiSelect extends FilterBase
 
     public string $optionLabel = '';
 
+    public array $params = [];
+
     public function dataSource(Collection|array $collection): FilterMultiSelect
     {
         $this->dataSource = $collection;
@@ -31,6 +33,13 @@ class FilterMultiSelect extends FilterBase
     public function optionLabel(string $value): FilterMultiSelect
     {
         $this->optionLabel = $value;
+
+        return $this;
+    }
+
+    public function params(array $params): FilterMultiSelect
+    {
+        $this->params = $params;
 
         return $this;
     }
