@@ -125,7 +125,10 @@ trait HasActions
                         ];
                     }
 
-                    $showToggleDetail      = data_get($rule, 'rule.toggleableVisibility') === 'show' || (bool) data_get($this->setUp, 'detail.showCollapseIcon');
+                    $showToggleDetail = $apply && data_get($rule, 'rule.toggleDetailVisibility')
+                        ? data_get($rule, 'rule.toggleDetailVisibility') === 'show'
+                        : (bool) data_get($this->setUp, 'detail.showCollapseIcon');
+
                     $toggleableVisibility  = $apply ? data_get($rule, 'rule.toggleableVisibility') : [];
                     $editOnClickVisibility = $apply ? data_get($rule, 'rule.editOnClickVisibility') : [];
                     $fieldHideEditOnClick  = $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick');
