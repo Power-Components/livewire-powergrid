@@ -3,6 +3,7 @@
     'column' => null,
     'inline' => null,
     'filter' => null,
+    'options' => [],
 ])
 @php
     $field = data_get($filter, 'field');
@@ -43,7 +44,9 @@
                 style="{{ data_get($column, 'headerStyle') }}"
                 {{ $defaultAttributes['selectAttributes'] }}
             >
-                <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                @if(!data_get($params, 'params.disableOptionAll', false))
+                    <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                @endif
 
                 @php
                     $computedDatasource = data_get($filter, 'computedDatasource');
