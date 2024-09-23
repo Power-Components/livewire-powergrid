@@ -17,6 +17,8 @@ class FilterSelect extends FilterBase
 
     public array $depends = [];
 
+    public array $params = [];
+
     public string $computedDatasource = '';
 
     public function depends(array $fields): FilterSelect
@@ -62,5 +64,12 @@ class FilterSelect extends FilterBase
                 'wire:input.live.debounce.600ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
             ]))
             ->toArray();
+    }
+
+    public function params(array $params): FilterSelect
+    {
+        $this->params = $params;
+
+        return $this;
     }
 }
