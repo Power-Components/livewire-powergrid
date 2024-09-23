@@ -4,6 +4,7 @@
     'tableName' => null,
     'multiple' => true,
     'initialValues' => [],
+    'options' => [],
     'title' => '',
     'theme' => null,
 ])
@@ -36,6 +37,7 @@
         'dataField' => data_get($filter, 'field'),
         'optionValue' => data_get($filter, 'optionValue'),
         'optionLabel' => data_get($filter, 'optionLabel'),
+        'options' => data_get($filter, 'params'),
         'initialValues' => $initialValues,
         'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
     ];
@@ -71,7 +73,10 @@
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
-                <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
+                @if (!data_get($params, 'options.disableOptionAll', false))
+                    <option value="">{{ trans('livewire-powergrid::datatable.multi_select.all') }}</option>
+                @endif
+
                 @if (blank(data_get($params, 'asyncData', [])))
                     @foreach ($collection->toArray() as $item)
                         <option wire:key="multi-select-option-{{ $loop->index }}"
