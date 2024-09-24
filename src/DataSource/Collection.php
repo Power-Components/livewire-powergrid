@@ -131,8 +131,8 @@ class Collection
             $row = (object) $row;
 
             foreach ($this->powerGridComponent->columns as $column) {
-                if ($column->searchable) {
-                    $field = filled(data_get($column, 'dataField')) ? data_get($column, 'dataField') : data_get($column, 'field');
+                if (data_get($column, 'searchable')) {
+                    $field = data_get($column, 'dataField', data_get($column, 'field'));
 
                     try {
                         if (Str::contains(strtolower($row->{$field}), $searchTerm)) {
