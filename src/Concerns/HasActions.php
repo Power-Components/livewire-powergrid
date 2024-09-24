@@ -185,10 +185,6 @@ trait HasActions
 
     public function resolveActionRules(mixed $row): array
     {
-        if (!method_exists($this, 'actionRules')) {
-            return [];
-        }
-
         return collect($this->actionRules($row)) // @phpstan-ignore-line
             ->transform(function ($rule) use ($row) {
                 $when = data_get($rule, 'rule.when');

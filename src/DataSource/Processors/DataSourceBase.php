@@ -10,7 +10,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Illuminate\View\Concerns\ManagesLoops;
 use Laravel\Scout\Builder as ScoutBuilder;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
 
 class DataSourceBase
 {
@@ -114,7 +114,8 @@ class DataSourceBase
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields = collect($component->fields()->fields);
+        $fields       = collect($component->fields()->fields);
+        $cookiePrefix = 'pg_cookie_' . $component->tableName . '_row_';
 
         if ($component->paginateRaw) {
             $results = collect((array) data_get($results, 'hits'))->pluck('document');
@@ -123,71 +124,57 @@ class DataSourceBase
         $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($results);
 
-        $renderActions = false;
+        $renderActions     = method_exists($component, 'actions');
+        $renderActionRules = method_exists($component, 'actionRules');
+        $actionsHtml       = &static::$actionsHtml;
 
-        if (method_exists($component, 'actions')) {
-            $renderActions = true;
-        }
+        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance, $renderActions, $renderActionRules, $cookiePrefix, &$actionsHtml) {
+            $row  = (object) $row;
+            $data = $fields->map(fn ($field) => $field($row, $index));
 
-        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance, $renderActions) {
-            $data = $fields->map(fn ($field) => $field((object) $row, $index));
-
-            $loopInstance->incrementLoopIndices();
-
-            $rowId = data_get($row, $component->realPrimaryKey);
-
-            $hasCookieActionsForRow = isset($_COOKIE['pg_cookie_' . $component->tableName . '_row_' . $rowId]);
+            $rowId                  = data_get($row, $component->realPrimaryKey);
+            $hasCookieActionsForRow = isset($_COOKIE[$cookiePrefix . $rowId]);
 
             if ($renderActions && !$hasCookieActionsForRow) {
                 try {
-                    $actions = collect($component->actions((object) $row)) // @phpstan-ignore-line
-                        ->transform(function (Button|array $action) use ($row, $component) {
-                            /** @var bool|\Closure $can */
+                    $actions = collect($component->actions($row)) // @phpstan-ignore-line
+                        ->map(function ($action) use ($row, $component, $renderActionRules) {
                             $can = data_get($action, 'can');
-
-                            if ($can instanceof \Closure) {
-                                $allowed = $can($row);
-                            }
 
                             return [
                                 'action'         => data_get($action, 'action'),
-                                'can'            => $allowed ?? $can,
+                                'can'            => $can instanceof \Closure ? $can($row) : $can,
                                 'slot'           => data_get($action, 'slot'),
                                 'tag'            => data_get($action, 'tag'),
                                 'icon'           => data_get($action, 'icon'),
                                 'iconAttributes' => data_get($action, 'iconAttributes'),
                                 'attributes'     => data_get($action, 'attributes'),
-                                'rules'          => $component->resolveActionRules($row),
+                                'rules'          => $renderActionRules ? $component->resolveActionRules($row) : [],
                             ];
                         });
 
-                    static::$actionsHtml[$rowId] = $actions->toArray();
+                    $actionsHtml[$rowId] = $actions->toArray();
                 } catch (\ArgumentCountError $exception) {
-                    $trace = $exception->getTrace();
-
-                    if (str(strval(data_get($trace, '0.file')))->contains('Macroable')) {
-                        $file = str(
-                            data_get($trace, '1.file') . ':' . data_get($trace, '1.line')
-                        )->after(base_path() . DIRECTORY_SEPARATOR);
-
-                        $method = strval(data_get($trace, '1.args.0'));
-
-                        throw new \Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
-                    }
+                    static::throwArgumentCountError($exception); // @phpstan-ignore-line
                 }
             }
 
-            $mergedData = $data->merge([
-                '__powergrid_loop'  => $loop = $loopInstance->getLastLoop(),
-                '__powergrid_rules' => $component->prepareActionRulesForRows($row, $loop),
-            ]);
-
-            if ($component->supportModel && $row instanceof Model) {
-                return (object) tap($row)->forceFill($mergedData->toArray());
-            }
-
-            return (object) $mergedData->toArray();
+            return tap($data->merge([
+                '__powergrid_loop'  => $loopInstance->getLastLoop(),
+                '__powergrid_rules' => $component->prepareActionRulesForRows($row, $loopInstance->getLastLoop()),
+            ]), function () use ($loopInstance) {
+                $loopInstance->incrementLoopIndices();
+            })->pipe(function ($mergedData) use ($component, $row) {
+                return $component->supportModel && $row instanceof Model // @phpstan-ignore-line
+                    ? (object) tap($row)->forceFill($mergedData->toArray()) // @phpstan-ignore-line
+                    : (object) $mergedData->toArray();
+            });
         });
+    }
+
+    public function transformTime(): float
+    {
+        return self::$transformTime;
     }
 
     protected function setCurrentTable(mixed $datasource): void
@@ -269,8 +256,18 @@ class DataSourceBase
             })->toArray();
     }
 
-    public function transformTime(): float
+    private static function throwArgumentCountError(\Exception|\ArgumentCountError $exception): void
     {
-        return self::$transformTime;
+        $trace = $exception->getTrace();
+
+        if (str(strval(data_get($trace, '0.file')))->contains('Macroable')) {
+            $file = str(
+                data_get($trace, '1.file') . ':' . data_get($trace, '1.line')
+            )->after(base_path() . DIRECTORY_SEPARATOR);
+
+            $method = strval(data_get($trace, '1.args.0'));
+
+            throw new \Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
+        }
     }
 }
