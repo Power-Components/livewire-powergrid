@@ -32,19 +32,16 @@ export default (params) => ({
         }
 
         let actions = null;
+        const wireId = this.parentId ?? this.$wire.id;
 
         if (this.rowId) {
-            const wireId = this.parentId ?? this.$wire.id;
             const pgActions = window[`pgActions_${wireId}`];
 
             if (pgActions && pgActions[this.rowId] !== undefined) {
                 actions = pgActions[this.rowId];
             }
-
-            const pgActionsHeader = window[`pgActionsHeader_${this.$wire.id}`];
-            if (!actions && pgActionsHeader !== undefined) {
-                actions = pgActionsHeader;
-            }
+        } else {
+            actions = window[`pgActionsHeader_${wireId}`];
         }
 
         if (typeof actions !== "object" || actions === null) {
