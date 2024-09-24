@@ -57,7 +57,7 @@ document.addEventListener('alpine:init', () => {
             }
         },
         get(tableName) {
-            return this.selected[tableName]
+            return this.selected[tableName] ?? ''
         },
         count(tableName) {
             if(typeof this.selected[tableName] == 'undefined') {
