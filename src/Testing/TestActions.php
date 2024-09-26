@@ -25,9 +25,13 @@ class TestActions
     public function assertActionHasIcon(): Closure
     {
         return function (string $action, string $icon, ?string $iconClass = null): static {
+            /** @var array $actionFound */
             $actionFound = collect(DataSourceBase::$actionsHtml)
                 ->flatten(1)
-                ->first(fn (array $dishAction) => $dishAction['action'] === $action && $dishAction['icon'] === $icon);
+                ->first(function ($dishAction) use ($action, $icon) {
+                    /** @var array $dishAction */
+                    return  $dishAction['action'] === $action && $dishAction['icon'] === $icon;
+                });
 
             Assert::assertNotNull($actionFound, "Failed asserting that the action '$action' has the icon '$icon'.");
 
@@ -45,7 +49,8 @@ class TestActions
         return function (string $action, string $attribute, string $expected, array $expectedParams = []): static {
             $attributeFound = collect(DataSourceBase::$actionsHtml)
                 ->flatten(1)
-                ->first(function (array $dishAction) use ($action, $attribute, $expected, $expectedParams) {
+                ->first(function ($dishAction) use ($action, $attribute, $expected, $expectedParams) {
+                    /** @var array $dishAction */
                     if ($dishAction['action'] === $action && isset($dishAction['attributes'][$attribute])) {
                         $attributeValue = $dishAction['attributes'][$attribute];
 
@@ -54,7 +59,7 @@ class TestActions
                             $jsonEscaped = $matches[1] ?? null;
 
                             if ($jsonEscaped) {
-                                $jsonStringClean = json_decode('"' . $jsonEscaped . '"', true);
+                                $jsonStringClean = strval(json_decode('"' . $jsonEscaped . '"', true));
                                 $data            = json_decode($jsonStringClean, true);
 
                                 return $data == $expectedParams;
