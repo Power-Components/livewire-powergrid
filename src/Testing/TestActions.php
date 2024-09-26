@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Testing;
 
 use Closure;
-use Illuminate\Support\Js;
+
 use PHPUnit\Framework\Assert;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase;
 
@@ -14,7 +14,7 @@ class TestActions
         return function (string $action): static {
             $actionFound = collect(DataSourceBase::$actionsHtml)
                 ->flatten(1)
-                ->contains(fn($dishAction) => $dishAction['action'] === $action);
+                ->contains(fn (array $dishAction): bool => $dishAction['action'] === $action);
 
             Assert::assertTrue($actionFound, "Failed asserting that the action '$action' exists in the table.");
 
@@ -27,7 +27,7 @@ class TestActions
         return function (string $action, string $icon, ?string $iconClass = null): static {
             $actionFound = collect(DataSourceBase::$actionsHtml)
                 ->flatten(1)
-                ->first(fn($dishAction) => $dishAction['action'] === $action && $dishAction['icon'] === $icon);
+                ->first(fn (array $dishAction) => $dishAction['action'] === $action && $dishAction['icon'] === $icon);
 
             Assert::assertNotNull($actionFound, "Failed asserting that the action '$action' has the icon '$icon'.");
 
@@ -45,18 +45,17 @@ class TestActions
         return function (string $action, string $attribute, string $expected, array $expectedParams = []): static {
             $attributeFound = collect(DataSourceBase::$actionsHtml)
                 ->flatten(1)
-                ->first(function ($dishAction) use ($action, $attribute, $expected, $expectedParams) {
+                ->first(function (array $dishAction) use ($action, $attribute, $expected, $expectedParams) {
                     if ($dishAction['action'] === $action && isset($dishAction['attributes'][$attribute])) {
                         $attributeValue = $dishAction['attributes'][$attribute];
 
-                        Js::from();
                         if (str_contains($attributeValue, 'JSON.parse')) {
                             preg_match("/JSON\.parse\('(.*)'\)/", $attributeValue, $matches);
                             $jsonEscaped = $matches[1] ?? null;
 
                             if ($jsonEscaped) {
                                 $jsonStringClean = json_decode('"' . $jsonEscaped . '"', true);
-                                $data = json_decode($jsonStringClean, true);
+                                $data            = json_decode($jsonStringClean, true);
 
                                 return $data == $expectedParams;
                             }
@@ -64,6 +63,7 @@ class TestActions
 
                         return str_contains($attributeValue, $expected);
                     }
+
                     return false;
                 });
 
