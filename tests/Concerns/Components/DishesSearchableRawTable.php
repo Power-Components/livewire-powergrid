@@ -68,11 +68,11 @@ class DishesSearchableRawTable extends PowerGridComponent
 
         return [
             Column::make('ID', 'id')
-                ->searchableRaw($this->database === 'pgsql' ? 'dishes.id ilike ?' : 'dishes.id like ?')
+                ->searchableRaw($this->database === 'pgsql' ? 'dishes.id::text ilike ?' : 'dishes.id like ?')
                 ->sortable(),
 
             Column::make('Preço', 'price_formatted', 'price')
-                ->searchableRaw($this->database === 'pgsql' ? 'price ilike ?' : 'price like ?')
+                ->searchableRaw($this->database === 'pgsql' ? 'price::text ilike ?' : 'price like ?')
                 ->sortable(),
 
             Column::make('Prato', 'name')

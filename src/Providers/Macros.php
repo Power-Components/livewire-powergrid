@@ -57,7 +57,7 @@ class Macros
 
         Column::macro('searchableRaw', function (string $sql = ''): Column {
             /** @var Column $this */
-            $field = $this->dataField;
+            $field = $this->dataField ?: $this->field;
 
             $this->rawQueries[] = [
                 'method'   => 'orWhereRaw',
