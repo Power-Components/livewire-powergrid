@@ -6,15 +6,16 @@ use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\{ServiceProvider};
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
+use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
-use PowerComponents\LivewirePowerGrid\{
-    Livewire\LazyChild,
+use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild,
     Livewire\PerformanceCard,
-    PowerGridManager};
+    PowerGridManager,
+    Testing\TestActions};
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -35,6 +36,8 @@ class PowerGridServiceProvider extends ServiceProvider
 
         Livewire::propertySynthesizer(EloquentModelSynth::class);
         Livewire::propertySynthesizer(EloquentCollectionSynth::class);
+
+        Testable::mixin(new TestActions());
     }
 
     public function register(): void
