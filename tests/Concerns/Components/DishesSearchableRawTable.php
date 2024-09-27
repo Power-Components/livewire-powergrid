@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use NumberFormatter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
@@ -48,6 +49,11 @@ class DishesSearchableRawTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
+            ->add('price_formatted', function (Dish $row): string {
+                $formatter = new NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
+
+                return $formatter->formatCurrency($row->price, 'BRL');
+            })
             ->add('produced_at_formatted');
     }
 
@@ -62,7 +68,11 @@ class DishesSearchableRawTable extends PowerGridComponent
 
         return [
             Column::make('ID', 'id')
-                ->searchable()
+                ->searchableRaw($this->database === 'pgsql' ? 'dishes.id::text ilike ?' : 'dishes.id like ?')
+                ->sortable(),
+
+            Column::make('Preço', 'price_formatted', 'price')
+                ->searchableRaw($this->database === 'pgsql' ? 'price::text ilike ?' : 'price like ?')
                 ->sortable(),
 
             Column::make('Prato', 'name')
@@ -76,6 +86,22 @@ class DishesSearchableRawTable extends PowerGridComponent
 
             Column::action('Action'),
         ];
+    }
+
+    public function beforeSearch(string $field): string
+    {
+        return $field === 'id'
+            ? preg_replace('/[^0-9]/', '', $this->search)
+            : $this->search;
+    }
+
+    public function beforeSearchPrice(): float
+    {
+        return (float) str_replace(
+            ',',
+            '.',
+            preg_replace('/[^0-9,]/', '', $this->search)
+        );
     }
 
     public function setTestThemeClass(string $themeClass): void

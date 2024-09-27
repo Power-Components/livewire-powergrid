@@ -55,12 +55,26 @@ class Macros
             return $this;
         });
 
-        Column::macro('searchableRaw', function (string $sql = '') {
+        Column::macro('searchableRaw', function (string $sql = ''): Column {
+            /** @var Column $this */
+            $field = $this->dataField ?: $this->field;
+
             $this->rawQueries[] = [
                 'method'   => 'orWhereRaw',
                 'sql'      => $sql,
-                'bindings' => ['%{search}%'],
-                'enabled'  => function (PowerGridComponent $component) {
+                'bindings' => [function (PowerGridComponent $component) use ($field): string {
+                    $search      = $component->search;
+                    $fieldMethod = 'beforeSearch' . str($field)->camel()->ucfirst();
+
+                    if (method_exists($component, $fieldMethod)) {
+                        $search = $component->{$fieldMethod}($field, $search);
+                    } elseif (method_exists($component, 'beforeSearch')) {
+                        $search = $component->beforeSearch($field, $search);
+                    }
+
+                    return "%$search%";
+                }],
+                'enabled' => function (PowerGridComponent $component) {
                     return filled($component->search);
                 },
             ];
