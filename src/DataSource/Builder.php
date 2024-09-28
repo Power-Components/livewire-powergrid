@@ -171,6 +171,8 @@ class Builder
                                 } catch (\Throwable) {
                                     $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                 }
+                            } elseif (!$hasColumn) {
+                                $query->orWhere($field, Sql::like($query), "%{$search}%");
                             }
                         });
                     });
