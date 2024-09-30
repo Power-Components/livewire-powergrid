@@ -5,8 +5,8 @@
 ])
 
 @includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
-        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
-    ])
+    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+])
 
 @php
     $defaultCollapseIcon = data_get($theme, 'root') . '.toggle-detail';
@@ -62,57 +62,61 @@
         ])
         wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
     >
-        @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
-            <div class="pg-actions">
-                @if (method_exists($this, 'actionsFromView') && ($actionsFromView = $this->actionsFromView($row)))
-                    <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
-                        {!! $actionsFromView !!}
-                    </div>
-                @endif
-
-                <div wire:replace.self>
-                    @if (data_get($column, 'isAction'))
-                        <div
-                            x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                            class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
-                            x-html="toHtml"
-                        >
+        @if (count(data_get($column, 'customContent')) > 0)
+            @include(data_get($column, 'customContent.view'), data_get($column, 'customContent.params'))
+        @else
+            @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
+                <div class="pg-actions">
+                    @if (method_exists($this, 'actionsFromView') && ($actionsFromView = $this->actionsFromView($row)))
+                        <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
+                            {!! $actionsFromView !!}
                         </div>
                     @endif
-                </div>
-            </div>
-        @endif
 
-        @php
-            $showEditOnClick = $this->shouldShowEditOnClick($column, $row);
-        @endphp
-
-        @if ($showEditOnClick === true)
-            <span @class([$contentClassField, $contentClass])>
-                @include(theme_style($theme, 'editable.view') ?? null, [
-                    'editable' => data_get($column, 'editable'),
-                ])
-            </span>
-        @elseif(count(data_get($column, 'toggleable')) > 0)
-            @php
-                $showToggleable = $this->shouldShowToggleable($column, $row);
-            @endphp
-            @includeWhen($showToggleable, theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
-        @else
-            <span @class([$contentClassField, $contentClass])>
-                @if (filled($templateContent))
-                    <div
-                        x-data="pgRenderRowTemplate({
-                            parentId: @js($parentId),
-                            templateContent: @js($templateContent)
-                        })"
-                        x-html="rendered"
-                    >
+                    <div wire:replace.self>
+                        @if (data_get($column, 'isAction'))
+                            <div
+                                x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
+                                class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
+                                x-html="toHtml"
+                            >
+                            </div>
+                        @endif
                     </div>
-                @else
-                    <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
-                @endif
-            </span>
+                </div>
+            @endif
+
+            @php
+                $showEditOnClick = $this->shouldShowEditOnClick($column, $row);
+            @endphp
+
+            @if ($showEditOnClick === true)
+                <span @class([$contentClassField, $contentClass])>
+                    @include(theme_style($theme, 'editable.view') ?? null, [
+                        'editable' => data_get($column, 'editable'),
+                    ])
+                </span>
+            @elseif(count(data_get($column, 'toggleable')) > 0)
+                @php
+                    $showToggleable = $this->shouldShowToggleable($column, $row);
+                @endphp
+                @include(theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
+            @else
+                <span @class([$contentClassField, $contentClass])>
+                    @if (filled($templateContent))
+                        <div
+                            x-data="pgRenderRowTemplate({
+                                parentId: @js($parentId),
+                                templateContent: @js($templateContent)
+                            })"
+                            x-html="rendered"
+                        >
+                        </div>
+                    @else
+                        <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                    @endif
+                </span>
+            @endif
         @endif
     </td>
 @endforeach

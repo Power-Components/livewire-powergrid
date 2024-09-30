@@ -64,6 +64,8 @@ final class Column implements \Livewire\Wireable
 
     public mixed $filters = null;
 
+    public array $customContent = [];
+
     /**
      * Adds a new Column
      *
@@ -259,12 +261,14 @@ final class Column implements \Livewire\Wireable
     public function toggleable(
         bool $hasPermission = true,
         string $trueLabel = 'Yes',
-        string $falseLabel = 'No'
+        string $falseLabel = 'No',
+        bool $onlyDisable = false,
     ): Column {
         $this->editable   = [];
         $this->toggleable = [
-            'enabled' => $hasPermission,
-            'default' => [$trueLabel,  $falseLabel],
+            'enabled'     => $hasPermission,
+            'default'     => [$trueLabel,  $falseLabel],
+            'onlyDisable' => $onlyDisable,
         ];
 
         return $this;
