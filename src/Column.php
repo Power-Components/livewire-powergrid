@@ -265,8 +265,8 @@ final class Column implements \Livewire\Wireable
     ): Column {
         $this->editable   = [];
         $this->toggleable = [
-            'enabled'     => $hasPermission,
-            'default'     => [$trueLabel,  $falseLabel],
+            'enabled' => $hasPermission,
+            'default' => [$trueLabel,  $falseLabel],
         ];
 
         return $this;
