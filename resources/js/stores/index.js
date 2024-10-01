@@ -1,22 +1,38 @@
 document.addEventListener('alpine:init', () => {
     window.Alpine.store('editablePending', {
         pending: [],
-        set(value) {
-            this.pending.push(value)
+
+        set(value, textContent) {
+            this.pending = this.pending.filter(item => item.value !== value);
+            this.pending.push({ value, textContent });
         },
+
         has(value) {
-            return this.pending.includes(value)
+            return this.pending.some(item => item.value === value);
         },
+
+        get(value) {
+            return this.pending.find(item => item.value === value);
+        },
+
         notContains(value) {
-            return this.pending.length > 0 && !this.pending.includes(value)
+            return this.pending.length > 0 && !this.has(value);
         },
+
         clear() {
-            this.pending = []
+            this.pending = [];
         },
+
         isNotEmpty() {
-            return this.pending.length > 0
+            return this.pending.length > 0;
         },
+
+        getTextContent(value) {
+            const item = this.pending.find(item => item.value === value);
+            return item ? item.textContent : null;
+        }
     });
+
 
     window.Alpine.store('pgBulkActions', {
         selected: [],

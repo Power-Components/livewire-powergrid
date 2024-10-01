@@ -1,18 +1,17 @@
 export default (params) => ({
     theme: params.theme,
-    editable: false,
-    tableName: params.tableName ?? null,
     id: params.id ?? null,
     dataField: params.dataField ?? null,
     content: params.content,
-    oldContent: null,
     fallback: params.fallback,
+    inputClass: params.inputClass,
+    saveOnMouseOut: params.saveOnMouseOut,
+    oldContent: null,
+    editable: false,
     hash: null,
     hashError: true,
     showEditable: false,
     editableInput: '',
-    inputClass: params.inputClass,
-    saveOnMouseOut: params.saveOnMouseOut,
     init() {
         if (this.content.length === 0 && this.fallback) {
             this.content = this.htmlSpecialChars(this.fallback);
@@ -28,8 +27,16 @@ export default (params) => ({
                 this.oldContent = this.content;
                 const editablePending = window.editablePending.notContains(this.hash)
                 this.hashError = editablePending
+
+                setTimeout(() => {
+                    if (window.editablePending.getTextContent(this.hash) && document.getElementById('editable-' + this.hash)) {
+                        document.getElementById('editable-' + this.hash).textContent =
+                            window.editablePending.getTextContent(this.hash)
+                    }
+                }, 220)
+
                 if (editablePending) {
-                    const pendingHash = window.editablePending.pending[0]
+                    const pendingHash = window.editablePending.get(this.hash)
                     document.getElementById('clickable-' + pendingHash).click()
                 } else {
                     showEditable = true
@@ -60,12 +67,13 @@ export default (params) => ({
         this.content = this.htmlSpecialChars(this.content);
     },
     save() {
-        if(this.$el.textContent == this.oldContent) {
-            this.editable = false;
-            this.showEditable = false;
+        window.editablePending.clear()
+        window.editablePending.set(this.hash, this.$el.textContent)
 
-            return;
-        }
+        setTimeout(() => {
+            document.getElementById('clickable-' + this.hash).textContent =
+                this.$el.textContent
+        }, 230)
 
         setTimeout(() => {
             window.addEventListener('pg:editable-close-'+this.id, () => {
@@ -75,16 +83,17 @@ export default (params) => ({
             })
 
             if(!window.editablePending.has(this.hash)) {
-                window.editablePending.set(this.hash)
+                window.editablePending.set(this.hash, this.$el.textContent)
+
             }
 
-            this.$wire.dispatch('pg:editable-' + this.tableName, {
+            this.$wire.dispatch('pg:editable-' + this.$wire.tableName, {
                 id: this.id,
                 value: this.$el.textContent,
                 field: this.dataField
             })
 
-            this.oldContent = null
+            this.oldContent = window.editablePending.getTextContent(this.hash)
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
