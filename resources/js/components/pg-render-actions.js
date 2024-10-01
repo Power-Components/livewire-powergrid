@@ -1,36 +1,7 @@
 export default (params) => ({
     rowId: params?.rowId ?? null,
-    storageKey: null,
-    cookieKey: null,
     parentId: params?.parentId ?? null,
-    init() {
-        this.setKeys();
-
-        window.addEventListener('beforeunload', () => {
-            localStorage.removeItem(this.storageKey);
-            document.cookie = this.cookieKey + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        });
-    },
-
-    setKeys() {
-        if (this.rowId) {
-            this.storageKey = `pg_session_${this.$wire.tableName}_row_${this.rowId}`;
-            this.cookieKey = `pg_cookie_${this.$wire.tableName}_row_${this.rowId}`;
-
-            return;
-        }
-
-        this.storageKey = `pg_session_${this.$wire.tableName}_header_actions`;
-        this.cookieKey = `pg_cookie_${this.$wire.tableName}_header_actions`;
-    },
-
     toHtml() {
-        const value = localStorage.getItem(this.storageKey)
-
-        if (typeof value === 'string' && value.length > 0) {
-            return value;
-        }
-
         let actions = null;
         const wireId = this.parentId ?? this.$wire.id;
 
@@ -71,12 +42,6 @@ export default (params) => ({
                 }
             }
         });
-
-        if (this.checkLocalStorageFreeSpace()) {
-            localStorage.setItem(this.storageKey, html);
-
-            document.cookie = this.cookieKey + '=true; path=/';
-        }
 
         return html;
     },
@@ -182,21 +147,5 @@ export default (params) => ({
 
     buildActionHtml(action, attributesStr) {
         return `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
-    },
-
-    checkLocalStorageFreeSpace() {
-        const maxLocalStorageSize = 2 * 1024 * 1024; // 2MB
-        let totalSize = 0;
-
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            let value = localStorage.getItem(key);
-
-            if (value !== null) {
-                totalSize += new Blob([value]).size;
-            }
-        }
-
-        return totalSize <= maxLocalStorageSize
     },
 });
