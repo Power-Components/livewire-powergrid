@@ -142,9 +142,7 @@ class Builder
             $columnList = $this->getColumnList($modelTable);
 
             collect($this->component->columns)
-                ->filter(function (\stdClass|array|Column $column) {
-                    return (bool) data_get($column, 'searchable');
-                })
+                ->filter(fn (\stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
                 ->each(function (\stdClass|array|Column $column) use ($query, $search, $columnList) {
                     $field = $this->getDataField($column);
 
@@ -154,13 +152,11 @@ class Builder
 
                     $hasColumn = isset($columnList[$field]);
 
-                    if ($hasColumn) {
-                        try {
-                            $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                        } catch (\Throwable) {
-                            $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                        }
-                    }
+                    $query->when(
+                        $hasColumn && $table,
+                        fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
+                        fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
+                    );
                 });
 
             return $query;

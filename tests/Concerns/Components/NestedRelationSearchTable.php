@@ -66,7 +66,7 @@ class NestedRelationSearchTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Restaurant', 'restaurant_name')
+            Column::make('Restaurant', 'restaurant_name', 'restaurants.name')
                 ->searchable()
                 ->sortable(),
         ];

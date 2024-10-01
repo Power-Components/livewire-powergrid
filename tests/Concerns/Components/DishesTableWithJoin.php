@@ -144,7 +144,7 @@ class DishesTableWithJoin extends PowerGridComponent
 
             Column::add()
                 ->title(__('Prato'))
-                ->field('dish_name')
+                ->field('dish_name', 'name')
                 ->searchable()
                 ->placeholder('Prato placeholder')
                 ->sortable(),
