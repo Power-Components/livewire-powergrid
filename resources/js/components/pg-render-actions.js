@@ -43,12 +43,6 @@ export default (params) => ({
             }
         });
 
-        if (this.checkLocalStorageFreeSpace()) {
-            localStorage.setItem(this.storageKey, html);
-
-            document.cookie = this.cookieKey + '=true; path=/';
-        }
-
         return html;
     },
 
@@ -153,21 +147,5 @@ export default (params) => ({
 
     buildActionHtml(action, attributesStr) {
         return `<${action.tag ?? 'button'} ${attributesStr}>${action.slot}</${action.tag ?? 'button'}>`;
-    },
-
-    checkLocalStorageFreeSpace() {
-        const maxLocalStorageSize = 2 * 1024 * 1024; // 2MB
-        let totalSize = 0;
-
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            let value = localStorage.getItem(key);
-
-            if (value !== null) {
-                totalSize += new Blob([value]).size;
-            }
-        }
-
-        return totalSize <= maxLocalStorageSize
     },
 });
