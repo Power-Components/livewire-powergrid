@@ -156,11 +156,11 @@ class Builder
                                 $query->orWhereRaw($sqlRaw . ' ' . Sql::like($query) . ' ?', ["%{$search}%"]);
                             }
 
-                            if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
-                                try {
+                            try {
+                                if ($hasColumn && blank(data_get($column, 'searchableRaw'))) {
                                     $columnType = $this->getColumnType($table, $field);
 
-                                    /** @phpstan-ignore-next-line  */
+                                    /** @phpstan-ignore-next-line */
                                     $driverName = $query->getConnection()->getConfig('driver');
 
                                     if ($columnType === 'json' && strtolower($driverName) !== 'pgsql') {
@@ -168,9 +168,14 @@ class Builder
                                     } else {
                                         $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                     }
-                                } catch (\Throwable) {
-                                    $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
                                 }
+                            } catch (\Throwable) {
+                                $query
+                                    ->when(
+                                        $table,
+                                        fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
+                                        fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
+                                    );
                             }
                         });
                     });
