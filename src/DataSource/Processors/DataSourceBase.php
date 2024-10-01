@@ -114,8 +114,7 @@ class DataSourceBase
 
     private static function processRows(BaseCollection $results, PowerGridComponent $component): BaseCollection
     {
-        $fields       = collect($component->fields()->fields);
-        $cookiePrefix = 'pg_cookie_' . $component->tableName . '_row_';
+        $fields = collect($component->fields()->fields);
 
         if ($component->paginateRaw) {
             $results = collect((array) data_get($results, 'hits'))->pluck('document');
@@ -128,14 +127,13 @@ class DataSourceBase
         $renderActionRules = method_exists($component, 'actionRules');
         $actionsHtml       = &static::$actionsHtml;
 
-        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance, $renderActions, $renderActionRules, $cookiePrefix, &$actionsHtml) {
+        return $results->map(function ($row, $index) use ($component, $fields, $loopInstance, $renderActions, $renderActionRules, &$actionsHtml) {
             $row  = (object) $row;
             $data = $fields->map(fn ($field) => $field($row, $index));
 
-            $rowId                  = data_get($row, $component->realPrimaryKey);
-            $hasCookieActionsForRow = isset($_COOKIE[$cookiePrefix . $rowId]);
+            $rowId = data_get($row, $component->realPrimaryKey);
 
-            if ($renderActions && !$hasCookieActionsForRow) {
+            if ($renderActions) {
                 try {
                     $actions = collect($component->actions($row)) // @phpstan-ignore-line
                         ->map(function ($action) use ($row, $component, $renderActionRules) {
