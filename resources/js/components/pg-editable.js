@@ -1,18 +1,17 @@
 export default (params) => ({
     theme: params.theme,
-    editable: false,
-    tableName: params.tableName ?? null,
     id: params.id ?? null,
     dataField: params.dataField ?? null,
     content: params.content,
-    oldContent: null,
     fallback: params.fallback,
+    inputClass: params.inputClass,
+    saveOnMouseOut: params.saveOnMouseOut,
+    oldContent: null,
+    editable: false,
     hash: null,
     hashError: true,
     showEditable: false,
     editableInput: '',
-    inputClass: params.inputClass,
-    saveOnMouseOut: params.saveOnMouseOut,
     init() {
         if (this.content.length === 0 && this.fallback) {
             this.content = this.htmlSpecialChars(this.fallback);
@@ -26,11 +25,23 @@ export default (params) => ({
                 this.showEditable = false
                 this.content = this.htmlSpecialChars(this.content);
                 this.oldContent = this.content;
-                const editablePending = window.editablePending.notContains(this.hash)
-                this.hashError = editablePending
-                if (editablePending) {
-                    const pendingHash = window.editablePending.pending[0]
-                    document.getElementById('clickable-' + pendingHash).click()
+                this.hashError = this.store().notContains(this.hash)
+
+                setTimeout(() => {
+                    const editableElement = document.getElementById('editable-' + this.hash)
+
+                    if (this.store().getTextContent(this.hash) && editableElement) {
+                        editableElement.textContent = this.store().getTextContent(this.hash)
+                    }
+                }, 220)
+
+                if (this.hashError) {
+                    const pendingHash = this.store().get(this.hash)
+                    const clickableElement = document.getElementById('clickable-' + pendingHash)
+
+                    if (clickableElement) {
+                        clickableElement.click()
+                    }
                 } else {
                     showEditable = true
                 }
@@ -59,32 +70,39 @@ export default (params) => ({
 
         this.content = this.htmlSpecialChars(this.content);
     },
-    save() {
-        if(this.$el.textContent == this.oldContent) {
-            this.editable = false;
-            this.showEditable = false;
 
-            return;
-        }
+    store() {
+        return window.editOnClickValidation
+    },
+
+    save() {
+        this.store().clear()
+        this.store().set(this.hash, this.$el.textContent)
+
+        setTimeout(() => {
+            document.getElementById('clickable-' + this.hash).textContent =
+                this.$el.textContent
+        }, 230)
 
         setTimeout(() => {
             window.addEventListener('pg:editable-close-'+this.id, () => {
-                window.editablePending.clear()
+                this.store().clear()
                 this.editable = false;
                 this.showEditable = false;
             })
 
-            if(!window.editablePending.has(this.hash)) {
-                window.editablePending.set(this.hash)
+            if(!this.store().has(this.hash)) {
+                this.store().set(this.hash, this.$el.textContent)
+
             }
 
-            this.$wire.dispatch('pg:editable-' + this.tableName, {
+            this.$wire.dispatch('pg:editable-' + this.$wire.tableName, {
                 id: this.id,
                 value: this.$el.textContent,
                 field: this.dataField
             })
 
-            this.oldContent = null
+            this.oldContent = this.store().getTextContent(this.hash)
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
@@ -95,6 +113,7 @@ export default (params) => ({
 
         this.content = this.htmlSpecialChars(this.$el.textContent)
     },
+
     focus() {
         const selection = window.getSelection();
         const range = document.createRange();
@@ -104,12 +123,14 @@ export default (params) => ({
         selection.addRange(range);
         this.$el.focus();
     },
+
     cancel() {
         this.$refs.editable.textContent = this.oldContent;
         this.content = this.oldContent;
         this.editable = false;
         this.showEditable = false;
     },
+
     htmlSpecialChars(string) {
         const el = document.createElement('div');
         el.innerHTML = string;
