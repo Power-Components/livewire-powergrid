@@ -12,38 +12,54 @@ export default (params) => ({
     hashError: true,
     showEditable: false,
     editableInput: '',
+
     init() {
         if (this.content.length === 0 && this.fallback) {
             this.content = this.htmlSpecialChars(this.fallback);
         }
 
-        this.hash = this.dataField + '-' + this.id
+        this.hash = this.dataField + '-' + this.id;
+
+        window.addEventListener('toggle-' + this.hash, () => {
+            this.observe(
+                () => document.getElementById('clickable-' + this.hash),
+                (clickableElement) => {
+                    clickableElement.click();
+                    this.observe(
+                        () => document.getElementById('editable-' + this.hash),
+                        (editableElement) => {
+                            this.setFocusToEnd(editableElement);
+                        }
+                    );
+                }
+            );
+        });
 
         this.$watch('editable', (value) => {
             if (value) {
-                let showEditable = false
-                this.showEditable = false
+                let showEditable = false;
+                this.showEditable = false;
                 this.content = this.htmlSpecialChars(this.content);
                 this.oldContent = this.content;
-                this.hashError = this.store().notContains(this.hash)
+                this.hashError = this.store().notContains(this.hash);
 
-                setTimeout(() => {
-                    const editableElement = document.getElementById('editable-' + this.hash)
-
-                    if (this.store().getTextContent(this.hash) && editableElement) {
-                        editableElement.textContent = this.store().getTextContent(this.hash)
+                this.observe(
+                    () => document.getElementById('editable-' + this.hash),
+                    (editableElement) => {
+                        if (this.store().getTextContent(this.hash)) {
+                            editableElement.textContent = this.store().getTextContent(this.hash);
+                        }
                     }
-                }, 220)
+                );
 
                 if (this.hashError) {
-                    const pendingHash = this.store().get(this.hash)
-                    const clickableElement = document.getElementById('clickable-' + pendingHash)
-
+                    const pendingHash = this.store().get(this.hash);
+                    const clickableElement = document.getElementById('clickable-' + pendingHash);
                     if (clickableElement) {
-                        clickableElement.click()
+                        clickableElement.click();
                     }
                 } else {
-                    showEditable = true
+                    showEditable = true;
                 }
 
                 this.editableInput = `
@@ -62,78 +78,104 @@ export default (params) => ({
                 </div>`;
 
                 this.$nextTick(() => setTimeout(() => {
-                    this.showEditable = showEditable
-                    this.focus()
-                }, 150))
+                    this.showEditable = showEditable;
+                    this.focus();
+                }, 150));
             }
-        })
+        });
 
         this.content = this.htmlSpecialChars(this.content);
     },
 
     store() {
-        return window.editOnClickValidation
+        return window.editOnClickValidation;
     },
 
     save() {
-        this.store().clear()
-        this.store().set(this.hash, this.$el.textContent)
+        this.store().clear();
+        this.store().set(this.hash, this.$el.textContent);
 
-        setTimeout(() => {
-            document.getElementById('clickable-' + this.hash).textContent =
-                this.$el.textContent
-        }, 230)
-
-        setTimeout(() => {
-            window.addEventListener('pg:editable-close-'+this.id, () => {
-                this.store().clear()
-                this.editable = false;
-                this.showEditable = false;
-            })
-
-            if(!this.store().has(this.hash)) {
-                this.store().set(this.hash, this.$el.textContent)
-
+        this.observe(
+            () => document.getElementById('clickable-' + this.hash),
+            (clickableElement) => {
+                clickableElement.textContent = this.$el.textContent;
             }
+        );
 
-            this.$wire.dispatch('pg:editable-' + this.$wire.tableName, {
-                id: this.id,
-                value: this.$el.textContent,
-                field: this.dataField
-            })
+        window.addEventListener('pg:editable-close-' + this.id, () => {
+            this.store().clear();
+            this.editable = false;
+            this.showEditable = false;
+        });
 
-            this.oldContent = this.store().getTextContent(this.hash)
+        if (!this.store().has(this.hash)) {
+            this.store().set(this.hash, this.$el.textContent);
+        }
 
-            this.$nextTick(() => setTimeout(() => {
-                this.focus()
-                setTimeout(() => this.$el.setAttribute('value', ''), 200)
-            }, 100))
+        this.$wire.dispatch('pg:editable-' + this.$wire.tableName, {
+            id: this.id,
+            value: this.$el.textContent,
+            field: this.dataField
+        });
 
-        }, 100)
+        this.oldContent = this.store().getTextContent(this.hash);
 
-        this.content = this.htmlSpecialChars(this.$el.textContent)
+        this.$nextTick(() => {
+            this.focus();
+            this.$el.setAttribute('value', '');
+        });
+
+        this.content = this.htmlSpecialChars(this.$el.textContent);
     },
 
     focus() {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        selection.removeAllRanges();
-        range.selectNodeContents(this.$el);
-        range.collapse(false);
-        selection.addRange(range);
-        this.$el.focus();
+        this.setFocusToEnd(this.$el);
     },
 
     cancel() {
+        this.store().clear();
         this.$refs.editable.textContent = this.oldContent;
         this.content = this.oldContent;
         this.editable = false;
         this.showEditable = false;
+
+        if (this.$refs.error) {
+            this.$refs.error.innerHTML = '';
+        }
     },
 
     htmlSpecialChars(string) {
         const el = document.createElement('div');
         el.innerHTML = string;
         return el.textContent;
+    },
+
+    observe(elementFinder, action) {
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    const element = elementFinder();
+                    if (element) {
+                        action(element);
+                        observer.disconnect();
+                        break;
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    },
+
+    setFocusToEnd(element) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        range.collapse(false);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        element.focus();
     }
-})
+});

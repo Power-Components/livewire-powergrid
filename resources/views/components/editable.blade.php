@@ -76,7 +76,7 @@
     </template>
     @if ($showErrorBag)
         @error($field . '.' . $row->{$this->realPrimaryKey})
-            <div class="text-sm text-red-800 p-1 transition-all duration-200">
+            <div x-ref="error" class="text-sm text-red-800 p-1 transition-all duration-200">
                 {{ str($message)->replace($field . '.' . $row->{$this->realPrimaryKey}, $field) }}
             </div>
         @enderror
