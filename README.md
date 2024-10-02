@@ -82,7 +82,7 @@ PowerGrid offers a range of features that are readily available:
 
 ### Requirements
 
-- PHP 8.1+
+- PHP 8.2+
 - [Laravel 10+](https://laravel.com/docs/installation)
 - [Livewire 3.0x](https://livewire.laravel.com)
 - [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
