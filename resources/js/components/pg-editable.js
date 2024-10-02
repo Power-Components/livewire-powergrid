@@ -29,15 +29,20 @@ export default (params) => ({
                 this.hashError = editablePending
 
                 setTimeout(() => {
-                    if (window.editablePending.getTextContent(this.hash) && document.getElementById('editable-' + this.hash)) {
-                        document.getElementById('editable-' + this.hash).textContent =
-                            window.editablePending.getTextContent(this.hash)
+                    const editableElement = document.getElementById('editable-' + this.hash)
+
+                    if (window.editablePending.getTextContent(this.hash) && editableElement) {
+                        editableElement.textContent = window.editablePending.getTextContent(this.hash)
                     }
                 }, 220)
 
                 if (editablePending) {
                     const pendingHash = window.editablePending.get(this.hash)
-                    document.getElementById('clickable-' + pendingHash).click()
+                    const clickableElement = document.getElementById('clickable-' + pendingHash)
+
+                    if (clickableElement) {
+                        clickableElement.click()
+                    }
                 } else {
                     showEditable = true
                 }

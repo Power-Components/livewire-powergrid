@@ -23,16 +23,11 @@ document.addEventListener('alpine:init', () => {
             this.pending = [];
         },
 
-        isNotEmpty() {
-            return this.pending.length > 0;
-        },
-
         getTextContent(value) {
             const item = this.pending.find(item => item.value === value);
             return item ? item.textContent : null;
         }
     });
-
 
     window.Alpine.store('pgBulkActions', {
         selected: [],
