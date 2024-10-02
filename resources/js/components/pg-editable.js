@@ -25,19 +25,18 @@ export default (params) => ({
                 this.showEditable = false
                 this.content = this.htmlSpecialChars(this.content);
                 this.oldContent = this.content;
-                const editablePending = window.editablePending.notContains(this.hash)
-                this.hashError = editablePending
+                this.hashError = this.store().notContains(this.hash)
 
                 setTimeout(() => {
                     const editableElement = document.getElementById('editable-' + this.hash)
 
-                    if (window.editablePending.getTextContent(this.hash) && editableElement) {
-                        editableElement.textContent = window.editablePending.getTextContent(this.hash)
+                    if (this.store().getTextContent(this.hash) && editableElement) {
+                        editableElement.textContent = this.store().getTextContent(this.hash)
                     }
                 }, 220)
 
-                if (editablePending) {
-                    const pendingHash = window.editablePending.get(this.hash)
+                if (this.hashError) {
+                    const pendingHash = this.store().get(this.hash)
                     const clickableElement = document.getElementById('clickable-' + pendingHash)
 
                     if (clickableElement) {
@@ -71,9 +70,14 @@ export default (params) => ({
 
         this.content = this.htmlSpecialChars(this.content);
     },
+
+    store() {
+        return window.editOnClickValidation
+    },
+
     save() {
-        window.editablePending.clear()
-        window.editablePending.set(this.hash, this.$el.textContent)
+        this.store().clear()
+        this.store().set(this.hash, this.$el.textContent)
 
         setTimeout(() => {
             document.getElementById('clickable-' + this.hash).textContent =
@@ -82,13 +86,13 @@ export default (params) => ({
 
         setTimeout(() => {
             window.addEventListener('pg:editable-close-'+this.id, () => {
-                window.editablePending.clear()
+                this.store().clear()
                 this.editable = false;
                 this.showEditable = false;
             })
 
-            if(!window.editablePending.has(this.hash)) {
-                window.editablePending.set(this.hash, this.$el.textContent)
+            if(!this.store().has(this.hash)) {
+                this.store().set(this.hash, this.$el.textContent)
 
             }
 
@@ -98,7 +102,7 @@ export default (params) => ({
                 field: this.dataField
             })
 
-            this.oldContent = window.editablePending.getTextContent(this.hash)
+            this.oldContent = this.store().getTextContent(this.hash)
 
             this.$nextTick(() => setTimeout(() => {
                 this.focus()
@@ -109,6 +113,7 @@ export default (params) => ({
 
         this.content = this.htmlSpecialChars(this.$el.textContent)
     },
+
     focus() {
         const selection = window.getSelection();
         const range = document.createRange();
@@ -118,12 +123,14 @@ export default (params) => ({
         selection.addRange(range);
         this.$el.focus();
     },
+
     cancel() {
         this.$refs.editable.textContent = this.oldContent;
         this.content = this.oldContent;
         this.editable = false;
         this.showEditable = false;
     },
+
     htmlSpecialChars(string) {
         const el = document.createElement('div');
         el.innerHTML = string;
