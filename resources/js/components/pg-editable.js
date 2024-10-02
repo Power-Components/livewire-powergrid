@@ -28,7 +28,7 @@ export default (params) => ({
                     this.observe(
                         () => document.getElementById('editable-' + this.hash),
                         (editableElement) => {
-                            this.setFocusToEnd(editableElement);
+                            setTimeout(() => this.setFocusToEnd(editableElement), 100);
                         }
                     );
                 }
@@ -46,9 +46,12 @@ export default (params) => ({
                 this.observe(
                     () => document.getElementById('editable-' + this.hash),
                     (editableElement) => {
-                        if (this.store().getTextContent(this.hash)) {
-                            editableElement.textContent = this.store().getTextContent(this.hash);
-                        }
+                        setTimeout(() => {
+                            this.setFocusToEnd(editableElement)
+                            if (this.store().getTextContent(this.hash)) {
+                                editableElement.textContent = this.store().getTextContent(this.hash);
+                            }
+                        }, 100);
                     }
                 );
 
