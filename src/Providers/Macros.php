@@ -198,6 +198,8 @@ class Macros
         });
 
         Button::macro('route', function (string $route, array $params, string $target = '_self') {
+            $this->tag('a');
+
             $this->attributes([
                 'href'   => route($route, $params),
                 'target' => $target,
