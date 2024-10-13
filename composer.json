@@ -20,7 +20,7 @@
   "require": {
     "php": "^8.2",
     "livewire/livewire": "^3.5.0",
-    "laravel/prompts": "^0.1.25"
+    "laravel/prompts": "*"
   },
   "require-dev": {
     "composer/composer": "^2.7.9",
