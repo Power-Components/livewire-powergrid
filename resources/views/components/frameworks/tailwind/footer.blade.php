@@ -41,17 +41,15 @@
             </div>
         @endif
 
-        @if (filled($data))
-            <div>
-                @if (method_exists($data, 'links'))
-                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'root') . '.pagination', [
-                        'recordCount' => data_get($setUp, 'footer.recordCount'),
-                        'perPage' => data_get($setUp, 'footer.perPage'),
-                        'perPageValues' => data_get($setUp, 'footer.perPageValues'),
-                    ]) !!}
-                @endif
-            </div>
-        @endif
+        <div>
+            @if (method_exists($data, 'links'))
+                {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'root') . '.pagination', [
+                    'recordCount' => data_get($setUp, 'footer.recordCount'),
+                    'perPage' => data_get($setUp, 'footer.perPage'),
+                    'perPageValues' => data_get($setUp, 'footer.perPageValues'),
+                ]) !!}
+            @endif
+        </div>
     </footer>
     @includeIf(data_get($setUp, 'footer.includeViewOnBottom'))
 </div>
