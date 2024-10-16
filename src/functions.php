@@ -50,8 +50,10 @@ if (!function_exists('once')) {
 }
 
 if (!function_exists('theme_style')) {
-    function theme_style(array $theme, string $name): string
+    function theme_style(array $theme, string $name, ?string $default = null): string
     {
-        return strval(data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name));
+        return strval(
+            data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name, $default)
+        );
     }
 }

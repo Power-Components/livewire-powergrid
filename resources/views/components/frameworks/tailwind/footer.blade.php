@@ -1,13 +1,12 @@
 <div>
     @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
-    <div
+    <footer
         id="pg-footer"
         @class([
             'justify-between' => filled(data_get($setUp, 'footer.perPage')),
             'justify-end' => blank(data_get($setUp, 'footer.perPage')),
-            'border-x border-b rounded-b-lg border-b border-pg-primary-200 dark:bg-pg-primary-700 dark:border-pg-primary-600',
-            'md:flex md:flex-row w-full items-center py-3 bg-white overflow-y-auto pl-2 pr-2 relative dark:bg-pg-primary-900' => blank(
-                data_get($setUp, 'footer.pagination')),
+            theme_style($theme, 'footer.footer', 'border-x border-b rounded-b-lg border-b border-pg-primary-200 dark:bg-pg-primary-700 dark:border-pg-primary-600'),
+            theme_style($theme, 'footer.footer_with_pagination', 'md:flex md:flex-row w-full items-center py-3 bg-white overflow-y-auto pl-2 pr-2 relative dark:bg-pg-primary-900') => blank(data_get($setUp, 'footer.pagination')),
         ])
     >
         @if (filled(data_get($setUp, 'footer.perPage')) &&
@@ -53,6 +52,6 @@
                 @endif
             </div>
         @endif
-    </div>
+    </footer>
     @includeIf(data_get($setUp, 'footer.includeViewOnBottom'))
 </div>
