@@ -49,8 +49,10 @@ class Bootstrap5 extends Theme
     public function footer(): array
     {
         return [
-            'view'   => $this->root() . '.footer',
-            'select' => '',
+            'view'                   => $this->root() . '.footer',
+            'select'                 => '',
+            'footer'                 => 'mt-50 pb-1 w-100 align-items-end px-1 d-flex flex-wrap justify-content-sm-center justify-content-md-between',
+            'footer_with_pagination' => '',
         ];
     }
 
