@@ -84,7 +84,7 @@ class DataSourceBase
 
         $this->component->gotoPage(1);
 
-        return $results->$paginate($count, pageName: $pageName);
+        return $results->$paginate($count ?: 10, pageName: $pageName);
     }
 
     protected function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
