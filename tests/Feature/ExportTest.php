@@ -5,6 +5,8 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\ExportTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
+use PowerComponents\LivewirePowerGrid\{Button,Column};
+
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
         ->call('exportToXLS', false)
@@ -84,6 +86,47 @@ it('properly does not export csv data without selected data', function () {
 
     expect()->notToBeFileDownloaded($component);
 })->requiresOpenSpout();
+
+$exportWithAction = new class () extends ExportTable {
+    public function columns(): array
+    {
+        return [
+            Column::action('Foo')
+                ->visibleInExport(true),
+        ];
+    }
+
+    public function actions($row): array
+    {
+        return [
+            Button::add('Foo'),
+        ];
+    }
+};
+
+it('properly export xls with action', function (string $component) {
+    $downloadedFile = livewire($component)
+        ->call('exportToXLS', false)
+        ->assertFileDownloaded('export.xlsx');
+
+    $headings = ['Foo'];
+
+    expect($downloadedFile)->toBeXLSDownload($headings, []);
+})->with('export_with_action')->requiresOpenSpout();
+
+it('properly export csv with action', function (string $component) {
+    $downloadedFile = livewire($component)
+        ->call('exportToCsv', false)
+        ->assertFileDownloaded('export.csv');
+
+    $headings = ['Foo'];
+
+    expect($downloadedFile)->toBeCsvDownload($headings, []);
+})->with('export_with_action')->requiresOpenSpout();
+
+dataset('export_with_action', [
+    'data' => [$exportWithAction::class],
+]);
 
 /*
 |--------------------------------------------------------------------------

@@ -93,7 +93,8 @@ final class Column implements \Livewire\Wireable
     {
         return (new static())
             ->title($title)
-            ->isAction();
+            ->isAction()
+            ->visibleInExport(false);
     }
 
     public function isAction(): Column
