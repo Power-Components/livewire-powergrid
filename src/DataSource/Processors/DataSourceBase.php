@@ -82,7 +82,7 @@ class DataSourceBase
 
         $count = $results->count(); // @phpstan-ignore-line
 
-        $this->component->gotoPage(1);
+        $this->component->gotoPage(1, pageName: $pageName);
 
         return $results->$paginate($count ?: 10, pageName: $pageName);
     }
