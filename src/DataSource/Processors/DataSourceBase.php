@@ -82,7 +82,9 @@ class DataSourceBase
 
         $count = $results->count(); // @phpstan-ignore-line
 
-        return $results->$paginate($count ?: 10, pageName: $pageName);
+        $this->component->gotoPage(1);
+
+        return $results->$paginate($count, pageName: $pageName);
     }
 
     protected function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
