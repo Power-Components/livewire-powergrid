@@ -21,6 +21,8 @@ class ExportTable extends PowerGridComponent
 
     public string $delimiter = '"';
 
+    public bool $testStripHtml = false;
+
     public function setUp(): array
     {
         $this->showCheckBox();
@@ -30,6 +32,7 @@ class ExportTable extends PowerGridComponent
                 ->striped()
                 ->csvSeparator($this->separator)
                 ->csvDelimiter($this->delimiter)
+                ->stripTags($this->testStripHtml)
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
 
             PowerGrid::header()

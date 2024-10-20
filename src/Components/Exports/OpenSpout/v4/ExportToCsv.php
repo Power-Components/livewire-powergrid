@@ -32,7 +32,8 @@ class ExportToCsv extends Export implements ExportInterface
      */
     public function build(Exportable|array $exportOptions): void
     {
-        $data = $this->prepare($this->data, $this->columns);
+        $stripTags = boolval(data_get($exportOptions, 'stripTags', false));
+        $data      = $this->prepare($this->data, $this->columns, $stripTags);
 
         $csvSeparator = strval(data_get($exportOptions, 'csvSeparator', ','));
         $csvDelimiter = strval(data_get($exportOptions, 'csvDelimiter', '"'));

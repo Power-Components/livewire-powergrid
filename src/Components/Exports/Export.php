@@ -35,14 +35,14 @@ class Export
         return $this;
     }
 
-    public function prepare(Collection $data, array $columns): array
+    public function prepare(Collection $data, array $columns, bool $stripTags): array
     {
         $header = collect([]);
 
-        $data = $data->transform(function ($row) use ($columns, $header) {
+        $data = $data->transform(function ($row) use ($columns, $header, $stripTags) {
             $item = collect([]);
 
-            collect($columns)->each(function ($column) use ($row, $header, $item) {
+            collect($columns)->each(function ($column) use ($row, $header, $item, $stripTags) {
                 /** @var Model|stdClass $row */
                 if (method_exists($row, 'withoutRelations')) {
                     $row = $row->withoutRelations()->toArray();
@@ -73,6 +73,9 @@ class Export
                     /** @var array $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
+                            if (true === $stripTags) {
+                                $value = strip_tags($value);
+                            }
                             $item->put($column->title, html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                         }
                     }
