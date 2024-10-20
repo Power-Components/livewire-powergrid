@@ -25,6 +25,8 @@ final class Exportable implements Wireable
 
     public array $batchExport = [];
 
+    public bool $stripTags = false;
+
     public function __construct(public string $fileName = 'export')
     {
     }
@@ -102,5 +104,12 @@ final class Exportable implements Wireable
     public static function fromLivewire($value)
     {
         return $value;
+    }
+
+    public function stripTags(bool $value): self
+    {
+        $this->stripTags = $value;
+
+        return $this;
     }
 }
