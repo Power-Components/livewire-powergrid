@@ -147,9 +147,7 @@ $exportWithHtml = new class () extends ExportTable {
         return [
             Column::add()
                 ->title('nameWithHtml')
-                ->field('nameWithHtml')
-                ->hidden(true, true)
-                ->visibleInExport(true),
+                ->field('nameWithHtml'),
         ];
     }
 };
