@@ -65,7 +65,7 @@
         @if (count(data_get($column, 'customContent')) > 0)
             @include(data_get($column, 'customContent.view'), data_get($column, 'customContent.params'))
         @else
-            @if (empty(data_get($row, 'actions')) && data_get($column, 'isAction'))
+            @if (data_get($column, 'isAction'))
                 <div class="pg-actions">
                     @if (method_exists($this, 'actionsFromView') && ($actionsFromView = $this->actionsFromView($row)))
                         <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
