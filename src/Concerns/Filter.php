@@ -117,8 +117,15 @@ trait Filter
 
         $this->resetPage();
 
-        $startDate = strval($selectedDates[0]);
-        $endDate   = strval($selectedDates[1]);
+        if (Str::contains($dateStr, 'to')) {
+            [$start, $end] = explode(' to ', $dateStr);
+
+            $startDate = strval($start);
+            $endDate   = strval($end);
+        } else {
+            $startDate = strval($selectedDates[0]);
+            $endDate = strval($selectedDates[1]);
+        }
 
         $appTimeZone = strval(config('app.timezone'));
 
