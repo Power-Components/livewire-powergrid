@@ -124,14 +124,13 @@ trait Filter
 
         $filterTimezone = new DateTimeZone($timezone);
 
-        $startDate = Carbon::parse($startDate)->format('Y-m-d');
-        $endDate   = Carbon::parse($endDate)->format('Y-m-d');
+        $startDate = Carbon::parse($startDate)->format('Y-m-d H:i:s');
+        $endDate   = Carbon::parse($endDate)->format('Y-m-d H:i:s');
 
-        $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
-        $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
+        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $startDate, $filterTimezone);
+        $endDate   = Carbon::createFromFormat('Y-m-d H:i:s', $endDate, $filterTimezone);
 
-        if ($type === 'datetime') {
-            $startDate->startOfDay()->setTimeZone($appTimeZone);
+        if ($type === 'datetime' && $endDate->isStartOfDay()) {
             $endDate->endOfDay()->setTimeZone($appTimeZone);
         }
 
