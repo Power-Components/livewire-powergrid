@@ -137,8 +137,12 @@ trait Filter
         $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $startDate, $filterTimezone);
         $endDate   = Carbon::createFromFormat('Y-m-d H:i:s', $endDate, $filterTimezone);
 
-        if ($type === 'datetime' && $endDate->isStartOfDay()) {
-            $endDate->endOfDay()->setTimeZone($appTimeZone);
+        if ($type === 'datetime') {
+            $endDate->setTimeZone($appTimeZone);
+            
+            if ($endDate->isStartOfDay()) {
+                $endDate->endOfDay()->setTimeZone($appTimeZone);
+            }
         }
 
         $this->addEnabledFilters($field, $label);
