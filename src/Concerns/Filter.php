@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon, Collection};
+use Illuminate\Support\{Arr, Carbon, Collection, Str};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 
