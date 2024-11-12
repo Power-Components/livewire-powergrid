@@ -118,13 +118,10 @@ trait Filter
         $this->resetPage();
 
         if (Str::contains($dateStr, 'to')) {
-            [$start, $end] = explode(' to ', $dateStr);
-
-            $startDate = strval($start);
-            $endDate   = strval($end);
+            [$startDate, $endDate] = explode(' to ', $dateStr);
         } else {
             $startDate = strval($selectedDates[0]);
-            $endDate = strval($selectedDates[1]);
+            $endDate   = strval($selectedDates[1]);
         }
 
         $appTimeZone = strval(config('app.timezone'));
@@ -139,7 +136,7 @@ trait Filter
 
         if ($type === 'datetime') {
             $endDate->setTimeZone($appTimeZone);
-            
+
             if ($endDate->isStartOfDay()) {
                 $endDate->endOfDay()->setTimeZone($appTimeZone);
             }
