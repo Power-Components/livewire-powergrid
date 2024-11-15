@@ -61,6 +61,7 @@
             data_get($column, 'bodyStyle'),
         ])
         wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
+        data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     >
         @if (count(data_get($column, 'customContent')) > 0)
             @include(data_get($column, 'customContent.view'), data_get($column, 'customContent.params'))
