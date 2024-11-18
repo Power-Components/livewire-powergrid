@@ -82,6 +82,8 @@ trait HasActions
 
         $actionsHtml = collect($this->header())
             ->transform(function (Button $action) {
+                $can = data_get($action, 'can');
+
                 return [
                     'action'         => $action->action,
                     'slot'           => $action->slot,
@@ -90,6 +92,7 @@ trait HasActions
                     'iconAttributes' => $action->iconAttributes,
                     'attributes'     => $action->attributes,
                     'rules'          => [],
+                    'can'            => $can instanceof \Closure ? $can() : $can,
                 ];
             });
 
