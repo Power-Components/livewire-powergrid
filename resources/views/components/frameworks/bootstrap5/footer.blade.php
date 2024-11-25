@@ -33,12 +33,23 @@
             </div>
             <div class="col-auto overflow-auto mt-2 mt-sm-0">
                 @if (method_exists($data, 'links'))
-                    {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'root') . '.pagination', [
+                    {!! $data->links(data_get($theme, 'root') . '.pagination', [
                         'recordCount' => data_get($setUp, 'footer.recordCount'),
                     ]) !!}
                 @endif
             </div>
         </footer>
     @endif
+
+    @if (filled(data_get($setUp, 'footer.pagination')))
+        <footer>
+            @if (method_exists($data, 'links'))
+                {!! $data->links(data_get($setUp, 'footer.pagination'), [
+                    'recordCount' => data_get($setUp, 'footer.recordCount'),
+                ]) !!}
+            @endif
+        </footer>
+    @endif
+
     @includeIf(data_get($setUp, 'footer.includeViewOnBottom'))
 </div>
