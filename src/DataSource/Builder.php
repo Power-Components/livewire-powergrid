@@ -253,10 +253,14 @@ class Builder
 
     private function getColumnList(string $modelTable): array
     {
+        $connection = $this->query instanceof EloquentBuilder
+            ? $this->query->getModel()->getConnection()->getName()
+            : $this->query->getConnection()->getName();
+
         try {
             return PowerGridTableCache::getOrCreate(
                 $modelTable,
-                fn () => collect(Schema::getColumns($modelTable))
+                fn () => collect(Schema::connection($connection)->getColumns($modelTable))
                     ->pluck('type', 'name')
                     ->toArray()
             );
@@ -266,7 +270,7 @@ class Builder
                 'throwable' => $throwable->getTrace(),
             ]);
 
-            return Schema::getColumnListing($modelTable);
+            return Schema::connection($connection)->getColumnListing($modelTable);
         }
     }
 
