@@ -255,7 +255,8 @@ class Builder
     {
         $connection = $this->query instanceof EloquentBuilder
             ? $this->query->getModel()->getConnection()->getName()
-            : $this->query->getConnection()->getName();
+            /** @phpstan-ignore-next-line  */
+            : $this->query->getConnection()->getConfig('name');
 
         try {
             return PowerGridTableCache::getOrCreate(
