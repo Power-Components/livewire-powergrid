@@ -202,7 +202,7 @@ class DataSourceBase
                 $summarizeFormatTasks = $this->component->summarizeFormat();
 
                 if (count($summarizeFormatTasks) === 0) {
-                    data_set($column, 'summarize.' . $summarizeMethod, $value);
+                    data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
 
                     return;
                 }
