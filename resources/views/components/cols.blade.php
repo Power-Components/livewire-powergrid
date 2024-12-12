@@ -34,24 +34,30 @@
         ? data_get($this->setUp, "responsive.sortOrder.{$field}", null)
         : null;
 @endphp
-<th
-    x-data="{ sortable: @js(data_get($column, 'sortable')) }"
+<th x-data="{ sortable: @js(data_get($column, 'sortable')) }"
+    data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
-    class="{{ theme_style($theme, 'table.header.th') . ' ' . data_get($column, 'headerClass') }}"
     @if ($isFixedOnResponsive) fixed @endif
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $this->getId() }}"
-        wire:click="sortBy('{{ $field }}')" @endif
-    style="{{ data_get($column, 'hidden') === true ? 'display:none' : '' }}; width: max-content !important; @if (data_get($column, 'enableSort')) cursor:pointer; @endif {{ data_get($column, 'headerStyle') }}"
+    wire:click="sortBy('{{ $field }}')" @endif
+    @class([
+        theme_style($theme, 'table.header.th') => true,
+        data_get($column, 'headerClass') => true,
+    ])
+    @style([
+        'display:none' => data_get($column, 'hidden') === true,
+        'cursor:pointer' => data_get($column, 'enableSort'),
+        data_get($column, 'headerStyle') => filled(data_get($column, 'headerStyle')),
+        'width: max-content !important',
+    ])
 >
-    <div
-        class="{{ theme_style($theme, 'cols.div') }}"
-    >
+    <div class="{{ theme_style($theme, 'cols.div') }}">
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
             <x-dynamic-component
-                component="{{ $this->sortIcon($field) }}"
-                width="16"
+                    component="{{ $this->sortIcon($field) }}"
+                    width="16"
             />
         @endif
     </div>

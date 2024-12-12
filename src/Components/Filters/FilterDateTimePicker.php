@@ -7,11 +7,13 @@ class FilterDateTimePicker extends FilterBase
 {
     public string $key = 'datetime';
 
-    public array $params = [];
+    public array $params = [
+        'enableTime' => true,
+    ];
 
     public function params(array $params): FilterDateTimePicker
     {
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
 
         return $this;
     }

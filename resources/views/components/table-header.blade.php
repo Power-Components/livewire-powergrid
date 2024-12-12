@@ -8,7 +8,7 @@
     @endif
     @foreach ($this->visibleColumns as $column)
         <td class="{{ theme_style($theme, 'table.body.tdSummarize') . ' '.data_get($column, 'bodyClass') ?? '' }}"
-            style="{{ data_get($column, 'hidden') === true ? 'display:none': '' }}; {{ data_get($column, 'bodyStyle') ?? ''  }}">
+            style="{{ data_get($column, 'hidden') === true ? 'display:none;': '' }} {{ data_get($column, 'bodyStyle') ?? ''  }}">
             @include('livewire-powergrid::components.summarize', [
                 'sum' => data_get($column, 'properties.summarize.sum.header') ? data_get($column, 'properties.summarize_values.sum') : null,
                 'labelSum' => data_get($column, 'properties.summarize.sum.label'),
