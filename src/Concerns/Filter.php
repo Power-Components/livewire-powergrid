@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use DateTimeZone;
-use Illuminate\Support\{Arr, Carbon, Collection};
+use Illuminate\Support\{Arr, Carbon, Collection, Str};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 
@@ -117,22 +117,29 @@ trait Filter
 
         $this->resetPage();
 
-        $startDate = strval($selectedDates[0]);
-        $endDate   = strval($selectedDates[1]);
+        if (Str::contains($dateStr, 'to')) {
+            [$startDate, $endDate] = explode(' to ', $dateStr);
+        } else {
+            $startDate = strval($selectedDates[0]);
+            $endDate   = strval($selectedDates[1]);
+        }
 
         $appTimeZone = strval(config('app.timezone'));
 
         $filterTimezone = new DateTimeZone($timezone);
 
-        $startDate = Carbon::parse($startDate)->format('Y-m-d');
-        $endDate   = Carbon::parse($endDate)->format('Y-m-d');
+        $startDate = Carbon::parse($startDate)->format('Y-m-d H:i:s');
+        $endDate   = Carbon::parse($endDate)->format('Y-m-d H:i:s');
 
-        $startDate = Carbon::createFromFormat('Y-m-d', $startDate, $filterTimezone);
-        $endDate   = Carbon::createFromFormat('Y-m-d', $endDate, $filterTimezone);
+        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $startDate, $filterTimezone);
+        $endDate   = Carbon::createFromFormat('Y-m-d H:i:s', $endDate, $filterTimezone);
 
         if ($type === 'datetime') {
-            $startDate->startOfDay()->setTimeZone($appTimeZone);
-            $endDate->endOfDay()->setTimeZone($appTimeZone);
+            $endDate->setTimeZone($appTimeZone);
+
+            if ($endDate->isStartOfDay()) {
+                $endDate->endOfDay()->setTimeZone($appTimeZone);
+            }
         }
 
         $this->addEnabledFilters($field, $label);

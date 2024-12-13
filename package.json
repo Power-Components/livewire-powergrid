@@ -7,8 +7,8 @@
         "test": "tests"
     },
     "scripts": {
-        "dev": "mix watch",
-        "build": "mix --production",
+        "build": "vite build",
+        "dev": "vite build --watch",
         "blade-formatter": "blade-formatter --write resources/**/*.blade.php"
     },
     "repository": {
@@ -22,19 +22,19 @@
     },
     "homepage": "https://github.com/Power-Components/livewire-powergrid#readme",
     "dependencies": {
-        "alpinejs": "^3.14.1",
-        "laravel-mix": "^6.0.49",
-        "tom-select": "^2.3.1"
+        "alpinejs": "^3.14.7",
+        "tom-select": "^2.4.1",
+        "vite": "^6.0.3"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.20",
         "blade-formatter": "^1.41.1",
-        "cypress": "^13.13.2",
+        "cypress": "^13.16.1",
         "flatpickr": "^4.6.13",
-        "postcss": "^8.4.41",
+        "postcss": "^8.4.49",
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.77.8",
-        "sass-loader": "^14.1.1",
-        "tailwindcss": "^3.4.7"
+        "sass": "^1.82.0",
+        "sass-loader": "^16.0.4",
+        "tailwindcss": "^3.4.16"
     }
 }
