@@ -20,10 +20,10 @@
                 'labelSum' =>  data_get($column, 'properties.summarize.sum.label'),
 
                 'count' =>  data_get($column, 'properties.summarize.count.footer') ? data_get($column, 'properties.summarize_values.count') : null,
-                'labelCount' =>  data_get($column, 'properties.summarize.count.footer'),
+                'labelCount' =>  data_get($column, 'properties.summarize.count.label'),
 
                 'min' =>  data_get($column, 'properties.summarize.min.footer') ? data_get($column, 'properties.summarize_values.min') : null,
-                'labelMin' =>  data_get($column, 'properties.summarize.min.footer'),
+                'labelMin' =>  data_get($column, 'properties.summarize.min.label'),
 
                 'max' =>  data_get($column, 'properties.summarize.max.footer') ? data_get($column, 'properties.summarize_values.max') : null,
                 'labelMax' =>  data_get($column, 'properties.summarize.max.label'),
