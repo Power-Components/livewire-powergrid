@@ -10,6 +10,7 @@
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/power-components/livewire-powergrid"></a>
    </p>
    <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
+   <a href="#-online-interactive-demo" target="_blank"> 🚀 Online Demo</a> |
    <a href="#-features">🔥 Features</a> |
    <a href="#get-started">⌨️ Get started</a>
 </div>
@@ -20,12 +21,12 @@
 
 <br/>
 
-Livewire PowerGrid creates modern, powerful, easy-to-customize data tables based on [Laravel Livewire](https://laravel-livewire.com) library.
+Livewire PowerGrid creates modern, powerful and easy-to-customize data tables based on [Laravel Livewire](https://laravel-livewire.com) library.
 
-With PowerGrid, you can effortlessly create advanced data tables in a matter of minutes.
+With PowerGrid, you can effortlessly create advanced data tables one in a matter of minutes.
 
 <p>
-    <img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805">
+    <a href="https://demo.livewire-powergrid.com/examples/demo-dish" target="_blank"><img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805"></a>
 </p>
 
 `🚀` **Minimal Configuration**
@@ -39,6 +40,14 @@ Extend and customize your Table including components (checkbox, action buttons, 
 `🛠️` **Minimal Configuration**
 
 Table components include feature examples. Just uncomment some code, enter your data, and it works!
+
+<br/>
+
+## 🚀 Online Interactive Demo
+
+Take a look at our Online Interactive Demo showcasing the latest PowerGrid features. Explore the source code, and get your Data Table up and running in no time.
+
+`🌎` <a href="https://demo.livewire-powergrid.com" target="_blank">PowerGrid Online Demo</a>
 
 <br/>
 
@@ -63,7 +72,7 @@ PowerGrid offers a range of features that are readily available:
 | Queue Export for large datasets                                        | ✅                                      |
 | Responsive                                                             | ✅                                      |
 | Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
-| Multi-Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/5.x/resources/lang) |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/5.x/resources/lang) |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 
