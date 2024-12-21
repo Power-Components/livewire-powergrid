@@ -29,6 +29,9 @@ jobs:
       matrix:
         php: [8.3, 8.2 ]
         laravel: [ 11.* ]
+        include:
+          - laravel: 11.*
+            testbench: 9.*
         dependency-version: [ prefer-stable ]
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
