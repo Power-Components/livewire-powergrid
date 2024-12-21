@@ -6,12 +6,20 @@ on:
       - "**"
     paths-ignore:
       - "art/**"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
       - "README.md"
+      - "CONTRIBUTING.md"
   pull_request:
     types: [ready_for_review, synchronize, opened]
     paths-ignore:
       - "art/**"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
       - "README.md"
+      - "CONTRIBUTING.md"
 
 jobs:
   build:
