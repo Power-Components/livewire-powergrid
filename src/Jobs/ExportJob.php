@@ -15,22 +15,17 @@ class ExportJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
+    use ExportableJob;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    use ExportableJob;
 
     private array $properties;
 
-    /**
-     * @param string $componentTable
-     * @param array $columns
-     * @param array $params
-     */
     public function __construct(
         string $componentTable,
-        array  $columns,
-        array  $params
+        array $columns,
+        array $params
     ) {
         $this->columns         = $columns;
         $this->exportableClass = $params['exportableClass'];

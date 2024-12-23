@@ -105,13 +105,13 @@ trait WithExport
         $this->exportedFiles = [];
         $filters             = $processDataSource?->component?->filters ?? [];
         $queues              = collect([]);
-        $countQueue          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
-        $perPage             = $this->total > $countQueue ? ($this->total / $countQueue) : 1;
+        $queueCount          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+        $perPage             = $this->total > $queueCount ? ($this->total / $queueCount) : 1;
         $offset              = 0;
         $limit               = $perPage;
 
-        for ($i = 1; $i < ($countQueue + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
+        for ($i = 1; $i < ($queueCount + 1); $i++) {
+            $fileName = Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
                 '-' . round(($offset + 1), 2) .
                 '-' . round($limit, 2) .
                 '-' . $this->getId() .
@@ -172,7 +172,8 @@ trait WithExport
 
         if ($processDataSource->component->datasource() instanceof Collection) {
             if ($inClause) {
-                $results = $processDataSource->get(isExport: true)->whereIn($this->primaryKey, $inClause);
+                $results = $processDataSource->get(isExport: true)
+                    ->whereIn($this->primaryKey, $inClause);
 
                 return DataSourceBase::transform($results, $this);
             }

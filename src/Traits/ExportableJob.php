@@ -36,19 +36,22 @@ trait ExportableJob
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
         /** @phpstan-ignore-next-line */
-        $processDataSource = tap(ProcessDataSource::make($this->componentTable, $properties), fn ($datasource) => $datasource->get());
-
-        $inClause = $processDataSource->component->filtered ?? [];
+        $this->componentTable->filters = $this->filters ?? [];
 
         /** @phpstan-ignore-next-line */
-        $this->componentTable->filters = $this->filters ?? [];
+        $processDataSource = tap(
+            ProcessDataSource::make($this->componentTable, $properties),
+            fn ($datasource) => $datasource->get()
+        );
+
+        $inClause = $processDataSource->component->filtered ?? [];
 
         /** @phpstan-ignore-next-line */
         $currentTable = $processDataSource->component->currentTable;
 
         $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
 
-        $results = $processDataSource->prepareDataSource() // @phpstan-ignore-line
+        $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
             ->where(
                 fn ($query) => Builder::make($query, $this->componentTable)
                     ->filterContains()
@@ -57,6 +60,8 @@ trait ExportableJob
             ->when($inClause, function ($query, $inClause) use ($processDataSource) {
                 return $query->whereIn($processDataSource->component->primaryKey, $inClause);
             })
+            ->offset($this->offset)
+            ->limit($this->limit)
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
 

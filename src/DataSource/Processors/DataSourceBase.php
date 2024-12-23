@@ -133,7 +133,7 @@ class DataSourceBase
             $row  = (object) $row;
             $data = $fields->map(fn ($field) => $field($row, $index));
 
-            $rowId = data_get($row, $component->realPrimaryKey);
+            $rowId = data_get($row, $component->primaryKeyAlias ?? $component->primaryKey);
 
             if ($renderActions) {
                 try {
