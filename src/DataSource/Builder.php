@@ -39,7 +39,11 @@ class Builder
 
     public function filter(): EloquentBuilder|QueryBuilder
     {
-        $filters = collect($this->component->filters);
+        $filters = collect(
+            app()->runningInConsole()
+            ? $this->component->filters
+            : $this->component->filters()
+        );
 
         if ($filters->isEmpty()) {
             return $this->query;

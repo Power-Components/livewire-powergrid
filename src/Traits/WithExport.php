@@ -54,17 +54,19 @@ trait WithExport
 
     public function updateExportProgress(): void
     {
-        if (!is_null($this->exportBatch)) {
-            $this->batchFinished = $this->exportBatch->finished();
-            $this->batchProgress = $this->exportBatch->progress();
-            $this->batchErrors   = $this->exportBatch->hasFailures();
-
-            if ($this->batchFinished) {
-                $this->batchExporting = false;
-            }
-
-            $this->onBatchExecuting($this->exportBatch);
+        if (is_null($this->exportBatch)) {
+            return;
         }
+
+        $this->batchFinished = $this->exportBatch->finished();
+        $this->batchProgress = $this->exportBatch->progress();
+        $this->batchErrors   = $this->exportBatch->hasFailures();
+
+        if ($this->batchFinished) {
+            $this->batchExporting = false;
+        }
+
+        $this->onBatchExecuting($this->exportBatch);
     }
 
     public function downloadExport(string $file): BinaryFileResponse
