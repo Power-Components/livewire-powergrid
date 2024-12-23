@@ -106,6 +106,7 @@ trait WithExport
 
         $this->exportedFiles = [];
         $filters             = $processDataSource?->component?->filters ?? [];
+        $filtered            = $processDataSource?->component?->filtered ?? [];
         $queues              = collect([]);
         $queueCount          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
         $perPage             = $this->total > $queueCount ? ($this->total / $queueCount) : 1;
@@ -120,6 +121,7 @@ trait WithExport
                 '.' . $fileExtension;
 
             $params = [
+                'filtered'        => $filtered,
                 'exportableClass' => $exportableClass,
                 'fileName'        => $fileName,
                 'offset'          => $offset,
@@ -166,16 +168,16 @@ trait WithExport
     {
         $processDataSource = tap(ProcessDataSource::make($this), fn ($datasource) => $datasource->get());
 
-        $inClause = $processDataSource->component->filtered;
+        $filtered = $processDataSource->component->filtered;
 
         if ($selected && filled($processDataSource->component->checkboxValues)) {
-            $inClause = $processDataSource->component->checkboxValues;
+            $filtered = $processDataSource->component->checkboxValues;
         }
 
         if ($processDataSource->component->datasource() instanceof Collection) {
-            if ($inClause) {
+            if ($filtered) {
                 $results = $processDataSource->get(isExport: true)
-                    ->whereIn($this->primaryKey, $inClause);
+                    ->whereIn($this->primaryKey, $filtered);
 
                 return DataSourceBase::transform($results, $this);
             }
@@ -194,8 +196,8 @@ trait WithExport
                     ->filterContains()
                     ->filter()
             )
-            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
+            ->when($filtered, function ($query, $filtered) use ($processDataSource) {
+                return $query->whereIn($processDataSource->component->primaryKey, $filtered);
             })
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
@@ -244,10 +246,9 @@ trait WithExport
         /** @var string $fileName */
         $fileName = data_get($this->setUp, 'exportable.fileName');
         $exportable
-            ->fileName($fileName) /** @phpstan-ignore-next-line  */
+            ->fileName($fileName)
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
-        /** @phpstan-ignore-next-line  */
         return $exportable->download(
             exportOptions: $this->setUp['exportable']
         );

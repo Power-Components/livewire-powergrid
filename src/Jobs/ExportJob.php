@@ -32,6 +32,7 @@ class ExportJob implements ShouldQueue
         $this->fileName        = $params['fileName'];
         $this->offset          = $params['offset'];
         $this->limit           = $params['limit'];
+        $this->filtered        = $params['filtered'];
         $this->filters         = (array) Crypt::decrypt($params['filters']);
         $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
@@ -41,8 +42,6 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
-        $exportable = new $this->exportableClass();
-
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
 
@@ -53,7 +52,7 @@ class ExportJob implements ShouldQueue
         }, $this->componentTable->columns());
 
         /** @phpstan-ignore-next-line  */
-        $exportable
+        (new $this->exportableClass())
             ->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
             ->download([]);

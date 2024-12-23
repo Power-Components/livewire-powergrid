@@ -26,6 +26,8 @@ trait ExportableJob
 
     private array $filters;
 
+    private array $filtered;
+
     private function getFilename(): Stringable
     {
         return Str::of($this->fileName)
@@ -35,18 +37,16 @@ trait ExportableJob
 
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
-        /** @phpstan-ignore-next-line */
-        $this->componentTable->filters = $this->filters ?? [];
+        $this->componentTable->filters  = $this->filters ?? [];
+        $this->componentTable->filtered = $this->filtered ?? [];
 
-        /** @phpstan-ignore-next-line */
         $processDataSource = tap(
             ProcessDataSource::make($this->componentTable, $properties),
             fn ($datasource) => $datasource->get()
         );
 
-        $inClause = $processDataSource->component->filtered ?? [];
+        $filtered = $processDataSource->component->filtered ?? [];
 
-        /** @phpstan-ignore-next-line */
         $currentTable = $processDataSource->component->currentTable;
 
         $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
@@ -57,8 +57,8 @@ trait ExportableJob
                     ->filterContains()
                     ->filter()
             )
-            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
+            ->when($filtered, function ($query, $filtered) use ($processDataSource) {
+                return $query->whereIn($processDataSource->component->primaryKey, $filtered);
             })
             ->offset($this->offset)
             ->limit($this->limit)
