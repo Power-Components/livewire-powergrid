@@ -14,7 +14,7 @@ class Sql
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
-    public static function like(EloquentBuilder|QueryBuilder $query = null): string
+    public static function like(EloquentBuilder|QueryBuilder|null $query = null): string
     {
         if ($query) {
             /** @phpstan-ignore-next-line  */

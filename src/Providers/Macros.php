@@ -99,7 +99,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('naturalSort', function (bool $when = false, string $tableName = null) {
+        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null) {
             $this->enableSort();
 
             if ($when) {
@@ -208,7 +208,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (string $id = null) {
+        Button::macro('id', function (?string $id = null) {
             $this->attributes([
                 'id' => $id,
             ]);

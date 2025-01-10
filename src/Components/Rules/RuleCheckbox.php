@@ -9,7 +9,7 @@ class RuleCheckbox extends BaseRule
     /**
      * Sets the button's given attribute to the given value.
      */
-    public function setAttribute(string $attribute = null, string $value = null): self
+    public function setAttribute(?string $attribute = null, ?string $value = null): self
     {
         $this->setModifier('setAttribute', [
             'attribute' => $attribute,

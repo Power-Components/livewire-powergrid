@@ -16,7 +16,7 @@ final class PowerGridFields
      * @param Closure|null $closure
      * @return $this
      */
-    public function add(string $fieldName, Closure $closure = null): PowerGridFields
+    public function add(string $fieldName, ?Closure $closure = null): PowerGridFields
     {
         $this->fields[$fieldName] = $closure ?? fn ($model) => $this->valueIsString(data_get($model, $fieldName));
 
