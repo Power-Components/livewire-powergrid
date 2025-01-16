@@ -21,9 +21,6 @@ jobs:
       matrix:
         php: [ 8.3 ]
         laravel: [ 11.* ]
-        exclude:
-          - php: 8.1
-            laravel: 11.*
         dependency-version: [ prefer-stable ]
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
