@@ -19,6 +19,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
     DataSource\Support\Sql,
     PowerGridComponent,
     Support\PowerGridTableCache};
+use stdClass;
+use Throwable;
 
 class Builder
 {
@@ -147,8 +149,8 @@ class Builder
             $columnList = $this->getColumnList($modelTable);
 
             collect($this->component->columns)
-                ->filter(fn (\stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
-                ->each(function (\stdClass|array|Column $column) use ($query, $search, $columnList) {
+                ->filter(fn (stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
+                ->each(function (stdClass|array|Column $column) use ($query, $search, $columnList) {
                     $field = $this->getDataField($column);
 
                     [$table, $field] = $this->splitField($field);
@@ -163,7 +165,7 @@ class Builder
                                 $hasColumn && $table,
                                 fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
                             );
-                    } catch (\Throwable) {
+                    } catch (Throwable) {
                         $query
                             ->when(
                                 $table,
@@ -270,7 +272,7 @@ class Builder
                     ->pluck('type', 'name')
                     ->toArray()
             );
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             logger()->warning('PowerGrid [getColumnList] warning: ', [
                 'table'     => $modelTable,
                 'throwable' => $throwable->getTrace(),
@@ -280,7 +282,7 @@ class Builder
         }
     }
 
-    private function getDataField(Column|\stdClass|array $column): string
+    private function getDataField(Column|stdClass|array $column): string
     {
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }
