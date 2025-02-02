@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Exception;
 use Livewire\Attributes\On;
 
 /** @codeCoverageIgnore */
@@ -23,6 +24,9 @@ trait Listeners
         $this->onUpdatedToggleable($id, $field, $value);
     }
 
+    /**
+     * @throws Exception
+     */
     #[On('pg:toggleColumn-{tableName}')]
     public function toggleColumn(string $field): void
     {
