@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
+use Closure;
 use Illuminate\Support\{Collection};
 use Illuminate\View\ComponentAttributeBag;
 
@@ -9,7 +10,7 @@ class FilterSelect extends FilterBase
 {
     public string $key = 'select';
 
-    public array|Collection|\Closure $dataSource;
+    public array|Collection|Closure $dataSource;
 
     public string $optionValue = '';
 
@@ -28,7 +29,7 @@ class FilterSelect extends FilterBase
         return $this;
     }
 
-    public function dataSource(Collection|array|\Closure $collection): FilterSelect
+    public function dataSource(Collection|array|Closure $collection): FilterSelect
     {
         $this->dataSource = $collection;
 
@@ -63,7 +64,7 @@ class FilterSelect extends FilterBase
                 'wire:model'                     => 'filters.select.' . $field,
                 'wire:input.live.debounce.600ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
             ]))
-            ->toArray();
+            ->all();
     }
 
     public function params(array $params): FilterSelect
