@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Closure;
 
+use InvalidArgumentException;
 use Livewire\Wireable;
 
 /**
@@ -22,7 +23,7 @@ class BaseRule implements Wireable
     public function setCondition(string $condition, Closure $closure): self
     {
         if ($this->hasCondition === true) {
-            throw new \InvalidArgumentException('A rule must have only one condition.');
+            throw new InvalidArgumentException('A rule must have only one condition.');
         }
 
         $this->hasCondition = true;
