@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\{Builder, Builder as EloquentBuilder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
@@ -23,7 +25,7 @@ class InputText extends BuilderBase
         }
 
         if (data_get($this->filterBase, 'builder')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
 
             $closure($builder, $values);
@@ -41,6 +43,9 @@ class InputText extends BuilderBase
             $value = $value[key($value)];
         }
 
+        /**
+         * @throws Exception
+         */
         $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, mixed $value) {
             match ($selected) {
                 'is'           => $query->where($field, '=', $value),
@@ -86,7 +91,7 @@ class InputText extends BuilderBase
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'collection');
 
             return $closure($collection, $values);
@@ -117,7 +122,7 @@ class InputText extends BuilderBase
             'is_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
-                return $row->{$field} == '' || is_null($row->{$field}); // @phpstan-ignore-line
+                return $row->{$field} == '' || blank($row->{$field}); // @phpstan-ignore-line
             }),
             'is_not_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
@@ -139,12 +144,12 @@ class InputText extends BuilderBase
             default => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
-                return false !== stristr($row->{$field}, strtolower($value));
+                return stristr($row->{$field}, strtolower($value)) !== false;
             }),
         };
     }
 
-    private function builderRelation(string $relation, string $field): \Closure
+    private function builderRelation(string $relation, string $field): Closure
     {
         return function (Builder $query, array $params) use ($relation, $field) {
             $value = $params['value'];
