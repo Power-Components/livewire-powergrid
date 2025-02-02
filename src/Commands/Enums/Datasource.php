@@ -20,9 +20,9 @@ enum Datasource
     public function label(): string
     {
         return match ($this) {
-            Datasource::ELOQUENT_BUILDER => "Eloquent Builder",
-            Datasource::QUERY_BUILDER    => "Query Builder",
-            Datasource::COLLECTION       => "Collection"
+            Datasource::ELOQUENT_BUILDER => 'Eloquent Builder',
+            Datasource::QUERY_BUILDER    => 'Query Builder',
+            Datasource::COLLECTION       => 'Collection'
         };
     }
 
@@ -70,7 +70,7 @@ enum Datasource
     }
 
     /**
-    * Datasource with labels for dropdown select
+     * Datasource with labels for dropdown select
      *
      * @return Collection<string,string>
      */
