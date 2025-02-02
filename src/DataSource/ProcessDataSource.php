@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorInterface;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Collection as BaseCollection;
@@ -9,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\DataSource\{Processors\CollectionProcessor
     Processors\ModelProcessor,
     Processors\ScoutBuilderProcessor};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Throwable;
 
 class ProcessDataSource
 {
@@ -23,7 +25,10 @@ class ProcessDataSource
         return new self($powerGridComponent, $properties);
     }
 
-    public function get(bool $isExport = false): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
+    /**
+     * @throws Throwable
+     */
+    public function get(bool $isExport = false): BaseCollection|LengthAwarePaginator|LengthAwarePaginatorInterface|Paginator|MorphToMany
     {
         $processors = [
             CollectionProcessor::class,
