@@ -122,7 +122,7 @@ class InputText extends BuilderBase
             'is_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
-                return $row->{$field} == '' || blank($row->{$field});
+                return blank($row->{$field});
             }),
             'is_not_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
