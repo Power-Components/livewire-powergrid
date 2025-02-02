@@ -4,9 +4,13 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules\Support;
 
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
+use JsonException;
 
 class SetAttributeRule
 {
+    /**
+     * @throws JsonException
+     */
     public function apply(array $ruleData): array
     {
         $output        = [];
