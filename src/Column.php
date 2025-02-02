@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Illuminate\Support\Traits\Macroable;
+use Livewire\Wireable;
 
 /**
  * Macros
@@ -10,7 +11,7 @@ use Illuminate\Support\Traits\Macroable;
  * @method static searchableRaw(string $sql)
  * @method static searchableJson(string $tableName) // sqlite, mysql
  */
-final class Column implements \Livewire\Wireable
+final class Column implements Wireable
 {
     use Macroable;
 
@@ -81,7 +82,7 @@ final class Column implements \Livewire\Wireable
      */
     public static function make(string $title, string $field, string $dataField = ''): self
     {
-        return (new static())
+        return (new Column())
             ->title($title)
             ->field($field, $dataField);
     }
@@ -91,7 +92,7 @@ final class Column implements \Livewire\Wireable
      */
     public static function action(string $title): self
     {
-        return (new static())
+        return (new Column())
             ->title($title)
             ->isAction()
             ->visibleInExport(false);
