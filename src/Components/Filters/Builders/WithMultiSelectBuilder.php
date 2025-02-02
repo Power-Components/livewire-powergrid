@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
+use Closure;
 use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
@@ -11,7 +12,7 @@ trait WithMultiSelectBuilder
     public function builder(Builder|QueryBuilder $builder, string $field, array|int|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
 
             $closure($builder, $values);
@@ -25,7 +26,6 @@ trait WithMultiSelectBuilder
             return;
         }
 
-        /** @var array $values */
         foreach ($values as $value) {
             if ($value === '') {
                 $empty = true;
@@ -40,7 +40,7 @@ trait WithMultiSelectBuilder
     public function collection(Collection $collection, string $field, array|int|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'collection');
 
             return $closure($collection, $values);
@@ -52,7 +52,6 @@ trait WithMultiSelectBuilder
             return $collection;
         }
 
-        /** @var array $values */
         foreach ($values as $value) {
             if ($value === '') {
                 $empty = true;
