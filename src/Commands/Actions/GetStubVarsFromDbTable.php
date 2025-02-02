@@ -83,8 +83,8 @@ class GetStubVarsFromDbTable
             $columns .= '            Column::make(\'' . $title . '\', \'' . $field . '\')' . "\n" . '                ->sortable()' . "\n" . '                ->searchable(),' . "\n\n";
         }
 
-        $columns .= "        ];";
-        $filters .= "        ];";
+        $columns .= '        ];';
+        $filters .= '        ];';
 
         return [
             'PowerGridFields' => $datasource,
