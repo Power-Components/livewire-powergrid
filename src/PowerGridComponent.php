@@ -128,7 +128,7 @@ class PowerGridComponent extends Component
             return collect();
         }
 
-        if (boolval(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
+        if (filled(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
             return $this->getRecordsFromCache();
         }
 
