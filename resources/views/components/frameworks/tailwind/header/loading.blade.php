@@ -1,6 +1,7 @@
 <div class="hidden lg:!block">
     <div
         wire:loading
+        wire:target.except="toggleDetail"
         class="mt-2 hidden"
     >
         <x-livewire-powergrid::icons.loading
