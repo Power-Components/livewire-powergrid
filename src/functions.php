@@ -21,7 +21,7 @@ if (!function_exists('powergrid_components_path')) {
     {
         return base_path(
             str(strval(config('livewire.class_namespace')))
-                 ->replace('App', 'app')
+                ->replace('App', 'app')
                 ->append(DIRECTORY_SEPARATOR . $filename)
                 ->replace('\\', '/')
                 ->replace('//', '/')
