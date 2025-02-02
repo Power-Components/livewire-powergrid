@@ -2,8 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Exception;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
+use stdClass;
 
 trait Sorting
 {
@@ -15,6 +17,9 @@ trait Sorting
 
     public array $sortArray = [];
 
+    /**
+     * @throws Exception
+     */
     public function sortBy(string $field, string $direction = 'asc'): void
     {
         if ($this->multiSort) {
@@ -87,7 +92,7 @@ trait Sorting
     public function getLabelFromColumn(string $field): string
     {
         $filter = collect($this->columns)->filter(
-            fn (Column|\stdClass|array $column) => data_get($column, 'dataField') == $field
+            fn (Column|stdClass|array $column) => data_get($column, 'dataField') == $field
         )->map(fn ($column) => (array) $column)
             ->first();
 
