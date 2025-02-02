@@ -15,17 +15,15 @@ final class AskModelName
      */
     public static function handle(): array
     {
-        {
-            while (self::$model === '') {
-                self::setModel(suggest(
-                    label: 'Select a Model or enter its Fully qualified name.',
-                    options: ListModels::handle(),
-                    required: true,
-                ));
-            }
-
-            return ['model' => self::$model, 'fqn' => self::$fqn];
+        while (self::$model === '') {
+            self::setModel(suggest(
+                label: 'Select a Model or enter its Fully qualified name.',
+                options: ListModels::handle(),
+                required: true,
+            ));
         }
+
+        return ['model' => self::$model, 'fqn' => self::$fqn];
     }
 
     private static function setModel(string $model): void
