@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Closure;
 use Illuminate\Support\Traits\Macroable;
 use Livewire\Wireable;
 
@@ -17,7 +18,7 @@ use Livewire\Wireable;
  * @method static route(string $route, array $params, string $target)
  * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
- * @method static can(bool|\Closure $allowed = true)
+ * @method static can(bool|Closure $allowed = true)
  * @method static id(string $id = null)
  * @method static confirm(string $message = 'Are you sure you want to perform this action?')
  * @method static confirmPrompt(string $message = 'Are you sure you want to perform this action?', string $confirmValue = 'Confirm')
@@ -38,7 +39,7 @@ final class Button implements Wireable
 
     public array $iconAttributes = [];
 
-    public bool | \Closure $can = true;
+    public bool|Closure $can = true;
 
     public function __construct(public string $action)
     {
