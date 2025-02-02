@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
+use stdClass;
 use Throwable;
 
 trait Checkbox
@@ -38,7 +39,7 @@ trait Checkbox
         }
 
         /** @phpstan-ignore-next-line  */
-        collect($data->items())->each(function (array|Model|\stdClass $model) {
+        collect($data->items())->each(function (array|Model|stdClass $model) {
             $value = $model->{$this->checkboxAttribute};
 
             $hide = (bool) data_get(
