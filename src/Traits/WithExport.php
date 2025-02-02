@@ -19,6 +19,7 @@ use Throwable;
 
 /**
  * @property ?Batch $exportBatch
+ *
  * @codeCoverageIgnore
  */
 trait WithExport
@@ -217,7 +218,6 @@ trait WithExport
 
     /**
      * @throws Exception | Throwable
-     *
      */
     private function export(string $exportType, bool $selected): BinaryFileResponse|bool
     {
