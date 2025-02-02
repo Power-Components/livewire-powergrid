@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use PowerComponents\LivewirePowerGrid\Column;
+use stdClass;
 
 trait ManageRow
 {
@@ -15,7 +16,7 @@ trait ManageRow
         JS);
     }
 
-    public function shouldShowEditOnClick(\stdClass|Column|array $column, mixed $row): bool
+    public function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool
     {
         $hasPermission = boolval(data_get($column, 'editable.hasPermission', false));
 
@@ -37,7 +38,7 @@ trait ManageRow
         return $hasPermission;
     }
 
-    public function shouldShowToggleable(\stdClass|Column|array $column, mixed $row): bool
+    public function shouldShowToggleable(stdClass|Column|array $column, mixed $row): bool
     {
         $showToggleable = boolval(data_get($column, 'toggleable.enabled', false));
 
