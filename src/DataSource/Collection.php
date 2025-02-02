@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
@@ -20,7 +21,7 @@ class Collection
     use InputOperators;
 
     public function __construct(
-        private BaseCollection              $collection,
+        private BaseCollection $collection,
         private readonly PowerGridComponent $powerGridComponent
     ) {
     }
@@ -32,10 +33,13 @@ class Collection
         return new Collection($collection, $powerGridComponent);
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public static function paginate(BaseCollection $results, int $pageSize): LengthAwarePaginator
     {
         $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
-        $page     = Paginator::resolveCurrentPage('page');
+        $page     = Paginator::resolveCurrentPage();
 
         $total = $results->count();
 
@@ -45,6 +49,9 @@ class Collection
         ]);
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     protected static function paginator(BaseCollection $items, int $total, int $perPage, int $currentPage, array $options): LengthAwarePaginator
     {
         /** @var LengthAwarePaginator $paginator */
