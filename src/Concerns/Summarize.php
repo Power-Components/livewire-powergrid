@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use PowerComponents\LivewirePowerGrid\Column;
+use stdClass;
 
 trait Summarize
 {
@@ -30,7 +31,7 @@ trait Summarize
     public function hasSummarizeInColumns(): bool
     {
         return collect($this->columns)
-            ->filter(function (array|\stdClass|Column $column) { // @phpstan-ignore-line
+            ->filter(function (array|stdClass|Column $column) { // @phpstan-ignore-line
                 return data_get($column, 'properties.summarize');
             })->count() > 0;
     }
