@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Support;
 
+use Exception;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
@@ -9,20 +10,20 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{SanitizeComponentName};
 use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 
 /**
-  * @property-read PowerGridStub $stub;
-  * @property-read Datasource $datasource;
-  * @property-read string $name;
-  * @property-read string $namespace
-  * @property-read string $folder
-  * @property-read string $filename
-  * @property-read string $htmlTag
-  * @property-read string $fqn
-  * @property-read string $databaseTable
-  * @property-read string $model
-  * @property-read string $modelFqn
-  * @property-read bool $autoCreateColumns
-  * @property-read bool $usesCustomStub
-  * @property-read bool $isProcessed
+ * @property-read PowerGridStub $stub;
+ * @property-read Datasource $datasource;
+ * @property-read string $name;
+ * @property-read string $namespace
+ * @property-read string $folder
+ * @property-read string $filename
+ * @property-read string $htmlTag
+ * @property-read string $fqn
+ * @property-read string $databaseTable
+ * @property-read string $model
+ * @property-read string $modelFqn
+ * @property-read bool $autoCreateColumns
+ * @property-read bool $usesCustomStub
+ * @property-read bool $isProcessed
  */
 final class PowerGridComponentMaker
 {
@@ -67,7 +68,7 @@ final class PowerGridComponentMaker
 
     public static function make(string $name): self
     {
-        return (new self($name));
+        return new self($name);
     }
 
     public function requiresDatabaseTableName(): bool
@@ -281,12 +282,15 @@ final class PowerGridComponentMaker
         return strval(config('livewire.class_namespace'));
     }
 
+    /**
+     * @throws Exception
+     */
     public function __get(string $name): mixed
     {
         if (property_exists($this, $name)) {
             return $this->$name;
         }
 
-        throw new \Exception("Attribute [{$name}] does not exist.");
+        throw new Exception("Attribute [{$name}] does not exist.");
     }
 }
