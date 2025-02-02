@@ -207,7 +207,7 @@ trait HasActions
                         [
                             'component' => data_get($bladeComponent, 'component'),
                             'params'    => new ComponentAttributeBag(
-                                array_merge((array)data_get($bladeComponent, 'params'))
+                                array_merge((array) data_get($bladeComponent, 'params'))
                             ),
                         ],
                     );
@@ -223,6 +223,6 @@ trait HasActions
                     'replaceHtml' => $html ?? '',
                 ];
             })
-            ->toArray();
+            ->all();
     }
 }
