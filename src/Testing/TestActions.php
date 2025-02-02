@@ -30,7 +30,7 @@ class TestActions
                 ->flatten(1)
                 ->first(function ($dishAction) use ($action, $icon) {
                     /** @var array $dishAction */
-                    return  $dishAction['action'] === $action && $dishAction['icon'] === $icon;
+                    return $dishAction['action'] === $action && $dishAction['icon'] === $icon;
                 });
 
             Assert::assertNotNull($actionFound, "Failed asserting that the action '$action' has the icon '$icon'.");
