@@ -2,6 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
+use ArgumentCountError;
+use Closure;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
@@ -9,13 +12,15 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\{Collection as BaseCollection, Str};
 use Illuminate\View\Concerns\ManagesLoops;
+use InvalidArgumentException;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\{Column, Concerns\SoftDeletes, ManageLoops, PowerGridComponent};
+use stdClass;
 
 class DataSourceBase
 {
-    use SoftDeletes;
     use ManagesLoops;
+    use SoftDeletes;
 
     public static float $transformTime = 0;
 
@@ -33,7 +38,7 @@ class DataSourceBase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     protected function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany $results): EloquentBuilder|QueryBuilder|MorphToMany
     {
@@ -143,7 +148,7 @@ class DataSourceBase
 
                             return [
                                 'action'         => data_get($action, 'action'),
-                                'can'            => $can instanceof \Closure ? $can($row) : $can,
+                                'can'            => $can instanceof Closure ? $can($row) : $can,
                                 'slot'           => data_get($action, 'slot'),
                                 'tag'            => data_get($action, 'tag'),
                                 'icon'           => data_get($action, 'icon'),
@@ -153,8 +158,8 @@ class DataSourceBase
                             ];
                         });
 
-                    $actionsHtml[$rowId] = $actions->toArray();
-                } catch (\ArgumentCountError $exception) {
+                    $actionsHtml[$rowId] = $actions->all();
+                } catch (ArgumentCountError $exception) {
                     static::throwArgumentCountError($exception); // @phpstan-ignore-line
                 }
             }
@@ -166,8 +171,8 @@ class DataSourceBase
                 $loopInstance->incrementLoopIndices();
             })->pipe(function ($mergedData) use ($component, $row) {
                 return $component->supportModel && $row instanceof Model // @phpstan-ignore-line
-                    ? (object) tap($row)->forceFill($mergedData->toArray()) // @phpstan-ignore-line
-                    : (object) $mergedData->toArray();
+                    ? (object) tap($row)->forceFill($mergedData->all()) // @phpstan-ignore-line
+                    : (object) $mergedData->all();
             });
         });
     }
@@ -211,7 +216,7 @@ class DataSourceBase
                     $fieldAndSummarizeMethods = explode('.', $field);
 
                     if (count($fieldAndSummarizeMethods) != 2) {
-                        throw new \InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
+                        throw new InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
                     }
 
                     $fieldName        = $fieldAndSummarizeMethods[0];
@@ -220,13 +225,13 @@ class DataSourceBase
                     $applyFormatToSummarizeMethods = str($summarizeMethods)->replaceMatches('/\s+/', '')
                         ->replace(['{', '}'], '')
                         ->explode(',')
-                        ->toArray();
+                        ->all();
 
                     if (in_array($summarizeMethod, $applyFormatToSummarizeMethods)) {
                         $formattingClosure = $this->component->summarizeFormat()[$field];
 
                         if (!is_callable($formattingClosure)) {
-                            throw new \InvalidArgumentException('Summary Formatter expects a callable function, ' . gettype($formattingClosure) . ' given instead.');
+                            throw new InvalidArgumentException('Summary Formatter expects a callable function, ' . gettype($formattingClosure) . ' given instead.');
                         }
 
                         if (in_array($fieldName, [$column->field, $column->dataField])) {
@@ -240,7 +245,7 @@ class DataSourceBase
         };
 
         $this->component->columns = collect($this->component->columns)
-            ->map(function (array|\stdClass|Column $column) use ($results, $applySummaryFormat) {
+            ->map(function (array|stdClass|Column $column) use ($results, $applySummaryFormat) {
                 $column = (object) $column;
 
                 $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
@@ -258,7 +263,10 @@ class DataSourceBase
             })->toArray();
     }
 
-    private static function throwArgumentCountError(\Exception|\ArgumentCountError $exception): void
+    /**
+     * @throws Exception
+     */
+    private static function throwArgumentCountError(Exception|ArgumentCountError $exception): void
     {
         $trace = $exception->getTrace();
 
@@ -269,7 +277,7 @@ class DataSourceBase
 
             $method = strval(data_get($trace, '1.args.0'));
 
-            throw new \Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
+            throw new Exception("ArgumentCountError - method: [{$method}] - file: [{$file}]");
         }
     }
 }
