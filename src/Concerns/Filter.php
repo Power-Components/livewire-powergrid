@@ -35,7 +35,7 @@ trait Filter
                  */
                 $extraFieldsToClear = [];
 
-                if (filled($this->filters['number'])) {
+                if (!empty($this->filters['number'])) {
                     $numberField = str($field)->beforeLast('_start')->beforeLast('_end')->append('')->toString();
 
                     if (isset($this->filters['number'][$numberField])) {
