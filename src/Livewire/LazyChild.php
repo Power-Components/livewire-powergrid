@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\Mechanisms\ComponentRegistry;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Concerns\ToggleDetail;
+use stdClass;
 
 class LazyChild extends Component
 {
@@ -69,7 +70,7 @@ class LazyChild extends Component
         return null;
     }
 
-    public function shouldShowEditOnClick(array|Column|\stdClass $column, mixed $row): bool
+    public function shouldShowEditOnClick(array|Column|stdClass $column, mixed $row): bool
     {
         /** @var string $parentComponent */
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
@@ -77,7 +78,7 @@ class LazyChild extends Component
         return app($parentComponent)->shouldShowEditOnClick($column, $row);
     }
 
-    public function shouldShowToggleable(array|Column|\stdClass $column, mixed $row): bool
+    public function shouldShowToggleable(array|Column|stdClass $column, mixed $row): bool
     {
         /** @var string $parentComponent */
         $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
