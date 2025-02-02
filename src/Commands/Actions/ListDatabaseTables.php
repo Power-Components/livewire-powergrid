@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
+use Exception;
 use Illuminate\Support\Facades\Schema;
 
 final class ListDatabaseTables
@@ -18,8 +19,8 @@ final class ListDatabaseTables
             return array_values(collect(Schema::getTables())
                 ->pluck('name')
                 ->diff(self::HIDDEN_TABLES)
-                ->toArray());
-        } catch (\Exception $e) {
+                ->all());
+        } catch (Exception) {
             return [];
         }
     }
