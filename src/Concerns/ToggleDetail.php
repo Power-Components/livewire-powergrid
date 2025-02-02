@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\{Collection as BaseCollection, Enumerable};
 use Livewire\Attributes\On;
 
 trait ToggleDetail
@@ -63,6 +63,9 @@ trait ToggleDetail
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function throwFeatureDetail(): void
     {
         if (
