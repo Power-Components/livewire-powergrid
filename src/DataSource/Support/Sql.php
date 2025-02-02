@@ -14,6 +14,9 @@ class Sql
      */
     private static array $sortStringNumberTypes = ['string', 'varchar', 'char'];
 
+    /**
+     * @throws Exception
+     */
     public static function like(EloquentBuilder|QueryBuilder|null $query = null): string
     {
         if ($query) {
@@ -146,7 +149,7 @@ class Sql
         $driverName = DB::getDriverName();
 
         if (!is_string($driverName)) {
-            throw new \Exception('Could not get Database version');
+            throw new Exception('Could not get Database version');
         }
 
         return $driverName;
@@ -160,7 +163,7 @@ class Sql
         $version = DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
 
         if (!is_string($version)) {
-            throw new \Exception('Could not get Database version');
+            throw new Exception('Could not get Database version');
         }
 
         return $version;
