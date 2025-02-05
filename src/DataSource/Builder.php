@@ -162,6 +162,7 @@ class Builder
                             ->when(
                                 $hasColumn && $table,
                                 fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
+                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%"),
                             );
                     } catch (\Throwable) {
                         $query
