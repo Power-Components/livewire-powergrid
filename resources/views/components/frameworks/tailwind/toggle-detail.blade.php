@@ -5,7 +5,7 @@
         $realPrimaryKey = $row->{$this->realPrimaryKey};
     @endphp
     <div
-        class="cursor-pointer"
+        class="cursor-pointer flex items-center"
         x-on:click.prevent="$wire.toggleDetail('{{ $realPrimaryKey }}')"
     >
         <div wire:loading wire:target="toggleDetail('{{ $realPrimaryKey }}')">
