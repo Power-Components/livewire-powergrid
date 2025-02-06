@@ -190,6 +190,7 @@ trait WithExport
         $currentTable = $processDataSource->component->currentTable;
 
         $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
+        $primaryKey = Support\Str::of($processDataSource->component->primaryKey)->contains('.') ? $processDataSource->component->primaryKey : $currentTable . '.' . $processDataSource->component->primaryKey;
 
         $results = $processDataSource->component->datasource()
             ->where(
@@ -197,8 +198,8 @@ trait WithExport
                     ->filterContains()
                     ->filter()
             )
-            ->when($filtered, function ($query, $filtered) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $filtered);
+            ->when($filtered, function ($query, $filtered) use ($primaryKey) {
+                return $query->whereIn($primaryKey, $filtered);
             })
             ->orderBy($sortField, $processDataSource->component->sortDirection)
             ->get();
