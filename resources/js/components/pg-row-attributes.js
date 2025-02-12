@@ -7,7 +7,7 @@ export default (params) => ({
     init() {
         if (this.rules) {
             Object.values(this.rules).forEach((rule) => {
-                if (rule.applyLoop || rule.apply) {
+                if ((rule.applyLoop || rule.apply) && rule?.attributes) {
                     this.attributes.push(rule.attributes)
                 }
             })
