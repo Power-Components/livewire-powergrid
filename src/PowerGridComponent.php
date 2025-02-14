@@ -258,7 +258,7 @@ class PowerGridComponent extends Component
 
     public function getPublicPropertiesDefinedInComponent(): array
     {
-        return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC))
+        return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC)) // @phpstan-ignore-line
             ->where('class', get_class($this))
             ->pluck('name')
             ->intersect(array_keys($this->all()))
