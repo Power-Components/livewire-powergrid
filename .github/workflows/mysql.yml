@@ -70,7 +70,7 @@ jobs:
 
       - name: Uninstall Larastan (until laravel 12 support)
         run: |
-          composer remove "larastan/larastan" --no-interaction --no-update
+          composer remove "larastan/larastan" --dev --no-interaction --no-update
 
       - name: Install Composer dependencies
         run: |
