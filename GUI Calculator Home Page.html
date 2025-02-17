@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            background: url('https://wallpaperaccess.com/full/237678.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        form {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #FF4500;
+            outline: none;
+        }
+
+        button {
+            padding: 12px;
+            width: 100%;
+            border: none;
+            background: #FF6347;
+            color: white;
+            border-radius: 8px;
+            cursor: not-allowed;
+            transition: background 0.3s ease;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:enabled {
+            cursor: pointer;
+            background: #FF4500;
+        }
+
+        button:enabled:hover {
+            background: #FF3300;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="loginForm" onsubmit="validateForm(event)">
+            <h1>Welcome to the Calculation World</h1>
+            <p>Please provide the required details to access the calculator.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="sapid">SapID:</label>
+                    <input type="text" id="sapid" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="course">Course:</label>
+                    <input type="text" id="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="branch">Branch:</label>
+                    <input type="text" id="branch" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="batchNo">Batch No.:</label>
+                    <input type="text" id="batchNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="studyYear">Study Year:</label>
+                    <input type="text" id="studyYear" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <button type="submit" id="accessButton" disabled>Enter Calculator</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('input', function() {
+            const name = document.getElementById('name').value;
+            const sapid = document.getElementById('sapid').value;
+            const course = document.getElementById('course').value;
+            const branch = document.getElementById('branch').value;
+            const batchNo = document.getElementById('batchNo').value;
+            const studyYear = document.getElementById('studyYear').value;
+            const email = document.getElementById('email').value;
+            const button = document.getElementById('accessButton');
+            if (name && sapid && course && branch && batchNo && studyYear && email) {
+                button.disabled = false;
+            } else {
+                button.disabled = true;
+            }
+        });
+
+        function validateForm(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            alert(`Welcome, ${name}! Access granted for ${email}.`);
+            // Navigate to calculator page here
+        }
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Login</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+    <div class="container">
+        <form id="loginForm" onsubmit="validateForm(event)">
+            <h1>Welcome to the Calculation World</h1>
+            <p>Please provide the required details to access the calculator.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="sapid">SapID:</label>
+                    <input type="text" id="sapid" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="course">Course:</label>
+                    <input type="text" id="course" required>
+                </div>
+                <div class="form-group">
+                    <label for="branch">Branch:</label>
+                    <input type="text" id="branch" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="batchNo">Batch No.:</label>
+                    <input type="text" id="batchNo" required>
+                </div>
+                <div class="form-group">
+                    <label for="studyYear">Study Year:</label>
+                    <input type="text" id="studyYear" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <button type="submit" id="accessButton" disabled>Enter Calculator</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script> <!-- Link to external JavaScript -->
+</body>
+</html>
