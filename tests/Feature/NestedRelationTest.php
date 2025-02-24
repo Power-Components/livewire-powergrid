@@ -9,9 +9,7 @@ it('searches data using nested relations', function (string $component, object $
         ->call('setTestThemeClass', $params->theme)
         ->set('search', 'Not McDonalds')
         ->assertSee('Not McDonalds');
-})->with('nested_search_themes');
-
-dataset('nested_search_themes', [
+})->with([
     'tailwind'  => [NestedRelationSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [NestedRelationSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
 ]);
