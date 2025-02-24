@@ -142,7 +142,9 @@ class Builder
 
         $search = strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
-        $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
+        $hasRelation = count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder;
+
+        $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search, $hasRelation) {
             /** @var string $modelTable */
             $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
 
@@ -150,7 +152,7 @@ class Builder
 
             collect($this->component->columns)
                 ->filter(fn (stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
-                ->each(function (stdClass|array|Column $column) use ($query, $search, $columnList) {
+                ->each(function (stdClass|array|Column $column) use ($query, $search, $columnList, $hasRelation) {
                     $field = $this->getDataField($column);
 
                     [$table, $field] = $this->splitField($field);
@@ -159,27 +161,26 @@ class Builder
 
                     $hasColumn = isset($columnList[$field]);
 
-                    try {
-                        $query
-                            ->when(
-                                $hasColumn && $table,
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%"),
-                            );
-                    } catch (Throwable) {
-                        $query
-                            ->when(
-                                $table,
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
+                    $query->when(
+                        $table,
+                        function (EloquentBuilder|QueryBuilder $query) use ($table, $field, $hasColumn, $search, $hasRelation) {
+                            if ($hasColumn) {
+                                return $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
+                            }
+
+                            return $query->when(
+                                !$hasRelation,
                                 fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
                             );
-                    }
+                        },
+                        fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
+                    );
                 });
 
             return $query;
         });
 
-        if (count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder) {
+        if ($hasRelation) {
             $this->filterRelation($search);
         }
 
