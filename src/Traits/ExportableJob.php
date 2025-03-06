@@ -62,7 +62,7 @@ trait ExportableJob
                     ->filterContains()
                     ->filter()
             )
-            ->when($filtered, function ($query, $filtered) use ($processDataSource, $property) {
+            ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
             ->offset($this->offset)
