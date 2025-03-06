@@ -45,11 +45,16 @@ trait ExportableJob
             fn ($datasource) => $datasource->get()
         );
 
-        $filtered = $processDataSource->component->filtered ?? [];
-
+        $filtered     = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
 
-        $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
+        $property = function (string $property) use ($processDataSource, $currentTable) {
+            $property = $processDataSource->component->{$property};
+
+            return Str::of($property)->contains('.')
+                ? $property
+                : $currentTable . '.' . $property;
+        };
 
         $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
             ->where(
@@ -57,12 +62,12 @@ trait ExportableJob
                     ->filterContains()
                     ->filter()
             )
-            ->when($filtered, function ($query, $filtered) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $filtered);
+            ->when($filtered, function ($query, $filtered) use ($property) {
+                return $query->whereIn($property('primaryKey'), $filtered);
             })
             ->offset($this->offset)
             ->limit($this->limit)
-            ->orderBy($sortField, $processDataSource->component->sortDirection)
+            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
         return DataSourceBase::transform($results, $this->componentTable);
