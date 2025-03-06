@@ -189,8 +189,13 @@ trait WithExport
         /** @phpstan-ignore-next-line */
         $currentTable = $processDataSource->component->currentTable;
 
-        $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
-        $primaryKey = Support\Str::of($processDataSource->component->primaryKey)->contains('.') ? $processDataSource->component->primaryKey : $currentTable . '.' . $processDataSource->component->primaryKey;
+        $property = function (string $property) use ($processDataSource, $currentTable) {
+            $property = $processDataSource->component->{$property};
+
+            return Support\Str::of($property)->contains('.')
+                ? $property
+                : $currentTable . '.' . $property;
+        };
 
         $results = $processDataSource->component->datasource()
             ->where(
@@ -198,10 +203,10 @@ trait WithExport
                     ->filterContains()
                     ->filter()
             )
-            ->when($filtered, function ($query, $filtered) use ($primaryKey) {
-                return $query->whereIn($primaryKey, $filtered);
+            ->when($filtered, function ($query, $filtered) use ($property) {
+                return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->orderBy($sortField, $processDataSource->component->sortDirection)
+            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
         return DataSourceBase::transform($results, $processDataSource->component);
