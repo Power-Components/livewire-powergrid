@@ -35,13 +35,12 @@ describe('render javascript actions attributes', () => {
 
         cy.get('[data-cy=btn-view-1]').click()
 
-        cy.wait('@requestIntercept')
+        cy.wait('@requestIntercept', { timeout: 8000 })
             .its('response.body')
             .should((response) => {
-                expect(response.components[0].effects.xjs[0])
-                    .to.deep
-                    .equal('console.log("Editing #view -  Luan")');
-        });
+                expect(response.components[0].effects.xjs[0].expression)
+                    .to.deep.equal('console.log("Editing #view -  Luan")');
+            });
     });
 
     it('can render "Edit" button and click for row 1', () => {
@@ -78,7 +77,7 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0])
+            expect(response.components[0].effects.xjs[0].expression)
                 .to.deep
                 .equal('console.log("Editing #edit -  Luan")');
         });
@@ -113,7 +112,7 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0])
+            expect(response.components[0].effects.xjs[0].expression)
                 .to.deep
                 .equal('console.log("Editing #view -  Daniel")');
         });
@@ -151,7 +150,7 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0])
+            expect(response.components[0].effects.xjs[0].expression)
                 .to.deep
                 .equal('console.log("Editing #edit -  Daniel")');
         });
