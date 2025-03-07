@@ -68,7 +68,7 @@ class Collection
 
     public function search(): BaseCollection
     {
-        $searchTerm = strtolower($this->powerGridComponent->search);
+        $searchTerm = trim(strtolower($this->powerGridComponent->search));
 
         if (empty($searchTerm)) {
             return $this->collection;

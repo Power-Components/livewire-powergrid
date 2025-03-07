@@ -140,7 +140,7 @@ class Builder
             return $this;
         }
 
-        $search            = strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $search            = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
         $hasRelationSearch = count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder;
 
         $this->query = $this->query->where(
