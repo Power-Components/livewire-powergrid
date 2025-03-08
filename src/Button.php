@@ -22,6 +22,8 @@ use Livewire\Wireable;
  * @method static id(string $id = null)
  * @method static confirm(string $message = 'Are you sure you want to perform this action?')
  * @method static confirmPrompt(string $message = 'Are you sure you want to perform this action?', string $confirmValue = 'Confirm')
+ * @method static class(string $classes)
+ * @method static disable(bool $disable = true)
  */
 final class Button implements Wireable
 {
