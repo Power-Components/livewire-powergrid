@@ -1,5 +1,7 @@
+import {defineConfig} from "vite";
+
 /** @type {import('vite').UserConfig} */
-export default {
+export default defineConfig({
     build: {
         assetsDir: '',
         manifest: true,
@@ -16,4 +18,4 @@ export default {
             },
         },
     },
-};
+});

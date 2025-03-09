@@ -19,18 +19,17 @@
   ],
   "require": {
     "php": "^8.2",
-    "livewire/livewire": "^3.5.0",
-    "laravel/prompts": "*",
-    "leuverink/asset-injector": "^2.0"
+    "livewire/livewire": "^3.6.0",
+    "laravel/prompts": "*"
   },
   "require-dev": {
     "composer/composer": "^2.7.9",
     "laravel/pint": "1.17",
     "pestphp/pest": "^2.35.1|^3.0",
     "orchestra/testbench": "^9.4|^10.0",
-    "larastan/larastan": "^2.9.8",
+    "larastan/larastan": "^3.0",
     "laradumps/laradumps": "^3.2|^4.0",
-    "laravel/scout": "^10.11.3",
+    "laravel/scout": "^10.11.3|^11.0",
     "openspout/openspout": "^4.24.5"
   },
   "suggest": {

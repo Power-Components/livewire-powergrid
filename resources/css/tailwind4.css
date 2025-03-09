@@ -1,0 +1,80 @@
+@import "tailwindcss";
+@import "./base.css";
+@import "./editable.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../src/';
+@source '../../src/Themes/Tailwind.php';
+@source '../../resources/views/**/*.php';
+
+@theme {
+    --color-pg-primary-50: #fafafa;
+    --color-pg-primary-100: #fafafa;
+    --color-pg-primary-200: #e5e5e9;
+    --color-pg-primary-300: #d4d4d4;
+    --color-pg-primary-400: #a3a3a3;
+    --color-pg-primary-500: #737373;
+    --color-pg-primary-600: #525252;
+    --color-pg-primary-700: #404040;
+    --color-pg-primary-800: #262626;
+    --color-pg-primary-900: #171717;
+    --color-pg-primary-950: #0a0a0a;
+
+    --color-primary-50: #fafafa;
+    --color-primary-100: #fafafa;
+    --color-primary-200: #e5e5e5;
+    --color-primary-300: #d4d4d4;
+    --color-primary-400: #a3a3a3;
+    --color-primary-500: #737373;
+    --color-primary-600: #525252;
+    --color-primary-700: #404040;
+    --color-primary-800: #262626;
+    --color-primary-900: #171717;
+    --color-primary-950: #0a0a0a;
+
+    --color-pg-secondary-50: #f0f9ff;
+    --color-pg-secondary-100: #e0f2fe;
+    --color-pg-secondary-200: #bae6fd;
+    --color-pg-secondary-300: #7dd3fc;
+    --color-pg-secondary-400: #38bdf8;
+    --color-pg-secondary-500: #0ea5e9;
+    --color-pg-secondary-600: #0284c7;
+    --color-pg-secondary-700: #0369a1;
+    --color-pg-secondary-800: #075985;
+    --color-pg-secondary-900: #0c4a6e;
+}
+
+.page-link {
+    @apply block bg-white text-pg-secondary-800 border-r border-gray-200 outline-none py-2 w-12 text-sm text-center
+}
+
+.page-link:last-child {
+    @apply border-0
+}
+
+.page-link:hover {
+    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+}
+
+.page-item.active .page-link {
+    @apply bg-pg-secondary-700 text-white border-pg-secondary-700
+}
+
+.page-item.disabled .page-link {
+    @apply bg-white text-gray-300 border-gray-200
+}
+
+.pg-btn-white {
+    @apply outline-none inline-flex justify-center items-center focus:ring-1 focus:ring-offset-1 bg-white
+    hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
+    text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
+}
+
+.pg-filter-container {
+    @apply py-3;
+}
+
+.pg-enabled-filters-base {
+    @apply flex items-center gap-2 my-3 md:mt-0 flex-wrap
+}

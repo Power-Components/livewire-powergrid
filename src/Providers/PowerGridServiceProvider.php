@@ -6,7 +6,6 @@ use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\{ServiceProvider};
 use Laravel\Pulse\Facades\Pulse;
-use Leuverink\AssetInjector\AssetManager;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
@@ -26,8 +25,6 @@ class PowerGridServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->shouldInjectAssets() && AssetManager::register(new InjectAssets());
-
         if ($this->app->runningInConsole()) {
             $this->commands([UpdateCommand::class]);
             $this->commands([PublishCommand::class]);
