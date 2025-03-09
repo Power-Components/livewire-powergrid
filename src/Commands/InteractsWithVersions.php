@@ -25,7 +25,7 @@ class InteractsWithVersions
      */
     public function ensureLatestVersion(): array
     {
-        $composer  = Factory::create(new NullIo(), null, false);
+        $composer  = Factory::create(new NullIo());
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         return $this->searchPackage($localRepo);
@@ -73,7 +73,7 @@ class InteractsWithVersions
 
             /** @phpstan-ignore-next-line */
             $version = collect($package['packages']['power-components/livewire-powergrid'])
-                    ->first()['version'];
+                ->first()['version'];
 
             if (!is_string($version)) {
                 throw new Exception('Error: could find PowerGrid version.');

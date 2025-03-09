@@ -3,11 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Livewire;
 
 use Illuminate\Support\Facades\{Blade, Config};
+use Laravel\Pulse\Facades\Pulse;
+use Laravel\Pulse\Livewire\Card;
 use Livewire\Attributes\Lazy;
 use PowerComponents\LivewirePowerGrid\Recorders\PowerGridPerformanceRecorder;
 
 #[Lazy]
-class PerformanceCard extends \Laravel\Pulse\Livewire\Card
+class PerformanceCard extends Card
 {
     public function render()
     {
@@ -18,7 +20,7 @@ class PerformanceCard extends \Laravel\Pulse\Livewire\Card
         $records             = collect();
 
         if (data_get($config, 'enabled')) {
-            $records = \Laravel\Pulse\Facades\Pulse::values('powergrid-performance')
+            $records = Pulse::values('powergrid-performance')
                 ->map(function ($item) {
                     /** @var array $value */
                     $value                  = json_decode($item->value, true);

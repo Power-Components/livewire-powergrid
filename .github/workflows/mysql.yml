@@ -6,12 +6,20 @@ on:
       - "**"
     paths-ignore:
       - "art/**"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
       - "README.md"
+      - "CONTRIBUTING.md"
   pull_request:
     types: [ready_for_review, synchronize, opened]
     paths-ignore:
       - "art/**"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
       - "README.md"
+      - "CONTRIBUTING.md"
 
 jobs:
   build:
@@ -30,8 +38,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.3, 8.2 ]
-        laravel: [ 11.* ]
+        php: [ 8.4, 8.3, 8.2 ]
+        laravel: [ 11.*, 12.* ]
         dependency-version: [ prefer-stable ]
 
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
@@ -59,6 +67,10 @@ jobs:
         with:
           path: $(composer config cache-files-dir)
           key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+
+      - name: Uninstall Larastan (until laravel 12 support)
+        run: |
+          composer remove "larastan/larastan" --dev --no-interaction --no-update
 
       - name: Install Composer dependencies
         run: |

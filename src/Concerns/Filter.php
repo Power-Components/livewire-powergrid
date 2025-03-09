@@ -2,7 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Closure;
 use DateTimeZone;
+use Exception;
 use Illuminate\Support\{Arr, Carbon, Collection, Str};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
@@ -19,6 +21,9 @@ trait Filter
 
     public bool $showFilters = false;
 
+    /**
+     * @throws Exception
+     */
     public function clearFilter(string $field = '', bool $emit = true): void
     {
         collect($this->filters())
@@ -28,7 +33,6 @@ trait Filter
                  * and both fields should also be cleaned.
                  * Here we verify if there are filter numbers and their fields.
                  */
-
                 $extraFieldsToClear = [];
 
                 if (!empty($this->filters['number'])) {
@@ -76,7 +80,7 @@ trait Filter
                     foreach ($extraFieldsToClear as $fieldToClear) {
                         $unset($filter, $fieldToClear, null);
                     }
-                };
+                }
             });
 
         if ($emit) {
@@ -86,6 +90,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function clearAllFilters(): void
     {
         $this->enabledFilters = [];
@@ -102,6 +109,9 @@ trait Filter
         $this->showFilters = !$this->showFilters;
     }
 
+    /**
+     * @throws Exception
+     */
     #[On('pg:datePicker-{tableName}')]
     public function datePickerChanged(
         array $selectedDates,
@@ -152,6 +162,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     #[On('pg:multiSelect-{tableName}')]
     public function multiSelectChanged(
         string $field,
@@ -173,6 +186,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterSelect(string $field, string $label): void
     {
         $this->resetPage();
@@ -190,6 +206,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterNumberStart(string $field, array $params, string $value): void
     {
         extract($params);
@@ -207,6 +226,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterNumberEnd(string $field, array $params, string $value): void
     {
         extract($params);
@@ -224,6 +246,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterBoolean(string $field, string $value, string $label): void
     {
         $this->resetPage();
@@ -239,6 +264,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterInputText(string $field, string $value, string $label = ''): void
     {
         $this->resetPage();
@@ -254,6 +282,9 @@ trait Filter
         $this->persistState('filters');
     }
 
+    /**
+     * @throws Exception
+     */
     public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
         data_set($this->filters, 'input_text_options.' . $field, $value);
@@ -299,7 +330,7 @@ trait Filter
             $this->columns = collect($this->columns)->map(function ($column) use ($filter) {
                 if (data_get($column, 'field') === data_get($filter, 'column') ||
                     data_get($column, 'dataField') === data_get($filter, 'column')) {
-                    if (data_get($filter, 'dataSource') instanceof \Closure) {
+                    if (data_get($filter, 'dataSource') instanceof Closure) {
                         $depends = (array) data_get($filter, 'depends');
                         $closure = data_get($filter, 'dataSource');
 
@@ -343,7 +374,7 @@ trait Filter
                 }
 
                 return $column;
-            })->toArray();
+            })->all();
         });
     }
 
@@ -377,8 +408,7 @@ trait Filter
     }
 
     /**
-     *
-     * @param string $prefix Prefix each field in URL
+     * @param  string  $prefix  Prefix each field in URL
      */
     protected function powerGridQueryString(string $prefix = ''): array
     {
@@ -388,11 +418,11 @@ trait Filter
 
         foreach (Arr::dot($this->filters()) as $filter) {
             $as = str($filter->field)
-                ->when(!empty($prefix), fn ($c) => $c->prepend($prefix . '_'))
+                ->when(filled($prefix), fn ($c) => $c->prepend($prefix . '_'))
                 ->replace('.', '_')
                 ->replaceMatches('/\_+/', '_');
 
-            if (!empty(request()->get($as))) {
+            if (filled(request()->get($as))) {
                 $this->addEnabledFilters($filter->field, strval($columns->get($filter->field, $filter->field)));
             }
 
@@ -420,7 +450,7 @@ trait Filter
                     'except' => '',
                 ];
 
-                if ($fieldProcessed === false && !is_null(request()->get($_start))) {
+                if (filled(request()->get($_start))) {
                     $this->addEnabledFilters($filter->field . '_start', strval($columns->get($filter->field, $filter->field)));
 
                     $fieldProcessed = true;
@@ -431,10 +461,8 @@ trait Filter
                     'except' => '',
                 ];
 
-                if ($fieldProcessed === false && !is_null(request()->get($_end))) {
+                if ($fieldProcessed === false && filled(request()->get($_end))) {
                     $this->addEnabledFilters($filter->field . '_end', strval($columns->get($filter->field, $filter->field)));
-
-                    $fieldProcessed = true;
                 }
 
                 continue;

@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use Illuminate\Support\Facades\{Cache, Cookie, Session};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /** @codeCoverageIgnore */
 trait Persist
@@ -36,7 +37,7 @@ trait Persist
             $state['columns'] = collect($this->columns)
                 ->map(fn ($column) => (object) $column)
                 ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
-                ->toArray();
+                ->all();
         }
 
         if (in_array('filters', $this->persist) || $tableItem === 'filters') {
@@ -65,7 +66,7 @@ trait Persist
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|InvalidArgumentException
      */
     private function restoreState(): void
     {
@@ -88,7 +89,7 @@ trait Persist
                 }
 
                 return (object) $column;
-            })->toArray();
+            })->all();
         }
 
         if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {

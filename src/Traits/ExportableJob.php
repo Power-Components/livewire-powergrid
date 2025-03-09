@@ -26,6 +26,8 @@ trait ExportableJob
 
     private array $filters;
 
+    private array $filtered;
+
     private function getFilename(): Stringable
     {
         return Str::of($this->fileName)
@@ -35,29 +37,37 @@ trait ExportableJob
 
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
-        /** @phpstan-ignore-next-line */
-        $processDataSource = tap(ProcessDataSource::make($this->componentTable, $properties), fn ($datasource) => $datasource->get());
+        $this->componentTable->filters  = $this->filters ?? [];
+        $this->componentTable->filtered = $this->filtered ?? [];
 
-        $inClause = $processDataSource->component->filtered ?? [];
+        $processDataSource = tap(
+            ProcessDataSource::make($this->componentTable, $properties),
+            fn ($datasource) => $datasource->get()
+        );
 
-        /** @phpstan-ignore-next-line */
-        $this->componentTable->filters = $this->filters ?? [];
-
-        /** @phpstan-ignore-next-line */
+        $filtered     = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
 
-        $sortField = Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
+        $property = function (string $property) use ($processDataSource, $currentTable) {
+            $property = $processDataSource->component->{$property};
 
-        $results = $processDataSource->prepareDataSource() // @phpstan-ignore-line
+            return Str::of($property)->contains('.')
+                ? $property
+                : $currentTable . '.' . $property;
+        };
+
+        $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
             ->where(
                 fn ($query) => Builder::make($query, $this->componentTable)
                     ->filterContains()
                     ->filter()
             )
-            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
+            ->when($filtered, function ($query, $filtered) use ($property) {
+                return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->orderBy($sortField, $processDataSource->component->sortDirection)
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
         return DataSourceBase::transform($results, $this->componentTable);

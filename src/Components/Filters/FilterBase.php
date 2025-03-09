@@ -2,15 +2,16 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
+use Closure;
 use Livewire\Wireable;
 
 class FilterBase implements Wireable
 {
     public string $className = '';
 
-    public ?\Closure $builder = null;
+    public ?Closure $builder = null;
 
-    public ?\Closure $collection = null;
+    public ?Closure $collection = null;
 
     public string $component = '';
 
@@ -31,7 +32,7 @@ class FilterBase implements Wireable
         $this->className = get_called_class();
     }
 
-    public function builder(\Closure $closure): self
+    public function builder(Closure $closure): self
     {
         $this->builder = $closure;
 
@@ -46,7 +47,7 @@ class FilterBase implements Wireable
         return $this;
     }
 
-    public function collection(\Closure $closure): self
+    public function collection(Closure $closure): self
     {
         $this->collection = $closure;
 

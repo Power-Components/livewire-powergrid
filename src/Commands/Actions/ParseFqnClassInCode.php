@@ -2,12 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
+use Exception;
+
 final class ParseFqnClassInCode
 {
     /**
      * Parse namespace from PHP source code
      * Inspired by: https://gist.github.com/ludofleury/1886076
-     * @throws \Exception
+     * @throws Exception
      */
     public static function handle(string $sourceCode): string
     {
@@ -15,6 +17,6 @@ final class ParseFqnClassInCode
             return $matches[1] . '\\' . $matches[2];
         }
 
-        throw new \Exception('could not find a FQN Class is source-code');
+        throw new Exception('could not find a FQN Class is source-code');
     }
 }

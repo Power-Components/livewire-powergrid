@@ -37,10 +37,10 @@ class Export
 
     public function prepare(Collection $data, array $columns, bool $stripTags): array
     {
-        $header = collect([]);
+        $header = collect();
 
         $data = $data->transform(function ($row) use ($columns, $header, $stripTags) {
-            $item = collect([]);
+            $item = collect();
 
             collect($columns)->each(function ($column) use ($row, $header, $item, $stripTags) {
                 /** @var Model|stdClass $row */
@@ -86,12 +86,12 @@ class Export
                 }
             });
 
-            return $item->toArray();
+            return $item->all();
         });
 
         return [
-            'headers' => $header->toArray(),
-            'rows'    => $data->toArray(),
+            'headers' => $header->all(),
+            'rows'    => $data->all(),
         ];
     }
 }

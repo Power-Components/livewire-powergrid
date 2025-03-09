@@ -19,6 +19,7 @@ use Throwable;
 
 /**
  * @property ?Batch $exportBatch
+ *
  * @codeCoverageIgnore
  */
 trait WithExport
@@ -54,17 +55,19 @@ trait WithExport
 
     public function updateExportProgress(): void
     {
-        if (!is_null($this->exportBatch)) {
-            $this->batchFinished = $this->exportBatch->finished();
-            $this->batchProgress = $this->exportBatch->progress();
-            $this->batchErrors   = $this->exportBatch->hasFailures();
-
-            if ($this->batchFinished) {
-                $this->batchExporting = false;
-            }
-
-            $this->onBatchExecuting($this->exportBatch);
+        if (is_null($this->exportBatch)) {
+            return;
         }
+
+        $this->batchFinished = $this->exportBatch->finished();
+        $this->batchProgress = $this->exportBatch->progress();
+        $this->batchErrors   = $this->exportBatch->hasFailures();
+
+        if ($this->batchFinished) {
+            $this->batchExporting = false;
+        }
+
+        $this->onBatchExecuting($this->exportBatch);
     }
 
     public function downloadExport(string $file): BinaryFileResponse
@@ -104,20 +107,22 @@ trait WithExport
 
         $this->exportedFiles = [];
         $filters             = $processDataSource?->component?->filters ?? [];
+        $filtered            = $processDataSource?->component?->filtered ?? [];
         $queues              = collect([]);
-        $countQueue          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
-        $perPage             = $this->total > $countQueue ? ($this->total / $countQueue) : 1;
+        $queueCount          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+        $perPage             = $this->total > $queueCount ? ($this->total / $queueCount) : 1;
         $offset              = 0;
         $limit               = $perPage;
 
-        for ($i = 1; $i < ($countQueue + 1); $i++) {
-            $fileName = 'powergrid-' . Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
+        for ($i = 1; $i < ($queueCount + 1); $i++) {
+            $fileName = Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
                 '-' . round(($offset + 1), 2) .
                 '-' . round($limit, 2) .
                 '-' . $this->getId() .
                 '.' . $fileExtension;
 
             $params = [
+                'filtered'        => $filtered,
                 'exportableClass' => $exportableClass,
                 'fileName'        => $fileName,
                 'offset'          => $offset,
@@ -164,15 +169,16 @@ trait WithExport
     {
         $processDataSource = tap(ProcessDataSource::make($this), fn ($datasource) => $datasource->get());
 
-        $inClause = $processDataSource->component->filtered;
+        $filtered = $processDataSource->component->filtered;
 
         if ($selected && filled($processDataSource->component->checkboxValues)) {
-            $inClause = $processDataSource->component->checkboxValues;
+            $filtered = $processDataSource->component->checkboxValues;
         }
 
         if ($processDataSource->component->datasource() instanceof Collection) {
-            if ($inClause) {
-                $results = $processDataSource->get(isExport: true)->whereIn($this->primaryKey, $inClause);
+            if ($filtered) {
+                $results = $processDataSource->get(isExport: true)
+                    ->whereIn($this->primaryKey, $filtered);
 
                 return DataSourceBase::transform($results, $this);
             }
@@ -183,7 +189,13 @@ trait WithExport
         /** @phpstan-ignore-next-line */
         $currentTable = $processDataSource->component->currentTable;
 
-        $sortField = Support\Str::of($processDataSource->component->sortField)->contains('.') ? $processDataSource->component->sortField : $currentTable . '.' . $processDataSource->component->sortField;
+        $property = function (string $property) use ($processDataSource, $currentTable) {
+            $property = $processDataSource->component->{$property};
+
+            return Support\Str::of($property)->contains('.')
+                ? $property
+                : $currentTable . '.' . $property;
+        };
 
         $results = $processDataSource->component->datasource()
             ->where(
@@ -191,10 +203,10 @@ trait WithExport
                     ->filterContains()
                     ->filter()
             )
-            ->when($inClause, function ($query, $inClause) use ($processDataSource) {
-                return $query->whereIn($processDataSource->component->primaryKey, $inClause);
+            ->when($filtered, function ($query, $filtered) use ($property) {
+                return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->orderBy($sortField, $processDataSource->component->sortDirection)
+            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
         return DataSourceBase::transform($results, $processDataSource->component);
@@ -212,7 +224,6 @@ trait WithExport
 
     /**
      * @throws Exception | Throwable
-     *
      */
     private function export(string $exportType, bool $selected): BinaryFileResponse|bool
     {
@@ -241,10 +252,9 @@ trait WithExport
         /** @var string $fileName */
         $fileName = data_get($this->setUp, 'exportable.fileName');
         $exportable
-            ->fileName($fileName) /** @phpstan-ignore-next-line  */
+            ->fileName($fileName)
             ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
 
-        /** @phpstan-ignore-next-line  */
         return $exportable->download(
             exportOptions: $this->setUp['exportable']
         );

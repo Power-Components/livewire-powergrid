@@ -30,14 +30,14 @@ final class PowerGridStub
         // Ensure legacy variables are properly replaced.
         // The order variables are replaced interfere in the result
         $this->content = str($this->content)
-             ->replace('{{ livewireClassNamespace }}', '{{ namespace }}')
-             ->replace('{{ subFolder }}', '')
-             ->replace('\{{ modelName }}', '{{ model }}')
-             ->replace('{{ modelName }}', '{{ modelFqn }}')
-             ->replace('{{ modelLastName }}', '{{ model }}')
-             ->replace('{{ datasource }}', '{{ PowerGridFields }}')
-             ->replace('{{ dataBaseTableName }}', '{{ databaseTableName }}')
-             ->toString();
+            ->replace('{{ livewireClassNamespace }}', '{{ namespace }}')
+            ->replace('{{ subFolder }}', '')
+            ->replace('\{{ modelName }}', '{{ model }}')
+            ->replace('{{ modelName }}', '{{ modelFqn }}')
+            ->replace('{{ modelLastName }}', '{{ model }}')
+            ->replace('{{ datasource }}', '{{ PowerGridFields }}')
+            ->replace('{{ dataBaseTableName }}', '{{ databaseTableName }}')
+            ->toString();
     }
 
     public function render(): string
@@ -50,7 +50,6 @@ final class PowerGridStub
     }
 
     /**
-     *
      * @return Collection<int, string>
      */
     public function listStubVars(): Collection
@@ -59,7 +58,6 @@ final class PowerGridStub
     }
 
     /**
-     *
      * @return Collection<string, string>
      */
     public function listVars(): Collection

@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
+use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\{Builder, Builder as EloquentBuilder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
@@ -23,7 +25,7 @@ class InputText extends BuilderBase
         }
 
         if (data_get($this->filterBase, 'builder')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
 
             $closure($builder, $values);
@@ -41,6 +43,9 @@ class InputText extends BuilderBase
             $value = $value[key($value)];
         }
 
+        /**
+         * @throws Exception
+         */
         $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, mixed $value) {
             match ($selected) {
                 'is'           => $query->where($field, '=', $value),
@@ -86,7 +91,7 @@ class InputText extends BuilderBase
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'collection');
 
             return $closure($collection, $values);
@@ -144,7 +149,7 @@ class InputText extends BuilderBase
         };
     }
 
-    private function builderRelation(string $relation, string $field): \Closure
+    private function builderRelation(string $relation, string $field): Closure
     {
         return function (Builder $query, array $params) use ($relation, $field) {
             $value = $params['value'];

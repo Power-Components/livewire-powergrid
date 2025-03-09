@@ -5,8 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Js;
-use Laravel\Scout\Builder;
 use Laravel\Scout\Contracts\PaginatesEloquentModels;
+use Laravel\Scout\{Builder, Builder as ScoutBuilder};
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleActions;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent};
@@ -99,7 +99,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('naturalSort', function (bool $when = false, string $tableName = null) {
+        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null) {
             $this->enableSort();
 
             if ($when) {
@@ -208,7 +208,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (string $id = null) {
+        Button::macro('id', function (?string $id = null) {
             $this->attributes([
                 'id' => $id,
             ]);
@@ -268,7 +268,7 @@ class Macros
 
     public static function builder(): void
     {
-        if (class_exists(\Laravel\Scout\Builder::class)) {
+        if (class_exists(ScoutBuilder::class)) {
             Builder::macro('paginateSafe', function ($perPage = null, $pageName = 'page', $page = null) {
                 $engine = $this->engine(); // @phpstan-ignore-line
 

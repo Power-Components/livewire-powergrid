@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands;
 
+use Composer\Factory;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,7 @@ class UpdateCommand extends Command
 
     public function handle(): int
     {
-        if (!class_exists(\Composer\Factory::class)) {
+        if (!class_exists(Factory::class)) {
             warning('UpdateCommand: You need to install composer: <info>composer require composer/composer --dev</info>');
 
             return self::SUCCESS;

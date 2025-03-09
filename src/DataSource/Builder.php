@@ -19,6 +19,8 @@ use PowerComponents\LivewirePowerGrid\{Column,
     DataSource\Support\Sql,
     PowerGridComponent,
     Support\PowerGridTableCache};
+use stdClass;
+use Throwable;
 
 class Builder
 {
@@ -39,7 +41,12 @@ class Builder
 
     public function filter(): EloquentBuilder|QueryBuilder
     {
-        $filters = collect($this->component->filters());
+        // To make it work on export, we need to use ->filters instead of filters()
+        $filters = collect(
+            app()->runningInConsole() && !app()->runningUnitTests()
+            ? $this->component->filters
+            : $this->component->filters()
+        );
 
         if ($filters->isEmpty()) {
             return $this->query;
@@ -133,45 +140,47 @@ class Builder
             return $this;
         }
 
-        $search = strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $search            = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+        $hasRelationSearch = count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder;
 
-        $this->query = $this->query->where(function (EloquentBuilder|QueryBuilder $query) use ($search) {
-            /** @var string $modelTable */
-            $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
+        $this->query = $this->query->where(
+            function (EloquentBuilder|QueryBuilder $query) use ($search, $hasRelationSearch) {
+                /** @var string $modelTable */
+                $modelTable = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
+                $columnList = $this->getColumnList($modelTable);
 
-            $columnList = $this->getColumnList($modelTable);
+                collect($this->component->columns)
+                    ->filter(fn (stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
+                    ->each(function (stdClass|array|Column $column) use ($query, $search, $columnList, $hasRelationSearch) {
+                        $field = $this->getDataField($column);
 
-            collect($this->component->columns)
-                ->filter(fn (\stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
-                ->each(function (\stdClass|array|Column $column) use ($query, $search, $columnList) {
-                    $field = $this->getDataField($column);
+                        [$table, $field] = $this->splitField($field);
 
-                    [$table, $field] = $this->splitField($field);
+                        $search = $this->getBeforeSearchMethod($field, $search);
 
-                    $search = $this->getBeforeSearchMethod($field, $search);
+                        $hasColumn = isset($columnList[$field]);
 
-                    $hasColumn = isset($columnList[$field]);
+                        $query->when(
+                            $table,
+                            function (EloquentBuilder|QueryBuilder $query) use ($table, $field, $hasColumn, $search, $hasRelationSearch) {
+                                if ($hasColumn) {
+                                    return $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
+                                }
 
-                    try {
-                        $query
-                            ->when(
-                                $hasColumn && $table,
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
-                            );
-                    } catch (\Throwable) {
-                        $query
-                            ->when(
-                                $table,
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%"),
-                                fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
-                            );
-                    }
-                });
+                                return $query->when(
+                                    !$hasRelationSearch,
+                                    fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
+                                );
+                            },
+                            fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
+                        );
+                    });
 
-            return $query;
-        });
+                return $query;
+            }
+        );
 
-        if (count($this->component->relationSearch()) && $this->query instanceof EloquentBuilder) {
+        if ($hasRelationSearch) {
             $this->filterRelation($search);
         }
 
@@ -223,7 +232,7 @@ class Builder
                         });
                     }
                 } catch (RelationNotFoundException $e) {
-                    $query->leftJoin($nestedTable, "$table.$nestedTable" . "_id", '=', "$nestedTable.id")
+                    $query->leftJoin($nestedTable, "$table.$nestedTable" . '_id', '=', "$nestedTable.id")
                         ->orWhere(function (EloquentBuilder $query) use ($nestedTable, $nestedColumns, $search) {
                             foreach ($nestedColumns as $nestedColumn) {
                                 $search = $this->getBeforeSearchMethod($nestedColumn, $search);
@@ -265,7 +274,7 @@ class Builder
                     ->pluck('type', 'name')
                     ->toArray()
             );
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             logger()->warning('PowerGrid [getColumnList] warning: ', [
                 'table'     => $modelTable,
                 'throwable' => $throwable->getTrace(),
@@ -275,7 +284,7 @@ class Builder
         }
     }
 
-    private function getDataField(Column|\stdClass|array $column): string
+    private function getDataField(Column|stdClass|array $column): string
     {
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }

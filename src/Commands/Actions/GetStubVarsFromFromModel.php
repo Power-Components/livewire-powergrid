@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
@@ -15,7 +16,7 @@ class GetStubVarsFromFromModel
      */
     public static function handle(PowerGridComponentMaker $component): array
     {
-        /** @var  \Illuminate\Database\Eloquent\Model $model*/
+        /** @var Model $model */
         $model = new $component->modelFqn();
 
         $getFillable = $model->getFillable();
@@ -106,8 +107,8 @@ class GetStubVarsFromFromModel
 
         $columns .= '            Column::action(\'Action\')' . "\n";
 
-        $columns .= "        ];";
-        $filters .= "        ];";
+        $columns .= '        ];';
+        $filters .= '        ];';
 
         return [
             'PowerGridFields' => $datasource,

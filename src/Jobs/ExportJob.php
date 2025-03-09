@@ -15,28 +15,24 @@ class ExportJob implements ShouldQueue
 {
     use Batchable;
     use Dispatchable;
+    use ExportableJob;
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    use ExportableJob;
 
     private array $properties;
 
-    /**
-     * @param string $componentTable
-     * @param array $columns
-     * @param array $params
-     */
     public function __construct(
         string $componentTable,
-        array  $columns,
-        array  $params
+        array $columns,
+        array $params
     ) {
         $this->columns         = $columns;
         $this->exportableClass = $params['exportableClass'];
         $this->fileName        = $params['fileName'];
         $this->offset          = $params['offset'];
         $this->limit           = $params['limit'];
+        $this->filtered        = $params['filtered'];
         $this->filters         = (array) Crypt::decrypt($params['filters']);
         $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
@@ -46,8 +42,6 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
-        $exportable = new $this->exportableClass();
-
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
 
@@ -58,7 +52,7 @@ class ExportJob implements ShouldQueue
         }, $this->componentTable->columns());
 
         /** @phpstan-ignore-next-line  */
-        $exportable
+        (new $this->exportableClass())
             ->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
             ->download([]);

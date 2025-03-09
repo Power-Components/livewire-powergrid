@@ -2,12 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Collection as BaseCollection;
 use PowerComponents\LivewirePowerGrid\DataSource\{Builder, DataSourceProcessorInterface};
+use Throwable;
 
 class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterface
 {
@@ -17,9 +19,9 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
     }
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function process(): BaseCollection|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Paginator|MorphToMany
+    public function process(): BaseCollection|LengthAwarePaginator|LengthAwarePaginatorInterface|Paginator|MorphToMany
     {
         $this->setCurrentTable($this->prepareDataSource());
 

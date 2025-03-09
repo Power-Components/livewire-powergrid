@@ -14,6 +14,7 @@ use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
+use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * @property-read mixed $getRecords
@@ -25,22 +26,26 @@ class PowerGridComponent extends Component
 {
     use Concerns\Base;
     use Concerns\Checkbox;
-    use Concerns\Radio;
     use Concerns\Filter;
     use Concerns\HasActions;
     use Concerns\Hooks;
     use Concerns\LazyManager;
     use Concerns\Listeners;
+    use Concerns\ManageRow;
     use Concerns\Persist;
+    use Concerns\Radio;
     use Concerns\SoftDeletes;
     use Concerns\Sorting;
     use Concerns\Summarize;
     use Concerns\ToggleDetail;
-    use Concerns\ManageRow;
     use WithPagination;
 
     public array $theme = [];
 
+    /**
+     * @throws TableNameCannotCalledDefault
+     * @throws Exception|InvalidArgumentException
+     */
     public function mount(): void
     {
         $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
@@ -80,7 +85,7 @@ class PowerGridComponent extends Component
     {
         $this->checkboxAll = false;
 
-        if ($this->hasLazyEnabled) {
+        if (!app()->runningInConsole() && $this->hasLazyEnabled) {
             $this->additionalCacheKey = uniqid();
 
             data_set($this->setUp, 'lazy.items', 0);
@@ -95,7 +100,7 @@ class PowerGridComponent extends Component
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
-        if ($this->hasLazyEnabled) {
+        if (!app()->runningInConsole() && $this->hasLazyEnabled) {
             $this->additionalCacheKey = uniqid();
 
             data_set($this->setUp, 'lazy.items', 0);
@@ -128,7 +133,7 @@ class PowerGridComponent extends Component
             return collect();
         }
 
-        if (boolval(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
+        if (filled(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
             return $this->getRecordsFromCache();
         }
 
@@ -204,6 +209,9 @@ class PowerGridComponent extends Component
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     private function throwColumnAction(): void
     {
         $hasColumnAction = collect($this->columns())
@@ -215,9 +223,12 @@ class PowerGridComponent extends Component
         }
     }
 
+    /**
+     * @throws TableNameCannotCalledDefault
+     */
     private function throwTableName(): void
     {
-        if (blank($this->tableName) || $this->tableName === "default") {
+        if (blank($this->tableName) || $this->tableName === 'default') {
             throw new TableNameCannotCalledDefault();
         }
     }
@@ -247,7 +258,7 @@ class PowerGridComponent extends Component
 
     public function getPublicPropertiesDefinedInComponent(): array
     {
-        return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC))
+        return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC)) // @phpstan-ignore-line
             ->where('class', get_class($this))
             ->pluck('name')
             ->intersect(array_keys($this->all()))

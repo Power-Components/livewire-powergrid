@@ -11,6 +11,7 @@ final class AskDatabaseTableName
     public static function handle(): string
     {
         $tableExists = false;
+        $tableName   = '';
 
         while (!$tableExists) {
             $tableName = suggest(

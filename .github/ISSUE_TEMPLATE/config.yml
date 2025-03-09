@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Bug Report
+    url: https://github.com/Power-Components/livewire-powergrid/discussions/new?category=bug
+    about: Submit a bug or an issue
   - name: Ask a question
     url: https://github.com/Power-Components/livewire-powergrid/discussions/new?category=q-a
     about: Ask the community for help

@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
 
+use Closure;
 use Illuminate\Database\Eloquent\{Builder};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
@@ -14,7 +15,7 @@ class Number extends BuilderBase
         $decimal   = data_get($this->filterBase, 'decimal');
 
         if (data_get($this->filterBase, 'builder')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'builder');
 
             $closure($builder, $values);
@@ -75,7 +76,7 @@ class Number extends BuilderBase
         $decimal   = data_get($this->filterBase, 'decimal');
 
         if (data_get($this->filterBase, 'collection')) {
-            /** @var \Closure $closure */
+            /** @var Closure $closure */
             $closure = data_get($this->filterBase, 'collection');
 
             return $closure($collection, $values);

@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\{ServiceProvider};
+use Laravel\Pulse\Facades\Pulse;
 use Leuverink\AssetInjector\AssetManager;
 use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Features\SupportTesting\Testable;
@@ -64,7 +65,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         Event::listen(MigrationsEnded::class, fn () => PowerGridTableCache::forgetAll());
 
-        if (class_exists(\Laravel\Pulse\Facades\Pulse::class)) {
+        if (class_exists(Pulse::class)) {
             Livewire::component('powergrid-performance-card', PerformanceCard::class);
         }
 

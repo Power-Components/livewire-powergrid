@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-class NestedRelationSearchTable extends PowerGridComponent
+class RelationSearchTable extends PowerGridComponent
 {
     public string $tableName = 'testing-nested-relation-search-table';
 
@@ -25,14 +25,7 @@ class NestedRelationSearchTable extends PowerGridComponent
 
     public function query(): Builder
     {
-        return Dish::query()
-            ->join('chefs', function ($chefs) {
-                $chefs->on('dishes.chef_id', '=', 'chefs.id');
-            })
-            ->join('restaurants', function ($restaurants) {
-                $restaurants->on('chefs.restaurant_id', '=', 'restaurants.id');
-            })
-            ->select('dishes.*', 'chefs.name as chef_name', 'restaurants.name as restaurant_name');
+        return Dish::query()->with('category');
     }
 
     public function fields(): PowerGridFields
@@ -40,15 +33,14 @@ class NestedRelationSearchTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('chef_name')
-            ->add('restaurant_name')
-            ->add('in_stock');
+            ->add('chef_name', fn ($dish) => e($dish->chef?->name))
+            ->add('category_name', fn ($dish) => e($dish->category->name));
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id')
+            Column::make('ID', 'id')
                 ->searchable()
                 ->sortable(),
 
@@ -56,20 +48,24 @@ class NestedRelationSearchTable extends PowerGridComponent
                 ->searchable()
                 ->sortable(),
 
-            Column::make('Chef', 'chef_name')
-                ->searchable()
-                ->sortable(),
+            Column::make('Category', 'category_name')
+                ->searchable(),
 
-            Column::make('Restaurant', 'restaurant_name', 'restaurants.name')
-                ->searchable()
-                ->sortable(),
+            Column::make('Chef', 'chef_name')
+                ->searchable(),
         ];
     }
 
     public function relationSearch(): array
     {
         return [
-            'chef' => ['name', 'restaurants' => ['name']],
+            'category' => [
+                'name',
+            ],
+
+            'chef' => [
+                'name',
+            ],
         ];
     }
 

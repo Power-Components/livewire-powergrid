@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\{Collection as BaseCollection, Enumerable};
 use Livewire\Attributes\On;
 
 trait ToggleDetail
@@ -44,8 +44,8 @@ trait ToggleDetail
     {
         $detailStates = (array) data_get($this->setUp, 'detail.state');
 
-        if (boolval(data_get($this->setUp, 'detail.collapseOthers'))) {
-            /** @var \Illuminate\Support\Enumerable<(int|string), (int|string)> $except */
+        if (filled(data_get($this->setUp, 'detail.collapseOthers'))) {
+            /** @var Enumerable<(int|string), (int|string)> $except */
             $except = $id;
             collect($detailStates)->except($except)
                 ->filter(fn ($state) => boolval($state))->keys()
@@ -63,6 +63,9 @@ trait ToggleDetail
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function throwFeatureDetail(): void
     {
         if (
