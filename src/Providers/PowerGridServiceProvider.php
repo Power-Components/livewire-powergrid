@@ -87,17 +87,10 @@ class PowerGridServiceProvider extends ServiceProvider
 
     private function publishConfigs(): void
     {
-        $this->loadRoutesFrom(__DIR__ . '/../routes.php');
-
         $this->publishes([
             __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path($this->packageName . '.php'),
         ], 'livewire-powergrid-config');
 
         $this->publishes([__DIR__ . '/../../resources/lang' => lang_path('vendor/' . $this->packageName)], $this->packageName . '-lang');
-    }
-
-    private function shouldInjectAssets(): bool
-    {
-        return boolval(config('livewire-powergrid.auto_inject_assets'));
     }
 }

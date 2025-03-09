@@ -139,15 +139,4 @@ return [
     'auto_discover_models_paths' => [
         app_path('Models'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Auto-Inject Assets
-    |--------------------------------------------------------------------------
-    |
-    | PowerGrid will automatically inject assets if set to "true"
-    |
-    */
-
-    'auto_inject_assets' => false,
 ];
