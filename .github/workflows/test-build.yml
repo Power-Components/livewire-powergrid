@@ -1,0 +1,33 @@
+name: Test Build
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    types: [ ready_for_review, synchronize, opened ]
+
+jobs:
+  test-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Install NPM Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Build Tailwind 4
+        run: npm run build:tailwind
