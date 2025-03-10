@@ -1,5 +1,5 @@
-@import "base.css";
-@import "editable.css";
+@import "./base.css";
+@import "./editable.css";
 
 .table .checkbox-column {
     width: 50px !important;

@@ -30,8 +30,6 @@ parameters:
 
     excludePaths:
         - './src/Components/Exports/OpenSpout/*'
-        - './src/Components/Actions/Macros.php'
-        - './src/Helpers/Actions.php'
         - './src/Livewire/PerformanceCard.php'
         - './src/Recorders/PowerGridPerformanceRecorder.php'
         - './src/Themes/Theme.php'
