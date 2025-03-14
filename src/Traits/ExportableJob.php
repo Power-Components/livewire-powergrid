@@ -68,16 +68,7 @@ trait ExportableJob
             ->offset($this->offset)
             ->limit($this->limit)
             ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
-            ->ds()
             ->get();
-
-        ds(
-            [
-                'limit'  => $this->limit,
-                'offset' => $this->offset,
-                'data'   => $results,
-            ]
-        );
 
         return DataSourceBase::transform($results, $this->componentTable);
     }
