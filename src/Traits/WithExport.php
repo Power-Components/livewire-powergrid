@@ -129,6 +129,7 @@ trait WithExport
                 'offset'          => $offset,
                 'limit'           => $perPage,
                 'filters'         => Support\Facades\Crypt::encrypt($filters),
+                'exportable'      => $processDataSource?->component->setUp['exportable'],
                 'parameters'      => Support\Facades\Crypt::encrypt($processDataSource->component->getPublicPropertiesDefinedInComponent()),
             ];
 

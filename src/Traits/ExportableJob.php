@@ -28,6 +28,8 @@ trait ExportableJob
 
     private array $filtered;
 
+    private array $exportable;
+
     private function getFilename(): Stringable
     {
         return Str::of($this->fileName)

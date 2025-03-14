@@ -33,6 +33,7 @@ class ExportJob implements ShouldQueue
         $this->offset          = $params['offset'];
         $this->limit           = $params['limit'];
         $this->filtered        = $params['filtered'];
+        $this->exportable      = $params['exportable'];
         $this->filters         = (array) Crypt::decrypt($params['filters']);
         $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
@@ -55,6 +56,6 @@ class ExportJob implements ShouldQueue
         (new $this->exportableClass())
             ->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
-            ->download([]);
+            ->download($this->exportable);
     }
 }
