@@ -110,14 +110,15 @@ trait WithExport
         $filtered            = $processDataSource?->component?->filtered ?? [];
         $queues              = collect([]);
         $queueCount          = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
-        $perPage             = $this->total > $queueCount ? ($this->total / $queueCount) : 1;
-        $offset              = 0;
-        $limit               = $perPage;
 
-        for ($i = 1; $i < ($queueCount + 1); $i++) {
+        $perPage = (int) ceil($this->total / $queueCount);
+
+        $offset = 0;
+
+        for ($i = 1; $i <= $queueCount; $i++) {
             $fileName = Str::kebab(strval(data_get($this->setUp, 'exportable.fileName'))) .
                 '-' . round(($offset + 1), 2) .
-                '-' . round($limit, 2) .
+                '-' . round(($offset + $perPage), 2) .
                 '-' . $this->getId() .
                 '.' . $fileExtension;
 
@@ -126,7 +127,7 @@ trait WithExport
                 'exportableClass' => $exportableClass,
                 'fileName'        => $fileName,
                 'offset'          => $offset,
-                'limit'           => $limit,
+                'limit'           => $perPage,
                 'filters'         => Support\Facades\Crypt::encrypt($filters),
                 'parameters'      => Support\Facades\Crypt::encrypt($processDataSource->component->getPublicPropertiesDefinedInComponent()),
             ];
@@ -139,8 +140,7 @@ trait WithExport
 
             $this->exportedFiles[] = $fileName;
 
-            $offset = $limit;
-            $limit  = $offset + $perPage;
+            $offset += $perPage;
         }
 
         return $queues;
