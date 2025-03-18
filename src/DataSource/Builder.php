@@ -160,20 +160,13 @@ class Builder
 
                         $hasColumn = isset($columnList[$field]);
 
-                        $query->when(
-                            $table,
-                            function (EloquentBuilder|QueryBuilder $query) use ($table, $field, $hasColumn, $search, $hasRelationSearch) {
-                                if ($hasColumn) {
-                                    return $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
-                                }
+                        if (empty($table)) {
+                            return $query->orWhere($field, Sql::like($query), "%{$search}%");
+                        }
 
-                                return $query->when(
-                                    !$hasRelationSearch,
-                                    fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
-                                );
-                            },
-                            fn (EloquentBuilder|QueryBuilder $query) => $query->orWhere($field, Sql::like($query), "%{$search}%")
-                        );
+                        if ($hasColumn || !$hasRelationSearch) {
+                            return $query->orWhere("{$table}.{$field}", Sql::like($query), "%{$search}%");
+                        }
                     });
 
                 return $query;
