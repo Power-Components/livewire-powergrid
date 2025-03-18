@@ -45,13 +45,15 @@ trait Checkbox
             $hide = (bool) data_get(
                 collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
                     ->where('apply', true)
+                    ->where('forAction', 'pg:checkbox')
                     ->last(),
-                'disable',
+                'hide',
             );
 
             $disable = (bool) data_get(
                 collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
                     ->where('apply', true)
+                    ->where('forAction', 'pg:checkbox')
                     ->last(),
                 'disable',
             );
