@@ -50,4 +50,13 @@
             @include(theme_style($theme, 'footer.view'))
         </div>
     </div>
+    @push('styles')
+    <!-- PowerGrid daisy style -->
+    <style>
+        [wire\:target^="toggleDetail"] svg {
+            @apply text-base-content
+        }
+    </style>
+    <!-- END PowerGrid daisy style -->
+    @endpush
 </div>
