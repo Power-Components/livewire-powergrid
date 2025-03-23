@@ -2,9 +2,6 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
-use Illuminate\Support\Js;
-use Illuminate\View\ComponentAttributeBag;
-
 class FilterNumber extends FilterBase
 {
     public string $key = 'number';
@@ -41,15 +38,8 @@ class FilterNumber extends FilterBase
 
     public static function getWireAttributes(string $field, array $filter): array
     {
-        return collect()
-            ->put('inputStartAttributes', new ComponentAttributeBag([
-                'wire:model'                     => 'filters.number.' . $field . '.start',
-                'wire:input.live.debounce.600ms' => 'filterNumberStart(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
-            ]))
-            ->put('inputEndAttributes', new ComponentAttributeBag([
-                'wire:model'                     => 'filters.number.' . $field . '.end',
-                'wire:input.live.debounce.600ms' => 'filterNumberEnd(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
-            ]))
-            ->toArray();
+        $configAttributes = config('livewire-powergrid.filter_attributes.number');
+
+        return is_callable($configAttributes) ? $configAttributes($field, $filter) : [];
     }
 }
