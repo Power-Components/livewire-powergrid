@@ -62,7 +62,7 @@ class DaisyUI extends Theme
     public function cols(): array
     {
         return [
-            'div' => 'select-none flex items-center gap-1',
+            'div' => 'select-none flex items-center gap-1 !text-base-content',
         ];
     }
 
@@ -158,9 +158,9 @@ class DaisyUI extends Theme
     public function searchBox(): array
     {
         return [
-            'input'      => 'flex items-center input w-full pl-8',
+            'input'      => 'grow',
             'iconClose'  => 'text-base-content',
-            'iconSearch' => 'text-base-content mr-2 w-5 h-5',
+            'iconSearch' => 'text-base-content grow mr-2 w-5 h-5',
         ];
     }
 }
