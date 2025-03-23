@@ -51,7 +51,7 @@ export default (params) => ({
                             if (this.store().getTextContent(this.hash)) {
                                 editableElement.textContent = this.store().getTextContent(this.hash);
                             }
-                        }, 100);
+                        }, 30);
                     }
                 );
 
@@ -61,9 +61,9 @@ export default (params) => ({
                     if (clickableElement) {
                         clickableElement.click();
                     }
-                } else {
-                    showEditable = true;
                 }
+
+                showEditable = true;
 
                 this.editableInput = `
                 <div
@@ -171,6 +171,7 @@ export default (params) => ({
     },
 
     setFocusToEnd(element) {
+        if (!element) return;
         const selection = window.getSelection();
         const range = document.createRange();
         range.selectNodeContents(element);
@@ -178,7 +179,6 @@ export default (params) => ({
 
         selection.removeAllRanges();
         selection.addRange(range);
-
         element.focus();
     }
 });
