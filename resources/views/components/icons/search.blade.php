@@ -1,5 +1,5 @@
 <svg
-    {{ $attributes->merge(['class' => 'h-5 w-5 dark:text-gray-300 text-gray-400']) }}
+    {{ $attributes->merge(['class' => 'h-5 w-5']) }}
     fill="none"
     stroke="currentColor"
     stroke-linecap="round"
