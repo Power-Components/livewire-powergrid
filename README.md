@@ -57,7 +57,7 @@ PowerGrid offers a range of features that are readily available:
 
 | Feature                                                            | PowerGrid                               |
 | :--------------------------------------------------------------------- | :-------------------------------------- |
-| Bootstrap 5 or Tailwind CSS 3x                                         | ✅                                      |
+| Bootstrap 5 or Tailwind CSS 3x/4x                                      | ✅                                      |
 | Pagination                                                             | ✅                                      |
 | Column Sorting                                                         | ✅                                      |
 | Filters & Global Search                                                | ✅                                      |
@@ -72,7 +72,7 @@ PowerGrid offers a range of features that are readily available:
 | Queue Export for large datasets                                        | ✅                                      |
 | Responsive                                                             | ✅                                      |
 | Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
-| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/5.x/resources/lang) |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/6.x/resources/lang) |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 
@@ -85,7 +85,7 @@ PowerGrid offers a range of features that are readily available:
 - PHP 8.2+
 - [Laravel 10+](https://laravel.com/docs/installation)
 - [Livewire 3.0x](https://livewire.laravel.com)
-- [Tailwind 3x](https://tailwindcss.com/docs/guides/laravel) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+- [Tailwind 3x/4x](https://tailwindcss.com) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
 
 <br/>
 
