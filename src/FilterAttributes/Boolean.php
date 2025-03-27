@@ -8,7 +8,7 @@ class Boolean
     {
         return [
             'selectAttributes' => [
-                'wire:model' => 'filters.boolean.' . $field,
+                'wire:model'                     => 'filters.boolean.' . $field,
                 'wire:input.live.debounce.600ms' => "filterBoolean('{$field}', \$event.target.value, '{$title}')",
             ],
         ];

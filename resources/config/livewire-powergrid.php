@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Js;
-use Illuminate\View\ComponentAttributeBag;
 
 return [
 

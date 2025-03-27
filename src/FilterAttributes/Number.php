@@ -8,11 +8,11 @@ class Number
     {
         return [
             'inputStartAttributes' => [
-                'wire:model' => "filters.number.{$field}.start",
+                'wire:model'                     => "filters.number.{$field}.start",
                 'wire:input.live.debounce.600ms' => "filterNumberStart('{$field}', " . json_encode($filter) . ", \$event.target.value)",
             ],
             'inputEndAttributes' => [
-                'wire:model' => "filters.number.{$field}.end",
+                'wire:model'                     => "filters.number.{$field}.end",
                 'wire:input.live.debounce.600ms' => "filterNumberEnd('{$field}', " . json_encode($filter) . ", \$event.target.value)",
             ],
         ];
