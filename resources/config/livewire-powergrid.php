@@ -112,38 +112,9 @@ return [
     */
 
     'filter_attributes' => [
-        'input_text' => function (string $field, string $title): array {
-            return [
-                'inputAttributes' => new ComponentAttributeBag([
-                    'wire:model'                     => 'filters.input_text.' . $field,
-                    'wire:input.live.debounce.600ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                ]),
-                'selectAttributes' => new ComponentAttributeBag([
-                    'wire:model'                     => 'filters.input_text_options.' . $field,
-                    'wire:input.live.debounce.600ms' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                ]),
-            ];
-        },
-        'boolean' => function (string $field, string $title): array {
-            return [
-                'selectAttributes' => new ComponentAttributeBag([
-                    'wire:input.live.debounce.600ms' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                    'wire:model'                     => 'filters.boolean.' . $field,
-                ]),
-            ];
-        },
-        'number' => function (string $field, array $filter): array {
-            return [
-                'inputStartAttributes' => new ComponentAttributeBag([
-                    'wire:model'                     => 'filters.number.' . $field . '.start',
-                    'wire:input.live.debounce.600ms' => 'filterNumberStart(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
-                ]),
-                'inputEndAttributes' => new ComponentAttributeBag([
-                    'wire:model'                     => 'filters.number.' . $field . '.end',
-                    'wire:input.live.debounce.600ms' => 'filterNumberEnd(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
-                ]),
-            ];
-        },
+        'input_text' => \PowerComponents\LivewirePowerGrid\FilterAttributes\InputText::class,
+        'boolean'    => \PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean::class,
+        'number'     => \PowerComponents\LivewirePowerGrid\FilterAttributes\Number::class,
     ],
 
     /*
