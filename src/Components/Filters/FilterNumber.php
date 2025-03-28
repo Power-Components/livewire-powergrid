@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
+use PowerComponents\LivewirePowerGrid\FilterAttributes\Number;
+
 class FilterNumber extends FilterBase
 {
     public string $key = 'number';
@@ -38,7 +40,7 @@ class FilterNumber extends FilterBase
 
     public static function getWireAttributes(string $field, array $filter): array
     {
-        $configAttributes = config('livewire-powergrid.filter_attributes.number', \PowerComponents\LivewirePowerGrid\FilterAttributes\Number::class);
+        $configAttributes = config('livewire-powergrid.filter_attributes.number', Number::class);
 
         /** @var callable $class */
         $class = new $configAttributes();

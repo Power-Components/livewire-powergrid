@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
+use PowerComponents\LivewirePowerGrid\FilterAttributes\InputText;
+
 class FilterInputText extends FilterBase
 {
     public string $key = 'input_text';
@@ -38,7 +40,7 @@ class FilterInputText extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        $configAttributes = config('livewire-powergrid.filter_attributes.input_text', \PowerComponents\LivewirePowerGrid\FilterAttributes\InputText::class);
+        $configAttributes = config('livewire-powergrid.filter_attributes.input_text', InputText::class);
 
         /** @var callable $class */
         $class = new $configAttributes();
