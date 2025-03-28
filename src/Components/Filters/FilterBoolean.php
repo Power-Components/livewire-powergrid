@@ -20,8 +20,11 @@ class FilterBoolean extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        $configAttributes = config('livewire-powergrid.filter_attributes.boolean');
+        $configAttributes = config('livewire-powergrid.filter_attributes.boolean', \PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean::class);
 
-        return is_callable($configAttributes) ? $configAttributes($field, $title) : [];
+        /** @var callable $class */
+        $class = new $configAttributes();
+
+        return $class($field, $title);
     }
 }

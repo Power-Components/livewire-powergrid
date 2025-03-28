@@ -114,6 +114,7 @@ return [
         'input_text' => \PowerComponents\LivewirePowerGrid\FilterAttributes\InputText::class,
         'boolean'    => \PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean::class,
         'number'     => \PowerComponents\LivewirePowerGrid\FilterAttributes\Number::class,
+        'select'     => \PowerComponents\LivewirePowerGrid\FilterAttributes\Select::class,
     ],
 
     /*

@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
 use Closure;
 use Illuminate\Support\{Collection};
-use Illuminate\View\ComponentAttributeBag;
 
 class FilterSelect extends FilterBase
 {
@@ -59,12 +58,12 @@ class FilterSelect extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        return collect()
-            ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:model'                     => 'filters.select.' . $field,
-                'wire:input.live.debounce.600ms' => 'filterSelect(\'' . $field . '\', \'' . $title . '\')',
-            ]))
-            ->all();
+        $configAttributes = config('livewire-powergrid.filter_attributes.select', \PowerComponents\LivewirePowerGrid\FilterAttributes\Select::class);
+
+        /** @var callable $class */
+        $class = new $configAttributes();
+
+        return $class($field, $title);
     }
 
     public function params(array $params): FilterSelect
