@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\FilterAttributes;
 
+use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 
 class Number
@@ -11,11 +12,11 @@ class Number
         return [
             'inputStartAttributes' => new ComponentAttributeBag([
                 'wire:model'                     => "filters.number.{$field}.start",
-                'wire:input.live.debounce.600ms' => "filterNumberStart('{$field}', " . json_encode($filter) . ", \$event.target.value)",
+                'wire:input.live.debounce.600ms' => 'filterNumberStart(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]),
             'inputEndAttributes' => new ComponentAttributeBag([
                 'wire:model'                     => "filters.number.{$field}.end",
-                'wire:input.live.debounce.600ms' => "filterNumberEnd('{$field}', " . json_encode($filter) . ", \$event.target.value)",
+                'wire:input.live.debounce.600ms' => 'filterNumberEnd(\'' . $field . '\', ' . Js::from($filter) . ', $event.target.value)',
             ]),
         ];
     }
