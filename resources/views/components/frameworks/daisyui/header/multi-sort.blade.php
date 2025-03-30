@@ -10,7 +10,7 @@
                     wire:key="{{ $tableName }}-multi-sort-{{ $field }}"
                     wire:click.prevent="sortBy('{{ $field }}')"
                     title="{{ __(':label :sort', ['label' => $label, 'sort' => $sort]) }}"
-                    class="badge badge-sm badge-primary"
+                    class="badge cursor-pointer badge-sm badge-primary"
                 >
                     {{ $label }}
                     @if ($sort == 'desc')

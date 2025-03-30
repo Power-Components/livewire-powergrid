@@ -2,7 +2,7 @@
 @if (count($enabledFilters))
     <div
         data-cy="enabled-filters"
-        class="pg-enabled-filters-base flex gap-2 items-center"
+        class="pg-enabled-filters-base mb-3 flex gap-2 items-center"
     >
         @if (count($enabledFilters) > 1)
             <div class="flex group items-center cursor-pointer">
