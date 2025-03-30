@@ -10,7 +10,7 @@ class DaisyUI extends Theme
     {
         return [
             'layout' => [
-                'base'      => 'p-3 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8',
+                'base'      => 'p-3 space-y-3 align-middle inline-block min-w-full w-full sm:px-6 lg:px-8',
                 'div'       => 'rounded-t-lg relative border-x border-t border-base-300',
                 'table'     => 'table table-zebra',
                 'container' => '-my-2 overflow-x-auto sm:-mx-3 lg:-mx-8',

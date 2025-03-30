@@ -2,13 +2,13 @@
 @if (count($enabledFilters))
     <div
         data-cy="enabled-filters"
-        class="pg-enabled-filters-base"
+        class="pg-enabled-filters-base flex gap-2 items-center"
     >
         @if (count($enabledFilters) > 1)
             <div class="flex group items-center cursor-pointer">
                 <span
                     wire:click.prevent="clearAllFilters"
-                    class="cursor-pointer badge badge-primary"
+                    class="cursor-pointer badge badge-neutral badge-sm"
                 >
                     {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
                     <x-livewire-powergrid::icons.x class="w-4 h-4 ml-1" />
@@ -20,12 +20,12 @@
             @isset($filter['label'])
                 <div
                     wire:key="enabled-filters-{{ $filter['field'] }}"
-                    class="flex group items-centercursor-pointer"
+                    class="flex group items-center cursor-pointer"
                 >
                     <button
                         data-cy="enabled-filters-clear-{{ $filter['field'] }}"
                         wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
-                        class="cursor-pointer badge badge-soft badge-primary badge-sm"
+                        class="cursor-pointer badge badge-primary badge-sm"
                     >
                         {{ $filter['label'] }}
                         <x-livewire-powergrid::icons.x class="w-4 h-4" />
