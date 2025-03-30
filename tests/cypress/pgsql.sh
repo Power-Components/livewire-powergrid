@@ -45,6 +45,12 @@ composer require power-components/livewire-powergrid
 # | ------------------------- |
 php artisan key:generate
 
+php artisan optimize:clear
+
+php artisan config:cache
+
+php artisan view:cache
+
 npm install
 
 npm run build
