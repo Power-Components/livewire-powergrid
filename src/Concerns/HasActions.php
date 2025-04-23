@@ -76,10 +76,6 @@ trait HasActions
 
     public function storeActionsHeaderInJSWindow(): void
     {
-        if (!method_exists($this, 'header')) {
-            return;
-        }
-
         $actionsHtml = collect($this->header())
             ->transform(function (Button $action) {
                 $can = data_get($action, 'can');
@@ -218,7 +214,7 @@ trait HasActions
                 return [
                     'action'      => data_get($rule, 'forAction'),
                     'apply'       => $apply,
-                    'column'      => $rule->column,
+                    'column'      => $rule->column, // @phpstan-ignore-line
                     'rule'        => data_get($rule, 'rule'),
                     'replaceHtml' => $html ?? '',
                 ];

@@ -34,7 +34,7 @@ final class ListModels
             ->filter()
 
             // Remove classes that do not extend an Eloquent Model
-            /** @phpstan-ignore-next-line
+            /**
              * @throws ReflectionException
              */
             ->reject(fn (string $fqnClass) => rescue(fn () => (new ReflectionClass($fqnClass))->isSubclassOf(\Illuminate\Database\Eloquent\Model::class), false) === false)

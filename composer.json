@@ -27,7 +27,7 @@
     "laravel/pint": "1.17",
     "pestphp/pest": "^2.35.1|^3.0",
     "orchestra/testbench": "^9.4|^10.0",
-    "larastan/larastan": "^2.9.8",
+    "larastan/larastan": "^2.0|^3.0",
     "laradumps/laradumps": "^3.2|^4.0",
     "laravel/scout": "^10.11.3",
     "openspout/openspout": "^4.24.5"
@@ -73,9 +73,6 @@
     ],
     "test:sqlsrv": [
       "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
-    ],
-    "test:typesense": [
-      "curl http://localhost:8108/health"
     ],
     "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
     "test:dbs": [

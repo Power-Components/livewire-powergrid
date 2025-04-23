@@ -7,7 +7,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use Illuminate\Support\Facades\Crypt;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
 /** @codeCoverageIgnore */
@@ -37,7 +36,6 @@ class ExportJob implements ShouldQueue
         $this->filters         = (array) Crypt::decrypt($params['filters']);
         $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
-        /** @var PowerGridComponent $componentTable */
         $this->componentTable = new $componentTable();
     }
 

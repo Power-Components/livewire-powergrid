@@ -37,7 +37,7 @@ class ProcessDataSource
 
         foreach ($processors as $processor) {
             /** @var DataSourceProcessorInterface $processor */
-            if ($processor::match($this->component->datasource($this->properties ?? null))) {
+            if ($processor::match($this->component->datasource($this->properties))) {
                 $instance = new $processor($this->component, $isExport);
 
                 return $instance->process(); // @phpstan-ignore-line

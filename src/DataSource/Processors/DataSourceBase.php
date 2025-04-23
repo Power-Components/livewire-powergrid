@@ -203,43 +203,41 @@ class DataSourceBase
         }
 
         $applySummaryFormat = function ($summarizeMethod, $column, $field, $value) {
-            if (method_exists($this->component, 'summarizeFormat')) {
-                $summarizeFormatTasks = $this->component->summarizeFormat();
+            $summarizeFormatTasks = $this->component->summarizeFormat();
 
-                if (count($summarizeFormatTasks) === 0) {
-                    data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
+            if (count($summarizeFormatTasks) === 0) {
+                data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
 
-                    return;
+                return;
+            }
+
+            foreach ($summarizeFormatTasks as $field => $applySummaryFormat) {
+                $fieldAndSummarizeMethods = explode('.', $field);
+
+                if (count($fieldAndSummarizeMethods) != 2) {
+                    throw new InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
                 }
 
-                foreach ($summarizeFormatTasks as $field => $applySummaryFormat) {
-                    $fieldAndSummarizeMethods = explode('.', $field);
+                $fieldName        = $fieldAndSummarizeMethods[0];
+                $summarizeMethods = $fieldAndSummarizeMethods[1];
 
-                    if (count($fieldAndSummarizeMethods) != 2) {
-                        throw new InvalidArgumentException('Summary Formatter expects key "column_name.{summarize_method}", [' . $field . '] given instead.');
+                $applyFormatToSummarizeMethods = str($summarizeMethods)->replaceMatches('/\s+/', '')
+                    ->replace(['{', '}'], '')
+                    ->explode(',')
+                    ->all();
+
+                if (in_array($summarizeMethod, $applyFormatToSummarizeMethods)) {
+                    $formattingClosure = $this->component->summarizeFormat()[$field];
+
+                    if (!is_callable($formattingClosure)) {
+                        throw new InvalidArgumentException('Summary Formatter expects a callable function, ' . gettype($formattingClosure) . ' given instead.');
                     }
 
-                    $fieldName        = $fieldAndSummarizeMethods[0];
-                    $summarizeMethods = $fieldAndSummarizeMethods[1];
-
-                    $applyFormatToSummarizeMethods = str($summarizeMethods)->replaceMatches('/\s+/', '')
-                        ->replace(['{', '}'], '')
-                        ->explode(',')
-                        ->all();
-
-                    if (in_array($summarizeMethod, $applyFormatToSummarizeMethods)) {
-                        $formattingClosure = $this->component->summarizeFormat()[$field];
-
-                        if (!is_callable($formattingClosure)) {
-                            throw new InvalidArgumentException('Summary Formatter expects a callable function, ' . gettype($formattingClosure) . ' given instead.');
-                        }
-
-                        if (in_array($fieldName, [$column->field, $column->dataField])) {
-                            $value = $formattingClosure($value);
-                        }
-
-                        data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
+                    if (in_array($fieldName, [$column->field, $column->dataField])) {
+                        $value = $formattingClosure($value);
                     }
+
+                    data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
                 }
             }
         };
