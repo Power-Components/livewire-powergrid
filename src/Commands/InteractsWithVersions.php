@@ -59,6 +59,9 @@ class InteractsWithVersions
      */
     public function getLatestVersion(): string
     {
+        /**
+         * @var callable|null $resolver
+         */
         $resolver = static::$latestVersionResolver ?? function () {
             $json = file_get_contents(
                 'https://packagist.org/p2/power-components/livewire-powergrid.json'
@@ -91,5 +94,7 @@ class InteractsWithVersions
 
             return $version;
         }
+
+        throw new Exception('Error: could find PowerGrid version.');
     }
 }

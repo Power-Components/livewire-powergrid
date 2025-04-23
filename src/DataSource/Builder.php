@@ -215,6 +215,7 @@ class Builder
                     if ($query->getRelation($nestedTable) != '') {
                         $nestedTableWithDot = $table . '.' . $nestedTable;
                         $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $query) use ($nestedTableWithDot, $nestedColumns, $search) {
+                            /** @var string $nestedColumn */
                             foreach ($nestedColumns as $nestedColumn) {
                                 $search = $this->getBeforeSearchMethod($nestedColumn, $search);
                                 $query->when(

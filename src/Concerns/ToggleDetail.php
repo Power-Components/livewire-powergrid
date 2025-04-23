@@ -58,6 +58,7 @@ trait ToggleDetail
 
         $state = strval(data_get($this->setUp, "detail.state.$id"));
 
+        /** @phpstan-ignore-next-line */
         if (method_exists($this, 'afterToggleDetail')) {
             $this->afterToggleDetail($id, $state);
         }

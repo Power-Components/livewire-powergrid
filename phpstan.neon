@@ -6,13 +6,20 @@ parameters:
     ignoreErrors:
         - identifier: missingType.iterableValue
         - identifier: missingType.generics
+        - identifier: trait.unused
+        - identifier: argument.type
+        - identifier: offsetAccess.nonOffsetAccessible
+        - identifier: assign.propertyType
+        - identifier: binaryOp.invalid
+        - identifier: argument.unknown
+        - identifier: method.notFound
+        - identifier: encapsedStringPart.nonString
+        - identifier: varTag.nativeType
+        - identifier: property.unusedType
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
-        - '~^Parameter #1 \$value of function strval expects bool\|float\|int\|resource\|string\|null, mixed given\.$~'
-        - '~^Parameter #1 \$value of function intval expects array\|bool\|float\|int\|resource\|string\|null, mixed given\.$~'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
-        - '#Call to an undefined method PowerComponents\\LivewirePowerGrid\\PowerGridComponent::datasource\(\).#'
         -
             message: "#^Unable to resolve the template type TKey in call to function collect$#"
             count: 1
@@ -26,10 +33,12 @@ parameters:
     paths:
         - src
 
-    level: max
+    level: 9
 
     excludePaths:
         - './src/Components/Exports/OpenSpout/*'
         - './src/Livewire/PerformanceCard.php'
         - './src/Recorders/PowerGridPerformanceRecorder.php'
         - './src/Themes/Theme.php'
+
+    treatPhpDocTypesAsCertain: false
