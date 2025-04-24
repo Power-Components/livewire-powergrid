@@ -42,7 +42,7 @@ Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.
         const lang = this.locale.locale;
 
         if (typeof lang !== 'undefined' && typeof flatpickr !== 'undefined') {
-            import(`flatpickr/dist/l10n/${lang}.js`)
+            import(`./flatpickr/dist/l10n/${lang}.js`)
                 .then(module => {
                     this.locale.locale = module.default[lang];
                 })
