@@ -1,5 +1,3 @@
-import flatpickr from "flatpickr";
-
 export default (params) => ({
     dataField: params.dataField,
     tableName: params.tableName,
