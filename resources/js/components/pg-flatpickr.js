@@ -1,15 +1,22 @@
+import flatpickr from "flatpickr";
+
 export default (params) => ({
     dataField: params.dataField,
     tableName: params.tableName,
     label: params.label ?? null,
-    locale: params.locale ?? 'en',
+    locale: params.locale ?? {
+        locale: 'default',
+        dateFormat: 'Y-m-d H:i',
+        time_24hr: false,
+        enableTime: true
+    },
     onlyFuture: params.onlyFuture ?? false,
     noWeekEnds: params.noWeekEnds ?? false,
     customConfig: params.customConfig ?? null,
     type: params.type,
     element: null,
     selectedDates: null,
-    init() {
+    async init() {
         if(typeof flatpickr == "undefined") {
             console.log('%c%s',
                 'color: #f59e0c; font-size: 1.2em; font-weight: bold; line-height: 1.5',
@@ -39,16 +46,10 @@ Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.
             }
         })
 
-        const lang = this.locale.locale;
-
-        if (typeof lang !== 'undefined' && typeof flatpickr !== 'undefined') {
-            import(`./flatpickr/dist/l10n/${lang}.js`)
-                .then(module => {
-                    this.locale.locale = module.default[lang];
-                })
-                .catch(err => {
-                    console.error("flatpickr l10n error", err);
-                });
+        try {
+            const localeModule = await import(`./flatpickr/dist/l10n/${this.locale.locale}.js`);
+            flatpickr.localize(localeModule.default || localeModule);
+        } catch (error) {
         }
 
         const options = this.getOptions()
