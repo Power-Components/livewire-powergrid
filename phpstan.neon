@@ -8,7 +8,6 @@ parameters:
         - identifier: missingType.generics
         - identifier: trait.unused
         - identifier: argument.type
-        - identifier: offsetAccess.nonOffsetAccessible
         - identifier: assign.propertyType
         - identifier: binaryOp.invalid
         - identifier: argument.unknown
