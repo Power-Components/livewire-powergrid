@@ -9,7 +9,7 @@ use stdClass;
 
 trait Sorting
 {
-    public string $sortField = 'id';
+    public string $sortField = '';
 
     public string $sortDirection = 'asc';
 
@@ -44,6 +44,10 @@ trait Sorting
     {
         if ($this->multiSort) {
             return $this->applySortingArray($query);
+        }
+		
+		if (empty($this->sortField)) {
+            return $query;
         }
 
         if (is_a($query, Collection::class)) {
