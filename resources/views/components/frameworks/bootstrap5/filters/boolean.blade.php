@@ -26,9 +26,10 @@
         :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
     />
 @else
-    <div
-        class="{{ theme_style($theme, 'filterBoolean.base') }}"
-    >
+    <div class="mb-2">
+        @if (!$inline)
+            <label class="form-label fw-semibold mb-1">{{ $title ?? '' }}</label>
+        @endif
         <select
             style="{{ data_get($column, 'headerStyle') }}"
             class="{{ $selectClasses }}"
