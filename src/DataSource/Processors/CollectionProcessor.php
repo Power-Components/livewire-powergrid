@@ -19,14 +19,24 @@ class CollectionProcessor extends DataSourceBase implements DataSourceProcessorI
      */
     public function process(): LengthAwarePaginator|BaseCollection
     {
-        $filters = DataSourceCollection::make(
+        $results = DataSourceCollection::make(
             new BaseCollection($this->prepareDataSource()), // @phpstan-ignore-line
             $this->component
         )
             ->filterContains()
             ->filter();
 
-        $results = $this->component->applySorting($filters);
+        if ($this->component->multiSort) {
+            $formattedSortingArray = [];
+
+            foreach ($this->component->sortArray as $sortField => $sortDirection) {
+                $formattedSortingArray[] = [$sortField, $sortDirection];
+            }
+
+            $results = $results->sortBy($formattedSortingArray);
+        } else {
+            $results = $results->sortBy($this->component->sortField, SORT_REGULAR, !(($this->component->sortDirection === 'asc')));
+        }
 
         $this->applySummaries($results);
 
