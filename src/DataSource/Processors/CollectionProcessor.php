@@ -26,16 +26,18 @@ class CollectionProcessor extends DataSourceBase implements DataSourceProcessorI
             ->filterContains()
             ->filter();
 
-        if ($this->component->multiSort) {
-            $formattedSortingArray = [];
+        if (filled($this->component->sortField)) {
+            if ($this->component->multiSort) {
+                $formattedSortingArray = [];
 
-            foreach ($this->component->sortArray as $sortField => $sortDirection) {
-                $formattedSortingArray[] = [$sortField, $sortDirection];
+                foreach ($this->component->sortArray as $sortField => $sortDirection) {
+                    $formattedSortingArray[] = [$sortField, $sortDirection];
+                }
+
+                $results = $results->sortBy($formattedSortingArray);
+            } else {
+                $results = $results->sortBy($this->component->sortField, SORT_REGULAR, !(($this->component->sortDirection === 'asc')));
             }
-
-            $results = $results->sortBy($formattedSortingArray);
-        } else {
-            $results = $results->sortBy($this->component->sortField, SORT_REGULAR, !(($this->component->sortDirection === 'asc')));
         }
 
         $this->applySummaries($results);

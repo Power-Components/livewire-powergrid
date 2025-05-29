@@ -40,9 +40,11 @@ class ModelProcessor extends DataSourceBase implements DataSourceProcessorInterf
 
         $this->applySummaries($results);
 
-        $results = $this->component->multiSort
-                    ? $this->applyMultipleSort($results)
-                    : $results->orderBy($this->makeSortField($this->component->sortField), $this->component->sortDirection);
+        if (filled($this->component->sortField)) {
+            $results = $this->component->multiSort
+                ? $this->applyMultipleSort($results)
+                : $results->orderBy($this->makeSortField($this->component->sortField), $this->component->sortDirection);
+        }
 
         $results = $this->applyPerPage($results);
 
