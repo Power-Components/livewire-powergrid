@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
 use stdClass;
 
@@ -40,23 +39,6 @@ trait Sorting
         return $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
-    public function applySorting(Collection $query): Collection
-    {
-        if ($this->multiSort) {
-            return $this->applySortingArray($query);
-        }
-
-        if (empty($this->sortField)) {
-            return $query;
-        }
-
-        if (is_a($query, Collection::class)) {
-            return $query->sortBy($this->sortField, SORT_REGULAR, !(($this->sortDirection === 'asc')));
-        }
-
-        return $query->orderBy($this->sortField, $this->sortDirection);
-    }
-
     public function sortByArray(string $field): void
     {
         if (array_key_exists($field, $this->sortArray)) {
@@ -72,25 +54,6 @@ trait Sorting
         }
 
         $this->sortArray[$field] = 'asc';
-    }
-
-    public function applySortingArray(Collection $query): Collection
-    {
-        if (is_a($query, Collection::class)) {
-            $formattedSortingArray = [];
-
-            foreach ($this->sortArray as $sortField => $sortDirection) {
-                $formattedSortingArray[] = [$sortField, $sortDirection];
-            }
-
-            return $query->sortBy($formattedSortingArray);
-        }
-
-        foreach ($this->sortArray as $sortField => $sortDirection) {
-            $query = $query->orderBy($sortField, $sortDirection);
-        }
-
-        return $query;
     }
 
     public function getLabelFromColumn(string $field): string
