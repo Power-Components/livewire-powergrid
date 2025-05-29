@@ -47,13 +47,14 @@
             :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
         />
     @else
-        <div
-            class="{{ theme_style($theme, 'filterInputText.base') }}"
-        >
-            @if ($showSelectOptions)
-                <div class="relative">
+        <div class="{{ theme_style($theme, 'filterInputText.base') }}">
+            @if (!$inline)
+                <label class="form-label fw-semibold mb-1">{{ $title }}</label>
+            @endif
+            <div class="d-flex flex-row gap-2 align-items-center">
+                @if ($showSelectOptions)
                     <select
-                        class="{{ $selectClasses }}"
+                        class="form-select form-select-sm w-auto"
                         style="{{ data_get($column, 'headerStyle') }}"
                         {{ $defaultAttributes['selectAttributes'] }}
                     >
@@ -64,9 +65,7 @@
                             >{{ trans('livewire-powergrid::datatable.input_text_options.' . $value) }}</option>
                         @endforeach
                     </select>
-                </div>
-            @endif
-            <div class="mt-1">
+                @endif
                 <input
                     wire:key="input-{{ $field }}"
                     data-id="{{ $field }}"
@@ -74,7 +73,7 @@
                         @else
                             {{ $defaultAttributes['inputAttributes'] }} @endif
                     type="text"
-                    class="{{ $inputClasses }}"
+                    class="form-control form-control-sm"
                     placeholder="{{ $placeholder }}"
                 />
             </div>

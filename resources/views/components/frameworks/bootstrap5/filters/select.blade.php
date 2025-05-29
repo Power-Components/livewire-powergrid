@@ -26,34 +26,39 @@
         :attributes="new \Illuminate\View\ComponentAttributeBag($params)"
     />
 @else
-    <div
-        class="{{ theme_style($theme, 'filterSelect.base') }}"
-    >
-        <select
-            class="{{ $filterClasses }}"
-            style="{{ data_get($column, 'headerStyle') }}"
-            {{ $defaultAttributes['selectAttributes'] }}
+    <div class="mb-2">
+        @if (!$inline)
+            <label class="form-label fw-semibold mb-1">{{ $title ?? '' }}</label>
+        @endif
+        <div
+            class="{{ theme_style($theme, 'filterSelect.base') }}"
         >
+            <select
+                class="{{ $filterClasses }}"
+                style="{{ data_get($column, 'headerStyle') }}"
+                {{ $defaultAttributes['selectAttributes'] }}
+            >
 
-            @if(!data_get($params, 'params.disableOptionAll', false))
-                <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
-            @endif
+                @if(!data_get($params, 'params.disableOptionAll', false))
+                    <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>
+                @endif
 
-            @php
-                $computedDatasource = data_get($filter, 'computedDatasource');
-                $dataSource = filled($computedDatasource)
-                    ? $this->{$computedDatasource}
-                    : data_get($filter, 'dataSource');
-            @endphp
+                @php
+                    $computedDatasource = data_get($filter, 'computedDatasource');
+                    $dataSource = filled($computedDatasource)
+                        ? $this->{$computedDatasource}
+                        : data_get($filter, 'dataSource');
+                @endphp
 
-            @foreach ($dataSource as $key => $item)
-                <option
-                    wire:key="select-{{ $tableName }}-{{ $key }}"
-                    value="{{ $item[data_get($filter, 'optionValue')] }}"
-                >
-                    {{ $item[data_get($filter, 'optionLabel')] }}
-                </option>
-            @endforeach
-        </select>
+                @foreach ($dataSource as $key => $item)
+                    <option
+                        wire:key="select-{{ $tableName }}-{{ $key }}"
+                        value="{{ $item[data_get($filter, 'optionValue')] }}"
+                    >
+                        {{ $item[data_get($filter, 'optionLabel')] }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
     </div>
 @endif
