@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Closure;
-use DateTimeZone;
 use Exception;
 use Illuminate\Support\{Arr, Carbon, Collection, Str};
 use Livewire\Attributes\On;
@@ -120,6 +119,7 @@ trait Filter
         string $label,
         string $type,
         string $timezone = 'UTC',
+        string $dateFormat = 'Y-m-d H:i',
     ): void {
         if (!isset($selectedDates[1])) {
             return;
@@ -127,37 +127,40 @@ trait Filter
 
         $this->resetPage();
 
-        if (Str::contains($dateStr, 'to')) {
-            [$startDate, $endDate] = explode(' to ', $dateStr);
-        } else {
-            $startDate = strval($selectedDates[0]);
-            $endDate   = strval($selectedDates[1]);
-        }
+        [$startRaw, $endRaw] = Str::contains($dateStr, 'to')
+            ? explode(' to ', $dateStr)
+            : [strval($selectedDates[0]), strval($selectedDates[1])];
 
-        $appTimeZone = strval(config('app.timezone'));
+        $appTimezone = config('app.timezone');
+        $isDatetime  = $type === 'datetime';
+        $hasTime     = str_contains($dateFormat, 'H');
 
-        $filterTimezone = new DateTimeZone($timezone);
+        $makeDate = function ($dateStr) use ($dateFormat, $hasTime, $appTimezone) {
+            $date = Carbon::createFromFormat($dateFormat, $dateStr, $appTimezone);
 
-        $startDate = Carbon::parse($startDate)->format('Y-m-d H:i:s');
-        $endDate   = Carbon::parse($endDate)->format('Y-m-d H:i:s');
-
-        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $startDate, $filterTimezone);
-        $endDate   = Carbon::createFromFormat('Y-m-d H:i:s', $endDate, $filterTimezone);
-
-        if ($type === 'datetime') {
-            $endDate->setTimeZone($appTimeZone);
-
-            if ($endDate->isStartOfDay()) {
-                $endDate->endOfDay()->setTimeZone($appTimeZone);
+            if (!$hasTime) {
+                $date->setTime(0, 0, 0);
             }
+
+            return $date->setTimezone($appTimezone);
+        };
+
+        $startDate = $makeDate($startRaw);
+        $endDate   = $makeDate($endRaw);
+
+        if ($isDatetime && $endDate->isStartOfDay()) {
+            $endDate->endOfDay();
+        } elseif (!$isDatetime) {
+            $endDate->endOfDay();
         }
 
         $this->addEnabledFilters($field, $label);
 
-        $this->filters[$type][$field]['start'] = $startDate->toString();
-        $this->filters[$type][$field]['end']   = $endDate->toString();
-
-        $this->filters[$type][$field]['formatted'] = $dateStr;
+        $this->filters[$type][$field] = [
+            'start'     => $startDate->toString(),
+            'end'       => $endDate->toString(),
+            'formatted' => $dateStr,
+        ];
 
         $this->persistState('filters');
     }
