@@ -3,11 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\{Collection, Collection as BaseCollection};
-use PowerComponents\LivewirePowerGrid\DataSource\{Collection as DataSourceCollection, DataSourceProcessorInterface};
+use PowerComponents\LivewirePowerGrid\DataSource\{Collection as DataSourceCollection};
 
-class CollectionProcessor extends DataSourceBase implements DataSourceProcessorInterface
+class CollectionProcessor extends DataSourceBase
 {
     public static function match(mixed $key): bool
     {
@@ -17,7 +16,7 @@ class CollectionProcessor extends DataSourceBase implements DataSourceProcessorI
     /**
      * @throws BindingResolutionException
      */
-    public function process(): LengthAwarePaginator|BaseCollection
+    public function process(): array
     {
         $results = DataSourceCollection::make(
             new BaseCollection($this->prepareDataSource()), // @phpstan-ignore-line
@@ -55,6 +54,9 @@ class CollectionProcessor extends DataSourceBase implements DataSourceProcessorI
             );
         }
 
-        return $results;
+        return [
+            'results'       => $results,
+            'transformTime' => 0,
+        ];
     }
 }

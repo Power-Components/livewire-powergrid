@@ -2,18 +2,17 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
-use Illuminate\Support\{Collection, Str, Stringable};
+use Illuminate\Support\{Str, Stringable};
 use Laravel\Scout\Builder as ScoutBuilder;
-use PowerComponents\LivewirePowerGrid\DataSource\DataSourceProcessorInterface;
 
-class ScoutBuilderProcessor extends DataSourceBase implements DataSourceProcessorInterface
+class ScoutBuilderProcessor extends DataSourceBase
 {
     public static function match(mixed $key): bool
     {
         return $key instanceof ScoutBuilder;
     }
 
-    public function process(): Collection
+    public function process(): array
     {
         /** @var ScoutBuilder $datasource */
         $datasource = $this->prepareDataSource();
@@ -41,8 +40,12 @@ class ScoutBuilderProcessor extends DataSourceBase implements DataSourceProcesso
             $this->component->total = $results->total();
         }
 
-        return $results->setCollection( // @phpstan-ignore-line
-            $this->transform($results->getCollection(), $this->component) // @phpstan-ignore-line
-        );
+        return [
+            'results' => $this->transform(
+                $results->getCollection(),
+                $this->component
+            ),
+            'transformTime' => 0,
+        ];
     }
 }

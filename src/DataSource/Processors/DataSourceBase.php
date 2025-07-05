@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\{Collection as BaseCollection, Str};
+use Illuminate\Support\{Collection as BaseCollection};
 use Illuminate\View\Concerns\ManagesLoops;
 use InvalidArgumentException;
 use Laravel\Scout\Builder as ScoutBuilder;
@@ -35,30 +35,6 @@ class DataSourceBase
     public function prepareDataSource(): mixed
     {
         return $this->component->datasource($this->component->properties ?? []);
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected function applyMultipleSort(EloquentBuilder|QueryBuilder|MorphToMany $results): EloquentBuilder|QueryBuilder|MorphToMany
-    {
-        foreach ($this->component->sortArray as $sortField => $direction) {
-            $results = $results->orderBy(
-                $this->makeSortField($sortField),
-                $direction
-            );
-        }
-
-        return $results;
-    }
-
-    protected function makeSortField(string $sortField): string
-    {
-        if (Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix) {
-            return $sortField;
-        }
-
-        return $this->component->currentTable . '.' . $sortField;
     }
 
     protected function applyPerPage(EloquentBuilder|QueryBuilder|MorphToMany|ScoutBuilder $results): LengthAwarePaginator|Paginator

@@ -9,11 +9,12 @@ use Illuminate\Support as Support;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
-use PowerComponents\LivewirePowerGrid\DataSource\Builder;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\ProcessDataSource,
-    DataSource\Processors\DataSourceBase};
+    DataSource\Processors\DataSourceBase,
+    DataSource\Processors\Handlers\FilterHandler,
+    DataSource\Processors\Handlers\GlobalSearchHandler};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -199,11 +200,10 @@ trait WithExport
         };
 
         $results = $processDataSource->component->datasource()
-            ->where(
-                fn ($query) => Builder::make($query, $this)
-                    ->filterContains()
-                    ->filter()
-            )
+            ->where(function ($query) {
+                (new GlobalSearchHandler($this))->apply($query);
+                (new FilterHandler($this))->apply($query);
+            })
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })

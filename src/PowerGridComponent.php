@@ -170,9 +170,9 @@ class PowerGridComponent extends Component
             DB::enableQueryLog();
         }
 
-        $start        = microtime(true);
-        $results      = ProcessDataSource::make($this)->get();
-        $retrieveData = round((microtime(true) - $start) * 1000);
+        $start         = microtime(true);
+        $processResult = ProcessDataSource::make($this)->get();
+        $retrieveData  = round((microtime(true) - $start) * 1000);
 
         if ($this->measurePerformance) {
             $queries = DB::getQueryLog();
@@ -186,14 +186,14 @@ class PowerGridComponent extends Component
                 new PowerGridPerformanceData(
                     $this->tableName,
                     retrieveDataInMs: $retrieveData,
-                    transformDataInMs: app(DataSourceBase::class)->transformTime(),
+                    transformDataInMs: $processResult['transformTime'],
                     queriesTimeInMs: $queriesTime,
                     queries: $queries,
                 )
             );
         }
 
-        return $results;
+        return $processResult['results'];
     }
 
     protected function getCacheKeys(): array
