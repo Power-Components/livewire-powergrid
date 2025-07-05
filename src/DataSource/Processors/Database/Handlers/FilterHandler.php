@@ -1,11 +1,17 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Handlers;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Arr;
-use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
+use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
+    DatePicker,
+    DateTimePicker,
+    InputText,
+    MultiSelect,
+    Number,
+    Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 

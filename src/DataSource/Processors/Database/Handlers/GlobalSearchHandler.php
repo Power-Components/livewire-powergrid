@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Handlers;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers;
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\{Builder as QueryBuilder, JoinClause};

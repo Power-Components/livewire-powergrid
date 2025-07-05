@@ -1,13 +1,13 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines\Database;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-class ApplySoftDeletes
+class SoftDeletes
 {
     public function __construct(protected PowerGridComponent $component)
     {

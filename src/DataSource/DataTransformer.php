@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
 use PowerComponents\LivewirePowerGrid\{ManageLoops, PowerGridComponent};
-use stdClass;
 
 final class DataTransformer
 {

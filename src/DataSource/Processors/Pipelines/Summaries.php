@@ -1,15 +1,12 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines\Database;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
-class ApplySummaries
+class Summaries
 {
     private const SUMMARIES = ['sum', 'count', 'avg', 'min', 'max'];
 
@@ -19,10 +16,6 @@ class ApplySummaries
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        if (!($query instanceof EloquentBuilder || $query instanceof MorphToMany || $query instanceof QueryBuilder)) {
-            return $next($query);
-        }
-
         if (!$this->component->hasSummarizeInColumns()) {
             return $next($query);
         }

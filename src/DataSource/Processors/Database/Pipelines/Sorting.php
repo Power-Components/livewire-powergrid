@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines\Database;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-class ApplySorting
+class Sorting
 {
     public function __construct(protected PowerGridComponent $component)
     {

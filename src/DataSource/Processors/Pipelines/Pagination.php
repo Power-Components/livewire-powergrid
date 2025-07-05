@@ -7,7 +7,7 @@ use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-class ApplyPagination
+class Pagination
 {
     public function __construct(protected PowerGridComponent $component)
     {

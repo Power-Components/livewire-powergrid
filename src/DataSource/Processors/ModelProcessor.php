@@ -4,14 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection as BaseCollection;
-use PowerComponents\LivewirePowerGrid\DataSource\{
-    DataTransformer,
-    Processors\Pipelines\ApplyPagination,
-    Processors\Pipelines\Database\ApplyColumnRawQueries,
-    Processors\Pipelines\Database\ApplyFilters,
-    Processors\Pipelines\Database\ApplySoftDeletes,
-    Processors\Pipelines\Database\ApplySorting,
-    Processors\Pipelines\Database\ApplySummaries};
+use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines as CommonPipelines;
 
 class ModelProcessor extends DataSourceBase
 {
@@ -27,18 +22,18 @@ class ModelProcessor extends DataSourceBase
         $query = app(Pipeline::class)
             ->send($this->prepareDataSource())
             ->through([
-                new ApplyFilters($this->component),
-                new ApplySoftDeletes($this->component),
-                new ApplyColumnRawQueries($this->component),
-                new ApplySummaries($this->component),
-                new ApplySorting($this->component),
+                new Pipelines\Filters($this->component),
+                new Pipelines\SoftDeletes($this->component),
+                new Pipelines\ColumnRawQueries($this->component),
+                new CommonPipelines\Summaries($this->component),
+                new Pipelines\Sorting($this->component),
             ])
             ->thenReturn();
 
         $paginate = app(Pipeline::class)
             ->send($query)
             ->through([
-                new ApplyPagination($this->component),
+                new CommonPipelines\Pagination($this->component),
             ])
             ->thenReturn();
 

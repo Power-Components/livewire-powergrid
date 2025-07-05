@@ -11,10 +11,11 @@ use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
+    DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\DataSourceBase,
-    DataSource\Processors\Handlers\FilterHandler,
-    DataSource\Processors\Handlers\GlobalSearchHandler};
+    DataSource\Processors\Database\Handlers\FilterHandler,
+    DataSource\Processors\Database\Handlers\GlobalSearchHandler};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -210,7 +211,9 @@ trait WithExport
             ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
-        return DataSourceBase::transform($results, $processDataSource->component);
+        $dataTransformer = new DataTransformer($processDataSource->component);
+
+        return $dataTransformer->transform($results)->collection;
     }
 
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
