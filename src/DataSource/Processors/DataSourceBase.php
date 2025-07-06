@@ -15,8 +15,6 @@ class DataSourceBase
     use ManagesLoops;
     use SoftDeletes;
 
-    public static float $transformTime = 0;
-
     public static array $actionsHtml = [];
 
     public function __construct(

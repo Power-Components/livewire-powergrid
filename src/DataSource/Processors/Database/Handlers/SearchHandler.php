@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use stdClass;
 use Throwable;
 
-class GlobalSearchHandler
+class SearchHandler
 {
     public function __construct(
         private readonly PowerGridComponent $component

@@ -15,7 +15,7 @@ use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\ProcessDataSource,
     DataSource\Processors\DataSourceBase,
     DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\GlobalSearchHandler};
+    DataSource\Processors\Database\Handlers\SearchHandler};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -202,7 +202,7 @@ trait WithExport
 
         $results = $processDataSource->component->datasource()
             ->where(function ($query) {
-                (new GlobalSearchHandler($this))->apply($query);
+                (new SearchHandler($this))->apply($query);
                 (new FilterHandler($this))->apply($query);
             })
             ->when($filtered, function ($query, $filtered) use ($property) {

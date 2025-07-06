@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
 use Exception;

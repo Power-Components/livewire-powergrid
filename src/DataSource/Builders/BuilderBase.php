@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Livewire\Component;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;

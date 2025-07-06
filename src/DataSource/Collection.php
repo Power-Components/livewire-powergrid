@@ -6,13 +6,7 @@ use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
-    DatePicker,
-    DateTimePicker,
-    InputText,
-    MultiSelect,
-    Select};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
+use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
