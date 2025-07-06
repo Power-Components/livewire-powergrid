@@ -18,7 +18,9 @@ class CollectionProcessor extends DataSourceBase
 
     public function process(): array
     {
-        $collection = new BaseCollection($this->prepareDataSource());
+        $datasource = $this->component->datasource($this->component->properties ?? []);
+
+        $collection = new BaseCollection($datasource);
 
         /** @var BaseCollection $results */
         $results = app(Pipeline::class)
@@ -33,25 +35,26 @@ class CollectionProcessor extends DataSourceBase
 
         $this->component->total = $results->count();
 
-        $paginated     = $results;
-        $transformTime = 0;
+        $paginated       = $results;
+        $dataTransformer = new DataTransformer($this->component);
+        $actionsByRow    = [];
+        $timeInMs        = 0;
 
         if ($results->count() > 0) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
+            $paginated                 = $this->paginate($results);
 
-            $paginated = $this->paginate($results);
-
-            $dataTransformer = new DataTransformer($this->component);
             $transformResult = $dataTransformer->transform($paginated->getCollection());
+            $actionsByRow    = $transformResult->getActionsByRow();
+            $timeInMs        = $transformResult->getTransformTimeInMs();
 
-            $transformTime = $transformResult->transformTimeInMs;
-
-            $paginated->setCollection($transformResult->collection);
+            $paginated->setCollection($transformResult->getCollection());
         }
 
         return [
             'results'       => $paginated,
-            'transformTime' => $transformTime,
+            'transformTime' => $timeInMs,
+            'actionsByRow'  => $actionsByRow,
         ];
     }
 

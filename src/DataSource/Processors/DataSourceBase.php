@@ -23,11 +23,6 @@ class DataSourceBase
     ) {
     }
 
-    public function prepareDataSource(): mixed
-    {
-        return $this->component->datasource($this->component->properties ?? []);
-    }
-
     protected function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
     {
         if (!method_exists($results, 'total')) {

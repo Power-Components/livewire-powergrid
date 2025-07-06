@@ -18,9 +18,9 @@ class ScoutBuilderProcessor extends DataSourceBase
     public function process(): array
     {
         /** @var ScoutBuilder $datasource */
-        $datasource = $this->prepareDataSource();
+        $datasource = $this->component->datasource($this->component->properties ?? []);
 
-        /** @var ScoutBuilder $results */
+        /** @var ScoutBuilder $query */
         $query = app(Pipeline::class)
             ->send($datasource)
             ->through([

@@ -12,20 +12,24 @@ final class DataTransformer
 
     private ActionProcessor $actionProcessor;
 
+    private string $primaryKey;
+
     public function __construct(protected PowerGridComponent $component)
     {
         $this->rowTransformer  = new RowTransformer($component->fields());
         $this->actionProcessor = new ActionProcessor($component);
+        $this->primaryKey      = $component->primaryKey;
     }
 
     public function transform(BaseCollection $collection): TransformResult
     {
-        $startTime = microtime(true);
+        $startTime    = microtime(true);
+        $actionsByRow = [];
 
         $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($collection);
 
-        $transformedCollection = $collection->map(function ($row, $index) use ($loopInstance) {
+        $transformedCollection = $collection->map(function ($row, $index) use ($loopInstance, &$actionsByRow) {
             $rowObject = (object) $row;
 
             $transformedData = $this->rowTransformer->transform($rowObject);
@@ -39,6 +43,12 @@ final class DataTransformer
 
             $loopInstance->incrementLoopIndices();
 
+            $primaryKeyValue = data_get($row, $this->primaryKey);
+
+            if ($primaryKeyValue && !empty($processedActions['actions'])) {
+                $actionsByRow[$primaryKeyValue] = $processedActions['actions'];
+            }
+
             if ($this->component->supportModel && $row instanceof Model) {
                 return (clone $row)->forceFill((array) $transformedData);
             }
@@ -48,6 +58,6 @@ final class DataTransformer
 
         $endTime = round((microtime(true) - $startTime) * 1000);
 
-        return new TransformResult($transformedCollection, $endTime);
+        return new TransformResult($transformedCollection, $endTime, $actionsByRow);
     }
 }

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\{Blade, Cache, File, View};
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase;
 
 trait HasActions
 {
@@ -61,13 +60,13 @@ trait HasActions
         return strval(json_encode($icons));
     }
 
-    public function storeActionsRowInJSWindow(): void
+    public function dispatchActionsToJS(array $actionsHtml): void
     {
         if (!method_exists($this, 'actions')) {
             return;
         }
 
-        $actionsHtml = json_encode(DataSourceBase::$actionsHtml);
+        $actionsHtml = json_encode($actionsHtml);
 
         $this->js(<<<JS
             this[`pgActions_\${\$wire.id}`] = $actionsHtml

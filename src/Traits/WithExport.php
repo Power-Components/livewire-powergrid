@@ -13,7 +13,6 @@ use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\DataTransformer,
     DataSource\ProcessDataSource,
-    DataSource\Processors\DataSourceBase,
     DataSource\Processors\Database\Handlers\FilterHandler,
     DataSource\Processors\Database\Handlers\SearchHandler};
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -183,10 +182,14 @@ trait WithExport
                 $results = $processDataSource->get(isExport: true)
                     ->whereIn($this->primaryKey, $filtered);
 
-                return DataSourceBase::transform($results, $this);
+                $dataTransformer = new DataTransformer($processDataSource->component);
+
+                return $dataTransformer->transform($results)->collection;
             }
 
-            return DataSourceBase::transform($processDataSource->component->datasource(), $this);
+            $dataTransformer = new DataTransformer($processDataSource->component);
+
+            return $dataTransformer->transform($processDataSource->component->datasource())->collection;
         }
 
         /** @phpstan-ignore-next-line */

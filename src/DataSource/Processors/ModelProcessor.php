@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Collection as BaseCollection;
 use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines as CommonPipelines;
@@ -17,10 +16,12 @@ class ModelProcessor extends DataSourceBase
 
     public function process(): array
     {
-        $this->setCurrentTable($this->prepareDataSource());
+        $datasource = $this->component->datasource($this->component->properties ?? []);
+
+        $this->setCurrentTable($datasource);
 
         $query = app(Pipeline::class)
-            ->send($this->prepareDataSource())
+            ->send($datasource)
             ->through([
                 new Pipelines\Filters($this->component),
                 new Pipelines\SoftDeletes($this->component),
@@ -39,27 +40,30 @@ class ModelProcessor extends DataSourceBase
 
         $this->setTotalCount($paginate);
 
+        /** @var \Illuminate\Support\Collection $collection */
+        $collection = $paginate->getCollection();
+
         if (filled(data_get($this->component, 'setUp.lazy'))) {
-            $count = data_get($this->component, 'setUp.lazy.rowsPerChildren');
+            $count = intval(data_get($this->component, 'setUp.lazy.rowsPerChildren'));
+
+            $lazyCollection = $collection->take($count);
+
+            $paginate->setCollection($lazyCollection);
 
             return [
-                'results' => $paginate->setCollection(
-                    $paginate->getCollection()->take($count)
-                ),
+                'results'       => $paginate,
                 'transformTime' => 0,
+                'actionsByRow'  => [],
             ];
         }
 
-        /** @var BaseCollection $collection */
-        $collection = $paginate->getCollection();
-
         $dataTransformer = new DataTransformer($this->component);
-
         $transformResult = $dataTransformer->transform($collection);
 
         return [
-            'results'       => $paginate->setCollection($transformResult->collection),
-            'transformTime' => $transformResult->transformTimeInMs,
+            'results'       => $paginate->setCollection($transformResult->getCollection()),
+            'transformTime' => $transformResult->getTransformTimeInMs(),
+            'actionsByRow'  => $transformResult->getActionsByRow(),
         ];
     }
 }

@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\{Collection};
-use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
+use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 

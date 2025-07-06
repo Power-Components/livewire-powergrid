@@ -11,7 +11,6 @@ use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
 use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\{DataSourceBase};
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -69,11 +68,6 @@ class PowerGridComponent extends Component
         $this->restoreState();
 
         $this->resolveSummarizeColumn();
-    }
-
-    public function hydrate(): void
-    {
-        DataSourceBase::$actionsHtml = [];
     }
 
     public function fetchDatasource(): void
@@ -173,6 +167,8 @@ class PowerGridComponent extends Component
         $start         = microtime(true);
         $processResult = ProcessDataSource::make($this)->get();
         $retrieveData  = round((microtime(true) - $start) * 1000);
+
+        $this->dispatchActionsToJS($processResult['actionsByRow']);
 
         if ($this->measurePerformance) {
             $queries = DB::getQueryLog();
@@ -278,8 +274,6 @@ class PowerGridComponent extends Component
         } else {
             $data = $this->getRecords();
         }
-
-        $this->storeActionsRowInJSWindow();
 
         $this->storeActionsHeaderInJSWindow();
 
