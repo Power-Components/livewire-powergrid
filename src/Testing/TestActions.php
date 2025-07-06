@@ -12,10 +12,11 @@ class TestActions
     public function assertHasAction(): Closure
     {
         return function (string $action): static {
-            /** @var PowerGridComponent $this */
             $rows = $this->getRecords->items();
 
-            $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
+            $allActions = collect($rows)
+                ->pluck('__powergrid_actions')
+                ->flatten(1);
 
             $actionFound = $allActions->contains(fn (array $dishAction): bool => $dishAction['action'] === $action);
 

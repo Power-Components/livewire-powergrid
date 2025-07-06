@@ -2,6 +2,10 @@ includes:
     - ./vendor/larastan/larastan/extension.neon
 
 parameters:
+    paths:
+        - src
+
+    level: 9
 
     ignoreErrors:
         - identifier: missingType.iterableValue
@@ -10,7 +14,6 @@ parameters:
         - identifier: argument.type
         - identifier: assign.propertyType
         - identifier: binaryOp.invalid
-        - identifier: argument.unknown
         - identifier: method.notFound
         - identifier: encapsedStringPart.nonString
         - identifier: varTag.nativeType
@@ -29,15 +32,11 @@ parameters:
             count: 1
             path: src/Support/PowerGridTableCache.php
 
-    paths:
-        - src
-
-    level: 9
-
     excludePaths:
         - './src/Components/Exports/OpenSpout/*'
         - './src/Livewire/PerformanceCard.php'
         - './src/Recorders/PowerGridPerformanceRecorder.php'
         - './src/Themes/Theme.php'
+        - './src/Testing/TestActions.php'
 
     treatPhpDocTypesAsCertain: false

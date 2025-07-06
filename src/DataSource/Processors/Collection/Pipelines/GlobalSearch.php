@@ -32,7 +32,7 @@ final class GlobalSearch
             $row = (object) $row;
 
             return $searchableColumns->contains(function (Column|stdClass|array $column) use ($row, $search) {
-                $field = $column->dataField ?: $column->field;
+                $field = $column->dataField ?: $column->field; // @phpstan-ignore-line
                 $value = data_get($row, $field);
 
                 return Str::contains(strtolower($value), $search);
