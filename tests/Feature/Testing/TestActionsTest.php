@@ -2,13 +2,13 @@
 
 use Illuminate\Support\{Carbon, Collection, Number};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 
-$component = new class () extends PowerGridComponent {
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+$component = new class() extends PowerGridComponent
+{
     public string $tableName = 'datasource-collection-table';
 
     public function setUp(): array
@@ -28,31 +28,31 @@ $component = new class () extends PowerGridComponent {
     {
         return collect([
             [
-                'id'         => 29,
-                'name'       => 'Luan',
-                'balance'    => 241.86,
-                'is_online'  => true,
+                'id' => 29,
+                'name' => 'Luan',
+                'balance' => 241.86,
+                'is_online' => true,
                 'created_at' => '2023-01-01 00:00:00',
             ],
             [
-                'id'         => 57,
-                'name'       => 'Daniel',
-                'balance'    => 166.51,
-                'is_online'  => true,
+                'id' => 57,
+                'name' => 'Daniel',
+                'balance' => 166.51,
+                'is_online' => true,
                 'created_at' => '2023-02-02 00:00:00',
             ],
             [
-                'id'         => 93,
-                'name'       => 'Claudio',
-                'balance'    => 219.01,
-                'is_online'  => false,
+                'id' => 93,
+                'name' => 'Claudio',
+                'balance' => 219.01,
+                'is_online' => false,
                 'created_at' => '2023-03-03 00:00:00',
             ],
             [
-                'id'         => 104,
-                'name'       => 'Vitor',
-                'balance'    => 44.28,
-                'is_online'  => true,
+                'id' => 104,
+                'name' => 'Vitor',
+                'balance' => 44.28,
+                'is_online' => true,
                 'created_at' => '2023-04-04 00:00:00',
             ],
         ]);
@@ -127,6 +127,6 @@ it('testings', function (string $component, object $params) {
         ->assertActionHasIcon('view', 'default-eye', '!text-green-500')
         ->assertOk();
 })->with([
-    'tailwind'  => [$component::class, (object) ['theme' => Tailwind::class]],
+    'tailwind' => [$component::class, (object) ['theme' => Tailwind::class]],
     'bootstrap' => [$component::class, (object) ['theme' => Bootstrap5::class]],
 ]);

@@ -1,10 +1,9 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesCollectionTable};
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 
 it('searches', function (string $component, object $params) {
     livewire($component)
@@ -30,6 +29,6 @@ it('searches', function (string $component, object $params) {
 })->with('search');
 
 dataset('search', [
-    'tailwind'  => [DishesCollectionTable::class, (object) ['theme' => Tailwind::class]],
+    'tailwind' => [DishesCollectionTable::class, (object) ['theme' => Tailwind::class]],
     'bootstrap' => [DishesCollectionTable::class, (object) ['theme' => Bootstrap5::class]],
 ]);

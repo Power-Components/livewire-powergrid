@@ -71,7 +71,7 @@ class DishesCalculationsTable extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('calories', fn ($dish) => $dish->calories . ' kcal')
+            ->add('calories', fn ($dish) => $dish->calories.' kcal')
             ->add('price');
     }
 
@@ -115,8 +115,8 @@ class DishesCalculationsTable extends PowerGridComponent
                 return (new \NumberFormatter('en_US', \NumberFormatter::CURRENCY))
                     ->formatCurrency($value, 'USD');
             },
-            'price.{count}'  => fn ($value) => $fmt->format($value) . ' item(s)',
-            'calories.{avg}' => fn ($value) => $fmt->format($value) . ' kcal',
+            'price.{count}' => fn ($value) => $fmt->format($value).' item(s)',
+            'calories.{avg}' => fn ($value) => $fmt->format($value).' kcal',
 
         ];
     }

@@ -77,11 +77,11 @@ it('searches for something that is not on the current page')
 
 test('set/sanitize and fallback pageName', function (string $pageNameCandidate, string $result) {
     $this->livewire(DishesCustomPageNameTable::class, ['pageNameCandidate' => $pageNameCandidate])
-    ->assertSeeHtml("gotoPage(2, '{$result}')");
+        ->assertSeeHtml("gotoPage(2, '{$result}')");
 })->with([
     'some invalid characters' => ['customPage12Ντόναλντ34', 'customPage1234'],
     'only invalid characters' => ['Ντόναλντ', 'page'],
-    'empty page name'         => ['', 'page'],
+    'empty page name' => ['', 'page'],
 ]);
 
 todo('prevents the "division by zero exception" when there is no data and when using toBase');

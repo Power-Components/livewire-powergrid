@@ -3,9 +3,6 @@
 use Illuminate\Database\Eloquent\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
-
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishTableBase,
     Concerns\Components\DishesArrayTable,
@@ -14,6 +11,8 @@ use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin
 };
+
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('property displays the results and options', function (string $component, object $params) {
     $select = Filter::select('category_name', 'category_id')
@@ -32,7 +31,8 @@ it('property displays the results and options', function (string $component, obj
 })->group('filters', 'filterSelect')
     ->with('filter_select_join', 'filter_select_query_builder');
 
-$customBuilder = new class () extends DishTableBase {
+$customBuilder = new class() extends DishTableBase
+{
     public int $dishId;
 
     public function filters(): array
@@ -53,7 +53,8 @@ $customBuilder = new class () extends DishTableBase {
     }
 };
 
-$customCollection = new class () extends DishesCollectionTable {
+$customCollection = new class() extends DishesCollectionTable
+{
     public int $dishId;
 
     public function filters(): array
@@ -74,7 +75,8 @@ $customCollection = new class () extends DishesCollectionTable {
     }
 };
 
-$computedDatasource = new class () extends DishTableBase {
+$computedDatasource = new class() extends DishTableBase
+{
     public int $dishId;
 
     #[\Livewire\Attributes\Computed]
@@ -100,10 +102,10 @@ it('property filter using custom builder', function (string $component, object $
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
-    ;
+
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id'  => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+        'tailwind -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
         'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
     ]);
 
@@ -114,10 +116,10 @@ it('property filter using computed datasource', function (string $component, obj
         ->set('filters', filterSelect('category_id', 1))
         ->assertSee('Almôndegas ao Sugo')
         ->assertDontSee('Pastel de Nata');
-    ;
+
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id'  => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+        'tailwind -> id' => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
         'bootstrap -> id' => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
     ]);
 
@@ -129,7 +131,7 @@ it('property filter using custom collection', function (string $component) {
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id'  => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+        'tailwind -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
         'bootstrap -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
     ]);
 
@@ -167,35 +169,35 @@ it('properly filters using the same model as the component', function (string $c
             Filter::inputText('serving_at')->operators(),
         ])
         ->set('filters', filterSelect('serving_at', 'table'))
-            ->assertSee('Pastel de Nata')
-            ->assertDontSee('Peixada da chef Nábia')
-            ->assertDontSee('Carne Louca')
-            ->assertDontSee('Bife à Rolê')
-            ->assertDontSee('Francesinha vegana')
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Peixada da chef Nábia')
+        ->assertDontSee('Carne Louca')
+        ->assertDontSee('Bife à Rolê')
+        ->assertDontSee('Francesinha vegana')
         ->set('filters', filterSelect('serving_at', 'pool bar'))
-            ->assertSee('Peixada da chef Nábia')
-            ->assertSee('Carne Louca')
-            ->assertSee('Bife à Rolê')
-            ->assertSee('Francesinha vegana')
-            ->assertDontSee('Pastel de Nata')
+        ->assertSee('Peixada da chef Nábia')
+        ->assertSee('Carne Louca')
+        ->assertSee('Bife à Rolê')
+        ->assertSee('Francesinha vegana')
+        ->assertDontSee('Pastel de Nata')
         ->set('filters', filterSelect('serving_at', 'bar'))
-            ->assertDontSee('Peixada da chef Nábia')
-            ->assertDontSee('Carne Louca')
-            ->assertDontSee('Bife à Rolê')
-            ->assertDontSee('Francesinha vegana')
-            ->assertDontSee('Pastel de Nata');
+        ->assertDontSee('Peixada da chef Nábia')
+        ->assertDontSee('Carne Louca')
+        ->assertDontSee('Bife à Rolê')
+        ->assertDontSee('Francesinha vegana')
+        ->assertDontSee('Pastel de Nata');
 })->group('filters', 'filterSelect')
     ->with('filter_select_join', 'filter_select_query_builder');
 
 dataset('filter_select_join', [
-    'tailwind -> id'         => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id'        => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'tailwind -> dishes.id'  => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
+    'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_select_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);
 
@@ -205,7 +207,7 @@ dataset('filter_select_themes_array', [
 ]);
 
 dataset('filter_select_themes_collection', [
-    'tailwind'  => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'tailwind' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);
 

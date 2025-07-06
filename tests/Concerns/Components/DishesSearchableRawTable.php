@@ -32,9 +32,9 @@ class DishesSearchableRawTable extends PowerGridComponent
     {
         $searchableRaw = match ($this->database) {
             'sqlite' => 'STRFTIME("%d/%m/%Y", dishes.produced_at) as produced_at_formatted',
-            'mysql'  => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y") as produced_at_formatted',
-            'pgsql'  => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text as produced_at_formatted',
-            default  => ''
+            'mysql' => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y") as produced_at_formatted',
+            'pgsql' => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text as produced_at_formatted',
+            default => ''
         };
 
         return Dish::query()
@@ -61,9 +61,9 @@ class DishesSearchableRawTable extends PowerGridComponent
     {
         $searchableRaw = match ($this->database) {
             'sqlite' => 'STRFTIME("%d/%m/%Y", dishes.produced_at) like ?',
-            'mysql'  => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y") like ?',
-            'pgsql'  => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text ilike ?',
-            default  => ''
+            'mysql' => 'DATE_FORMAT(dishes.produced_at, "%d/%m/%Y") like ?',
+            'pgsql' => 'to_char(dishes.produced_at, \'DD/MM/YYYY\')::text ilike ?',
+            default => ''
         };
 
         return [

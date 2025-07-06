@@ -80,7 +80,6 @@
 
                         @endphp
 
-                        @ds($dataTransformer->transform($data->skip($skip)->take($take))->collection)
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
                             :parentId="$this->getId()"

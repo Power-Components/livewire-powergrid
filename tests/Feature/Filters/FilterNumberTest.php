@@ -2,7 +2,7 @@
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-require(__DIR__ . '/../../Concerns/Components/ComponentsForFilterTest.php');
+require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
 
 it('properly filters by filter Number', function (string $component, object $params) {
     $component = livewire($component)
@@ -20,7 +20,7 @@ it('properly filters by filter Number', function (string $component, object $par
 
     expect($component->filters)->toBe($filters);
 })->group('filters')
-->with('filterComponent');
+    ->with('filterComponent');
 
 it('properly filters by filter Number with wrong separators', function (string $component, object $params) {
     $component = livewire($component)
@@ -32,6 +32,6 @@ it('properly filters by filter Number with wrong separators', function (string $
     $component->set('filters', $filters)
         ->assertSee('No records found');
 })
-->skipOnPostgreSQL('PG will throw "invalid input syntax for type double precision"')
-->group('filters')
-->with('filterComponent');
+    ->skipOnPostgreSQL('PG will throw "invalid input syntax for type double precision"')
+    ->group('filters')
+    ->with('filterComponent');

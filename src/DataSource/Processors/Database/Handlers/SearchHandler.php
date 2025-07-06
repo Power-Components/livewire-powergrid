@@ -15,8 +15,7 @@ class SearchHandler
 {
     public function __construct(
         private readonly PowerGridComponent $component
-    ) {
-    }
+    ) {}
 
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
@@ -24,7 +23,7 @@ class SearchHandler
             return $query;
         }
 
-        $search            = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+        $search = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
         $hasRelationSearch = count($this->component->relationSearch()) && $query instanceof EloquentBuilder;
 
         $query->where(function (EloquentBuilder|QueryBuilder $subQuery) use ($search, $hasRelationSearch) {
@@ -34,9 +33,9 @@ class SearchHandler
             collect($this->component->columns)
                 ->filter(fn (stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
                 ->each(function (stdClass|array|Column $column) use ($subQuery, $search, $columnList, $hasRelationSearch) {
-                    $field           = $this->getDataField($column);
+                    $field = $this->getDataField($column);
                     [$table, $field] = $this->splitField($subQuery, $field);
-                    $search          = $this->getBeforeSearchMethod($field, $search);
+                    $search = $this->getBeforeSearchMethod($field, $search);
 
                     if (empty($table)) {
                         $subQuery->orWhere($field, Sql::like($subQuery), "%{$search}%");
@@ -44,7 +43,7 @@ class SearchHandler
                         return;
                     }
 
-                    if (isset($columnList[$field]) || !$hasRelationSearch) {
+                    if (isset($columnList[$field]) || ! $hasRelationSearch) {
                         $subQuery->orWhere("{$table}.{$field}", Sql::like($subQuery), "%{$search}%");
                     }
                 });
@@ -68,7 +67,7 @@ class SearchHandler
 
             $query->orWhereHas($table, function (EloquentBuilder $subQuery) use ($columns, $search) {
                 $search = $this->getBeforeSearchMethod($columns, $search);
-                $subQuery->when($search, fn ($q) => $q->where($columns, Sql::like($q), '%' . $search . '%'));
+                $subQuery->when($search, fn ($q) => $q->where($columns, Sql::like($q), '%'.$search.'%'));
             });
         }
     }
@@ -79,27 +78,27 @@ class SearchHandler
             if (is_array($nestedColumns)) {
                 try {
                     if ($query->getRelation($nestedTable) != '') {
-                        $nestedTableWithDot = $table . '.' . $nestedTable;
+                        $nestedTableWithDot = $table.'.'.$nestedTable;
                         $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
                             foreach ($nestedColumns as $nestedColumn) {
                                 $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                                $subQuery->when($search, fn ($q) => $q->where($nestedColumn, Sql::like($q), '%' . $search . '%'));
+                                $subQuery->when($search, fn ($q) => $q->where($nestedColumn, Sql::like($q), '%'.$search.'%'));
                             }
                         });
                     }
                 } catch (RelationNotFoundException) {
                     /** @var JoinClause[] $joins */
-                    $joins       = $query->getQuery()->joins ?? [];
+                    $joins = $query->getQuery()->joins ?? [];
                     $tableExists = collect($joins)->pluck('table')->contains($nestedTable);
 
-                    if (!$tableExists) {
-                        $query->leftJoin($nestedTable, "$table." . $nestedTable . '_id', '=', "$nestedTable.id");
+                    if (! $tableExists) {
+                        $query->leftJoin($nestedTable, "$table.".$nestedTable.'_id', '=', "$nestedTable.id");
                     }
 
                     $query->orWhere(function (EloquentBuilder $subQuery) use ($nestedTable, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
                             $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                            $subQuery->when($search, fn ($q) => $q->where("$nestedTable.$nestedColumn", Sql::like($q), '%' . $search . '%'));
+                            $subQuery->when($search, fn ($q) => $q->where("$nestedTable.$nestedColumn", Sql::like($q), '%'.$search.'%'));
                         }
                     });
                 }
@@ -109,7 +108,7 @@ class SearchHandler
 
             $query->orWhereHas($table, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
                 $search = $this->getBeforeSearchMethod($nestedColumns, $search);
-                $subQuery->when($search, fn ($q) => $q->where($nestedColumns, Sql::like($q), '%' . $search . '%'));
+                $subQuery->when($search, fn ($q) => $q->where($nestedColumns, Sql::like($q), '%'.$search.'%'));
             });
         }
     }
@@ -139,7 +138,7 @@ class SearchHandler
 
     private function getBeforeSearchMethod(string $field, ?string $search): ?string
     {
-        $method = 'beforeSearch' . str($field)->headline()->replace(' ', '');
+        $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
 
         if (method_exists($this->component, $method)) {
             return $this->component->$method($search);
@@ -158,8 +157,8 @@ class SearchHandler
 
         if (str_contains($field, '.')) {
             $explodeField = explode('.', $field);
-            $table        = $explodeField[0];
-            $field        = $explodeField[1];
+            $table = $explodeField[0];
+            $field = $explodeField[1];
         }
 
         return [$table, $field];

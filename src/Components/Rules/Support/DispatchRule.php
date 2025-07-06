@@ -14,10 +14,10 @@ class DispatchRule
     {
         $output = [];
 
-        $event  = strval(data_get($ruleData, 'event'));
+        $event = strval(data_get($ruleData, 'event'));
         $params = (array) data_get($ruleData, 'params', []);
 
-        $output['attributes'] = ['wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ')'];
+        $output['attributes'] = ['wire:click' => "\$dispatch('{$event}', ".Js::from($params).')'];
 
         return $output;
     }

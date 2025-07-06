@@ -4,12 +4,12 @@ use Illuminate\Support\Facades\{Cookie};
 use Livewire\Features\SupportTesting\Testable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
-
-$component = new class () extends DishTableBase {
+$component = new class() extends DishTableBase
+{
     public function setUp(): array
     {
         $this->persist(['filters', 'enabledFilters']);
@@ -26,7 +26,7 @@ $component = new class () extends DishTableBase {
 };
 
 $params = [
-    'tailwind -> id'  => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'name'],
+    'tailwind -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'name'],
     'bootstrap -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'name'],
 ];
 
@@ -43,7 +43,7 @@ it('should be able to set persist_driver for session', function (string $compone
     /** @var Testable $component */
     $component->call('filterInputText', $field, 'ba', 'test');
 
-    expect(session('pg:testing-dish-table'))->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
+    expect(session('pg:testing-dish-table'))->toBe('{"filters":[],"enabledFilters":[{"field":"'.$field.'","label":"test"}]}');
 })->group('filters')
     ->with($params);
 
@@ -60,12 +60,12 @@ it('should be able to set persist_driver for cookies', function (string $compone
     /** @var Testable $component */
     $component->call('filterInputText', $field, 'ba', 'test');
 
-    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"' . $field . '","label":"test"}]}');
+    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"'.$field.'","label":"test"}]}');
 })
     ->with($params);
 
 it('should not be able to set invalid persist driver', function (string $componentString, string $theme) {
-    # change config
+    // change config
     config()->set('livewire-powergrid.persist_driver', 'invalid');
 
     expect(static function () use ($componentString, $theme) {

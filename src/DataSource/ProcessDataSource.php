@@ -13,8 +13,7 @@ class ProcessDataSource
     public function __construct(
         public PowerGridComponent $component,
         public array $properties = [],
-    ) {
-    }
+    ) {}
 
     public static function make(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
     {

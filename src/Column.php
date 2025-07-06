@@ -7,6 +7,7 @@ use Livewire\Wireable;
 
 /**
  * Macros
+ *
  * @method static naturalSort()
  * @method static searchableRaw(string $sql)
  * @method static searchableJson(string $tableName) // sqlite, mysql
@@ -69,8 +70,6 @@ final class Column implements Wireable
 
     /**
      * Adds a new Column
-     *
-     * @return self
      */
     public static function add(): self
     {
@@ -107,7 +106,6 @@ final class Column implements Wireable
 
     /**
      * Adds title
-     *
      */
     public function title(string $title): Column
     {
@@ -125,7 +123,6 @@ final class Column implements Wireable
 
     /**
      * Adds index ($loop->index)
-     *
      */
     public function index(): Column
     {
@@ -136,7 +133,6 @@ final class Column implements Wireable
 
     /**
      * Adds placeholder
-     *
      */
     public function placeholder(string $placeholder): Column
     {
@@ -147,7 +143,6 @@ final class Column implements Wireable
 
     /**
      * Makes the column searchable
-     *
      */
     public function searchable(): Column
     {
@@ -165,8 +160,6 @@ final class Column implements Wireable
 
     /**
      * Adds sort to the column header
-     *
-     * @return Column
      */
     public function sortable(): Column
     {
@@ -179,7 +172,6 @@ final class Column implements Wireable
 
     /**
      * Field in the database
-     *
      */
     public function field(string $field, string $dataField = ''): Column
     {
@@ -191,8 +183,7 @@ final class Column implements Wireable
     }
 
     /**
-    * Class html tag header table
-     *
+     * Class html tag header table
      */
     public function headerAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -203,8 +194,7 @@ final class Column implements Wireable
     }
 
     /**
-    * Class html tag body table
-     *
+     * Class html tag body table
      */
     public function bodyAttribute(string $classAttr = '', string $styleAttr = ''): Column
     {
@@ -215,12 +205,11 @@ final class Column implements Wireable
     }
 
     /**
-    * Hide the column
-     *
+     * Hide the column
      */
     public function hidden(bool $isHidden = true, bool $isForceHidden = true): Column
     {
-        $this->hidden      = $isHidden;
+        $this->hidden = $isHidden;
         $this->forceHidden = $isForceHidden;
 
         return $this;
@@ -235,7 +224,6 @@ final class Column implements Wireable
 
     /**
      * Adds Edit on click to a column
-     *
      */
     public function editOnClick(
         bool $hasPermission = true,
@@ -244,8 +232,8 @@ final class Column implements Wireable
         bool $saveOnMouseOut = false
     ): Column {
         $this->editable = [
-            'hasPermission'  => $hasPermission,
-            'fallback'       => $fallback,
+            'hasPermission' => $hasPermission,
+            'fallback' => $fallback,
             'saveOnMouseOut' => $saveOnMouseOut,
         ];
 
@@ -258,14 +246,13 @@ final class Column implements Wireable
 
     /**
      * Adds Toggle to a column
-     *
      */
     public function toggleable(
         bool $hasPermission = true,
         string $trueLabel = 'Yes',
         string $falseLabel = 'No',
     ): Column {
-        $this->editable   = [];
+        $this->editable = [];
         $this->toggleable = [
             'enabled' => $hasPermission,
             'default' => [$trueLabel,  $falseLabel],

@@ -88,14 +88,14 @@ class DishesDynamicFiltersTable extends PowerGridComponent
             Filter::dynamic('in_stock', 'in_stock')
                 ->component('tests::dynamic-select')
                 ->attributes([
-                    'class'   => 'min-w-[170px]',
+                    'class' => 'min-w-[170px]',
                     'options' => [
                         ['name' => 'Active',  'value' => true],
                         ['name' => 'Inactive', 'value' => false],
                     ],
                     'option-label' => 'name',
                     'option-value' => 'value',
-                    'placeholder'  => 'Choose']),
+                    'placeholder' => 'Choose']),
         ];
     }
 

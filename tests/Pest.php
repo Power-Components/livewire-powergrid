@@ -23,10 +23,10 @@ function powergrid(): PowerGridComponent
             ->sortable(),
     ];
 
-    $component               = new PowerGridComponent(1);
+    $component = new PowerGridComponent(1);
     $component->supportModel = true;
-    $component->datasource   = Dish::query();
-    $component->columns      = $columns;
+    $component->datasource = Dish::query();
+    $component->columns = $columns;
 
     return $component;
 }
@@ -88,7 +88,7 @@ function requiresOpenSpout()
 {
     $isInstalled = \Composer\InstalledVersions::isInstalled('openspout/openspout');
 
-    if (!$isInstalled) {
+    if (! $isInstalled) {
         test()->skipWithReason('test requires openspout/openspout');
     }
 
@@ -97,14 +97,14 @@ function requiresOpenSpout()
 
 function fixturePath(string $filepath): string
 {
-    return str_replace('/', DIRECTORY_SEPARATOR, __DIR__ . '/Concerns/Fixtures/' . ltrim($filepath, '/'));
+    return str_replace('/', DIRECTORY_SEPARATOR, __DIR__.'/Concerns/Fixtures/'.ltrim($filepath, '/'));
 }
 
 function skipWithReason(string $default, string $reason = ''): void
 {
     $reason = str($reason)->whenNotEmpty(fn ($r) => $r->prepend(': '))
-            ->prepend($default)
-            ->toString();
+        ->prepend($default)
+        ->toString();
 
     test()->markTestSkipped($reason);
 }

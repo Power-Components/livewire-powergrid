@@ -11,8 +11,8 @@ class RedirectRule
         $redirectToUrl = data_get($ruleData, 'url');
 
         $output['attributes'] = ['href' => $redirectToUrl, 'target' => '_blank'];
-        $output['remove']     = 'wire:click';
-        $output['component']  = 'a';
+        $output['remove'] = 'wire:click';
+        $output['component'] = 'a';
 
         return $output;
     }

@@ -35,26 +35,26 @@ class CollectionProcessor extends DataSourceBase
 
         $this->component->total = $results->count();
 
-        $paginated       = $results;
+        $paginated = $results;
         $dataTransformer = new DataTransformer($this->component);
-        $actionsByRow    = [];
-        $timeInMs        = 0;
+        $actionsByRow = [];
+        $timeInMs = 0;
 
         if ($results->count() > 0) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
-            $paginated                 = $this->paginate($results);
+            $paginated = $this->paginate($results);
 
             $transformResult = $dataTransformer->transform($paginated->getCollection());
-            $actionsByRow    = $transformResult->getActionsByRow();
-            $timeInMs        = $transformResult->getTransformTimeInMs();
+            $actionsByRow = $transformResult->getActionsByRow();
+            $timeInMs = $transformResult->getTransformTimeInMs();
 
             $paginated->setCollection($transformResult->getCollection());
         }
 
         return [
-            'results'       => $paginated,
+            'results' => $paginated,
             'transformTime' => $timeInMs,
-            'actionsByRow'  => $actionsByRow,
+            'actionsByRow' => $actionsByRow,
         ];
     }
 
@@ -74,7 +74,7 @@ class CollectionProcessor extends DataSourceBase
             perPage: $perPage,
             currentPage: $page,
             options: [
-                'path'     => Paginator::resolveCurrentPath(),
+                'path' => Paginator::resolveCurrentPath(),
                 'pageName' => 'page',
             ]
         );

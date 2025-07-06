@@ -45,7 +45,7 @@ class ScoutBuilderProcessor extends DataSourceBase
         $paginate->setCollection($transformResult->collection);
 
         return [
-            'results'       => $paginate,
+            'results' => $paginate,
             'transformTime' => $transformResult->transformTimeInMs,
         ];
     }

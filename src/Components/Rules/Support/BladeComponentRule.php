@@ -19,7 +19,7 @@ class BladeComponentRule
                 :attributes="$params"
                 />', [
                 'component' => $component,
-                'params'    => new ComponentAttributeBag((array) $params),
+                'params' => new ComponentAttributeBag((array) $params),
             ]);
 
             $output['blade'] = $html;

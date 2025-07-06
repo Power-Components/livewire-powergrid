@@ -23,10 +23,10 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $casts = [
-        'name'      => 'string',
-        'link'      => 'string',
-        'price'     => 'decimal:2',
-        'tax'       => 'float',
+        'name' => 'string',
+        'link' => 'string',
+        'price' => 'decimal:2',
+        'tax' => 'float',
         'is_active' => 'boolean',
     ];
 }
