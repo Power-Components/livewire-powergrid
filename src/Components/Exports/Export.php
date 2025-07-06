@@ -17,7 +17,7 @@ class Export
 
     public array $columnWidth = [];
 
-    /** @var array<Column> */
+    /** @var array<Column> $columns */
     public array $columns;
 
     public function fileName(string $name): Export
@@ -30,7 +30,7 @@ class Export
     public function setData(array $columns, Collection $data): Export
     {
         $this->columns = $columns;
-        $this->data = collect($data);
+        $this->data    = collect($data);
 
         return $this;
     }
@@ -69,18 +69,18 @@ class Export
                 }
 
                 /** @var Column $column */
-                if ($column->visibleInExport || (! $column->hidden && is_null($column->visibleInExport)) && ! $isExportable) {
+                if ($column->visibleInExport || (!$column->hidden && is_null($column->visibleInExport)) && !$isExportable) {
                     /** @var array $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
-                            if ($stripTags === true) {
+                            if (true === $stripTags) {
                                 $value = strip_tags($value);
                             }
                             $item->put($column->title, html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
                         }
                     }
 
-                    if (! $header->contains($column->title)) {
+                    if (!$header->contains($column->title)) {
                         $header->push($column->title);
                     }
                 }
@@ -91,7 +91,7 @@ class Export
 
         return [
             'headers' => $header->all(),
-            'rows' => $data->all(),
+            'rows'    => $data->all(),
         ];
     }
 }

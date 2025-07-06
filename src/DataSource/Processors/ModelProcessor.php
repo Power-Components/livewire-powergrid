@@ -51,9 +51,9 @@ class ModelProcessor extends DataSourceBase
             $paginate->setCollection($lazyCollection);
 
             return [
-                'results' => $paginate,
+                'results'       => $paginate,
                 'transformTime' => 0,
-                'actionsByRow' => [],
+                'actionsByRow'  => [],
             ];
         }
 
@@ -61,9 +61,9 @@ class ModelProcessor extends DataSourceBase
         $transformResult = $dataTransformer->transform($collection);
 
         return [
-            'results' => $paginate->setCollection($transformResult->getCollection()),
+            'results'       => $paginate->setCollection($transformResult->getCollection()),
             'transformTime' => $transformResult->getTransformTimeInMs(),
-            'actionsByRow' => $transformResult->getActionsByRow(),
+            'actionsByRow'  => $transformResult->getActionsByRow(),
         ];
     }
 }

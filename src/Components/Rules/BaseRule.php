@@ -3,12 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Closure;
+
 use InvalidArgumentException;
 use Livewire\Wireable;
 
 /**
  * @codeCoverageIgnore
- */
+*/
 class BaseRule implements Wireable
 {
     public array $rule = [];

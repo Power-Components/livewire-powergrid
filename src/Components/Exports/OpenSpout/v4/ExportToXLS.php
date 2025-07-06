@@ -21,16 +21,16 @@ class ExportToXLS extends Export implements ExportInterface
     public function download(Exportable|array $exportOptions): BinaryFileResponse
     {
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend'));
-        $this->striped = strval(data_get($exportOptions, 'striped'));
+        $this->striped       = strval(data_get($exportOptions, 'striped'));
 
         /** @var array $columnWidth */
-        $columnWidth = data_get($exportOptions, 'columnWidth', []);
+        $columnWidth       = data_get($exportOptions, 'columnWidth', []);
         $this->columnWidth = $columnWidth;
 
         $this->build($exportOptions);
 
         return response()
-            ->download(storage_path($this->fileName.'.xlsx'))
+            ->download(storage_path($this->fileName . '.xlsx'))
             ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
@@ -40,12 +40,12 @@ class ExportToXLS extends Export implements ExportInterface
     public function build(Exportable|array $exportOptions): void
     {
         $stripTags = boolval(data_get($exportOptions, 'stripTags', false));
-        $data = $this->prepare($this->data, $this->columns, $stripTags);
+        $data      = $this->prepare($this->data, $this->columns, $stripTags);
 
         $options = new Options();
-        $writer = new Writer($options);
+        $writer  = new Writer($options);
 
-        $writer->openToFile(storage_path($this->fileName.'.xlsx'));
+        $writer->openToFile(storage_path($this->fileName . '.xlsx'));
 
         $style = (new Style())
             ->setFontBold()

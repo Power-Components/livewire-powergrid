@@ -14,7 +14,7 @@ class FilterBoolean extends FilterBase
 
     public function label(string $trueLabel, string $falseLabel): FilterBoolean
     {
-        $this->trueLabel = $trueLabel;
+        $this->trueLabel  = $trueLabel;
         $this->falseLabel = $falseLabel;
 
         return $this;

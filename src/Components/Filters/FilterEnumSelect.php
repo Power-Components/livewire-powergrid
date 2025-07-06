@@ -31,7 +31,7 @@ class FilterEnumSelect extends FilterBase
 
             if (method_exists($case, 'labelPowergridFilter')) {
                 $option['name'] = $case->labelPowergridFilter();
-                $optionLabel = 'name';
+                $optionLabel    = 'name';
             }
 
             return $option;

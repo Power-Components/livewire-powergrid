@@ -101,7 +101,7 @@ final class PowerGridComponentMaker
         $path = $this->folder;
 
         if ($filename !== '') {
-            $path .= $this->folder = DIRECTORY_SEPARATOR.$filename;
+            $path .= $this->folder = DIRECTORY_SEPARATOR . $filename;
         }
 
         return powergrid_components_path($path);
@@ -222,7 +222,7 @@ final class PowerGridComponentMaker
 
     private function resolveFolder(string $name): string
     {
-        if (! str_contains($name, '\\')) {
+        if (!str_contains($name, '\\')) {
             return '';
         }
 
@@ -232,14 +232,14 @@ final class PowerGridComponentMaker
 
     private function resolveNamespace(): self
     {
-        $this->namespace = rtrim($this->livewireNamespace().'\\'.$this->folder, '\\');
+        $this->namespace = rtrim($this->livewireNamespace() . '\\' . $this->folder, '\\');
 
         return $this;
     }
 
     private function resolveFqn(): self
     {
-        $this->fqn = $this->namespace.'\\'.$this->name;
+        $this->fqn = $this->namespace . '\\' . $this->name;
 
         return $this;
     }
@@ -248,7 +248,7 @@ final class PowerGridComponentMaker
     {
         return str($this->namespace)
             ->replace('App', 'app')
-            ->append('\\'.$this->filename)
+            ->append('\\' . $this->filename)
             ->replace('\\', '/');
     }
 
@@ -256,7 +256,7 @@ final class PowerGridComponentMaker
     {
         $this->htmlTag = str($this->name)
             ->kebab()
-            ->prepend($this->folder.'\\')
+            ->prepend($this->folder . '\\')
             ->lower()
             ->replace('\\', '.')
             ->ltrim('.')
@@ -270,7 +270,7 @@ final class PowerGridComponentMaker
     {
         $this->tableName = str($this->name)
             ->kebab()
-            ->append('-'.Str::random(6))
+            ->append('-' . Str::random(6))
             ->append('-table')
             ->lower();
 

@@ -26,15 +26,15 @@ class ExportJob implements ShouldQueue
         array $columns,
         array $params
     ) {
-        $this->columns = $columns;
+        $this->columns         = $columns;
         $this->exportableClass = $params['exportableClass'];
-        $this->fileName = $params['fileName'];
-        $this->offset = $params['offset'];
-        $this->limit = $params['limit'];
-        $this->filtered = $params['filtered'];
-        $this->exportable = $params['exportable'];
-        $this->filters = (array) Crypt::decrypt($params['filters']);
-        $this->properties = (array) Crypt::decrypt($params['parameters']);
+        $this->fileName        = $params['fileName'];
+        $this->offset          = $params['offset'];
+        $this->limit           = $params['limit'];
+        $this->filtered        = $params['filtered'];
+        $this->exportable      = $params['exportable'];
+        $this->filters         = (array) Crypt::decrypt($params['filters']);
+        $this->properties      = (array) Crypt::decrypt($params['parameters']);
 
         $this->componentTable = new $componentTable();
     }

@@ -21,7 +21,7 @@ class Select extends BuilderBase
         }
 
         if (is_array($values)) {
-            $field = $field.'.'.key($values);
+            $field  = $field . '.' . key($values);
             $values = $values[key($values)];
         }
 

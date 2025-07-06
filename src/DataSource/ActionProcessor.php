@@ -13,14 +13,14 @@ final class ActionProcessor
 
     public function __construct(protected PowerGridComponent $component)
     {
-        $this->shouldProcessActions = method_exists($component, 'actions');
+        $this->shouldProcessActions     = method_exists($component, 'actions');
         $this->shouldProcessActionRules = method_exists($component, 'actionRules');
     }
 
     public function process(object $row, stdClass $loopVars): array
     {
         $actions = [];
-        $rules = [];
+        $rules   = [];
 
         if ($this->shouldProcessActionRules) {
             $rules = $this->component->prepareActionRulesForRows($row, $loopVars);
@@ -36,7 +36,7 @@ final class ActionProcessor
 
         return [
             'actions' => $actions,
-            'rules' => $rules,
+            'rules'   => $rules,
         ];
     }
 
@@ -45,13 +45,13 @@ final class ActionProcessor
         $can = $action->can;
 
         return [
-            'action' => $action->action,
-            'can' => $can instanceof \Closure ? $can($row) : $can,
-            'slot' => $action->slot,
-            'tag' => $action->tag,
-            'icon' => $action->icon,
+            'action'         => $action->action,
+            'can'            => $can instanceof \Closure ? $can($row) : $can,
+            'slot'           => $action->slot,
+            'tag'            => $action->tag,
+            'icon'           => $action->icon,
             'iconAttributes' => $action->iconAttributes,
-            'attributes' => $action->attributes,
+            'attributes'     => $action->attributes,
         ];
     }
 }

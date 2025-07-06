@@ -23,7 +23,7 @@ class ExportToCsv extends Export implements ExportInterface
         $this->build($exportOptions);
 
         return response()
-            ->download(storage_path($this->fileName.'.csv'))
+            ->download(storage_path($this->fileName . '.csv'))
             ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
@@ -33,17 +33,17 @@ class ExportToCsv extends Export implements ExportInterface
     public function build(Exportable|array $exportOptions): void
     {
         $stripTags = boolval(data_get($exportOptions, 'stripTags', false));
-        $data = $this->prepare($this->data, $this->columns, $stripTags);
+        $data      = $this->prepare($this->data, $this->columns, $stripTags);
 
         $csvSeparator = strval(data_get($exportOptions, 'csvSeparator', ','));
         $csvDelimiter = strval(data_get($exportOptions, 'csvDelimiter', '"'));
 
-        $csvOptions = new Options();
+        $csvOptions                  = new Options();
         $csvOptions->FIELD_DELIMITER = $csvSeparator;
         $csvOptions->FIELD_ENCLOSURE = $csvDelimiter;
 
         $writer = new Writer($csvOptions);
-        $writer->openToFile(storage_path($this->fileName.'.csv'));
+        $writer->openToFile(storage_path($this->fileName . '.csv'));
 
         $row = Row::fromValues($data['headers']);
 

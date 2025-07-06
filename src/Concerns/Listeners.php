@@ -15,7 +15,7 @@ trait Listeners
 
         $this->onUpdatedEditable($id, $field, $value);
 
-        $this->dispatch('pg:editable-close-'.$id);
+        $this->dispatch('pg:editable-close-' . $id);
     }
 
     #[On('pg:toggleable-{tableName}')]
@@ -32,7 +32,7 @@ trait Listeners
     {
         foreach ($this->columns as &$column) {
             if (data_get($column, 'field') === $field) {
-                data_set($column, 'hidden', ! data_get($column, 'hidden'));
+                data_set($column, 'hidden', !data_get($column, 'hidden'));
 
                 break;
             }

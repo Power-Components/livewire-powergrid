@@ -22,7 +22,7 @@ class RuleActions extends BaseRule
     {
         $this->pushModifier('setAttribute', [
             'attribute' => $attribute,
-            'value' => $value,
+            'value'     => $value,
         ]);
 
         return $this;
@@ -52,7 +52,7 @@ class RuleActions extends BaseRule
     {
         $this->setModifier('bladeComponent', [
             'component' => $component,
-            'params' => $params,
+            'params'    => $params,
         ]);
 
         return $this;

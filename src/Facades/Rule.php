@@ -12,7 +12,7 @@ use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleActions, RuleCheckbo
  * @method static RuleRows rows()
  * @method static RuleCheckbox checkbox()
  * @method static RuleRadio radio()
- *
+
  * @see RuleManager
  */
 class Rule extends Facade

@@ -37,18 +37,18 @@ final class AskModelName
 
     private static function parseFqn(): void
     {
-        self::$fqn = 'App\\Models\\'.self::$model;
+        self::$fqn = 'App\\Models\\' . self::$model;
 
         if (str_contains(self::$model, '\\')) {
-            self::$fqn = self::$model;
+            self::$fqn   = self::$model;
             self::$model = str(self::$fqn)->rtrim('\\')->afterLast('\\');
         }
     }
 
     private static function checkIfModelExists(): void
     {
-        if (! class_exists(self::$fqn)) {
-            error('Cannot find class ['.self::$fqn.']. Try again or press Ctrl+C to abort.');
+        if (!class_exists(self::$fqn)) {
+            error("Cannot find class [" . self::$fqn . "]. Try again or press Ctrl+C to abort.");
 
             self::$model = '';
 

@@ -15,5 +15,6 @@ class BuilderBase
     public function __construct(
         protected Component $component,
         protected null|array|FilterBase $filterBase = null
-    ) {}
+    ) {
+    }
 }

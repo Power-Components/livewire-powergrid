@@ -24,7 +24,7 @@ final class Header implements Wireable
 
     /**
      * @return $this
-     *               Show search input into component
+     * Show search input into component
      */
     public function showSearchInput(): Header
     {
@@ -35,7 +35,7 @@ final class Header implements Wireable
 
     public function showSoftDeletes(bool $showMessage = true): Header
     {
-        $this->softDeletes = true;
+        $this->softDeletes            = true;
         $this->showMessageSoftDeletes = $showMessage;
 
         return $this;

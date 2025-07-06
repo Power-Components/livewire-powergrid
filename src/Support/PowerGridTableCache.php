@@ -56,6 +56,6 @@ final class PowerGridTableCache
 
     private static function generateTag(string $tableName): string
     {
-        return self::$cachedTableTag.$tableName;
+        return self::$cachedTableTag . $tableName;
     }
 }

@@ -8,7 +8,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Filters
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridComponent $component)
+    {
+    }
 
     public function handle(ScoutBuilder $builder, Closure $next): ScoutBuilder
     {
@@ -19,7 +21,7 @@ final class Filters
         collect($this->component->filters)
             ->each(
                 fn (array $filters) => collect($filters)
-                    ->each(fn (string $value, string $field) => $builder->where($field, $value))
+                ->each(fn (string $value, string $field) => $builder->where($field, $value))
             );
 
         return $next($builder);

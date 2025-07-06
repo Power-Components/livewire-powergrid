@@ -21,8 +21,8 @@ enum Datasource
     {
         return match ($this) {
             Datasource::ELOQUENT_BUILDER => 'Eloquent Builder',
-            Datasource::QUERY_BUILDER => 'Query Builder',
-            Datasource::COLLECTION => 'Collection'
+            Datasource::QUERY_BUILDER    => 'Query Builder',
+            Datasource::COLLECTION       => 'Collection'
         };
     }
 
@@ -33,7 +33,7 @@ enum Datasource
     {
         return match ($this) {
             Datasource::ELOQUENT_BUILDER => true,
-            default => false
+            default                      => false
         };
     }
 
@@ -44,7 +44,7 @@ enum Datasource
     {
         return match ($this) {
             Datasource::QUERY_BUILDER => true,
-            default => false
+            default                   => false
         };
     }
 
@@ -55,8 +55,8 @@ enum Datasource
     {
         return match ($this) {
             Datasource::ELOQUENT_BUILDER => true,
-            Datasource::QUERY_BUILDER => true,
-            default => false
+            Datasource::QUERY_BUILDER    => true,
+            default                      => false
         };
     }
 
@@ -64,8 +64,8 @@ enum Datasource
     {
         return match ($this) {
             Datasource::ELOQUENT_BUILDER => 'table.model.stub',
-            Datasource::QUERY_BUILDER => 'table.query-builder.stub',
-            Datasource::COLLECTION => 'table.collection.stub',
+            Datasource::QUERY_BUILDER    => 'table.query-builder.stub',
+            Datasource::COLLECTION       => 'table.collection.stub',
         };
     }
 

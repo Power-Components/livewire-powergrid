@@ -22,7 +22,7 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
-        if (! is_array($values) || count($values) === 0) {
+        if (!is_array($values) || count($values) === 0) {
             return;
         }
 
@@ -32,7 +32,7 @@ trait WithMultiSelectBuilder
             }
         }
 
-        if (! $empty) {
+        if (!$empty) {
             $builder->whereIn($field, $values);
         }
     }
@@ -48,7 +48,7 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
-        if (! is_array($values) || count($values) === 0) {
+        if (!is_array($values) || count($values) === 0) {
             return $collection;
         }
 

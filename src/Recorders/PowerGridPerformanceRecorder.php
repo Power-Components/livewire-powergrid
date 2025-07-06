@@ -14,7 +14,8 @@ class PowerGridPerformanceRecorder
     public function __construct(
         protected Pulse $pulse,
         protected Repository $config
-    ) {}
+    ) {
+    }
 
     public function record(PowerGridPerformanceData $class): void
     {

@@ -29,7 +29,7 @@ class FilterInputText extends FilterBase
 
     public function operators(array $value = []): FilterInputText
     {
-        if (! in_array('contains', $value)) {
+        if (!in_array('contains', $value)) {
             $value[] = 'contains';
         }
 

@@ -12,7 +12,7 @@ class RuleRadio extends BaseRule
     {
         $this->setModifier('setAttribute', [
             'attribute' => $attribute,
-            'value' => $value,
+            'value'     => $value,
         ]);
 
         return $this;

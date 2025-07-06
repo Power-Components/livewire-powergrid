@@ -11,9 +11,9 @@ final class AskDatabaseTableName
     public static function handle(): string
     {
         $tableExists = false;
-        $tableName = '';
+        $tableName   = '';
 
-        while (! $tableExists) {
+        while (!$tableExists) {
             $tableName = suggest(
                 label: 'Enter or Select a DB Table',
                 options: ListDatabaseTables::handle(),
@@ -27,7 +27,7 @@ final class AskDatabaseTableName
             } else {
                 $tableExists = Schema::hasTable($tableName);
 
-                if (! $tableExists) {
+                if (!$tableExists) {
                     error("The table [{$tableName}] does not exist! Try again or press Ctrl+C to abort.");
                 }
             }

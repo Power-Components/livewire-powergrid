@@ -4,6 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
+
+use function Laravel\Prompts\{error, info, note};
+
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentDatasource};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
     AskDatabaseTableName,
@@ -13,8 +16,6 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
-
-use function Laravel\Prompts\{error, info, note};
 
 class CreateCommand extends Command
 {
@@ -130,12 +131,12 @@ class CreateCommand extends Command
 
         note("💡 include the <comment>{$this->component?->name}</comment> component using the tag: <comment>{$this->component?->htmlTag}</comment>");
 
-        info('👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>'.PHP_EOL);
+        info('👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>' . PHP_EOL);
     }
 
     private function AutoImportLabel(): string
     {
-        return 'Auto-import Data Source fields from '.
+        return 'Auto-import Data Source fields from ' .
         (
             $this->component->requiresDatabaseTableName() ?
                  "[{$this->component?->databaseTable}] table?" :

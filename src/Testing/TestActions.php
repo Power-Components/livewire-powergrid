@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Testing;
 
 use Closure;
+
 use PHPUnit\Framework\Assert;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -68,8 +69,8 @@ class TestActions
                         $jsonEscaped = $matches[1] ?? null;
 
                         if ($jsonEscaped) {
-                            $jsonStringClean = strval(json_decode('"'.$jsonEscaped.'"', true));
-                            $data = json_decode($jsonStringClean, true);
+                            $jsonStringClean = strval(json_decode('"' . $jsonEscaped . '"', true));
+                            $data            = json_decode($jsonStringClean, true);
 
                             return $data == $expectedParams;
                         }

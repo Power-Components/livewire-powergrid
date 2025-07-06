@@ -2,9 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
-
 use function Laravel\Prompts\select;
+
+use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
 
 final class AskComponentDatasource
 {

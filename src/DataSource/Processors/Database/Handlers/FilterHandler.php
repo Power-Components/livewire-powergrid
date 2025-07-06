@@ -15,7 +15,8 @@ class FilterHandler
 
     public function __construct(
         private readonly PowerGridComponent $component
-    ) {}
+    ) {
+    }
 
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
@@ -31,14 +32,14 @@ class FilterHandler
             $newColumns = [];
 
             foreach ($columns as $key => $value) {
-                $parts = explode('.', $key);
+                $parts    = explode('.', $key);
                 $lastPart = end($parts);
 
                 if (is_numeric($lastPart) && intval($lastPart) == $lastPart) {
                     array_pop($parts);
                     $prefix = implode('.', $parts);
 
-                    if (! isset($newColumns[$prefix])) {
+                    if (!isset($newColumns[$prefix])) {
                         $newColumns[$prefix] = [];
                     }
 
@@ -48,7 +49,7 @@ class FilterHandler
                 } elseif ($lastPart === 'start' || $lastPart === 'end') {
                     $prefix = implode('.', array_slice($parts, 0, -1));
 
-                    if (! isset($newColumns[$prefix])) {
+                    if (!isset($newColumns[$prefix])) {
                         $newColumns[$prefix] = [];
                     }
 
@@ -67,15 +68,15 @@ class FilterHandler
                             ->first();
 
                         match ($filterType) {
-                            'datetime' => (new DateTimePicker($this->component, $filter))->builder($query, $field, $value),
-                            'date' => (new DatePicker($this->component, $filter))->builder($query, $field, $value),
+                            'datetime'     => (new DateTimePicker($this->component, $filter))->builder($query, $field, $value),
+                            'date'         => (new DatePicker($this->component, $filter))->builder($query, $field, $value),
                             'multi_select' => (new MultiSelect($this->component, $filter))->builder($query, $field, $value),
-                            'select' => (new Select($this->component, $filter))->builder($query, $field, $value),
-                            'boolean' => (new Boolean($this->component, $filter))->builder($query, $field, $value),
-                            'number' => (new Number($this->component, $filter))->builder($query, $field, $value),
-                            'input_text' => (new InputText($this->component, $filter))->builder($query, $field, [
-                                'selected' => $this->validateInputTextOptions($this->component->filters, $field),
-                                'value' => $value,
+                            'select'       => (new Select($this->component, $filter))->builder($query, $field, $value),
+                            'boolean'      => (new Boolean($this->component, $filter))->builder($query, $field, $value),
+                            'number'       => (new Number($this->component, $filter))->builder($query, $field, $value),
+                            'input_text'   => (new InputText($this->component, $filter))->builder($query, $field, [
+                                'selected'     => $this->validateInputTextOptions($this->component->filters, $field),
+                                'value'        => $value,
                                 'searchMorphs' => $this->component->searchMorphs(),
                             ]),
                             default => null

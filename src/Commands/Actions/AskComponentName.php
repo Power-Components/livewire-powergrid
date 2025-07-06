@@ -30,9 +30,9 @@ final class AskComponentName
 
     private static function checkIfComponentAlreadyExists(): void
     {
-        if (File::exists(powergrid_components_path(self::$componentName.'.php'))) {
+        if (File::exists(powergrid_components_path(self::$componentName . '.php'))) {
             $confirmation = confirm(
-                'Component ['.self::$componentName.'] already exists. Overwrite it?',
+                'Component [' . self::$componentName . '] already exists. Overwrite it?',
                 default: false,
                 hint: '❗ WARNING ❗'
             );

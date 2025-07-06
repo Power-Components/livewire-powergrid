@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 final class PowerGridStub
 {
-    /** @var Collection<string, string> */
+    /** @var Collection<string, string> $variables */
     private Collection $variables;
 
     private string $content = '';
@@ -15,7 +15,7 @@ final class PowerGridStub
     public function __construct(string $template)
     {
         $this->variables = collect();
-        $this->content = File::get($template);
+        $this->content   = File::get($template);
 
         $this->ensureContentCompatibility();
     }

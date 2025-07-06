@@ -27,9 +27,9 @@ trait LazyManager
     #[Computed]
     public function getLazyKeys(): string
     {
-        return md5('pg_keys_'.json_encode(array_merge($this->getCacheKeys(), [
+        return md5('pg_keys_' . json_encode(array_merge($this->getCacheKeys(), [
             'additionalCacheKey' => $this->additionalCacheKey,
-            'index' => data_get($this->setUp, 'lazy.items'),
+            'index'              => data_get($this->setUp, 'lazy.items'),
         ])));
     }
 
@@ -38,7 +38,7 @@ trait LazyManager
     {
         $count = $this->totalCurrentPage;
 
-        $items = data_get($this->setUp, 'lazy.items');
+        $items           = data_get($this->setUp, 'lazy.items');
         $rowsPerChildren = data_get($this->setUp, 'lazy.rowsPerChildren');
 
         $rendered = ($items + 1) * $rowsPerChildren;

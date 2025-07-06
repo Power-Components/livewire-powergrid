@@ -13,22 +13,22 @@ class PerformanceCard extends Card
 {
     public function render()
     {
-        $config = Config::get('pulse.recorders.'.PowerGridPerformanceRecorder::class);
+        $config = Config::get('pulse.recorders.' . PowerGridPerformanceRecorder::class);
 
         $averageRetrieveData = 0;
-        $averageQueriesTime = 0;
-        $records = collect();
+        $averageQueriesTime  = 0;
+        $records             = collect();
 
         if (data_get($config, 'enabled')) {
             $records = Pulse::values('powergrid-performance')
                 ->map(function ($item) {
                     /** @var array $value */
-                    $value = json_decode($item->value, true);
-                    $item->tableName = $value['tableName'];
+                    $value                  = json_decode($item->value, true);
+                    $item->tableName        = $value['tableName'];
                     $item->retrieveDataInMs = $value['retrieveDataInMs'];
-                    $item->queriesTimeInMs = $value['queriesTimeInMs'];
-                    $item->isCached = $value['isCached'];
-                    $item->queries = $value['queries'];
+                    $item->queriesTimeInMs  = $value['queriesTimeInMs'];
+                    $item->isCached         = $value['isCached'];
+                    $item->queries          = $value['queries'];
                     unset($item->value);
 
                     return $item;
@@ -38,7 +38,7 @@ class PerformanceCard extends Card
                 ->values();
 
             $averageRetrieveData = $records->avg(fn ($item) => $item->retrieveDataInMs);
-            $averageQueriesTime = $records->avg(fn ($item) => $item->queriesTimeInMs);
+            $averageQueriesTime  = $records->avg(fn ($item) => $item->queriesTimeInMs);
         }
 
         return Blade::render(<<<blade
@@ -127,14 +127,14 @@ class PerformanceCard extends Card
                 </x-pulse::scroll>
             </x-pulse::card>
         blade, [
-            'cols' => $this->cols,
-            'rows' => $this->rows,
-            'class' => $this->class,
-            'expand' => $this->expand,
+            'cols'                => $this->cols,
+            'rows'                => $this->rows,
+            'class'               => $this->class,
+            'expand'              => $this->expand,
             'averageRetrieveData' => $averageRetrieveData,
-            'averageQueriesTime' => $averageQueriesTime,
-            'records' => $records,
-            'enabled' => $config['enabled'],
+            'averageQueriesTime'  => $averageQueriesTime,
+            'records'             => $records,
+            'enabled'             => $config['enabled'],
         ]);
     }
 }

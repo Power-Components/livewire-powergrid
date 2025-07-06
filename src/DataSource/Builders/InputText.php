@@ -15,7 +15,7 @@ class InputText extends BuilderBase
     {
         if ($filterRelation = (array) data_get($this->filterBase, 'filterRelation')) {
             $relation = strval(data_get($filterRelation, 'relation'));
-            $field = strval(data_get($filterRelation, 'field'));
+            $field    = strval(data_get($filterRelation, 'field'));
 
             $closure = $this->builderRelation($relation, $field);
 
@@ -34,12 +34,12 @@ class InputText extends BuilderBase
         }
 
         /** @var array $values */
-        $value = $values['value'];
-        $selected = $values['selected'];
+        $value        = $values['value'];
+        $selected     = $values['selected'];
         $searchMorphs = $values['searchMorphs'];
 
         if (is_array($value) && count($value) > 0 && blank($searchMorphs)) {
-            $field = $field.'.'.key($value);
+            $field = $field . '.' . key($value);
             $value = $value[key($value)];
         }
 
@@ -48,25 +48,25 @@ class InputText extends BuilderBase
          */
         $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, mixed $value) {
             match ($selected) {
-                'is' => $query->where($field, '=', $value),
-                'is_not' => $query->where($field, '!=', $value),
-                'starts_with' => $query->where($field, Sql::like($query), $value.'%'),
-                'ends_with' => $query->where($field, Sql::like($query), '%'.$value),
-                'contains_not' => $query->where($field, 'NOT '.Sql::like($query), '%'.$value.'%'),
-                'is_empty' => $query->where($field, '=', '')->orWhereNull($field),
+                'is'           => $query->where($field, '=', $value),
+                'is_not'       => $query->where($field, '!=', $value),
+                'starts_with'  => $query->where($field, Sql::like($query), $value . '%'),
+                'ends_with'    => $query->where($field, Sql::like($query), '%' . $value),
+                'contains_not' => $query->where($field, 'NOT ' . Sql::like($query), '%' . $value . '%'),
+                'is_empty'     => $query->where($field, '=', '')->orWhereNull($field),
                 'is_not_empty' => $query->where($field, '!=', '')->whereNotNull($field),
-                'is_null' => $query->whereNull($field),
-                'is_not_null' => $query->whereNotNull($field),
-                'is_blank' => $query->where($field, '=', ''),
+                'is_null'      => $query->whereNull($field),
+                'is_not_null'  => $query->whereNotNull($field),
+                'is_blank'     => $query->where($field, '=', ''),
                 'is_not_blank' => $query->where($field, '!=', '')->orWhereNull($field),
-                default => $query->where($field, Sql::like($query), '%'.$value.'%'),
+                default        => $query->where($field, Sql::like($query), '%' . $value . '%'),
             };
         };
 
         if (filled($searchMorphs) && $builder instanceof EloquentBuilder) {
-            $table = $searchMorphs[0];
+            $table        = $searchMorphs[0];
             $relationship = $searchMorphs[1];
-            $types = $searchMorphs[2];
+            $types        = $searchMorphs[2];
 
             $builder->whereHasMorph(
                 $relationship,
@@ -98,12 +98,12 @@ class InputText extends BuilderBase
         }
 
         /** @var array $values */
-        $value = $values['value'];
+        $value    = $values['value'];
         $selected = $values['selected'];
 
         return match ($selected) {
-            'is' => $collection->where($field, '=', $value),
-            'is_not' => $collection->where($field, '!=', $value),
+            'is'          => $collection->where($field, '=', $value),
+            'is_not'      => $collection->where($field, '!=', $value),
             'starts_with' => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
@@ -117,7 +117,7 @@ class InputText extends BuilderBase
             'contains_not' => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
-                return ! Str::Contains(Str::lower($row->{$field}), Str::lower($value));
+                return !Str::Contains(Str::lower($row->{$field}), Str::lower($value));
             }),
             'is_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
@@ -129,13 +129,13 @@ class InputText extends BuilderBase
 
                 return $row->{$field} !== '' && $row->{$field} !== null;
             }),
-            'is_null' => $collection->whereNull($field),
+            'is_null'     => $collection->whereNull($field),
             'is_not_null' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
-                return $row->{$field} !== '' && ! is_null($row->{$field});
+                return $row->{$field} !== '' && !is_null($row->{$field});
             }),
-            'is_blank' => $collection->whereNotNull($field)->where($field, '=', ''),
+            'is_blank'     => $collection->whereNotNull($field)->where($field, '=', ''),
             'is_not_blank' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
 
@@ -144,7 +144,7 @@ class InputText extends BuilderBase
             default => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
 
-                return stristr($row->{$field}, strtolower($value)) !== false;
+                return false !== stristr($row->{$field}, strtolower($value));
             }),
         };
     }
@@ -155,12 +155,12 @@ class InputText extends BuilderBase
             $value = $params['value'];
 
             match ($params['selected']) {
-                'is' => $query->whereRelation($relation, $field, '=', $value),
-                'is_not' => $query->whereRelation($relation, $field, '!=', $value),
-                'starts_with' => $query->whereRelation($relation, $field, Sql::like($query), $value.'%'),
-                'ends_with' => $query->whereRelation($relation, $field, Sql::like($query), '%'.$value),
-                'contains_not' => $query->whereRelation($relation, $field, 'NOT '.Sql::like($query), '%'.$value.'%'),
-                'is_empty' => $query->whereRelation($relation, function (Builder $query) use ($field) {
+                'is'           => $query->whereRelation($relation, $field, '=', $value),
+                'is_not'       => $query->whereRelation($relation, $field, '!=', $value),
+                'starts_with'  => $query->whereRelation($relation, $field, Sql::like($query), $value . '%'),
+                'ends_with'    => $query->whereRelation($relation, $field, Sql::like($query), '%' . $value),
+                'contains_not' => $query->whereRelation($relation, $field, 'NOT ' . Sql::like($query), '%' . $value . '%'),
+                'is_empty'     => $query->whereRelation($relation, function (Builder $query) use ($field) {
                     $query->where($field, '=', '')->orWhereNull($field);
                 }),
                 'is_not_empty' => $query->whereRelation($relation, function (Builder $query) use ($field) {
@@ -172,11 +172,11 @@ class InputText extends BuilderBase
                 'is_not_null' => $query->whereRelation($relation, function (Builder $query) use ($field) {
                     $query->whereNotNull($field);
                 }),
-                'is_blank' => $query->whereRelation($relation, $field, '=', ''),
+                'is_blank'     => $query->whereRelation($relation, $field, '=', ''),
                 'is_not_blank' => $query->whereRelation($relation, function (Builder $query) use ($field) {
                     $query->where($field, '!=', '')->orWhereNull($field);
                 }),
-                default => $query->whereRelation($relation, $field, Sql::like($query), '%'.$value.'%'),
+                default => $query->whereRelation($relation, $field, Sql::like($query), '%' . $value . '%'),
             };
         };
     }

@@ -20,7 +20,7 @@ trait Persist
      */
     public function persist(array $tableItems, string $prefix = ''): PowerGridComponent
     {
-        $this->persist = $tableItems;
+        $this->persist       = $tableItems;
         $this->persistPrefix = $prefix;
 
         return $this;
@@ -41,15 +41,15 @@ trait Persist
         }
 
         if (in_array('filters', $this->persist) || $tableItem === 'filters') {
-            $state['filters'] = $this->filters;
+            $state['filters']        = $this->filters;
             $state['enabledFilters'] = $this->enabledFilters;
         }
 
         if (in_array('sorting', $this->persist) || $tableItem === 'sorting') {
-            $state['sortField'] = $this->sortField;
+            $state['sortField']     = $this->sortField;
             $state['sortDirection'] = $this->sortDirection;
-            $state['sortArray'] = $this->sortArray;
-            $state['multiSort'] = $this->multiSort;
+            $state['sortArray']     = $this->sortArray;
+            $state['multiSort']     = $this->multiSort;
         }
 
         if (empty($this->persist)) {
@@ -60,8 +60,8 @@ trait Persist
 
         match ($this->getPersistDriverConfig()) {
             'session' => Session::put($this->getPersistKeyName(), $jsonState),
-            'cache' => Cache::store($this->getPersistDriverStoreConfig())->put($this->getPersistKeyName(), $jsonState),
-            default => Cookie::queue($this->getPersistKeyName(), $jsonState, now()->addYears(5)->unix())
+            'cache'   => Cache::store($this->getPersistDriverStoreConfig())->put($this->getPersistKeyName(), $jsonState),
+            default   => Cookie::queue($this->getPersistKeyName(), $jsonState, now()->addYears(5)->unix())
         };
     }
 
@@ -76,15 +76,15 @@ trait Persist
 
         $storage = match ($this->getPersistDriverConfig()) {
             'session' => Session::get($this->getPersistKeyName()),
-            'cache' => Cache::store($this->getPersistDriverStoreConfig())->get($this->getPersistKeyName()),
-            default => Cookie::get($this->getPersistKeyName())
+            'cache'   => Cache::store($this->getPersistDriverStoreConfig())->get($this->getPersistKeyName()),
+            default   => Cookie::get($this->getPersistKeyName())
         };
 
         $state = (array) json_decode(strval($storage), true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
             $this->columns = collect($this->columns)->map(function ($column) use ($state) {
-                if (! $column->forceHidden && array_key_exists($column->field, $state['columns'])) {
+                if (!$column->forceHidden && array_key_exists($column->field, $state['columns'])) {
                     data_set($column, 'hidden', $state['columns'][$column->field]);
                 }
 
@@ -93,15 +93,15 @@ trait Persist
         }
 
         if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
-            $this->filters = $state['filters'];
+            $this->filters        = $state['filters'];
             $this->enabledFilters = $state['enabledFilters'];
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {
-            $this->sortField = $state['sortField'];
+            $this->sortField     = $state['sortField'];
             $this->sortDirection = $state['sortDirection'];
-            $this->sortArray = $state['sortArray'];
-            $this->multiSort = $state['multiSort'];
+            $this->sortArray     = $state['sortArray'];
+            $this->multiSort     = $state['multiSort'];
         }
     }
 
@@ -112,7 +112,7 @@ trait Persist
     {
         $persistDriver = strval(config('livewire-powergrid.persist_driver', 'cookies'));
 
-        if (! in_array($persistDriver, ['session', 'cache', 'cookies'])) {
+        if (!in_array($persistDriver, ['session', 'cache', 'cookies'])) {
             throw new Exception('Invalid persist driver');
         }
 
@@ -126,10 +126,10 @@ trait Persist
 
     private function getPersistKeyName(): string
     {
-        if (! empty($this->persistPrefix)) {
-            return 'pg:'.$this->persistPrefix.'-'.$this->tableName;
+        if (!empty($this->persistPrefix)) {
+            return 'pg:' . $this->persistPrefix . '-' . $this->tableName;
         }
 
-        return 'pg:'.$this->tableName;
+        return 'pg:' . $this->tableName;
     }
 }

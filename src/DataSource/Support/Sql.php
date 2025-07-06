@@ -24,7 +24,7 @@ class Sql
             $driverName = $query->getConnection()->getConfig('driver');
         }
 
-        if (! isset($driverName) or ! is_string($driverName)) {
+        if (!isset($driverName) or !is_string($driverName)) {
             $driverName = self::getDatabaseDriverName();
         }
 
@@ -48,7 +48,7 @@ class Sql
      */
     public static function sortStringAsNumber(string $sortField): string
     {
-        $driverName = self::getDatabaseDriverName();
+        $driverName    = self::getDatabaseDriverName();
         $driverVersion = self::getDatabaseVersion();
 
         return self::getSortSqlByDriver($sortField, $driverName, $driverVersion);
@@ -77,7 +77,7 @@ class Sql
 
         $supportedVersions = [
             'mysql' => [
-                '0' => $default,
+                '0'     => $default,
                 '8.0.4' => "CAST(NULLIF(REGEXP_REPLACE($sortField, '[[:alpha:]]+', ''), '') AS SIGNED INTEGER) {sortDirection}",
             ],
             'sqlite' => [
@@ -91,7 +91,7 @@ class Sql
             ],
         ];
 
-        if (! isset($supportedVersions[$driverName])) {
+        if (!isset($supportedVersions[$driverName])) {
             return $default;
         }
 
@@ -105,6 +105,10 @@ class Sql
         return is_null($syntax) === true ? $default : $syntax;
     }
 
+    /**
+     * @param string|null $sortFieldType
+     * @return bool
+     */
     public static function isValidSortFieldType(?string $sortFieldType): bool
     {
         if (is_null($sortFieldType)) {
@@ -115,20 +119,22 @@ class Sql
     }
 
     /**
+     * @param string $sortField
+     * @return string|null
      * @throws Exception
      */
     public static function getSortFieldType(string $sortField): ?string
     {
         $data = explode('.', $sortField);
 
-        if (! isset($data[1])) {
+        if (!isset($data[1])) {
             return null;
         }
 
         $tableName = $data[0];
-        $column = $data[1];
+        $column    = $data[1];
 
-        if (! Schema::hasColumn($data[0], $data[1])) {
+        if (!Schema::hasColumn($data[0], $data[1])) {
             throw new Exception("There is no column with name '$column' on table '$tableName'. Please see: https://livewire-powergrid.com/#/table/include-columns?id=fieldstring-field-string-datafield");
         }
 
@@ -142,7 +148,7 @@ class Sql
     {
         $driverName = DB::getDriverName();
 
-        if (! is_string($driverName)) {
+        if (!is_string($driverName)) {
             throw new Exception('Could not get Database version');
         }
 
@@ -156,7 +162,7 @@ class Sql
     {
         $version = DB::getPdo()->getAttribute(intval(constant('PDO::ATTR_SERVER_VERSION')));
 
-        if (! is_string($version)) {
+        if (!is_string($version)) {
             throw new Exception('Could not get Database version');
         }
 

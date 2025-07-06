@@ -60,11 +60,11 @@ class Macros
             $field = $this->dataField ?: $this->field;
 
             $this->rawQueries[] = [
-                'method' => 'orWhereRaw',
-                'sql' => $sql,
+                'method'   => 'orWhereRaw',
+                'sql'      => $sql,
                 'bindings' => [function (PowerGridComponent $component) use ($field): string {
-                    $search = $component->search;
-                    $fieldMethod = 'beforeSearch'.str($field)->camel()->ucfirst();
+                    $search      = $component->search;
+                    $fieldMethod = 'beforeSearch' . str($field)->camel()->ucfirst();
 
                     if (method_exists($component, $fieldMethod)) {
                         $search = $component->{$fieldMethod}($field, $search);
@@ -84,12 +84,12 @@ class Macros
 
         Column::macro('searchableJson', function (string $tableName) {
             $this->rawQueries[] = [
-                'method' => 'orWhereRaw',
-                'sql' => $tableName ? "LOWER(`$tableName`.`$this->dataField`) like ?" : "LOWER(`$this->dataField`) like ?",
+                'method'   => 'orWhereRaw',
+                'sql'      => $tableName ? "LOWER(`$tableName`.`$this->dataField`) like ?" : "LOWER(`$this->dataField`) like ?",
                 'bindings' => [function (PowerGridComponent $component) {
                     $search = htmlspecialchars($component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
-                    return '%'.strtolower($search).'%';
+                    return "%" . strtolower($search) . "%";
                 }],
                 'enabled' => function (PowerGridComponent $component) {
                     return filled($component->search);
@@ -105,7 +105,7 @@ class Macros
             if ($when) {
                 $this->rawQueries[] = [
                     'method' => 'orderByRaw',
-                    'sql' => $tableName
+                    'sql'    => $tableName
                         ? Sql::sortStringAsNumber("`$tableName`.`$this->dataField`")
                         : Sql::sortStringAsNumber($this->dataField),
                     'bindings' => [],
@@ -128,7 +128,7 @@ class Macros
 
         Button::macro('call', function (string $method, array $params) {
             $this->attributes([
-                'wire:click' => "\$call('{$method}', ".Js::from($params).')',
+                'wire:click' => "\$call('{$method}', " . Js::from($params) . ")",
             ]);
 
             return $this;
@@ -136,7 +136,7 @@ class Macros
 
         Button::macro('dispatch', function (string $event, array $params) {
             $this->attributes([
-                'wire:click' => "\$dispatch('{$event}', ".Js::from($params).')',
+                'wire:click' => "\$dispatch('{$event}', " . Js::from($params) . ")",
             ]);
 
             return $this;
@@ -144,7 +144,7 @@ class Macros
 
         Button::macro('dispatchTo', function (string $component, string $event, array $params) {
             $this->attributes([
-                'wire:click' => "\$dispatchTo('{$component}', '{$event}', ".Js::from($params).')',
+                'wire:click' => "\$dispatchTo('{$component}', '{$event}', " . Js::from($params) . ")",
             ]);
 
             return $this;
@@ -152,7 +152,7 @@ class Macros
 
         Button::macro('dispatchSelf', function (string $event, array $params) {
             $this->attributes([
-                'wire:click' => "\$dispatchSelf('{$event}', ".Js::from($params).')',
+                'wire:click' => "\$dispatchSelf('{$event}', " . Js::from($params) . ")",
             ]);
 
             return $this;
@@ -160,7 +160,7 @@ class Macros
 
         Button::macro('parent', function (string $method, array $params) {
             $this->attributes([
-                'wire:click' => "\$parent.{$method}(".Js::from($params).')',
+                'wire:click' => "\$parent.{$method}(" . Js::from($params) . ")",
             ]);
 
             return $this;
@@ -201,7 +201,7 @@ class Macros
             $this->tag('a');
 
             $this->attributes([
-                'href' => route($route, $params),
+                'href'   => route($route, $params),
                 'target' => $target,
             ]);
 
@@ -231,7 +231,7 @@ class Macros
         });
 
         Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm') {
-            $message = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
+            $message      = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
             $confirmValue = trim($confirmValue);
 
             $this->attributes([
@@ -289,12 +289,12 @@ class Macros
                 );
 
                 return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
-                    'items' => $results,
-                    'total' => $engine->getTotalCount($rawResults),
-                    'perPage' => $perPage,
+                    'items'       => $results,
+                    'total'       => $engine->getTotalCount($rawResults),
+                    'perPage'     => $perPage,
                     'currentPage' => $page,
-                    'options' => [
-                        'path' => Paginator::resolveCurrentPath(),
+                    'options'     => [
+                        'path'     => Paginator::resolveCurrentPath(),
                         'pageName' => $pageName,
                     ],
                 ])->appends('query', $this->query);

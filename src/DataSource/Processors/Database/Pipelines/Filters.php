@@ -9,7 +9,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Filters
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridComponent $component)
+    {
+    }
 
     public function handle(mixed $query, Closure $next): mixed
     {

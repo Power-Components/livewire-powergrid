@@ -42,7 +42,7 @@ class FilterBase implements Wireable
     public function filterRelation(string $relation, string $field): self
     {
         $this->filterRelation['relation'] = $relation;
-        $this->filterRelation['field'] = $field;
+        $this->filterRelation['field']    = $field;
 
         return $this;
     }

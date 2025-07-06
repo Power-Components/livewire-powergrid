@@ -4,8 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
-use Illuminate\View\Concerns\ManagesLoops;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\{ManageLoops, PowerGridComponent};
 
 final class DataTransformer
 {
@@ -17,17 +16,17 @@ final class DataTransformer
 
     public function __construct(protected PowerGridComponent $component)
     {
-        $this->rowTransformer = new RowTransformer($component->fields());
+        $this->rowTransformer  = new RowTransformer($component->fields());
         $this->actionProcessor = new ActionProcessor($component);
-        $this->primaryKey = $component->primaryKey;
+        $this->primaryKey      = $component->primaryKey;
     }
 
     public function transform(BaseCollection $collection): TransformResult
     {
-        $startTime = microtime(true);
+        $startTime    = microtime(true);
         $actionsByRow = [];
 
-        $loopInstance = app(ManagesLoops::class);
+        $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($collection);
 
         $transformedCollection = $collection->map(function ($row, $index) use ($loopInstance, &$actionsByRow) {
@@ -35,18 +34,18 @@ final class DataTransformer
 
             $transformedData = $this->rowTransformer->transform($rowObject);
 
-            $loopVars = $loopInstance->getLastLoop();
+            $loopVars         = $loopInstance->getLastLoop();
             $processedActions = $this->actionProcessor->process($rowObject, $loopVars);
 
-            $transformedData->__powergrid_loop = $loopVars;
+            $transformedData->__powergrid_loop    = $loopVars;
             $transformedData->__powergrid_actions = $processedActions['actions'];
-            $transformedData->__powergrid_rules = $processedActions['rules'];
+            $transformedData->__powergrid_rules   = $processedActions['rules'];
 
             $loopInstance->incrementLoopIndices();
 
             $primaryKeyValue = data_get($row, $this->primaryKey);
 
-            if ($primaryKeyValue && ! empty($processedActions['actions'])) {
+            if ($primaryKeyValue && !empty($processedActions['actions'])) {
                 $actionsByRow[$primaryKeyValue] = $processedActions['actions'];
             }
 

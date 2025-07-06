@@ -43,7 +43,9 @@ final class Button implements Wireable
 
     public bool|Closure $can = true;
 
-    public function __construct(public string $action) {}
+    public function __construct(public string $action)
+    {
+    }
 
     public static function add(string $action = ''): Button
     {
@@ -86,7 +88,7 @@ final class Button implements Wireable
 
     public function icon(string $icon, array $iconAttributes = []): Button
     {
-        $this->icon = $icon;
+        $this->icon           = $icon;
         $this->iconAttributes = $iconAttributes;
 
         return $this;

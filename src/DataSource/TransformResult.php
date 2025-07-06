@@ -10,7 +10,8 @@ final class TransformResult
         public readonly BaseCollection $collection,
         public readonly float $transformTimeInMs,
         public readonly array $actionsByRow = []
-    ) {}
+    ) {
+    }
 
     public function getActionsByRow(): array
     {

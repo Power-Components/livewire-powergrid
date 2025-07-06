@@ -8,7 +8,9 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Sorting
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridComponent $component)
+    {
+    }
 
     public function handle(ScoutBuilder $builder, Closure $next): ScoutBuilder
     {

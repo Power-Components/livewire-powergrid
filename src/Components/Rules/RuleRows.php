@@ -14,7 +14,7 @@ class RuleRows extends BaseRule
     {
         $this->setModifier('setAttribute', [
             'attribute' => $attribute,
-            'value' => $value,
+            'value'     => $value,
         ]);
 
         return $this;
@@ -27,7 +27,7 @@ class RuleRows extends BaseRule
     {
         $this->setModifier('detailView', [
             'detailView' => $detailView,
-            'options' => $options,
+            'options'    => $options,
         ]);
 
         return $this;

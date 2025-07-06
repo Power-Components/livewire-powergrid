@@ -24,7 +24,7 @@ final class Footer implements Wireable
 
     public function showPerPage(int $perPage = 10, array $perPageValues = [10, 25, 50, 100, 0]): Footer
     {
-        $this->perPage = $perPage;
+        $this->perPage       = $perPage;
         $this->perPageValues = $perPageValues;
 
         return $this;

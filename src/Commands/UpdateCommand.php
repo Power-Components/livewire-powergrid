@@ -19,7 +19,7 @@ class UpdateCommand extends Command
 
     public function handle(): int
     {
-        if (! class_exists(Factory::class)) {
+        if (!class_exists(Factory::class)) {
             warning('UpdateCommand: You need to install composer: <info>composer require composer/composer --dev</info>');
 
             return self::SUCCESS;

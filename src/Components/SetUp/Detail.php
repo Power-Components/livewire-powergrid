@@ -45,7 +45,7 @@ final class Detail implements Wireable
     public function showCollapseIcon(string $viewIcon = ''): Detail
     {
         $this->showCollapseIcon = true;
-        $this->viewIcon = $viewIcon;
+        $this->viewIcon         = $viewIcon;
 
         return $this;
     }

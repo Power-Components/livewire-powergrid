@@ -10,7 +10,7 @@ class Boolean
     {
         return [
             'selectAttributes' => new ComponentAttributeBag([
-                'wire:model' => 'filters.boolean.'.$field,
+                'wire:model'                     => 'filters.boolean.' . $field,
                 'wire:input.live.debounce.600ms' => "filterBoolean('{$field}', \$event.target.value, '{$title}')",
             ]),
         ];

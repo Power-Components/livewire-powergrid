@@ -12,7 +12,7 @@ trait Radio
 
     public function showRadioButton(string $attribute = 'id'): self
     {
-        $this->radio = true;
+        $this->radio          = true;
         $this->radioAttribute = $attribute;
 
         return $this;

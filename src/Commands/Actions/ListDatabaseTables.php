@@ -11,6 +11,7 @@ final class ListDatabaseTables
 
     /**
      * List tables in database
+     *
      */
     public static function handle(): array
     {

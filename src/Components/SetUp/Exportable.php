@@ -7,7 +7,6 @@ use Livewire\Wireable;
 final class Exportable implements Wireable
 {
     public const TYPE_XLS = 'xlsx';
-
     public const TYPE_CSV = 'csv';
 
     public string $name = 'exportable';
@@ -28,7 +27,9 @@ final class Exportable implements Wireable
 
     public bool $stripTags = false;
 
-    public function __construct(public string $fileName = 'export') {}
+    public function __construct(public string $fileName = 'export')
+    {
+    }
 
     public function type(string ...$types): self
     {

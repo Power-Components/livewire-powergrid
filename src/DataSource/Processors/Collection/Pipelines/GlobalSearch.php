@@ -9,7 +9,9 @@ use stdClass;
 
 final class GlobalSearch
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridComponent $component)
+    {
+    }
 
     public function handle(Collection $collection, Closure $next): Collection
     {
