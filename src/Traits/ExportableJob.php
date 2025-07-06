@@ -4,9 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Database\Eloquent as Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
-use PowerComponents\LivewirePowerGrid\DataSource\Builder;
-use PowerComponents\LivewirePowerGrid\{DataSource\ProcessDataSource,
-    DataSource\Processors\DataSourceBase,
+use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
+    DataSource\ProcessDataSource,
+    DataSource\Processors\Database\Handlers\FilterHandler,
+    DataSource\Processors\Database\Handlers\SearchHandler,
     PowerGridComponent};
 
 /** @codeCoverageIgnore */
@@ -59,11 +60,10 @@ trait ExportableJob
         };
 
         $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
-            ->where(
-                fn ($query) => Builder::make($query, $this->componentTable)
-                    ->filterContains()
-                    ->filter()
-            )
+            ->where(function ($query) {
+                (new SearchHandler($this->componentTable))->apply($query);
+                (new FilterHandler($this->componentTable))->apply($query);
+            })
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
@@ -72,6 +72,8 @@ trait ExportableJob
             ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
             ->get();
 
-        return DataSourceBase::transform($results, $this->componentTable);
+        $dataTransformer = new DataTransformer($processDataSource->component);
+
+        return $dataTransformer->transform($results)->collection;
     }
 }
