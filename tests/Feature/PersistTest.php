@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\{Cookie};
 use Livewire\Features\SupportTesting\Testable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

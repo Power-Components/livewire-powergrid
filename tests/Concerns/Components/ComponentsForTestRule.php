@@ -1,8 +1,8 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid};
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid};
 
 $baseRuleComponent = new class() extends DishesTable
 {

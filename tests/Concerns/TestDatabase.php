@@ -306,7 +306,7 @@ class TestDatabase
             }
 
             if (! array_key_exists('diet', $dish)) {
-                $dish['diet'] = $faker->randomElement([0, 1, 2]); //Diet::cases()
+                $dish['diet'] = $faker->randomElement([0, 1, 2]); // Diet::cases()
             }
 
             if (! array_key_exists('serving_at', $dish)) {

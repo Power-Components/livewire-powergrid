@@ -12,11 +12,11 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild,
     Livewire\PerformanceCard,
     PowerGridManager,
     Testing\TestActions};
+use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -33,7 +33,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         $this->publishViews();
         $this->publishConfigs();
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', $this->packageName);
+        $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', $this->packageName);
 
         Livewire::propertySynthesizer(EloquentModelSynth::class);
         Livewire::propertySynthesizer(EloquentCollectionSynth::class);
@@ -44,11 +44,11 @@ class PowerGridServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../../resources/config/livewire-powergrid.php',
+            __DIR__.'/../../resources/config/livewire-powergrid.php',
             $this->packageName
         );
 
-        $file = __DIR__ . '/../functions.php';
+        $file = __DIR__.'/../functions.php';
 
         if (file_exists($file)) {
             require_once $file;
@@ -73,14 +73,14 @@ class PowerGridServiceProvider extends ServiceProvider
 
     private function publishViews(): void
     {
-        $this->loadViewsFrom(__DIR__ . '/../../resources/views', $this->packageName);
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', $this->packageName);
 
         $this->publishes([
-            __DIR__ . '/../../resources/views' => resource_path('views/vendor/' . $this->packageName),
-        ], $this->packageName . '-views');
+            __DIR__.'/../../resources/views' => resource_path('views/vendor/'.$this->packageName),
+        ], $this->packageName.'-views');
 
         Blade::anonymousComponentPath(
-            __DIR__ . '/../../resources/views/tests',
+            __DIR__.'/../../resources/views/tests',
             'tests'
         );
     }
@@ -88,9 +88,9 @@ class PowerGridServiceProvider extends ServiceProvider
     private function publishConfigs(): void
     {
         $this->publishes([
-            __DIR__ . '/../../resources/config/livewire-powergrid.php' => config_path($this->packageName . '.php'),
+            __DIR__.'/../../resources/config/livewire-powergrid.php' => config_path($this->packageName.'.php'),
         ], 'livewire-powergrid-config');
 
-        $this->publishes([__DIR__ . '/../../resources/lang' => lang_path('vendor/' . $this->packageName)], $this->packageName . '-lang');
+        $this->publishes([__DIR__.'/../../resources/lang' => lang_path('vendor/'.$this->packageName)], $this->packageName.'-lang');
     }
 }

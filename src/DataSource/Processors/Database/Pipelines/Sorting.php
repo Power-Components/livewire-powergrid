@@ -11,13 +11,11 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Sorting
 {
-    public function __construct(protected PowerGridComponent $component)
-    {
-    }
+    public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        if (!($query instanceof EloquentBuilder || $query instanceof MorphToMany || $query instanceof QueryBuilder)) {
+        if (! ($query instanceof EloquentBuilder || $query instanceof MorphToMany || $query instanceof QueryBuilder)) {
             return $next($query);
         }
 
@@ -48,6 +46,6 @@ class Sorting
             return $sortField;
         }
 
-        return $this->component->currentTable . '.' . $sortField;
+        return $this->component->currentTable.'.'.$sortField;
     }
 }

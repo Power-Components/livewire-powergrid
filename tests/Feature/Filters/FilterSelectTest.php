@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Eloquent\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishTableBase,
     Concerns\Components\DishesArrayTable,
@@ -11,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin
 };
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

@@ -1,9 +1,9 @@
 <?php
 
 use OpenSpout\Reader\XLSX\Reader;
+use PowerComponents\LivewirePowerGrid\{Button,Column, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\ExportTable;
-use PowerComponents\LivewirePowerGrid\{Button,Column, PowerGridFields};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

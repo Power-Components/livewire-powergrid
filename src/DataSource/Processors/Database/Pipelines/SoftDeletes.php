@@ -9,13 +9,11 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class SoftDeletes
 {
-    public function __construct(protected PowerGridComponent $component)
-    {
-    }
+    public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        if (!($query instanceof EloquentBuilder || $query instanceof MorphToMany)) {
+        if (! ($query instanceof EloquentBuilder || $query instanceof MorphToMany)) {
             return $next($query);
         }
 

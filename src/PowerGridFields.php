@@ -12,8 +12,6 @@ final class PowerGridFields
     public array $fields = [];
 
     /**
-     * @param string $fieldName
-     * @param Closure|null $closure
      * @return $this
      */
     public function add(string $fieldName, ?Closure $closure = null): PowerGridFields
@@ -23,10 +21,6 @@ final class PowerGridFields
         return $this;
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
     private function valueIsString(mixed $value): mixed
     {
         return is_string($value) ? e($value) : $value;

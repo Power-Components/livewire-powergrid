@@ -10,13 +10,11 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class ColumnRawQueries
 {
-    public function __construct(protected PowerGridComponent $component)
-    {
-    }
+    public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        if (!($query instanceof EloquentBuilder || $query instanceof MorphToMany || $query instanceof QueryBuilder)) {
+        if (! ($query instanceof EloquentBuilder || $query instanceof MorphToMany || $query instanceof QueryBuilder)) {
             return $next($query);
         }
 
@@ -35,19 +33,19 @@ class ColumnRawQueries
     {
         $isEnabled = data_get($rawQueryConfig, 'enabled', true);
 
-        if ($isEnabled instanceof Closure && !$isEnabled($this->component)) {
+        if ($isEnabled instanceof Closure && ! $isEnabled($this->component)) {
             return;
         }
 
-        if (!$isEnabled) {
+        if (! $isEnabled) {
             return;
         }
 
-        $sql      = data_get($rawQueryConfig, 'sql');
+        $sql = data_get($rawQueryConfig, 'sql');
         $bindings = data_get($rawQueryConfig, 'bindings', []);
-        $method   = data_get($rawQueryConfig, 'method', 'whereRaw');
+        $method = data_get($rawQueryConfig, 'method', 'whereRaw');
 
-        $resolvedSql      = $this->resolvePlaceholders($sql);
+        $resolvedSql = $this->resolvePlaceholders($sql);
         $resolvedBindings = $this->resolveBindings($bindings);
 
         if ($resolvedSql) {

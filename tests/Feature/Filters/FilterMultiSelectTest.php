@@ -3,14 +3,14 @@
 use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelectAsync};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
     Concerns\Components\DishesCollectionTable,
     Concerns\Components\DishesFiltersTable,
     Concerns\Components\DishesQueryBuilderTable,
     Concerns\Components\DishesTable};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
 
-    use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $customBuilder = new class() extends DishesTable
 {

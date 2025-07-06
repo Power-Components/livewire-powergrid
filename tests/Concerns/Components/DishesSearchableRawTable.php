@@ -5,8 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesSearchableRawTable extends PowerGridComponent
 {

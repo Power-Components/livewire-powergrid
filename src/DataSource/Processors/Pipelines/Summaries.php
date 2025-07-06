@@ -10,23 +10,21 @@ class Summaries
 {
     private const SUMMARIES = ['sum', 'count', 'avg', 'min', 'max'];
 
-    public function __construct(protected PowerGridComponent $component)
-    {
-    }
+    public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        if (!$this->component->hasSummarizeInColumns()) {
+        if (! $this->component->hasSummarizeInColumns()) {
             return $next($query);
         }
 
         $this->component->columns = collect($this->component->columns)
             ->map(function ($column) use ($query) {
                 $column = (object) $column;
-                $field  = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+                $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
 
                 foreach (self::SUMMARIES as $summary) {
-                    if (data_get($column, 'properties.summarize.' . $summary)) {
+                    if (data_get($column, 'properties.summarize.'.$summary)) {
                         $value = $query->{$summary}($field);
                         $this->formatAndSetSummaryValue($column, $summary, $value);
                     }
@@ -61,6 +59,6 @@ class Summaries
             }
         }
 
-        data_set($column, 'properties.summarize_values.' . $summarizeMethod, $value);
+        data_set($column, 'properties.summarize_values.'.$summarizeMethod, $value);
     }
 }

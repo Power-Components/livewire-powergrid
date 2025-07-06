@@ -12,9 +12,7 @@ final class Filters
 {
     use InputOperators;
 
-    public function __construct(protected PowerGridComponent $component)
-    {
-    }
+    public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(Collection $collection, Closure $next): Collection
     {
@@ -23,26 +21,26 @@ final class Filters
         }
 
         $definitions = collect($this->component->filters());
-        $results     = $collection;
+        $results = $collection;
 
         foreach ($this->component->filters as $filterType => $columns) {
             foreach ($columns as $field => $value) {
                 $definition = $definitions->first(fn ($filter) => data_get($filter, 'field') === $field);
 
-                if (!$definition) {
+                if (! $definition) {
                     continue;
                 }
 
                 $results = match ($filterType) {
-                    'datetime'     => (new DateTimePicker($this->component, $definition))->collection($results, $field, $value),
-                    'date'         => (new DatePicker($this->component, $definition))->collection($results, $field, $value),
+                    'datetime' => (new DateTimePicker($this->component, $definition))->collection($results, $field, $value),
+                    'date' => (new DatePicker($this->component, $definition))->collection($results, $field, $value),
                     'multi_select' => (new MultiSelect($this->component, $definition))->collection($results, $field, $value),
-                    'select'       => (new Select($this->component, $definition))->collection($results, $field, $value),
-                    'boolean'      => (new Boolean($this->component, $definition))->collection($results, $field, $value),
-                    'number'       => (new Number($this->component, $definition))->collection($results, $field, $value),
-                    'input_text'   => (new InputText($this->component, $definition))->collection($results, $field, [
+                    'select' => (new Select($this->component, $definition))->collection($results, $field, $value),
+                    'boolean' => (new Boolean($this->component, $definition))->collection($results, $field, $value),
+                    'number' => (new Number($this->component, $definition))->collection($results, $field, $value),
+                    'input_text' => (new InputText($this->component, $definition))->collection($results, $field, [
                         'selected' => $this->validateInputTextOptions($this->component->filters, $field),
-                        'value'    => $value,
+                        'value' => $value,
                     ]),
                     default => $results
                 };

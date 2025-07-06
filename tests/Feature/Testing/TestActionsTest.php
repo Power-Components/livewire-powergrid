@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\{Carbon, Collection, Number};
+use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

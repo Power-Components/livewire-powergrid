@@ -2,8 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\{Button, Facades\PowerGrid};
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
 
 class RulesDetailRowTable extends DishTableBase
 {

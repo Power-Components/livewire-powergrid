@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesTable, Concerns\Components\DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

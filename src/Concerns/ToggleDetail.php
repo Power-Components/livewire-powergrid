@@ -18,15 +18,15 @@ trait ToggleDetail
 
     private function resolveDetailRow(mixed $results): void
     {
-        if (!isset($this->setUp['detail']) && !isset($this->setUp['lazy'])) {
+        if (! isset($this->setUp['detail']) && ! isset($this->setUp['lazy'])) {
             return;
         }
 
         $collection = $results;
 
-        if (!$results instanceof BaseCollection) {
+        if (! $results instanceof BaseCollection) {
             /** @phpstan-ignore-next-line */
-            $collection = !is_array($results) && method_exists($results, 'items') ? collect($results->items()) : collect($results);
+            $collection = ! is_array($results) && method_exists($results, 'items') ? collect($results->items()) : collect($results);
         }
 
         $primaryKey = $this->primaryKeyAlias ?? $this->primaryKey;
@@ -54,7 +54,7 @@ trait ToggleDetail
                 );
         }
 
-        data_set($this->setUp, "detail.state.$id", !boolval(data_get($this->setUp, "detail.state.$id")));
+        data_set($this->setUp, "detail.state.$id", ! boolval(data_get($this->setUp, "detail.state.$id")));
 
         $state = strval(data_get($this->setUp, "detail.state.$id"));
 

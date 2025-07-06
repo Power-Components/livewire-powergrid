@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Traits;
 
-use Illuminate\Database\Eloquent as Eloquent;
+use Illuminate\Database\Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
     DataSource\ProcessDataSource,
@@ -40,7 +40,7 @@ trait ExportableJob
 
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
-        $this->componentTable->filters  = $this->filters ?? [];
+        $this->componentTable->filters = $this->filters ?? [];
         $this->componentTable->filtered = $this->filtered ?? [];
 
         $processDataSource = tap(
@@ -48,7 +48,7 @@ trait ExportableJob
             fn ($datasource) => $datasource->get()
         );
 
-        $filtered     = $processDataSource->component->filtered ?? [];
+        $filtered = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
 
         $property = function (string $property) use ($processDataSource, $currentTable) {
@@ -56,7 +56,7 @@ trait ExportableJob
 
             return Str::of($property)->contains('.')
                 ? $property
-                : $currentTable . '.' . $property;
+                : $currentTable.'.'.$property;
         };
 
         $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line

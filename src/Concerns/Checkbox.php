@@ -23,7 +23,7 @@ trait Checkbox
      */
     public function selectCheckboxAll(): void
     {
-        if (!$this->checkboxAll) {
+        if (! $this->checkboxAll) {
             $this->checkboxValues = [];
 
             $this->dispatch('pgBulkActions::clear', $this->tableName);
@@ -43,7 +43,7 @@ trait Checkbox
             $value = $model->{$this->checkboxAttribute};
 
             $hide = (bool) data_get(
-                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
                     ->where('apply', true)
                     ->where('forAction', 'pg:checkbox')
                     ->last(),
@@ -51,7 +51,7 @@ trait Checkbox
             );
 
             $disable = (bool) data_get(
-                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
                     ->where('apply', true)
                     ->where('forAction', 'pg:checkbox')
                     ->last(),
@@ -62,11 +62,11 @@ trait Checkbox
                 return;
             }
 
-            if (!in_array($value, $this->checkboxValues)) {
+            if (! in_array($value, $this->checkboxValues)) {
                 $this->checkboxValues[] = (string) $value;
 
                 $this->dispatch('pgBulkActions::addMore', [
-                    'value'     => strval($value),
+                    'value' => strval($value),
                     'tableName' => $this->tableName,
                 ]);
             }
@@ -75,7 +75,7 @@ trait Checkbox
 
     public function showCheckBox(string $attribute = 'id'): self
     {
-        $this->checkbox          = true;
+        $this->checkbox = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;

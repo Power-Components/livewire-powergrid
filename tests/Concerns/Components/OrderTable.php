@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order;
 
 class OrderTable extends PowerGridComponent
 {

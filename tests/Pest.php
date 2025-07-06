@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 
 uses(TestCase::class)->in(__DIR__);
 
