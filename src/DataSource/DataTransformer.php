@@ -29,24 +29,26 @@ final class DataTransformer
         $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($collection);
 
+        $shouldProcessActionRules = method_exists($this->component, 'actionRules');
+
         $transformedCollection = $collection->map(function ($row, $index) use ($loopInstance, &$actionsByRow) {
             $rowObject = (object) $row;
 
             $transformedData = $this->rowTransformer->transform($rowObject);
 
             $loopVars = $loopInstance->getLastLoop();
-            $processedActions = $this->actionProcessor->process($rowObject, $loopVars);
+            $processedActions = $this->actionProcessor->process($rowObject);
 
             $transformedData->__powergrid_loop = $loopVars;
-            $transformedData->__powergrid_actions = $processedActions['actions'];
-            $transformedData->__powergrid_rules = $processedActions['rules'];
+            $transformedData->__powergrid_actions = $processedActions;
+            $transformedData->__powergrid_rules = $this->component->prepareActionRulesForRows($row, $loopVars);
 
             $loopInstance->incrementLoopIndices();
 
             $primaryKeyValue = data_get($row, $this->primaryKey);
 
-            if ($primaryKeyValue && ! empty($processedActions['actions'])) {
-                $actionsByRow[$primaryKeyValue] = $processedActions['actions'];
+            if ($primaryKeyValue && ! empty($processedActions)) {
+                $actionsByRow[$primaryKeyValue] = $processedActions;
             }
 
             if ($this->component->supportModel && $row instanceof Model) {

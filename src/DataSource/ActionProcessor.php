@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent};
-use stdClass;
 
 final class ActionProcessor
 {
@@ -17,27 +16,20 @@ final class ActionProcessor
         $this->shouldProcessActionRules = method_exists($component, 'actionRules');
     }
 
-    public function process(object $row, stdClass $loopVars): array
+    public function process(object $row): array
     {
         $actions = [];
-        $rules = [];
-
-        if ($this->shouldProcessActionRules) {
-            $rules = $this->component->prepareActionRulesForRows($row, $loopVars);
-        }
 
         if ($this->shouldProcessActions) {
             /** @var array $actions */
             $actions = $this->component->actions($row);
+
             $actions = collect($actions)
                 ->map(fn (Button $action) => $this->mapAction($action, $row))
                 ->all();
         }
 
-        return [
-            'actions' => $actions,
-            'rules' => $rules,
-        ];
+        return $actions;
     }
 
     private function mapAction(Button $action, object $row): array
@@ -52,6 +44,9 @@ final class ActionProcessor
             'icon' => $action->icon,
             'iconAttributes' => $action->iconAttributes,
             'attributes' => $action->attributes,
+            'rules' => $this->shouldProcessActionRules
+                ? $this->component->resolveActionRules($row)
+                : [],
         ];
     }
 }
