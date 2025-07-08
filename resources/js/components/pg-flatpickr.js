@@ -92,6 +92,7 @@ Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.
                     type: this.type,
                     field: this.dataField,
                     label: this.label,
+                    dateFormat:  this.locale.dateFormat ?? 'Y-m-d H:i'
                 });
             }
         }

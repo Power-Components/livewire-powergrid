@@ -21,8 +21,8 @@ class DatePicker extends BuilderBase
 
         /** @var array $values */
         [$startDate, $endDate] = [
-            0 => Carbon::parse($values['start'])->format('Y-m-d'),
-            1 => Carbon::parse($values['end'])->format('Y-m-d'),
+            0 => Carbon::parse($values['start'])->format('Y-m-d H:i:s'),
+            1 => Carbon::parse($values['end'])->format('Y-m-d H:i:s'),
         ];
 
         if (data_get($this->filterBase, 'builder')) {
