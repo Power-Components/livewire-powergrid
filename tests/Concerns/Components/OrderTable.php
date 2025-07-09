@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields,};
 
 class OrderTable extends PowerGridComponent
 {
@@ -22,7 +22,7 @@ class OrderTable extends PowerGridComponent
             ->add('name')
             ->add('tax')
             ->add('price')
-            ->add('link', fn (Order $order): string|null => $order->link)
+            ->add('link', fn (Order $order): ?string => $order->link)
             ->add('is_active_label', fn (Order $order): string => $order->price ? 'active' : 'inactive')
             ->add('price_formatted', fn (Order $order): float => $order->price * 100);
     }

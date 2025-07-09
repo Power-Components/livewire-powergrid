@@ -3,13 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Facades\Filter,
     Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesDynamicFiltersTable extends PowerGridComponent
 {
@@ -88,14 +88,14 @@ class DishesDynamicFiltersTable extends PowerGridComponent
             Filter::dynamic('in_stock', 'in_stock')
                 ->component('tests::dynamic-select')
                 ->attributes([
-                    'class'   => 'min-w-[170px]',
+                    'class' => 'min-w-[170px]',
                     'options' => [
                         ['name' => 'Active',  'value' => true],
                         ['name' => 'Inactive', 'value' => false],
                     ],
                     'option-label' => 'name',
                     'option-value' => 'value',
-                    'placeholder'  => 'Choose']),
+                    'placeholder' => 'Choose']),
         ];
     }
 

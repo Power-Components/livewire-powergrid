@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
 use Illuminate\Database\Eloquent\{Builder};
@@ -22,7 +22,7 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
-        if (!is_array($values) || count($values) === 0) {
+        if (! is_array($values) || count($values) === 0) {
             return;
         }
 
@@ -32,7 +32,7 @@ trait WithMultiSelectBuilder
             }
         }
 
-        if (!$empty) {
+        if (! $empty) {
             $builder->whereIn($field, $values);
         }
     }
@@ -48,7 +48,7 @@ trait WithMultiSelectBuilder
 
         $empty = false;
 
-        if (!is_array($values) || count($values) === 0) {
+        if (! is_array($values) || count($values) === 0) {
             return $collection;
         }
 

@@ -1,9 +1,9 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesTableWithJoin,
     Concerns\Components\DishesTableWithJoinNames};
+
+    use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('properly sorts ASC/DESC with: string join column', function (string $component, string $theme) {
     livewire($component)
@@ -16,7 +16,7 @@ it('properly sorts ASC/DESC with: string join column', function (string $compone
         ->set('sortDirection', 'asc')
         ->assertSee('Acompanhamentos');
 })->with([
-    'tailwind'  => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'tailwind' => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);
 
@@ -26,7 +26,7 @@ it('properly search join column with invalid table', function (string $component
         ->set('search', 'Pastel de Nata')
         ->assertSee('Pastel')
         ->assertDontSee('Sopas')
-        # search in newCategories.name
+        // search in newCategories.name
         ->set('search', 'Peixe')
         ->assertSee('Peixe')
         ->assertDontSee([
@@ -34,6 +34,6 @@ it('properly search join column with invalid table', function (string $component
             'Sobremesas',
         ]);
 })->with([
-    'tailwind'  => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'tailwind' => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
 ]);

@@ -30,7 +30,7 @@ final class ListModels
 
                 return rescue(fn () => ParseFqnClassInCode::handle($sourceCode), '');
             })
-            //Remove all unqualified PHP files code
+            // Remove all unqualified PHP files code
             ->filter()
 
             // Remove classes that do not extend an Eloquent Model

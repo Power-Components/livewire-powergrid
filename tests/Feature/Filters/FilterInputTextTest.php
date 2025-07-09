@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-require(__DIR__ . '/../../Concerns/Components/ComponentsForFilterTest.php');
+require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
 
 it('properly filters by inputText', function (string $component, object $params) {
     $component = livewire($component)
@@ -18,7 +18,7 @@ it('properly filters by inputText', function (string $component, object $params)
     $component->set('filters', filterInputText('ba', 'contains', $params->field));
 
     if (str_contains($params->field, '.')) {
-        $data  = Str::of($params->field)->explode('.');
+        $data = Str::of($params->field)->explode('.');
         $table = $data->get(0);
         $field = $data->get(1);
 
@@ -62,4 +62,4 @@ it('properly filters by inputText', function (string $component, object $params)
 
     expect($component->filters)->toBe($filters);
 })->group('filters')
-->with('filterComponent');
+    ->with('filterComponent');

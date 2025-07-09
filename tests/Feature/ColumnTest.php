@@ -1,12 +1,11 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Column;
-
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuilderTable,
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin};
+
+    use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('sorts by "name" and then by "id"', function (string $component, object $params) {
     livewire($component)
@@ -27,7 +26,8 @@ it('searches data', function (string $component, object $params) {
         ->assertDontSee('Pastel de Nata');
 })->with('column_join', 'column_query_builder');
 
-$contentClassesString = new class () extends DishesTable {
+$contentClassesString = new class() extends DishesTable
+{
     public function columns(): array
     {
         return [
@@ -67,11 +67,12 @@ it('add contentClasses on dishes name column', function (string $component, obje
             '</span>',
         ]);
 })->with([
-    'tailwind'  => [$contentClassesString::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
+    'tailwind' => [$contentClassesString::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
     'bootstrap' => [$contentClassesString::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
 ]);
 
-$contentClassesArray = new class () extends DishesTable {
+$contentClassesArray = new class() extends DishesTable
+{
     public function columns(): array
     {
         return [
@@ -114,18 +115,18 @@ it('add contentClasses on dishes name column array', function (string $component
             '</span>',
         ]);
 })->with([
-    'tailwind'  => [$contentClassesArray::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
+    'tailwind' => [$contentClassesArray::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
     'bootstrap' => [$contentClassesArray::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
 ]);
 
 dataset('column_join', [
-    'tailwind'       => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
-    'bootstrap'      => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
-    'tailwind join'  => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.name']],
+    'tailwind' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
+    'bootstrap' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
+    'tailwind join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.name']],
     'bootstrap join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.name']],
 ]);
 
 dataset('column_query_builder', [
-    'tailwind query builder -> id'  => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);

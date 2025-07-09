@@ -4,13 +4,13 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column,
     Components\SetUp\Exportable,
     Facades\PowerGrid,
     Facades\Rule,
     PowerGridComponent,
     PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesTableWithJoin extends PowerGridComponent
 {
@@ -93,7 +93,7 @@ class DishesTableWithJoin extends PowerGridComponent
             ->add('calories')
             ->add('serving_at')
             ->add('calories', function ($dish) {
-                return $dish->calories . ' kcal';
+                return $dish->calories.' kcal';
             })
             /*** CATEGORY ***/
             ->add('category_id', function ($dish) {
@@ -105,19 +105,19 @@ class DishesTableWithJoin extends PowerGridComponent
             /*** PRICE ***/
             ->add('price')
             ->add('price_BRL', function ($dish) {
-                return 'R$ ' . number_format($dish->price, 2, ',', '.'); //R$ 1.000,00
+                return 'R$ '.number_format($dish->price, 2, ',', '.'); // R$ 1.000,00
             })
             /*** SALE'S PRICE ***/
             ->add('sales_price')
             ->add('sales_price_BRL', function ($dish) {
                 $sales_price = $dish->price + ($dish->price * 0.15);
 
-                return 'R$ ' . number_format($sales_price, 2, ',', '.'); //R$ 1.000,00
+                return 'R$ '.number_format($sales_price, 2, ',', '.'); // R$ 1.000,00
             })
             /*** STOCK ***/
             ->add('in_stock')
             ->add('in_stock_label', function ($dish) {
-                return ($dish->in_stock ? 'sim' : 'não');
+                return $dish->in_stock ? 'sim' : 'não';
             })
             /*** Produced At ***/
             ->add('created_at')

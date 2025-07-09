@@ -1,15 +1,15 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
-use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
-class Select extends BuilderBase
+class Boolean extends BuilderBase
 {
-    public function builder(Builder|QueryBuilder $builder, string $field, int|array|string|null $values): void
+    public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
             /** @var Closure $closure */
@@ -20,13 +20,18 @@ class Select extends BuilderBase
             return;
         }
 
+        if (is_null($values)) {
+            $values = 'all';
+        }
+
         if (is_array($values)) {
-            $field  = $field . '.' . key($values);
+            $field = $field.'.'.key($values);
             $values = $values[key($values)];
         }
 
-        if (filled($values)) {
-            $builder->where($field, $values);
+        if ($values != 'all') {
+            $values = ($values == 'true' || $values == '1');
+            $builder->where($field, '=', $values);
         }
     }
 
@@ -39,8 +44,14 @@ class Select extends BuilderBase
             return $closure($collection, $values);
         }
 
-        if (filled($values)) {
-            return $collection->where($field, $values);
+        if (is_null($values)) {
+            $values = 'all';
+        }
+
+        if ($values != 'all') {
+            $values = ($values == 'true' || $values == '1');
+
+            return $collection->where($field, '=', $values);
         }
 
         return $collection;

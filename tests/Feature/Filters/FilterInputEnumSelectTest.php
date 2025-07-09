@@ -47,6 +47,6 @@ function filterEnumSelect(string $dataField, ?string $value): array
 }
 
 dataset('enum_themes', [
-    'tailwind -> id'  => [DishesEnumTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
+    'tailwind -> id' => [DishesEnumTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
 ]);

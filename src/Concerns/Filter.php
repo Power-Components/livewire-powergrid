@@ -34,21 +34,21 @@ trait Filter
                  */
                 $extraFieldsToClear = [];
 
-                if (!empty($this->filters['number'])) {
+                if (! empty($this->filters['number'])) {
                     $numberField = str($field)->beforeLast('_start')->beforeLast('_end')->append('')->toString();
 
                     if (isset($this->filters['number'][$numberField])) {
-                        $field              = $numberField;
-                        $extraFieldsToClear = [$numberField . '_start', $numberField . '_end'];
+                        $field = $numberField;
+                        $extraFieldsToClear = [$numberField.'_start', $numberField.'_end'];
                     }
                 }
 
                 if (isset($this->filters['multi_select'][$field])) {
-                    $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
+                    $this->dispatch('pg:clear_multi_select::'.$this->tableName.':'.$field);
                 }
 
                 if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {
-                    $this->dispatch('pg:clear_flatpickr::' . $this->tableName . ':' . $field);
+                    $this->dispatch('pg:clear_flatpickr::'.$this->tableName.':'.$field);
                 }
 
                 $unset = function ($filter, $field, $column) {
@@ -95,17 +95,17 @@ trait Filter
     public function clearAllFilters(): void
     {
         $this->enabledFilters = [];
-        $this->filters        = [];
+        $this->filters = [];
 
         $this->persistState('filters');
 
-        $this->dispatch('pg:clear_all_flatpickr::' . $this->tableName);
-        $this->dispatch('pg:clear_all_multi_select::' . $this->tableName);
+        $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
+        $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
     }
 
     public function toggleFilters(): void
     {
-        $this->showFilters = !$this->showFilters;
+        $this->showFilters = ! $this->showFilters;
     }
 
     /**
@@ -121,7 +121,7 @@ trait Filter
         string $timezone = 'UTC',
         string $dateFormat = 'Y-m-d H:i',
     ): void {
-        if (!isset($selectedDates[1])) {
+        if (! isset($selectedDates[1])) {
             return;
         }
 
@@ -132,13 +132,13 @@ trait Filter
             : [strval($selectedDates[0]), strval($selectedDates[1])];
 
         $appTimezone = config('app.timezone');
-        $isDatetime  = $type === 'datetime';
-        $hasTime     = str_contains($dateFormat, 'H');
+        $isDatetime = $type === 'datetime';
+        $hasTime = str_contains($dateFormat, 'H');
 
         $makeDate = function ($dateStr) use ($dateFormat, $hasTime, $appTimezone) {
             $date = Carbon::createFromFormat($dateFormat, $dateStr, $appTimezone);
 
-            if (!$hasTime) {
+            if (! $hasTime) {
                 $date->setTime(0, 0, 0);
             }
 
@@ -146,19 +146,19 @@ trait Filter
         };
 
         $startDate = $makeDate($startRaw);
-        $endDate   = $makeDate($endRaw);
+        $endDate = $makeDate($endRaw);
 
         if ($isDatetime && $endDate->isStartOfDay()) {
             $endDate->endOfDay();
-        } elseif (!$isDatetime) {
+        } elseif (! $isDatetime) {
             $endDate->endOfDay();
         }
 
         $this->addEnabledFilters($field, $label);
 
         $this->filters[$type][$field] = [
-            'start'     => $startDate->toString(),
-            'end'       => $endDate->toString(),
+            'start' => $startDate->toString(),
+            'end' => $endDate->toString(),
             'formatted' => $dateStr,
         ];
 
@@ -290,7 +290,7 @@ trait Filter
      */
     public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
-        data_set($this->filters, 'input_text_options.' . $field, $value);
+        data_set($this->filters, 'input_text_options.'.$field, $value);
 
         $disabled = false;
 
@@ -306,10 +306,10 @@ trait Filter
             }
         }
 
-        if (!collect($this->enabledFilters)->where('field', $field)->count()) {
+        if (! collect($this->enabledFilters)->where('field', $field)->count()) {
             $this->enabledFilters[] = [
-                'field'    => $field,
-                'label'    => $label,
+                'field' => $field,
+                'label' => $label,
                 'disabled' => $disabled,
             ];
         }
@@ -349,7 +349,7 @@ trait Filter
                     data_forget($filter, 'builder');
                     data_forget($filter, 'collection');
 
-                    if (!is_array($filter) && method_exists($filter, 'execute')) {
+                    if (! is_array($filter) && method_exists($filter, 'execute')) {
                         $filter = $filter->execute();
                     }
 
@@ -383,7 +383,7 @@ trait Filter
 
     public function addEnabledFilters(string $field, ?string $label): void
     {
-        if (!collect($this->enabledFilters)
+        if (! collect($this->enabledFilters)
             ->where('field', $field)
             ->count()) {
             $this->enabledFilters[] = [
@@ -421,7 +421,7 @@ trait Filter
 
         foreach (Arr::dot($this->filters()) as $filter) {
             $as = str($filter->field)
-                ->when(filled($prefix), fn ($c) => $c->prepend($prefix . '_'))
+                ->when(filled($prefix), fn ($c) => $c->prepend($prefix.'_'))
                 ->replace('.', '_')
                 ->replaceMatches('/\_+/', '_');
 
@@ -430,13 +430,13 @@ trait Filter
             }
 
             if ($filter->key === 'input_text') {
-                $queryString['filters.input_text.' . $filter->field] = [
-                    'as'     => $as->toString(),
+                $queryString['filters.input_text.'.$filter->field] = [
+                    'as' => $as->toString(),
                     'except' => '',
                 ];
 
-                $queryString['filters.input_text_options.' . $filter->field] = [
-                    'as'     => $as->append('_operator')->toString(),
+                $queryString['filters.input_text_options.'.$filter->field] = [
+                    'as' => $as->append('_operator')->toString(),
                     'except' => '',
                 ];
 
@@ -444,28 +444,28 @@ trait Filter
             }
 
             if ($filter->key === 'number') {
-                $_start         = $as->append('_start')->toString();
-                $_end           = $as->append('_end')->toString();
+                $_start = $as->append('_start')->toString();
+                $_end = $as->append('_end')->toString();
                 $fieldProcessed = false;
 
-                $queryString['filters.number.' . $filter->field . '.start'] = [
-                    'as'     => $_start,
+                $queryString['filters.number.'.$filter->field.'.start'] = [
+                    'as' => $_start,
                     'except' => '',
                 ];
 
                 if (filled(request()->get($_start))) {
-                    $this->addEnabledFilters($filter->field . '_start', strval($columns->get($filter->field, $filter->field)));
+                    $this->addEnabledFilters($filter->field.'_start', strval($columns->get($filter->field, $filter->field)));
 
                     $fieldProcessed = true;
                 }
 
-                $queryString['filters.number.' . $filter->field . '.end'] = [
-                    'as'     => $_end,
+                $queryString['filters.number.'.$filter->field.'.end'] = [
+                    'as' => $_end,
                     'except' => '',
                 ];
 
                 if ($fieldProcessed === false && filled(request()->get($_end))) {
-                    $this->addEnabledFilters($filter->field . '_end', strval($columns->get($filter->field, $filter->field)));
+                    $this->addEnabledFilters($filter->field.'_end', strval($columns->get($filter->field, $filter->field)));
                 }
 
                 continue;
@@ -481,7 +481,7 @@ trait Filter
 
                 if (count($wireModel)) {
                     $queryString[$wireModel[0]] = [
-                        'as'     => $as->toString(),
+                        'as' => $as->toString(),
                         'except' => '',
                     ];
                 }
@@ -489,8 +489,8 @@ trait Filter
                 continue;
             }
 
-            $queryString['filters.' . $filter->key . '.' . $filter->field] = [
-                'as'     => $as->toString(),
+            $queryString['filters.'.$filter->key.'.'.$filter->field] = [
+                'as' => $as->toString(),
                 'except' => '',
             ];
         }

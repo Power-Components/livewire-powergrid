@@ -22,7 +22,7 @@ it('properly changes records and displays per page')
     ->assertSeeHtmlInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results'])
     ->set('setUp.footer.perPage', '12')
     ->assertSeeHtmlInOrder(['Showing', '1', 'to', '12', 'of', '15', 'Results'])
-    ->set('setUp.footer.perPage', '0') //All items
+    ->set('setUp.footer.perPage', '0') // All items
     ->assertSeeHtmlInOrder(['Showing', '1', 'to', '15', 'of', '15', 'Results'])
     ->assertSeeHtml('Pastel de Nata');
 
@@ -54,14 +54,14 @@ it('displays next links ">" and ">>"')
     ->set('setUp.footer.perPage', '4')
 
     ->assertSeeHtml('wire:click="nextPage(\'page\')"')
-    //page #2
+    // page #2
     ->call('gotoPage', '2')
     ->assertSeeHtml('wire:click="nextPage(\'page\')"');
 
 it('displays previous links "<" and "<<"')
     ->livewire(DishesTable::class)
     ->assertDontSeeHtml('wire:click="previousPage(\'page\')"')
-    //page #2
+    // page #2
     ->call('gotoPage', '2')
     ->assertSeeHtml('wire:click="previousPage(\'page\')"');
 
@@ -77,11 +77,11 @@ it('searches for something that is not on the current page')
 
 test('set/sanitize and fallback pageName', function (string $pageNameCandidate, string $result) {
     $this->livewire(DishesCustomPageNameTable::class, ['pageNameCandidate' => $pageNameCandidate])
-    ->assertSeeHtml("gotoPage(2, '{$result}')");
+        ->assertSeeHtml("gotoPage(2, '{$result}')");
 })->with([
     'some invalid characters' => ['customPage12Ντόναλντ34', 'customPage1234'],
     'only invalid characters' => ['Ντόναλντ', 'page'],
-    'empty page name'         => ['', 'page'],
+    'empty page name' => ['', 'page'],
 ]);
 
 todo('prevents the "division by zero exception" when there is no data and when using toBase');

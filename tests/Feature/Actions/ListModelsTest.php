@@ -21,7 +21,7 @@ it('list all Eloquent Models in a directory', function () {
 
 it('will not list non-Eloquent Models', function () {
     app()->config->set('livewire-powergrid.auto_discover_models_paths', [
-        'tests/Concerns/Enums', //There are no models in this directory.
+        'tests/Concerns/Enums', // There are no models in this directory.
 
     ]);
 

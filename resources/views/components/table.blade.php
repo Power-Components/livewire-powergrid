@@ -75,6 +75,9 @@
                         @php
                             $skip = $item * data_get($setUp, 'lazy.rowsPerChildren');
                             $take = data_get($setUp, 'lazy.rowsPerChildren');
+
+                            $dataTransformer = new \PowerComponents\LivewirePowerGrid\DataSource\DataTransformer($this);
+
                         @endphp
 
                         <livewire:lazy-child
@@ -92,11 +95,7 @@
                             :$tableName
                             :parentName="$this->getName()"
                             :columns="$this->visibleColumns"
-                            :data="\PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase::transform(
-                                $data->skip($skip)->take($take),
-                                $this,
-                                true,
-                            )"
+                            :data="$dataTransformer->transform($data->skip($skip)->take($take))->collection"
                         />
                     @endforeach
                 </div>

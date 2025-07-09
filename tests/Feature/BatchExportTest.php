@@ -3,11 +3,9 @@
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Support\Facades\Bus;
 use Livewire\Features\SupportTesting\Testable;
-
-use function Livewire\invade;
-
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\BatchExportTable;
 
+use function Livewire\invade;
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('can pass class parameters in batch export.', function () {

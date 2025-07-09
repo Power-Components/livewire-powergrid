@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-require(__DIR__ . '/../../Concerns/Components/ComponentsForFilterTest.php');
+require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
 
 it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
     $component = livewire($component)
@@ -18,7 +18,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     $component->set('filters', filterInputText('ba', 'contains', $params->field));
 
     if (str_contains($params->field, '.')) {
-        $data  = Str::of($params->field)->explode('.');
+        $data = Str::of($params->field)->explode('.');
         $table = $data->get(0);
         $field = $data->get(1);
 
@@ -65,7 +65,7 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     $filters = array_merge($component->filters, filterBoolean('in_stock', 'true'));
 
     $component->set('filters', $filters)
-       ->assertDontSee('Barco-Sushi Simples');
+        ->assertDontSee('Barco-Sushi Simples');
 
     expect($component->filters)
         ->toMatchArray($filters);
@@ -83,4 +83,4 @@ it('properly filters by inputText, number, boolean filter and clearAll', functio
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters')
-->with('filterComponent');
+    ->with('filterComponent');

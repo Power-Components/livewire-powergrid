@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Filters\Builders;
+namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Livewire\Component;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
@@ -15,6 +15,5 @@ class BuilderBase
     public function __construct(
         protected Component $component,
         protected null|array|FilterBase $filterBase = null
-    ) {
-    }
+    ) {}
 }
