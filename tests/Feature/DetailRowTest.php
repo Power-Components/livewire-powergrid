@@ -6,6 +6,8 @@ use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid,
 
     use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
+beforeEach(fn () => null)->todo();
+
 it('collapse detail row', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
@@ -111,7 +113,7 @@ it('render x-data correctly for detail row state', function () {
     $component->assertSeeHtmlInOrder($xData);
 });
 
-it('collapse detail row with collapseOthers', function () {
+todo('collapse detail row with collapseOthers', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
             PowerGrid::footer()

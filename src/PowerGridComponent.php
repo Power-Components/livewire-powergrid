@@ -36,7 +36,6 @@ class PowerGridComponent extends Component
     use Concerns\SoftDeletes;
     use Concerns\Sorting;
     use Concerns\Summarize;
-    use Concerns\ToggleDetail;
     use WithPagination;
 
     public array $theme = [];
@@ -262,6 +261,11 @@ class PowerGridComponent extends Component
             ->all();
     }
 
+    public function toggleDetail(string $rowId): void
+    {
+        $this->dispatch('toggle-detail-'.$rowId, collapsed: null);
+    }
+
     public function render(): Application|Factory|View
     {
         if (isset($this->setUp['lazy'])) {
@@ -277,9 +281,9 @@ class PowerGridComponent extends Component
 
         $this->storeActionsHeaderInJSWindow();
 
-        $this->resolveDetailRow($data);
-
         $this->resolveFilters();
+
+        ds('render')->blue();
 
         return view(theme_style($this->theme, 'layout.table'), [
             'data' => $data,

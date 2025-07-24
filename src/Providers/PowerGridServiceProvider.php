@@ -12,7 +12,8 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\{Livewire\LazyChild,
+use PowerComponents\LivewirePowerGrid\{Livewire\Detail,
+    Livewire\LazyChild,
     Livewire\PerformanceCard,
     PowerGridManager,
     Testing\TestActions};
@@ -65,6 +66,8 @@ class PowerGridServiceProvider extends ServiceProvider
         if (class_exists(Pulse::class)) {
             Livewire::component('powergrid-performance-card', PerformanceCard::class);
         }
+
+        Livewire::component('powergrid-detail', Detail::class);
 
         Macros::columns();
         Macros::actions();
