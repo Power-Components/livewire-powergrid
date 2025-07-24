@@ -4,9 +4,12 @@
 >
     <div
         class="cursor-pointer flex items-center"
-        x-on:click.prevent="
+        x-on:click="
+            const isOpen = expandedId == '{{ $rowId }}';
+
             loading = true;
-            collapsed = !collapsed;
+            expandedId = isOpen ? null : '{{ $rowId }}';
+            collapsed = !isOpen;
             $dispatch('toggle-detail-{{ $rowId }}', { 'collapsed' : collapsed });
         "
         x-on:powergrid-detail-loaded.window="loading = false;"
@@ -22,7 +25,7 @@
             @unless (data_get($setUp, 'detail.viewIcon'))
                 <div
                     x-bind:class='{
-                        "rotate-90": collapsed,
+                        "rotate-90": collapsed && expandedId === "{{ $rowId }}",
                         "-rotate-0": !collapsed
                     }'>
                     <x-livewire-powergrid::icons.arrow

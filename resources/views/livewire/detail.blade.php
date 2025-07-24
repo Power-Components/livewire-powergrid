@@ -1,9 +1,9 @@
 <tr
-    x-data="{ collapsed: @entangle('show') }"
+    x-data="{ collapsed: @entangle('show'), collapseOthers: @entangle('collapseOthers') }"
     class="{{ $trClass }}"
 >
     <td
-        x-show="collapsed"
+        x-show="collapsed || (collapsed && collapseOthers && expandedId == '{{ $rowId }}')"
         colspan="999"
     >
         @includeWhen($show, $view, [

@@ -20,6 +20,8 @@ class Detail extends Component
 
     public mixed $options = null;
 
+    public bool $collapseOthers = false;
+
     #[On('toggle-detail-{rowId}')]
     public function toggle(?bool $collapsed = false): void
     {

@@ -1,19 +1,22 @@
 <td
-    x-data="{ collapsed: false, loading: false }"
-    class="{{ theme_style($theme, 'table.body.td') }}"
+        x-data="{ collapsed: false, loading: false }"
+        class="{{ theme_style($theme, 'table.body.td') }}"
 >
     <div
-        class="cursor-pointer flex items-center"
-        x-on:click.prevent="
+            class="cursor-pointer flex items-center"
+            x-on:click="
+            const isOpen = expandedId == '{{ $rowId }}';
+
             loading = true;
-            collapsed = !collapsed;
+            expandedId = isOpen ? null : '{{ $rowId }}';
+            collapsed = !isOpen;
             $dispatch('toggle-detail-{{ $rowId }}', { 'collapsed' : collapsed });
         "
-        x-on:powergrid-detail-loaded.window="loading = false;"
+            x-on:powergrid-detail-loaded.window="loading = false;"
     >
         <div x-show="loading">
             <x-livewire-powergrid::icons.loading
-                class="text-pg-primary-300 dark:text-pg-primary-400 h-5 w-5 animate-spin"
+                    class="text-pg-primary-300 dark:text-pg-primary-400 h-5 w-5 animate-spin"
             />
         </div>
 
@@ -21,15 +24,15 @@
             @includeIf(data_get($setUp, 'detail.viewIcon'))
             @unless (data_get($setUp, 'detail.viewIcon'))
                 <div
-                    x-bind:class='{
-                        "rotate-90": collapsed,
+                        x-bind:class='{
+                        "rotate-90": collapsed && expandedId === "{{ $rowId }}",
                         "-rotate-0": !collapsed
                     }'>
                     <x-livewire-powergrid::icons.arrow
-                        class="text-pg-primary-600 w-5 h-5 transition-all duration-300 dark:text-pg-primary-200"
+                            class="text-pg-primary-600 w-5 h-5 transition-all duration-300 dark:text-pg-primary-200"
                     />
                 </div>
-                @endif
-            </div>
+            @endif
         </div>
-    </td>
+    </div>
+</td>

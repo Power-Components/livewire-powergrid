@@ -59,6 +59,7 @@
                                 :row-id="$rowId"
                                 tr-class="{{ $class }}"
                                 :row="(object)$row->toArray()"
+                                :collapse-others="data_get($setUp, 'detail.collapseOthers', false)"
                             />
                         </tbody>
 

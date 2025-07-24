@@ -34,7 +34,9 @@
                 :options="$rulesValues"
                 :row-id="$rowId"
                 tr-class="{{ $class }}"
-                :row="$row->toArray()" />
+                :row="$row->toArray()"
+                :collapse-others="data_get($setUp, 'detail.collapseOthers', false)"
+             />
         @else
             <tr
                 class="{{ $class }}"
