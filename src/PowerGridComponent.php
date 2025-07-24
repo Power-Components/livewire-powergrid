@@ -283,8 +283,6 @@ class PowerGridComponent extends Component
 
         $this->resolveFilters();
 
-        ds('render')->blue();
-
         return view(theme_style($this->theme, 'layout.table'), [
             'data' => $data,
             'table' => 'livewire-powergrid::components.table',
