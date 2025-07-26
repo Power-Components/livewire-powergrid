@@ -135,7 +135,7 @@ trait Filter
         $appTimezone = config('app.timezone');
         $isDatetime = $type === 'datetime';
         $hasTime = str_contains($dateFormat, 'H');
-        
+
         $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
             try {
                 $date = Carbon::parse($dateStr, $appTimezone);
@@ -143,7 +143,7 @@ trait Filter
                 return now($appTimezone);
             }
 
-            if (!$hasTime) {
+            if (! $hasTime) {
                 $date->setTime(0, 0, 0);
             }
 
