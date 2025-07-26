@@ -133,6 +133,7 @@ trait HasActions
                     $fieldHideToggleable = $apply && (bool) data_get($rule, 'rule.fieldHideToggleable');
                     $disabled = $apply && (bool) data_get($rule, 'rule.disable');
                     $hide = $apply && (bool) data_get($rule, 'rule.hide');
+                    $detailView = (array) data_get($rule, 'rule.detailView', []);
 
                     if ($apply || $applyLoop) {
                         return [
@@ -147,6 +148,7 @@ trait HasActions
                             'editOnClickVisibility' => $editOnClickVisibility,
                             'fieldHideEditOnClick' => $fieldHideEditOnClick,
                             'fieldHideToggleable' => $fieldHideToggleable,
+                            ...$detailView,
                         ];
                     }
 
