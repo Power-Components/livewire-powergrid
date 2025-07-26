@@ -8,7 +8,7 @@
     >
         @includeWhen($show, $view, [
             'id' => $rowId,
-            'options' => [],
+            'options' => $options,
         ])
     </td>
 </tr>

@@ -29,7 +29,7 @@
                 }
             @endphp
             <livewire:powergrid-detail
-                key="powergrid-detail-{{ $rowId }}"
+                key="powergrid-lazy-child-detail-{{ $rowId }}"
                 :view="$detailView"
                 :options="$rulesValues"
                 :row-id="$rowId"

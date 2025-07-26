@@ -8,6 +8,8 @@ use Livewire\Component;
 
 class Detail extends Component
 {
+    public string $tableName = '';
+
     public int|string $rowId = '';
 
     public string $trClass = '';
@@ -29,9 +31,19 @@ class Detail extends Component
             $collapsed = ! $this->show;
         }
 
-        $this->show = $collapsed;
+        $this->show = (bool) $collapsed;
+
+        ds($this->show);
 
         $this->dispatch('powergrid-detail-loaded');
+    }
+
+    #[On('toggle-detail-hidden-all-{tableName}')]
+    public function hiddenAll(): void
+    {
+        $this->show = false;
+
+        ds($this->show);
     }
 
     public function render(): View

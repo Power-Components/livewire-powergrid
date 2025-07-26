@@ -60,6 +60,7 @@
                                 tr-class="{{ $class }}"
                                 :row="(object)$row->toArray()"
                                 :collapse-others="data_get($setUp, 'detail.collapseOthers', false)"
+                                :table-name="$tableName"
                             />
                         </tbody>
 
