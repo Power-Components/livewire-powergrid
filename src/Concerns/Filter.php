@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Exception;
 use Illuminate\Support\{Arr, Carbon, Collection, Str};
@@ -135,8 +136,12 @@ trait Filter
         $isDatetime = $type === 'datetime';
         $hasTime = str_contains($dateFormat, 'H');
 
-        $makeDate = function ($dateStr) use ($dateFormat, $hasTime, $appTimezone) {
-            $date = Carbon::createFromFormat($dateFormat, $dateStr, $appTimezone);
+        $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
+            try {
+                $date = Carbon::parse($dateStr, $appTimezone);
+            } catch (InvalidFormatException) {
+                return now($appTimezone);
+            }
 
             if (! $hasTime) {
                 $date->setTime(0, 0, 0);
