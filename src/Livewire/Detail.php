@@ -24,7 +24,7 @@ class Detail extends Component
 
     public bool $collapseOthers = false;
 
-    #[On('toggle-detail-{rowId}')]
+    #[On('pg-toggle-detail-{tableName}-{rowId}')]
     public function toggle(?bool $collapsed = false): void
     {
         if (is_null($collapsed)) {
@@ -33,17 +33,13 @@ class Detail extends Component
 
         $this->show = (bool) $collapsed;
 
-        ds($this->show);
-
-        $this->dispatch('powergrid-detail-loaded');
+        $this->dispatch('pg-toggle-detail-'.$this->tableName.'-loaded');
     }
 
-    #[On('toggle-detail-hidden-all-{tableName}')]
+    #[On('pg-toggle-detail-{tableName}-hidden-all')]
     public function hiddenAll(): void
     {
         $this->show = false;
-
-        ds($this->show);
     }
 
     public function render(): View

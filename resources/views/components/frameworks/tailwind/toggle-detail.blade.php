@@ -8,7 +8,7 @@
                 const isOpen = this.collapsed;
     
                 if (this.collapseOthers) {
-                    this.$dispatch('toggle-detail-hidden-all-{{ $tableName }}');
+                    this.$dispatch('pg-toggle-detail-{{ $tableName }}-hidden-all');
                     expandedId = '{{ $rowId }}';
                 } else {
                     this.loading = true;
@@ -16,14 +16,14 @@
     
                 this.collapsed = !isOpen;
     
-                this.$dispatch('toggle-detail-{{ $rowId }}', {
+                this.$dispatch('pg-toggle-detail-{{ $tableName }}-{{ $rowId }}', {
                     collapsed: this.collapsed
                 });
             }
         }
     }"
-    x-on:toggle-detail-hidden-all-{{ $tableName }}.window="collapsed = false"
-    x-on:powergrid-detail-loaded.window="loading = false"
+    x-on:pg-toggle-detail-{{ $tableName }}-hidden-all.window="collapsed = false"
+    x-on:pg-toggle-detail-{{ $tableName }}-loaded.window="loading = false;"
     class="{{ theme_style($theme, 'table.body.td') }}"
 >
     <div
