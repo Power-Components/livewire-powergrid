@@ -11,7 +11,7 @@ class TestActions
     public function assertHasAction(): Closure
     {
         return function (string $action): static {
-            $rows = $this->getRecords->items();
+            $rows = $this->records->items();
 
             $allActions = collect($rows)
                 ->pluck('__powergrid_actions')
@@ -29,7 +29,7 @@ class TestActions
     {
         return function (string $action, string $icon, ?string $iconClass = null): static {
             /** @var PowerGridComponent $this */
-            $rows = $this->getRecords->items();
+            $rows = $this->records->items();
 
             $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
 
@@ -54,7 +54,7 @@ class TestActions
     {
         return function (string $action, string $attribute, string $expected, array $expectedParams = []): static {
             /** @var PowerGridComponent $this */
-            $rows = $this->getRecords->items();
+            $rows = $this->records->items();
 
             $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
 

@@ -16,7 +16,7 @@ use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /**
- * @property-read mixed $getRecords
+ * @property-read mixed $records
  * @property-read bool $hasColumnFilters
  * @property-read array|BaseCollection $visibleColumns
  * @property-read string $realPrimaryKey
@@ -46,9 +46,7 @@ class PowerGridComponent extends Component
      */
     public function mount(): void
     {
-        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
-
-        $this->theme = app($themeClass)->apply();
+        $this->theme = app($this->customThemeClass() ?? strval(config('livewire-powergrid.theme')))->apply();
 
         $this->prepareActionsResources();
         $this->prepareRowTemplates();
@@ -120,7 +118,7 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    protected function getRecords(): mixed
+    protected function records(): mixed
     {
         if (! $this->readyToLoad) {
             return collect();
@@ -271,12 +269,10 @@ class PowerGridComponent extends Component
         if (isset($this->setUp['lazy'])) {
             $cacheKey = 'lazy-tmp-'.$this->getId().'-'.implode('-', $this->getCacheKeys());
 
-            $data = Cache::remember($cacheKey, 60, fn () => $this->getRecords());
+            $data = Cache::remember($cacheKey, 60, fn () => $this->records());
 
             /** @phpstan-ignore-next-line */
             $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
-        } else {
-            $data = $this->getRecords();
         }
 
         $this->storeActionsHeaderInJSWindow();
@@ -284,7 +280,6 @@ class PowerGridComponent extends Component
         $this->resolveFilters();
 
         return view(theme_style($this->theme, 'layout.table'), [
-            'data' => $data,
             'table' => 'livewire-powergrid::components.table',
         ]);
     }
