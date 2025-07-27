@@ -38,8 +38,8 @@
         @endif
 
         <div>
-            @if (method_exists($data, 'links'))
-                {!! $data->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'layout.pagination'), [
+            @if (method_exists($this->records, 'links'))
+                {!! $this->records->links(data_get($setUp, 'footer.pagination') ?: data_get($theme, 'layout.pagination'), [
                     'recordCount' => data_get($setUp, 'footer.recordCount'),
                     'perPage' => data_get($setUp, 'footer.perPage'),
                     'perPageValues' => data_get($setUp, 'footer.perPageValues'),

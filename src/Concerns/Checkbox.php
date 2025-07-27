@@ -31,15 +31,15 @@ trait Checkbox
             return;
         }
 
-        /** @var AbstractPaginator $data */
-        $data = $this->getRecords();
+        /** @var AbstractPaginator $records */
+        $records = $this->records();
 
-        if ($data->isEmpty()) {
+        if ($records->isEmpty()) {
             return;
         }
 
         /** @phpstan-ignore-next-line  */
-        collect($data->items())->each(function (array|Model|stdClass $model) {
+        collect($records->items())->each(function (array|Model|stdClass $model) {
             $value = $model->{$this->checkboxAttribute};
 
             $hide = (bool) data_get(
