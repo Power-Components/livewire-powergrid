@@ -79,19 +79,19 @@
                             <optgroup label="{{ $item['label'] }}">
                                 @foreach ($item['options'] as $subItem)
                                     <option
-                                        wire:key="multi-select-option-{{ md5($item['label'] . $subItem['value']) }}"
-                                        value="{{ $subItem['value'] }}"
+                                        wire:key="multi-select-option-{{ $loop->parent->index }}-{{ $loop->index }}"
+                                        value="{{ data_get($subItem, data_get($filter, 'optionValue')) }}"
                                     >
-                                        {{ $subItem['label'] }}
+                                        {{ data_get($subItem, data_get($filter, 'optionLabel')) }}
                                     </option>
                                 @endforeach
                             </optgroup>
                         @else
                             <option
-                                wire:key="multi-select-option-{{ md5($item['value']) }}"
-                                value="{{ $item['value'] }}"
+                                wire:key="multi-select-option-{{ $loop->index }}"
+                                value="{{ data_get($item, data_get($filter, 'optionValue')) }}"
                             >
-                                {{ $item['label'] }}
+                                {{ data_get($item, data_get($filter, 'optionLabel')) }}
                             </option>
                         @endif
                     @endforeach
