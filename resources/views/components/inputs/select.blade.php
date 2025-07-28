@@ -11,25 +11,22 @@
 
 @php
     $framework = config('livewire-powergrid.plugins.select');
-    $collection = collect();
+    $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
-    if (filled(data_get($filter, 'dataSource'))) {
-        $collection = collect(data_get($filter, 'dataSource'))
-            ->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
-                if (is_array($entry)) {
-                    $entry = collect($entry);
-                }
-            return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
+    // Determine if the collection is grouped (optgroup)
+    $isGrouped = $rawCollection->first() && is_array($rawCollection->first()) && array_key_exists('options', $rawCollection->first());
+
+    $collection = $isGrouped
+        ? $rawCollection // optgroup structure, don't transform
+        : $rawCollection->transform(function ($entry) use ($filter) {
+            if (is_array($entry)) {
+                $entry = collect($entry);
+            }
+            return $entry->only([
+                data_get($filter, 'optionValue'),
+                data_get($filter, 'optionLabel')
+            ]);
         });
-    } elseif (filled(data_get($filter, 'computedDatasource'))) {
-        $collection = collect(data_get($filter, 'computedDatasource'))
-            ->transform(function (array|\Illuminate\Support\Collection|\Illuminate\Database\Eloquent\Model $entry) use ($filter) {
-                if (is_array($entry)) {
-                    $entry = collect($entry);
-                }
-            return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
-        });
-    }
 
     $params = [
         'tableName' => $tableName,
@@ -52,25 +49,23 @@
         ];
     }
 
-    $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')' : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
+    $alpineData = $framework['default'] == 'tom'
+        ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')'
+        : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
 @endphp
-<div
-    x-cloak
-    wire:ignore
-    x-data="{{ $alpineData }}"
->
+
+<div x-cloak wire:ignore x-data="{{ $alpineData }}">
     @if (filled($filter))
-        <div
-            class="{{ theme_style($theme, 'filterSelect.base') }}"
-        >
+        <div class="{{ theme_style($theme, 'filterSelect.base') }}">
             @if (!$inline)
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                     {{ $title }}
                 </label>
             @endif
+
             <select
                 @if ($multiple) multiple @endif
-            class="{{ theme_style($theme, 'filterSelect.select') }}"
+                class="{{ theme_style($theme, 'filterMultiSelect.select') }}"
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
@@ -80,10 +75,25 @@
 
                 @if (blank(data_get($params, 'asyncData', [])))
                     @foreach ($collection->toArray() as $item)
-                        <option wire:key="multi-select-option-{{ $loop->index }}"
-                                value="{{ data_get($item, data_get($filter, 'optionValue')) }}">
-                            {{ data_get($item, data_get($filter, 'optionLabel')) }}
-                        </option>
+                        @if (isset($item['options']) && isset($item['label']))
+                            <optgroup label="{{ $item['label'] }}">
+                                @foreach ($item['options'] as $subItem)
+                                    <option
+                                        wire:key="multi-select-option-{{ md5($item['label'] . $subItem['value']) }}"
+                                        value="{{ $subItem['value'] }}"
+                                    >
+                                        {{ $subItem['label'] }}
+                                    </option>
+                                @endforeach
+                            </optgroup>
+                        @else
+                            <option
+                                wire:key="multi-select-option-{{ md5($item['value']) }}"
+                                value="{{ $item['value'] }}"
+                            >
+                                {{ $item['label'] }}
+                            </option>
+                        @endif
                     @endforeach
                 @endif
             </select>
