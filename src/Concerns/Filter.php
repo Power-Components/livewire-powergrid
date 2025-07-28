@@ -44,7 +44,13 @@ trait Filter
                     }
                 }
 
-                if (isset($this->filters['multi_select'][$field])) {
+                // Because multi_select filters can be nested
+                // We need to use data_get to access the field
+                // Example of field: user.roles would not be accessible with $this->filters['multi_select'][$field] since it is nested as
+                // $this->filters['multi_select']['user']['roles']
+                // By using data_get, we can access it regardless of nesting
+                // This is needed because in the slimSelect.js the dataField is set as 'multi_select.user.roles'
+                if (data_get($this->filters, "multi_select.$field")) {
                     $this->dispatch('pg:clear_multi_select::'.$this->tableName.':'.$field);
                 }
 
