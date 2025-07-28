@@ -51,7 +51,7 @@ trait Filter
                 // By using data_get, we can access it regardless of nesting
                 // This is needed because in the slimSelect.js the dataField is set as 'multi_select.user.roles'
                 if (data_get($this->filters, "multi_select.$field")) {
-                    $this->dispatch('pg:clear_multi_select::' . $this->tableName . ':' . $field);
+                    $this->dispatch('pg:clear_multi_select::'.$this->tableName.':'.$field);
                 }
 
                 if (isset($this->filters['datetime'][$field]) || isset($this->filters['date'][$field])) {

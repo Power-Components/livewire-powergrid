@@ -14,47 +14,52 @@
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
     // Determine if the collection is grouped (optgroup)
-    $isGrouped = $rawCollection->first() && is_array($rawCollection->first()) && array_key_exists('options', $rawCollection->first());
+    $isGrouped =
+        $rawCollection->first() &&
+        is_array($rawCollection->first()) &&
+        array_key_exists('options', $rawCollection->first());
 
     $collection = $isGrouped
         ? $rawCollection // optgroup structure, don't transform
-        : $rawCollection->transform(function ($entry) use ($filter) {
-            if (is_array($entry)) {
-                $entry = collect($entry);
-            }
-            return $entry->only([
-                data_get($filter, 'optionValue'),
-                data_get($filter, 'optionLabel')
-            ]);
-        });
+    : $rawCollection->transform(function ($entry) use ($filter) {
+        if (is_array($entry)) {
+            $entry = collect($entry);
+        }
+        return $entry->only([data_get($filter, 'optionValue'), data_get($filter, 'optionLabel')]);
+    });
 
-    $params = [
-        'tableName' => $tableName,
-        'label' => $title,
-        'dataField' => data_get($filter, 'field'),
-        'optionValue' => data_get($filter, 'optionValue'),
-        'optionLabel' => data_get($filter, 'optionLabel'),
-        'options' => data_get($filter, 'params'),
-        'initialValues' => $initialValues,
-        'appliedFilters' => data_get($this->filters, 'multi_select', []),
-        'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
+$params = [
+    'tableName' => $tableName,
+    'label' => $title,
+    'dataField' => data_get($filter, 'field'),
+    'optionValue' => data_get($filter, 'optionValue'),
+    'optionLabel' => data_get($filter, 'optionLabel'),
+    'options' => data_get($filter, 'params'),
+    'initialValues' => $initialValues,
+    'appliedFilters' => data_get($this->filters, 'multi_select', []),
+    'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
+];
+
+if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
+    $params['asyncData'] = [
+        'url' => data_get($filter, 'url'),
+        'method' => data_get($filter, 'method'),
+        'parameters' => data_get($filter, 'parameters'),
+        'headers' => data_get($filter, 'headers'),
     ];
+}
 
-    if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
-        $params['asyncData'] = [
-            'url' => data_get($filter, 'url'),
-            'method' => data_get($filter, 'method'),
-            'parameters' => data_get($filter, 'parameters'),
-            'headers' => data_get($filter, 'headers'),
-        ];
-    }
-
-    $alpineData = $framework['default'] == 'tom'
+$alpineData =
+    $framework['default'] == 'tom'
         ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')'
         : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
 @endphp
 
-<div x-cloak wire:ignore x-data="{{ $alpineData }}">
+<div
+    x-cloak
+    wire:ignore
+    x-data="{{ $alpineData }}"
+>
     @if (filled($filter))
         <div class="{{ theme_style($theme, 'filterSelect.base') }}">
             @if (!$inline)
