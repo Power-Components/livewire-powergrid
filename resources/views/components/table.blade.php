@@ -108,8 +108,6 @@
                             $take = $rowsPerChildren;
                         @endphp
 
-                        @ds([$skip, $take])
-
                         <livewire:lazy-child
                             key="{{ $this->getLazyKeys }}"
                             :parentId="$this->getId()"
@@ -127,8 +125,6 @@
                             :columns="$this->visibleColumns"
                             :data="$dataTransformer->transform($data->skip($skip)->take($take))->collection"
                         />
-
-                        @ds($dataTransformer->transform($data->skip($skip)->take($take))->collection)
                     @endforeach
                 </div>
             @endif
