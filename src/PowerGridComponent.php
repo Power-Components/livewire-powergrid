@@ -266,6 +266,8 @@ class PowerGridComponent extends Component
 
     public function render(): Application|Factory|View
     {
+        $data = [];
+
         if (isset($this->setUp['lazy'])) {
             $cacheKey = 'lazy-tmp-'.$this->getId().'-'.implode('-', $this->getCacheKeys());
 
@@ -281,6 +283,7 @@ class PowerGridComponent extends Component
 
         return view(theme_style($this->theme, 'layout.table'), [
             'table' => 'livewire-powergrid::components.table',
+            'data' => isset($this->setUp['lazy']) ? $data : [],
         ]);
     }
 }

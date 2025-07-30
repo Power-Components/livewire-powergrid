@@ -44,11 +44,7 @@ class ModelProcessor extends DataSourceBase
         $collection = $paginate->getCollection();
 
         if (filled(data_get($this->component, 'setUp.lazy'))) {
-            $count = intval(data_get($this->component, 'setUp.lazy.rowsPerChildren'));
-
-            $lazyCollection = $collection->take($count);
-
-            $paginate->setCollection($lazyCollection);
+            $paginate->setCollection($collection);
 
             return [
                 'results' => $paginate,
