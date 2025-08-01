@@ -203,7 +203,9 @@ trait WithExport
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
+            ->when($this->sortField, function ($query) use ($property, $processDataSource) {
+                return $query->orderBy($property('sortField'), $processDataSource->component->sortDirection);
+            })
             ->get();
 
         $dataTransformer = new DataTransformer($processDataSource->component);
