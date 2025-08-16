@@ -90,6 +90,7 @@ it('properly filters by bool true - custom builder', function (string $component
     ->with([
         'tailwind -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
         'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
     ]);
 
 it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
@@ -241,6 +242,7 @@ it('properly filters by bool true - using collection - custom builder - using ta
     ->with([
         'tailwind -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
         'bootstrap -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+        'daisyui -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
     ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
@@ -378,19 +380,24 @@ dataset('filter_boolean_join', [
     'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
     'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
+    'daisyui -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_boolean_query_builder', [
     'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
 ]);
 
 dataset('filter_boolean_themes_array', [
     [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);
 
 dataset('filter_boolean_themes_collection', [
     'tailwind' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    'daisyui' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);

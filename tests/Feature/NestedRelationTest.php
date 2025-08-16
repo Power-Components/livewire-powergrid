@@ -12,4 +12,5 @@ it('searches data using nested relations', function (string $component, object $
 })->with([
     'tailwind' => [NestedRelationSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [NestedRelationSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [NestedRelationSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

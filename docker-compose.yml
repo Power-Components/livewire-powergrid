@@ -35,20 +35,6 @@ services:
       test: [ "CMD", "pg_isready", "-q", "-d", "powergridtest", "-U", "postgres" ]
       retries: 3
       timeout: 5s
-  sqlsrv:
-    container_name: 'sqlsrv_test'
-    image: 'mcr.microsoft.com/mssql/server:2017-latest'
-    ports:
-      - '1434:1433'
-    environment:
-      ACCEPT_EULA: 'Y'
-      SA_PASSWORD: 'yourStrong(!)Password'
-    networks:
-      - sail
-    healthcheck:
-      test: [ "CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "yourStrong(!)Password", "-Q", "select 1" ]
-      retries: 3
-      timeout: 5s
 networks:
   sail:
     driver: bridge

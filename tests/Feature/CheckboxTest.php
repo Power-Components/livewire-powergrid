@@ -71,6 +71,7 @@ it('selectCheckboxAll works properly', function (string $component, object $para
 })->with([
     'tailwind -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'daisyui -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
 ]);
 
 it('selectCheckboxAll works properly with actionRules disable', function (string $component, object $params) {
@@ -119,4 +120,5 @@ it('selectCheckboxAll works properly with actionRules disable', function (string
 })->with([
     'tailwind -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
     'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
+    'daisyui -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
 ]);

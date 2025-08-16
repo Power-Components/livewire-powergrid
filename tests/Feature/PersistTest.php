@@ -28,6 +28,7 @@ $component = new class() extends DishTableBase
 $params = [
     'tailwind -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'name'],
     'bootstrap -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'name'],
+    'daisyui -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'name'],
 ];
 
 it('should be able to set persist_driver for session', function (string $componentString, string $theme, string $field) {

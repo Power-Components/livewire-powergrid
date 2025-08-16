@@ -16,6 +16,7 @@ it('searches data using beforeSearch', function (string $component, object $para
 })->with([
     'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);
 
 it('can use beforeSearch in boolean field', function (string $component, object $params) {
@@ -39,4 +40,5 @@ it('can use beforeSearch in boolean field', function (string $component, object 
 })->with([
     'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

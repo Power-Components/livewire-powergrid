@@ -47,4 +47,5 @@ it('can render actionsFromView property', function (string $component, object $p
 })->with([
     'tailwind' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
     'bootstrap' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
+    'daisyui' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'name']],
 ]);
