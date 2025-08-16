@@ -24,7 +24,11 @@ export default (params) => ({
                 if (typeof attribute[key] === 'object') {
                     attributes[attribute[key].key] = attribute[key].value;
                 } else {
-                    attributes[key] += attributes[key] ? ` ${attribute[key]}` : attribute[key]
+                    if (!attributes[key]) {
+                        attributes[key] = attribute[key];
+                    } else {
+                        attributes[key] += ` ${attribute[key]}`
+                    }
                 }
             });
         });
