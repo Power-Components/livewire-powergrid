@@ -94,6 +94,7 @@ it('should be able to see a warning message when showMessageSoftDeletes is true 
 dataset('soft_deletes', [
     [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);
 
 /**

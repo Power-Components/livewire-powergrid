@@ -46,4 +46,5 @@ it('sorts by "name" and then by "id"', function (string $component, string $them
 dataset('row_index', [
     'tailwind' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    'daisyui' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);

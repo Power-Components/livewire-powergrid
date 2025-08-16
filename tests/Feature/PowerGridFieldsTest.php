@@ -47,4 +47,5 @@ it('can fields with casting and custom fields', function (string $component, obj
 dataset('order table', [
     'tailwind' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

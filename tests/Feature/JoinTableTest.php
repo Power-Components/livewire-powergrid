@@ -18,6 +18,7 @@ it('properly sorts ASC/DESC with: string join column', function (string $compone
 })->with([
     'tailwind' => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    'daisyui' => [DishesTableWithJoin::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);
 
 it('properly search join column with invalid table', function (string $component, string $theme) {
@@ -36,4 +37,5 @@ it('properly search join column with invalid table', function (string $component
 })->with([
     'tailwind' => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
     'bootstrap' => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    'daisyui' => [DishesTableWithJoinNames::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);

@@ -143,6 +143,8 @@ dataset('sort join', [
     'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
     'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
     'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
+    'daisyui -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'dishes.id']],
 ]);
 
 /**

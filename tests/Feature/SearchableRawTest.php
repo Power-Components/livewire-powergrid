@@ -95,4 +95,5 @@ it('searches data using whereRaw on pgsql', function (string $component, object 
 dataset('searchable_raw_themes', [
     'tailwind' => [DishesSearchableRawTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesSearchableRawTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

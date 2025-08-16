@@ -42,6 +42,8 @@ dataset('action:depends', [
     'bootstrap' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
     'tailwind join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
+    'daisyui' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => false]],
+    'daisyui join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => true]],
 ]);
 
 it('"depends" works properly in select', function (string $component, object $params) {

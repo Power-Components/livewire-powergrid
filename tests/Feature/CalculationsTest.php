@@ -63,6 +63,8 @@ dataset('calculations', [
     'bootstrap' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
     'tailwind join' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
     'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
+    'daisyui' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => false]],
+    'daisyui join' => [DishesCalculationsTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => true]],
 ]);
 
 /**

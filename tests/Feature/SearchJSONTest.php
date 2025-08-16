@@ -23,4 +23,5 @@ it('searches JSON column', function (string $component, object $params) {
 dataset('search-json', [
     'tailwind' => [DishesSearchJSONTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesSearchJSONTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesSearchJSONTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

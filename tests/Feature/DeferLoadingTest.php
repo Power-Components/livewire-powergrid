@@ -20,4 +20,6 @@ dataset('defer_loading_join', [
     'bootstrap' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
     'tailwind => join' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
     'bootstrap => join' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
+    'daisyui' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => false]],
+    'daisyui => join' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => true]],
 ]);
