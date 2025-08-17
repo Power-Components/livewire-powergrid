@@ -171,7 +171,7 @@ trait WithExport
 
         if ($processDataSource->component->datasource() instanceof Collection) {
             if ($filtered) {
-                $results = $processDataSource->get(isExport: true)
+                $results = $processDataSource->get(isExport: true)['results']
                     ->whereIn($this->primaryKey, $filtered);
 
                 $dataTransformer = new DataTransformer($processDataSource->component);
