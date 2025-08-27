@@ -19,12 +19,10 @@ class SoftDeletes
 
         $softDeletes = data_get($this->component, 'softDeletes');
 
-        if ($softDeletes && method_exists($query, 'withTrashed')) {
-            if ($softDeletes === 'withTrashed') {
-                $query->withTrashed();
-            } elseif ($softDeletes === 'onlyTrashed') {
-                $query->onlyTrashed();
-            }
+        if ($softDeletes === 'withTrashed') {
+            $query->withTrashed();
+        } elseif ($softDeletes === 'onlyTrashed') {
+            $query->onlyTrashed();
         }
 
         return $next($query);
