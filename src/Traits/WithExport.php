@@ -195,6 +195,8 @@ trait WithExport
                 : $currentTable.'.'.$property;
         };
 
+        $queryOptions = data_get($this->setUp, 'exportable.queryOptions', []);
+
         $results = $processDataSource->component->datasource()
             ->where(function ($query) {
                 (new SearchHandler($this))->apply($query);
@@ -203,8 +205,11 @@ trait WithExport
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->when($this->sortField, function ($query) use ($property, $processDataSource) {
-                return $query->orderBy($property('sortField'), $processDataSource->component->sortDirection);
+            ->when($this->sortField, function ($query) use ($property, $processDataSource, $queryOptions) {
+                $sortField = $queryOptions['sortField'] ?? $property('sortField');
+                $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
+
+                return $query->orderBy($sortField, $sortDirection);
             })
             ->get();
 

@@ -1,7 +1,7 @@
 <?php
 
 use OpenSpout\Reader\XLSX\Reader;
-use PowerComponents\LivewirePowerGrid\{Button,Column, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button, Column, Components\SetUp\Exportable, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\ExportTable;
 
@@ -222,6 +222,59 @@ it('properly export xls without tags', function (string $component) {
 
 dataset('export_with_html', [
     'html' => [$exportWithHtml::class],
+]);
+
+$exportWithQueryOptions = new class() extends ExportTable
+{
+    public string $testSortField = '';
+
+    public string $testSortDirection = '';
+
+    public function setUp(): array
+    {
+        $this->showCheckBox();
+
+        return [
+            PowerGrid::exportable('export')
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV)
+                ->queryOptions([
+                    'sortField' => $this->testSortField,
+                    'sortDirection' => $this->testSortDirection,
+                ]),
+        ];
+    }
+
+    public function fields(): PowerGridFields
+    {
+        return PowerGrid::fields()
+            ->add('name', function ($dish) {
+                return $dish->name;
+            });
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::add()
+                ->title('name')
+                ->field('name'),
+        ];
+    }
+};
+
+it('properly exports with query options', function ($component, $options, $expectedRows) {
+    $downloadedFile = livewire($component, $options)
+        ->set('checkboxValues', [0 => '1', 1 => '3'])
+        ->call('exportToCsv', true)
+        ->assertFileDownloaded('export.csv');
+
+    expect($downloadedFile)->toBeCsvDownload(['name'], $expectedRows);
+
+})->with('export_with_query_options')->requiresOpenSpout();
+
+dataset('export_with_query_options', [
+    'desc' => [$exportWithQueryOptions::class, ['testSortField' => 'name', 'testSortDirection' => 'desc'], [['Pastel de Nata'], ['Carne Louca']]],
+    'asc' => [$exportWithQueryOptions::class, ['testSortField' => 'name', 'testSortDirection' => 'asc'], [['Carne Louca'], ['Pastel de Nata']]],
 ]);
 
 /*
