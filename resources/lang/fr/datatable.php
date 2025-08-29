@@ -8,7 +8,7 @@ return [
     'labels' => [
         'action'           => 'Actions',
         'results_per_page' => 'Résultats par page',
-        'clear_filter'     => 'Enlever les Filtres',
+        'clear_filter'     => 'Enlever les filtres',
         'no_data'          => 'Aucune réponse',
         'all'              => 'Tous',
         'selected'         => 'Sélectionné',
@@ -53,7 +53,7 @@ return [
     ],
     'export' => [
         'exporting' => 'Veuillez patienter !',
-        'completed' => 'Exportation terminée ! Vos fichiers sont téléchargés',
+        'completed' => 'Export terminé ! Vos fichiers sont téléchargés',
     ],
     'soft_deletes' => [
         'message_with_trashed' => 'Afficher toutes les lignes, même celles supprimées',
@@ -63,14 +63,14 @@ return [
         'only_trashed'         => 'Uniquement les lignes supprimées',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Le multi-filtre est actif',
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'Êtes-vous sûr de vouloir effectuer cette action ?',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "Êtes-vous sûr de vouloir effectuer cette action ? \n\n Entrer :confirmValue pour confirmer.",
         ],
     ],
 ];
