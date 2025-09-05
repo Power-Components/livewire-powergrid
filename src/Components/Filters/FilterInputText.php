@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
-use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\FilterAttributes\InputText;
 
 class FilterInputText extends FilterBase
 {
@@ -29,7 +29,7 @@ class FilterInputText extends FilterBase
 
     public function operators(array $value = []): FilterInputText
     {
-        if (!in_array('contains', $value)) {
+        if (! in_array('contains', $value)) {
             $value[] = 'contains';
         }
 
@@ -40,16 +40,12 @@ class FilterInputText extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        return collect()
-            ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:model'                     => 'filters.input_text_options.' . $field,
-                'wire:input.live.debounce.600ms' => 'filterInputTextOptions(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-            ]))
-            ->put('inputAttributes', new ComponentAttributeBag([
-                'wire:model'                     => 'filters.input_text.' . $field,
-                'wire:input.live.debounce.600ms' => 'filterInputText(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-            ]))
-            ->toArray();
+        $configAttributes = config('livewire-powergrid.filter_attributes.input_text', InputText::class);
+
+        /** @var callable $class */
+        $class = new $configAttributes();
+
+        return $class($field, $title);
     }
 
     public function placeholder(string $placeholder): FilterInputText

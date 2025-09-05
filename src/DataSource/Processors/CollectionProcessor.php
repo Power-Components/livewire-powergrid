@@ -2,47 +2,81 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
+use Illuminate\Routing\Pipeline;
 use Illuminate\Support\{Collection, Collection as BaseCollection};
-use PowerComponents\LivewirePowerGrid\DataSource\{Collection as DataSourceCollection, DataSourceProcessorInterface};
+use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pipelines;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines as CommonPipelines;
 
-class CollectionProcessor extends DataSourceBase implements DataSourceProcessorInterface
+class CollectionProcessor extends DataSourceBase
 {
     public static function match(mixed $key): bool
     {
         return $key instanceof Collection;
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function process(): LengthAwarePaginator|BaseCollection
+    public function process(): array
     {
-        $filters = DataSourceCollection::make(
-            new BaseCollection($this->prepareDataSource()), // @phpstan-ignore-line
-            $this->component
-        )
-            ->filterContains()
-            ->filter();
+        $datasource = $this->component->datasource($this->component->properties ?? []);
 
-        $results = $this->component->applySorting($filters);
+        $collection = new BaseCollection($datasource);
 
-        $this->applySummaries($results);
+        /** @var BaseCollection $results */
+        $results = app(Pipeline::class)
+            ->send($collection)
+            ->through([
+                new Pipelines\GlobalSearch($this->component),
+                new Pipelines\Filters($this->component),
+                new Pipelines\Sorting($this->component),
+                new CommonPipelines\Summaries($this->component),
+            ])
+            ->thenReturn();
 
         $this->component->total = $results->count();
 
-        if ($results->count()) {
+        $paginated = $results;
+        $dataTransformer = new DataTransformer($this->component);
+        $actionsByRow = [];
+        $timeInMs = 0;
+
+        if ($results->count() > 0) {
             $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
+            $paginated = $this->paginate($results);
 
-            $perPage   = $this->isExport ? $this->component->total : intval(data_get($this->component->setUp, 'footer.perPage'));
-            $paginated = DataSourceCollection::paginate($results, $perPage);
+            $transformResult = $dataTransformer->transform($paginated->getCollection());
+            $actionsByRow = $transformResult->getActionsByRow();
+            $timeInMs = $transformResult->getTransformTimeInMs();
 
-            $results = $paginated->setCollection(
-                $this->transform($paginated->getCollection(), $this->component)
-            );
+            $paginated->setCollection($transformResult->getCollection());
         }
 
-        return $results;
+        return [
+            'results' => $paginated,
+            'transformTime' => $timeInMs,
+            'actionsByRow' => $actionsByRow,
+        ];
+    }
+
+    private function paginate(BaseCollection $results): LengthAwarePaginator
+    {
+        $perPage = $this->isExport
+            ? $results->count()
+            : intval(data_get($this->component->setUp, 'footer.perPage', 10));
+
+        $perPage = $perPage > 0 ? $perPage : $results->count();
+
+        $page = Paginator::resolveCurrentPage('page');
+
+        return new LengthAwarePaginator(
+            items: $results->forPage($page, $perPage),
+            total: $results->count(),
+            perPage: $perPage,
+            currentPage: $page,
+            options: [
+                'path' => Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]
+        );
     }
 }

@@ -3,18 +3,21 @@
 namespace PowerComponents\LivewirePowerGrid\Testing;
 
 use Closure;
-
 use PHPUnit\Framework\Assert;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class TestActions
 {
     public function assertHasAction(): Closure
     {
         return function (string $action): static {
-            $actionFound = collect(DataSourceBase::$actionsHtml)
-                ->flatten(1)
-                ->contains(fn (array $dishAction): bool => $dishAction['action'] === $action);
+            $rows = $this->records->items();
+
+            $allActions = collect($rows)
+                ->pluck('__powergrid_actions')
+                ->flatten(1);
+
+            $actionFound = $allActions->contains(fn (array $dishAction): bool => $dishAction['action'] === $action);
 
             Assert::assertTrue($actionFound, "Failed asserting that the action '$action' exists in the table.");
 
@@ -25,13 +28,16 @@ class TestActions
     public function assertActionHasIcon(): Closure
     {
         return function (string $action, string $icon, ?string $iconClass = null): static {
-            /** @var array $actionFound */
-            $actionFound = collect(DataSourceBase::$actionsHtml)
-                ->flatten(1)
-                ->first(function ($dishAction) use ($action, $icon) {
-                    /** @var array $dishAction */
-                    return $dishAction['action'] === $action && $dishAction['icon'] === $icon;
-                });
+            /** @var PowerGridComponent $this */
+            $rows = $this->records->items();
+
+            $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
+
+            /** @var array|null $actionFound */
+            $actionFound = $allActions->first(function ($dishAction) use ($action, $icon) {
+                /** @var array $dishAction */
+                return $dishAction['action'] === $action && $dishAction['icon'] === $icon;
+            });
 
             Assert::assertNotNull($actionFound, "Failed asserting that the action '$action' has the icon '$icon'.");
 
@@ -47,30 +53,33 @@ class TestActions
     public function assertActionContainsAttribute(): Closure
     {
         return function (string $action, string $attribute, string $expected, array $expectedParams = []): static {
-            $attributeFound = collect(DataSourceBase::$actionsHtml)
-                ->flatten(1)
-                ->first(function ($dishAction) use ($action, $attribute, $expected, $expectedParams) {
-                    /** @var array $dishAction */
-                    if ($dishAction['action'] === $action && isset($dishAction['attributes'][$attribute])) {
-                        $attributeValue = $dishAction['attributes'][$attribute];
+            /** @var PowerGridComponent $this */
+            $rows = $this->records->items();
 
-                        if (str_contains($attributeValue, 'JSON.parse')) {
-                            preg_match("/JSON\.parse\('(.*)'\)/", $attributeValue, $matches);
-                            $jsonEscaped = $matches[1] ?? null;
+            $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
 
-                            if ($jsonEscaped) {
-                                $jsonStringClean = strval(json_decode('"' . $jsonEscaped . '"', true));
-                                $data            = json_decode($jsonStringClean, true);
+            $attributeFound = $allActions->first(function ($dishAction) use ($action, $attribute, $expected, $expectedParams) {
+                /** @var array $dishAction */
+                if ($dishAction['action'] === $action && isset($dishAction['attributes'][$attribute])) {
+                    $attributeValue = $dishAction['attributes'][$attribute];
 
-                                return $data == $expectedParams;
-                            }
+                    if (str_contains($attributeValue, 'JSON.parse')) {
+                        preg_match("/JSON\.parse\('(.*)'\)/", $attributeValue, $matches);
+                        $jsonEscaped = $matches[1] ?? null;
+
+                        if ($jsonEscaped) {
+                            $jsonStringClean = strval(json_decode('"'.$jsonEscaped.'"', true));
+                            $data = json_decode($jsonStringClean, true);
+
+                            return $data == $expectedParams;
                         }
-
-                        return str_contains($attributeValue, $expected);
                     }
 
-                    return false;
-                });
+                    return str_contains($attributeValue, $expected);
+                }
+
+                return false;
+            });
 
             Assert::assertNotNull($attributeFound, "Failed asserting that the '$attribute' of action '$action' contains the expected parameters.");
 

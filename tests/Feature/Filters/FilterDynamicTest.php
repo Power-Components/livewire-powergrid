@@ -18,6 +18,7 @@ it(
 )->group('filters')->with('dynamic_themes');
 
 dataset('dynamic_themes', [
-    'tailwind'  => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'tailwind' => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesDynamicFiltersTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

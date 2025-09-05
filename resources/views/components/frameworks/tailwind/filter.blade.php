@@ -22,9 +22,18 @@
     >
         @php
             $customConfig = [];
+
+            $componentFilters = collect($this->filters());
+            $filterOrderMap = $componentFilters->pluck('field')->flip();
+
+            // Sort filters based on the order they appear in filters() method
+            $sortedFilters = $filtersFromColumns->sortBy(function ($column) use ($filterOrderMap) {
+                $fieldName = data_get($column, 'filters.field');
+                return $filterOrderMap->get($fieldName, 999); // 999 for fields not found in filters()
+            });
         @endphp
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-3">
-            @foreach ($filtersFromColumns as $column)
+            @foreach ($sortedFilters as $column)
                 @php
                     $filter = data_get($column, 'filters');
                     $title = data_get($column, 'title');
@@ -35,12 +44,12 @@
                 <div class="{{ $baseClass }}">
                     @if ($className->contains('FilterMultiSelect'))
                         <x-livewire-powergrid::inputs.select
-                                :inline="false"
-                                :theme="$theme"
-                                :table-name="$tableName"
-                                :filter="$filter"
-                                :title="$title"
-                                :initial-values="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
+                            :inline="false"
+                            :theme="$theme"
+                            :table-name="$tableName"
+                            :filter="$filter"
+                            :title="$title"
+                            :initial-values="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
                         />
                     @elseif ($className->contains(['FilterDateTimePicker', 'FilterDatePicker']))
                         @includeIf(theme_style($theme, 'filterDatePicker.view'), [
@@ -67,8 +76,8 @@
                         ])
                     @elseif ($className->contains('FilterDynamic'))
                         <x-dynamic-component
-                                :component="data_get($filter, 'component', '')"
-                                :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))"
+                            :component="data_get($filter, 'component', '')"
+                            :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))"
                         />
                     @endif
                 </div>

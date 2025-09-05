@@ -12,6 +12,10 @@ export default (params) => ({
                 storeMultiSelect(params, value)
             },
             onInitialize: () => {
+                if (params.appliedFilters && params.dataField) {
+                    this.applyFilterForDataField(params.appliedFilters, params.dataField, element);
+                }
+
                 window.addEventListener(`pg:clear_multi_select::${params.tableName}:${params.dataField}`, () => {
                     if (element) {
                         element.tomselect.clear(true)
@@ -85,4 +89,22 @@ export default (params) => ({
         new TomSelect(element, parameters);
 
     },
+
+    applyFilterForDataField(appliedFilters, dataField, element) {
+        const pathParts = dataField.split('.');
+        let current = appliedFilters;
+
+        // Traverse the nested object structure
+        for (const part of pathParts) {
+            if (current && typeof current === 'object' && current.hasOwnProperty(part)) {
+                current = current[part];
+            } else {
+                return; // Path doesn't exist in appliedFilters
+            }
+        }
+
+        if (Array.isArray(current) && current.length > 0) {
+            element.tomselect.addItems(current);
+        }
+    }
 })

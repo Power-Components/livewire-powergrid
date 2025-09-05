@@ -45,6 +45,7 @@ it('calculates "max" on balance field', function (string $component, object $par
 })->with('calculations collection');
 
 dataset('calculations collection', [
-    'tailwind'  => [DishesCalculationsCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'tailwind' => [DishesCalculationsCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesCalculationsCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesCalculationsCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);

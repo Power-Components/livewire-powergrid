@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
-use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean;
 
 class FilterBoolean extends FilterBase
 {
@@ -14,7 +14,7 @@ class FilterBoolean extends FilterBase
 
     public function label(string $trueLabel, string $falseLabel): FilterBoolean
     {
-        $this->trueLabel  = $trueLabel;
+        $this->trueLabel = $trueLabel;
         $this->falseLabel = $falseLabel;
 
         return $this;
@@ -22,10 +22,11 @@ class FilterBoolean extends FilterBase
 
     public static function getWireAttributes(string $field, string $title): array
     {
-        return collect()
-            ->put('selectAttributes', new ComponentAttributeBag([
-                'wire:input.live.debounce.600ms' => 'filterBoolean(\'' . $field . '\', $event.target.value, \'' . $title . '\')',
-                'wire:model'                     => 'filters.boolean.' . $field,
-            ]))->toArray();
+        $configAttributes = config('livewire-powergrid.filter_attributes.boolean', Boolean::class);
+
+        /** @var callable $class */
+        $class = new $configAttributes();
+
+        return $class($field, $title);
     }
 }

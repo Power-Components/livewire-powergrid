@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\{Blade, Cache, File, View};
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\DataSourceBase;
 
 trait HasActions
 {
@@ -35,15 +34,15 @@ trait HasActions
 
     private function getResourceIconsJson(): string
     {
-        $paths          = (array) config('livewire-powergrid.icon_resources.paths');
-        $allowed        = (array) config('livewire-powergrid.icon_resources.allowed');
+        $paths = (array) config('livewire-powergrid.icon_resources.paths');
+        $allowed = (array) config('livewire-powergrid.icon_resources.allowed');
         $iconAttributes = (array) config('livewire-powergrid.icon_resources.attributes');
 
         $icons = [];
 
         foreach ($paths as $key => $path) {
             $fullPath = base_path(strval($path));
-            $files    = File::allFiles($fullPath);
+            $files = File::allFiles($fullPath);
 
             foreach ($files as $file) {
                 $name = Str::replaceLast('.blade.php', '', $file->getFilename());
@@ -61,13 +60,13 @@ trait HasActions
         return strval(json_encode($icons));
     }
 
-    public function storeActionsRowInJSWindow(): void
+    public function dispatchActionsToJS(array $actionsHtml): void
     {
-        if (!method_exists($this, 'actions')) {
+        if (! method_exists($this, 'actions')) {
             return;
         }
 
-        $actionsHtml = json_encode(DataSourceBase::$actionsHtml);
+        $actionsHtml = json_encode($actionsHtml);
 
         $this->js(<<<JS
             this[`pgActions_\${\$wire.id}`] = $actionsHtml
@@ -76,23 +75,19 @@ trait HasActions
 
     public function storeActionsHeaderInJSWindow(): void
     {
-        if (!method_exists($this, 'header')) {
-            return;
-        }
-
         $actionsHtml = collect($this->header())
             ->transform(function (Button $action) {
                 $can = data_get($action, 'can');
 
                 return [
-                    'action'         => $action->action,
-                    'slot'           => $action->slot,
-                    'tag'            => $action->tag,
-                    'icon'           => $action->icon,
+                    'action' => $action->action,
+                    'slot' => $action->slot,
+                    'tag' => $action->tag,
+                    'icon' => $action->icon,
                     'iconAttributes' => $action->iconAttributes,
-                    'attributes'     => $action->attributes,
-                    'rules'          => [],
-                    'can'            => $can instanceof \Closure ? $can() : $can,
+                    'attributes' => $action->attributes,
+                    'rules' => [],
+                    'can' => $can instanceof \Closure ? $can() : $can,
                 ];
             });
 
@@ -105,7 +100,7 @@ trait HasActions
 
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
     {
-        if (!method_exists($this, 'actionRules')) {
+        if (! method_exists($this, 'actionRules')) {
             return [];
         }
 
@@ -117,9 +112,9 @@ trait HasActions
                 ->transform(function ($rule) use ($row, $loop) {
                     $closureWhen = data_get($rule, 'rule.when');
                     $closureLoop = data_get($rule, 'rule.loop');
-                    $attributes  = data_get($rule, 'rule.setAttribute');
+                    $attributes = data_get($rule, 'rule.setAttribute');
 
-                    $apply     = is_callable($closureWhen) ? $closureWhen($row) : false;
+                    $apply = is_callable($closureWhen) ? $closureWhen($row) : false;
                     $applyLoop = is_callable($closureLoop) ? $closureLoop($loop) : false;
 
                     if (is_array($attributes) && isset($attributes['attribute']) && isset($attributes['value'])) {
@@ -132,38 +127,40 @@ trait HasActions
                         ? data_get($rule, 'rule.toggleDetailVisibility') === 'show'
                         : (bool) data_get($this->setUp, 'detail.showCollapseIcon');
 
-                    $toggleableVisibility  = $apply ? data_get($rule, 'rule.toggleableVisibility') : [];
+                    $toggleableVisibility = $apply ? data_get($rule, 'rule.toggleableVisibility') : [];
                     $editOnClickVisibility = $apply ? data_get($rule, 'rule.editOnClickVisibility') : [];
-                    $fieldHideEditOnClick  = $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick');
-                    $fieldHideToggleable   = $apply && (bool) data_get($rule, 'rule.fieldHideToggleable');
-                    $disabled              = $apply && (bool) data_get($rule, 'rule.disable');
-                    $hide                  = $apply && (bool) data_get($rule, 'rule.hide');
+                    $fieldHideEditOnClick = $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick');
+                    $fieldHideToggleable = $apply && (bool) data_get($rule, 'rule.fieldHideToggleable');
+                    $disabled = $apply && (bool) data_get($rule, 'rule.disable');
+                    $hide = $apply && (bool) data_get($rule, 'rule.hide');
+                    $detailView = (array) data_get($rule, 'rule.detailView', []);
 
                     if ($apply || $applyLoop) {
                         return [
-                            'forAction'             => strval(data_get($rule, 'forAction')),
-                            'apply'                 => (bool) $apply,
-                            'applyLoop'             => (bool) $applyLoop,
-                            'attributes'            => $attributes,
-                            'disable'               => $disabled,
-                            'hide'                  => $hide,
-                            'toggleableVisibility'  => $toggleableVisibility,
-                            'toggleDetailView'      => $this->theme['root'] . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                            'forAction' => strval(data_get($rule, 'forAction')),
+                            'apply' => (bool) $apply,
+                            'applyLoop' => (bool) $applyLoop,
+                            'attributes' => $attributes,
+                            'disable' => $disabled,
+                            'hide' => $hide,
+                            'toggleableVisibility' => $toggleableVisibility,
+                            'toggleDetailView' => $this->theme['root'].($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                             'editOnClickVisibility' => $editOnClickVisibility,
-                            'fieldHideEditOnClick'  => $fieldHideEditOnClick,
-                            'fieldHideToggleable'   => $fieldHideToggleable,
+                            'fieldHideEditOnClick' => $fieldHideEditOnClick,
+                            'fieldHideToggleable' => $fieldHideToggleable,
+                            ...$detailView,
                         ];
                     }
 
                     return [
                         'toggleableVisibility' => $toggleableVisibility,
-                        'toggleDetailView'     => $this->theme['root'] . ($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                        'toggleDetailView' => $this->theme['root'].($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                     ];
                 })
                 ->toArray();
         };
 
-        $value    = strval(data_get($row, $this->realPrimaryKey));
+        $value = strval(data_get($row, $this->realPrimaryKey));
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
 
         if (intval(config('livewire-powergrid.cache_ttl') > 0)) {
@@ -172,14 +169,14 @@ trait HasActions
                 $value = $closure($row, $loop);
 
                 return array_filter($value, function ($item) {
-                    return !empty($item);
+                    return ! empty($item);
                 });
             });
         } else {
             $value = $closure($row, $loop);
 
             $formattedRules = array_filter($value, function ($item) {
-                return !empty($item);
+                return ! empty($item);
             });
         }
 
@@ -206,7 +203,7 @@ trait HasActions
                         '<x-dynamic-component :component="$component" :attributes="$params" />',
                         [
                             'component' => data_get($bladeComponent, 'component'),
-                            'params'    => new ComponentAttributeBag(
+                            'params' => new ComponentAttributeBag(
                                 array_merge((array) data_get($bladeComponent, 'params'))
                             ),
                         ],
@@ -216,10 +213,10 @@ trait HasActions
                 }
 
                 return [
-                    'action'      => data_get($rule, 'forAction'),
-                    'apply'       => $apply,
-                    'column'      => $rule->column,
-                    'rule'        => data_get($rule, 'rule'),
+                    'action' => data_get($rule, 'forAction'),
+                    'apply' => $apply,
+                    'column' => $rule->column, // @phpstan-ignore-line
+                    'rule' => data_get($rule, 'rule'),
                     'replaceHtml' => $html ?? '',
                 ];
             })

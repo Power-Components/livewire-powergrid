@@ -69,7 +69,7 @@
         ></span>
     </div>
     <template
-        x-if="showEditable && !hashError"
+        x-if="showEditable"
         style="margin-bottom: 4px"
     >
         <div x-html="editableInput"></div>

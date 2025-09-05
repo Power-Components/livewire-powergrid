@@ -6,29 +6,31 @@
     'theme' => null,
 ])
 <div @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset>
-    <table
-        id="table_base_{{ $tableName }}"
-        class="table power-grid-table {{ theme_style($theme, 'table.layout.table') }}"
-    >
-        <thead
-            class="{{ theme_style($theme, 'table.header.thead') }}"
+    <div x-data="{ expandedId: null }">
+        <table
+            id="table_base_{{ $tableName }}"
+            class="table power-grid-table {{ theme_style($theme, 'table.layout.table') }}"
         >
-            {{ $header }}
-        </thead>
-        @if ($readyToLoad)
-            <tbody
-                class="{{ theme_style($theme, 'table.body.tbody') }}"
+            <thead
+                class="{{ theme_style($theme, 'table.header.thead') }}"
             >
-                {{ $body }}
-            </tbody>
-        @else
-            <tbody
-                class="{{ theme_style($theme, 'table.body.tbody') }}"
-            >
-                {{ $loading }}
-            </tbody>
-        @endif
-    </table>
+                {{ $header }}
+            </thead>
+            @if ($readyToLoad)
+                <tbody
+                    class="{{ theme_style($theme, 'table.body.tbody') }}"
+                >
+                    {{ $body }}
+                </tbody>
+            @else
+                <tbody
+                    class="{{ theme_style($theme, 'table.body.tbody') }}"
+                >
+                    {{ $loading }}
+                </tbody>
+            @endif
+        </table>
+    </div>
 
     {{-- infinite pagination handler --}}
     @if ($this->canLoadMore && $lazy)

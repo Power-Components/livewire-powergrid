@@ -2,11 +2,11 @@
 
 return [
     'buttons' => [
-        'filter'            => 'Filtrer',
+        'filter' => 'Filtrer',
         'clear_all_filters' => 'Enlever tous les filtres',
     ],
     'labels' => [
-        'action'           => 'Actions',
+        'action' => 'Actions',
         'results_per_page' => 'Résultats par page',
         'clear_filter'     => 'Enlever les filtres',
         'no_data'          => 'Aucune réponse',
@@ -20,34 +20,34 @@ return [
     ],
     'pagination' => [
         'showing' => 'Résultats',
-        'to'      => 'à',
-        'of'      => 'sur',
+        'to' => 'à',
+        'of' => 'sur',
         'results' => '',
-        'all'     => 'Tous',
+        'all' => 'Tous',
     ],
     'multi_select' => [
         'select' => 'Sélectionner',
-        'all'    => 'Tous',
+        'all' => 'Tous',
     ],
     'select' => [
         'select' => 'Sélectionner',
-        'all'    => 'Tous',
+        'all' => 'Tous',
     ],
     'boolean_filter' => [
         'all' => 'Tous',
     ],
     'input_text_options' => [
-        'is'           => 'Est',
-        'is_not'       => 'N\'est pas',
-        'contains'     => 'Contient',
+        'is' => 'Est',
+        'is_not' => 'N\'est pas',
+        'contains' => 'Contient',
         'contains_not' => 'Ne contient pas',
-        'starts_with'  => 'Commence par',
-        'ends_with'    => 'Termine par',
-        'is_empty'     => 'Est vide ou nul',
+        'starts_with' => 'Commence par',
+        'ends_with' => 'Termine par',
+        'is_empty' => 'Est vide ou nul',
         'is_not_empty' => 'N\'est ni vide ni nul',
-        'is_null'      => 'Est nul',
-        'is_not_null'  => 'N\'est pas nul',
-        'is_blank'     => 'Est vide',
+        'is_null' => 'Est nul',
+        'is_not_null' => 'N\'est pas nul',
+        'is_blank' => 'Est vide',
         'is_not_blank' => 'N\'est pas vide',
 
     ],
@@ -58,9 +58,9 @@ return [
     'soft_deletes' => [
         'message_with_trashed' => 'Afficher toutes les lignes, même celles supprimées',
         'message_only_trashed' => 'Afficher seulement les lignes supprimées',
-        'without_trashed'      => 'Sans les lignes supprimées',
-        'with_trashed'         => 'Avec les lignes supprimées',
-        'only_trashed'         => 'Uniquement les lignes supprimées',
+        'without_trashed' => 'Sans les lignes supprimées',
+        'with_trashed' => 'Avec les lignes supprimées',
+        'only_trashed' => 'Uniquement les lignes supprimées',
     ],
     'multi_sort' => [
         'message' => 'Le multi-filtre est actif',

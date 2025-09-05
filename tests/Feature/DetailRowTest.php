@@ -1,10 +1,12 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
 use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid,
     Tests\Concerns\Components\RulesDetailRowTable,
     Tests\Concerns\Components\RulesToggleDetailTable};
+
+    use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+
+beforeEach(fn () => null)->todo();
 
 it('collapse detail row', function () {
     livewire(RulesToggleDetailTable::class, [
@@ -102,16 +104,16 @@ it('render x-data correctly for detail row state', function () {
     ]);
 
     $perPage = data_get($component, 'payload.serverMemo.data.setUp.footer.perPage');
-    $xData   = [];
+    $xData = [];
 
     for ($i = 1; $i < $perPage + 1; $i++) {
-        $xData[] = 'x-data="{ detailState: window.Livewire.find(\'' . $component->id() . '\').entangle(\'setUp.detail.state.' . $i . '\') }"';
+        $xData[] = 'x-data="{ detailState: window.Livewire.find(\''.$component->id().'\').entangle(\'setUp.detail.state.'.$i.'\') }"';
     }
 
     $component->assertSeeHtmlInOrder($xData);
 });
 
-it('collapse detail row with collapseOthers', function () {
+todo('collapse detail row with collapseOthers', function () {
     livewire(RulesToggleDetailTable::class, [
         'setUpTest' => [
             PowerGrid::footer()

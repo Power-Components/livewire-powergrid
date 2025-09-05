@@ -3,13 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Facades\PowerGrid,
     Facades\Rule,
     PowerGridComponent,
     PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesActionRulesTable extends PowerGridComponent
 {

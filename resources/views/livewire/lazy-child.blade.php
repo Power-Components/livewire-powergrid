@@ -13,11 +13,30 @@
                     'parentId' => $parentId
                 ])
             </tr>
-            @if (data_get($setUp, 'detail.state.' . $rowId))
-                <tr class="{{ $class }}">
-                    @include('livewire-powergrid::components.table.detail')
-                </tr>
-            @endif
+
+            @php
+                $hasDetailView = (bool) data_get(
+                    collect($row->__powergrid_rules)->where('apply', true)->last(),
+                    'detailView',
+                );
+
+                if ($hasDetailView) {
+                    $detailView = data_get($row->__powergrid_rules, '0.detailView');
+                    $rulesValues = data_get($row->__powergrid_rules, '0.options', []);
+                } else {
+                    $detailView = data_get($setUp, 'detail.view');
+                    $rulesValues = data_get($setUp, 'detail.options', []);
+                }
+            @endphp
+            <livewire:powergrid-detail
+                key="powergrid-lazy-child-detail-{{ $rowId }}"
+                :view="$detailView"
+                :options="$rulesValues"
+                :row-id="$rowId"
+                tr-class="{{ $class }}"
+                :row="$row->toArray()"
+                :collapse-others="data_get($setUp, 'detail.collapseOthers', false)"
+             />
         @else
             <tr
                 class="{{ $class }}"

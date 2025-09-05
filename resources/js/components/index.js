@@ -20,20 +20,22 @@ window.pgRenderActions = pgRenderActions
 window.pgRowAttributes = pgRowAttributes
 window.pgRenderRowTemplate = pgRenderRowTemplate
 
-Livewire.hook('commit', ({ component, succeed, fail }) => {
-    if (component.ephemeral.setUp && component.ephemeral.setUp.hasOwnProperty('responsive')) {
-        succeed(() => {
-            queueMicrotask(() => {
+document.addEventListener("DOMContentLoaded", () => {
+    Livewire.hook('commit', ({component, succeed, fail}) => {
+        if (component.ephemeral.setUp && component.ephemeral.setUp.hasOwnProperty('responsive')) {
+            succeed(() => {
+                queueMicrotask(() => {
+                    window.dispatchEvent(
+                        new CustomEvent('pg-livewire-request-finished')
+                    );
+                })
+            })
+
+            fail(() => {
                 window.dispatchEvent(
                     new CustomEvent('pg-livewire-request-finished')
                 );
             })
-        })
-
-        fail(() => {
-            window.dispatchEvent(
-                new CustomEvent('pg-livewire-request-finished')
-            );
-        })
-    }
+        }
+    })
 })

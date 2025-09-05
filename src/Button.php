@@ -22,6 +22,8 @@ use Livewire\Wireable;
  * @method static id(string $id = null)
  * @method static confirm(string $message = 'Are you sure you want to perform this action?')
  * @method static confirmPrompt(string $message = 'Are you sure you want to perform this action?', string $confirmValue = 'Confirm')
+ * @method static class(string $classes)
+ * @method static disable(bool $disable = true)
  */
 final class Button implements Wireable
 {
@@ -41,9 +43,7 @@ final class Button implements Wireable
 
     public bool|Closure $can = true;
 
-    public function __construct(public string $action)
-    {
-    }
+    public function __construct(public string $action) {}
 
     public static function add(string $action = ''): Button
     {
@@ -86,7 +86,7 @@ final class Button implements Wireable
 
     public function icon(string $icon, array $iconAttributes = []): Button
     {
-        $this->icon           = $icon;
+        $this->icon = $icon;
         $this->iconAttributes = $iconAttributes;
 
         return $this;

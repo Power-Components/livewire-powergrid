@@ -20,12 +20,10 @@ class InteractsWithVersions
 
     /**
      * Warns the user about the latest version of PowerGrid.
-     *
-     * @return array
      */
     public function ensureLatestVersion(): array
     {
-        $composer  = Factory::create(new NullIo());
+        $composer = Factory::create(new NullIo());
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         return $this->searchPackage($localRepo);
@@ -33,9 +31,6 @@ class InteractsWithVersions
 
     /**
      * Search package version.
-     *
-     * @param InstalledRepositoryInterface $localRepo
-     * @return array
      */
     public function searchPackage(InstalledRepositoryInterface $localRepo): array
     {
@@ -54,11 +49,13 @@ class InteractsWithVersions
     /**
      * Returns the latest version.
      *
-     * @return string
      * @throws Exception
      */
     public function getLatestVersion(): string
     {
+        /**
+         * @var callable|null $resolver
+         */
         $resolver = static::$latestVersionResolver ?? function () {
             $json = file_get_contents(
                 'https://packagist.org/p2/power-components/livewire-powergrid.json'
@@ -75,7 +72,7 @@ class InteractsWithVersions
             $version = collect($package['packages']['power-components/livewire-powergrid'])
                 ->first()['version'];
 
-            if (!is_string($version)) {
+            if (! is_string($version)) {
                 throw new Exception('Error: could find PowerGrid version.');
             }
 
@@ -85,11 +82,13 @@ class InteractsWithVersions
         if (is_callable($resolver)) {
             $version = call_user_func($resolver);
 
-            if (!is_string($version)) {
+            if (! is_string($version)) {
                 throw new Exception('Error: could find PowerGrid version.');
             }
 
             return $version;
         }
+
+        throw new Exception('Error: could find PowerGrid version.');
     }
 }

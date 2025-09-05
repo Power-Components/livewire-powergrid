@@ -13,8 +13,8 @@ test('cases', function () {
 it('has options', function () {
     expect(Datasource::asOptions()->toArray())->toBe([
         'ELOQUENT_BUILDER' => 'Eloquent Builder',
-        'QUERY_BUILDER'    => 'Query Builder',
-        'COLLECTION'       => 'Collection',
+        'QUERY_BUILDER' => 'Query Builder',
+        'COLLECTION' => 'Collection',
     ]);
 });
 

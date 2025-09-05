@@ -6,13 +6,7 @@ use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Str};
-use PowerComponents\LivewirePowerGrid\Components\Filters\Builders\{Boolean,
-    DatePicker,
-    DateTimePicker,
-    InputText,
-    MultiSelect,
-    Select};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{Builders\Number};
+use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -23,8 +17,7 @@ class Collection
     public function __construct(
         private BaseCollection $collection,
         private readonly PowerGridComponent $powerGridComponent
-    ) {
-    }
+    ) {}
 
     public static function make(
         BaseCollection $collection,
@@ -39,12 +32,12 @@ class Collection
     public static function paginate(BaseCollection $results, int $pageSize): LengthAwarePaginator
     {
         $pageSize = ($pageSize == '0') ? $results->count() : $pageSize;
-        $page     = Paginator::resolveCurrentPage();
+        $page = Paginator::resolveCurrentPage();
 
         $total = $results->count();
 
         return self::paginator($results->forPage($page, $pageSize), $total, $pageSize, $page, [
-            'path'     => Paginator::resolveCurrentPath(),
+            'path' => Paginator::resolveCurrentPath(),
             'pageName' => 'page',
         ]);
     }
@@ -68,7 +61,7 @@ class Collection
 
     public function search(): BaseCollection
     {
-        $searchTerm = strtolower($this->powerGridComponent->search);
+        $searchTerm = trim(strtolower($this->powerGridComponent->search));
 
         if (empty($searchTerm)) {
             return $this->collection;
@@ -108,15 +101,15 @@ class Collection
                     ->first();
 
                 $this->collection = match ($filterType) {
-                    'datetime'     => (new DateTimePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
-                    'date'         => (new DatePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'datetime' => (new DateTimePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'date' => (new DatePicker($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
                     'multi_select' => (new MultiSelect($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
-                    'select'       => (new Select($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
-                    'boolean'      => (new Boolean($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
-                    'number'       => (new Number($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
-                    'input_text'   => (new InputText($this->powerGridComponent, $filter))->collection($this->collection, $field, [
+                    'select' => (new Select($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'boolean' => (new Boolean($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'number' => (new Number($this->powerGridComponent, $filter))->collection($this->collection, $field, $value),
+                    'input_text' => (new InputText($this->powerGridComponent, $filter))->collection($this->collection, $field, [
                         'selected' => $this->validateInputTextOptions($this->powerGridComponent->filters, $field),
-                        'value'    => $value,
+                        'value' => $value,
                     ]),
                     default => $this->collection
                 };

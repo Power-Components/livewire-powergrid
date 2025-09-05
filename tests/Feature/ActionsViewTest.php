@@ -1,12 +1,12 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Column;
-
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-$component = new class () extends DishesTable {
+$component = new class() extends DishesTable
+{
     public function columns(): array
     {
         return [
@@ -45,6 +45,7 @@ it('can render actionsFromView property', function (string $component, object $p
             'Dish From Actions View: 6',
         ]);
 })->with([
-    'tailwind'  => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
+    'tailwind' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'name']],
     'bootstrap' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'name']],
+    'daisyui' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'name']],
 ]);

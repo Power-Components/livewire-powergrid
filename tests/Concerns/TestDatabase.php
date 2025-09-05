@@ -9,10 +9,8 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Chef};
 class TestDatabase
 {
     /**
-    * Migrate and seed Dish and Category
-    *
-    * @return void
-    */
+     * Migrate and seed Dish and Category
+     */
     public static function up(): void
     {
         self::migrate();
@@ -20,10 +18,8 @@ class TestDatabase
     }
 
     /**
-    * Drop databases
-    *
-    * @return void
-    */
+     * Drop databases
+     */
     public static function down(): void
     {
         Schema::dropIfExists('dishes');
@@ -151,177 +147,177 @@ class TestDatabase
     {
         $dishes = collect([
             [
-                'name'        => 'Pastel de Nata',
+                'name' => 'Pastel de Nata',
                 'category_id' => 6,
-                'chef_id'     => 1,
-                'price'       => 10.00,
-                'in_stock'    => true,
+                'chef_id' => 1,
+                'price' => 10.00,
+                'in_stock' => true,
                 'produced_at' => '2021-01-01 03:00:00',
-                'chef_name'   => null,
-                'diet'        => 2,
-                'serving_at'  => 'table',
+                'chef_name' => null,
+                'diet' => 2,
+                'serving_at' => 'table',
             ],
             [
-                'name'        => 'Peixada da chef Nábia',
+                'name' => 'Peixada da chef Nábia',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 20.50,
-                'in_stock'    => true,
+                'chef_id' => 1,
+                'price' => 20.50,
+                'in_stock' => true,
                 'produced_at' => '2021-02-02 05:00:00',
-                'chef_name'   => 'Nábia',
-                'diet'        => 1,
+                'chef_name' => 'Nábia',
+                'diet' => 1,
             ],
             [
-                'name'        => 'Carne Louca',
+                'name' => 'Carne Louca',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 30.00,
-                'in_stock'    => true,
+                'chef_id' => 1,
+                'price' => 30.00,
+                'in_stock' => true,
                 'produced_at' => '2021-03-03 00:00:00',
-                'chef_name'   => '',
-                'diet'        => 1,
+                'chef_name' => '',
+                'diet' => 1,
             ],
             [
-                'name'        => 'Bife à Rolê',
+                'name' => 'Bife à Rolê',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 40.50,
-                'in_stock'    => true,
+                'chef_id' => 1,
+                'price' => 40.50,
+                'in_stock' => true,
                 'produced_at' => '2021-04-04 00:00:00',
-                'diet'        => 1,
+                'diet' => 1,
             ],
             [
-                'name'        => 'Francesinha vegana',
+                'name' => 'Francesinha vegana',
                 'category_id' => 2,
-                'chef_id'     => 1,
-                'price'       => 50.00,
-                'in_stock'    => true,
+                'chef_id' => 1,
+                'price' => 50.00,
+                'in_stock' => true,
                 'produced_at' => '2021-05-05 00:00:00',
             ],
             [
-                'name'        => 'Francesinha',
+                'name' => 'Francesinha',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 60.50,
-                'in_stock'    => false,
+                'chef_id' => 1,
+                'price' => 60.50,
+                'in_stock' => false,
                 'produced_at' => '2026-06-06 00:00:00',
             ],
             [
-                'name'        => 'Barco-Sushi da Sueli',
+                'name' => 'Barco-Sushi da Sueli',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 5000.00,
-                'in_stock'    => false,
+                'chef_id' => 1,
+                'price' => 5000.00,
+                'in_stock' => false,
                 'produced_at' => '2021-07-07 19:59:59',
-                'additional'  => json_encode([
+                'additional' => json_encode([
                     [
                         'Hot-roll' => 8,
-                        'Temaki'   => 2,
+                        'Temaki' => 2,
                     ],
                 ]),
             ],
             [
-                'name'        => 'Barco-Sushi Simples',
+                'name' => 'Barco-Sushi Simples',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 1500.40,
-                'in_stock'    => false,
+                'chef_id' => 1,
+                'price' => 1500.40,
+                'in_stock' => false,
                 'produced_at' => '2021-08-08 00:00:00',
-                'additional'  => json_encode([
+                'additional' => json_encode([
                     [
                         'Hot-roll' => 6,
-                        'Temaki'   => 1,
-                        'Uramaki'  => 1,
+                        'Temaki' => 1,
+                        'Uramaki' => 1,
                     ],
                 ]),
             ],
             [
-                'name'        => 'Polpetone Filé Mignon',
+                'name' => 'Polpetone Filé Mignon',
                 'category_id' => 1,
-                'chef_id'     => 1,
-                'price'       => 5000.00,
-                'in_stock'    => false,
+                'chef_id' => 1,
+                'price' => 5000.00,
+                'in_stock' => false,
                 'produced_at' => '2021-09-09 00:00:00',
             ],
             [
-                'name'        => 'борщ',
+                'name' => 'борщ',
                 'category_id' => 7,
-                'chef_id'     => 1,
-                'price'       => 5000.00,
-                'in_stock'    => false,
+                'chef_id' => 1,
+                'price' => 5000.00,
+                'in_stock' => false,
                 'produced_at' => '2021-10-10 00:00:00',
             ],
             [
-                'name'        => 'Bife à Parmegiana',
+                'name' => 'Bife à Parmegiana',
                 'category_id' => 1,
-                'chef_id'     => 1,
+                'chef_id' => 1,
             ],
             [
-                'name'        => 'Berinjela à Parmegiana',
+                'name' => 'Berinjela à Parmegiana',
                 'category_id' => 4,
-                'chef_id'     => 1,
+                'chef_id' => 1,
             ],
             [
-                'name'        => 'Almôndegas ao Sugo',
+                'name' => 'Almôndegas ao Sugo',
                 'category_id' => 1,
-                'chef_id'     => 1,
+                'chef_id' => 1,
             ],
             [
-                'name'        => 'Filé Mignon à parmegiana',
+                'name' => 'Filé Mignon à parmegiana',
                 'category_id' => 1,
-                'chef_id'     => 1,
+                'chef_id' => 1,
             ],
             [
-                'name'        => 'Strogonoff de Filé Mignon',
+                'name' => 'Strogonoff de Filé Mignon',
                 'category_id' => 1,
-                'chef_id'     => 1,
+                'chef_id' => 1,
             ],
         ]);
 
         $faker = fake();
 
         return $dishes->map(function ($dish) use ($faker) {
-            if (!isset($dish['price'])) {
+            if (! isset($dish['price'])) {
                 $dish['price'] = $faker->randomFloat(2, 50, 200);
-            };
+            }
 
-            if (!isset($dish['stored_at'])) {
-                $dish['stored_at'] = rand(1, 3) . $faker->randomElement(['', 'a', 'b']);
-            };
+            if (! isset($dish['stored_at'])) {
+                $dish['stored_at'] = rand(1, 3).$faker->randomElement(['', 'a', 'b']);
+            }
 
-            if (!isset($dish['calories'])) {
+            if (! isset($dish['calories'])) {
                 $dish['calories'] = $faker->biasedNumberBetween($min = 40, $max = 890, $function = 'sqrt');
             }
 
-            if (!isset($dish['in_stock'])) {
+            if (! isset($dish['in_stock'])) {
                 $dish['in_stock'] = $faker->boolean();
             }
 
-            if (!isset($dish['produced_at'])) {
+            if (! isset($dish['produced_at'])) {
                 $dish['produced_at'] = $faker->dateTimeBetween($startDate = '-1 months', $endDate = 'now')->format('Y-m-d');
             }
 
-            if (!isset($dish['stored_at'])) {
+            if (! isset($dish['stored_at'])) {
                 $dish['price'] = $faker->randomFloat(2, 50, 200);
-            };
+            }
 
-            if (!array_key_exists('chef_name', $dish)) {
+            if (! array_key_exists('chef_name', $dish)) {
                 $dish['chef_name'] = 'Luan';
             }
 
-            if (!array_key_exists('diet', $dish)) {
-                $dish['diet'] = $faker->randomElement([0, 1, 2]); //Diet::cases()
+            if (! array_key_exists('diet', $dish)) {
+                $dish['diet'] = $faker->randomElement([0, 1, 2]); // Diet::cases()
             }
 
-            if (!array_key_exists('serving_at', $dish)) {
+            if (! array_key_exists('serving_at', $dish)) {
                 $dish['serving_at'] = 'pool bar';
             }
 
-            if (!isset($dish['additional'])) {
+            if (! isset($dish['additional'])) {
                 $dish['additional'] = '{}';
             }
 
-            if (!isset($dish['chef_id'])) {
+            if (! isset($dish['chef_id'])) {
                 $dish['chef_id'] = 1;
             }
 

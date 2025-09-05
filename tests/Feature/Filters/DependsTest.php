@@ -8,7 +8,8 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Chef};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-$component = new class () extends DishTableBase {
+$component = new class() extends DishTableBase
+{
     public function filters(): array
     {
         return [
@@ -21,14 +22,14 @@ $component = new class () extends DishTableBase {
                 ->depends(['category_id'])
                 ->dataSource(
                     fn ($depends) => Chef::query()
-                    ->when(
-                        isset($depends['category_id']),
-                        fn (Builder $query) => $query->whereRelation(
-                            'categories',
-                            fn (Builder $builder) => $builder->where('id', $depends['category_id'])
+                        ->when(
+                            isset($depends['category_id']),
+                            fn (Builder $query) => $query->whereRelation(
+                                'categories',
+                                fn (Builder $builder) => $builder->where('id', $depends['category_id'])
+                            )
                         )
-                    )
-                    ->get()
+                        ->get()
                 )
                 ->optionLabel('name')
                 ->optionValue('id'),
@@ -37,10 +38,12 @@ $component = new class () extends DishTableBase {
 };
 
 dataset('action:depends', [
-    'tailwind'       => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => false]],
-    'bootstrap'      => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
-    'tailwind join'  => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
+    'tailwind' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => false]],
+    'bootstrap' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => false]],
+    'tailwind join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'join' => true]],
     'bootstrap join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'join' => true]],
+    'daisyui' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => false]],
+    'daisyui join' => [$component::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'join' => true]],
 ]);
 
 it('"depends" works properly in select', function (string $component, object $params) {

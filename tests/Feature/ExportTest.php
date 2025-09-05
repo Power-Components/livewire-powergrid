@@ -1,13 +1,11 @@
 <?php
 
 use OpenSpout\Reader\XLSX\Reader;
+use PowerComponents\LivewirePowerGrid\{Button, Column, Components\SetUp\Exportable, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\ExportTable;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-use PowerComponents\LivewirePowerGrid\{Button,Column, PowerGridFields};
 
 it('properly export xls - all data', function () {
     livewire(ExportTable::class)
@@ -24,11 +22,11 @@ it('properly does not export xls data without selected data', function () {
 
 it('properly export csv data with selected data', function () {
     $downloadedFile = livewire(ExportTable::class)
-         ->set('checkboxValues', [
-             0 => '1',
-             1 => '2',
-         ])
-         ->call('exportToCsv', true);
+        ->set('checkboxValues', [
+            0 => '1',
+            1 => '2',
+        ])
+        ->call('exportToCsv', true);
 
     $headings = ['ID', 'Prato'];
 
@@ -62,10 +60,10 @@ it('properly export xls data with selected data', function () {
 
 it('properly sets CSV separator and delimiter', function () {
     $downloadedFile = livewire(ExportTable::class, ['separator' => '|', 'delimiter' => '@'])
-       ->set('checkboxValues', [
-           0 => '1',
-       ])
-       ->call('exportToCsv', true);
+        ->set('checkboxValues', [
+            0 => '1',
+        ])
+        ->call('exportToCsv', true);
 
     $headings = ['ID', 'Prato'];
 
@@ -89,7 +87,8 @@ it('properly does not export csv data without selected data', function () {
     expect()->notToBeFileDownloaded($component);
 })->requiresOpenSpout();
 
-$exportWithAction = new class () extends ExportTable {
+$exportWithAction = new class() extends ExportTable
+{
     public function columns(): array
     {
         return [
@@ -130,7 +129,8 @@ dataset('export_with_action', [
     'data' => [$exportWithAction::class],
 ]);
 
-$exportWithHtml = new class () extends ExportTable {
+$exportWithHtml = new class() extends ExportTable
+{
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
@@ -171,11 +171,11 @@ it('properly export csv with tags', function (string $component) {
 
 it('properly export csv without tags', function (string $component) {
     $downloadedFile = livewire($component, ['testStripHtml' => true])
-    ->set('checkboxValues', [
-        0 => '1',
-    ])
-    ->call('exportToCsv', true)
-    ->assertFileDownloaded('export.csv');
+        ->set('checkboxValues', [
+            0 => '1',
+        ])
+        ->call('exportToCsv', true)
+        ->assertFileDownloaded('export.csv');
 
     $headings = ['nameWithHtml'];
 
@@ -205,11 +205,11 @@ it('properly export xls with tags', function (string $component) {
 
 it('properly export xls without tags', function (string $component) {
     $downloadedFile = livewire($component, ['testStripHtml' => true])
-    ->set('checkboxValues', [
-        0 => '1',
-    ])
-    ->call('exportToXLS', true)
-    ->assertFileDownloaded('export.xlsx');
+        ->set('checkboxValues', [
+            0 => '1',
+        ])
+        ->call('exportToXLS', true)
+        ->assertFileDownloaded('export.xlsx');
 
     $headings = ['nameWithHtml'];
 
@@ -222,6 +222,59 @@ it('properly export xls without tags', function (string $component) {
 
 dataset('export_with_html', [
     'html' => [$exportWithHtml::class],
+]);
+
+$exportWithQueryOptions = new class() extends ExportTable
+{
+    public string $testSortField = '';
+
+    public string $testSortDirection = '';
+
+    public function setUp(): array
+    {
+        $this->showCheckBox();
+
+        return [
+            PowerGrid::exportable('export')
+                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV)
+                ->queryOptions([
+                    'sortField' => $this->testSortField,
+                    'sortDirection' => $this->testSortDirection,
+                ]),
+        ];
+    }
+
+    public function fields(): PowerGridFields
+    {
+        return PowerGrid::fields()
+            ->add('name', function ($dish) {
+                return $dish->name;
+            });
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::add()
+                ->title('name')
+                ->field('name'),
+        ];
+    }
+};
+
+it('properly exports with query options', function ($component, $options, $expectedRows) {
+    $downloadedFile = livewire($component, $options)
+        ->set('checkboxValues', [0 => '1', 1 => '3'])
+        ->call('exportToCsv', true)
+        ->assertFileDownloaded('export.csv');
+
+    expect($downloadedFile)->toBeCsvDownload(['name'], $expectedRows);
+
+})->with('export_with_query_options')->requiresOpenSpout();
+
+dataset('export_with_query_options', [
+    'desc' => [$exportWithQueryOptions::class, ['testSortField' => 'name', 'testSortDirection' => 'desc'], [['Pastel de Nata'], ['Carne Louca']]],
+    'asc' => [$exportWithQueryOptions::class, ['testSortField' => 'name', 'testSortDirection' => 'asc'], [['Carne Louca'], ['Pastel de Nata']]],
 ]);
 
 /*
@@ -240,7 +293,7 @@ expect()->extend('notToBeFileDownloaded', function ($component) {
 expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
     $downloadEffect = data_get($this->value->effects, 'download');
 
-    $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.csv';
+    $filename = data_get($this->value->setUp, 'exportable.fileName').'.csv';
     $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
     $delimiter = data_get($this->value->setUp, 'exportable.csvDelimiter', '"');
 
@@ -279,7 +332,7 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
 expect()->extend('toBeXLSDownload', function (array $headings, array $rows) {
     $downloadEffect = data_get($this->value->effects, 'download');
 
-    $filename  = data_get($this->value->setUp, 'exportable.fileName') . '.xlsx';
+    $filename = data_get($this->value->setUp, 'exportable.fileName').'.xlsx';
     $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
     $delimiter = data_get($this->value->setUp, 'exportable.csvDelimiter', '"');
 

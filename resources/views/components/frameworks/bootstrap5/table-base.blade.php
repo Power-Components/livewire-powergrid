@@ -9,6 +9,24 @@
             'enabledFilters' => $enabledFilters,
         ])
     </div>
+
+    @if (config('livewire-powergrid.filter') === 'outside')
+        @php
+            $filtersFromColumns = $columns
+                ->filter(fn($column) => filled(data_get($column, 'filters')));
+        @endphp
+
+        @if ($filtersFromColumns->count() > 0)
+            <x-livewire-powergrid::frameworks.bootstrap5.filter
+                :enabled-filters="$enabledFilters"
+                :tableName="$tableName"
+                :columns="$columns"
+                :filtersFromColumns="$filtersFromColumns"
+                :theme="$theme"
+            />
+        @endif
+    @endif
+
     <div
         class="{{ theme_style($theme, 'table.layout.div') }}"
     >

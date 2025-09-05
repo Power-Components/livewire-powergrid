@@ -21,7 +21,15 @@ export default (params) => ({
 
         this.attributes.forEach(attribute => {
             Object.keys(attribute).forEach(key => {
-                attributes[key] += attributes[key] ? ` ${attribute[key]}` : attribute[key]
+                if (typeof attribute[key] === 'object') {
+                    attributes[attribute[key].key] = attribute[key].value;
+                } else {
+                    if (!attributes[key]) {
+                        attributes[key] = attribute[key];
+                    } else {
+                        attributes[key] += ` ${attribute[key]}`
+                    }
+                }
             });
         });
 

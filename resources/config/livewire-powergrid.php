@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Js;
+
 return [
 
     /*
@@ -12,7 +14,8 @@ return [
     */
 
     'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
-    //'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
+    // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class,
+    // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
     'cache_ttl' => null,
 
@@ -46,10 +49,10 @@ return [
         'flatpickr' => [
             'locales' => [
                 'pt_BR' => [
-                    'locale'     => 'pt',
+                    'locale' => 'pt',
                     'dateFormat' => 'd/m/Y H:i',
                     'enableTime' => true,
-                    'time_24hr'  => true,
+                    'time_24hr' => true,
                 ],
             ],
         ],
@@ -97,6 +100,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Filters Attributes
+    |--------------------------------------------------------------------------
+
+    | You can add custom attributes to the filters.
+    | The key is the filter type and the value is a callback function.
+    | like: input_text, select, datetime, etc.
+    | The callback function receives the field and title as parameters.
+    | The callback function must return an array with the attributes.
+    */
+
+    'filter_attributes' => [
+        'input_text' => \PowerComponents\LivewirePowerGrid\FilterAttributes\InputText::class,
+        'boolean' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean::class,
+        'number' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Number::class,
+        'select' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Select::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Persisting
     |--------------------------------------------------------------------------
     |
@@ -118,10 +140,10 @@ return [
     */
 
     'exportable' => [
-        'default'      => 'openspout_v4',
+        'default' => 'openspout_v4',
         'openspout_v4' => [
             'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
-            'csv'  => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
+            'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
         ],
     ],
 

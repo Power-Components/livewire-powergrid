@@ -24,8 +24,6 @@ class TestCase extends BaseTestCase
 
     /**
      * Delete PowerGrid cached views
-     *
-     * @return void
      */
     protected function clearViewsCache(): void
     {
@@ -33,7 +31,7 @@ class TestCase extends BaseTestCase
             return;
         }
 
-        $viewsFolder = base_path() . '/resources/views/vendor/livewire-powergrid/';
+        $viewsFolder = base_path().'/resources/views/vendor/livewire-powergrid/';
 
         $viewsFolderPath = str_replace('/', DIRECTORY_SEPARATOR, $viewsFolder);
 
@@ -45,8 +43,7 @@ class TestCase extends BaseTestCase
     /**
      * Define environment setup.
      *
-     * @param Application $app
-     * @return void
+     * @param  Application  $app
      */
     protected function getEnvironmentSetUp($app): void
     {
@@ -56,14 +53,14 @@ class TestCase extends BaseTestCase
         $databases = ['testbench', ':memory:', 'powergridtest', 'tempdb', 'sqlsrv'];
 
         foreach ($databases as $database) {
-            $app['config']->set('database.connections.' . $database, [
-                'driver'   => env('DB_DRIVER'),
-                'host'     => env('DB_HOST'),
-                'port'     => env('DB_PORT'),
+            $app['config']->set('database.connections.'.$database, [
+                'driver' => env('DB_DRIVER'),
+                'host' => env('DB_HOST'),
+                'port' => env('DB_PORT'),
                 'username' => env('DB_USERNAME'),
                 'password' => env('DB_PASSWORD'),
                 'database' => env('DB_DATABASE'),
-                'prefix'   => '',
+                'prefix' => '',
             ]);
         }
 
@@ -72,7 +69,7 @@ class TestCase extends BaseTestCase
             'livewire-powergrid.exportable.openspout_v4',
             [
                 'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
-                'csv'  => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
+                'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
             ]
         );
     }

@@ -4,8 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\{Carbon, Collection, Number};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesCalculationsCollectionTable extends PowerGridComponent
 {
@@ -40,31 +40,31 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
     {
         return collect([
             [
-                'id'         => 29,
-                'name'       => 'Luan',
-                'balance'    => 241.86,
-                'is_online'  => true,
+                'id' => 29,
+                'name' => 'Luan',
+                'balance' => 241.86,
+                'is_online' => true,
                 'created_at' => '2023-01-01 00:00:00',
             ],
             [
-                'id'         => 57,
-                'name'       => 'Daniel',
-                'balance'    => 166.51,
-                'is_online'  => true,
+                'id' => 57,
+                'name' => 'Daniel',
+                'balance' => 166.51,
+                'is_online' => true,
                 'created_at' => '2023-02-02 00:00:00',
             ],
             [
-                'id'         => 93,
-                'name'       => 'Claudio',
-                'balance'    => 219.01,
-                'is_online'  => false,
+                'id' => 93,
+                'name' => 'Claudio',
+                'balance' => 219.01,
+                'is_online' => false,
                 'created_at' => '2023-03-03 00:00:00',
             ],
             [
-                'id'         => 104,
-                'name'       => 'Vitor',
-                'balance'    => 44.28,
-                'is_online'  => true,
+                'id' => 104,
+                'name' => 'Vitor',
+                'balance' => 44.28,
+                'is_online' => true,
                 'created_at' => '2023-04-04 00:00:00',
             ],
         ]);
@@ -134,7 +134,7 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
         $fmt = (new \NumberFormatter('pt-PT', \NumberFormatter::DEFAULT_STYLE));
 
         return [
-            'id.{count}' => fn ($value) => $fmt->format($value) . ' item(s)',
+            'id.{count}' => fn ($value) => $fmt->format($value).' item(s)',
 
             'balance.{sum,avg,min,max}' => function ($value) {
                 return (new \NumberFormatter('en_US', \NumberFormatter::CURRENCY))

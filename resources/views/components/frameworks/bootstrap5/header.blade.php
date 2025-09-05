@@ -14,6 +14,10 @@
                 @include(data_get($theme, 'root') . '.header.toggle-columns')
                 @includeIf(data_get($theme, 'root') . '.header.soft-deletes')
 
+                @if (config('livewire-powergrid.filter') === 'outside')
+                    @include(data_get($theme, 'root') . '.header.filters')
+                @endif
+
                 @includeWhen(boolval(data_get($setUp, 'header.wireLoading')),
                     data_get($theme, 'root') . '.header.loading')
             </div>

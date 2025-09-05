@@ -23,7 +23,7 @@ trait Checkbox
      */
     public function selectCheckboxAll(): void
     {
-        if (!$this->checkboxAll) {
+        if (! $this->checkboxAll) {
             $this->checkboxValues = [];
 
             $this->dispatch('pgBulkActions::clear', $this->tableName);
@@ -31,27 +31,29 @@ trait Checkbox
             return;
         }
 
-        /** @var AbstractPaginator $data */
-        $data = $this->getRecords();
+        /** @var AbstractPaginator $records */
+        $records = $this->records();
 
-        if ($data->isEmpty()) {
+        if ($records->isEmpty()) {
             return;
         }
 
         /** @phpstan-ignore-next-line  */
-        collect($data->items())->each(function (array|Model|stdClass $model) {
+        collect($records->items())->each(function (array|Model|stdClass $model) {
             $value = $model->{$this->checkboxAttribute};
 
             $hide = (bool) data_get(
-                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
                     ->where('apply', true)
+                    ->where('forAction', 'pg:checkbox')
                     ->last(),
-                'disable',
+                'hide',
             );
 
             $disable = (bool) data_get(
-                collect((array) $model->__powergrid_rules) //@phpstan-ignore-line
+                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
                     ->where('apply', true)
+                    ->where('forAction', 'pg:checkbox')
                     ->last(),
                 'disable',
             );
@@ -60,11 +62,11 @@ trait Checkbox
                 return;
             }
 
-            if (!in_array($value, $this->checkboxValues)) {
+            if (! in_array($value, $this->checkboxValues)) {
                 $this->checkboxValues[] = (string) $value;
 
                 $this->dispatch('pgBulkActions::addMore', [
-                    'value'     => strval($value),
+                    'value' => strval($value),
                     'tableName' => $this->tableName,
                 ]);
             }
@@ -73,7 +75,7 @@ trait Checkbox
 
     public function showCheckBox(string $attribute = 'id'): self
     {
-        $this->checkbox          = true;
+        $this->checkbox = true;
         $this->checkboxAttribute = $attribute;
 
         return $this;

@@ -2,12 +2,12 @@
 
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
-
-$component = new class () extends DishesTable {
+$component = new class() extends DishesTable
+{
     public string $tableName = 'filter-date-picker-test';
 
     public function filters(): array
@@ -28,7 +28,8 @@ it('should dispatch "pg:datePicker-{tableName}" with date format', function (str
             dateStr: '2021-01-01 to 2021-02-02',
             label: 'Produced At',
             type: 'datetime',
-            timezone: 'UTC'
+            timezone: 'UTC',
+            dateFormat: 'Y-m-d'
         )
         ->assertSee('Peixada');
 
@@ -36,8 +37,8 @@ it('should dispatch "pg:datePicker-{tableName}" with date format', function (str
         ->toBe([
             'datetime' => [
                 'produced_at' => [
-                    'start'     => 'Fri Jan 01 2021 00:00:00 GMT+0000',
-                    'end'       => 'Tue Feb 02 2021 23:59:59 GMT+0000',
+                    'start' => 'Fri Jan 01 2021 00:00:00 GMT+0000',
+                    'end' => 'Tue Feb 02 2021 23:59:59 GMT+0000',
                     'formatted' => '2021-01-01 to 2021-02-02',
                 ],
             ],
@@ -55,7 +56,8 @@ it('should filter "pg:datePicker-{tableName}" with date format', function (strin
             dateStr: '2021-03-03 to 2021-05-05',
             label: 'Produced At',
             type: 'date',
-            timezone: 'UTC'
+            timezone: 'UTC',
+            dateFormat: 'Y-m-d'
         )
         ->assertDontSee('Peixada');
 })->with('filterComponent');
@@ -71,7 +73,8 @@ it('should filter "pg:datePicker-{tableName}" with datetime format', function (s
             dateStr: '2021-01-01 00:00:00 to 2021-02-02 04:00:00',
             label: 'Produced At',
             type: 'datetime',
-            timezone: 'UTC'
+            timezone: 'UTC',
+            dateFormat: 'Y-m-d H:i:s'
         )
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada');
@@ -87,7 +90,8 @@ it('should dispatch "pg:datePicker-{tableName}" with datetime format', function 
             dateStr: '2021-01-01 03:00:00 to 2021-02-02 05:00:00',
             label: 'Produced At',
             type: 'datetime',
-            timezone: 'UTC'
+            timezone: 'UTC',
+            dateFormat: 'Y-m-d H:i:s'
         )
         ->assertSee('Peixada');
 
@@ -95,8 +99,8 @@ it('should dispatch "pg:datePicker-{tableName}" with datetime format', function 
         ->toBe([
             'datetime' => [
                 'produced_at' => [
-                    'start'     => 'Fri Jan 01 2021 03:00:00 GMT+0000',
-                    'end'       => 'Tue Feb 02 2021 05:00:00 GMT+0000',
+                    'start' => 'Fri Jan 01 2021 03:00:00 GMT+0000',
+                    'end' => 'Tue Feb 02 2021 05:00:00 GMT+0000',
                     'formatted' => '2021-01-01 03:00:00 to 2021-02-02 05:00:00',
                 ],
             ],
@@ -104,6 +108,6 @@ it('should dispatch "pg:datePicker-{tableName}" with datetime format', function 
 })->with('filterComponent');
 
 dataset('filterComponent', [
-    'tailwind -> id'  => [$component::class, (object) ['theme' => Tailwind::class]],
+    'tailwind -> id' => [$component::class, (object) ['theme' => Tailwind::class]],
     'bootstrap -> id' => [$component::class, (object) ['theme' => Bootstrap5::class]],
 ]);
