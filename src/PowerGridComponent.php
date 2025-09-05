@@ -140,6 +140,7 @@ class PowerGridComponent extends Component
         $tag = $prefix.($customTag ?: 'powergrid-'.$this->datasource()->getModel()->getTable().'-'.$this->tableName);
         $cacheKey = implode('-', $this->getCacheKeys());
 
+        /** @var array $results */
         $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
         if ($this->measurePerformance) {
@@ -152,7 +153,7 @@ class PowerGridComponent extends Component
             );
         }
 
-        return $results;
+        return $results['results'];
     }
 
     private function getRecordsDataSource(): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
