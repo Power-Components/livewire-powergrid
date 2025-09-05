@@ -8,11 +8,11 @@ return [
     'labels' => [
         'action' => 'Actions',
         'results_per_page' => 'Résultats par page',
-        'clear_filter'     => 'Enlever les filtres',
-        'no_data'          => 'Aucune réponse',
-        'all'              => 'Tous',
-        'selected'         => 'Sélectionné',
-        'filtered'         => 'Filtrée',
+        'clear_filter' => 'Enlever les filtres',
+        'no_data' => 'Aucune réponse',
+        'all' => 'Tous',
+        'selected' => 'Sélectionné',
+        'filtered' => 'Filtrée',
     ],
     'placeholders' => [
         'search' => 'Recherche...',
