@@ -3,7 +3,7 @@
     wire:loading.class="blur-[2px]"
     wire:target="loadMore"
 >
-    @if($paginator->total() > 0)
+    @if($paginator->count() > 0)
         <div class="items-center justify-between w-full sm:flex-1 sm:flex">
             @if ($recordCount === 'full')
                 <div @class(['mr-3' => $paginator->hasPages()])>

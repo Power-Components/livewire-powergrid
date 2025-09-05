@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-lg-row align-items-sm-center justify-content-between">
-    @if($paginator->total() > 0)
+    @if($paginator->count() > 0)
         @if ($recordCount === 'full')
             <small class="text-muted d-block mb-2 my-md-2 me-1">
                 {{ trans('livewire-powergrid::datatable.pagination.showing') }}
