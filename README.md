@@ -4,7 +4,7 @@
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
       <a href="https://github.com/Power-Components/livewire-powergrid/actions">
-      <img alt="Tests Passing" src="https://github.com/Power-Components/livewire-powergrid/workflows/Powergrid%20Tests/badge.svg" /></a>
+      <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/power-components/livewire-powergrid/mysql.yml?label=Tests" /></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/packagist/v/power-components/livewire-powergrid"></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="License" src="https://img.shields.io/packagist/l/power-components/livewire-powergrid"></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/power-components/livewire-powergrid"></a>
