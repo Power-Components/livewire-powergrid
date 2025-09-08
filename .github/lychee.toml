@@ -46,14 +46,15 @@ timeout = 20
 retry_wait_time = 2
 
 # Comma-separated list of accepted status codes for valid links.
-accept = [200, 429]
+accept = ["200", "429"]
 
 # Proceed for server connections considered insecure (invalid TLS).
 insecure = false
 
 # Only test links with the given schemes (e.g. https).
-# Omit to check links with any scheme.
-scheme = [ "https" ]
+# Omit to check links with any other scheme.
+# At the moment, we support http, https, file, and mailto.
+scheme = ["https"]
 
 # When links are available using HTTPS, treat HTTP links as errors.
 require_https = false
@@ -62,18 +63,28 @@ require_https = false
 method = "get"
 
 # Custom request headers
-headers = []
+#header = { "accept" = "text/html", "x-custom-header" = "value" }
 
 # Remap URI matching pattern to different URI.
 remap = [ "https://example.com http://example.invalid" ]
 
+# Fallback extensions to apply when a URL does not specify one.
+# This is common in documentation tools that cross-reference files without extensions.
+#fallback_extensions = ["md", "html"]
+
 # Base URL or website root directory to check relative URLs.
-#base = ""
+#base_url = "https://example.com"
+
+# Root path to use when checking absolute local links, must be an absolute path
+#root_dir = "/dist"
 
 # HTTP basic auth support. This will be the username and password passed to the
 # authorization HTTP header. See
 # <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization>
-basic_auth = "user:pwd"
+basic_auth = ["example.com user:pwd"]
+
+# Enable the checking of fragments in links.
+include_fragments = true
 
 #############################  Exclusions  ##########################
 
@@ -88,15 +99,13 @@ include_verbatim = false
 glob_ignore_case = false
 
 # Exclude URLs and mail addresses from checking (supports regex).
-#exclude = [ '.*\.github.com\.*' ]
-# receiving forbidden but valid link, receiving timeout but valid link
-exclude = ['https://devsquad.com/', 'https://twitter.com/caneco', 'https://twitter.com/luanfreitasdev']
+exclude = ['https://devsquad.com/', '.*\.twitter.com\.*', '.*\.x.com\.*']
 
 # Exclude these filesystem paths from getting checked.
 #exclude_path = ["file/path/to/Ignore", "./other/file/path/to/Ignore"]
 
 # URLs to check (supports regex). Has preference over all excludes.
-#include = [ 'gist\.github\.com.*' ]
+#include = ['gist\.github\.com.*']
 
 # Exclude all private IPs from checking.
 # Equivalent to setting `exclude_private`, `exclude_link_local`, and
@@ -112,5 +121,5 @@ exclude_link_local = false
 # Exclude loopback IP address range and localhost from checking.
 exclude_loopback = false
 
-# Exclude all mail addresses from checking.
-exclude_mail = false
+# Check mail addresses
+include_mail = true
