@@ -6,7 +6,6 @@ use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\{ServiceProvider};
 use Laravel\Pulse\Facades\Pulse;
-use Livewire\Features\SupportLegacyModels\{EloquentCollectionSynth, EloquentModelSynth};
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
@@ -35,9 +34,6 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->publishViews();
         $this->publishConfigs();
         $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', $this->packageName);
-
-        Livewire::propertySynthesizer(EloquentModelSynth::class);
-        Livewire::propertySynthesizer(EloquentCollectionSynth::class);
 
         Testable::mixin(new TestActions());
     }
