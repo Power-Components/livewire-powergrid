@@ -29,8 +29,6 @@ final class DataTransformer
         $loopInstance = app(ManageLoops::class);
         $loopInstance->addLoop($collection);
 
-        $shouldProcessActionRules = method_exists($this->component, 'actionRules');
-
         $transformedCollection = $collection->map(function ($row, $index) use ($loopInstance, &$actionsByRow) {
             $rowObject = (object) $row;
 
