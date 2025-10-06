@@ -276,7 +276,9 @@ class PowerGridComponent extends Component
 
             /** @phpstan-ignore-next-line */
             $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
-        }
+        } else {
+            $data = $this->records();
+        }  
 
         $this->storeActionsHeaderInJSWindow();
 
