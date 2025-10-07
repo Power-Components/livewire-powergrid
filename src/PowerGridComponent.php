@@ -262,7 +262,7 @@ class PowerGridComponent extends Component
 
     public function toggleDetail(string $rowId): void
     {
-        $this->dispatch('toggle-detail-'.$rowId, collapsed: null);
+        $this->dispatch('pg-toggle-detail-'.$this->tableName.'-'.$rowId, collapsed: null);
     }
 
     public function render(): Application|Factory|View
