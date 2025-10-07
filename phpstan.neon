@@ -19,6 +19,7 @@ parameters:
         - identifier: varTag.nativeType
         - identifier: property.unusedType
         - identifier: offsetAccess.invalidOffset
+        - identifier: array.invalidKey
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'

@@ -160,7 +160,7 @@ trait HasActions
                 ->toArray();
         };
 
-        $value = strval(data_get($row, $this->realPrimaryKey));
+        $value = strval(data_get($row, $this->realPrimaryKey()));
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
 
         if (intval(config('livewire-powergrid.cache_ttl') > 0)) {
