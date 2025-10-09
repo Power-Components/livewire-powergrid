@@ -10,6 +10,7 @@
                 if (this.collapseOthers) {
                     this.$dispatch('pg-toggle-detail-{{ $tableName }}-hidden-all');
                     expandedId = '{{ $rowId }}';
+                    this.loading = true;
                 } else {
                     this.loading = true;
                 }
