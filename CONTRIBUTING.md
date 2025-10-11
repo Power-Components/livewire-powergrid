@@ -105,7 +105,7 @@ git checkout -b feature/my-new-feature
 Write your code and, when you are done, run the CS Fix:
 
 ```Shell
-composer fix
+composer pint:fix
 ```
 
 Run tests and static analysis:
