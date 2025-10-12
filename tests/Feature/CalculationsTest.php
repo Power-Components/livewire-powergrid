@@ -26,8 +26,10 @@ it('calculates "sum" on price field', function (string $component, object $param
         ->set('search', 'Dish C')
         ->assertSeeHtml('<span>Sum Price: $300.50</span>')
         ->set('search', 'Dish F')
-        ->assertSeeHtml('<span>Sum Price: $600.00</span>');
-})->with('calculations')->skip('Refactoring');
+        ->assertSeeHtml('<span>Sum Price: $600.00</span>')
+        ->set('search', 'Zebra')
+        ->assertSeeHtml('<span>Sum Price: $9,500.00</span>');
+})->with('calculations');
 
 it('calculates "count" and formats on price field', function (string $component, object $params) {
     livewire($component)
@@ -43,7 +45,7 @@ it('calculates and formats "avg" on price field and calorie fields', function (s
     livewire($component)
         ->call('setTestThemeClass', $params->theme)
         ->assertSeeHtml('<span>Avg Price: $1,250.05</span>')
-        ->assertSeeHtml('<span>Average: 224 kcal</span>');
+        ->assertSeeHtml('<span>Average: 233 kcal</span>');
 })->with('calculations');
 
 it('calculates "min" on price field', function (string $component, object $params) {
@@ -79,7 +81,7 @@ function dishesForWithSum(): array
             'chef_id' => 1,
             'price' => 100.00,
             'stored_at' => '1',
-            'calories' => 224,
+            'calories' => 228,
             'serving_at' => 'pool bar',
             'diet' => 1,
             'in_stock' => true,
@@ -91,7 +93,7 @@ function dishesForWithSum(): array
             'chef_id' => 1,
             'price' => 200.10,
             'stored_at' => '2',
-            'calories' => 224,
+            'calories' => 174,
             'serving_at' => 'pool bar',
             'diet' => 1,
             'in_stock' => true,
@@ -103,7 +105,7 @@ function dishesForWithSum(): array
             'chef_id' => 1,
             'price' => 300.50,
             'stored_at' => '3',
-            'calories' => 224,
+            'calories' => 480,
             'serving_at' => 'pool bar',
             'diet' => 1,
             'in_stock' => true,
@@ -115,7 +117,7 @@ function dishesForWithSum(): array
             'chef_id' => 1,
             'price' => 400.00,
             'stored_at' => '4',
-            'calories' => 224,
+            'calories' => 122,
             'serving_at' => 'pool bar',
             'diet' => 1,
             'in_stock' => true,
@@ -206,7 +208,7 @@ function dishesForWithSum(): array
             'produced_at' => '2021-02-01',
         ],
         [
-            'name' => 'Dish L',
+            'name' => 'Zebra L',
             'category_id' => 7,
             'chef_id' => 1,
             'price' => 2000.00,
