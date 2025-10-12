@@ -4,6 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 use Illuminate\Support\Traits\Macroable;
 
+/**
+ * @method static disable()
+ */
 class RuleActions extends BaseRule
 {
     use Macroable;
