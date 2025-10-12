@@ -8,6 +8,11 @@ use Livewire\Wireable;
 /**
  * Macros
  *
+ * @method static withSum(string $label, bool $header, bool $footer)
+ * @method static withCount(string $label, bool $header, bool $footer)
+ * @method static withAvg(string $label, bool $header, bool $footer)
+ * @method static withMin(string $label, bool $header, bool $footer)
+ * @method static withMax(string $label, bool $header, bool $footer)
  * @method static naturalSort()
  * @method static searchableRaw(string $sql)
  * @method static searchableJson(string $tableName) // sqlite, mysql
