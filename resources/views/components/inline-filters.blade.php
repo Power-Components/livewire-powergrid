@@ -51,7 +51,7 @@
                             :theme="$theme"
                             :title="data_get($column, 'title')"
                             :filter="(array) data_get($column, 'filters')"
-                            :initial-values="data_get($filters, 'multi_select.' . data_get($column, 'dataField'))"
+                            :initial-values="data_get($filters, 'multi_select.' . data_get($column, 'filters.field'))"
                         />
                     @elseif ($filterClass->contains(['FilterSelect', 'FilterEnumSelect']))
                         @includeIf(theme_style($theme, 'filterSelect.view'), [
