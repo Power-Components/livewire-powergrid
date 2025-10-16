@@ -45,6 +45,8 @@ trait Base
 
     public bool $measurePerformance = false;
 
+    public bool $isExporting = false;
+
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields();
