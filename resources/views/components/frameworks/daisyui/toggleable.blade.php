@@ -20,7 +20,7 @@
         <input
             x-data="pgToggleable(@js($params))"
             type="checkbox"
-            class="toggle toggle-sm"
+            class="toggle toggle-sm toggle-success"
             :checked="toggle"
             x-on:click="save"
         />
