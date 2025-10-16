@@ -2,11 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\{Builder as EloquentBuilder};
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Pagination\Paginator;
 use Illuminate\View\Concerns\ManagesLoops;
 use PowerComponents\LivewirePowerGrid\{Concerns\SoftDeletes, PowerGridComponent};
 
