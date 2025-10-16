@@ -47,7 +47,7 @@ class ExportJob implements ShouldQueue
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
 
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
-            $column->hidden = $currentHiddenStates[data_get($column, 'field')];
+            $column->hidden = data_get($currentHiddenStates, data_get($column, 'field'), true);
 
             return $column;
         }, $this->componentTable->columns());
