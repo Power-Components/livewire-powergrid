@@ -33,8 +33,6 @@ class CollectionProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
-        $this->component->total = $results->count();
-
         $paginated = $results;
         $dataTransformer = new DataTransformer($this->component);
         $actionsByRow = [];
