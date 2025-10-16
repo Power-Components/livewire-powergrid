@@ -16,9 +16,9 @@ class CollectionProcessor extends DataSourceBase
         return $key instanceof Collection;
     }
 
-    public function process(): array
+    public function process(array $properties = []): array
     {
-        $datasource = $this->component->datasource($this->component->properties ?? []);
+        $datasource = $this->component->datasource($properties);
 
         $collection = new BaseCollection($datasource);
 

@@ -14,9 +14,9 @@ class ModelProcessor extends DataSourceBase
         return true;
     }
 
-    public function process(): array
+    public function process(array $properties = []): array
     {
-        $datasource = $this->component->datasource($this->component->properties ?? []);
+        $datasource = $this->component->datasource($properties);
 
         $this->setCurrentTable($datasource);
 
