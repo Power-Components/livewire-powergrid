@@ -20,15 +20,6 @@ class DataSourceBase
         public bool $isExport = false
     ) {}
 
-    protected function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
-    {
-        if (! method_exists($results, 'total')) {
-            return;
-        }
-
-        $this->component->total = $results->total();
-    }
-
     protected function setCurrentTable(mixed $datasource): void
     {
         if ($datasource instanceof QueryBuilder) {

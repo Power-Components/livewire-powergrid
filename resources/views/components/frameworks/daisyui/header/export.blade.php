@@ -23,7 +23,7 @@
                         href="#"
                         class="btn btn-sm"
                     >
-                        <span class="export-count text-xs">({{ $total }})</span>
+                        <span class="export-count text-xs">({{ $this->total }})</span>
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
@@ -55,7 +55,7 @@
                         x-on:click="open = false"
                         class="btn btn-sm"
                     >
-                        <span class="export-count text-xs">({{ $total }})</span>
+                        <span class="export-count text-xs">({{ $this->total }})</span>
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else

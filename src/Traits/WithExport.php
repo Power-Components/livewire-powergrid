@@ -33,8 +33,6 @@ trait WithExport
 
     public string $batchName = 'PowerGrid batch export';
 
-    public int $total = 0;
-
     public bool $showExporting = true;
 
     public int $batchProgress = 0;
