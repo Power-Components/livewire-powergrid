@@ -45,6 +45,8 @@ trait WithExport
 
     public bool $batchErrors = false;
 
+    public bool $isExporting = false;
+
     public function getExportBatchProperty(): ?Batch
     {
         if (empty($this->batchId)) {

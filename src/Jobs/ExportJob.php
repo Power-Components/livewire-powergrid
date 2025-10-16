@@ -37,6 +37,8 @@ class ExportJob implements ShouldQueue
         $this->properties = (array) Crypt::decrypt($params['parameters']);
 
         $this->componentTable = new $componentTable();
+
+        $this->componentTable->isExporting = true;
     }
 
     public function handle(): void
