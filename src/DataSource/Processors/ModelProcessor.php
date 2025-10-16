@@ -38,8 +38,6 @@ class ModelProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
-        $this->setTotalCount($paginate);
-
         /** @var \Illuminate\Support\Collection $collection */
         $collection = $paginate->getCollection();
 

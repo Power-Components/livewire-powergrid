@@ -37,8 +37,6 @@ class ScoutBuilderProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
-        $this->setTotalCount($paginate);
-
         $dataTransformer = new DataTransformer($this->component);
         $transformResult = $dataTransformer->transform($paginate->getCollection());
 

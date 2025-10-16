@@ -35,8 +35,6 @@ trait Base
 
     public string $currentTable = '';
 
-    public int $total = 0;
-
     public int $totalCurrentPage = 0;
 
     public bool $supportModel = true;
