@@ -108,9 +108,9 @@ trait WithExport
         $filters = $processDataSource?->component?->filters ?? [];
         $filtered = $processDataSource?->component?->filtered ?? [];
         $queues = collect([]);
-        $queueCount = $this->total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+        $queueCount = $this->total() > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
 
-        $perPage = (int) ceil($this->total / $queueCount);
+        $perPage = (int) ceil($this->total() / $queueCount);
 
         $offset = 0;
 
