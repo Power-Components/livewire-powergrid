@@ -63,8 +63,9 @@ class CollectionProcessor extends DataSourceBase
             : intval(data_get($this->component->setUp, 'footer.perPage', 10));
 
         $perPage = $perPage > 0 ? $perPage : $results->count();
+        $pageName = (string) data_get($this->component->setUp, 'footer.pageName', 'page');
 
-        $page = Paginator::resolveCurrentPage('page');
+        $page = Paginator::resolveCurrentPage($pageName);
 
         return new LengthAwarePaginator(
             items: $results->forPage($page, $perPage),
@@ -73,7 +74,7 @@ class CollectionProcessor extends DataSourceBase
             currentPage: $page,
             options: [
                 'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
+                'pageName' => $pageName,
             ]
         );
     }
