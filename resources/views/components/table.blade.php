@@ -64,6 +64,12 @@
                                 }
                             @endphp
 
+                            @php
+                                if ($row instanceof stdClass) {
+                                    $row = collect($row);
+                                }
+                            @endphp
+
                             <livewire:powergrid-detail
                                 key="powergrid-detail-{{ $rowId }}"
                                 :view="$detailView"
