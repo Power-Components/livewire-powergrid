@@ -104,9 +104,15 @@ trait HasActions
 
         $actionsHtml = json_encode($actionsHtml);
 
-        $this->js(<<<JS
-            this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
-        JS);
+        if (SupportLivewireVersions::isV3()) {
+            $this->js(<<<JS
+                this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
+            JS);
+
+            return;
+        }
+
+        $this->js('pgActionsHeader', $actionsHtml);
     }
 
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
