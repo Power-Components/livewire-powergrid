@@ -29,7 +29,8 @@
     "larastan/larastan": "^2.0|^3.0",
     "laradumps/laradumps": "^3.2|^4.0",
     "laravel/scout": "^10.11.3",
-    "openspout/openspout": "^4.24.5"
+    "openspout/openspout": "^4.24.5",
+    "composer/composer": "^2.8"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"
