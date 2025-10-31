@@ -40,16 +40,16 @@
                         @class([
                             'font-semibold bg-pg-primary-100 dark:bg-pg-primary-800 ' => data_get($column, 'hidden'),
                             'py-1' => $loop->first || $loop->last,
-                            'cursor-pointer text-sm flex justify-between block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800'
+                            'cursor-pointer text-sm flex gap-2 justify-between block px-4 py-2 text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800'
                         ])
                     >
                         <div>
                             {!! data_get($column, 'title') !!}
                         </div>
                         @if (!data_get($column, 'hidden'))
-                            <x-livewire-powergrid::icons.eye class="h-5 w-5 text-pg-primary-200 dark:text-pg-primary-300" />
+                            <x-livewire-powergrid::icons.eye class="h-5 w-5 text-pg-primary-200 dark:text-pg-primary-300 shrink-0" />
                         @else
-                            <x-livewire-powergrid::icons.eye-off class="h-5 w-5 text-pg-primary-500 dark:text-pg-primary-300" />
+                            <x-livewire-powergrid::icons.eye-off class="h-5 w-5 text-pg-primary-500 dark:text-pg-primary-300 shrink-0" />
                         @endif
                     </div>
                 @endforeach
