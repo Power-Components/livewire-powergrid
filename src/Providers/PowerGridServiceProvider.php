@@ -68,6 +68,8 @@ class PowerGridServiceProvider extends ServiceProvider
         Macros::columns();
         Macros::actions();
         Macros::builder();
+
+        $this->app->singleton(SupportLivewireVersions::class, fn () => new SupportLivewireVersions());
     }
 
     private function publishViews(): void
