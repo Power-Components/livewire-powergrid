@@ -15,4 +15,4 @@ test('input component name', function () {
     Prompt::fake(['foo', Key::DOWN, Key::ENTER]);
 
     expect(AskDatabaseTableName::handle())->toBe('foobar');
-})->skip('Check test: it gets stuck');
+});
