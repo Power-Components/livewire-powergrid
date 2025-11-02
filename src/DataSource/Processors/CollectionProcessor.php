@@ -13,7 +13,8 @@ class CollectionProcessor extends DataSourceBase
 {
     public static function match(mixed $key): bool
     {
-        return $key instanceof Collection;
+        return $key instanceof Collection
+            || is_iterable($key);
     }
 
     public function process(array $properties = []): array
