@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use Illuminate\Support\{Carbon, Collection};
+use Illuminate\Support\{Carbon};
 use PowerComponents\LivewirePowerGrid\{Button,
     Column,
     Components\SetUp\Exportable,
@@ -10,15 +10,34 @@ use PowerComponents\LivewirePowerGrid\{Button,
     PowerGridComponent,
     PowerGridFields};
 
-class DishesCollectionTable extends PowerGridComponent
+class DishesIterableTable extends PowerGridComponent
 {
-    public string $tableName = 'testing-dishes-collection-table';
+    public string $tableName = 'testing-dishes-iterable-table';
+
+    public array $eventId = [];
 
     public array $testFilters = [];
 
-    public function datasource(): Collection
+    public string $iterableType = 'array';
+
+    protected function getListeners()
     {
-        return collect([
+        return array_merge(
+            parent::getListeners(),
+            [
+                'deletedEvent',
+            ]
+        );
+    }
+
+    public function openModal(array $params)
+    {
+        $this->eventId = $params;
+    }
+
+    public function datasource()
+    {
+        $data = [
             [
                 'id' => 1,
                 'name' => 'Name 1',
@@ -59,7 +78,13 @@ class DishesCollectionTable extends PowerGridComponent
                 'created_at' => '2021-05-05 00:00:00',
                 'chef_name' => 'Luan',
             ],
-        ]);
+        ];
+
+        if ($this->iterableType === 'collection') {
+            return collect($data);
+        }
+
+        return $data;
     }
 
     public function setUp(): array
@@ -125,7 +150,7 @@ class DishesCollectionTable extends PowerGridComponent
 
             Column::add()
                 ->title(__('In Stock'))
-                ->toggleable(true, 'yes', 'no')
+                ->toggleable(true, 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
@@ -142,17 +167,7 @@ class DishesCollectionTable extends PowerGridComponent
             Button::add('edit-stock')
                 ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $row->id]),
-
-            Button::add('edit-stock-for-rules')
-                ->slot('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => $row->id]),
-
-            Button::add('destroy')
-                ->slot(__('Delete'))
-                ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $row->id]),
+                ->openModal('edit-stock', ['dishId' => 'id']),
         ];
     }
 

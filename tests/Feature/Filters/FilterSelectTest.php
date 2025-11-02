@@ -4,13 +4,13 @@ use Illuminate\Database\Eloquent\{Builder, Collection};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishTableBase,
-    Concerns\Components\DishesArrayTable,
-    Concerns\Components\DishesCollectionTable,
+    Concerns\Components\DishesIterableTable,
     Concerns\Components\DishesQueryBuilderTable,
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin
 };
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -53,7 +53,7 @@ $customBuilder = new class() extends DishTableBase
     }
 };
 
-$customCollection = new class() extends DishesCollectionTable
+$customCollection = new class() extends DishesIterableTable
 {
     public int $dishId;
 
@@ -105,13 +105,15 @@ it('property filter using custom builder', function (string $component, object $
 
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-        'daisyui -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+        'tailwind -> id' => [$customBuilder::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+        'daisyui -> id' => [$customBuilder::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
     ]);
 
 it('property filter using computed datasource', function (string $component, object $params) {
-    livewire($component)
+    livewire($component, [
+        'iterableType' => 'collection',
+    ])
         ->call('setTestThemeClass', $params->theme)
         ->assertSee('Pastel de Nata')
         ->set('filters', filterSelect('category_id', 1))
@@ -120,9 +122,9 @@ it('property filter using computed datasource', function (string $component, obj
 
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id' => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-        'bootstrap -> id' => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-        'daisyui -> id' => [$computedDatasource::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+        'tailwind -> id' => [$computedDatasource::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+        'bootstrap -> id' => [$computedDatasource::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+        'daisyui -> id' => [$computedDatasource::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
     ]);
 
 it('property filter using custom collection', function (string $component) {
@@ -133,9 +135,9 @@ it('property filter using custom collection', function (string $component) {
         ->assertDontSee('Name 3');
 })->group('filters', 'filterSelect')
     ->with([
-        'tailwind -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-        'daisyui -> id' => [$customCollection::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+        'tailwind -> id' => [$customCollection::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+        'bootstrap -> id' => [$customCollection::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+        'daisyui -> id' => [$customCollection::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
     ]);
 
 it('properly filter with category_id', function (string $component, object $params) {
@@ -193,30 +195,30 @@ it('properly filters using the same model as the component', function (string $c
     ->with('filter_select_join', 'filter_select_query_builder');
 
 dataset('filter_select_join', [
-    'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
-    'daisyui -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
-    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'dishes.id']],
+    'tailwind -> id' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => Tailwind::class, 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => Bootstrap5::class, 'field' => 'dishes.id']],
+    'daisyui -> id' => [DishesTable::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
+    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => DaisyUI::class, 'field' => 'dishes.id']],
 ]);
 
 dataset('filter_select_query_builder', [
-    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+    'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
 ]);
 
 dataset('filter_select_themes_array', [
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+    [DishesArrayTable::class, Tailwind::class],
+    [DishesArrayTable::class, Bootstrap5::class],
+    [DishesArrayTable::class, DaisyUI::class],
 ]);
 
 dataset('filter_select_themes_collection', [
-    'tailwind' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    'bootstrap' => [DishesCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui' => [DishesCollectionTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind' => [DishesCollectionTable::class, Tailwind::class],
+    'bootstrap' => [DishesCollectionTable::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui' => [DishesCollectionTable::class, (object) ['theme' => DaisyUI::class]],
 ]);
 
 function filterSelect(string $dataField, ?string $value): array

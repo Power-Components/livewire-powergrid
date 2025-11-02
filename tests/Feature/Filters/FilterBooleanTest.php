@@ -1,8 +1,8 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesArrayTable,
-    Concerns\Components\DishesCollectionTable,
+use PowerComponents\LivewirePowerGrid\Tests\{
+    Concerns\Components\DishesIterableTable,
     Concerns\Components\DishesQueryBuilderTable,
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin};
@@ -131,7 +131,7 @@ it('properly filters by bool true - using collection & array table', function (s
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
+    ->with('iterable_datasource');
 
 it('properly filters by bool true - using collection', function (string $component, string $theme) {
     $component = livewire($component, [
@@ -169,7 +169,7 @@ it('properly filters by bool true - using collection', function (string $compone
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection');
+    ->with('iterable_datasource');
 
 it('properly filters by bool true - using collection - custom builder', function (string $componentName, string $theme) {
     $component = livewire($componentName, [
@@ -192,9 +192,9 @@ it('properly filters by bool true - using collection - custom builder', function
         ->assertSee('Name 4')
         ->assertDontSee('Name 5');
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection');
+    ->with('iterable_datasource');
 
-$customCollection = new class() extends DishesCollectionTable
+$customCollection = new class() extends DishesIterableTable
 {
     public int $dishId;
 
@@ -214,7 +214,9 @@ $customCollection = new class() extends DishesCollectionTable
 };
 
 it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
-    $component = livewire($component)
+    $component = livewire($component, [
+        'iterableType' => 'collection',
+    ])
         ->call('setTestThemeClass', $theme)
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
@@ -320,7 +322,7 @@ it('properly filters by bool false - using collection & array', function (string
     expect($component->filters)
         ->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
+    ->with('iterable_datasource');
 
 it('properly filters by bool "all"', function (string $component, object $params) {
     $component = livewire($component, [
@@ -352,8 +354,10 @@ it('properly filters by bool "all"', function (string $component, object $params
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_join', 'filter_boolean_query_builder');
 
-it('properly filters by bool "all" - using collection & array table', function (string $component, string $theme) {
-    $component = livewire($component)
+it('properly filters by bool "all" - using collection', function (string $component, string $theme, string $iterableType) {
+    $component = livewire($component, [
+        'iterableType' => $iterableType,
+    ])
         ->call('setTestThemeClass', $theme);
 
     expect($component->filters)
@@ -373,7 +377,7 @@ it('properly filters by bool "all" - using collection & array table', function (
             ],
         ]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_themes_collection', 'filter_boolean_themes_array');
+    ->with('iterable_datasource');
 
 dataset('filter_boolean_join', [
     'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
@@ -390,14 +394,11 @@ dataset('filter_boolean_query_builder', [
     'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
 ]);
 
-dataset('filter_boolean_themes_array', [
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    [DishesArrayTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
-]);
-
-dataset('filter_boolean_themes_collection', [
-    'tailwind' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    'bootstrap' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    'daisyui' => [DishesCollectionTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+dataset('iterable_datasource', [
+    'tailwind datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'array'],
+    'bootstrap datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'array'],
+    'daisyui datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'array'],
+    'tailwind datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'collection'],
+    'bootstrap datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'collection'],
+    'daisyui datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'collection'],
 ]);
