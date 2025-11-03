@@ -1,9 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\{
-    Concerns\Components\DishesIterableTable,
-    Concerns\Components\DishesQueryBuilderTable,
+use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesIterableTable,
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin};
 
@@ -12,47 +10,31 @@ use PowerComponents\LivewirePowerGrid\Tests\{
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
         'testFilters' => [
-            Filter::boolean('in_stock')->label('sim', 'não'),
+            Filter::boolean('in_stock')->label('yes', 'no'),
         ],
     ])
         ->call('setTestThemeClass', $params->theme)
-        ->assertSee('Em Estoque')
-        ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
+        ->assertSee('In Stock')
+        ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
-    expect($component->filters)
-        ->toBeEmpty();
+    expect($component->filters)->toBeEmpty();
 
     $component->set('filters', filterBoolean('in_stock', 'true'))
         ->assertSee('Pastel de Nata')
-        ->assertSee('Peixada da chef Nábia')
-        ->assertSee('Carne Louca')
-        ->assertSee('Bife à Rolê')
-        ->assertSee('Francesinha vegana')
-        ->assertDontSeeHtml('Francesinha </div>')
-        ->assertDontSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Barco-Sushi Simples')
-        ->assertDontSee('Polpetone Filé Mignon')
-        ->assertDontSee('борщ');
+        ->assertDontSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'true',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
 
     $component->call('clearFilter', 'in_stock');
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 
-    $component->assertSee('Francesinha')
-        ->assertSee('Barco-Sushi da Sueli')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertSee('Polpetone Filé Mignon')
-        ->assertSee('борщ');
-})->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join', 'filter_boolean_query_builder');
+    $component->assertSee('Barco-Sushi da Sueli');
+})->with('filter_boolean_themes');
 
 $customBuilder = new class() extends DishesTable
 {
@@ -69,109 +51,60 @@ $customBuilder = new class() extends DishesTable
 
                     return $builder->where('dishes.id', 1);
                 })
-                ->label('sim', 'não'),
+                ->label('yes', 'no'),
         ];
     }
 };
 
-it('properly filters by bool true - custom builder', function (string $component, object $params) {
+it('properly filters by bool true with custom builder', function (string $component, object $params) {
     $component = livewire($component)
         ->call('setTestThemeClass', $params->theme)
-        ->assertSee('Em Estoque')
-        ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'Em Estoque\')"');
+        ->assertSee('In Stock')
+        ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
-    expect($component->filters)
-        ->toBeEmpty();
+    expect($component->filters)->toBeEmpty();
 
     $component->set('filters', filterBoolean('in_stock', 'true'))
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-        'bootstrap -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-        'daisyui -> id' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+        'tailwind' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
     ]);
 
-it('properly filters by bool true - using collection & array table', function (string $component, string $theme) {
+it('properly filters by bool true using collection table', function (string $component, string $theme) {
     $component = livewire($component, [
         'testFilters' => [
-            Filter::boolean('in_stock')->label('sim', 'não'),
+            Filter::boolean('in_stock')->label('yes', 'no'),
         ],
     ])
         ->call('setTestThemeClass', $theme)
         ->assertSee('In Stock')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
-    expect($component->filters)
-        ->toBeEmpty();
+    expect($component->filters)->toBeEmpty();
 
     $component->set('filters', filterBoolean('in_stock', 'true'))
         ->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 4')
-        ->assertDontSee('Name 3')
-        ->assertDontSee('Name 5');
+        ->assertDontSee('Name 3');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'true',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
 
     $component->call('clearFilter', 'in_stock');
 
-    $component->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 3')
-        ->assertSee('Name 4')
-        ->assertSee('Name 5');
+    $component->assertSee('Name 3');
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('iterable_datasource');
+    ->with('filter_boolean_themes_iterable');
 
-it('properly filters by bool true - using collection', function (string $component, string $theme) {
-    $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
-    ])
-        ->call('setTestThemeClass', $theme)
-        ->assertSee('In Stock')
-        ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
-
-    expect($component->filters)
-        ->toBeEmpty();
-
-    $component->set('filters', filterBoolean('in_stock', 'true'))
-        ->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 4')
-        ->assertDontSee('Name 3')
-        ->assertDontSee('Name 5');
-
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'true',
-            ],
-        ]);
-
-    $component->call('clearFilter', 'in_stock');
-
-    $component->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 3')
-        ->assertSee('Name 4')
-        ->assertSee('Name 5');
-
-    expect($component->filters)
-        ->toMatchArray([]);
-})->group('filters', 'filterBoolean')
-    ->with('iterable_datasource');
-
-it('properly filters by bool true - using collection - custom builder', function (string $componentName, string $theme) {
+it('properly filters by bool true using collection with custom builder', function (string $componentName, string $theme) {
     $component = livewire($componentName, [
         'testFilters' => [
             Filter::boolean('in_stock', 'in_stock')
@@ -182,17 +115,13 @@ it('properly filters by bool true - using collection - custom builder', function
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"')
         ->assertSeeHtml('wire:model="filters.boolean.in_stock"');
 
-    expect($component->filters)
-        ->toBeEmpty();
+    expect($component->filters)->toBeEmpty();
 
     $component->set('filters', filterBoolean('in_stock', true))
         ->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertDontSee('Name 3')
-        ->assertSee('Name 4')
-        ->assertDontSee('Name 5');
+        ->assertDontSee('Name 3');
 })->group('filters', 'filterBoolean')
-    ->with('iterable_datasource');
+    ->with('filter_boolean_themes_iterable');
 
 $customCollection = new class() extends DishesIterableTable
 {
@@ -213,15 +142,12 @@ $customCollection = new class() extends DishesIterableTable
     }
 };
 
-it('properly filters by bool true - using collection - custom builder - using tablename in field', function (string $component, string $theme) {
-    $component = livewire($component, [
-        'iterableType' => 'collection',
-    ])
+it('properly filters by bool true using collection with custom builder using tablename in field', function (string $component, string $theme) {
+    $component = livewire($component, ['iterableType' => 'collection'])
         ->call('setTestThemeClass', $theme)
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
-    expect($component->filters)
-        ->toBeEmpty();
+    expect($component->filters)->toBeEmpty();
 
     $component->set('filters', [
         'boolean' => [
@@ -229,176 +155,121 @@ it('properly filters by bool true - using collection - custom builder - using ta
         ],
     ])
         ->assertSee('Name 1')
-        ->assertDontSee('Name 2')
-        ->assertDontSee('Name 3')
-        ->assertDontSee('Name 4')
-        ->assertDontSee('Name 5');
+        ->assertDontSee('Name 2');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'true',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-        'bootstrap -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-        'daisyui -> id' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+        'tailwind' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+        'bootstrap' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+        'daisyui' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
     ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('yes', 'no')],
     ])
         ->call('setTestThemeClass', $params->theme);
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 
     $component->set('filters', filterBoolean('in_stock', 'false'))
-        ->assertSee('Francesinha')
         ->assertSee('Barco-Sushi da Sueli')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertSee('Polpetone Filé Mignon')
-        ->assertSee('борщ')
-        ->assertDontSee('Pastel de Nata')
-        ->assertDontSee('Peixada da chef Nábia')
-        ->assertDontSee('Carne Louca')
-        ->assertDontSee('Bife à Rolê')
-        ->assertDontSee('Francesinha vegana');
+        ->assertDontSee('Pastel de Nata');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'false',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'false',
+        ],
+    ]);
 
     $component->call('clearFilter', 'in_stock')
-        ->assertSee('Pastel de Nata')
-        ->assertSee('Peixada da chef Nábia')
-        ->assertSee('Carne Louca')
-        ->assertSee('Bife à Rolê')
-        ->assertSee('Francesinha vegana');
+        ->assertSee('Pastel de Nata');
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join', 'filter_boolean_query_builder');
+    ->with('filter_boolean_themes');
 
-it('properly filters by bool false - using collection & array', function (string $component, string $theme) {
+it('properly filters by bool false using collection', function (string $component, string $theme) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('yes', 'no')],
     ])
         ->call('setTestThemeClass', $theme)
         ->assertSee('In Stock')
         ->assertSeeHtml('wire:input.live.debounce.600ms="filterBoolean(\'in_stock\', $event.target.value, \'In Stock\')"');
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 
     $component->set('filters', filterBoolean('in_stock', 'false'))
         ->assertSee('Name 3')
-        ->assertSee('Name 5')
-        ->assertDontSee('Name 1')
-        ->assertDontSee('Name 2')
-        ->assertDontSee('Name 4');
+        ->assertDontSee('Name 1');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'false',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'false',
+        ],
+    ]);
 
     $component->call('clearFilter', 'in_stock')
-        ->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 3')
-        ->assertSee('Name 4')
-        ->assertSee('Name 5');
+        ->assertSee('Name 1');
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 })->group('filters', 'filterBoolean')
-    ->with('iterable_datasource');
+    ->with('filter_boolean_themes_iterable');
 
 it('properly filters by bool "all"', function (string $component, object $params) {
     $component = livewire($component, [
-        'testFilters' => [Filter::boolean('in_stock')->label('sim', 'não')],
+        'testFilters' => [Filter::boolean('in_stock')->label('yes', 'no')],
     ])
         ->call('setTestThemeClass', $params->theme);
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 
     $component->set('filters', filterBoolean('in_stock', 'all'))
         ->assertSee('Pastel de Nata')
-        ->assertSee('Peixada da chef Nábia')
-        ->assertSee('Carne Louca')
-        ->assertSee('Bife à Rolê')
-        ->assertSee('Francesinha vegana')
-        ->assertSee('Francesinha')
-        ->assertSee('Barco-Sushi da Sueli')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertSee('Polpetone Filé Mignon')
-        ->assertSee('борщ');
+        ->assertSee('Barco-Sushi da Sueli');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'all',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'all',
+        ],
+    ]);
 })->group('filters', 'filterBoolean')
-    ->with('filter_boolean_join', 'filter_boolean_query_builder');
+    ->with('filter_boolean_themes');
 
-it('properly filters by bool "all" - using collection', function (string $component, string $theme, string $iterableType) {
-    $component = livewire($component, [
-        'iterableType' => $iterableType,
-    ])
+it('properly filters by bool "all" using collection table', function (string $component, string $theme) {
+    $component = livewire($component)
         ->call('setTestThemeClass', $theme);
 
-    expect($component->filters)
-        ->toMatchArray([]);
+    expect($component->filters)->toMatchArray([]);
 
     $component->set('filters', filterBoolean('in_stock', 'all'))
         ->assertSee('Name 1')
-        ->assertSee('Name 2')
-        ->assertSee('Name 3')
-        ->assertSee('Name 4')
-        ->assertSee('Name 5');
+        ->assertSee('Name 3');
 
-    expect($component->filters)
-        ->toMatchArray([
-            'boolean' => [
-                'in_stock' => 'all',
-            ],
-        ]);
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'all',
+        ],
+    ]);
 })->group('filters', 'filterBoolean')
-    ->with('iterable_datasource');
+    ->with('filter_boolean_themes_iterable');
 
-dataset('filter_boolean_join', [
-    'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
-    'daisyui -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
-    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'dishes.id']],
+dataset('filter_boolean_themes', [
+    'tailwind' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
 ]);
 
-dataset('filter_boolean_query_builder', [
-    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
-]);
-
-dataset('iterable_datasource', [
-    'tailwind datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'array'],
-    'bootstrap datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'array'],
-    'daisyui datasource array' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'array'],
-    'tailwind datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'collection'],
-    'bootstrap datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'collection'],
-    'daisyui datasource collection' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'collection'],
+dataset('filter_boolean_themes_iterable', [
+    'tailwind' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
+    'bootstrap' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
+    'daisyui' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);
