@@ -2,43 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Components\SetUp\Exportable,
-    Facades\PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Button, Column};
 
-class DishesQueryBuilderTable extends PowerGridComponent
+class DishesQueryBuilderTable extends BaseDishesTable
 {
     public string $tableName = 'testing-dishes-query-builder-table';
 
     public string $primaryKey = 'dishes.id';
-
-    public array $testFilters = [];
-
-    public function setUp(): array
-    {
-        $this->showCheckBox();
-
-        return [
-            PowerGrid::exportable('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
-            PowerGrid::header()
-                ->showToggleColumns()
-                ->showSearchInput(),
-
-            PowerGrid::footer()
-                ->showPerPage()
-                ->showRecordCount(),
-        ];
-    }
 
     public function datasource(): Builder
     {
@@ -56,47 +28,6 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 'name',
             ],
         ];
-    }
-
-    public function fields(): PowerGridFields
-    {
-        $fmt = new NumberFormatter('ca_ES', NumberFormatter::CURRENCY);
-
-        return PowerGrid::fields()
-            ->add('id')
-            ->add('name')
-            ->add('storage_room')
-            ->add('chef_name')
-            ->add('serving_at')
-            ->add('calories')
-            ->add('calories', function ($dish) {
-                return $dish->calories.' kcal';
-            })
-            ->add('category_id', function ($dish) {
-                return $dish->category_id;
-            })
-            ->add('category_name')
-            ->add('price')
-            ->add('price_EUR', function ($dish) use ($fmt) {
-                return $fmt->formatCurrency($dish->price, 'EUR');
-            })
-            ->add('price_BRL', function ($dish) {
-                return 'R$ '.number_format($dish->price, 2, ',', '.'); // R$ 1.000,00
-            })
-            ->add('sales_price')
-            ->add('sales_price_BRL', function ($dish) {
-                $sales_price = $dish->price + ($dish->price * 0.15);
-
-                return 'R$ '.number_format($sales_price, 2, ',', '.'); // R$ 1.000,00
-            })
-            ->add('in_stock')
-            ->add('in_stock_label', function ($dish) {
-                return $dish->in_stock ? 'sim' : 'não';
-            })
-            ->add('produced_at')
-            ->add('produced_at_formatted', function ($dish) {
-                return Carbon::parse($dish->produced_at)->format('d/m/Y');
-            });
     }
 
     public function columns(): array
@@ -117,7 +48,7 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->title('Dish')
                 ->field('name')
                 ->searchable()
-                ->placeholder('Prato placeholder')
+                ->placeholder('Dish placeholder')
                 ->sortable(),
 
             Column::add()
@@ -160,7 +91,7 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->field('produced_at_formatted'),
 
             Column::add()
-                ->title(__('Data'))
+                ->title('Date')
                 ->field('produced_at')
                 ->sortable(),
 
@@ -177,19 +108,14 @@ class DishesQueryBuilderTable extends PowerGridComponent
                 ->openModal('edit-stock', ['dishId' => $row->id]),
 
             Button::add('destroy')
-                ->slot(__('Delete'))
+                ->slot('Delete')
                 ->class('text-center')
                 ->dispatch('deletedEvent', ['dishId' => $row->id]),
         ];
     }
 
-    public function filters(): array
+    protected function getCategoryName($dish): string
     {
-        return $this->testFilters;
-    }
-
-    public function setTestThemeClass(string $themeClass): void
-    {
-        config(['livewire-powergrid.theme' => $themeClass]);
+        return $dish->category_name ?? '';
     }
 }

@@ -2,68 +2,20 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
-use PowerComponents\LivewirePowerGrid\{Column,
-    Components\SetUp\Exportable,
-    Facades\PowerGrid,
-    Facades\Rule,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\Rule, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
-class DishesTableWithJoin extends PowerGridComponent
+class DishesTableWithJoin extends BaseDishesTable
 {
     public string $tableName = 'testing-dishes-with-join-names-table';
 
-    public array $eventId = [];
-
-    public array $testFilters = [];
-
     public ?string $primaryKeyAlias = 'id';
-
-    protected function getListeners()
-    {
-        return array_merge(
-            parent::getListeners(),
-            [
-                'deletedEvent',
-            ]
-        );
-    }
-
-    public function openModal(array $params)
-    {
-        $this->eventId = $params;
-    }
-
-    public function deletedEvent(array $params)
-    {
-        $this->eventId = $params;
-    }
 
     public string $sortField = 'dishes.id';
 
     public string $primaryKey = 'dishes.id';
-
-    public function setUp(): array
-    {
-        $this->showCheckBox();
-
-        return [
-            PowerGrid::exportable('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
-            PowerGrid::header()
-                ->showToggleColumns()
-                ->showSearchInput(),
-
-            PowerGrid::footer()
-                ->showPerPage()
-                ->showRecordCount(),
-        ];
-    }
 
     public function dataSource(): Builder
     {
@@ -85,68 +37,30 @@ class DishesTableWithJoin extends PowerGridComponent
 
     public function fields(): PowerGridFields
     {
-        return PowerGrid::fields()
-            ->add('id')
+        return parent::fields()
             ->add('dish_name', function ($dish) {
                 return $dish->name;
             })
-            ->add('calories')
-            ->add('serving_at')
-            ->add('calories', function ($dish) {
-                return $dish->calories.' kcal';
-            })
-            /*** CATEGORY ***/
-            ->add('category_id', function ($dish) {
-                return $dish->category_id;
-            })
-            ->add('category_name', function ($dish) {
-                return $dish->category->name;
-            })
-            /*** PRICE ***/
-            ->add('price')
-            ->add('price_BRL', function ($dish) {
-                return 'R$ '.number_format($dish->price, 2, ',', '.'); // R$ 1.000,00
-            })
-            /*** SALE'S PRICE ***/
-            ->add('sales_price')
-            ->add('sales_price_BRL', function ($dish) {
-                $sales_price = $dish->price + ($dish->price * 0.15);
-
-                return 'R$ '.number_format($sales_price, 2, ',', '.'); // R$ 1.000,00
-            })
-            /*** STOCK ***/
-            ->add('in_stock')
-            ->add('in_stock_label', function ($dish) {
-                return $dish->in_stock ? 'sim' : 'não';
-            })
-            /*** Produced At ***/
             ->add('created_at')
             ->add('created_at_formatted', function ($dish) {
-                return \Carbon\Carbon::parse($dish->category->created_at)->format('d/m/Y');
-            })
-            /*** Produced At ***/
-            ->add('produced_at')
-            ->add('produced_at_formatted', function ($dish) {
-                return Carbon::parse($dish->produced_at)->format('d/m/Y');
+                return Carbon::parse($dish->category->created_at)->format('d/m/Y');
             });
     }
 
     public function columns(): array
     {
-        $canEdit = true;
-
         return [
             Column::add()
-                ->title(__('ID'))
+                ->title('ID')
                 ->field('id')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Prato'))
+                ->title('Dish')
                 ->field('dish_name', 'name')
                 ->searchable()
-                ->placeholder('Prato placeholder')
+                ->placeholder('Dish placeholder')
                 ->sortable(),
 
             Column::add()
@@ -155,37 +69,37 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->sortable(),
 
             Column::add()
-                ->title(__('Category'))
+                ->title('Category')
                 ->field('category_name', 'categories.name')
                 ->sortable()
                 ->placeholder('Category placeholder'),
 
             Column::add()
-                ->title(__('Preço'))
+                ->title('Price')
                 ->field('price_BRL'),
 
             Column::add()
-                ->title(__('Preço de Venda'))
+                ->title('Sales Price')
                 ->field('sales_price_BRL'),
 
             Column::add()
-                ->title(__('Calorias'))
+                ->title('Calories')
                 ->field('calories')
                 ->sortable(),
 
             Column::add()
-                ->title(__('Em Estoque'))
+                ->title('In Stock')
                 ->toggleable(true, 'sim', 'não')
                 ->sortable()
                 ->field('in_stock'),
 
             Column::add()
-                ->title(__('Created Categories'))
+                ->title('Created Categories')
                 ->sortable()
                 ->field('created_at_formatted', 'categories.created_at'),
 
             Column::add()
-                ->title(__('Data de produção'))
+                ->title('Production Date')
                 ->field('produced_at_formatted'),
 
             Column::action('Action'),
@@ -203,7 +117,6 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 4)
                 ->slot('cation edit for id 4'),
 
-            // Set a row red background for when dish is out of stock
             Rule::rows()
                 ->when(fn ($dish) => (bool) $dish->in_stock === false)
                 ->setAttribute('class', 'bg-red-100 text-red-800'),
@@ -220,15 +133,5 @@ class DishesTableWithJoin extends PowerGridComponent
                 ->when(fn ($dish) => $dish->id == 9)
                 ->disable(),
         ];
-    }
-
-    public function filters(): array
-    {
-        return $this->testFilters;
-    }
-
-    public function setTestThemeClass(string $themeClass): void
-    {
-        config(['livewire-powergrid.theme' => $themeClass]);
     }
 }
