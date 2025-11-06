@@ -162,3 +162,15 @@ it('can create component in a custom Livewire namespace', function () {
 
     expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'Domains/System/Office/Users/Admin/Active/ListTable.php'));
 });
+
+it('tableName is converted to camelCase', function () {
+    $component = PowerGridComponentMaker::make('System/Office/Users/Admin/Active/ListTable');
+
+    expect($component->tableName)->toBe('listTable');
+});
+
+it('tableName appends Table to the end of the name', function () {
+    $component = PowerGridComponentMaker::make('System/Office/Users/Admin/Active/List');
+
+    expect($component->tableName)->toBe('listTable');
+});
