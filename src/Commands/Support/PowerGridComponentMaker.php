@@ -271,7 +271,7 @@ final class PowerGridComponentMaker
         $this->tableName = str($this->name)
             ->camel();
 
-        if (Str::doesntEndWith($this->name, 'Table')) {
+        if (! str_ends_with($this->name, 'Table')) {
             $this->tableName = str($this->tableName)->append('Table');
         }
 
