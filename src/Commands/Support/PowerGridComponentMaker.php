@@ -269,10 +269,11 @@ final class PowerGridComponentMaker
     private function resolveTableName(): self
     {
         $this->tableName = str($this->name)
-            ->kebab()
-            ->append('-'.Str::random(6))
-            ->append('-table')
-            ->lower();
+            ->camel();
+
+        if (! str_ends_with($this->name, 'Table')) {
+            $this->tableName = str($this->tableName)->append('Table');
+        }
 
         return $this;
     }

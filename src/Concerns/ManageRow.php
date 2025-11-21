@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Providers\SupportLivewireVersions;
 use stdClass;
 
 trait ManageRow
@@ -11,9 +12,15 @@ trait ManageRow
     {
         $rowTemplates = json_encode($this->rowTemplates());
 
-        $this->js(<<<JS
-            this[`pgRowTemplates_\${\$wire.id}`] = $rowTemplates
-        JS);
+        if (SupportLivewireVersions::isV3()) {
+            $this->js(<<<JS
+                window[`pgRowTemplates_\${\$wire.id}`] = $rowTemplates
+            JS);
+
+            return;
+        }
+
+        $this->js('pgRowTemplates', $rowTemplates);
     }
 
     public function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool

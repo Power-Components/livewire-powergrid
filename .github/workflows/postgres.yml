@@ -41,11 +41,10 @@ jobs:
       matrix:
         php: [ 8.4, 8.3 ]
         laravel: [ 11.*, 12.* ]
+        livewire: [ 3.*, 4.* ]
         dependency-version: [ prefer-stable ]
 
-    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
-
-    if: github.ref != 'refs/heads/todo-tests'
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }}
 
     steps:
       - name: Checkout
@@ -67,15 +66,11 @@ jobs:
         uses: actions/cache@v4
         with:
           path: $(composer config cache-files-dir)
-          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
-
-      - name: Uninstall Larastan (until laravel 12 support)
-        run: |
-          composer remove "larastan/larastan" --dev --no-interaction --no-update
+          key: dependencies-laravel-${{ matrix.laravel }}-livewire-${{ matrix.livewire}}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
       - name: Install Composer dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
           composer install
 
       - name: Install openspout/openspout

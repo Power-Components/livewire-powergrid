@@ -43,8 +43,7 @@ class LazyChild extends Component
 
     public function actionsFromView(mixed $row): ?View
     {
-        /** @var string $parentComponent */
-        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+        $parentComponent = $this->getComponentAlias();
 
         if (method_exists($parentComponent, 'actionsFromView')) {
             return app($parentComponent)->actionsFromView($row);
@@ -55,18 +54,26 @@ class LazyChild extends Component
 
     public function shouldShowEditOnClick(array|Column|stdClass $column, mixed $row): bool
     {
-        /** @var string $parentComponent */
-        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+        $parentComponent = $this->getComponentAlias();
 
         return app($parentComponent)->shouldShowEditOnClick($column, $row);
     }
 
     public function shouldShowToggleable(array|Column|stdClass $column, mixed $row): bool
     {
-        /** @var string $parentComponent */
-        $parentComponent = app(ComponentRegistry::class)->getClass($this->parentName);
+        $parentComponent = $this->getComponentAlias();
 
         return app($parentComponent)->shouldShowToggleable($column, $row);
+    }
+
+    private function getComponentAlias(): string
+    {
+        if (app()->has(ComponentRegistry::class)) {
+
+            return app(ComponentRegistry::class)->getClass($this->parentName);
+        }
+
+        return app('livewire.finder')->resolveClassComponentClassName($this->parentName);
     }
 
     public function render(): View

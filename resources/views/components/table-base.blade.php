@@ -40,4 +40,6 @@
 
         <div x-data="pgLoadMore"></div>
     @endif
+
+    <x-livewire-powergrid::support-livewire-v4 />
 </div>

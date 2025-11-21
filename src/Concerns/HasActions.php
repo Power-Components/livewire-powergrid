@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\{Blade, Cache, File, View};
 use Illuminate\Support\Str;
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\Providers\SupportLivewireVersions;
 
 trait HasActions
 {
@@ -25,9 +26,13 @@ trait HasActions
             $records = (string) $closure();
         }
 
-        $this->js(<<<JS
-            this.pgResourceIcons = $records
-        JS);
+        if (SupportLivewireVersions::isV3()) {
+            $this->js(<<<JS
+                this.pgResourceIcons = $records
+            JS);
+        } else {
+            $this->js('pgResourceIcons', $records);
+        }
 
         return $records;
     }
@@ -68,9 +73,15 @@ trait HasActions
 
         $actionsHtml = json_encode($actionsHtml);
 
-        $this->js(<<<JS
-            this[`pgActions_\${\$wire.id}`] = $actionsHtml
-        JS);
+        if (SupportLivewireVersions::isV3()) {
+            $this->js(<<<JS
+                this[`pgActions_\${\$wire.id}`] = $actionsHtml
+            JS);
+
+            return;
+        }
+
+        $this->js('pgActions', $actionsHtml);
     }
 
     public function storeActionsHeaderInJSWindow(): void
@@ -93,9 +104,15 @@ trait HasActions
 
         $actionsHtml = json_encode($actionsHtml);
 
-        $this->js(<<<JS
-            this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
-        JS);
+        if (SupportLivewireVersions::isV3()) {
+            $this->js(<<<JS
+                this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
+            JS);
+
+            return;
+        }
+
+        $this->js('pgActionsHeader', $actionsHtml);
     }
 
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array

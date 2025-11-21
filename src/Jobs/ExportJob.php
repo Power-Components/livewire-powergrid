@@ -43,6 +43,10 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
+        collect($this->componentTable->getPublicPropertiesDefinedInComponent())
+            ->intersectByKeys($this->properties)
+            ->each(fn ($value, $key) => $this->componentTable->{$key} = data_get($this->properties, $key));
+
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
 
