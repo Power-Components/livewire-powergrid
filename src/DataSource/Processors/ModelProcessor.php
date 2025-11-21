@@ -14,9 +14,9 @@ class ModelProcessor extends DataSourceBase
         return true;
     }
 
-    public function process(): array
+    public function process(array $properties = []): array
     {
-        $datasource = $this->component->datasource($this->component->properties ?? []);
+        $datasource = $this->component->datasource($properties);
 
         $this->setCurrentTable($datasource);
 
@@ -37,8 +37,6 @@ class ModelProcessor extends DataSourceBase
                 new CommonPipelines\Pagination($this->component),
             ])
             ->thenReturn();
-
-        $this->setTotalCount($paginate);
 
         /** @var \Illuminate\Support\Collection $collection */
         $collection = $paginate->getCollection();

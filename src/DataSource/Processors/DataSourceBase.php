@@ -2,11 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\{Builder as EloquentBuilder};
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Pagination\Paginator;
 use Illuminate\View\Concerns\ManagesLoops;
 use PowerComponents\LivewirePowerGrid\{Concerns\SoftDeletes, PowerGridComponent};
 
@@ -19,15 +15,6 @@ class DataSourceBase
         public PowerGridComponent $component,
         public bool $isExport = false
     ) {}
-
-    protected function setTotalCount(EloquentBuilder|MorphToMany|QueryBuilder|LengthAwarePaginator|Paginator $results): void
-    {
-        if (! method_exists($results, 'total')) {
-            return;
-        }
-
-        $this->component->total = $results->total();
-    }
 
     protected function setCurrentTable(mixed $datasource): void
     {

@@ -113,21 +113,20 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
         ->set('ignoreTablePrefix', false)
         ->call('sortBy', 'stored_at')
         ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish K')
-        ->assertSeeHtml('Dish L')
         ->assertSeeHtml('Dish A')
+        ->assertSeeHtml('Dish J')
+        ->assertSeeHtml('Dish L')
+        ->assertSeeHtml('Dish K')
         ->assertSeeHtml('Dish B')
-        ->assertSeeHtml('Dish C')
+        ->assertSeeHtml('Dish D')
         ->assertSeeHtml('Dish D')
         ->assertSeeHtml('Dish E')
         ->assertSeeHtml('Dish F')
         ->assertSeeHtml('Dish G')
-        ->assertSeeHtml('Dish H')
         ->assertDontSeeHtml('Dish I')
         ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Dish J')
         ->assertSeeHtml('Dish I')
-        ->assertSeeHtml('Dish H')
+        ->assertSeeHtml('Zebra Dish H')
         ->assertSeeHtml('Dish G')
         ->assertSeeHtml('Dish F')
         ->assertSeeHtml('Dish E')
@@ -135,8 +134,9 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
         ->assertSeeHtml('Dish C')
         ->assertSeeHtml('Dish B')
         ->assertSeeHtml('Dish K')
+        ->assertSeeHtml('Dish L')
         ->assertDontSeeHtml('Dish A');
-})->with('sort join')->skip();
+})->with('sort join');
 
 dataset('sort join', [
     'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],

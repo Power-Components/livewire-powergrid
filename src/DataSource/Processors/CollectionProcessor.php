@@ -13,12 +13,13 @@ class CollectionProcessor extends DataSourceBase
 {
     public static function match(mixed $key): bool
     {
-        return $key instanceof Collection;
+        return $key instanceof Collection
+            || is_iterable($key);
     }
 
-    public function process(): array
+    public function process(array $properties = []): array
     {
-        $datasource = $this->component->datasource($this->component->properties ?? []);
+        $datasource = $this->component->datasource($properties);
 
         $collection = new BaseCollection($datasource);
 
@@ -32,8 +33,6 @@ class CollectionProcessor extends DataSourceBase
                 new CommonPipelines\Summaries($this->component),
             ])
             ->thenReturn();
-
-        $this->component->total = $results->count();
 
         $paginated = $results;
         $dataTransformer = new DataTransformer($this->component);
@@ -65,8 +64,9 @@ class CollectionProcessor extends DataSourceBase
             : intval(data_get($this->component->setUp, 'footer.perPage', 10));
 
         $perPage = $perPage > 0 ? $perPage : $results->count();
+        $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
 
-        $page = Paginator::resolveCurrentPage('page');
+        $page = Paginator::resolveCurrentPage($pageName);
 
         return new LengthAwarePaginator(
             items: $results->forPage($page, $perPage),
@@ -75,7 +75,7 @@ class CollectionProcessor extends DataSourceBase
             currentPage: $page,
             options: [
                 'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
+                'pageName' => $pageName,
             ]
         );
     }

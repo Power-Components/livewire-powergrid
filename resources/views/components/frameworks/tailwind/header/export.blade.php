@@ -36,7 +36,7 @@
                     href="#"
                     class="px-2 py-1 block text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800 rounded"
                 >
-                    <span class="export-count text-xs">({{ $total }})</span>
+                    <span class="export-count text-xs">({{ $this->total }})</span>
                     @if (count($enabledFilters) === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else
@@ -64,7 +64,7 @@
                     x-on:click="open = false"
                     class="px-2 py-1 block text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800 rounded"
                 >
-                    <span class="export-count text-xs">({{ $total }})</span>
+                    <span class="export-count text-xs">({{ $this->total }})</span>
                     @if (count($enabledFilters) === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else

@@ -2,23 +2,18 @@
 
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
-use Illuminate\Support\{Carbon, Collection};
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Components\SetUp\Exportable,
-    Facades\PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use Carbon\Carbon;
+use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridFields};
 
-class DishesCollectionTable extends PowerGridComponent
+class DishesIterableTable extends BaseDishesTable
 {
-    public string $tableName = 'testing-dishes-collection-table';
+    public string $tableName = 'testing-dishes-iterable-table';
 
-    public array $testFilters = [];
+    public string $iterableType = 'array';
 
-    public function datasource(): Collection
+    public function datasource()
     {
-        return collect([
+        $data = [
             [
                 'id' => 1,
                 'name' => 'Name 1',
@@ -59,26 +54,13 @@ class DishesCollectionTable extends PowerGridComponent
                 'created_at' => '2021-05-05 00:00:00',
                 'chef_name' => 'Luan',
             ],
-        ]);
-    }
-
-    public function setUp(): array
-    {
-        $this->showCheckBox();
-
-        return [
-            PowerGrid::exportable('export')
-                ->striped()
-                ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
-
-            PowerGrid::header()
-                ->showToggleColumns()
-                ->showSearchInput(),
-
-            PowerGrid::footer()
-                ->showPerPage()
-                ->showRecordCount(),
         ];
+
+        if ($this->iterableType === 'collection') {
+            return collect($data);
+        }
+
+        return $data;
     }
 
     public function fields(): PowerGridFields
@@ -90,7 +72,7 @@ class DishesCollectionTable extends PowerGridComponent
             ->add('price')
             ->add('in_stock')
             ->add('in_stock_label', function ($entry) {
-                return $entry->in_stock ? 'sim' : 'não';
+                return $entry->in_stock ? 'yes' : 'no';
             })
             ->add('created_at_formatted', function ($entry) {
                 return Carbon::parse($entry->created_at)->format('d/m/Y');
@@ -101,35 +83,35 @@ class DishesCollectionTable extends PowerGridComponent
     {
         return [
             Column::add()
-                ->title(__('ID'))
+                ->title('ID')
                 ->field('id')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Name'))
+                ->title('Name')
                 ->field('name')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Chef'))
+                ->title('Chef')
                 ->field('chef_name')
                 ->searchable()
                 ->sortable(),
 
             Column::add()
-                ->title(__('Price'))
+                ->title('Price')
                 ->field('price')
                 ->sortable(),
 
             Column::add()
-                ->title(__('In Stock'))
-                ->toggleable(true, 'yes', 'no')
+                ->title('In Stock')
+                ->toggleable(true, 'sim', 'não')
                 ->field('in_stock'),
 
             Column::add()
-                ->title(__('Created At'))
+                ->title('Created At')
                 ->field('created_at_formatted'),
 
             Column::action('Action'),
@@ -142,27 +124,7 @@ class DishesCollectionTable extends PowerGridComponent
             Button::add('edit-stock')
                 ->slot('<div id="edit">Edit</div>')
                 ->class('text-center')
-                ->openModal('edit-stock', ['dishId' => $row->id]),
-
-            Button::add('edit-stock-for-rules')
-                ->slot('<div id="edit">Edit for Rules</div>')
-                ->class('text-center')
-                ->openModal('edit-stock-for-rules', ['dishId' => $row->id]),
-
-            Button::add('destroy')
-                ->slot(__('Delete'))
-                ->class('text-center')
-                ->dispatch('deletedEvent', ['dishId' => $row->id]),
+                ->openModal('edit-stock', ['dishId' => 'id']),
         ];
-    }
-
-    public function filters(): array
-    {
-        return $this->testFilters;
-    }
-
-    public function setTestThemeClass(string $themeClass): void
-    {
-        config(['livewire-powergrid.theme' => $themeClass]);
     }
 }

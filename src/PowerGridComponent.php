@@ -265,6 +265,24 @@ class PowerGridComponent extends Component
         $this->dispatch('pg-toggle-detail-'.$this->tableName.'-'.$rowId, collapsed: null);
     }
 
+    #[Computed]
+    public function total(): ?int
+    {
+        if (method_exists($this->records, 'total')) {
+            return $this->records->total();
+        }
+
+        if (method_exists($this->records, 'count')) {
+            return $this->records->count();
+        }
+
+        if (is_countable($this->records)) {
+            return count($this->records);
+        }
+
+        return 0;
+    }
+
     public function render(): Application|Factory|View
     {
         $data = [];

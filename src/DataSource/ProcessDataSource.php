@@ -35,10 +35,10 @@ class ProcessDataSource
             if ($processor::match($this->component->datasource($this->properties))) {
                 $instance = new $processor($this->component, $isExport);
 
-                return $instance->process();
+                return $instance->process($this->properties);
             }
         }
 
-        return (new ModelProcessor($this->component, $isExport))->process();
+        return (new ModelProcessor($this->component, $isExport))->process($this->properties);
     }
 }

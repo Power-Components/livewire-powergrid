@@ -15,10 +15,10 @@ class ScoutBuilderProcessor extends DataSourceBase
         return $key instanceof ScoutBuilder;
     }
 
-    public function process(): array
+    public function process(array $properties = []): array
     {
         /** @var ScoutBuilder $datasource */
-        $datasource = $this->component->datasource($this->component->properties ?? []);
+        $datasource = $this->component->datasource($properties);
 
         /** @var ScoutBuilder $query */
         $query = app(Pipeline::class)
@@ -36,8 +36,6 @@ class ScoutBuilderProcessor extends DataSourceBase
                 new CommonPipelines\Pagination($this->component),
             ])
             ->thenReturn();
-
-        $this->setTotalCount($paginate);
 
         $dataTransformer = new DataTransformer($this->component);
         $transformResult = $dataTransformer->transform($paginate->getCollection());
