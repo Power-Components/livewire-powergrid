@@ -40,6 +40,13 @@
         }
 
         $contentClassField = data_get($column, 'contentClassField');
+
+        if ($content instanceof \UnitEnum) {
+            $content = $content instanceof \BackedEnum 
+                ? $content->value 
+                : $content->name;
+        }
+
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
         $field = data_get($column, 'dataField', data_get($column, 'field'));
 
