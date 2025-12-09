@@ -42,6 +42,8 @@ trait ExportableJob
     {
         $this->componentTable->filters = $this->filters ?? [];
         $this->componentTable->filtered = $this->filtered ?? [];
+        $this->componentTable->columns = $this->columns;
+        $this->componentTable->search = data_get($properties, 'search', '');
 
         $processDataSource = tap(
             ProcessDataSource::make($this->componentTable, $properties),
