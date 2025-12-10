@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
-use Illuminate\Support\{ServiceProvider};
+use Illuminate\Support\ServiceProvider;
 use Laravel\Pulse\Facades\Pulse;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;

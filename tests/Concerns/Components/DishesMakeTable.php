@@ -11,7 +11,7 @@ use PowerComponents\LivewirePowerGrid\{Button,
     Facades\PowerGrid,
     PowerGridComponent,
     PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Dish};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class DishesMakeTable extends PowerGridComponent
 {

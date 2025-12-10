@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pipelines;
 
 use Closure;
-use Illuminate\Support\{Collection};
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;

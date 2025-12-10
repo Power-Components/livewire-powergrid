@@ -3,8 +3,7 @@
 use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Chef};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Chef};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

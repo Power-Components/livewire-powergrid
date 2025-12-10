@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
-use PowerComponents\LivewirePowerGrid\{PowerGridFields};
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use stdClass;
 
 final class RowTransformer

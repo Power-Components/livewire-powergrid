@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
-use Illuminate\Database\Eloquent\{Builder};
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 

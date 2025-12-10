@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterMultiSelectAsync};
+use PowerComponents\LivewirePowerGrid\Components\Filters\FilterMultiSelectAsync;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\{

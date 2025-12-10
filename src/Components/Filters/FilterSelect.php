@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Components\Filters;
 
 use Closure;
-use Illuminate\Support\{Collection};
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\FilterAttributes\Select;
 
 class FilterSelect extends FilterBase

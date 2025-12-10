@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Exports;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\{Column};
+use PowerComponents\LivewirePowerGrid\Column;
 use stdClass;
 
 class Export

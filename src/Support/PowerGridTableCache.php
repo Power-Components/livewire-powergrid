@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\{Cache};
+use Illuminate\Support\Facades\Cache;
 
 final class PowerGridTableCache
 {

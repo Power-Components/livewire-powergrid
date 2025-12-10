@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentDatasource};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
     AskDatabaseTableName,
     AskModelName,

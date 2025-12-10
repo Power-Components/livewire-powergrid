@@ -3,8 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler};
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\SearchHandler;
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandler};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Filters
