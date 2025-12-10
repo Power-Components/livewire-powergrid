@@ -23,7 +23,7 @@
     "laravel/prompts": "*"
   },
   "require-dev": {
-    "laravel/pint": "^1.24",
+    "laravel/pint": "^1.26",
     "pestphp/pest": "^2.35.1|^3.0",
     "orchestra/testbench": "^9.4|^10.0",
     "larastan/larastan": "^2.0|^3.0",
