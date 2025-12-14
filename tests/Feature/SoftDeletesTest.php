@@ -3,10 +3,8 @@
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSoftDeletesTable;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
-use PowerComponents\LivewirePowerGrid\Themes\Bootstrap5;
-use PowerComponents\LivewirePowerGrid\Themes\DaisyUI;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 beforeEach(
