@@ -80,6 +80,21 @@ it('should filter "pg:datePicker-{tableName}" with datetime format', function (s
         ->assertDontSee('Peixada');
 })->with('filterComponent');
 
+it('ignores date picker change when only one date is selected', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme)
+        ->dispatch(
+            'pg:datePicker-filter-date-picker-test',
+            selectedDates: ['2024-11-06'],
+            field: 'produced_at',
+            dateStr: '2024-11-06',
+            label: 'Produced At',
+            type: 'date'
+        );
+
+    expect($component->filters)->toBeEmpty();
+})->with('filterComponent');
+
 it('should dispatch "pg:datePicker-{tableName}" with datetime format', function (string $component, object $params) {
     $component = livewire($component)
         ->call('setTestThemeClass', $params->theme)
@@ -105,6 +120,35 @@ it('should dispatch "pg:datePicker-{tableName}" with datetime format', function 
                 ],
             ],
         ]);
+})->with('filterComponent');
+
+it('handles invalid date format gracefully', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme)
+        ->dispatch(
+            'pg:datePicker-filter-date-picker-test',
+            selectedDates: ['invalid-date', 'invalid-date-2'],
+            field: 'produced_at',
+            dateStr: 'invalid-date to invalid-date-2',
+            label: 'Produced At',
+            type: 'date'
+        );
+})->with('filterComponent');
+
+it('clears date filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme)
+        ->dispatch(
+            'pg:datePicker-filter-date-picker-test',
+            selectedDates: ['2021-01-01', '2021-01-02'],
+            field: 'produced_at',
+            dateStr: '2021-01-01 to 2021-01-02',
+            label: 'Produced At',
+            type: 'date'
+        );
+
+    $component->call('clearFilter', 'produced_at');
+    expect($component->filters)->toBeEmpty();
 })->with('filterComponent');
 
 dataset('filterComponent', [

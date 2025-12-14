@@ -63,3 +63,102 @@ it('properly filters by inputText', function (string $component, object $params)
     expect($component->filters)->toBe($filters);
 })->group('filters')
     ->with('filterComponent');
+
+it('properly filters by inputText using action', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    $component->set('filters.input_text.'.$params->field, 'ba')
+        ->call('filterInputText', $params->field, 'ba', 'Dish Name');
+
+    if (str_contains($params->field, '.')) {
+        $data = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $table => [
+                        $field => 'ba',
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text' => [
+                    $params->field => 'ba',
+                ],
+            ]);
+    }
+})->group('filters')
+    ->with('filterComponent');
+
+it('properly filters by inputTextOptions using action', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    $component->call('filterInputTextOptions', $params->field, 'contains_not', 'Dish Name');
+
+    if (str_contains($params->field, '.')) {
+        $data = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text_options' => [
+                    $table => [
+                        $field => 'contains_not',
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text_options' => [
+                    $params->field => 'contains_not',
+                ],
+            ]);
+    }
+})->group('filters')
+    ->with('filterComponent');
+
+it('properly filters by inputTextOptions is_empty', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    $component->call('filterInputTextOptions', $params->field, 'is_empty', 'Dish Name');
+
+    if (str_contains($params->field, '.')) {
+        $data = Str::of($params->field)->explode('.');
+        $table = $data->get(0);
+        $field = $data->get(1);
+
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text_options' => [
+                    $table => [
+                        $field => 'is_empty',
+                    ],
+                ],
+                'input_text' => [
+                    $table => [
+                        $field => null,
+                    ],
+                ],
+            ]);
+    } else {
+        expect($component->filters)
+            ->toMatchArray([
+                'input_text_options' => [
+                    $params->field => 'is_empty',
+                ],
+                'input_text' => [
+                    $params->field => null,
+                ],
+            ]);
+    }
+})->group('filters')
+    ->with('filterComponent');
