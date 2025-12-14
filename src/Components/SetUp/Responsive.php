@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
+/** @codeCoverageIgnore */
 final class Responsive implements Wireable
 {
     public string $name = 'responsive';

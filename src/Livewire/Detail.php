@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
+/** @codeCoverageIgnore */
 class Detail extends Component
 {
     public string $tableName = '';

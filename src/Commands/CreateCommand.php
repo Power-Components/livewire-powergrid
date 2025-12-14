@@ -16,6 +16,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 use function Laravel\Prompts\{error, info, note};
 
+/** @codeCoverageIgnore */
 class CreateCommand extends Command
 {
     use RenderAscii;

@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use function Laravel\Prompts\{error, suggest};
 
+/** @codeCoverageIgnore */
 final class AskModelName
 {
     protected static string $model = '';

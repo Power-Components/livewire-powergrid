@@ -9,6 +9,7 @@ use Livewire\Mechanisms\ComponentRegistry;
 use PowerComponents\LivewirePowerGrid\Column;
 use stdClass;
 
+/** @codeCoverageIgnore */
 class LazyChild extends Component
 {
     public bool $checkbox = false;

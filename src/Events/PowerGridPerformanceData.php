@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Events;
 
+/** @codeCoverageIgnore */
 class PowerGridPerformanceData
 {
     /**

@@ -8,6 +8,7 @@ use Laravel\Pulse\Livewire\Card;
 use Livewire\Attributes\Lazy;
 use PowerComponents\LivewirePowerGrid\Recorders\PowerGridPerformanceRecorder;
 
+/** @codeCoverageIgnore */
 #[Lazy]
 class PerformanceCard extends Card
 {
