@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Concerns;
 
+/** @codeCoverageIgnore */
 trait RenderAscii
 {
     /**

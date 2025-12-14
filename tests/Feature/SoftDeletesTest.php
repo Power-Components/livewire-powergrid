@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSoftDeletesTable;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -44,7 +45,7 @@ it('should list all records including excluded', function (string $component, st
     livewire($component)
         ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '20')
-        ->set('softDeletes', 'withTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'withTrashed')
         ->assertSeeHtml('Dish A')
         ->assertSeeHtml('Dish B')
         ->assertSeeHtml('Dish E')
@@ -58,7 +59,7 @@ it('should list only deleted records', function (string $component, string $them
     livewire($component)
         ->call('setTestThemeClass', $theme)
         ->set('setUp.footer.perPage', '10')
-        ->set('softDeletes', 'onlyTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'onlyTrashed')
         ->assertDontSeeHtml('Dish C')
         ->assertDontSeeHtml('Dish D')
         ->assertDontSeeHtml('Dish E')
@@ -77,24 +78,36 @@ it('should be able to see a warning message when showMessageSoftDeletes is true 
         ->set('setUp.header.showMessageSoftDeletes', true)
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->assertDontSeeHtml(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
-        ->set('softDeletes', 'withTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'withTrashed')
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
         ->assertSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
-        ->set('softDeletes', 'onlyTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'onlyTrashed')
         ->assertSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->set('setUp.header.showMessageSoftDeletes', false)
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'))
-        ->set('softDeletes', 'withTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'withTrashed')
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_with_trashed'))
         ->assertDontSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'));
 })->with('soft_deletes');
 
+it('should trigger softDeletes method through event listener', function (string $component, string $theme) {
+    livewire($component)
+        ->call('setTestThemeClass', $theme)
+        ->assertSet('softDeletes', '')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'withTrashed')
+        ->assertSet('softDeletes', 'withTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: 'onlyTrashed')
+        ->assertSet('softDeletes', 'onlyTrashed')
+        ->dispatch('pg:softDeletes-testing-dishes-soft-deletes-table', softDeletes: '')
+        ->assertSet('softDeletes', '');
+})->with('soft_deletes');
+
 dataset('soft_deletes', [
-    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    [DishesSoftDeletesTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+    [DishesSoftDeletesTable::class, Tailwind::class],
+    [DishesSoftDeletesTable::class, Bootstrap5::class],
+    [DishesSoftDeletesTable::class, DaisyUI::class],
 ]);
 
 /**

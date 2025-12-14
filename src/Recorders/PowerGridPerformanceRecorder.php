@@ -7,6 +7,7 @@ use Illuminate\Config\Repository;
 use Laravel\Pulse\Pulse;
 use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 
+/** @codeCoverageIgnore */
 class PowerGridPerformanceRecorder
 {
     public string $listen = PowerGridPerformanceData::class;

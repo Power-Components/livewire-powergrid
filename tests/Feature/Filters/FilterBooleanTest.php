@@ -259,6 +259,48 @@ it('properly filters by bool "all" using collection table', function (string $co
 })->group('filters', 'filterBoolean')
     ->with('filter_boolean_themes_iterable');
 
+it('properly filters by bool true using action', function (string $component, object $params) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::boolean('in_stock')->label('yes', 'no'),
+        ],
+    ])
+        ->call('setTestThemeClass', $params->theme)
+        ->assertSee('In Stock');
+
+    $component->set('filters.boolean.in_stock', 'true')
+        ->call('filterBoolean', 'in_stock', 'true', 'In Stock')
+        ->assertSee('Pastel de Nata')
+        ->assertDontSee('Barco-Sushi da Sueli');
+
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes');
+
+it('properly filters by bool "all" using action', function (string $component, object $params) {
+    $component = livewire($component, [
+        'testFilters' => [
+            Filter::boolean('in_stock')->label('yes', 'no'),
+        ],
+    ])
+        ->call('setTestThemeClass', $params->theme);
+
+    $component->set('filters.boolean.in_stock', 'true')
+        ->call('filterBoolean', 'in_stock', 'true', 'In Stock');
+
+    $component->set('filters.boolean.in_stock', 'all')
+        ->call('filterBoolean', 'in_stock', 'all', 'In Stock')
+        ->assertSee('Pastel de Nata')
+        ->assertSee('Barco-Sushi da Sueli');
+
+    expect($component->filters)->toMatchArray([]);
+})->group('filters', 'filterBoolean')
+    ->with('filter_boolean_themes');
+
 dataset('filter_boolean_themes', [
     'tailwind' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
     'bootstrap' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
