@@ -21,10 +21,17 @@ trait Filter
 
     public bool $showFilters = false;
 
+    public bool $emitClearFiltersEvent = true;
+
+    public function emitClearFiltersEvent(bool $emit): void
+    {
+        $this->emitClearFiltersEvent = $emit;
+    }
+    
     /**
      * @throws Exception
      */
-    public function clearFilter(string $field = '', bool $emit = true): void
+    public function clearFilter(string $field = ''): void
     {
         collect($this->filters())
             ->each(function ($filter) use ($field) {
@@ -93,7 +100,7 @@ trait Filter
                 }
             });
 
-        if ($emit) {
+        if ($this->emitClearFiltersEvent) {
             $this->dispatch('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
         }
 
@@ -196,7 +203,7 @@ trait Filter
         $this->addEnabledFilters($field, $label);
 
         if (count($values) === 0) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedMultiSelectFilter($field, $values);
@@ -216,7 +223,7 @@ trait Filter
         $value = data_get($this->filters, "select.$field");
 
         if (blank($value)) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedSelectFilter($field, $label, $value);
@@ -236,7 +243,7 @@ trait Filter
         $this->addEnabledFilters($field, $title);
 
         if (blank($value)) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedNumberStartFilter($field, $title, $value);
@@ -256,7 +263,7 @@ trait Filter
         $this->addEnabledFilters($field, $title);
 
         if (blank($value)) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedNumberEndFilter($field, $title, $value);
@@ -274,7 +281,7 @@ trait Filter
         $this->addEnabledFilters($field, $label);
 
         if ($value == 'all') {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedBooleanFilter($field, $label, $value);
@@ -292,7 +299,7 @@ trait Filter
         $this->addEnabledFilters($field, $label);
 
         if (blank($value)) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->afterChangedInputTextFilter($field, $label, $value);
@@ -330,7 +337,7 @@ trait Filter
         }
 
         if (blank($value)) {
-            $this->clearFilter($field, emit: false);
+            $this->clearFilter($field);
         }
 
         $this->persistState('filters');
