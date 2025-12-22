@@ -27,7 +27,7 @@ trait Filter
     {
         $this->emitClearFiltersEvent = $emit;
     }
-    
+
     /**
      * @throws Exception
      */
