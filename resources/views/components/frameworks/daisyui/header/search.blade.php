@@ -1,5 +1,5 @@
 @if (data_get($setUp, 'header.searchInput'))
-    <label class="input">
+    <label class="input relative group">
         <x-livewire-powergrid::icons.search class="{{ theme_style($theme, 'searchBox.iconSearch') }}" />
 
         <input
