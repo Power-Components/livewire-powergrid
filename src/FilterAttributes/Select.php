@@ -11,7 +11,7 @@ class Select
         return [
             'selectAttributes' => new ComponentAttributeBag([
                 'wire:model' => 'filters.select.'.$field,
-                'wire:input.live.debounce.600ms' => 'filterSelect(\''.$field.'\', \''.$title.'\')',
+                'wire:input.live.debounce.600ms' => 'filterSelect(\''.$field.'\', \''.addslashes($title).'\')',
             ]),
         ];
     }
