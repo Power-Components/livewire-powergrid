@@ -21,6 +21,108 @@ trait Filter
 
     public bool $showFilters = false;
 
+    protected function applyDefaultFilters(): void
+    {
+        // Only apply defaults if no filters are currently set
+        // This prevents overriding persisted filters
+        if (!empty($this->filters)) {
+            return;
+        }
+
+        $defaultFiltersApplied = false;
+
+        collect($this->filters())
+            ->each(function ($filter) use (&$defaultFiltersApplied) {
+                // Check if filter has a default value set
+                if (!isset($filter->defaultValue) || is_null($filter->defaultValue)) {
+                    return;
+                }
+
+                $field = data_get($filter, 'field');
+                $column = data_get($filter, 'column');
+                $key = data_get($filter, 'key');
+                $defaultValue = $filter->defaultValue;
+
+                // Find the column to get the label
+                $columnData = collect($this->columns)
+                    ->first(fn ($col) =>
+                        data_get($col, 'field') === $column ||
+                        data_get($col, 'dataField') === $column
+                    );
+
+                $label = data_get($columnData, 'title', $field);
+
+                // Apply the default value based on filter type
+                switch ($key) {
+                    case 'select':
+                        data_set($this->filters, "select.{$field}", $defaultValue);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'multi_select':
+                        $values = is_array($defaultValue) ? $defaultValue : [$defaultValue];
+                        data_set($this->filters, "multi_select.{$field}", $values);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'boolean':
+                        data_set($this->filters, "boolean.{$field}", $defaultValue);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'input_text':
+                        if (is_array($defaultValue)) {
+                            // Support for both value and operator
+                            data_set($this->filters, "input_text.{$field}", $defaultValue['value'] ?? '');
+                            if (isset($defaultValue['operator'])) {
+                                data_set($this->filters, "input_text_options.{$field}", $defaultValue['operator']);
+                            }
+                        } else {
+                            data_set($this->filters, "input_text.{$field}", $defaultValue);
+                        }
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'number':
+                        if (is_array($defaultValue)) {
+                            if (isset($defaultValue['start'])) {
+                                data_set($this->filters, "number.{$field}.start", $defaultValue['start']);
+                            }
+                            if (isset($defaultValue['end'])) {
+                                data_set($this->filters, "number.{$field}.end", $defaultValue['end']);
+                            }
+                        } else {
+                            data_set($this->filters, "number.{$field}.start", $defaultValue);
+                        }
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'date':
+                    case 'datetime':
+                        if (is_array($defaultValue) && isset($defaultValue['start']) && isset($defaultValue['end'])) {
+                            $this->filters[$key][$field] = [
+                                'start' => $defaultValue['start'],
+                                'end' => $defaultValue['end'],
+                                'formatted' => $defaultValue['formatted'] ?? '',
+                            ];
+                            $this->addEnabledFilters($field, $label);
+                            $defaultFiltersApplied = true;
+                        }
+                        break;
+                }
+            });
+
+        // Persist the default filters if any were applied
+        if ($defaultFiltersApplied) {
+            $this->persistState('filters');
+        }
+    }
+
     /**
      * @throws Exception
      */
@@ -69,10 +171,6 @@ trait Filter
                     }
 
                     unset($this->filters[$key][$field]);
-
-                    if (empty($this->filters[$key])) {
-                        unset($this->filters[$key]);
-                    }
 
                     $this->enabledFilters = array_filter(
                         $this->enabledFilters,
