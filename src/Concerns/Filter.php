@@ -175,7 +175,7 @@ trait Filter
                     if (empty($this->filters[$key])) {
                         unset($this->filters[$key]);
                     }
-                    
+
                     $this->enabledFilters = array_filter(
                         $this->enabledFilters,
                         fn ($filter) => $filter['field'] !== ($column ?? $field)
