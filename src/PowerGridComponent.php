@@ -104,7 +104,7 @@ class PowerGridComponent extends Component
     public function hasColumnFilters(): bool
     {
         return collect($this->columns)
-           ->filter(fn ($column) => filled(data_get($column, 'filters')))->count() > 0;
+            ->filter(fn ($column) => filled(data_get($column, 'filters')))->count() > 0;
     }
 
     #[Computed]

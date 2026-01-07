@@ -25,7 +25,7 @@ trait Filter
     {
         // Only apply defaults if no filters are currently set
         // This prevents overriding persisted filters
-        if (!empty($this->filters)) {
+        if (! empty($this->filters)) {
             return;
         }
 
@@ -34,7 +34,7 @@ trait Filter
         collect($this->filters())
             ->each(function ($filter) use (&$defaultFiltersApplied) {
                 // Check if filter has a default value set
-                if (!isset($filter->defaultValue) || is_null($filter->defaultValue)) {
+                if (! isset($filter->defaultValue) || is_null($filter->defaultValue)) {
                     return;
                 }
 
@@ -45,8 +45,7 @@ trait Filter
 
                 // Find the column to get the label
                 $columnData = collect($this->columns)
-                    ->first(fn ($col) =>
-                        data_get($col, 'field') === $column ||
+                    ->first(fn ($col) => data_get($col, 'field') === $column ||
                         data_get($col, 'dataField') === $column
                     );
 
