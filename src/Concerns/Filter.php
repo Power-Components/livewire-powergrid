@@ -34,7 +34,7 @@ trait Filter
         collect($this->filters())
             ->each(function ($filter) use (&$defaultFiltersApplied) {
                 // Check if filter has a default value set
-                if (! isset($filter->defaultValue) || is_null($filter->defaultValue)) {
+                if (empty($filter->defaultValue)) {
                     return;
                 }
 
