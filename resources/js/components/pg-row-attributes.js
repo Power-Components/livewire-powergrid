@@ -1,7 +1,6 @@
 export default (params) => ({
     rowId: params.rowId,
     rules: params.rules,
-    defaultClasses: params.defaultClasses,
     attributes: [],
     theme: [],
     init() {
@@ -16,7 +15,7 @@ export default (params) => ({
 
     getAttributes() {
         let attributes = {
-            class: this.defaultClasses
+            class: $el.getAttribute('class') || '',
         };
 
         this.attributes.forEach(attribute => {

@@ -94,7 +94,8 @@
 
                         <tr
                             wire:replace.self
-                            x-data="pgRowAttributes({ rowId: @js($rowId), defaultClasses: @js($class), rules: @js($row->__powergrid_rules) })"
+                            class="{{ $class }}"
+                            x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [

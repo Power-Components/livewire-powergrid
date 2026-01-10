@@ -86,7 +86,6 @@
                 @endif
                 <div @class([
                     'pl-0 w-full sm:w-1/2' => !$inline && $showSelectOptions,
-                    'pt-1' => !$showSelectOptions,
                 ])>
                     <input
                         data-cy="input_text_{{ $tableName }}_{{ $field }}"
