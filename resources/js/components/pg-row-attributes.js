@@ -15,7 +15,7 @@ export default (params) => ({
 
     getAttributes() {
         let attributes = {
-            class: $el.getAttribute('class') || '',
+            class: this.$el.getAttribute('class') || '',
         };
 
         this.attributes.forEach(attribute => {
