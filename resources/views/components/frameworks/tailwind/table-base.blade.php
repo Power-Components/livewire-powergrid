@@ -26,15 +26,10 @@
                         ->filter(fn($column) => filled(data_get($column, 'filters')));
                 @endphp
 
-                @if ($filtersFromColumns->count() > 0)
-                    <x-livewire-powergrid::frameworks.tailwind.filter
-                        :enabled-filters="$enabledFilters"
-                        :tableName="$tableName"
-                        :columns="$columns"
-                        :filtersFromColumns="$filtersFromColumns"
-                        :theme="$theme"
-                    />
-                @endif
+                @includeWhen(
+                    $filtersFromColumns->count() > 0,
+                    'livewire-powergrid::components.frameworks.tailwind.filter'
+                )
             @endif
 
             <div
