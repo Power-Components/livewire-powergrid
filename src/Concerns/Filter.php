@@ -73,7 +73,9 @@ trait Filter
 
                         $currentArray = &$this->filters[$key];
 
-                        Arr::forget($currentArray[$explodeField[0]], $explodeField[1]);
+                        if (isset($currentArray[$explodeField[0]]) && isset($currentArray[$explodeField[0]][$explodeField[1]])) {
+                            unset($currentArray[$explodeField[0]][$explodeField[1]]);
+                        }
 
                         if (isset($currentArray[$explodeField[0]]) && count($currentArray[$explodeField[0]]) === 0) {
                             unset($currentArray[$explodeField[0]]);
