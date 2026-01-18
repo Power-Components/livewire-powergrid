@@ -75,6 +75,7 @@
                     <button
                         wire:click.prevent="exportToCsv(true)"
                         x-on:click="open = false"
+                        x-bind:disabled="countChecked.length === 0"
                         :class="{'cursor-not-allowed' : countChecked.length === 0}"
                         class="px-2 py-1 block text-pg-primary-800 hover:bg-pg-primary-100 hover:text-black-300 dark:text-pg-primary-200 dark:hover:bg-pg-primary-800 rounded"
                     >

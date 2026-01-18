@@ -43,6 +43,7 @@
                         <a
                             class="text-muted small"
                             wire:click.prevent="exportToXLS(true)"
+                            x-bind:disabled="countChecked.length === 0"
                             href="#"
                         >
                             (<span class="text-muted small" x-text="countChecked.length"></span>) @lang('livewire-powergrid::datatable.labels.selected')
