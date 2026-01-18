@@ -66,6 +66,7 @@
                         <button
                             wire:click.prevent="exportToCsv(true)"
                             x-on:click="open = false"
+                            x-bind:disabled="countChecked.length === 0"
                             :class="{ 'cursor-not-allowed': countChecked.length === 0 }"
                             class="btn btn-sm"
                         >
