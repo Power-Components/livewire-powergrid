@@ -76,7 +76,7 @@ class PowerGridComponent extends Component
     {
         $this->checkboxAll = false;
 
-        if (! app()->runningInConsole() && $this->hasLazyEnabled) {
+        if (! app()->runningInConsole() && $this->hasLazyEnabled()) {
             $this->additionalCacheKey = uniqid();
 
             data_set($this->setUp, 'lazy.items', 0);
@@ -91,7 +91,7 @@ class PowerGridComponent extends Component
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
-        if (! app()->runningInConsole() && $this->hasLazyEnabled) {
+        if (! app()->runningInConsole() && $this->hasLazyEnabled()) {
             $this->additionalCacheKey = uniqid();
 
             data_set($this->setUp, 'lazy.items', 0);
