@@ -73,6 +73,9 @@ final class Column implements Wireable
 
     public array $customContent = [];
 
+    /** @var \Closure|null */
+    public ?\Closure $sortCallback = null;
+
     /**
      * Adds a new Column
      */
@@ -171,6 +174,23 @@ final class Column implements Wireable
         $this->enableSort();
 
         $this->sortable = true;
+
+        return $this;
+    }
+
+    /**
+     * Sets a custom sorting callback for this column.
+     * The callback receives the query builder and sort direction.
+     *
+     * @param \Closure $callback function($query, string $direction): void
+     */
+    public function sortUsing(\Closure $callback): Column
+    {
+        $this->enableSort();
+
+        $this->sortable = true;
+
+        $this->sortCallback = $callback;
 
         return $this;
     }
@@ -289,7 +309,12 @@ final class Column implements Wireable
 
     public function toLivewire(): array
     {
-        return (array) $this;
+        $data = (array) $this;
+
+        // Closures cannot be serialized, exclude them
+        unset($data['sortCallback']);
+
+        return $data;
     }
 
     public static function fromLivewire($value)

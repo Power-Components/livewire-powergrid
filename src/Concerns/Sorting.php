@@ -115,4 +115,23 @@ trait Sorting
             data_set($this->setUp, 'lazy.items', 0);
         }
     }
+
+    /**
+     * Get the sort callback for a given field from the columns definition.
+     * Returns null if no custom callback is defined.
+     */
+    public function getSortCallback(string $field): ?\Closure
+    {
+        $columns = $this->columns();
+
+        foreach ($columns as $column) {
+            $columnDataField = data_get($column, 'dataField');
+
+            if ($columnDataField === $field && data_get($column, 'sortCallback') instanceof \Closure) {
+                return $column->sortCallback;
+            }
+        }
+
+        return null;
+    }
 }

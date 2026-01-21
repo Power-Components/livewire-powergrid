@@ -23,19 +23,37 @@ class Sorting
             if ($this->component->multiSort) {
                 $this->applyMultipleSort($query);
             } else {
-                $query->orderBy(
-                    $this->makeSortField($this->component->sortField),
-                    $this->component->sortDirection
-                );
+                $this->applySingleSort($query, $this->component->sortField, $this->component->sortDirection);
             }
         }
 
         return $next($query);
     }
 
+    private function applySingleSort(EloquentBuilder|MorphToMany|QueryBuilder $query, string $sortField, string $direction): void
+    {
+        $sortCallback = $this->component->getSortCallback($sortField);
+
+        if ($sortCallback !== null) {
+            $sortCallback($query, $direction);
+
+            return;
+        }
+
+        $query->orderBy($this->makeSortField($sortField), $direction);
+    }
+
     private function applyMultipleSort(EloquentBuilder|MorphToMany|QueryBuilder $results): void
     {
         foreach ($this->component->sortArray as $sortField => $direction) {
+            $sortCallback = $this->component->getSortCallback($sortField);
+
+            if ($sortCallback !== null) {
+                $sortCallback($results, $direction);
+
+                continue;
+            }
+
             $results->orderBy($this->makeSortField($sortField), $direction);
         }
     }
