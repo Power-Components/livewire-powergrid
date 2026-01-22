@@ -73,13 +73,7 @@ trait Filter
 
                         $currentArray = &$this->filters[$key];
 
-                        if (isset($currentArray[$explodeField[0]]) && isset($currentArray[$explodeField[0]][$explodeField[1]])) {
-                            unset($currentArray[$explodeField[0]][$explodeField[1]]);
-                        }
-
-                        if (isset($currentArray[$explodeField[0]]) && count($currentArray[$explodeField[0]]) === 0) {
-                            unset($currentArray[$explodeField[0]]);
-                        }
+                        $this->removeNestedArrayKey($currentArray, $explodeField[0], $explodeField[1]);
                     }
 
                     unset($this->filters[$key][$field]);
@@ -525,5 +519,16 @@ trait Filter
         }
 
         return $queryString;
+    }
+
+    private function removeNestedArrayKey(array &$array, string $parent, string $child): void
+    {
+        if (isset($array[$parent][$child])) {
+            unset($array[$parent][$child]);
+        }
+
+        if (isset($array[$parent]) && empty($array[$parent])) {
+            unset($array[$parent]);
+        }
     }
 }
