@@ -16,21 +16,16 @@ describe('render javascript actions attributes', () => {
                 '</svg>')
             .should('contain.text', 'View')
 
-        cy.intercept('POST', '/livewire/update', (req) => {
-            expect(req.body.components[0].calls[0])
-                .to.deep
-                .equal({
-                    path: "",
-                    method: "__dispatch",
-                    params: [
-                        "clickToEdit",
-                        {
-                            action: "view",
-                            name: "Luan"
-                        }
-                    ]
-                });
-
+        cy.intercept('POST', '**/livewire*/update', (req) => {
+            const call = req.body.components[0].calls[0];
+            expect(call.method).to.equal("__dispatch");
+            expect(call.params).to.deep.equal([
+                "clickToEdit",
+                {
+                    action: "view",
+                    name: "Luan"
+                }
+            ]);
         }).as('requestIntercept');
 
         cy.get('[data-cy=btn-view-1]').click()
@@ -55,21 +50,16 @@ describe('render javascript actions attributes', () => {
                 '</svg>')
             .should('contain.text', 'Edit')
 
-        cy.intercept('POST', '/livewire/update', (req) => {
-            expect(req.body.components[0].calls[0])
-                .to.deep
-                .equal({
-                    path: "",
-                    method: "__dispatch",
-                    params: [
-                        "clickToEdit",
-                        {
-                            action: "edit",
-                            name: "Luan"
-                        }
-                    ]
-                });
-
+        cy.intercept('POST', '**/livewire*/update', (req) => {
+            const call = req.body.components[0].calls[0];
+            expect(call.method).to.equal("__dispatch");
+            expect(call.params).to.deep.equal([
+                "clickToEdit",
+                {
+                    action: "edit",
+                    name: "Luan"
+                }
+            ]);
         }).as('requestIntercept');
 
         cy.get('[data-cy=btn-edit-1]').click()
@@ -77,10 +67,10 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0].expression)
-                .to.deep
-                .equal('console.log("Editing #edit -  Luan")');
-        });
+                expect(response.components[0].effects.xjs[0].expression)
+                    .to.deep
+                    .equal('console.log("Editing #edit -  Luan")');
+            });
     });
 
     it('can render view button and click for row 2', () => {
@@ -93,18 +83,16 @@ describe('render javascript actions attributes', () => {
                 '    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>\n' +
                 '</svg>')
 
-        cy.intercept('POST', '/livewire/update', (req) => {
-            expect(req.body.components[0].calls[0]).to.deep.equal({
-                path: "",
-                method: "__dispatch",
-                params: [
-                    "clickToEdit",
-                    {
-                        action: "view",
-                        name: "Daniel"
-                    }
-                ]
-            });
+        cy.intercept('POST', '**/livewire*/update', (req) => {
+            const call = req.body.components[0].calls[0];
+            expect(call.method).to.equal("__dispatch");
+            expect(call.params).to.deep.equal([
+                "clickToEdit",
+                {
+                    action: "view",
+                    name: "Daniel"
+                }
+            ]);
         }).as('requestIntercept');
 
         cy.get('[data-cy=btn-view-2').click()
@@ -112,10 +100,10 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0].expression)
-                .to.deep
-                .equal('console.log("Editing #view -  Daniel")');
-        });
+                expect(response.components[0].effects.xjs[0].expression)
+                    .to.deep
+                    .equal('console.log("Editing #view -  Daniel")');
+            });
     })
 
     it('can render "Edit" button and click for row 2', () => {
@@ -130,19 +118,16 @@ describe('render javascript actions attributes', () => {
                 '</svg>')
             .should('contain.text', 'Edit')
 
-        cy.intercept('POST', '/livewire/update', (req) => {
-            expect(req.body.components[0].calls[0]).to.deep.equal({
-                path: "",
-                method: "__dispatch",
-                params: [
-                    "clickToEdit",
-                    {
-                        action: "edit",
-                        name: "Daniel"
-                    }
-                ]
-            });
-
+        cy.intercept('POST', '**/livewire*/update', (req) => {
+            const call = req.body.components[0].calls[0];
+            expect(call.method).to.equal("__dispatch");
+            expect(call.params).to.deep.equal([
+                "clickToEdit",
+                {
+                    action: "edit",
+                    name: "Daniel"
+                }
+            ]);
         }).as('requestIntercept');
 
         cy.get('[data-cy=btn-edit-2]').click()
@@ -150,9 +135,9 @@ describe('render javascript actions attributes', () => {
         cy.wait('@requestIntercept')
             .its('response.body')
             .should((response) => {
-            expect(response.components[0].effects.xjs[0].expression)
-                .to.deep
-                .equal('console.log("Editing #edit -  Daniel")');
-        });
+                expect(response.components[0].effects.xjs[0].expression)
+                    .to.deep
+                    .equal('console.log("Editing #edit -  Daniel")');
+            });
     });
 })

@@ -67,9 +67,9 @@ class LazyChild extends Component
         return app($parentComponent)->shouldShowToggleable($column, $row);
     }
 
-    private function getComponentAlias(): string
+    private function getComponentAlias(): ?string
     {
-        if (app()->has(ComponentRegistry::class)) {
+        if (class_exists(\Livewire\Mechanisms\ComponentRegistry::class)) {
 
             return app(ComponentRegistry::class)->getClass($this->parentName);
         }

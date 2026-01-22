@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter' => 'Filter',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'Hapus semua',
     ],
     'labels' => [
         'action' => 'Aksi',
@@ -66,10 +66,10 @@ return [
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'Apakah anda yakin ingin melakukan tindakan ini?',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "Apakah anda yakin ingin melakukan tindakan ini? \n\n Ketik :confirmValue untuk mengonfirmasi.",
         ],
     ],
 ];
