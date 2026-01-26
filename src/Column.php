@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Closure;
 use Illuminate\Support\Traits\Macroable;
 use Livewire\Wireable;
 
@@ -41,6 +42,8 @@ final class Column implements Wireable
 
     public bool $sortable = false;
 
+    public ?Closure $sortCallback = null;
+
     public bool $index = false;
 
     public array $properties = [];
@@ -72,9 +75,6 @@ final class Column implements Wireable
     public mixed $filters = null;
 
     public array $customContent = [];
-
-    /** @var \Closure|null */
-    public ?\Closure $sortCallback = null;
 
     /**
      * Adds a new Column
@@ -181,10 +181,8 @@ final class Column implements Wireable
     /**
      * Sets a custom sorting callback for this column.
      * The callback receives the query builder and sort direction.
-     *
-     * @param \Closure $callback function($query, string $direction): void
      */
-    public function sortUsing(\Closure $callback): Column
+    public function sortUsing(Closure $callback): Column
     {
         $this->enableSort();
 

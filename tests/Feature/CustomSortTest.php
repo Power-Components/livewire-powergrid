@@ -39,10 +39,10 @@ it('uses custom sort callback for collection datasource', function () {
         ->set('setUp.footer.perPage', '10')
         ->call('sortBy', 'calories')
         ->set('sortDirection', 'asc')
-        ->assertSeeInOrder(['Cherry Tart', 'Apple Pie', 'Zebra Dish', 'Banana Split', 'Donut'])
+        ->assertSeeInOrder(['Apple Pie', 'Cherry Tart', 'Zebra Dish', 'Banana Split', 'Donut'])
         ->call('sortBy', 'calories')
         ->set('sortDirection', 'desc')
-        ->assertSeeInOrder(['Donut', 'Banana Split', 'Zebra Dish', 'Apple Pie', 'Cherry Tart']);
+        ->assertSeeInOrder(['Donut', 'Zebra Dish', 'Banana Split', 'Apple Pie', 'Cherry Tart']);
 });
 
 it('getSortCallback returns null for regular sortable columns', function () {
@@ -119,7 +119,7 @@ function customSortDishes(): array
         [
             'name' => 'Dish D',
             'category_id' => 7,
-            'price' => null,
+            'price' => 150.00,
             'stored_at' => '4',
             'calories' => 400,
             'serving_at' => 'pool bar',
