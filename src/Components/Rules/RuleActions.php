@@ -6,6 +6,7 @@ use Illuminate\Support\Traits\Macroable;
 
 /**
  * @method static disable()
+ * @method static dispatch(string $event, array $params)
  */
 class RuleActions extends BaseRule
 {
