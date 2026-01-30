@@ -51,10 +51,10 @@
             @if (!$inline)
                 <label class="form-label fw-semibold mb-1">{{ $title }}</label>
             @endif
-            <div class="d-flex flex-row gap-2 align-items-center">
+                <div @class(["d-flex", "flex-row gap-2 align-items-center" => !$inline, "flex-column align-items-start gap-1" => $inline])>
                 @if ($showSelectOptions)
                     <select
-                        class="form-select form-select-sm w-auto"
+                        @class(["form-select form-select-sm", "w-auto" => !$inline, "w-full" => $inline])
                         style="{{ data_get($column, 'headerStyle') }}"
                         {{ $defaultAttributes['selectAttributes'] }}
                     >
