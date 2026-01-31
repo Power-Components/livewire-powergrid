@@ -1,7 +1,3 @@
-
-Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in phar:///Users/mlempereur/Labo/livewire-powergrid/vendor/laravel/pint/builds/pint/vendor/laravel-zero/foundation/config/database.php on line 61
-
-Deprecated: Constant PDO::MYSQL_ATTR_SSL_CA is deprecated since 8.5, use Pdo\Mysql::ATTR_SSL_CA instead in phar:///Users/mlempereur/Labo/livewire-powergrid/vendor/laravel/pint/builds/pint/vendor/laravel-zero/foundation/config/database.php on line 81
 <?php
 
 namespace PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5;
