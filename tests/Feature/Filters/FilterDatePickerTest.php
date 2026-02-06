@@ -155,3 +155,63 @@ dataset('filterComponent', [
     'tailwind -> id' => [$component::class, (object) ['theme' => Tailwind::class]],
     'bootstrap -> id' => [$component::class, (object) ['theme' => Bootstrap5::class]],
 ]);
+
+$defaultDatePicker = new class() extends DishesTable
+{
+    public string $tableName = 'filter-default-date-picker-test';
+
+    public function filters(): array
+    {
+        return [
+            Filter::datepicker('produced_at')
+                ->default([
+                    'start' => 'Fri Jan 01 2021 00:00:00 GMT+0000',
+                    'end' => 'Tue Feb 02 2021 23:59:59 GMT+0000',
+                    'formatted' => '2021-01-01 to 2021-02-02',
+                ]),
+        ];
+    }
+};
+
+it('applies default value to datepicker filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'date' => [
+            'produced_at' => [
+                'start' => 'Fri Jan 01 2021 00:00:00 GMT+0000',
+                'end' => 'Tue Feb 02 2021 23:59:59 GMT+0000',
+                'formatted' => '2021-01-01 to 2021-02-02',
+            ],
+        ],
+    ]);
+
+    // Should show items produced within the date range
+    $component->assertSee('Peixada');
+})->with([
+    'tailwind' => [$defaultDatePicker::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [$defaultDatePicker::class, (object) ['theme' => Bootstrap5::class]],
+]);
+
+it('can clear default datepicker filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'date' => [
+            'produced_at' => [
+                'start' => 'Fri Jan 01 2021 00:00:00 GMT+0000',
+                'end' => 'Tue Feb 02 2021 23:59:59 GMT+0000',
+                'formatted' => '2021-01-01 to 2021-02-02',
+            ],
+        ],
+    ]);
+
+    $component->call('clearFilter', 'produced_at');
+
+    expect($component->filters)->toMatchArray([]);
+})->with([
+    'tailwind' => [$defaultDatePicker::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [$defaultDatePicker::class, (object) ['theme' => Bootstrap5::class]],
+]);

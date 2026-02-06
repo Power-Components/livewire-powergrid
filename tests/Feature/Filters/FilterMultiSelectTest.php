@@ -201,3 +201,95 @@ dataset('filter_multi_select_query_builder', [
     'bootstrap query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
     'daisyui query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
 ]);
+
+$defaultMultiSelect = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::multiSelect('category_name', 'category_id')
+                ->dataSource(Category::all())
+                ->optionValue('id')
+                ->optionLabel('name')
+                ->default([1]),
+        ];
+    }
+};
+
+$defaultMultiSelectMultiple = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::multiSelect('category_name', 'category_id')
+                ->dataSource(Category::all())
+                ->optionValue('id')
+                ->optionLabel('name')
+                ->default([3, 7]),
+        ];
+    }
+};
+
+it('applies default value to multi select filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'multi_select' => [
+            'category_id' => [1],
+        ],
+    ]);
+
+    // Should show items from category 1 (Carnes) and not items from other categories
+    $component->assertSee('Peixada da chef Nábia')
+        ->assertDontSee('Pastel de Nata')
+        ->assertDontSee('Francesinha vegana');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
+        'bootstrap' => [$defaultMultiSelect::class, (object) ['theme' => Bootstrap5::class]],
+        'daisyui' => [$defaultMultiSelect::class, (object) ['theme' => DaisyUI::class]],
+    ]);
+
+it('applies default value with multiple selections to multi select filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'multi_select' => [
+            'category_id' => [3, 7],
+        ],
+    ]);
+
+    // Should show items from categories 3 and 7
+    $component->assertSee('борщ')
+        ->assertDontSee('Peixada da chef Nábia');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultMultiSelectMultiple::class, (object) ['theme' => Tailwind::class]],
+        'bootstrap' => [$defaultMultiSelectMultiple::class, (object) ['theme' => Bootstrap5::class]],
+        'daisyui' => [$defaultMultiSelectMultiple::class, (object) ['theme' => DaisyUI::class]],
+    ]);
+
+it('can clear default multi select filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'multi_select' => [
+            'category_id' => [1],
+        ],
+    ]);
+
+    $component->call('clearFilter', 'category_id');
+
+    expect($component->filters)->toMatchArray([]);
+
+    // Should now show all items
+    $component->assertSee('Pastel de Nata');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
+        'bootstrap' => [$defaultMultiSelect::class, (object) ['theme' => Bootstrap5::class]],
+        'daisyui' => [$defaultMultiSelect::class, (object) ['theme' => DaisyUI::class]],
+    ]);

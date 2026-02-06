@@ -315,3 +315,122 @@ dataset('filter_boolean_themes_iterable', [
     'bootstrap' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
     'daisyui' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
 ]);
+
+$defaultBooleanTrue = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::boolean('in_stock')
+                ->label('yes', 'no')
+                ->default('true'),
+        ];
+    }
+};
+
+$defaultBooleanFalse = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::boolean('in_stock')
+                ->label('yes', 'no')
+                ->default('false'),
+        ];
+    }
+};
+
+it('applies default value true to boolean filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
+
+    // Should show items that are in stock and not out of stock items
+    $component->assertSee('Pastel de Nata')
+        ->assertDontSee('Barco-Sushi da Sueli');
+})->group('filters', 'filterBoolean')
+    ->with([
+        'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);
+
+it('applies default value false to boolean filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'false',
+        ],
+    ]);
+
+    // Should show items that are out of stock and not in stock items
+    $component->assertSee('Barco-Sushi da Sueli')
+        ->assertDontSee('Pastel de Nata');
+})->group('filters', 'filterBoolean')
+    ->with([
+        'tailwind' => [$defaultBooleanFalse::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultBooleanFalse::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultBooleanFalse::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);
+
+it('can clear default boolean filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'true',
+        ],
+    ]);
+
+    $component->call('clearFilter', 'in_stock');
+
+    expect($component->filters)->toMatchArray([]);
+
+    // Should now show all items including out of stock
+    $component->assertSee('Barco-Sushi da Sueli');
+})->group('filters', 'filterBoolean')
+    ->with([
+        'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultBooleanTrue::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);
+
+$defaultBooleanAll = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::boolean('in_stock')
+                ->label('yes', 'no')
+                ->default('all'),
+        ];
+    }
+};
+
+it('applies default value all to boolean filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'boolean' => [
+            'in_stock' => 'all',
+        ],
+    ]);
+
+    // Should show all items - both in stock and out of stock
+    $component->assertSee('Pastel de Nata')
+        ->assertSee('Barco-Sushi da Sueli');
+})->group('filters', 'filterBoolean')
+    ->with([
+        'tailwind' => [$defaultBooleanAll::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultBooleanAll::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultBooleanAll::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);

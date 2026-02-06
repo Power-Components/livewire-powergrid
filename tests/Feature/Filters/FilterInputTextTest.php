@@ -162,3 +162,93 @@ it('properly filters by inputTextOptions is_empty', function (string $component,
     }
 })->group('filters')
     ->with('filterComponent');
+
+$defaultInputText = new class() extends \PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            \PowerComponents\LivewirePowerGrid\Facades\Filter::inputText('name')
+                ->operators()
+                ->default('Pastel'),
+        ];
+    }
+};
+
+$defaultInputTextWithOperator = new class() extends \PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            \PowerComponents\LivewirePowerGrid\Facades\Filter::inputText('name')
+                ->operators()
+                ->default(['value' => 'Pastel', 'operator' => 'contains']),
+        ];
+    }
+};
+
+it('applies default value to input text filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'input_text' => [
+            'name' => 'Pastel',
+        ],
+    ]);
+
+    // Should show items matching "Pastel"
+    $component->assertSee('Pastel de Nata')
+        ->assertDontSee('Barco-Sushi da Sueli');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);
+
+it('applies default value with operator to input text filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'input_text' => [
+            'name' => 'Pastel',
+        ],
+        'input_text_options' => [
+            'name' => 'contains',
+        ],
+    ]);
+
+    // Should show items containing "Pastel"
+    $component->assertSee('Pastel de Nata')
+        ->assertDontSee('Barco-Sushi da Sueli');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultInputTextWithOperator::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultInputTextWithOperator::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultInputTextWithOperator::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);
+
+it('can clear default input text filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'input_text' => [
+            'name' => 'Pastel',
+        ],
+    ]);
+
+    $component->call('clearFilter', 'name');
+
+    expect($component->filters)->toMatchArray([]);
+
+    // Should now show all items
+    $component->assertSee('Barco-Sushi da Sueli');
+})->group('filters')
+    ->with([
+        'tailwind' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+        'bootstrap' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+        'daisyui' => [$defaultInputText::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    ]);

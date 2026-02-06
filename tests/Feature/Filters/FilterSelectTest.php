@@ -184,3 +184,58 @@ function filterSelect(string $dataField, ?string $value): array
         ],
     ];
 }
+
+$defaultSelect = new class() extends DishesTable
+{
+    public function filters(): array
+    {
+        return [
+            Filter::select('category_name', 'category_id')
+                ->dataSource(Category::all())
+                ->optionValue('category_id')
+                ->optionLabel('category_name')
+                ->default(1),
+        ];
+    }
+};
+
+it('applies default value to select filter on initial load', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'select' => [
+            'category_id' => 1,
+        ],
+    ]);
+
+    // Should show items from category 1 (Carnes) and not items from other categories
+    $component->assertSee('Peixada da chef Nábia')
+        ->assertDontSee('Pastel de Nata');
+})->with([
+    'tailwind' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+]);
+
+it('can clear default select filter', function (string $component, object $params) {
+    $component = livewire($component)
+        ->call('setTestThemeClass', $params->theme);
+
+    expect($component->filters)->toMatchArray([
+        'select' => [
+            'category_id' => 1,
+        ],
+    ]);
+
+    $component->call('clearFilter', 'category_id');
+
+    expect($component->filters)->toMatchArray([]);
+
+    // Should now show all items
+    $component->assertSee('Pastel de Nata');
+})->with([
+    'tailwind' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
+    'bootstrap' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
+    'daisyui' => [$defaultSelect::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+]);
