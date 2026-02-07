@@ -17,19 +17,52 @@ final class Sorting
         }
 
         if ($this->component->multiSort) {
-            $sortArray = [];
-
-            foreach ($this->component->sortArray as $sortField => $sortDirection) {
-                $sortArray[] = [$sortField, $sortDirection];
-            }
-
-            return $next($collection->sortBy($sortArray));
+            return $next($this->applyMultipleSort($collection));
         }
 
-        $isDescending = $this->component->sortDirection === 'desc';
+        return $next($this->applySingleSort($collection, $this->component->sortField, $this->component->sortDirection));
+    }
 
-        $sorted = $collection->sortBy($this->component->sortField, SORT_REGULAR, $isDescending);
+    private function applySingleSort(Collection $collection, string $sortField, string $direction): Collection
+    {
+        $sortCallback = $this->component->getSortCallback($sortField);
 
-        return $next($sorted);
+        if ($sortCallback !== null) {
+            return $sortCallback($collection, $direction);
+        }
+
+        $isDescending = $direction === 'desc';
+
+        return $collection->sortBy($sortField, SORT_REGULAR, $isDescending);
+    }
+
+    private function applyMultipleSort(Collection $collection): Collection
+    {
+        $sortArray = [];
+        $callbackFields = [];
+
+        foreach ($this->component->sortArray as $sortField => $sortDirection) {
+            $sortCallback = $this->component->getSortCallback($sortField);
+
+            if ($sortCallback !== null) {
+                $callbackFields[] = ['field' => $sortField, 'direction' => $sortDirection, 'callback' => $sortCallback];
+
+                continue;
+            }
+
+            $sortArray[] = [$sortField, $sortDirection];
+        }
+
+        // Apply standard sorting first
+        if (filled($sortArray)) {
+            $collection = $collection->sortBy($sortArray);
+        }
+
+        // Apply callback sorting
+        foreach ($callbackFields as $callbackField) {
+            $collection = $callbackField['callback']($collection, $callbackField['direction']);
+        }
+
+        return $collection;
     }
 }
