@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use Closure;
 use Illuminate\Support\Traits\Macroable;
 use Livewire\Wireable;
 
@@ -40,6 +41,8 @@ final class Column implements Wireable
     public ?bool $visibleInExport = null;
 
     public bool $sortable = false;
+
+    public ?Closure $sortCallback = null;
 
     public bool $index = false;
 
@@ -176,6 +179,21 @@ final class Column implements Wireable
     }
 
     /**
+     * Sets a custom sorting callback for this column.
+     * The callback receives the query builder and sort direction.
+     */
+    public function sortUsing(Closure $callback): Column
+    {
+        $this->enableSort();
+
+        $this->sortable = true;
+
+        $this->sortCallback = $callback;
+
+        return $this;
+    }
+
+    /**
      * Field in the database
      */
     public function field(string $field, string $dataField = ''): Column
@@ -289,7 +307,12 @@ final class Column implements Wireable
 
     public function toLivewire(): array
     {
-        return (array) $this;
+        $data = (array) $this;
+
+        // Closures cannot be serialized, exclude them
+        unset($data['sortCallback']);
+
+        return $data;
     }
 
     public static function fromLivewire($value)
