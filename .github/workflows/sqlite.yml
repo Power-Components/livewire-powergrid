@@ -62,7 +62,6 @@ jobs:
           composer install
 
       - name: Install openspout/openspout v4
-        if: matrix.php == '8.3'
         run: composer require openspout/openspout ^4.23
 
       - name: SQLite
