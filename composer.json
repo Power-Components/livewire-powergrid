@@ -29,7 +29,7 @@
     "larastan/larastan": "^2.0|^3.0",
     "laradumps/laradumps": "^4.6",
     "laravel/scout": "^10.11.3",
-    "openspout/openspout": "^4.24.5",
+    "openspout/openspout": "^4.24.5|^5.0",
     "composer/composer": "^2.8"
   },
   "suggest": {
