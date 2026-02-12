@@ -3,7 +3,7 @@
 return [
     'buttons' => [
         'filter' => 'Filtrar',
-        'clear_all_filters' => 'Clear all',
+        'clear_all_filters' => 'Limpiar todo',
     ],
     'labels' => [
         'action' => 'Acción',
@@ -12,7 +12,7 @@ return [
         'no_data' => 'No se encontraron registros.',
         'all' => 'Todos',
         'selected' => 'Seleccionado',
-        'filtered' => 'Filtrada',
+        'filtered' => 'Filtrado',
     ],
     'placeholders' => [
         'search' => 'Buscar',
@@ -43,10 +43,10 @@ return [
         'contains_not' => 'No contiene',
         'starts_with' => 'Comienza por',
         'ends_with' => 'Termina en',
-        'is_null' => 'És nulo',
-        'is_not_null' => 'No és nulo',
-        'is_blank' => 'És blanco',
-        'is_not_blank' => 'No és blanco',
+        'is_null' => 'Es nulo',
+        'is_not_null' => 'No es nulo',
+        'is_blank' => 'Es blanco',
+        'is_not_blank' => 'No es blanco',
         'is_empty' => 'Esta relleno',
         'is_not_empty' => 'No está relleno',
     ],
@@ -55,21 +55,21 @@ return [
         'completed' => '¡Exportación completada! Tus archivos están listos para descargar',
     ],
     'soft_deletes' => [
-        'message_with_trashed' => 'Displaying all records, including deleted ones.',
-        'message_only_trashed' => 'Displaying only deleted records.',
-        'without_trashed' => 'Without deleted',
-        'with_trashed' => 'With deleted',
-        'only_trashed' => 'Only deleted',
+        'message_with_trashed' => 'Mostrando todos los registros, incluidos los eliminados.',
+        'message_only_trashed' => 'Mostrando solo los registros eliminados.',
+        'without_trashed' => 'Sin eliminados',
+        'with_trashed' => 'Con eliminados',
+        'only_trashed' => 'Solo eliminados',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'La ordenación múltiple está activa',
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'La ordenación múltiple está activa',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "¿Estás seguro de que deseas realizar esta acción? \n\n Escribe :confirmValue para confirmar.",
         ],
     ],
 ];
