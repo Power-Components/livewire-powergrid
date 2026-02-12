@@ -21,6 +21,8 @@ class FilterBase implements Wireable
 
     public array $filterRelation = [];
 
+    public mixed $defaultValue = null;
+
     public function __construct(
         public string $column,
         public ?string $field = null,
@@ -66,6 +68,13 @@ class FilterBase implements Wireable
     public function baseClass(string $attrClass): self
     {
         $this->baseClass = $attrClass;
+
+        return $this;
+    }
+
+    public function default(mixed $value): self
+    {
+        $this->defaultValue = $value;
 
         return $this;
     }

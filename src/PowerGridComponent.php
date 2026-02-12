@@ -64,6 +64,8 @@ class PowerGridComponent extends Component
 
         $this->restoreState();
 
+        $this->applyDefaultFilters();
+
         $this->resolveSummarizeColumn();
     }
 

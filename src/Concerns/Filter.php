@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\{Arr, Carbon, Collection, Str};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
 
 trait Filter
 {
@@ -26,6 +27,93 @@ trait Filter
     public function emitClearFiltersEvent(bool $emit): void
     {
         $this->emitClearFiltersEvent = $emit;
+    }
+
+    protected function applyDefaultFilters(): void
+    {
+        $columnsByField = collect($this->columns)
+            ->mapWithKeys(fn (Column $column) => [
+                filled($column->field) ?? filled($column->dataField) => $column,
+            ]);
+
+        collect($this->filters())
+            ->filter(fn ($filter) => filled($filter->defaultValue))
+            ->each(function (FilterBase $filter) use (&$defaultFiltersApplied, $columnsByField) {
+                $field = $filter->field;
+                $column = $filter->column;
+                $key = $filter->key;
+                $defaultValue = $filter->defaultValue;
+
+                $columnData = $columnsByField->get($column);
+                $label = data_get($columnData, 'title', $field);
+
+                switch ($key) {
+                    case 'select':
+                        data_set($this->filters, "select.{$field}", $defaultValue);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'multi_select':
+                        $values = is_array($defaultValue) ? $defaultValue : [$defaultValue];
+                        data_set($this->filters, "multi_select.{$field}", $values);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'boolean':
+                        data_set($this->filters, "boolean.{$field}", $defaultValue);
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'input_text':
+                        if (is_array($defaultValue)) {
+                            // Support for both value and operator
+                            data_set($this->filters, "input_text.{$field}", $defaultValue['value'] ?? '');
+                            if (isset($defaultValue['operator'])) {
+                                data_set($this->filters, "input_text_options.{$field}", $defaultValue['operator']);
+                            }
+                        } else {
+                            data_set($this->filters, "input_text.{$field}", $defaultValue);
+                        }
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'number':
+                        if (is_array($defaultValue)) {
+                            if (isset($defaultValue['start'])) {
+                                data_set($this->filters, "number.{$field}.start", $defaultValue['start']);
+                            }
+                            if (isset($defaultValue['end'])) {
+                                data_set($this->filters, "number.{$field}.end", $defaultValue['end']);
+                            }
+                        } else {
+                            data_set($this->filters, "number.{$field}.start", $defaultValue);
+                        }
+                        $this->addEnabledFilters($field, $label);
+                        $defaultFiltersApplied = true;
+                        break;
+
+                    case 'date':
+                    case 'datetime':
+                        if (is_array($defaultValue) && isset($defaultValue['start']) && isset($defaultValue['end'])) {
+                            $this->filters[$key][$field] = [
+                                'start' => $defaultValue['start'],
+                                'end' => $defaultValue['end'],
+                                'formatted' => $defaultValue['formatted'] ?? '',
+                            ];
+                            $this->addEnabledFilters($field, $label);
+                            $defaultFiltersApplied = true;
+                        }
+                        break;
+                }
+            });
+
+        if ($defaultFiltersApplied) {
+            $this->persistState('filters');
+        }
     }
 
     /**
