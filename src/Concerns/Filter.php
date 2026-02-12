@@ -33,7 +33,7 @@ trait Filter
     {
         $columnsByField = collect($this->columns)
             ->mapWithKeys(fn (Column $column) => [
-                filled($column->field) ?? filled($column->dataField) => $column,
+                filled($column->field) ? $column->field : $column->dataField => $column,
             ]);
 
         collect($this->filters())
@@ -41,7 +41,9 @@ trait Filter
             ->each(function (FilterBase $filter) use (&$defaultFiltersApplied, $columnsByField) {
                 $field = $filter->field;
                 $column = $filter->column;
-                $key = $filter->key;
+
+                /** @var string $key */
+                $key = data_get($filter, 'key');
                 $defaultValue = $filter->defaultValue;
 
                 $columnData = $columnsByField->get($column);
