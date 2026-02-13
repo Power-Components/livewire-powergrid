@@ -143,6 +143,8 @@ class PowerGridComponent extends Component
         /** @var array $results */
         $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
+        $this->dispatchActionsToJS($results['actionsByRow']);
+
         if ($this->measurePerformance) {
             app(Dispatcher::class)->dispatch(
                 new PowerGridPerformanceData(
