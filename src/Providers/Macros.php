@@ -15,7 +15,7 @@ class Macros
 {
     public static function columns(): void
     {
-        Column::macro('withSum', function (string $label, bool $header, bool $footer) {
+        Column::macro('withSum', function (string $label, bool $header, bool $footer): Column {
             data_set($this->properties, 'summarize.sum.label', $label);
             data_set($this->properties, 'summarize.sum.header', $header);
             data_set($this->properties, 'summarize.sum.footer', $footer);
@@ -23,7 +23,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withCount', function (string $label, bool $header, bool $footer) {
+        Column::macro('withCount', function (string $label, bool $header, bool $footer): Column {
             data_set($this->properties, 'summarize.count.label', $label);
             data_set($this->properties, 'summarize.count.header', $header);
             data_set($this->properties, 'summarize.count.footer', $footer);
@@ -31,7 +31,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withAvg', function (string $label, bool $header, bool $footer) {
+        Column::macro('withAvg', function (string $label, bool $header, bool $footer): Column {
             data_set($this->properties, 'summarize.avg.label', $label);
             data_set($this->properties, 'summarize.avg.header', $header);
             data_set($this->properties, 'summarize.avg.footer', $footer);
@@ -39,7 +39,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMin', function (string $label, bool $header, bool $footer) {
+        Column::macro('withMin', function (string $label, bool $header, bool $footer): Column {
             data_set($this->properties, 'summarize.min.label', $label);
             data_set($this->properties, 'summarize.min.header', $header);
             data_set($this->properties, 'summarize.min.footer', $footer);
@@ -47,7 +47,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMax', function (string $label, bool $header, bool $footer) {
+        Column::macro('withMax', function (string $label, bool $header, bool $footer): Column {
             data_set($this->properties, 'summarize.max.label', $label);
             data_set($this->properties, 'summarize.max.header', $header);
             data_set($this->properties, 'summarize.max.footer', $footer);
@@ -82,7 +82,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('searchableJson', function (string $tableName) {
+        Column::macro('searchableJson', function (string $tableName): Column {
             $this->rawQueries[] = [
                 'method' => 'orWhereRaw',
                 'sql' => $tableName ? "LOWER(`$tableName`.`$this->dataField`) like ?" : "LOWER(`$this->dataField`) like ?",
@@ -99,7 +99,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null) {
+        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null): Column {
             $this->enableSort();
 
             if ($when) {
@@ -118,7 +118,7 @@ class Macros
 
     public static function actions(): void
     {
-        Button::macro('class', function (string $classes) {
+        Button::macro('class', function (string $classes): Button {
             $this->attributes([
                 'class' => $classes,
             ]);
@@ -126,7 +126,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('call', function (string $method, array $params) {
+        Button::macro('call', function (string $method, array $params): Button {
             $this->attributes([
                 'wire:click' => "\$call('{$method}', ".Js::from($params).')',
             ]);
@@ -134,7 +134,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatch', function (string $event, array $params) {
+        Button::macro('dispatch', function (string $event, array $params): Button {
             $this->attributes([
                 'wire:click' => "\$dispatch('{$event}', ".Js::from($params).')',
             ]);
@@ -142,7 +142,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatchTo', function (string $component, string $event, array $params) {
+        Button::macro('dispatchTo', function (string $component, string $event, array $params): Button {
             $this->attributes([
                 'wire:click' => "\$dispatchTo('{$component}', '{$event}', ".Js::from($params).')',
             ]);
@@ -150,7 +150,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatchSelf', function (string $event, array $params) {
+        Button::macro('dispatchSelf', function (string $event, array $params): Button {
             $this->attributes([
                 'wire:click' => "\$dispatchSelf('{$event}', ".Js::from($params).')',
             ]);
@@ -158,7 +158,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('parent', function (string $method, array $params) {
+        Button::macro('parent', function (string $method, array $params): Button {
             $this->attributes([
                 'wire:click' => "\$parent.{$method}(".Js::from($params).')',
             ]);
@@ -166,7 +166,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('openModal', function (string $component, array $params) {
+        Button::macro('openModal', function (string $component, array $params): Button {
             $encoded = Js::from([
                 'component' => $component,
                 'arguments' => $params,
@@ -179,7 +179,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('disable', function (bool $disable = true) {
+        Button::macro('disable', function (bool $disable = true): Button {
             if ($disable) {
                 $this->attributes([
                     'disabled' => 'disabled',
@@ -189,7 +189,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('tooltip', function (string $value) {
+        Button::macro('tooltip', function (string $value): Button {
             $this->attributes([
                 'title' => $value,
             ]);
@@ -197,7 +197,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('route', function (string $route, array $params, string $target = '_self') {
+        Button::macro('route', function (string $route, array $params, string $target = '_self'): Button {
             $this->tag('a');
 
             $this->attributes([
@@ -208,7 +208,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (?string $id = null) {
+        Button::macro('id', function (?string $id = null): Button {
             $this->attributes([
                 'id' => $id,
             ]);
@@ -216,13 +216,13 @@ class Macros
             return $this;
         });
 
-        Button::macro('can', function (bool|\Closure $closure) {
+        Button::macro('can', function (bool|\Closure $closure): Button {
             $this->can = $closure;
 
             return $this;
         });
 
-        Button::macro('confirm', function (?string $message = null) {
+        Button::macro('confirm', function (?string $message = null): Button {
             $this->attributes([
                 'wire:confirm' => $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm.message'),
             ]);
@@ -230,7 +230,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm') {
+        Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm'): Button {
             $message = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
             $confirmValue = trim($confirmValue);
 
@@ -241,7 +241,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('toggleDetail', function (int|string $rowId) {
+        Button::macro('toggleDetail', function (int|string $rowId): Button {
             $this->attributes([
                 'wire:click' => "toggleDetail('$rowId')",
             ]);
