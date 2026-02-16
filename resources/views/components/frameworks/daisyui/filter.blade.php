@@ -18,7 +18,7 @@
         x-transition:leave="transform duration-100"
         x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
-        class="pg-filter-container"
+        class="pg-filter-container py-2"
     >
         @php
             $customConfig = [];
