@@ -48,7 +48,7 @@
         />
     @else
         <div
-            @class([theme_style($theme, 'filterInputText.base'), 'space-y-1' => !$inline])
+            @class([theme_style($theme, 'filterInputText.base')])
         >
             @if (!$inline)
                 <label class="label">
