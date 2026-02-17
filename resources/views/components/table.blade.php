@@ -42,7 +42,7 @@
                         @endphp
 
                         <tbody
-                            wire:key="tbody-{{ substr($rowId, 0, 6) }}"
+                            wire:key="tbody-{{ $rowId }}"
                             class="{{ $class }}"
                         >
                             @include('livewire-powergrid::components.row', [
