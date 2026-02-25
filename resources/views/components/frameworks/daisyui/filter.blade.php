@@ -22,9 +22,18 @@
     >
         @php
             $customConfig = [];
+
+            $componentFilters = collect($this->filters());
+            $filterOrderMap = $componentFilters->pluck('field')->flip();
+
+            // Sort filters based on the order they appear in filters() method
+            $sortedFilters = $filtersFromColumns->sortBy(function ($column) use ($filterOrderMap) {
+                $fieldName = data_get($column, 'filters.field');
+                return $filterOrderMap->get($fieldName, 999); // 999 for fields not found in filters()
+            });
         @endphp
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-3">
-            @foreach ($filtersFromColumns as $column)
+            @foreach ($sortedFilters  as $column)
                 @php
                     $filter = data_get($column, 'filters');
                     $title = data_get($column, 'title');
