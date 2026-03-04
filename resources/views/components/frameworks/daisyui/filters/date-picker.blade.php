@@ -35,7 +35,7 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        @class([theme_style($theme, 'filterDatePicker.base'), 'space-y-1' => !$inline])
+        @class([theme_style($theme, 'filterDatePicker.base')])
     >
         @if (!$inline)
             <label class="label">
