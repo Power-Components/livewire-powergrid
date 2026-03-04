@@ -56,7 +56,6 @@ class ExportJob implements ShouldQueue
             return $column;
         }, $this->componentTable->columns());
 
-        /** @phpstan-ignore-next-line  */
         (new $this->exportableClass())
             ->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
