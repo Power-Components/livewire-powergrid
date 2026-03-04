@@ -44,6 +44,8 @@
                         <tbody
                             wire:key="tbody-{{ $rowId }}"
                             class="{{ $class }}"
+                            x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
+                            x-bind="getAttributes"
                         >
                             @include('livewire-powergrid::components.row', [
                                 'rowIndex' => $loop->index + 1,
