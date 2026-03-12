@@ -43,7 +43,11 @@ class SearchHandler
                         return;
                     }
 
-                    if (isset($columnList[$field]) || ! $hasRelationSearch) {
+
+                    if (str_contains($field, '.') || data_get($column, 'dataField')) {
+                        $subQuery->orWhere("{$table}.{$field}", Sql::like($subQuery), "%{$search}%");
+                    }
+                    else if (isset($columnList[$field]) || ! $hasRelationSearch) {
                         $subQuery->orWhere("{$table}.{$field}", Sql::like($subQuery), "%{$search}%");
                     }
                 });
