@@ -13,9 +13,14 @@ use Throwable;
 
 class SearchHandler
 {
-    public function __construct(
-        private readonly PowerGridComponent $component
-    ) {}
+    private string $searchTerm;
+    private string $databaseDriver;
+    private PowerGridComponent $component;
+
+    public function __construct(PowerGridComponent $component)
+    {
+        $this->component = $component;
+    }
 
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
@@ -23,34 +28,36 @@ class SearchHandler
             return $query;
         }
 
-        $search = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+        $this->searchTerm = trim(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        $this->databaseDriver = $this->detectDatabaseDriver($query);
+
         $hasRelationSearch = count($this->component->relationSearch()) && $query instanceof EloquentBuilder;
 
-        $query->where(function (EloquentBuilder|QueryBuilder $subQuery) use ($search, $hasRelationSearch) {
+        $query->where(function (EloquentBuilder|QueryBuilder $subQuery) use ($hasRelationSearch) {
             $modelTable = $subQuery instanceof QueryBuilder ? $subQuery->from : $subQuery->getModel()->getTable();
             $columnList = $this->getColumnList($subQuery, $modelTable);
 
             collect($this->component->columns)
-                ->filter(fn (stdClass|array|Column $column) => (bool) data_get($column, 'searchable'))
-                ->each(function (stdClass|array|Column $column) use ($subQuery, $search, $columnList, $hasRelationSearch) {
+                ->filter(fn ($column) => (bool) data_get($column, 'searchable'))
+                ->each(function ($column) use ($subQuery, $columnList, $hasRelationSearch) {
                     $field = $this->getDataField($column);
                     [$table, $field] = $this->splitField($subQuery, $field);
-                    $search = $this->getBeforeSearchMethod($field, $search);
+                    $searchTerm = $this->getBeforeSearchMethod($field, $this->searchTerm);
 
                     if (empty($table)) {
-                        $subQuery->orWhere($field, Sql::like($subQuery), "%{$search}%");
-
+                        $this->applyWhereByDriver($subQuery, $modelTable, $field, $searchTerm);
                         return;
                     }
 
-                    if (isset($columnList[$field]) || ! $hasRelationSearch) {
-                        $subQuery->orWhere("{$table}.{$field}", Sql::like($subQuery), "%{$search}%");
+                    if (isset($columnList[$field]) || !$hasRelationSearch) {
+                        $this->applyWhereByDriver($subQuery, $table, $field, $searchTerm);
                     }
                 });
         });
 
         if ($hasRelationSearch) {
-            $this->filterRelation($query, $search);
+            $this->filterRelation($query, $this->searchTerm);
         }
 
         return $query;
@@ -58,57 +65,58 @@ class SearchHandler
 
     private function filterRelation(EloquentBuilder $query, string $search): void
     {
-        foreach ($this->component->relationSearch() as $table => $columns) {
+        foreach ($this->component->relationSearch() as $relation => $columns) {
             if (is_array($columns)) {
-                $this->filterNestedRelation($query, $table, $columns, $search);
-
+                $this->filterNestedRelation($query, $relation, $columns, $search);
                 continue;
             }
 
-            $query->orWhereHas($table, function (EloquentBuilder $subQuery) use ($columns, $search) {
-                $search = $this->getBeforeSearchMethod($columns, $search);
-                $subQuery->when($search, fn ($q) => $q->where($columns, Sql::like($q), '%'.$search.'%'));
+            $query->orWhereHas($relation, function (EloquentBuilder $subQuery) use ($columns, $search) {
+                $searchTerm = $this->getBeforeSearchMethod($columns, $search);
+                $tableName = $subQuery->getModel()->getTable();
+                $this->applyWhereByDriver($subQuery, $tableName, $columns, $searchTerm);
             });
         }
     }
 
-    private function filterNestedRelation(EloquentBuilder $query, string $table, array $columns, string $search): void
+    private function filterNestedRelation(EloquentBuilder $query, string $relation, array $columns, string $search): void
     {
-        foreach ($columns as $nestedTable => $nestedColumns) {
+        foreach ($columns as $nestedRelation => $nestedColumns) {
             if (is_array($nestedColumns)) {
                 try {
-                    if ($query->getRelation($nestedTable) != '') {
-                        $nestedTableWithDot = $table.'.'.$nestedTable;
-                        $query->orWhereHas($nestedTableWithDot, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
+                    if ($query->getRelation($nestedRelation) != '') {
+                        $nestedRelationWithDot = $relation.'.'.$nestedRelation;
+                        $query->orWhereHas($nestedRelationWithDot, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
                             foreach ($nestedColumns as $nestedColumn) {
-                                $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                                $subQuery->when($search, fn ($q) => $q->where($nestedColumn, Sql::like($q), '%'.$search.'%'));
+                                $searchTerm = $this->getBeforeSearchMethod($nestedColumn, $search);
+                                $tableName = $subQuery->getModel()->getTable();
+                                $this->applyWhereByDriver($subQuery, $tableName, $nestedColumn, $searchTerm);
                             }
                         });
                     }
                 } catch (RelationNotFoundException) {
                     /** @var JoinClause[] $joins */
                     $joins = $query->getQuery()->joins ?? [];
-                    $tableExists = collect($joins)->pluck('table')->contains($nestedTable);
+                    $tableExists = collect($joins)->pluck('table')->contains($nestedRelation);
 
                     if (! $tableExists) {
-                        $query->leftJoin($nestedTable, "$table.".$nestedTable.'_id', '=', "$nestedTable.id");
+                        $query->leftJoin($nestedRelation, "$relation.".$nestedRelation.'_id', '=', "$nestedRelation.id");
                     }
 
-                    $query->orWhere(function (EloquentBuilder $subQuery) use ($nestedTable, $nestedColumns, $search) {
+                    $query->orWhere(function (EloquentBuilder $subQuery) use ($nestedRelation, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
-                            $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                            $subQuery->when($search, fn ($q) => $q->where("$nestedTable.$nestedColumn", Sql::like($q), '%'.$search.'%'));
+                            $searchTerm = $this->getBeforeSearchMethod($nestedColumn, $search);
+                            $this->applyWhereByDriver($subQuery, $nestedRelation, $nestedColumn, $searchTerm);
                         }
                     });
                 }
-
                 continue;
             }
 
-            $query->orWhereHas($table, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
-                $search = $this->getBeforeSearchMethod($nestedColumns, $search);
-                $subQuery->when($search, fn ($q) => $q->where($nestedColumns, Sql::like($q), '%'.$search.'%'));
+            $query->orWhereHas($relation, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
+                $searchTerm = $this->getBeforeSearchMethod($nestedColumns, $search);
+                $tableName = $subQuery->getModel()->getTable();
+                $this->applyWhereByDriver($subQuery, $tableName, $nestedColumns, $searchTerm);
             });
         }
     }
@@ -117,7 +125,7 @@ class SearchHandler
     {
         $connection = $query instanceof EloquentBuilder
             ? $query->getModel()->getConnection()->getName()
-            : $query->getConnection()->getConfig('name');
+            : $query->getConnection()->getName();
 
         try {
             return PowerGridTableCache::getOrCreate(
@@ -162,5 +170,69 @@ class SearchHandler
         }
 
         return [$table, $field];
+    }
+
+    private function applyWhereByDriver($query, string $table, string $field, string $searchTerm): void
+    {
+        $fullField = "{$table}.{$field}";
+
+        switch ($this->databaseDriver) {
+            case 'mysql':
+            case 'mariadb':
+                $query->orWhere($fullField, 'like', "%{$searchTerm}%");
+                break;
+
+            case 'pgsql':
+                $query->orWhereRaw("{$fullField}::text ILIKE ?", ["%{$searchTerm}%"]);
+                if (str_starts_with($searchTerm, '%') || str_ends_with($searchTerm, '%')) {
+                    $this->suggestPgTrgm($table, $field);
+                }
+                break;
+
+            case 'oracle':
+                $query->orWhereRaw("UPPER({$fullField}) LIKE UPPER(?)", ["%{$searchTerm}%"]);
+                $this->suggestFunctionalIndex($table, $field);
+                break;
+
+            case 'sqlsrv':
+                $query->orWhereRaw("{$fullField} COLLATE Latin1_General_CI_AI LIKE ?", ["%{$searchTerm}%"]);
+                break;
+
+            case 'sqlite':
+                $query->orWhereRaw("LOWER({$fullField}) LIKE LOWER(?)", ["%{$searchTerm}%"]);
+                break;
+
+            default:
+                $query->orWhereRaw("UPPER({$fullField}) LIKE UPPER(?)", ["%{$searchTerm}%"]);
+                break;
+        }
+    }
+
+    private function detectDatabaseDriver(EloquentBuilder|QueryBuilder $query): string
+    {
+        if ($query instanceof EloquentBuilder) {
+            $connection = $query->getModel()->getConnection();
+        } else {
+            $connection = $query->getConnection();
+        }
+
+        return $connection->getDriverName();
+    }
+
+    private function suggestFunctionalIndex(string $table, string $field): void
+    {
+        if (app()->environment('local', 'development')) {
+            logger()->notice("PowerGrid/Oracle: Consider creating this functional index:
+                CREATE INDEX idx_{$table}_{$field}_upper ON {$table}(UPPER({$field}))");
+        }
+    }
+
+    private function suggestPgTrgm(string $table, string $field): void
+    {
+        if (app()->environment('local', 'development')) {
+            logger()->notice("PowerGrid/PostgreSQL: for leading wildcards, install pg_trgm and create the index:
+                CREATE EXTENSION IF NOT EXISTS pg_trgm;
+                CREATE INDEX idx_{$table}_{$field}_trgm ON {$table} USING gin (UPPER({$field}) gin_trgm_ops);");
+        }
     }
 }
