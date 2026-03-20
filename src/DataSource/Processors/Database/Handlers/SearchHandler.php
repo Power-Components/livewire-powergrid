@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundEx
 use Illuminate\Database\Query\{Builder as QueryBuilder, JoinClause};
 use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use stdClass;
 use Throwable;
@@ -14,7 +13,9 @@ use Throwable;
 class SearchHandler
 {
     private string $searchTerm;
+
     private string $databaseDriver;
+
     private PowerGridComponent $component;
 
     public function __construct(PowerGridComponent $component)
@@ -28,7 +29,7 @@ class SearchHandler
             return $query;
         }
 
-        $this->searchTerm = trim(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        $this->searchTerm = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
         $this->databaseDriver = $this->detectDatabaseDriver($query);
 
@@ -47,10 +48,11 @@ class SearchHandler
 
                     if (empty($table)) {
                         $this->applyWhereByDriver($subQuery, $modelTable, $field, $searchTerm);
+
                         return;
                     }
 
-                    if (isset($columnList[$field]) || !$hasRelationSearch) {
+                    if (isset($columnList[$field]) || ! $hasRelationSearch) {
                         $this->applyWhereByDriver($subQuery, $table, $field, $searchTerm);
                     }
                 });
@@ -68,6 +70,7 @@ class SearchHandler
         foreach ($this->component->relationSearch() as $relation => $columns) {
             if (is_array($columns)) {
                 $this->filterNestedRelation($query, $relation, $columns, $search);
+
                 continue;
             }
 
@@ -110,6 +113,7 @@ class SearchHandler
                         }
                     });
                 }
+
                 continue;
             }
 
