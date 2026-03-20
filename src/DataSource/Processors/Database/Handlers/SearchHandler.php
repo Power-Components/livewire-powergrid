@@ -40,7 +40,7 @@ class SearchHandler
 
             collect($this->component->columns)
                 ->filter(fn ($column) => (bool) data_get($column, 'searchable'))
-                ->each(function ($column) use ($subQuery, $columnList, $hasRelationSearch) {
+                ->each(function ($column) use ($subQuery, $columnList, $hasRelationSearch, $modelTable) {
                     $field = $this->getDataField($column);
                     [$table, $field] = $this->splitField($subQuery, $field);
                     $searchTerm = $this->getBeforeSearchMethod($field, $this->searchTerm);
@@ -172,7 +172,7 @@ class SearchHandler
         return [$table, $field];
     }
 
-    private function applyWhereByDriver($query, string $table, string $field, string $searchTerm): void
+    private function applyWhereByDriver(EloquentBuilder|QueryBuilder $query, string $table, string $field, string $searchTerm): void
     {
         $fullField = "{$table}.{$field}";
 
