@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundEx
 use Illuminate\Database\Query\{Builder as QueryBuilder, JoinClause};
 use Illuminate\Support\Facades\Schema;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use stdClass;
 use Throwable;
@@ -77,7 +78,7 @@ class SearchHandler
             $query->orWhereHas($relation, function (EloquentBuilder $subQuery) use ($columns, $search) {
                 $searchTerm = $this->getBeforeSearchMethod($columns, $search);
                 $tableName = $subQuery->getModel()->getTable();
-                $this->applyWhereByDriver($subQuery, $tableName, $columns, $searchTerm);
+                $subQuery->where($columns, Sql::like($subQuery), "%{$searchTerm}%");
             });
         }
     }
@@ -93,7 +94,7 @@ class SearchHandler
                             foreach ($nestedColumns as $nestedColumn) {
                                 $searchTerm = $this->getBeforeSearchMethod($nestedColumn, $search);
                                 $tableName = $subQuery->getModel()->getTable();
-                                $this->applyWhereByDriver($subQuery, $tableName, $nestedColumn, $searchTerm);
+                                $subQuery->where($nestedColumn, Sql::like($subQuery), "%{$searchTerm}%");
                             }
                         });
                     }
@@ -109,7 +110,7 @@ class SearchHandler
                     $query->orWhere(function (EloquentBuilder $subQuery) use ($nestedRelation, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
                             $searchTerm = $this->getBeforeSearchMethod($nestedColumn, $search);
-                            $this->applyWhereByDriver($subQuery, $nestedRelation, $nestedColumn, $searchTerm);
+                            $subQuery->where("$nestedRelation.$nestedColumn", Sql::like($subQuery), "%{$searchTerm}%");
                         }
                     });
                 }
@@ -120,7 +121,7 @@ class SearchHandler
             $query->orWhereHas($relation, function (EloquentBuilder $subQuery) use ($nestedColumns, $search) {
                 $searchTerm = $this->getBeforeSearchMethod($nestedColumns, $search);
                 $tableName = $subQuery->getModel()->getTable();
-                $this->applyWhereByDriver($subQuery, $tableName, $nestedColumns, $searchTerm);
+                $subQuery->where($nestedColumns, Sql::like($subQuery), "%{$searchTerm}%");
             });
         }
     }
@@ -181,19 +182,8 @@ class SearchHandler
         $fullField = "{$table}.{$field}";
 
         switch ($this->databaseDriver) {
-            case 'mysql':
-            case 'mariadb':
-                $query->orWhere($fullField, 'like', "%{$searchTerm}%");
-                break;
-
-            case 'pgsql':
-                $query->orWhereRaw("{$fullField}::text ILIKE ?", ["%{$searchTerm}%"]);
-                if (str_starts_with($searchTerm, '%') || str_ends_with($searchTerm, '%')) {
-                    $this->suggestPgTrgm($table, $field);
-                }
-                break;
-
             case 'oracle':
+                // Oracle necesita UPPER() explícito
                 $query->orWhereRaw("UPPER({$fullField}) LIKE UPPER(?)", ["%{$searchTerm}%"]);
                 $this->suggestFunctionalIndex($table, $field);
                 break;
@@ -202,12 +192,8 @@ class SearchHandler
                 $query->orWhereRaw("{$fullField} COLLATE Latin1_General_CI_AI LIKE ?", ["%{$searchTerm}%"]);
                 break;
 
-            case 'sqlite':
-                $query->orWhereRaw("LOWER({$fullField}) LIKE LOWER(?)", ["%{$searchTerm}%"]);
-                break;
-
             default:
-                $query->orWhereRaw("UPPER({$fullField}) LIKE UPPER(?)", ["%{$searchTerm}%"]);
+                $query->orWhere($fullField, Sql::like($query), "%{$searchTerm}%");
                 break;
         }
     }
