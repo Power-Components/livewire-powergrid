@@ -172,9 +172,10 @@ class PowerGridComponent extends Component
         $processResult = ProcessDataSource::make($this)->get();
         $retrieveData = round((microtime(true) - $start) * 1000);
 
+        /** @var BaseCollection $actionsRows */
         $actionsRows = ($processResult['results'] instanceof AbstractPaginator || $processResult['results'] instanceof \Illuminate\Contracts\Pagination\Paginator)
             ? $processResult['results']->getCollection()
-            : collect($processResult['results']);
+            : new BaseCollection($processResult['results']);
 
         $processResult['actionsByRow'] = $this->transformActions($processResult['actionsByRow'], $actionsRows);
         $this->dispatchActionsToJS($processResult['actionsByRow']);
@@ -201,9 +202,14 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($processResult['results']);
     }
 
+    /**
+     * @param  mixed  $results
+     * @return Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
+     */
     private function applyAfterQuery(mixed $results): mixed
     {
         if ($results instanceof AbstractPaginator || $results instanceof \Illuminate\Contracts\Pagination\Paginator) {
+            /** @var Paginator|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator $results */
             $results->setCollection($this->transformRows($results->getCollection()));
 
             return $results;
@@ -213,6 +219,7 @@ class PowerGridComponent extends Component
             return $this->transformRows($results);
         }
 
+        /** @var BaseCollection */
         return $results;
     }
 
