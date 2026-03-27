@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines as CommonPipelines;
@@ -31,6 +32,8 @@ class ModelProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
+        $query = $this->component->transformQuery($query);
+
         $paginate = app(Pipeline::class)
             ->send($query)
             ->through([
@@ -38,7 +41,7 @@ class ModelProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
-        /** @var \Illuminate\Support\Collection $collection */
+        /** @var Collection $collection */
         $collection = $paginate->getCollection();
 
         if (filled(data_get($this->component, 'setUp.lazy'))) {
