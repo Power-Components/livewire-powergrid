@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use ReflectionClass;
 use ReflectionException;
@@ -37,7 +38,7 @@ final class ListModels
             /**
              * @throws ReflectionException
              */
-            ->reject(fn (string $fqnClass) => rescue(fn () => (new ReflectionClass($fqnClass))->isSubclassOf(\Illuminate\Database\Eloquent\Model::class), false) === false)
+            ->reject(fn (string $fqnClass) => rescue(fn () => (new ReflectionClass($fqnClass))->isSubclassOf(Model::class), false) === false)
             ->all();
     }
 }

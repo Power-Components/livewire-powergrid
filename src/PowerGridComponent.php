@@ -203,7 +203,6 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * @param  mixed  $results
      * @return Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
      */
     private function applyAfterQuery(mixed $results): mixed

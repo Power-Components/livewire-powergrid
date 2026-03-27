@@ -2,6 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesTable, Concerns\Components\DishesTableWithJoin};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -139,12 +140,12 @@ it('properly sorts ASC/DESC with: string-number', function (string $component, o
 })->with('sort join');
 
 dataset('sort join', [
-    'tailwind -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'dishes.id']],
-    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'dishes.id']],
-    'daisyui -> id' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
-    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'dishes.id']],
+    'tailwind -> id' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishesTable::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => Tailwind::class, 'field' => 'dishes.id']],
+    'bootstrap -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => Bootstrap5::class, 'field' => 'dishes.id']],
+    'daisyui -> id' => [DishesTable::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
+    'daisyui -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => DaisyUI::class, 'field' => 'dishes.id']],
 ]);
 
 /**

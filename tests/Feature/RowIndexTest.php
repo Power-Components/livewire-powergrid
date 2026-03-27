@@ -1,6 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesRowIndex;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -44,7 +45,7 @@ it('sorts by "name" and then by "id"', function (string $component, string $them
 })->with('row_index');
 
 dataset('row_index', [
-    'tailwind' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    'bootstrap' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    'daisyui' => [DishesRowIndex::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+    'tailwind' => [DishesRowIndex::class, Tailwind::class],
+    'bootstrap' => [DishesRowIndex::class, Bootstrap5::class],
+    'daisyui' => [DishesRowIndex::class, DaisyUI::class],
 ]);
