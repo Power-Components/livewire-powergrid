@@ -2,6 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\OrderTable;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -45,7 +46,7 @@ it('can fields with casting and custom fields', function (string $component, obj
 })->with('order table');
 
 dataset('order table', [
-    'tailwind' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-    'bootstrap' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui' => [OrderTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind' => [OrderTable::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [OrderTable::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui' => [OrderTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

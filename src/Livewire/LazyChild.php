@@ -69,7 +69,7 @@ class LazyChild extends Component
 
     private function getComponentAlias(): ?string
     {
-        if (class_exists(\Livewire\Mechanisms\ComponentRegistry::class)) {
+        if (class_exists(ComponentRegistry::class)) {
 
             return app(ComponentRegistry::class)->getClass($this->parentName);
         }

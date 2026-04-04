@@ -1,5 +1,9 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\{ExportToCsv, ExportToXLS};
+use PowerComponents\LivewirePowerGrid\FilterAttributes\{Boolean, InputText, Number, Select};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+
 return [
 
     /*
@@ -11,7 +15,7 @@ return [
     | Configure here the theme of your choice.
     */
 
-    'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+    'theme' => Tailwind::class,
     // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class,
     // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
 
@@ -109,10 +113,10 @@ return [
     */
 
     'filter_attributes' => [
-        'input_text' => \PowerComponents\LivewirePowerGrid\FilterAttributes\InputText::class,
-        'boolean' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Boolean::class,
-        'number' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Number::class,
-        'select' => \PowerComponents\LivewirePowerGrid\FilterAttributes\Select::class,
+        'input_text' => InputText::class,
+        'boolean' => Boolean::class,
+        'number' => Number::class,
+        'select' => Select::class,
     ],
 
     /*
@@ -140,12 +144,12 @@ return [
     'exportable' => [
         'default' => 'openspout_v4',
         'openspout_v5' => [
-            'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToXLS::class,
-            'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\ExportToCsv::class,
+            'xlsx' => ExportToXLS::class,
+            'csv' => ExportToCsv::class,
         ],
         'openspout_v4' => [
-            'xlsx' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
-            'csv' => \PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
+            'xlsx' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
+            'csv' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
         ],
     ],
 

@@ -2,6 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -69,9 +70,9 @@ it('selectCheckboxAll works properly', function (string $component, object $para
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'daisyui -> id' => [DishTableBase::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+    'tailwind -> id' => [DishTableBase::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [DishTableBase::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+    'daisyui -> id' => [DishTableBase::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
 ]);
 
 it('selectCheckboxAll works properly with actionRules disable', function (string $component, object $params) {
@@ -118,7 +119,7 @@ it('selectCheckboxAll works properly with actionRules disable', function (string
     expect($component->checkboxValues)
         ->toBe([]);
 })->with([
-    'tailwind -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'field' => 'id']],
-    'daisyui -> id' => [$componentWithActionRules::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'field' => 'id']],
+    'tailwind -> id' => [$componentWithActionRules::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
+    'bootstrap -> id' => [$componentWithActionRules::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
+    'daisyui -> id' => [$componentWithActionRules::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
 ]);
