@@ -1,5 +1,6 @@
 <?php
 
+use Composer\InstalledVersions;
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
@@ -86,7 +87,7 @@ function skipOnPostgreSQL(string $reason = '')
 
 function requiresOpenSpout()
 {
-    $isInstalled = \Composer\InstalledVersions::isInstalled('openspout/openspout');
+    $isInstalled = InstalledVersions::isInstalled('openspout/openspout');
 
     if (! $isInstalled) {
         test()->skipWithReason('test requires openspout/openspout');

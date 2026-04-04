@@ -165,7 +165,7 @@ describe('Scout Sorting Pipeline', function () {
 
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($result);
+        $reflection = new ReflectionClass($result);
         $ordersProperty = $reflection->getProperty('orders');
         $ordersProperty->setAccessible(true);
         $orders = $ordersProperty->getValue($result);
@@ -195,7 +195,7 @@ describe('Scout Sorting Pipeline', function () {
 
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($result);
+        $reflection = new ReflectionClass($result);
         $ordersProperty = $reflection->getProperty('orders');
         $orders = $ordersProperty->getValue($result);
 
@@ -220,7 +220,7 @@ describe('Scout Sorting Pipeline', function () {
 
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($result);
+        $reflection = new ReflectionClass($result);
         $ordersProperty = $reflection->getProperty('orders');
         $orders = $ordersProperty->getValue($result);
 
@@ -242,7 +242,7 @@ describe('Scout Sorting Pipeline', function () {
 
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($result);
+        $reflection = new ReflectionClass($result);
         $ordersProperty = $reflection->getProperty('orders');
         $orders = $ordersProperty->getValue($result);
 
@@ -270,7 +270,7 @@ describe('Scout Sorting Pipeline', function () {
 
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($result);
+        $reflection = new ReflectionClass($result);
         $ordersProperty = $reflection->getProperty('orders');
         $orders = $ordersProperty->getValue($result);
 
@@ -308,7 +308,7 @@ describe('Scout Pipeline Integration', function () {
         $sortingPipeline = new Sorting($component);
         $builder = $sortingPipeline->handle($builder, fn ($builder) => $builder);
 
-        $reflection = new \ReflectionClass($builder);
+        $reflection = new ReflectionClass($builder);
         $ordersProperty = $reflection->getProperty('orders');
         $orders = $ordersProperty->getValue($builder);
 

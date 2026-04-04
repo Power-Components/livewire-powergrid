@@ -23,7 +23,7 @@ class InteractsWithVersions
      */
     public function ensureLatestVersion(): array
     {
-        $composer = Factory::create(new NullIo());
+        $composer = Factory::create(new NullIO());
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         return $this->searchPackage($localRepo);

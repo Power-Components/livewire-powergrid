@@ -157,7 +157,7 @@ trait WithExport
     /**
      * @throws Exception
      */
-    public function prepareToExport(bool $selected = false): Eloquent\Collection|Support\Collection
+    public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection
     {
         $processDataSource = tap(ProcessDataSource::make($this), fn ($datasource) => $datasource->get());
 
@@ -188,7 +188,7 @@ trait WithExport
         $property = function (string $property) use ($processDataSource, $currentTable) {
             $property = $processDataSource->component->{$property};
 
-            return Support\Str::of($property)->contains('.')
+            return Str::of($property)->contains('.')
                 ? $property
                 : $currentTable.'.'.$property;
         };
