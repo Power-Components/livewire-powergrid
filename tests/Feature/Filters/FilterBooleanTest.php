@@ -1,11 +1,14 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesIterableTable,
     Concerns\Components\DishesTable,
     Concerns\Components\DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
-    use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 it('properly filters by bool true', function (string $component, object $params) {
     $component = livewire($component, [
@@ -47,7 +50,7 @@ $customBuilder = new class() extends DishesTable
                 ->builder(function ($builder, $values) {
                     expect($values)
                         ->toBe('true')
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+                        ->and($builder)->toBeInstanceOf(Builder::class);
 
                     return $builder->where('dishes.id', 1);
                 })
@@ -69,9 +72,9 @@ it('properly filters by bool true with custom builder', function (string $compon
         ->assertDontSee('Peixada da chef Nábia');
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-        'bootstrap' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-        'daisyui' => [$customBuilder::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+        'tailwind' => [$customBuilder::class, (object) ['theme' => Tailwind::class]],
+        'bootstrap' => [$customBuilder::class, (object) ['theme' => Bootstrap5::class]],
+        'daisyui' => [$customBuilder::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('properly filters by bool true using collection table', function (string $component, string $theme) {
@@ -134,7 +137,7 @@ $customCollection = new class() extends DishesIterableTable
                 ->label('yes', 'no')
                 ->collection(function ($collection, $values) {
                     expect($values)->toBe('true')
-                        ->and($collection)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+                        ->and($collection)->toBeInstanceOf(Collection::class);
 
                     return $collection->where('id', 1);
                 }),
@@ -164,9 +167,9 @@ it('properly filters by bool true using collection with custom builder using tab
     ]);
 })->group('filters', 'filterBoolean')
     ->with([
-        'tailwind' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-        'bootstrap' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-        'daisyui' => [$customCollection::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+        'tailwind' => [$customCollection::class, Tailwind::class],
+        'bootstrap' => [$customCollection::class, Bootstrap5::class],
+        'daisyui' => [$customCollection::class, DaisyUI::class],
     ]);
 
 it('properly filters by bool false', function (string $component, object $params) {
@@ -302,16 +305,16 @@ it('properly filters by bool "all" using action', function (string $component, o
     ->with('filter_boolean_themes');
 
 dataset('filter_boolean_themes', [
-    'tailwind' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-    'bootstrap' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui' => [DishesTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
-    'tailwind with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-    'bootstrap with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui with join' => [DishesTableWithJoin::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind' => [DishesTable::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [DishesTable::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui' => [DishesTable::class, (object) ['theme' => DaisyUI::class]],
+    'tailwind with join' => [DishesTableWithJoin::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap with join' => [DishesTableWithJoin::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui with join' => [DishesTableWithJoin::class, (object) ['theme' => DaisyUI::class]],
 ]);
 
 dataset('filter_boolean_themes_iterable', [
-    'tailwind' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class],
-    'bootstrap' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class],
-    'daisyui' => [DishesIterableTable::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class],
+    'tailwind' => [DishesIterableTable::class, Tailwind::class],
+    'bootstrap' => [DishesIterableTable::class, Bootstrap5::class],
+    'daisyui' => [DishesIterableTable::class, DaisyUI::class],
 ]);

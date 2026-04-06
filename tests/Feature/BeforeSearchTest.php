@@ -1,6 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesBeforeSearchTable;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -14,9 +15,9 @@ it('searches data using beforeSearch', function (string $component, object $para
         ->set('search', '')
         ->assertSee('Peixada');
 })->with([
-    'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-    'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => DaisyUI::class]],
 ]);
 
 it('can use beforeSearch in boolean field', function (string $component, object $params) {
@@ -38,7 +39,7 @@ it('can use beforeSearch in boolean field', function (string $component, object 
         ->assertSee('Barco-Sushi Simples')
         ->assertDontSee('Pastel de Nata');
 })->with([
-    'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class]],
-    'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class]],
-    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class]],
+    'tailwind' => [DishesBeforeSearchTable::class, (object) ['theme' => Tailwind::class]],
+    'bootstrap' => [DishesBeforeSearchTable::class, (object) ['theme' => Bootstrap5::class]],
+    'daisyui' => [DishesBeforeSearchTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

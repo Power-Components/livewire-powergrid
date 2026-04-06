@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterMultiSelectAsync;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -27,7 +29,7 @@ $customBuilder = new class() extends DishesTable
                 ->builder(function ($builder, $values) {
                     expect($values)
                         ->toBe([0 => 1])
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+                        ->and($builder)->toBeInstanceOf(Builder::class);
 
                     return $builder->where('dishes.id', 1);
                 }),
@@ -49,7 +51,7 @@ $customCollection = new class() extends DishesIterableTable
                 ->collection(function ($builder, $values) {
                     expect($values)
                         ->toBe([0 => 1, 1 => 3])
-                        ->and($builder)->toBeInstanceOf(\Illuminate\Support\Collection::class);
+                        ->and($builder)->toBeInstanceOf(Collection::class);
 
                     return $builder->whereIn('id', [1, 3]);
                 }),

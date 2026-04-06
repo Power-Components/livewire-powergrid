@@ -5,6 +5,7 @@ use Livewire\Features\SupportTesting\Testable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
+use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -26,9 +27,9 @@ $component = new class() extends DishTableBase
 };
 
 $params = [
-    'tailwind -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, 'name'],
-    'bootstrap -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class, 'name'],
-    'daisyui -> id' => [$component::class, \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class, 'name'],
+    'tailwind -> id' => [$component::class, Tailwind::class, 'name'],
+    'bootstrap -> id' => [$component::class, Bootstrap5::class, 'name'],
+    'daisyui -> id' => [$component::class, DaisyUI::class, 'name'],
 ];
 
 it('should be able to set persist_driver for session', function (string $componentString, string $theme, string $field) {
