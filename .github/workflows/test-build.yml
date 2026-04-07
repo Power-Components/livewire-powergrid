@@ -24,7 +24,7 @@ jobs:
           node-version: '22.x'
 
       - name: Install NPM Dependencies
-        run: npm install
+        run: npm install --force
 
       - name: Build
         run: npm run build
