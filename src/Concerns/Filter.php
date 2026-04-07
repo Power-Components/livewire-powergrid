@@ -513,11 +513,11 @@ trait Filter
         collect($this->columns())
             ->ensure([Column::class])
             ->each(function ($column) use (&$columns) {
-                if (isset($column->dataField)) {
-                    $columns->put($column->dataField, $column->title ?? $column->dataField);
+                if (filled($column->dataField)) {
+                    $columns->put($column->dataField, $column->title ?: $column->dataField);
                 }
 
-                $columns->put($column->field, $column->title ?? $column->field);
+                $columns->put($column->field, $column->title ?: $column->field);
             });
 
         return $columns;
