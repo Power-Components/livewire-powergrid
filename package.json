@@ -1,7 +1,7 @@
 {
     "name": "livewire-powergrid",
     "version": "1.0.0",
-    "description": "<div align=\"center\"> \t<p><img src=\"art/header.jpg\" alt=\"PowerGrid Logo\"></p>     <p align=\"center\">         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"Total Downloads\" src=\"https://img.shields.io/packagist/dt/power-components/livewire-powergrid\"></a>         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"Latest Version\" src=\"https://img.shields.io/packagist/v/power-components/livewire-powergrid\"></a>         <a href=\"https://packagist.org/packages/power-components/livewire-powergrid\"><img alt=\"License\" src=\"https://img.shields.io/packagist/l/power-components/livewire-powergrid\"></a>     </p>     <a href=\"https://livewire-powergrid.com/\" target=\"_blank\">📚 Documentation</a> |     <a href=\"#features\">🔥 Features</a> |     <a href=\"#get-started\">⌨️ Get started</a> </div>",
+    "description": "PowerGrid generates Advanced Datatables using Laravel Livewire.",
     "main": "index.js",
     "directories": {
         "test": "tests"
@@ -35,6 +35,6 @@
         "sass-loader": "^16.0.6",
         "tailwindcss": "^4.1.18",
         "tom-select": "^2.4.3",
-        "vite": "^7.3.2"
+        "vite": "^8.0.6"
     }
 }

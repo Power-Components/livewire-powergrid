@@ -1,21 +1,21 @@
 {
   "resources/css/bootstrap5.css": {
     "file": "bootstrap5.css",
-    "src": "resources/css/bootstrap5.css",
-    "isEntry": true,
     "name": "bootstrap5",
     "names": [
       "bootstrap5.css"
-    ]
+    ],
+    "src": "resources/css/bootstrap5.css",
+    "isEntry": true
   },
   "resources/css/tailwind.css": {
     "file": "tailwind.css",
-    "src": "resources/css/tailwind.css",
-    "isEntry": true,
     "name": "tailwind",
     "names": [
       "tailwind.css"
-    ]
+    ],
+    "src": "resources/css/tailwind.css",
+    "isEntry": true
   },
   "resources/js/powergrid.js": {
     "file": "powergrid.js",
