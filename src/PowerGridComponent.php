@@ -202,9 +202,6 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($processResult['results']);
     }
 
-    /**
-     * @return Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
-     */
     private function applyAfterQuery(mixed $results): mixed
     {
         if ($results instanceof AbstractPaginator || $results instanceof \Illuminate\Contracts\Pagination\Paginator) {
@@ -218,7 +215,6 @@ class PowerGridComponent extends Component
             return $this->transformRows($results);
         }
 
-        /** @var BaseCollection */
         return $results;
     }
 
