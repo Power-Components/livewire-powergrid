@@ -7,7 +7,7 @@ use Illuminate\Support\{Collection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandler,
+    DataSource\Processors\Database\Handlers\SearchHandlerContract,
     PowerGridComponent};
 
 /** @codeCoverageIgnore */
@@ -63,7 +63,9 @@ trait ExportableJob
 
         $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
             ->where(function ($query) {
-                (new SearchHandler($this->componentTable))->apply($query);
+                app()->makeWith(SearchHandlerContract::class, [
+                    'component' => $this->componentTable,
+                ])->apply($query);
                 (new FilterHandler($this->componentTable))->apply($query);
             })
             ->when($filtered, function ($query, $filtered) use ($property) {

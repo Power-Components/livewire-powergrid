@@ -11,7 +11,9 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\{Livewire\Detail,
+use PowerComponents\LivewirePowerGrid\{DataSource\Processors\Database\Handlers\SearchHandler,
+    DataSource\Processors\Database\Handlers\SearchHandlerContract,
+    Livewire\Detail,
     Livewire\LazyChild,
     Livewire\PerformanceCard,
     PowerGridManager,
@@ -70,6 +72,10 @@ class PowerGridServiceProvider extends ServiceProvider
         Macros::builder();
 
         $this->app->singleton(SupportLivewireVersions::class, fn () => new SupportLivewireVersions());
+
+        $this->app->bind(SearchHandlerContract::class, function ($app, array $params) {
+            return new SearchHandler($params['component']);
+        });
     }
 
     private function publishViews(): void

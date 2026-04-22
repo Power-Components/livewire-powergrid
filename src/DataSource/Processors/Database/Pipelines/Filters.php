@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandler};
+use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Filters
@@ -12,7 +12,9 @@ class Filters
 
     public function handle(mixed $query, Closure $next): mixed
     {
-        (new SearchHandler($this->component))->apply($query);
+        app()->makeWith(SearchHandlerContract::class, [
+            'component' => $this->component,
+        ])->apply($query);
         (new FilterHandler($this->component))->apply($query);
 
         return $next($query);
