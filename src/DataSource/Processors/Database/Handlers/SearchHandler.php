@@ -11,10 +11,10 @@ use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use stdClass;
 use Throwable;
 
-class SearchHandler
+class SearchHandler implements SearchHandlerContract
 {
     public function __construct(
-        private readonly PowerGridComponent $component
+        protected readonly PowerGridComponent $component
     ) {}
 
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
@@ -56,7 +56,7 @@ class SearchHandler
         return $query;
     }
 
-    private function filterRelation(EloquentBuilder $query, string $search): void
+    protected function filterRelation(EloquentBuilder $query, string $search): void
     {
         foreach ($this->component->relationSearch() as $table => $columns) {
             if (is_array($columns)) {
@@ -72,7 +72,7 @@ class SearchHandler
         }
     }
 
-    private function filterNestedRelation(EloquentBuilder $query, string $table, array $columns, string $search): void
+    protected function filterNestedRelation(EloquentBuilder $query, string $table, array $columns, string $search): void
     {
         foreach ($columns as $nestedTable => $nestedColumns) {
             if (is_array($nestedColumns)) {
@@ -113,7 +113,7 @@ class SearchHandler
         }
     }
 
-    private function getColumnList(EloquentBuilder|QueryBuilder $query, string $modelTable): array
+    protected function getColumnList(EloquentBuilder|QueryBuilder $query, string $modelTable): array
     {
         $connection = $query instanceof EloquentBuilder
             ? $query->getModel()->getConnection()->getName()
@@ -131,12 +131,12 @@ class SearchHandler
         }
     }
 
-    private function getDataField(Column|stdClass|array $column): string
+    protected function getDataField(Column|stdClass|array $column): string
     {
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
     }
 
-    private function getBeforeSearchMethod(string $field, ?string $search): ?string
+    protected function getBeforeSearchMethod(string $field, ?string $search): ?string
     {
         $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
 
@@ -151,7 +151,7 @@ class SearchHandler
         return $search;
     }
 
-    private function splitField(EloquentBuilder|QueryBuilder $query, string $field): array
+    protected function splitField(EloquentBuilder|QueryBuilder $query, string $field): array
     {
         $table = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
 
