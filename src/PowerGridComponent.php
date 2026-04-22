@@ -7,6 +7,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
 use Livewire\{Attributes\Computed, Component, WithPagination};
@@ -145,6 +146,7 @@ class PowerGridComponent extends Component
         /** @var array $results */
         $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
+        $results['actionsByRow'] = $this->transformActions($results['actionsByRow'], $results['results']->getCollection());
         $this->dispatchActionsToJS($results['actionsByRow']);
 
         if ($this->measurePerformance) {
@@ -157,7 +159,7 @@ class PowerGridComponent extends Component
             );
         }
 
-        return $results['results'];
+        return $this->applyAfterQuery($results['results']);
     }
 
     private function getRecordsDataSource(): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
@@ -170,6 +172,12 @@ class PowerGridComponent extends Component
         $processResult = ProcessDataSource::make($this)->get();
         $retrieveData = round((microtime(true) - $start) * 1000);
 
+        /** @var BaseCollection $actionsRows */
+        $actionsRows = ($processResult['results'] instanceof AbstractPaginator || $processResult['results'] instanceof \Illuminate\Contracts\Pagination\Paginator)
+            ? $processResult['results']->getCollection()
+            : new BaseCollection($processResult['results']);
+
+        $processResult['actionsByRow'] = $this->transformActions($processResult['actionsByRow'], $actionsRows);
         $this->dispatchActionsToJS($processResult['actionsByRow']);
 
         if ($this->measurePerformance) {
@@ -191,7 +199,23 @@ class PowerGridComponent extends Component
             );
         }
 
-        return $processResult['results'];
+        return $this->applyAfterQuery($processResult['results']);
+    }
+
+    private function applyAfterQuery(mixed $results): mixed
+    {
+        if ($results instanceof AbstractPaginator || $results instanceof \Illuminate\Contracts\Pagination\Paginator) {
+            /** @var Paginator|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator $results */
+            $results->setCollection($this->transformRows($results->getCollection()));
+
+            return $results;
+        }
+
+        if ($results instanceof BaseCollection) {
+            return $this->transformRows($results);
+        }
+
+        return $results;
     }
 
     protected function getCacheKeys(): array

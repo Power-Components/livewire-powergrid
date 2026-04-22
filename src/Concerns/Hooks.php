@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Illuminate\Support\Collection;
+
 trait Hooks
 {
     public function onUpdatedEditable(string|int $id, string $field, string $value): void {}
@@ -19,4 +21,19 @@ trait Hooks
     public function afterChangedNumberStartFilter(string $field, string $label, string|false $value): void {}
 
     public function afterChangedNumberEndFilter(string $field, string $label, string|false $value): void {}
+
+    public function transformRows(Collection $rows): Collection
+    {
+        return $rows;
+    }
+
+    public function transformQuery(mixed $query): mixed
+    {
+        return $query;
+    }
+
+    public function transformActions(array $actionsByRow, Collection $rows): array
+    {
+        return $actionsByRow;
+    }
 }

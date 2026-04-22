@@ -32,6 +32,8 @@ class ModelProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
+        $query = $this->component->transformQuery($query);
+
         $paginate = app(Pipeline::class)
             ->send($query)
             ->through([
