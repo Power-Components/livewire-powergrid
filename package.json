@@ -29,7 +29,6 @@
         "alpinejs": "^3.15.3",
         "autoprefixer": "^10.4.23",
         "blade-formatter": "^1.44.2",
-        "cypress": "^15.8.2",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.97.2",
         "sass-loader": "^16.0.6",
