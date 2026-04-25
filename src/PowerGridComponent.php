@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
+use Illuminate\Support\Collection;
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
 use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
@@ -202,7 +203,7 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($processResult['results']);
     }
 
-    private function applyAfterQuery(mixed $results): mixed
+    private function applyAfterQuery(mixed $results): Paginator|MorphToMany|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|BaseCollection
     {
         if ($results instanceof AbstractPaginator || $results instanceof \Illuminate\Contracts\Pagination\Paginator) {
             /** @var Paginator|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator $results */
@@ -215,6 +216,7 @@ class PowerGridComponent extends Component
             return $this->transformRows($results);
         }
 
+        /** @var MorphToMany|Collection $results */
         return $results;
     }
 
