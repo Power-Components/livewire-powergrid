@@ -1,6 +1,6 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => theme_style($theme, 'radio.input'),
+        'class' => theme('radio.input'),
     ]);
 
     $rules = collect($row->__powergrid_rules)
@@ -21,15 +21,15 @@
 @endphp
 @if ($hide)
     <td
-        class="{{ theme_style($theme, 'radio.td') }}"
+        class="{{ theme('radio.th') }}"
     >
     </td>
 @elseif($disable)
     <td
-        class="{{ theme_style($theme, 'radio.td') }}"
+        class="{{ theme('radio.th') }}"
     >
-        <div class="{{ theme_style($theme, 'radio.base') }}">
-            <label class="{{ theme_style($theme, 'radio.label') }}">
+        <div class="{{ theme('radio.base') }}">
+            <label class="{{ theme('radio.label') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -40,10 +40,10 @@
     </td>
 @else
     <td
-        class="{{ theme_style($theme, 'radio.th') }}"
+        class="{{ theme('radio.th') }}"
     >
-        <div class="{{ theme_style($theme, 'radio.base') }}">
-            <label class="{{ theme_style($theme, 'radio.label') }}">
+        <div class="{{ theme('radio.base') }}">
+            <label class="{{ theme('radio.label') }}">
                 <input
                     type="radio"
                     {{ $inputAttributes }}

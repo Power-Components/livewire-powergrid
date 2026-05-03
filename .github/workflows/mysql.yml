@@ -27,7 +27,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: powergridtest
@@ -38,10 +38,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [ 8.4, 8.3 ]
-        laravel: [ 11.*, 12.* ]
-        livewire: [ 3.*, 4.* ]
-        dependency-version: [ prefer-stable ]
+        php: [8.5, 8.4, 8.3]
+        laravel: [12.*, 13.*]
+        livewire: [4.*]
+        dependency-version: [prefer-stable]
 
     name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }}
 
@@ -72,8 +72,8 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
           composer install
 
-      - name: Install openspout/openspout v4
-        run: composer require openspout/openspout ^4.23
+      - name: Install openspout/openspout v5
+        run: composer require openspout/openspout ^5.0
 
       - name: MySQL
         run: composer test:mysql

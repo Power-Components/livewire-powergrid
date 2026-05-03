@@ -20,3 +20,4 @@ package-lock.json
 tests/cypress/cypress/screenshots/*
 composer.lock
 /packages/*
+/workspace

@@ -15,7 +15,7 @@
     );
 
     $filterClasses = \Illuminate\Support\Arr::toCssClasses([
-       theme_style($theme, 'filterSelect.select'),
+       theme('filter.select.select'),
         $class,
     ]);
 
@@ -31,10 +31,10 @@
     />
 @else
     <div
-        @class([theme_style($theme, 'filterSelect.base'), 'space-y-1' => !$inline])
+        @class([theme('filter.select.base'), 'space-y-1' => !$inline])
     >
         @if (!$inline)
-            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="{{ theme('filter.label', 'block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300') }}">
                 {{ $title }}
             </label>
         @endif
@@ -64,10 +64,6 @@
                     </option>
                 @endforeach
             </select>
-            <div
-                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700 dark:text-pg-primary-300">
-                <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
-            </div>
         </div>
     </div>
 @endif

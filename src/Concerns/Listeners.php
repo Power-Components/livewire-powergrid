@@ -50,10 +50,6 @@ trait Listeners
             return;
         }
 
-        if ($this->hasLazyEnabled) {
-            $this->additionalCacheKey = uniqid();
-        }
-
         $this->dispatch('$commit')->self();
     }
 }

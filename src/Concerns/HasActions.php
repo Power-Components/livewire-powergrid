@@ -2,119 +2,11 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Illuminate\Support\Facades\{Blade, Cache, File, View};
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
-use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Providers\SupportLivewireVersions;
 
 trait HasActions
 {
-    public bool $withoutResourcesActions = false;
-
-    public function prepareActionsResources(): ?string
-    {
-        if ($this->withoutResourcesActions) {
-            return null;
-        }
-
-        $closure = fn () => $this->getResourceIconsJson();
-
-        if (intval(config('livewire-powergrid.cache_ttl')) > 0) {
-            $records = strval(Cache::remember('pg-resource-icons-json', intval(config('livewire-powergrid.cache_ttl')), $closure));
-        } else {
-            $records = (string) $closure();
-        }
-
-        if (SupportLivewireVersions::isV3()) {
-            $this->js(<<<JS
-                this.pgResourceIcons = $records
-            JS);
-        } else {
-            $this->js('pgResourceIcons', $records);
-        }
-
-        return $records;
-    }
-
-    private function getResourceIconsJson(): string
-    {
-        $paths = (array) config('livewire-powergrid.icon_resources.paths');
-        $allowed = (array) config('livewire-powergrid.icon_resources.allowed');
-        $iconAttributes = (array) config('livewire-powergrid.icon_resources.attributes');
-
-        $icons = [];
-
-        foreach ($paths as $key => $path) {
-            $fullPath = base_path(strval($path));
-            $files = File::allFiles($fullPath);
-
-            foreach ($files as $file) {
-                $name = Str::replaceLast('.blade.php', '', $file->getFilename());
-
-                if (blank($allowed) || in_array($name, $allowed)) {
-                    $attributes = new ComponentAttributeBag($iconAttributes);
-
-                    $icons["{$key}-{$name}"] = View::file($file->getRealPath(), [
-                        'attributes' => $attributes,
-                    ])->render();
-                }
-            }
-        }
-
-        return strval(json_encode($icons));
-    }
-
-    public function dispatchActionsToJS(array $actionsHtml): void
-    {
-        if (! method_exists($this, 'actions')) {
-            return;
-        }
-
-        $actionsHtml = json_encode($actionsHtml);
-
-        if (SupportLivewireVersions::isV3()) {
-            $this->js(<<<JS
-                this[`pgActions_\${\$wire.id}`] = $actionsHtml
-            JS);
-
-            return;
-        }
-
-        $this->js('pgActions', $actionsHtml);
-    }
-
-    public function storeActionsHeaderInJSWindow(): void
-    {
-        $actionsHtml = collect($this->header())
-            ->transform(function (Button $action) {
-                $can = data_get($action, 'can');
-
-                return [
-                    'action' => $action->action,
-                    'slot' => $action->slot,
-                    'tag' => $action->tag,
-                    'icon' => $action->icon,
-                    'iconAttributes' => $action->iconAttributes,
-                    'attributes' => $action->attributes,
-                    'rules' => [],
-                    'can' => $can instanceof \Closure ? $can() : $can,
-                ];
-            });
-
-        $actionsHtml = json_encode($actionsHtml);
-
-        if (SupportLivewireVersions::isV3()) {
-            $this->js(<<<JS
-                this[`pgActionsHeader_\${\$wire.id}`] = $actionsHtml
-            JS);
-
-            return;
-        }
-
-        $this->js('pgActionsHeader', $actionsHtml);
-    }
-
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
     {
         if (! method_exists($this, 'actionRules')) {
@@ -161,7 +53,7 @@ trait HasActions
                             'disable' => $disabled,
                             'hide' => $hide,
                             'toggleableVisibility' => $toggleableVisibility,
-                            'toggleDetailView' => data_get($this->theme, 'root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                            'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                             'editOnClickVisibility' => $editOnClickVisibility,
                             'fieldHideEditOnClick' => $fieldHideEditOnClick,
                             'fieldHideToggleable' => $fieldHideToggleable,
@@ -171,7 +63,7 @@ trait HasActions
 
                     return [
                         'toggleableVisibility' => $toggleableVisibility,
-                        'toggleDetailView' => data_get($this->theme, 'root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                        'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                     ];
                 })
                 ->toArray();

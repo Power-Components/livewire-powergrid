@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -18,9 +18,5 @@ it('deferLoading work properly', function (string $component, object $params) {
 
 dataset('defer_loading_join', [
     'tailwind' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'bootstrap' => [DishesTable::class, (object) ['theme' => Bootstrap5::class, 'join' => false]],
     'tailwind => join' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-    'bootstrap => join' => [DishesTable::class, (object) ['theme' => Bootstrap5::class, 'join' => true]],
-    'daisyui' => [DishesTable::class, (object) ['theme' => DaisyUI::class, 'join' => false]],
-    'daisyui => join' => [DishesTable::class, (object) ['theme' => DaisyUI::class, 'join' => true]],
 ]);

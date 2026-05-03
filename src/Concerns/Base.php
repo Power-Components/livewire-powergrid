@@ -41,8 +41,6 @@ trait Base
 
     public bool $paginateRaw = false;
 
-    public bool $measurePerformance = false;
-
     public bool $isExporting = false;
 
     public function fields(): PowerGridFields

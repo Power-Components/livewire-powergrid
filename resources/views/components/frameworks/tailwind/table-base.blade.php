@@ -10,13 +10,13 @@
 >
     <div
         id="power-grid-table-container"
-        class="{{ theme_style($theme, 'table.layout.container') }}"
+        class="{{ theme('table.layout.container') }}"
     >
         <div
             id="power-grid-table-base"
-            class="{{ theme_style($theme, 'table.layout.base') }}"
+            class="{{ theme('table.layout.base') }}"
         >
-            @include(theme_style($theme, 'layout.header'), [
+            @include(theme_view('header'), [
                 'enabledFilters' => $enabledFilters,
             ])
 
@@ -36,13 +36,13 @@
                 @class([
                     'overflow-auto' => $readyToLoad,
                     'overflow-hidden' => !$readyToLoad,
-                    theme_style($theme, 'table.layout.div'),
+                    theme('table.layout.div'),
                 ])
             >
                 @include($table)
             </div>
 
-            @include(theme_style($theme, 'footer.view'))
+            @include(theme_view('footer'))
         </div>
     </div>
 </div>

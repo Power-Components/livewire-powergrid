@@ -5,17 +5,15 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Database\Events\MigrationsEnded;
 use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\ServiceProvider;
-use Laravel\Pulse\Facades\Pulse;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
+use PowerComponents\LivewirePowerGrid\Commands\GenerateThemeMetaCommand;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\{DataSource\Processors\Database\Handlers\SearchHandler,
     DataSource\Processors\Database\Handlers\SearchHandlerContract,
     Livewire\Detail,
-    Livewire\LazyChild,
-    Livewire\PerformanceCard,
     PowerGridManager,
     Testing\TestActions};
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
@@ -31,7 +29,18 @@ class PowerGridServiceProvider extends ServiceProvider
             $this->commands([UpdateCommand::class]);
             $this->commands([PublishCommand::class]);
             $this->commands([CreateCommand::class]);
+            $this->commands([GenerateThemeMetaCommand::class]);
         }
+
+        Blade::directive('theme', function ($expression) {
+            return "<?php echo theme($expression); ?>";
+        });
+
+        //        $this->app->singleton('powergrid.theme', function ($app) {
+        //            $themeClass = strval(config('livewire-powergrid.theme'));
+        //
+        //            return $app->make($themeClass);
+        //        });
 
         $this->publishViews();
         $this->publishConfigs();
@@ -57,21 +66,13 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
 
-        Livewire::component('lazy-child', LazyChild::class);
-
         Event::listen(MigrationsEnded::class, fn () => PowerGridTableCache::forgetAll());
-
-        if (class_exists(Pulse::class)) {
-            Livewire::component('powergrid-performance-card', PerformanceCard::class);
-        }
 
         Livewire::component('powergrid-detail', Detail::class);
 
         Macros::columns();
         Macros::actions();
         Macros::builder();
-
-        $this->app->singleton(SupportLivewireVersions::class, fn () => new SupportLivewireVersions());
 
         $this->app->bind(SearchHandlerContract::class, function ($app, array $params) {
             return new SearchHandler($params['component']);

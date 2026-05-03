@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSearchableRawTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -95,6 +95,4 @@ it('searches data using whereRaw on pgsql', function (string $component, object 
 
 dataset('searchable_raw_themes', [
     'tailwind' => [DishesSearchableRawTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesSearchableRawTable::class, (object) ['theme' => Bootstrap5::class]],
-    'daisyui' => [DishesSearchableRawTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

@@ -4,12 +4,12 @@
     'parentId' => null,
 ])
 
-@includeWhen(isset($setUp['responsive']), data_get($theme, 'root') . '.toggle-detail-responsive', [
+@includeWhen(isset($setUp['responsive']), theme_view('toggle-detail-responsive'), [
     'view' => data_get($setUp, 'detail.viewIcon') ?? null,
 ])
 
 @php
-    $defaultCollapseIcon = data_get($theme, 'root') . '.toggle-detail';
+    $defaultCollapseIcon = theme_view('toggle-detail');
 @endphp
 
 @includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
@@ -42,8 +42,8 @@
         $contentClassField = data_get($column, 'contentClassField');
 
         if ($content instanceof \UnitEnum) {
-            $content = $content instanceof \BackedEnum 
-                ? $content->value 
+            $content = $content instanceof \BackedEnum
+                ? $content->value
                 : $content->name;
         }
 
@@ -60,7 +60,7 @@
     @endphp
     <td
         @class([
-            theme_style($theme, 'table.body.td'),
+            theme('table.body.td.wrapper'),
             data_get($column, 'bodyClass'),
         ])
         @style([
@@ -85,7 +85,7 @@
                         @if (data_get($column, 'isAction'))
                             <div
                                 x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                                class="{{ theme_style($theme, 'table.body.tdActionsContainer') }}"
+                                class="{{ theme('table.body.td.actions_wrapper') }}"
                                 x-html="toHtml"
                             >
                             </div>
@@ -100,7 +100,7 @@
 
             @if ($showEditOnClick === true)
                 <span @class([$contentClassField, $contentClass])>
-                    @include(theme_style($theme, 'editable.view') ?? null, [
+                    @include(theme_view('editable') ?? null, [
                         'editable' => data_get($column, 'editable'),
                     ])
                 </span>
@@ -108,7 +108,7 @@
                 @php
                     $showToggleable = $this->shouldShowToggleable($column, $row);
                 @endphp
-                @include(theme_style($theme, 'toggleable.view'), ['tableName' => $tableName])
+                @include(theme_view('toggleable'), ['tableName' => $tableName])
             @else
                 <span @class([$contentClassField, $contentClass])>
                     @if (filled($templateContent))

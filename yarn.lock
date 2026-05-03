@@ -192,13 +192,6 @@
     object-hash "^3.0.0"
     tailwindcss "^3.3.2"
 
-"@tailwindcss/forms@^0.5.11":
-  version "0.5.11"
-  resolved "https://registry.npmjs.org/@tailwindcss/forms/-/forms-0.5.11.tgz"
-  integrity sha512-h9wegbZDPurxG22xZSoWtdzc41/OlNEUQERNqI/0fOwa2aVlWGu7C35E/x6LDyD3lgtztFSSjKZyuVM0hxhbgA==
-  dependencies:
-    mini-svg-data-uri "^1.2.3"
-
 "@tailwindcss/node@4.2.4":
   version "4.2.4"
   resolved "https://registry.npmjs.org/@tailwindcss/node/-/node-4.2.4.tgz"
@@ -251,18 +244,6 @@
   dependencies:
     tslib "^2.4.0"
 
-"@vue/reactivity@~3.1.1":
-  version "3.1.5"
-  resolved "https://registry.npmjs.org/@vue/reactivity/-/reactivity-3.1.5.tgz"
-  integrity sha512-1tdfLmNjWG6t/CsPldh+foumYFo3cpyCHgBYQ34ylaMsJ+SNHQ1kApMIa8jN+i593zQuaw3AdWH0nJTARzCFhg==
-  dependencies:
-    "@vue/shared" "3.1.5"
-
-"@vue/shared@3.1.5":
-  version "3.1.5"
-  resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.1.5.tgz"
-  integrity sha512-oJ4F3TnvpXaQwZJNF3ZK+kLPHKarDmJjJ6jyzVNDKH9md1dptjC7lWR//jrGuLdek/U6iltWxqAnYOu8gCiOvA==
-
 abbrev@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/abbrev/-/abbrev-2.0.0.tgz"
@@ -297,13 +278,6 @@ ajv@^8.9.0:
     fast-uri "^3.0.1"
     json-schema-traverse "^1.0.0"
     require-from-string "^2.0.2"
-
-alpinejs@^3.15.3:
-  version "3.15.3"
-  resolved "https://registry.npmjs.org/alpinejs/-/alpinejs-3.15.3.tgz"
-  integrity sha512-fSI6F5213FdpMC4IWaup92KhuH3jBX0VVqajRJ6cOTCy1cL6888KyXdGO+seAAkn+g6fnrxBqQEx6gRpQ5EZoQ==
-  dependencies:
-    "@vue/reactivity" "~3.1.1"
 
 ansi-regex@^5.0.1:
   version "5.0.1"
@@ -362,9 +336,9 @@ balanced-match@^1.0.0:
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
 baseline-browser-mapping@^2.10.12:
-  version "2.10.22"
-  resolved "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.22.tgz"
-  integrity sha512-6qruVrb5rse6WylFkU0FhBKKGuecWseqdpQfhkawn6ztyk2QlfwSRjsDxMCLJrkfmfN21qvhl9ABgaMeRkuwww==
+  version "2.10.24"
+  resolved "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.24.tgz"
+  integrity sha512-I2NkZOOrj2XuguvWCK6OVh9GavsNjZjK908Rq3mIBK25+GD8vPX5w2WdxVqnQ7xx3SrZJiCiZFu+/Oz50oSYSA==
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -439,9 +413,9 @@ camelcase-css@^2.0.1:
   integrity sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==
 
 caniuse-lite@^1.0.30001782, caniuse-lite@^1.0.30001787:
-  version "1.0.30001790"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001790.tgz"
-  integrity sha512-bOoxfJPyYo+ds6W0YfptaCWbFnJYjh2Y1Eow5lRv+vI2u8ganPZqNm1JwNh0t2ELQCqIWg4B3dWEusgAmsoyOw==
+  version "1.0.30001791"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001791.tgz"
+  integrity sha512-yk0l/YSrOnFZk3UROpDLQD9+kC1l4meK/wed583AXrzoarMGJcbRi2Q4RaUYbKxYAsZ8sWmaSa/DsLmdBeI1vQ==
 
 chalk@^4.1.0:
   version "4.1.2"
@@ -927,11 +901,6 @@ micromatch@^4.0.8:
   dependencies:
     braces "^3.0.3"
     picomatch "^2.3.1"
-
-mini-svg-data-uri@^1.2.3:
-  version "1.4.4"
-  resolved "https://registry.npmjs.org/mini-svg-data-uri/-/mini-svg-data-uri-1.4.4.tgz"
-  integrity sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==
 
 minimatch@^9.0.1, minimatch@^9.0.4:
   version "9.0.9"
@@ -1422,7 +1391,7 @@ tailwindcss@^3.3.2:
     resolve "^1.22.8"
     sucrase "^3.35.0"
 
-tailwindcss@^4.1.18, "tailwindcss@>=3.0.0 || >= 3.0.0-alpha.1 || >= 4.0.0-alpha.20 || >= 4.0.0-beta.1", tailwindcss@4.2.4:
+tailwindcss@^4.1.18, tailwindcss@4.2.4:
   version "4.2.4"
   resolved "https://registry.npmjs.org/tailwindcss/-/tailwindcss-4.2.4.tgz"
   integrity sha512-HhKppgO81FQof5m6TEnuBWCZGgfRAWbaeOaGT00KOy/Pf/j6oUihdvBpA7ltCeAvZpFhW3j0PTclkxsd4IXYDA==
@@ -1461,7 +1430,7 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-tom-select@^2.4.3:
+tom-select@^2.6.0:
   version "2.6.0"
   resolved "https://registry.npmjs.org/tom-select/-/tom-select-2.6.0.tgz"
   integrity sha512-o2ToBjhUAnrrQvW/hrY9c//TpOpAKYSlfuFnf0DIwNy+ua+mmYnsF4PxN/PpzBfUIfEFkNYAngeGBfOAZWF3tw==

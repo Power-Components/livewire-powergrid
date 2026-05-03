@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Builder;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Chef};
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -39,11 +39,7 @@ $component = new class() extends DishTableBase
 
 dataset('action:depends', [
     'tailwind' => [$component::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'bootstrap' => [$component::class, (object) ['theme' => Bootstrap5::class, 'join' => false]],
     'tailwind join' => [$component::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-    'bootstrap join' => [$component::class, (object) ['theme' => Bootstrap5::class, 'join' => true]],
-    'daisyui' => [$component::class, (object) ['theme' => DaisyUI::class, 'join' => false]],
-    'daisyui join' => [$component::class, (object) ['theme' => DaisyUI::class, 'join' => true]],
 ]);
 
 it('"depends" works properly in select', function (string $component, object $params) {

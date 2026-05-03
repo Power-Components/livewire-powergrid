@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Providers\SupportLivewireVersions;
 use stdClass;
 
 trait ManageRow
@@ -11,14 +10,6 @@ trait ManageRow
     public function prepareRowTemplates(): void
     {
         $rowTemplates = json_encode($this->rowTemplates());
-
-        if (SupportLivewireVersions::isV3()) {
-            $this->js(<<<JS
-                window[`pgRowTemplates_\${\$wire.id}`] = $rowTemplates
-            JS);
-
-            return;
-        }
 
         $this->js('pgRowTemplates', $rowTemplates);
     }
@@ -28,7 +19,7 @@ trait ManageRow
         $hasPermission = boolval(data_get($column, 'editable.hasPermission', false));
 
         $editOnClickVisibility = data_get(
-            collect((array) $row->__powergrid_rules) // @phpstan-ignore-line
+            collect((array) data_get($row, '__powergrid_rules')) // @phpstan-ignore-line
                 ->where('apply', true)
                 ->last(),
             'editOnClickVisibility'
@@ -50,7 +41,7 @@ trait ManageRow
         $showToggleable = boolval(data_get($column, 'toggleable.enabled', false));
 
         $toggleableRowRules = data_get(
-            collect((array) $row->__powergrid_rules) // @phpstan-ignore-line
+            collect((array) data_get($row, '__powergrid_rules')) // @phpstan-ignore-line
                 ->where('apply', true)
                 ->last(),
             'toggleableVisibility'
@@ -65,7 +56,7 @@ trait ManageRow
         }
 
         $fieldHideToggleable = (bool) data_get(
-            collect((array) $row->__powergrid_rules) // @phpstan-ignore-line
+            collect((array) data_get($row, '__powergrid_rules')) // @phpstan-ignore-line
                 ->where('apply', true)
                 ->last(),
             'fieldHideToggleable'

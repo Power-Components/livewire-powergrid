@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesCustomSortCollectionTable, DishesCustomSortTable};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -78,7 +78,6 @@ it('sortCallback is excluded from toLivewire serialization', function () {
 
 dataset('custom sort', [
     'tailwind' => [DishesCustomSortTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesCustomSortTable::class, (object) ['theme' => Bootstrap5::class]],
 ]);
 
 function customSortDishes(): array

@@ -3,9 +3,6 @@
     use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
     $dataTransformer = new DataTransformer($this);
-    $tableIsLazy = !is_null(data_get($setUp, 'lazy'));
-    $lazyConfig = data_get($setUp, 'lazy');
-    $rowsPerChildren = data_get($lazyConfig, 'rowsPerChildren')
 
     /** @var PowerGridComponent $this */
 
@@ -13,32 +10,28 @@
 <x-livewire-powergrid::table-base
     :$readyToLoad
     :$tableName
-    :$theme
-    :lazy="$tableIsLazy"
 >
     <x-slot:header>
-        @include('livewire-powergrid::components.table.tr')
+        @include(theme_view('table.header'))
     </x-slot:header>
 
     <x-slot:loading>
-        @include('livewire-powergrid::components.table.tr', ['loading' => true])
+        @include(theme_view('table.header'), ['loading' => true])
     </x-slot:loading>
 
     <x-slot:body>
-        @includeWhen($this->hasColumnFilters, 'livewire-powergrid::components.inline-filters')
+        @includeWhen($this->hasColumnFilters, theme_view('table.inline-filters'))
 
         @if (count($this->records) === 0)
-            @include('livewire-powergrid::components.table.th-empty')
+            @include(theme_view('table.th-empty'))
         @else
-            @includeWhen($headerTotalColumn, 'livewire-powergrid::components.table-header')
-
-            @if (empty($lazyConfig))
+            @includeWhen($headerTotalColumn, theme_view('table.header-summarize'))
 
                 @if (isset($setUp['detail']))
                     @foreach ($this->records as $row)
                         @php
                             $rowId = data_get($row, $this->realPrimaryKey);
-                            $class = theme_style($theme, 'table.body.tr');
+                            $class = theme('table.body.tr.wrapper');
                         @endphp
 
                         <tbody
@@ -47,7 +40,7 @@
                             x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
                         >
-                            @include('livewire-powergrid::components.row', [
+                            @include(theme_view('table.row'), [
                                 'rowIndex' => $loop->index + 1,
                             ])
 
@@ -85,13 +78,13 @@
                         </tbody>
 
                         @includeWhen(isset($setUp['responsive']),
-                            'livewire-powergrid::components.expand-container')
+                            theme_view('table.responsive-container'))
                     @endforeach
                 @else
                     @foreach ($this->records as $row)
                         @php
                             $rowId = data_get($row, $this->realPrimaryKey);
-                            $class = theme_style($theme, 'table.body.tr');
+                            $class = theme('table.body.tr.wrapper');
                         @endphp
 
                         <tr
@@ -100,7 +93,7 @@
                             x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
                             x-bind="getAttributes"
                         >
-                            @include('livewire-powergrid::components.row', [
+                            @include(theme_view('table.row'), [
                                 'rowIndex' => $loop->index + 1,
                             ])
                         </tr>
@@ -109,36 +102,8 @@
                             'livewire-powergrid::components.expand-container')
                     @endforeach
                 @endif
-            @else
-                <div>
-                    @foreach (range(0, data_get($lazyConfig, 'items')) as $item)
-                        @php
-                            $skip = $item * $rowsPerChildren;
-                            $take = $rowsPerChildren;
-                        @endphp
 
-                        <livewire:lazy-child
-                            key="{{ $this->getLazyKeys }}"
-                            :parentId="$this->getId()"
-                            :child-index="$item"
-                            :primary-key="$primaryKey"
-                            real-primary-key="{{ $this->realPrimaryKey }}"
-                            :$radio
-                            :$radioAttribute
-                            :$checkbox
-                            :$checkboxAttribute
-                            :theme="$theme"
-                            :$setUp
-                            :$tableName
-                            :parentName="$this->getName()"
-                            :columns="$this->visibleColumns"
-                            :data="$dataTransformer->transform($data->skip($skip)->take($take))->collection"
-                        />
-                    @endforeach
-                </div>
-            @endif
-
-            @includeWhen($footerTotalColumn, 'livewire-powergrid::components.table-footer')
+            @includeWhen($footerTotalColumn, theme_view('table.footer-summarize'))
         @endif
     </x-slot:body>
 </x-livewire-powergrid::table-base>

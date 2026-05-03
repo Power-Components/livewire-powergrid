@@ -7,7 +7,6 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Exportable,
     Footer,
     Header,
-    Lazy,
     Responsive
 };
 
@@ -36,11 +35,6 @@ class PowerGridManager
     public function responsive(): Responsive
     {
         return app(Responsive::class);
-    }
-
-    public function lazy(): Lazy
-    {
-        return app(Lazy::class);
     }
 
     public function cache(): Cache

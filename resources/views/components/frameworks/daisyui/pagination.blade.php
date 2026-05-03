@@ -4,7 +4,7 @@
     wire:target="loadMore"
 >
     @if($paginator->count() > 0)
-        <div class="items-center justify-between w-full sm:flex-1 sm:flex">
+        <div class="items-center text-sm justify-between w-full sm:flex-1 sm:flex">
             @if ($recordCount === 'full')
                 <div @class(['mr-3' => $paginator->hasPages()])>
                     <div @class([
@@ -56,7 +56,7 @@
 
                         @if (!$paginator->onFirstPage())
                             <a
-                                class="btn join-item"
+                                class="btn btn-sm join-item"
                                 wire:click="gotoPage(1, '{{ $paginator->getPageName() }}')"
                             >
                                 <svg
@@ -75,7 +75,7 @@
                             </a>
 
                             <a
-                                class="btn join-item flex items-center"
+                                class="btn btn-sm join-item flex items-center"
                                 wire:click="previousPage('{{ $paginator->getPageName() }}')"
                                 rel="next"
                             >
@@ -100,14 +100,14 @@
                             @if (is_array($element))
                                 @foreach ($element as $page => $url)
                                     @if ($page == $paginator->currentPage())
-                                        <span class="btn join-item btn-primary">{{ $page }}</span>
+                                        <span class="btn btn-sm join-item btn-primary">{{ $page }}</span>
                                     @elseif (
                                         $page === $paginator->currentPage() + 1 ||
                                             $page === $paginator->currentPage() + 2 ||
                                             $page === $paginator->currentPage() - 1 ||
                                             $page === $paginator->currentPage() - 2)
                                         <a
-                                            class="btn join-item"
+                                            class="btn btn-sm join-item"
                                             wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                         >{{ $page }}</a>
                                     @endif
@@ -120,7 +120,7 @@
                                 @class([
                                     'block' => $paginator->lastPage() - $paginator->currentPage() >= 2,
                                     'hidden' => $paginator->lastPage() - $paginator->currentPage() < 2,
-                                    'btn join-item flex',
+                                    'btn btn-sm join-item flex',
                                 ])
                                 wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                 rel="next"
@@ -140,7 +140,7 @@
                                 </svg>
                             </a>
                             <a
-                                class="btn join-item"
+                                class="btn btn-sm join-item"
                                 wire:click="gotoPage({{ $paginator->lastPage() }}, '{{ $paginator->getPageName() }}')"
                             >
                                 <svg
@@ -175,7 +175,7 @@
                                 @if ($paginator->onFirstPage())
                                     <button
                                         disabled
-                                        class="btn join-item"
+                                        class="btn btn-sm join-item"
                                     >
                                         @lang('Previous')
                                     </button>
@@ -184,7 +184,7 @@
                                         <button
                                             wire:click="setPage('{{ $paginator->previousCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="btn join-item"
+                                            class="btn btn-sm join-item"
                                         >
                                             <svg
                                                 fill="none"
@@ -205,7 +205,7 @@
                                         <button
                                             wire:click="previousPage('{{ $paginator->getPageName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="select-none btn join-item"
+                                            class="select-none btn btn-sm join-item"
                                         >
                                             @lang('Previous')
                                         </button>
@@ -220,7 +220,7 @@
                                         <button
                                             wire:click="setPage('{{ $paginator->nextCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="btn join-item"
+                                            class="btn btn-sm join-item"
                                         >
                                             <svg
                                                 fill="none"
@@ -241,7 +241,7 @@
                                         <button
                                             wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="btn join-item"
+                                            class="btn btn-sm join-item"
                                         >
                                             @lang('Next')
                                         </button>
@@ -249,7 +249,7 @@
                                 @else
                                     <button
                                         disabled
-                                        class="btn join-item"
+                                        class="btn btn-sm join-item"
                                     >
                                         @lang('Next')
                                     </button>

@@ -9,7 +9,6 @@ export default defineConfig({
             input: [
                 'resources/js/powergrid.js',
                 'resources/css/tailwind.css',
-                'resources/css/bootstrap5.css'
             ],
             output: {
                 entryFileNames: '[name].js',

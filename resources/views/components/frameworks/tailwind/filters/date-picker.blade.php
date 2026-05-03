@@ -35,10 +35,10 @@
     x-data="pgFlatpickr(@js($params))"
 >
     <div
-        @class([theme_style($theme, 'filterDatePicker.base'), 'space-y-1' => !$inline])
+        @class([theme('filter.date_picker.base'), 'space-y-1' => !$inline])
     >
         @if (!$inline)
-            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="{{ theme('filter.label', 'block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300') }}">
                 {{ $title }}
             </label>
         @endif
@@ -49,7 +49,7 @@
                 wire:model="filters.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
-                class="{{ theme_style($theme, 'filterDatePicker.input') }} {{ data_get($column, 'headerClass') }}"
+                class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"
                 type="text"
                 readonly
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.select') }}"

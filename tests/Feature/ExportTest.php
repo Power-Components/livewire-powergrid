@@ -352,7 +352,7 @@ expect()->extend('toBeXLSDownload', function (array $headings, array $rows) {
 
     foreach ($reader->getSheetIterator() as $sheet) {
         foreach ($sheet->getRowIterator() as $row) {
-            foreach ($row->getCells() as $cell) {
+            foreach ($row->cells as $cell) {
                 $testableRows[] = $cell->getValue();
             }
         }

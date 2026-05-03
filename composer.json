@@ -18,19 +18,20 @@
     }
   ],
   "require": {
-    "php": "^8.2",
-    "livewire/livewire": "^3.7|^4.0",
-    "laravel/prompts": "*"
+    "php": "^8.3",
+    "livewire/livewire": "^4.0",
+    "laravel/prompts": "*",
+    "power-components/partials": "*",
+    "openspout/openspout": "^5.7"
   },
   "require-dev": {
-    "laravel/pint": "^1.26",
-    "pestphp/pest": "^3.0|^4.0",
-    "orchestra/testbench": "^9.4|^10.0",
-    "larastan/larastan": "^2.0|^3.0",
+    "laravel/pint": "^1.29",
+    "pestphp/pest": "^4.6",
+    "orchestra/testbench": "^10.0",
+    "larastan/larastan": "^3.0",
     "laradumps/laradumps": "^4.6",
     "laravel/scout": "^10.11.3",
-    "openspout/openspout": "^4.24.5|^5.0",
-    "composer/composer": "^2.8"
+    "composer/composer": "^2.9"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"
@@ -100,6 +101,10 @@
     {
       "type": "path",
       "url": "../../../"
+    },
+    {
+      "type": "path",
+      "url": "/Users/luan.freitas/Dev/power-components/partials"
     }
   ]
 }

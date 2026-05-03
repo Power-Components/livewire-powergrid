@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 use PowerComponents\LivewirePowerGrid\FilterAttributes\{Boolean, InputText, Number, Select};
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Tailwind};
 
 return [
 
@@ -11,29 +11,15 @@ return [
     | Theme
     |--------------------------------------------------------------------------
     |
-    | PowerGrid supports Tailwind and Bootstrap 5 themes.
+    | PowerGrid supports Tailwind.
     | Configure here the theme of your choice.
     */
 
     'theme' => Tailwind::class,
-    // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class,
-    // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\Bootstrap5::class,
+    // 'theme' => DaisyUI::class,
+    // 'theme' => Flux::class,
 
     'cache_ttl' => null,
-
-    'icon_resources' => [
-        'paths' => [
-            // 'default' => 'resources/views/components/icons',
-            // 'outline' => 'vendor/wireui/wireui/resources/views/components/icons/outline',
-            // 'solid'   => 'vendor/wireui/wireui/resources/views/components/icons/solid',
-        ],
-
-        'allowed' => [
-            // 'pencil',
-        ],
-
-        'attributes' => ['class' => 'w-5 text-red-600'],
-    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -60,28 +46,14 @@ return [
         ],
 
         'select' => [
-            'default' => 'tom',
-
-            /*
-             * TomSelect Options
-             * https://tom-select.js.org
-             */
-            'tom' => [
-                'plugins' => [
-                    'clear_button' => [
-                        'title' => 'Remove all selected options',
-                    ],
-                ],
-            ],
-
-            /*
-             * Slim Select options
-             * https://slimselectjs.com/
-             */
+            'default' => 'slim',
             'slim' => [
-                'settings' => [
-                    'alwaysOpen' => false,
-                ],
+                'cdn' => 'https://unpkg.com/slim-select@latest/dist/slimselect.min.js',
+                'css' => 'https://unpkg.com/slim-select@latest/dist/slimselect.css',
+            ],
+            'tom' => [
+                'cdn' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/js/tom-select.complete.min.js',
+                'css' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/css/tom-select.css',
             ],
         ],
     ],

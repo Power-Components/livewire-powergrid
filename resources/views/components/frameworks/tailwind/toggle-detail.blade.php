@@ -6,15 +6,15 @@
             collapseOthers: @js(data_get($setUp, 'detail.collapseOthers', false)),
             toggleDetail() {
                 const isOpen = this.collapsed;
-    
+
                 if (this.collapseOthers) {
                     this.$dispatch('pg-toggle-detail-{{ $tableName }}-hidden-all');
                     expandedId = '{{ $rowId }}';
                 }
-    
+
                 this.loading = true;
                 this.collapsed = !isOpen;
-    
+
                 this.$dispatch('pg-toggle-detail-{{ $tableName }}-{{ $rowId }}', {
                     collapsed: this.collapsed
                 });
@@ -23,7 +23,7 @@
     }"
     x-on:pg-toggle-detail-{{ $tableName }}-hidden-all.window="collapsed = false"
     x-on:pg-toggle-detail-{{ $tableName }}-loaded.window="loading = false;"
-    class="{{ theme_style($theme, 'table.body.td') }}"
+    class="{{ theme('table.body.td.wrapper') }}"
 >
     <div
         class="cursor-pointer flex items-center"
@@ -31,7 +31,7 @@
     >
         <div x-show="loading">
             <x-livewire-powergrid::icons.loading
-                class="text-pg-primary-300 dark:text-pg-primary-400 h-5 w-5 animate-spin"
+                class="text-pg-primary-300 dark:text-pg-primary-400 size-4 animate-spin"
             />
         </div>
 

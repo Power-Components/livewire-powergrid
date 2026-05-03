@@ -1,20 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
-
-if (! function_exists('isBootstrap5')) {
-    function isBootstrap5(): bool
-    {
-        return in_array(config('livewire-powergrid.theme'), ['bootstrap', Bootstrap5::class]);
-    }
-}
-
-if (! function_exists('isTailwind')) {
-    function isTailwind(): bool
-    {
-        return in_array(config('livewire-powergrid.theme'), ['tailwind', Tailwind::class]);
-    }
-}
+use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 
 if (! function_exists('powergrid_components_path')) {
     function powergrid_components_path(string $filename = ''): string
@@ -49,11 +35,16 @@ if (! function_exists('once')) {
     }
 }
 
-if (! function_exists('theme_style')) {
-    function theme_style(array $theme, string $name, ?string $default = null): string
+if (! function_exists('theme')) {
+    function theme(string $key, string $default = ''): string
     {
-        return strval(
-            data_get($theme, str($name)->append('.0')) ?? data_get($theme, $name, $default)
-        );
+        return ThemeManager::theme($key, $default);
+    }
+}
+
+if (! function_exists('theme_view')) {
+    function theme_view(string $alias): string
+    {
+        return ThemeManager::view($alias);
     }
 }

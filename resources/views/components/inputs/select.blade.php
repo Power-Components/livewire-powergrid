@@ -61,7 +61,7 @@ $alpineData =
     x-data="{{ $alpineData }}"
 >
     @if (filled($filter))
-        <div class="{{ theme_style($theme, 'filterSelect.base') }}">
+        <div class="{{ theme('filter.select.base') }}">
             @if (!$inline)
                 <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
                     {{ $title }}
@@ -70,7 +70,7 @@ $alpineData =
 
             <select
                 @if ($multiple) multiple @endif
-                class="{{ theme_style($theme, 'filterMultiSelect.select') }}"
+                class="{{ theme('filter.multi_select.select') }}"
                 wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >

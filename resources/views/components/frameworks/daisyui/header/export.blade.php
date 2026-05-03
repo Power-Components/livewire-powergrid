@@ -1,61 +1,14 @@
-<div
-    x-data="{ open: false, countChecked: @entangle('checkboxValues').live }"
-    class="dropdown"
->
-    <div
-        tabindex="0"
-        role="button"
-        class="btn btn-sm btn-primary"
-    >
-        <x-livewire-powergrid::icons.download class="h-5 w-5" />
+<div class="{{ theme('header.export.container') }}" :class="{ 'dropdown-open': open }" x-data="{ open: false, countChecked: @entangle('checkboxValues').live }" x-on:keydown.esc="open = false" x-on:click.outside="open = false">
+    <div tabindex="0" role="button" class="{{ theme('header.export.button') }}" x-on:click="open = !open">
+        <x-livewire-powergrid::icons.download class="w-4 h-4" />
     </div>
-    <div
-        tabindex="0"
-        class="dropdown-content card card-sm bg-base-100 z-1 shadow-md"
-    >
-        <div class="card-body">
-            @if (in_array('xlsx', data_get($setUp, 'exportable.type')))
-                <div class="flex items-center gap-2">
-                    <span class="w-12">@lang('XLSX')</span>
-                    <button
-                        wire:click.prevent="exportToXLS"
-                        x-on:click="open = false"
-                        href="#"
-                        class="btn btn-sm"
-                    >
-                        <span class="export-count text-xs">({{ $this->total }})</span>
-                        @if (count($enabledFilters) === 0)
-                            @lang('livewire-powergrid::datatable.labels.all')
-                        @else
-                            @lang('livewire-powergrid::datatable.labels.filtered')
-                        @endif
-
-                    </button>
-                    @if ($checkbox)
-                        <button
-                            wire:click.prevent="exportToXLS(true)"
-                            x-on:click="open = false"
-                            x-bind:disabled="countChecked.length === 0"
-                            :class="{ 'cursor-not-allowed': countChecked.length === 0 }"
-                            class="btn btn-sm"
-                        >
-                            <span
-                                class="export-count text-xs"
-                                x-text="`(${countChecked.length})`"
-                            ></span> @lang('livewire-powergrid::datatable.labels.selected')
-                        </button>
-                    @endif
-                </div>
-            @endif
-            @if (in_array('csv', data_get($setUp, 'exportable.type')))
-                <div class="flex items-center gap-2">
-                    <span class="w-12">@lang('Csv')</span>
-                    <button
-                        wire:click.prevent="exportToCsv"
-                        x-on:click="open = false"
-                        class="btn btn-sm"
-                    >
-                        <span class="export-count text-xs">({{ $this->total }})</span>
+    <ul tabindex="0" class="{{ theme('header.export.menu') }} flex flex-col gap-2">
+        @if (in_array('xlsx', data_get($setUp, 'exportable.type')))
+            <li class="{{ theme('header.export.menu_item') }} p-0 flex-row items-center hover:bg-transparent focus:bg-transparent active:bg-transparent">
+                <div class="flex items-center gap-2 p-0 hover:bg-transparent active:bg-transparent focus:bg-transparent">
+                    <span class="w-12 font-medium text-sm">@lang('XLSX')</span>
+                    <button wire:click.prevent="exportToXLS" x-on:click="open = false" class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200">
+                        <span class="export-count text-xs opacity-70">({{ $this->total }})</span>
                         @if (count($enabledFilters) === 0)
                             @lang('livewire-powergrid::datatable.labels.all')
                         @else
@@ -63,21 +16,32 @@
                         @endif
                     </button>
                     @if ($checkbox)
-                        <button
-                            wire:click.prevent="exportToCsv(true)"
-                            x-on:click="open = false"
-                            x-bind:disabled="countChecked.length === 0"
-                            :class="{ 'cursor-not-allowed': countChecked.length === 0 }"
-                            class="btn btn-sm"
-                        >
-                            <span
-                                class="export-count text-xs"
-                                x-text="`(${countChecked.length})`"
-                            ></span> @lang('livewire-powergrid::datatable.labels.selected')
+                        <button wire:click.prevent="exportToXLS(true)" x-on:click="open = false" x-bind:disabled="countChecked.length === 0" :class="{ 'cursor-not-allowed': countChecked.length === 0 }" class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200">
+                            <span class="export-count text-xs opacity-70" x-text="`(${countChecked.length})`"></span> @lang('livewire-powergrid::datatable.labels.selected')
                         </button>
                     @endif
                 </div>
-            @endif
-        </div>
-    </div>
+            </li>
+        @endif
+        @if (in_array('csv', data_get($setUp, 'exportable.type')))
+            <li class="{{ theme('header.export.menu_item') }} p-0 flex-row items-center hover:bg-transparent focus:bg-transparent active:bg-transparent">
+                <div class="flex items-center gap-2 p-0 hover:bg-transparent active:bg-transparent focus:bg-transparent">
+                    <span class="w-12 font-medium text-sm">@lang('Csv')</span>
+                    <button wire:click.prevent="exportToCsv" x-on:click="open = false" class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200">
+                        <span class="export-count text-xs opacity-70">({{ $this->total }})</span>
+                        @if (count($enabledFilters) === 0)
+                            @lang('livewire-powergrid::datatable.labels.all')
+                        @else
+                            @lang('livewire-powergrid::datatable.labels.filtered')
+                        @endif
+                    </button>
+                    @if ($checkbox)
+                        <button wire:click.prevent="exportToCsv(true)" x-on:click="open = false" x-bind:disabled="countChecked.length === 0" :class="{ 'cursor-not-allowed': countChecked.length === 0 }" class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200">
+                            <span class="export-count text-xs opacity-70" x-text="`(${countChecked.length})`"></span> @lang('livewire-powergrid::datatable.labels.selected')
+                        </button>
+                    @endif
+                </div>
+            </li>
+        @endif
+    </ul>
 </div>

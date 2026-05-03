@@ -1,3 +1,3 @@
 <td
-    class="{{ theme_style($theme, 'table.body.td') }}"
+    class="@theme('table.body.td.wrapper')"
 ></td>

@@ -57,7 +57,6 @@ body:
           label: Which Theme are you using?
           options:
               - 'Tailwind'
-              - 'Bootstrap 5'
 
     - type: dropdown
       id: published-assets

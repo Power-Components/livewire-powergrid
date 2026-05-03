@@ -25,8 +25,8 @@
 
         $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
 
-        $selectClasses = theme_style($theme, 'filterInputText.select');
-        $inputClasses = theme_style($theme, 'filterInputText.input');
+        $selectClasses = theme('filter.input_text.select');
+        $inputClasses = theme('filter.input_text.input');
 
         $params = array_merge(
             [
@@ -48,16 +48,16 @@
         />
     @else
         <div
-            @class([theme_style($theme, 'filterInputText.base'), 'space-y-1' => !$inline])
+            @class([theme('filter.input_text.base'), 'space-y-1' => !$inline])
         >
             @if (!$inline)
-                <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
+                <label class="{{ theme('filter.label') }}">
                     {{ $title }}
                 </label>
             @endif
             <div @class([
                 'w-full space-y-2 sm:flex sm:space-y-0' => !$inline && $showSelectOptions,
-                'flex flex-col space-y-1.5' => $inline && $showSelectOptions,
+                'flex flex-col space-y-1.5 gap-1' => $inline && $showSelectOptions,
             ])>
                 @if ($showSelectOptions)
                     <div @class([
@@ -77,10 +77,6 @@
                                     >{{ trans('livewire-powergrid::datatable.input_text_options.' . $value) }}</option>
                                 @endforeach
                             </select>
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-pg-primary-700 dark:text-pg-primary-300">
-                                <x-livewire-powergrid::icons.down class="w-4 h-4 dark:text-gray-300" />
-                            </div>
                         </div>
                     </div>
                 @endif

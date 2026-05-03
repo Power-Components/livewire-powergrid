@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSoftDeletesTable;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -106,8 +106,6 @@ it('should trigger softDeletes method through event listener', function (string 
 
 dataset('soft_deletes', [
     [DishesSoftDeletesTable::class, Tailwind::class],
-    [DishesSoftDeletesTable::class, Bootstrap5::class],
-    [DishesSoftDeletesTable::class, DaisyUI::class],
 ]);
 
 /**

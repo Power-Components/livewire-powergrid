@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesEnumTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -49,6 +49,4 @@ function filterEnumSelect(string $dataField, ?string $value): array
 
 dataset('enum_themes', [
     'tailwind -> id' => [DishesEnumTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-    'bootstrap -> id' => [DishesEnumTable::class, (object) ['theme' => Bootstrap5::class, 'field' => 'id']],
-    'daisyui -> id' => [DishesEnumTable::class, (object) ['theme' => DaisyUI::class, 'field' => 'id']],
 ]);

@@ -3,18 +3,17 @@
 namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Collection;
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache, Facades\DB};
+use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
-use PowerComponents\LivewirePowerGrid\Events\PowerGridPerformanceData;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
+use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /**
@@ -30,7 +29,6 @@ class PowerGridComponent extends Component
     use Concerns\Filter;
     use Concerns\HasActions;
     use Concerns\Hooks;
-    use Concerns\LazyManager;
     use Concerns\Listeners;
     use Concerns\ManageRow;
     use Concerns\Persist;
@@ -40,7 +38,26 @@ class PowerGridComponent extends Component
     use Concerns\Summarize;
     use WithPagination;
 
-    public array $theme = [];
+    public function template(): ?Theme
+    {
+        return null;
+    }
+
+    public function boot(): void
+    {
+        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
+
+        /** @var Theme $themeInstance */
+        $themeInstance = app($themeClass);
+
+        $customTheme = $this->template();
+
+        if ($customTheme instanceof Theme) {
+            $themeInstance = $customTheme;
+        }
+
+        app()->instance('powergrid.theme', $themeInstance);
+    }
 
     /**
      * @throws TableNameCannotCalledDefault
@@ -48,9 +65,6 @@ class PowerGridComponent extends Component
      */
     public function mount(): void
     {
-        $this->theme = app($this->customThemeClass() ?? strval(config('livewire-powergrid.theme')))->apply();
-
-        $this->prepareActionsResources();
         $this->prepareRowTemplates();
 
         $this->readyToLoad = ! $this->deferLoading;
@@ -79,27 +93,11 @@ class PowerGridComponent extends Component
     public function updatedPage(): void
     {
         $this->checkboxAll = false;
-
-        if (! app()->runningInConsole() && $this->hasLazyEnabled()) {
-            $this->additionalCacheKey = uniqid();
-
-            data_set($this->setUp, 'lazy.items', 0);
-
-            $this->render();
-
-            $this->dispatch('pg:scrollTop', name: $this->getName());
-        }
     }
 
     public function updatedSearch(): void
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
-
-        if (! app()->runningInConsole() && $this->hasLazyEnabled()) {
-            $this->additionalCacheKey = uniqid();
-
-            data_set($this->setUp, 'lazy.items', 0);
-        }
     }
 
     #[Computed]
@@ -148,30 +146,15 @@ class PowerGridComponent extends Component
         $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
 
         $results['actionsByRow'] = $this->transformActions($results['actionsByRow'], $results['results']->getCollection());
-        $this->dispatchActionsToJS($results['actionsByRow']);
 
-        if ($this->measurePerformance) {
-            app(Dispatcher::class)->dispatch(
-                new PowerGridPerformanceData(
-                    tableName: $this->tableName,
-                    retrieveDataInMs: 0,
-                    isCached: true,
-                )
-            );
-        }
+        $this->js('pgActions', json_encode($results['actionsByRow']));
 
         return $this->applyAfterQuery($results['results']);
     }
 
     private function getRecordsDataSource(): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
     {
-        if ($this->measurePerformance) {
-            DB::enableQueryLog();
-        }
-
-        $start = microtime(true);
         $processResult = ProcessDataSource::make($this)->get();
-        $retrieveData = round((microtime(true) - $start) * 1000);
 
         /** @var BaseCollection $actionsRows */
         $actionsRows = ($processResult['results'] instanceof AbstractPaginator || $processResult['results'] instanceof \Illuminate\Contracts\Pagination\Paginator)
@@ -179,26 +162,8 @@ class PowerGridComponent extends Component
             : new BaseCollection($processResult['results']);
 
         $processResult['actionsByRow'] = $this->transformActions($processResult['actionsByRow'], $actionsRows);
-        $this->dispatchActionsToJS($processResult['actionsByRow']);
 
-        if ($this->measurePerformance) {
-            $queries = DB::getQueryLog();
-
-            DB::disableQueryLog();
-
-            /** @var float $queriesTime */
-            $queriesTime = collect($queries)->sum('time');
-
-            app(Dispatcher::class)->dispatch(
-                new PowerGridPerformanceData(
-                    $this->tableName,
-                    retrieveDataInMs: $retrieveData,
-                    transformDataInMs: $processResult['transformTime'],
-                    queriesTimeInMs: $queriesTime,
-                    queries: $queries,
-                )
-            );
-        }
+        $this->js('pgActions', json_encode($processResult['actionsByRow']));
 
         return $this->applyAfterQuery($processResult['results']);
     }
@@ -315,24 +280,10 @@ class PowerGridComponent extends Component
 
     public function render(): Application|Factory|View
     {
-        $data = [];
-
-        if (isset($this->setUp['lazy'])) {
-            $cacheKey = 'lazy-tmp-'.$this->getId().'-'.implode('-', $this->getCacheKeys());
-
-            $data = Cache::remember($cacheKey, 60, fn () => $this->records());
-
-            /** @phpstan-ignore-next-line */
-            $this->totalCurrentPage = method_exists($data, 'items') ? count($data->items()) : $data->count();
-        }
-
-        $this->storeActionsHeaderInJSWindow();
-
         $this->resolveFilters();
 
-        return view(theme_style($this->theme, 'layout.table'), [
+        return view(theme_view('table'), [
             'table' => 'livewire-powergrid::components.table',
-            'data' => isset($this->setUp['lazy']) ? $data : [],
         ]);
     }
 }

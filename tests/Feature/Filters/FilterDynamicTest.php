@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesDynamicFiltersTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -20,6 +20,4 @@ it(
 
 dataset('dynamic_themes', [
     'tailwind' => [DishesDynamicFiltersTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesDynamicFiltersTable::class, (object) ['theme' => Bootstrap5::class]],
-    'daisyui' => [DishesDynamicFiltersTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

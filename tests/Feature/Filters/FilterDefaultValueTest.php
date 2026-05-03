@@ -5,7 +5,7 @@ use PowerComponents\LivewirePowerGrid\Tests\{
     Concerns\Components\DishesTable
 };
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -40,8 +40,6 @@ it('applies default boolean filter value "true" on mount', function (string $com
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultBooleanTrue::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultBooleanTrue::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultBooleanFalse = new class() extends DishesTable
@@ -73,8 +71,6 @@ it('applies default boolean filter value "false" on mount', function (string $co
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultBooleanFalse::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultBooleanFalse::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultBooleanFalse::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default boolean filter', function (string $component, object $params) {
@@ -96,8 +92,6 @@ it('can clear a default boolean filter', function (string $component, object $pa
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultBooleanTrue::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultBooleanTrue::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultBooleanAll = new class() extends DishesTable
@@ -129,8 +123,6 @@ it('applies default boolean filter value "all" on mount', function (string $comp
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultBooleanAll::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultBooleanAll::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultBooleanAll::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Select default ────────────────────────────────────────────────────
@@ -168,8 +160,6 @@ it('applies default select filter value on mount', function (string $component, 
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultSelect::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultSelect::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultSelect::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default select filter', function (string $component, object $params) {
@@ -190,8 +180,6 @@ it('can clear a default select filter', function (string $component, object $par
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultSelect::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultSelect::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultSelect::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Multi Select default ──────────────────────────────────────────────
@@ -229,8 +217,6 @@ it('applies default multi_select filter value on mount', function (string $compo
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultMultiSelect::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultMultiSelect::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultMultiSelectMultiple = new class() extends DishesTable
@@ -266,8 +252,6 @@ it('applies default multi_select filter with multiple values on mount', function
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultMultiSelectMultiple::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultMultiSelectMultiple::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultMultiSelectMultiple::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default multi_select filter', function (string $component, object $params) {
@@ -288,8 +272,6 @@ it('can clear a default multi_select filter', function (string $component, objec
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultMultiSelect::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultMultiSelect::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Input Text default ────────────────────────────────────────────────
@@ -320,8 +302,6 @@ it('applies default input_text filter value on mount', function (string $compone
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultInputText::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultInputText::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultInputText::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultInputTextWithOperator = new class() extends DishesTable
@@ -356,8 +336,6 @@ it('applies default input_text filter with operator on mount', function (string 
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultInputTextWithOperator::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultInputTextWithOperator::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultInputTextWithOperator::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default input_text filter', function (string $component, object $params) {
@@ -376,8 +354,6 @@ it('can clear a default input_text filter', function (string $component, object 
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultInputText::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultInputText::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultInputText::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Number default ────────────────────────────────────────────────────
@@ -420,8 +396,6 @@ it('applies default number filter value on mount', function (string $component, 
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultNumber::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultNumber::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultNumber::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultNumberStartOnly = new class() extends DishesTable
@@ -459,8 +433,6 @@ it('applies default number filter with start only on mount', function (string $c
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultNumberStartOnly::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultNumberStartOnly::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultNumberStartOnly::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default number filter', function (string $component, object $params) {
@@ -485,8 +457,6 @@ it('can clear a default number filter', function (string $component, object $par
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultNumber::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultNumber::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultNumber::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Date/Datetime default ─────────────────────────────────────────────
@@ -524,8 +494,6 @@ it('applies default datetime filter value on mount', function (string $component
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultDatetime::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultDatetime::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultDatetime::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 $defaultDate = new class() extends DishesTable
@@ -561,8 +529,6 @@ it('applies default date filter value on mount', function (string $component, ob
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultDate::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultDate::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultDate::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 it('can clear a default datetime filter', function (string $component, object $params) {
@@ -577,8 +543,6 @@ it('can clear a default datetime filter', function (string $component, object $p
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultDatetime::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultDatetime::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultDatetime::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Enabled filters tracking ─────────────────────────────────────────
@@ -597,8 +561,6 @@ it('registers default filters in enabledFilters', function (string $component, o
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultBooleanTrue::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultBooleanTrue::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── clearAllFilters resets defaults ───────────────────────────────────
@@ -633,8 +595,6 @@ it('clearAllFilters resets all default filters', function (string $component, ob
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultMultipleFilters::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultMultipleFilters::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultMultipleFilters::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── Multiple default filters applied together ─────────────────────────
@@ -659,8 +619,6 @@ it('applies multiple default filters simultaneously on mount', function (string 
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$defaultMultipleFilters::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$defaultMultipleFilters::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$defaultMultipleFilters::class, (object) ['theme' => DaisyUI::class]],
     ]);
 
 // ── No default value means no filter applied ──────────────────────────
@@ -689,6 +647,4 @@ it('does not apply filters when no default value is set', function (string $comp
 })->group('filters', 'filterDefaultValue')
     ->with([
         'tailwind' => [$noDefaultFilter::class, (object) ['theme' => Tailwind::class]],
-        'bootstrap' => [$noDefaultFilter::class, (object) ['theme' => Bootstrap5::class]],
-        'daisyui' => [$noDefaultFilter::class, (object) ['theme' => DaisyUI::class]],
     ]);

@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSearchJSONTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -23,6 +23,4 @@ it('searches JSON column', function (string $component, object $params) {
 
 dataset('search-json', [
     'tailwind' => [DishesSearchJSONTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesSearchJSONTable::class, (object) ['theme' => Bootstrap5::class]],
-    'daisyui' => [DishesSearchJSONTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

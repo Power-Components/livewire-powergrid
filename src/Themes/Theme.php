@@ -2,47 +2,53 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
-class Theme
+abstract class Theme
 {
-    public string $name = '';
+    protected array $tokens = [];
 
-    public string $base = 'livewire-powergrid::components.frameworks.';
-
-    public function root(): string
+    public static function make(): static
     {
-        return $this->base.$this->name;
+        return new static();
     }
 
-    public function layout(): array
+    abstract public function struct(): array;
+
+    public function views(): array
     {
-        return [
-            'table' => $this->root().'.table-base',
-            'header' => $this->root().'.header',
-            'pagination' => $this->root().'.pagination',
-            'footer' => $this->root().'.footer',
-        ];
+        return [];
     }
 
-    public function apply(): array
+    public function merge(array $overrides): static
     {
-        return [
-            'name' => $this->name,
-            'root' => $this->root(),
-            'table' => $this->table(),
-            'footer' => $this->footer(),
-            'cols' => $this->cols(),
-            'editable' => $this->editable(),
-            'layout' => $this->layout(),
-            'toggleable' => $this->toggleable(),
-            'checkbox' => $this->checkbox(),
-            'radio' => $this->radio(),
-            'filterBoolean' => $this->filterBoolean(),
-            'filterDatePicker' => $this->filterDatePicker(),
-            'filterMultiSelect' => $this->filterMultiSelect(),
-            'filterNumber' => $this->filterNumber(),
-            'filterSelect' => $this->filterSelect(),
-            'filterInputText' => $this->filterInputText(),
-            'searchBox' => $this->searchBox(),
-        ];
+        $this->tokens = array_replace_recursive($this->resolveTokens(), $overrides);
+
+        return $this;
+    }
+
+    public function resolveTokens(): array
+    {
+        if (empty($this->tokens)) {
+            $this->tokens = $this->struct();
+        }
+
+        return $this->tokens;
+    }
+
+    public function get(string $key, string $default = ''): string
+    {
+        return strval(data_get($this->resolveTokens(), $key, $default));
+    }
+
+    public function resolveView(string $alias): string
+    {
+        $views = $this->views();
+
+        if (isset($views[$alias])) {
+            return $views[$alias];
+        }
+
+        $tailwindViews = (new Tailwind())->views();
+
+        return $tailwindViews[$alias] ?? '';
     }
 }

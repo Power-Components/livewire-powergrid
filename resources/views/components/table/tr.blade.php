@@ -2,11 +2,11 @@
     'loading' => false,
 ])
 <tr
-    class="{{ theme_style($theme, 'table.header.tr') }}"
+    class="{{ theme('table.header.tr') }}"
 >
     @if ($loading)
         <td
-            class="{{ theme_style($theme, 'table.body.tbodyEmpty') }}"
+            class="{{ theme('table.body.empty_state') }}"
             colspan="999"
         >
             @if ($loadingComponent)
@@ -19,7 +19,7 @@
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <th
                 scope="col"
-                class="{{ theme_style($theme, 'table.header.th') }}"
+                class="{{ theme('table.header.th') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -29,14 +29,14 @@
             <th
                 fixed
                 x-show="hasHiddenElements"
-                class="{{ theme_style($theme, 'table.header.th') }}"
+                class="{{ theme('table.header.th') }}"
             >
             </th>
         @endisset
 
         @if ($radio)
             <th
-                class="{{ theme_style($theme, 'table.header.th') }}"
+                class="{{ theme('table.header.th') }}"
             >
             </th>
         @endif
@@ -46,12 +46,17 @@
         @endif
 
         @foreach ($columns as $column)
-            <x-livewire-powergrid::cols
-                wire:key="cols-{{ data_get($column, 'field') }} }}"
-                :$column
-                :$theme
-                :$enabledFilters
-            />
+            @include('livewire-powergrid::components.cols', [
+                'column'         => $column,
+                'theme'          => $theme,
+                'enabledFilters' => $enabledFilters,
+                'setUp'          => $setUp,
+                'tableName'      => $tableName,
+                'multiSort'      => $this->multiSort,
+                'sortArray'      => $this->sortArray,
+                'sortField'      => $this->sortField,
+                'sortDirection'  => $this->sortDirection,
+            ])
         @endforeach
 
         @if (isset($actions) && count($actions))
@@ -68,7 +73,7 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ theme_style($theme, 'table.header.th') . ' ' . theme_style($theme, 'table.header.thAction') }}"
+                class="{{ theme('table.header.th') . ' ' . theme('table.header.th_action') }}"
                 scope="col"
                 colspan="999"
                 wire:key="{{ md5('actions') }}"

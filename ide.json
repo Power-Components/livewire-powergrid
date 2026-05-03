@@ -1,92 +1,75 @@
 {
-    "$schema": "https://laravel-ide.com/schema/laravel-ide-v2.json",
+    "$schema": "https://laravel-idea.com/schema/laravel-idea-latest.json",
     "completions": [
         {
-            "complete": "cssClassNames",
-            "condition": [
+            "class": "PowerComponents\\LivewirePowerGrid\\Facades\\Filter",
+            "method": [
+                "multiSelect",
+                "inputText",
+                "select",
+                "enumSelect",
+                "number",
+                "dynamic",
+                "datepicker",
+                "datetimepicker",
+                "boolean"
+            ],
+            "parameters": [
                 {
-                    "methodNames": ["class"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Button"],
-                    "parameters": [1]
+                    "index": 0,
+                    "provider": "modelField"
                 },
                 {
-                    "methodNames": ["headerAttribute", "bodyAttribute", "contentClasses"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Column"],
-                    "parameters": [1]
+                    "index": 1,
+                    "provider": "modelField"
                 }
             ]
         },
         {
-            "complete": "routeName",
-            "condition": [
+            "class": "PowerComponents\\LivewirePowerGrid\\Components\\Filters\\FilterManager",
+            "method": [
+                "multiSelect",
+                "inputText",
+                "select",
+                "enumSelect",
+                "number",
+                "dynamic",
+                "datepicker",
+                "datetimepicker",
+                "boolean"
+            ],
+            "parameters": [
                 {
-                    "methodNames": ["route"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Button"],
-                    "parameters": [1]
-                }
-            ]
-        },
-
-        {
-            "complete": "viewName",
-            "condition": [
-                {
-                    "methodNames": ["view"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Detail"],
-                    "parameters": [1]
+                    "index": 0,
+                    "provider": "modelField"
                 },
                 {
-                    "methodNames": [
-                        "includeViewOnTop",
-                        "includeViewOnBottom",
-                        "pagination"
-                    ],
-                    "classFqn": [
-                        "\\PowerComponents\\LivewirePowerGrid\\Header",
-                        "\\PowerComponents\\LivewirePowerGrid\\Footer"
-                    ],
-                    "parameters": [1]
+                    "index": 1,
+                    "provider": "modelField"
+                }
+            ]
+        },
+        {
+            "class": "PowerComponents\\LivewirePowerGrid\\Column",
+            "method": "make",
+            "parameters": [
+                {
+                    "index": 1,
+                    "provider": "modelField"
                 },
                 {
-                    "methodNames": ["detailView"],
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Rules\\RuleRows"],
-                    "parameters": [1]
+                    "index": 2,
+                    "provider": "modelField"
                 }
             ]
         },
         {
-            "complete": "staticStrings",
-            "options": {
-                "strings": ["short", "min","full"]
-            },
-            "condition": [
+            "class": "PowerComponents\\LivewirePowerGrid\\PowerGridFields",
+            "method": "add",
+            "parameters": [
                 {
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Footer"],
-                    "methodNames": ["showRecordCount"],
-                    "parameters": [1]
-                }
-            ]
-        },
-        {
-            "complete": "staticStrings",
-            "options": {
-                "strings": ["post","delete", "update"]
-            },
-            "condition": [
-                {
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Button"],
-                    "methodNames": ["method"],
-                    "parameters": [1]
-                }
-            ]
-        },
-        {
-            "complete": "livewireComponent",
-            "condition": [
-                {
-                    "classFqn": ["\\PowerComponents\\LivewirePowerGrid\\Button"],
-                    "methodNames": ["openModal"],
-                    "parameters": [1]
+                    "index": 0,
+                    "provider": "modelField"
                 }
             ]
         }

@@ -5,9 +5,6 @@
             <directory suffix="Test.php">./tests/Feature</directory>
             <exclude>./tests/Feature/FilterInputOptionsCollectionTest.php</exclude>
         </testsuite>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
     </testsuites>
     <coverage/>
     <php>

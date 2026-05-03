@@ -1,14 +1,12 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTransformHooksTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
 $themes = [
     'tailwind' => [DishesTransformHooksTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesTransformHooksTable::class, (object) ['theme' => Bootstrap5::class]],
-    'daisyui' => [DishesTransformHooksTable::class, (object) ['theme' => DaisyUI::class]],
 ];
 
 it('transformRows modifies row data before rendering', function (string $component, object $params) {

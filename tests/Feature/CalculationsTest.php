@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesCalculationsTable;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -63,11 +63,7 @@ it('calculates "max" on price field', function (string $component, object $param
 
 dataset('calculations', [
     'tailwind' => [DishesCalculationsTable::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'bootstrap' => [DishesCalculationsTable::class, (object) ['theme' => Bootstrap5::class, 'join' => false]],
     'tailwind join' => [DishesCalculationsTable::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-    'bootstrap join' => [DishesCalculationsTable::class, (object) ['theme' => Bootstrap5::class, 'join' => true]],
-    'daisyui' => [DishesCalculationsTable::class, (object) ['theme' => DaisyUI::class, 'join' => false]],
-    'daisyui join' => [DishesCalculationsTable::class, (object) ['theme' => DaisyUI::class, 'join' => true]],
 ]);
 
 /**

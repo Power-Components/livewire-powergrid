@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\{ExportToCsv, ExportToXLS};
+use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
@@ -65,9 +65,9 @@ class TestCase extends BaseTestCase
             ]);
         }
 
-        $app['config']->set('livewire-powergrid.exportable.default', 'openspout_v4');
+        $app['config']->set('livewire-powergrid.exportable.default', 'openspout_v5');
         $app['config']->set(
-            'livewire-powergrid.exportable.openspout_v4',
+            'livewire-powergrid.exportable.openspout_v5',
             [
                 'xlsx' => ExportToXLS::class,
                 'csv' => ExportToCsv::class,

@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesCalculationsCollectionTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -47,6 +47,4 @@ it('calculates "max" on balance field', function (string $component, object $par
 
 dataset('calculations collection', [
     'tailwind' => [DishesCalculationsCollectionTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesCalculationsCollectionTable::class, (object) ['theme' => Bootstrap5::class]],
-    'daisyui' => [DishesCalculationsCollectionTable::class, (object) ['theme' => DaisyUI::class]],
 ]);

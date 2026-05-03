@@ -2,12 +2,10 @@
     'primaryKey' => null,
     'row' => null,
     'field' => null,
-    'theme' => null,
     'currentTable' => null,
     'tableName' => null,
     'showErrorBag' => null,
     'editable' => null,
-    'theme' => null,
 ])
 
 @php
@@ -37,13 +35,13 @@
     $content = !empty($value) || $value == '0' ? $value : $fallback;
 
     $params = [
-        'theme' => theme_style($theme, 'name'),
+        'theme' => theme('name'),
         'tableName' => $tableName,
         'id' => data_get($row, $this->realPrimaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,
-        'inputClass' => theme_style($theme, 'editable.input'),
+        'inputClass' => theme('editable.input'),
         'saveOnMouseOut' => data_get($editable, 'saveOnMouseOut'),
     ];
 @endphp
@@ -54,10 +52,7 @@
     style="width: 100% !important; height: 100% !important;"
 >
     <div
-        :class="{
-            'py-2': theme == 'tailwind',
-            'p-1': theme == 'bootstrap5',
-        }"
+        class="{{ theme('editable.clickable') }}"
         x-show="!showEditable"
         x-on:click="editable = true;"
         :id="`clickable-` + dataField + '-' + id"
@@ -76,7 +71,7 @@
     </template>
     @if ($showErrorBag)
         @error($field . '.' . $row->{$this->realPrimaryKey})
-            <div x-ref="error" class="text-sm text-red-800 p-1 transition-all duration-200">
+            <div x-ref="error" class="{{ theme('editable.error') }}">
                 {{ str($message)->replace($field . '.' . $row->{$this->realPrimaryKey}, $field) }}
             </div>
         @enderror

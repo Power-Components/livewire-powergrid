@@ -83,36 +83,20 @@ trait Sorting
         }
     }
 
-    public function sortIcon(string $field): string
+    public function showSortIcon(string $field): string
     {
         if ($this->multiSort && array_key_exists($field, $this->sortArray)) {
-            return ($this->sortArray[$field] == 'desc') ? 'livewire-powergrid::icons.chevron-up' : 'livewire-powergrid::icons.chevron-down';
+            return ($this->sortArray[$field] == 'desc') ? 'livewire-powergrid::components.icons.chevron-up' : 'livewire-powergrid::components.icons.chevron-down';
         } elseif ($this->multiSort) {
-            return 'livewire-powergrid::icons.chevron-up-down';
+            return 'livewire-powergrid::components.icons.chevron-up-down';
         } else {
             if ($this->sortField !== $field) {
-                return 'livewire-powergrid::icons.chevron-up-down';
+                return 'livewire-powergrid::components.icons.chevron-up-down';
             } elseif ($this->sortDirection == 'desc') {
-                return 'livewire-powergrid::icons.chevron-up';
+                return 'livewire-powergrid::components.icons.chevron-up';
             } else {
-                return 'livewire-powergrid::icons.chevron-down';
+                return 'livewire-powergrid::components.icons.chevron-down';
             }
-        }
-    }
-
-    public function updatedSortDirection(): void
-    {
-        if ($this->hasLazyEnabled) {
-            data_set($this->setUp, 'lazy.items', 0);
-
-            $this->additionalCacheKey = uniqid();
-        }
-    }
-
-    public function updatedSortField(): void
-    {
-        if ($this->hasLazyEnabled) {
-            data_set($this->setUp, 'lazy.items', 0);
         }
     }
 

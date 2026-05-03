@@ -3,7 +3,7 @@
 use Illuminate\Support\{Carbon, Collection, Number};
 use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -128,5 +128,4 @@ it('testings', function (string $component, object $params) {
         ->assertOk();
 })->with([
     'tailwind' => [$component::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [$component::class, (object) ['theme' => Bootstrap5::class]],
 ]);

@@ -1,13 +1,4 @@
 {
-  "resources/css/bootstrap5.css": {
-    "file": "bootstrap5.css",
-    "name": "bootstrap5",
-    "names": [
-      "bootstrap5.css"
-    ],
-    "src": "resources/css/bootstrap5.css",
-    "isEntry": true
-  },
   "resources/css/tailwind.css": {
     "file": "tailwind.css",
     "name": "tailwind",

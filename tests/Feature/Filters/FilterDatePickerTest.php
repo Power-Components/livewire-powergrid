@@ -2,7 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -153,5 +153,4 @@ it('clears date filter', function (string $component, object $params) {
 
 dataset('filterComponent', [
     'tailwind -> id' => [$component::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap -> id' => [$component::class, (object) ['theme' => Bootstrap5::class]],
 ]);

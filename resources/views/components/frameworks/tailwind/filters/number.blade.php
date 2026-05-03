@@ -16,7 +16,7 @@
         array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')])
     );
 
-    $filterClasses = theme_style($theme, 'filterNumber.input');
+    $filterClasses = theme('filter.number.input');
 
     $placeholder = data_get($filter, 'placeholder');
 
@@ -33,10 +33,10 @@
 @else
     <div @class([
         'space-y-1' => !$inline,
-        theme_style($theme, 'filterNumber.base')
+        theme('filter.number.base')
     ])>
         @if (!$inline)
-            <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
+            <label class="{{ theme('filter.label', 'block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300') }}">
                 {{ $title }}
             </label>
         @endif

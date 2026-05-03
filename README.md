@@ -57,7 +57,7 @@ PowerGrid offers a range of features that are readily available:
 
 | Feature                                                            | PowerGrid                               |
 | :--------------------------------------------------------------------- | :-------------------------------------- |
-| Bootstrap 5 or Tailwind CSS 3x/4x                                      | ✅                                      |
+| Tailwind CSS                    x                                      | ✅                                      |
 | Pagination                                                             | ✅                                      |
 | Column Sorting                                                         | ✅                                      |
 | Filters & Global Search                                                | ✅                                      |
@@ -85,7 +85,7 @@ PowerGrid offers a range of features that are readily available:
 - PHP 8.2+
 - [Laravel 10+](https://laravel.com/docs/installation)
 - [Livewire 3.0x](https://livewire.laravel.com)
-- [Tailwind 3x/4x](https://tailwindcss.com) or [Bootstrap 5](https://getbootstrap.com/docs/5.0/getting-started/introduction/)
+- [Tailwind 4x](https://tailwindcss.com)
 
 <br/>
 

@@ -1,7 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesIterableTable;
-use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, Tailwind};
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
@@ -32,5 +32,4 @@ it('searches', function (string $component, object $params) {
 
 dataset('search', [
     'tailwind' => [DishesIterableTable::class, (object) ['theme' => Tailwind::class]],
-    'bootstrap' => [DishesIterableTable::class, (object) ['theme' => Bootstrap5::class]],
 ]);
