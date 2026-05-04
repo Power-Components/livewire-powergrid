@@ -31,19 +31,21 @@ class ProcessDataSource
             $this->datasource = $this->component->datasource($this->properties);
         }
 
+        $datasource = is_object($this->datasource) ? clone $this->datasource : $this->datasource;
+
         $processors = [
             CollectionProcessor::class,
             ScoutBuilderProcessor::class,
         ];
 
         foreach ($processors as $processor) {
-            if ($processor::match($this->datasource)) {
+            if ($processor::match($datasource)) {
                 $instance = new $processor($this->component, $isExport);
 
-                return $instance->process($this->properties, $this->datasource);
+                return $instance->process($this->properties, $datasource);
             }
         }
 
-        return (new ModelProcessor($this->component, $isExport))->process($this->properties, $this->datasource);
+        return (new ModelProcessor($this->component, $isExport))->process($this->properties, $datasource);
     }
 }
