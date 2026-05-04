@@ -201,6 +201,8 @@ class DaisyUI extends Theme
                 'container' => 'w-full md:w-auto mt-2 md:mt-0',
                 'relative_main' => '',
                 'input' => 'input input-bordered input-sm w-full md:w-80',
+                'icon_search_wrapper' => 'absolute inset-y-0 left-0 flex items-center h-full pl-3 pointer-events-none',
+                'icon_close_wrapper' => 'absolute opacity-0 group-hover:opacity-100 transition-all inset-y-0 right-0 flex items-center pr-1',
                 'icon_close' => 'text-base-content/50',
                 'icon_search' => 'text-base-content/50 h-4 w-4',
             ],
