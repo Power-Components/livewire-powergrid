@@ -167,7 +167,7 @@ trait WithExport
             $filtered = $processDataSource->component->checkboxValues;
         }
 
-        if ($processDataSource->component->datasource() instanceof Collection) {
+        if ($processDataSource->datasource instanceof Collection) {
             if ($filtered) {
                 $results = $processDataSource->get(isExport: true)['results']
                     ->whereIn($this->primaryKey, $filtered);
@@ -179,7 +179,7 @@ trait WithExport
 
             $dataTransformer = new DataTransformer($processDataSource->component);
 
-            return $dataTransformer->transform($processDataSource->component->datasource())->collection;
+            return $dataTransformer->transform($processDataSource->datasource)->collection;
         }
 
         /** @phpstan-ignore-next-line */
@@ -195,7 +195,7 @@ trait WithExport
 
         $queryOptions = data_get($this->setUp, 'exportable.queryOptions', []);
 
-        $results = $processDataSource->component->datasource()
+        $results = $processDataSource->datasource
             ->where(function ($query) {
                 app()->makeWith(SearchHandlerContract::class, [
                     'component' => $this,

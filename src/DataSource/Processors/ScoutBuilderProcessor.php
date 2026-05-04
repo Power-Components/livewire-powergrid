@@ -15,10 +15,10 @@ class ScoutBuilderProcessor extends DataSourceBase
         return $key instanceof ScoutBuilder;
     }
 
-    public function process(array $properties = []): array
+    public function process(array $properties = [], mixed $datasource = null): array
     {
         /** @var ScoutBuilder $datasource */
-        $datasource = $this->component->datasource($properties);
+        $datasource = $datasource ?? $this->component->datasource($properties);
 
         /** @var ScoutBuilder $query */
         $query = app(Pipeline::class)

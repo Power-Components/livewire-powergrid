@@ -61,7 +61,7 @@ trait ExportableJob
                 : $currentTable.'.'.$property;
         };
 
-        $results = $this->componentTable->datasource($this->properties ?? []) // @phpstan-ignore-line
+        $results = $processDataSource->datasource
             ->where(function ($query) {
                 app()->makeWith(SearchHandlerContract::class, [
                     'component' => $this->componentTable,
