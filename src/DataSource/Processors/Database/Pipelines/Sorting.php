@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Sorting
@@ -40,7 +39,7 @@ class Sorting
             return;
         }
 
-        $query->orderBy($this->makeSortField($sortField), $direction);
+        $query->orderBy($this->component->resolveSortField($sortField), $direction);
     }
 
     private function applyMultipleSort(EloquentBuilder|MorphToMany|QueryBuilder $results): void
@@ -54,16 +53,7 @@ class Sorting
                 continue;
             }
 
-            $results->orderBy($this->makeSortField($sortField), $direction);
+            $results->orderBy($this->component->resolveSortField($sortField), $direction);
         }
-    }
-
-    private function makeSortField(string $sortField): string
-    {
-        if (Str::of($sortField)->contains('.') || $this->component->ignoreTablePrefix) {
-            return $sortField;
-        }
-
-        return $this->component->currentTable.'.'.$sortField;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use OpenSpout\Reader\XLSX\Reader;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Components\SetUp\Exportable, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -224,6 +225,50 @@ dataset('export_with_html', [
     'html' => [$exportWithHtml::class],
 ]);
 
+$exportWithJoinedAliasSort = new class() extends ExportTable
+{
+    public function datasource(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::datasource()
+            ->join('categories', function ($categories) {
+                $categories->on('dishes.category_id', '=', 'categories.id');
+            })
+            ->select('dishes.*', DB::raw('categories.name as category_name'));
+    }
+
+    public function fields(): PowerGridFields
+    {
+        return PowerGrid::fields()
+            ->add('category_name');
+    }
+
+    public function columns(): array
+    {
+        return [
+            Column::add()
+                ->title('Category')
+                ->field('category_name')
+                ->sortable(),
+        ];
+    }
+};
+
+it('properly prepares export data sorted by a joined alias column', function (string $component) {
+    $component = livewire($component)
+        ->set('checkboxValues', [
+            0 => '1',
+            1 => '3',
+        ])
+        ->call('sortBy', 'category_name');
+
+    expect($component->instance()->prepareToExport(true)->pluck('category_name')->values()->all())
+        ->toBe(['Carnes', 'Sobremesas']);
+})->with('export_with_joined_alias_sort');
+
+dataset('export_with_joined_alias_sort', [
+    'joined alias' => [$exportWithJoinedAliasSort::class],
+]);
+
 $exportWithQueryOptions = new class() extends ExportTable
 {
     public string $testSortField = '';
@@ -302,7 +347,7 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
         data_get($downloadEffect, 'name')
     );
 
-    $content = str_replace(PHP_EOL, '<csv-divider>', base64_decode(data_get($downloadEffect, 'content')));
+    $content = str_replace(["\r\n", "\n", "\r"], '<csv-divider>', base64_decode(data_get($downloadEffect, 'content')));
 
     $expected = collect(array_merge([$headings], $rows))
         ->transform(function ($heading) use ($delimiter, $separator) {

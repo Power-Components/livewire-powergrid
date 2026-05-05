@@ -52,6 +52,7 @@ trait ExportableJob
 
         $filtered = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
+        $queryOptions = data_get($this->exportable, 'queryOptions', []);
 
         $property = function (string $property) use ($processDataSource, $currentTable) {
             $property = $processDataSource->component->{$property};
@@ -60,6 +61,10 @@ trait ExportableJob
                 ? $property
                 : $currentTable.'.'.$property;
         };
+
+        $sortField = $queryOptions['sortField']
+            ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
+        $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
 
         $results = $processDataSource->datasource
             ->where(function ($query) {
@@ -73,7 +78,7 @@ trait ExportableJob
             })
             ->offset($this->offset)
             ->limit($this->limit)
-            ->orderBy($property('sortField'), $processDataSource->component->sortDirection)
+            ->orderBy($sortField, $sortDirection)
             ->get();
 
         $dataTransformer = new DataTransformer($processDataSource->component);

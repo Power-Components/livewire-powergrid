@@ -206,7 +206,8 @@ trait WithExport
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
             ->when($this->sortField, function ($query) use ($property, $processDataSource, $queryOptions) {
-                $sortField = $queryOptions['sortField'] ?? $property('sortField');
+                $sortField = $queryOptions['sortField']
+                    ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
                 $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
 
                 return $query->orderBy($sortField, $sortDirection);
