@@ -57,3 +57,41 @@ it('resolves view from bound theme', function () {
     expect(ThemeManager::view('table.header'))
         ->toBe('custom-theme::table.header');
 });
+
+it('resolves view from tokens', function () {
+    $theme = new class() extends Theme
+    {
+        public function struct(): array
+        {
+            return [
+                'view_toggle_detail' => 'my-toggle-detail-view',
+                'header' => [
+                    'view_export' => 'my-export-view',
+                ],
+            ];
+        }
+    };
+
+    app()->instance('powergrid.theme', $theme);
+
+    expect(ThemeManager::view('toggle-detail'))->toBe('my-toggle-detail-view')
+        ->and(ThemeManager::view('header.export'))->toBe('my-export-view');
+});
+
+it('resolves nested views from tokens', function () {
+    $theme = new class() extends Theme
+    {
+        public function struct(): array
+        {
+            return [
+                'table' => [
+                    'view_row' => 'my-table-row-view',
+                ],
+            ];
+        }
+    };
+
+    app()->instance('powergrid.theme', $theme);
+
+    expect(ThemeManager::view('table.row'))->toBe('my-table-row-view');
+});

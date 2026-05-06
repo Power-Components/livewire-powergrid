@@ -1,6 +1,6 @@
 @php
     $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
-        'class' => theme('checkbox.input'),
+        'class' => theme('table.checkbox.input'),
     ]);
 
     $rules = collect($row->__powergrid_rules)
@@ -23,15 +23,15 @@
 
 @if ($hide)
     <td
-        class="{{ theme('checkbox.th') }}"
+        class="{{ theme('table.checkbox.th') }}"
     >
     </td>
 @elseif($disable)
     <td
-        class="{{ theme('checkbox.th') }}"
+        class="{{ theme('table.checkbox.th') }}"
     >
-        <div class="{{ theme('checkbox.base') }}">
-            <label class="{{ theme('checkbox.label') }}">
+        <div class="{{ theme('table.checkbox.base') }}">
+            <label class="{{ theme('table.checkbox.label') }}">
                 <input
                     {{ $inputAttributes }}
                     disabled
@@ -42,10 +42,10 @@
     </td>
 @else
     <td
-        class="{{ theme('checkbox.th') }}"
+        class="{{ theme('table.checkbox.th') }}"
     >
-        <div class="{{ theme('checkbox.base') }}">
-            <label class="{{ theme('checkbox.label') }}">
+        <div class="{{ theme('table.checkbox.base') }}">
+            <label class="{{ theme('table.checkbox.label') }}">
                 <input
                     x-data="{}"
                     type="checkbox"

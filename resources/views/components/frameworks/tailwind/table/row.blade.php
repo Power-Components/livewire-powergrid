@@ -60,7 +60,7 @@
     @endphp
     <td
         @class([
-            theme('table.body.td.wrapper'),
+            theme('table.layout.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([

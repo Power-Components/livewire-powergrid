@@ -5,8 +5,7 @@
         @class([
             'justify-between' => filled(data_get($setUp, 'footer.perPage')),
             'justify-end' => blank(data_get($setUp, 'footer.perPage')),
-            theme('footer.footer'),
-            theme('footer.footer_with_pagination') => blank(data_get($setUp, 'footer.pagination')),
+            theme('footer.layout.container'),
         ])
     >
         @if (filled(data_get($setUp, 'footer.perPage')) &&
@@ -16,7 +15,7 @@
                 <div class="relative">
                     <select
                         wire:model.live="setUp.footer.perPage"
-                        class="{{ theme('footer.select') }}"
+                        class="{{ theme('footer.layout.select') }}"
                     >
                         @foreach (data_get($setUp, 'footer.perPageValues') as $value)
                             <option value="{{ $value }}">

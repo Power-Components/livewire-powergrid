@@ -1,5 +1,5 @@
 <tr
-    class="{{ theme('table.header.tr') }}"
+    class="{{ theme('table.tr') }}"
 >
     <th
         class="{{ theme('table.body.td.empty_state') }}"

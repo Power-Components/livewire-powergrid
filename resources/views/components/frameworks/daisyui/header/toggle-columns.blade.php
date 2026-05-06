@@ -1,13 +1,12 @@
 @if (data_get($setUp, 'header.toggleColumns'))
-    <div class="{{ theme('header.toggle_columns.container') }}">
-        <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.toggle_columns.button') }}">
+    <div class="dropdown">
+        <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.layout.actions') }}">
             <x-livewire-powergrid::icons.eye-off class="w-4 h-4" />
         </div>
-        <ul tabindex="0" class="{{ theme('header.toggle_columns.menu') }}">
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
             @foreach ($this->visibleColumns as $column)
                 <li wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                     data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
-                    class="{{ theme('header.toggle_columns.menu_item') }}"
                 >
                     <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="{{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
                         <div class="flex-1">

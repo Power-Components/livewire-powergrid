@@ -31,7 +31,7 @@
                     @foreach ($this->records as $row)
                         @php
                             $rowId = data_get($row, $this->realPrimaryKey);
-                            $class = theme('table.body.tr.wrapper');
+                            $class = theme('table.tr');
                         @endphp
 
                         <tbody
@@ -84,7 +84,7 @@
                     @foreach ($this->records as $row)
                         @php
                             $rowId = data_get($row, $this->realPrimaryKey);
-                            $class = theme('table.body.tr.wrapper');
+                            $class = theme('table.tr');
                         @endphp
 
                         <tr

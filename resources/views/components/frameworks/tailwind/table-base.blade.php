@@ -10,11 +10,11 @@
 >
     <div
         id="power-grid-table-container"
-        class="{{ theme('table.layout.container') }}"
+        class=""
     >
         <div
             id="power-grid-table-base"
-            class="{{ theme('table.layout.base') }}"
+            class=""
         >
             @include(theme_view('header'), [
                 'enabledFilters' => $enabledFilters,
@@ -36,7 +36,7 @@
                 @class([
                     'overflow-auto' => $readyToLoad,
                     'overflow-hidden' => !$readyToLoad,
-                    theme('table.layout.div'),
+                    theme('table.layout.container'),
                 ])
             >
                 @include($table)

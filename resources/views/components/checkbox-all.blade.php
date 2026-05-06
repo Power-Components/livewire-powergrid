@@ -10,7 +10,7 @@
     <th
         @if ($isCheckboxFixedOnResponsive) fixed @endif
         scope="col"
-        @class([theme('table.header.th'), theme('checkbox.th')])
+        @class([theme('table.th'), theme('checkbox.th')])
         wire:key="checkbox-all-{{ $tableName }}"
     >
         <div class="{{ theme('checkbox.base') }}">

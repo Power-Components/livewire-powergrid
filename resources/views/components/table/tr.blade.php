@@ -2,11 +2,11 @@
     'loading' => false,
 ])
 <tr
-    class="{{ theme('table.header.tr') }}"
+    class="{{ theme('table.tr') }}"
 >
     @if ($loading)
         <td
-            class="{{ theme('table.body.empty_state') }}"
+            class="{{ theme('table.td') }}"
             colspan="999"
         >
             @if ($loadingComponent)
@@ -19,7 +19,7 @@
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <th
                 scope="col"
-                class="{{ theme('table.header.th') }}"
+                class="{{ theme('table.th') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -29,14 +29,14 @@
             <th
                 fixed
                 x-show="hasHiddenElements"
-                class="{{ theme('table.header.th') }}"
+                class="{{ theme('table.th') }}"
             >
             </th>
         @endisset
 
         @if ($radio)
             <th
-                class="{{ theme('table.header.th') }}"
+                class="{{ theme('table.th') }}"
             >
             </th>
         @endif
@@ -73,7 +73,7 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ theme('table.header.th') . ' ' . theme('table.header.th_action') }}"
+                class="{{ theme('table.th') }}"
                 scope="col"
                 colspan="999"
                 wire:key="{{ md5('actions') }}"

@@ -1,6 +1,6 @@
 @if (data_get($setUp, 'header.searchInput'))
-    <div class="{{ theme('search_box.container') }}">
-        <label class="input {{ theme('search_box.input') }}">
+    <div class="{{ theme('header.searchBox.container') }}">
+        <label class="input {{ theme('header.searchBox.input') }}">
             <x-livewire-powergrid::icons.search class="h-[1em] opacity-50" />
             <input 
                 wire:model.live.debounce.700ms="search" 

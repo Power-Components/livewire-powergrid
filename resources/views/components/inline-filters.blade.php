@@ -10,8 +10,8 @@
 ])
 
 @php
-    $trClasses = Arr::toCssClasses([theme('table.body.tr.wrapper'), theme('table.body.tr.filters')]);
-    $tdClasses = Arr::toCssClasses([theme('table.body.td.wrapper'), theme('table.body.td.filters')]);
+    $trClasses = Arr::toCssClasses([theme('table.tr'), theme('table.body.tr.filters')]);
+    $tdClasses = Arr::toCssClasses([theme('table.td'), theme('table.body.td.filters')]);
 @endphp
 @if (config('livewire-powergrid.filter') === 'inline')
     <tr
@@ -35,7 +35,7 @@
             @endphp
             <td
                 @class([
-                    theme('table.body.td.wrapper'),
+                    theme('table.td'),
                     theme('table.body.td.filters'),
                 ])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"

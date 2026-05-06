@@ -7,22 +7,22 @@
     <div x-data="{ expandedId: null }">
         <table
             id="table_base_{{ $tableName }}"
-            class="table {{ theme('table.base') }}"
+            class="table {{ theme('table.table') }}"
         >
             <thead
-                class="{{ theme('table.header.thead') }}"
+                class="{{ theme('table.thead') }}"
             >
                 {{ $header }}
             </thead>
             @if ($readyToLoad)
                 <tbody
-                    class="{{ theme('table.body.wrapper') }}"
+                    class="{{ theme('table.tbody') }}"
                 >
                     {{ $body }}
                 </tbody>
             @else
                 <tbody
-                    class="{{ theme('table.body.wrapper') }}"
+                    class="{{ theme('table.tbody') }}"
                 >
                     {{ $loading }}
                 </tbody>

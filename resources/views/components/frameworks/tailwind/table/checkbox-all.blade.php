@@ -10,13 +10,13 @@
     <th
         @if ($isCheckboxFixedOnResponsive) fixed @endif
         scope="col"
-        @class([theme('table.header.th'), theme('checkbox.th')])
+        @class([theme('table.layout.th'), theme('table.checkbox.th')])
         wire:key="checkbox-all-{{ $tableName }}"
     >
-        <div class="{{ theme('checkbox.base') }}">
-            <label class="{{ theme('checkbox.label') }}">
+        <div class="{{ theme('table.checkbox.base') }}">
+            <label class="{{ theme('table.checkbox.label') }}">
                 <input
-                    class="{{ theme('checkbox.input') }}"
+                    class="{{ theme('table.checkbox.input') }}"
                     type="checkbox"
                     wire:click="selectCheckboxAll"
                     wire:model="checkboxAll"

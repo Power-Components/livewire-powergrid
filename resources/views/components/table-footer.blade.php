@@ -1,10 +1,10 @@
 {{-- blade-formatter-enable --}}
 <tr
-    class="{{ theme('table.footer.tr') }}"
+    class="{{ theme('table.tr') }}"
 >
     @if (data_get($setUp, 'detail.showCollapseIcon'))
         <td
-            class="{{ theme('table.body.td.wrapper') }}"
+            class="{{ theme('table.td') }}"
         ></td>
     @endif
     @if ($checkbox)
@@ -12,7 +12,7 @@
     @endif
     @foreach ($this->visibleColumns as $column)
         <td
-            class="{{ theme('table.body.td.summarize.wrapper') . ' ' . data_get($column, 'bodyClass') ?? '' }}"
+            class="{{ theme('table.td') . ' ' . data_get($column, 'bodyClass') ?? '' }}"
             style="{{ data_get($column, 'hidden') === true ? 'display:none;' : '' }} . {{ data_get($column, 'bodyStyle') ?? '' }}"
         >
             @include('livewire-powergrid::components.summarize', [
@@ -35,7 +35,7 @@
     @endforeach
     @if (isset($actions) && count($actions))
         <th
-            class="{{ theme('table.header.th') . ' ' .  data_get($column, 'headerClass') }}"
+            class="{{ theme('table.th') . ' ' .  data_get($column, 'headerClass') }}"
             scope="col"
             colspan="{{ count($actions) }}"
         >

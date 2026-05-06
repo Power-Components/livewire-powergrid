@@ -1,0 +1,68 @@
+<?php
+
+namespace PowerComponents\LivewirePowerGrid\Themes\Components;
+
+use Closure;
+
+class ThemeBuilder
+{
+    use HasProperties;
+
+    public static function make(string $name): self
+    {
+        $builder = new self();
+        $builder->properties['name'] = $name;
+
+        return $builder;
+    }
+
+    public function baseView(string $baseView): self
+    {
+        $this->setBaseView($baseView);
+        $this->properties['baseView'] = $baseView;
+
+        return $this;
+    }
+
+    public function header(Closure $callback): self
+    {
+        $component = new Header();
+
+        if ($this->baseView) {
+            $component->setBaseView($this->baseView);
+        }
+
+        $callback($component);
+        $this->properties['header'] = $component->toArray();
+
+        return $this;
+    }
+
+    public function table(Closure $callback): self
+    {
+        $component = new Table();
+
+        if ($this->baseView) {
+            $component->setBaseView($this->baseView);
+        }
+
+        $callback($component);
+        $this->properties['table'] = $component->toArray();
+
+        return $this;
+    }
+
+    public function footer(Closure $callback): self
+    {
+        $component = new Footer();
+
+        if ($this->baseView) {
+            $component->setBaseView($this->baseView);
+        }
+
+        $callback($component);
+        $this->properties['footer'] = $component->toArray();
+
+        return $this;
+    }
+}

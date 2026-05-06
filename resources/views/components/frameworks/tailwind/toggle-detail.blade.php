@@ -23,7 +23,7 @@
     }"
     x-on:pg-toggle-detail-{{ $tableName }}-hidden-all.window="collapsed = false"
     x-on:pg-toggle-detail-{{ $tableName }}-loaded.window="loading = false;"
-    class="{{ theme('table.body.td.wrapper') }}"
+    class="{{ theme('table.layout.td') }}"
 >
     <div
         class="cursor-pointer flex items-center"

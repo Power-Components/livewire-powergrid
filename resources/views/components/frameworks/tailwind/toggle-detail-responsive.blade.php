@@ -1,7 +1,7 @@
 <td
     x-cloak
     x-show="hasHiddenElements"
-    class="w-0 {{ theme('table.body.td.wrapper') }}"
+    class="w-0 {{ theme('table.layout.td') }}"
 >
     <button
         class="flex items-center"

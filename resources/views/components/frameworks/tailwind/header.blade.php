@@ -1,12 +1,12 @@
 <div>
     @includeIf(data_get($setUp, 'header.includeViewOnTop'))
 
-    <div class="{{ theme('header.container') }}">
-        <div class="{{ theme('header.sub_container') }}">
+    <div class="{{ theme('header.layout.container') }}">
+        <div class="{{ theme('header.layout.sub_container') }}">
             <div x-data="pgRenderActions">
                 <span class="pg-actions" x-html="toHtml"></span>
             </div>
-            <div class="{{ theme('header.actions') }}">
+            <div class="{{ theme('header.layout.actions_container') }}">
                 @if (data_get($setUp, 'exportable'))
                     <div
                         class="mr-2 mt-2 sm:mt-0"

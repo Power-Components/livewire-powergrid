@@ -1,15 +1,18 @@
 <?php
 
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\LivewirePowerGrid\Themes\{Tailwind, Theme};
 
 it('resolves tokens properly', function () {
     $theme = new class() extends Theme
     {
+        protected ?string $parentTheme = null;
+
         public function struct(): array
         {
             return [
                 'table' => [
-                    'base' => 'bg-blue-500',
+                    'table' => 'bg-blue-500',
                     'header' => 'text-white',
                 ],
             ];
@@ -19,7 +22,7 @@ it('resolves tokens properly', function () {
     expect($theme->resolveTokens())
         ->toBe([
             'table' => [
-                'base' => 'bg-blue-500',
+                'table' => 'bg-blue-500',
                 'header' => 'text-white',
             ],
         ]);
@@ -28,17 +31,19 @@ it('resolves tokens properly', function () {
 it('gets a specific token', function () {
     $theme = new class() extends Theme
     {
+        protected ?string $parentTheme = null;
+
         public function struct(): array
         {
             return [
                 'table' => [
-                    'base' => 'bg-blue-500',
+                    'table' => 'bg-blue-500',
                 ],
             ];
         }
     };
 
-    expect($theme->get('table.base'))
+    expect($theme->get('table.table'))
         ->toBe('bg-blue-500')
         ->and($theme->get('table.non_existent', 'default'))
         ->toBe('default');
@@ -47,11 +52,13 @@ it('gets a specific token', function () {
 it('merges tokens with overrides', function () {
     $theme = new class() extends Theme
     {
+        protected ?string $parentTheme = null;
+
         public function struct(): array
         {
             return [
                 'table' => [
-                    'base' => 'bg-blue-500',
+                    'table' => 'bg-blue-500',
                     'row' => 'bg-white',
                 ],
             ];
@@ -60,17 +67,38 @@ it('merges tokens with overrides', function () {
 
     $theme->merge([
         'table' => [
-            'base' => 'bg-red-500',
+            'table' => 'bg-red-500',
             'new_key' => 'text-black',
         ],
     ]);
 
-    expect($theme->get('table.base'))
+    expect($theme->get('table.table'))
         ->toBe('bg-red-500')
         ->and($theme->get('table.row'))
         ->toBe('bg-white')
         ->and($theme->get('table.new_key'))
         ->toBe('text-black');
+});
+
+it('inherits tokens from parent theme', function () {
+    $theme = new class() extends Theme
+    {
+        public function struct(): array
+        {
+            return [
+                'table' => [
+                    'layout' => [
+                        'table' => 'overridden-base',
+                    ],
+                ],
+            ];
+        }
+    };
+
+    $tailwind = new Tailwind();
+
+    expect($theme->get('table.layout.table'))->toBe('overridden-base')
+        ->and($theme->get('table.layout.container'))->toBe($tailwind->get('table.layout.container'));
 });
 
 it('resolves specific view from theme', function () {
@@ -84,13 +112,13 @@ it('resolves specific view from theme', function () {
         public function views(): array
         {
             return [
-                'table.base' => 'custom-theme::table.base',
+                'table.table' => 'custom-theme::table.table',
             ];
         }
     };
 
-    expect($theme->resolveView('table.base'))
-        ->toBe('custom-theme::table.base');
+    expect($theme->resolveView('table.table'))
+        ->toBe('custom-theme::table.table');
 });
 
 it('falls back to tailwind view when theme does not have the view', function () {
@@ -125,4 +153,19 @@ it('can be instantiated with make', function () {
     $instance = $themeClass::make();
 
     expect($instance)->toBeInstanceOf(Theme::class);
+});
+
+it('daisyui provides correct tokens using ThemeBuilder', function () {
+    $theme = new DaisyUI();
+
+    expect($theme->get('table.layout.table'))->toBe('table table-zebra')
+        ->and($theme->get('table.layout.container'))->toBe('rounded-t-lg relative border-x border-t border-base-300');
+});
+
+it('flux provides correct tokens using ThemeBuilder', function () {
+    $theme = new Flux();
+
+    expect($theme->get('name'))->toBe('flux')
+        ->and($theme->get('table.layout.table'))->toBe('min-w-full')
+        ->and($theme->get('table.layout.container'))->toBe('rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900');
 });

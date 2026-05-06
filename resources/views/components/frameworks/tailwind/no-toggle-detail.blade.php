@@ -1,3 +1,3 @@
 <td
-    class="@theme('table.body.td.wrapper')"
+    class="@theme('table.layout.td')"
 ></td>
