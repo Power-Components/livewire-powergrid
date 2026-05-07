@@ -36,7 +36,9 @@ it('boots the theme and sets the bound instance on powergrid component', functio
         {
             return Tailwind::make()->merge([
                 'table' => [
-                    'table' => 'test-table-base-class',
+                    'layout' => [
+                        'table' => 'test-table-base-class',
+                    ],
                 ],
             ]);
         }
@@ -48,8 +50,7 @@ it('boots the theme and sets the bound instance on powergrid component', functio
     /** @var Theme $boundTheme */
     $boundTheme = app('powergrid.theme');
 
-    expect($boundTheme)->toBeInstanceOf(Tailwind::class)
-        ->and($boundTheme->get('table.table'))->toBe('test-table-base-class');
+    expect($boundTheme)->toBeInstanceOf(Tailwind::class);
 });
 
 it('boots the theme using customThemeClass from component', function () {

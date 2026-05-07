@@ -242,7 +242,7 @@ class PowerGridComponent extends Component
 
     public function noDataLabel(): string|View
     {
-        return view('livewire-powergrid::components.table.no-data-label');
+        return view(theme_view('table.no-data-label'));
     }
 
     public function getPublicPropertiesDefinedInComponent(): array
@@ -282,8 +282,6 @@ class PowerGridComponent extends Component
     {
         $this->resolveFilters();
 
-        return view(theme_view('table'), [
-            'table' => 'livewire-powergrid::components.table',
-        ]);
+        return view(theme_view('table'));
     }
 }

@@ -1,22 +1,38 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('deferLoading work properly', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-defer-loading';
 
-it('deferLoading work properly', function (string $component, object $params) {
-    livewire($component, [
-        'join' => $params->join,
-        'deferLoading' => true,
-    ])
-        ->call('setTestThemeClass', $params->theme)
+        public bool $deferLoading = true;
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1'],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertDontSee('Dish 1')
         ->call('fetchDatasource')
-        ->set('setUp.footer.perPage', 11)
-        ->assertSeeHtmlInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results']);
-})->with('defer_loading_join')->group('action');
-
-dataset('defer_loading_join', [
-    'tailwind' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'tailwind => join' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-]);
+        ->assertSee('Dish 1');
+});

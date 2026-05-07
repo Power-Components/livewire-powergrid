@@ -17,8 +17,6 @@ final class GlobalSearch
             return $next($collection);
         }
 
-        $search = strtolower($this->component->search);
-
         $searchableColumns = collect($this->component->columns())
             ->filter(fn (Column|stdClass|array $column) => (bool) data_get($column, 'searchable'));
 
@@ -26,17 +24,36 @@ final class GlobalSearch
             return $next($collection);
         }
 
-        $results = $collection->filter(function ($row) use ($searchableColumns, $search) {
+        $results = $collection->filter(function ($row) use ($searchableColumns) {
             $row = (object) $row;
 
-            return $searchableColumns->contains(function (Column|stdClass|array $column) use ($row, $search) {
+            return $searchableColumns->contains(function (Column|stdClass|array $column) use ($row) {
                 $field = $column->dataField ?: $column->field; // @phpstan-ignore-line
                 $value = data_get($row, $field);
 
-                return Str::contains(strtolower($value), $search);
+                $search = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+
+                $search = $this->getBeforeSearchMethod($field, $search);
+
+                return Str::contains(strtolower((string) $value), strtolower((string) $search));
             });
         });
 
         return $next($results);
+    }
+
+    protected function getBeforeSearchMethod(string $field, ?string $search): ?string
+    {
+        $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
+
+        if (method_exists($this->component, $method)) {
+            return $this->component->$method($search);
+        }
+
+        if (method_exists($this->component, 'beforeSearch')) {
+            return $this->component->beforeSearch($field, $search);
+        }
+
+        return $search;
     }
 }

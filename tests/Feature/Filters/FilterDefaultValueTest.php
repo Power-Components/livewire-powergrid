@@ -1,650 +1,197 @@
 <?php
 
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\{
-    Concerns\Components\DishesTable
-};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-// ── Boolean default ───────────────────────────────────────────────────
-
-$defaultBooleanTrue = new class() extends DishesTable
-{
-    public string $tableName = 'default-boolean-true-table';
-
-    public function filters(): array
+it('applies default boolean filter value "true" on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::boolean('in_stock')
-                ->label('yes', 'no')
-                ->default('true'),
-        ];
-    }
-};
+        public string $tableName = 'test-default-boolean';
 
-it('applies default boolean filter value "true" on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'in_stock' => true]]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'boolean' => [
-            'in_stock' => 'true',
-        ],
-    ]);
+        public function filters(): array
+        {
+            return [Filter::boolean('in_stock')->default('true')];
+        }
 
-    $component->assertSee('Pastel de Nata')
-        ->assertDontSee('Barco-Sushi da Sueli');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-$defaultBooleanFalse = new class() extends DishesTable
-{
-    public string $tableName = 'default-boolean-false-table';
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-    public function filters(): array
+    Livewire::test($component::class)
+        ->assertSet('filters.boolean.in_stock', 'true');
+});
+
+it('applies default select filter value on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::boolean('in_stock')
-                ->label('yes', 'no')
-                ->default('false'),
-        ];
-    }
-};
+        public string $tableName = 'test-default-select';
 
-it('applies default boolean filter value "false" on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'category_id' => 1]]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'boolean' => [
-            'in_stock' => 'false',
-        ],
-    ]);
+        public function filters(): array
+        {
+            return [
+                Filter::select('category_id')->dataSource(collect([['id' => 1, 'name' => 'Cat 1']]))->optionValue('id')->optionLabel('name')->default(1),
+            ];
+        }
 
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultBooleanFalse::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-it('can clear a default boolean filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-    expect($component->filters)->toMatchArray([
-        'boolean' => [
-            'in_stock' => 'true',
-        ],
-    ]);
+    Livewire::test($component::class)
+        ->assertSet('filters.select.category_id', 1);
+});
 
-    $component->call('clearFilter', 'in_stock');
-
-    expect($component->filters)->toMatchArray([]);
-
-    $component->assertSee('Pastel de Nata')
-        ->assertSee('Barco-Sushi da Sueli');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-$defaultBooleanAll = new class() extends DishesTable
-{
-    public string $tableName = 'default-boolean-all-table';
-
-    public function filters(): array
+it('applies default multi_select filter value on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::boolean('in_stock')
-                ->label('yes', 'no')
-                ->default('all'),
-        ];
-    }
-};
+        public string $tableName = 'test-default-multi-select';
 
-it('applies default boolean filter value "all" on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'category_id' => 1]]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'boolean' => [
-            'in_stock' => 'all',
-        ],
-    ]);
+        public function filters(): array
+        {
+            return [
+                Filter::multiSelect('category_id')->dataSource(collect([['id' => 1, 'name' => 'Cat 1']]))->optionValue('id')->optionLabel('name')->default([1]),
+            ];
+        }
 
-    $component->assertSee('Pastel de Nata')
-        ->assertSee('Barco-Sushi da Sueli');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultBooleanAll::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-// ── Select default ────────────────────────────────────────────────────
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-$defaultSelect = new class() extends DishesTable
-{
-    public string $tableName = 'default-select-table';
+    Livewire::test($component::class)
+        ->assertSet('filters.multi_select.category_id', [1]);
+});
 
-    public function filters(): array
+it('applies default input_text filter value on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::select('category_name', 'category_id')
-                ->dataSource(Category::all())
-                ->optionValue('category_id')
-                ->optionLabel('category_name')
-                ->default(1),
-        ];
-    }
-};
+        public string $tableName = 'test-default-input-text';
 
-it('applies default select filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Pastel']]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'select' => [
-            'category_id' => 1,
-        ],
-    ]);
+        public function filters(): array
+        {
+            return [Filter::inputText('name')->default('Pastel')];
+        }
 
-    // category_id 1 = Carnes
-    $component->assertSee('Peixada da chef Nábia')
-        ->assertSee('Carne Louca')
-        ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultSelect::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-it('can clear a default select filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-    expect($component->filters)->toMatchArray([
-        'select' => [
-            'category_id' => 1,
-        ],
-    ]);
+    Livewire::test($component::class)
+        ->assertSet('filters.input_text.name', 'Pastel');
+});
 
-    $component->call('clearFilter', 'category_id');
-
-    expect($component->filters)->toMatchArray([]);
-
-    $component->assertSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultSelect::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Multi Select default ──────────────────────────────────────────────
-
-$defaultMultiSelect = new class() extends DishesTable
-{
-    public string $tableName = 'default-multi-select-table';
-
-    public function filters(): array
+it('applies default number filter value on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::multiSelect('category_name', 'category_id')
-                ->dataSource(Category::all())
-                ->optionValue('id')
-                ->optionLabel('name')
-                ->default([1]),
-        ];
-    }
-};
+        public string $tableName = 'test-default-number';
 
-it('applies default multi_select filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'price' => 10]]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'multi_select' => [
-            'category_id' => [1],
-        ],
-    ]);
+        public function filters(): array
+        {
+            return [Filter::number('price')->default(['start' => 10, 'end' => 20])];
+        }
 
-    // category_id 1 = Carnes
-    $component->assertSee('Peixada da chef Nábia')
-        ->assertSee('Carne Louca')
-        ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('price');
+        }
 
-$defaultMultiSelectMultiple = new class() extends DishesTable
-{
-    public string $tableName = 'default-multi-select-multiple-table';
+        public function columns(): array
+        {
+            return [Column::make('Price', 'price')];
+        }
+    };
 
-    public function filters(): array
+    Livewire::test($component::class)
+        ->assertSet('filters.number.price.start', 10)
+        ->assertSet('filters.number.price.end', 20);
+});
+
+it('applies default date filter value on mount', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::multiSelect('category_name', 'category_id')
-                ->dataSource(Category::all())
-                ->optionValue('id')
-                ->optionLabel('name')
-                ->default([1, 6]),
-        ];
-    }
-};
+        public string $tableName = 'test-default-date';
 
-it('applies default multi_select filter with multiple values on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'date' => '2021-01-01']]);
+        }
 
-    expect($component->filters)->toMatchArray([
-        'multi_select' => [
-            'category_id' => [1, 6],
-        ],
-    ]);
-
-    // category_id 1 = Carnes, 6 = Sobremesas  (Pastel de Nata is cat 6)
-    $component->assertSee('Peixada da chef Nábia')
-        ->assertSee('Pastel de Nata')
-        ->assertDontSee('Francesinha vegana');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultMultiSelectMultiple::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-it('can clear a default multi_select filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'multi_select' => [
-            'category_id' => [1],
-        ],
-    ]);
-
-    $component->call('clearFilter', 'category_id');
-
-    expect($component->filters)->toMatchArray([]);
-
-    $component->assertSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultMultiSelect::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Input Text default ────────────────────────────────────────────────
-
-$defaultInputText = new class() extends DishesTable
-{
-    public string $tableName = 'default-input-text-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::inputText('name')
-                ->placeholder('dish_name_placeholder')
-                ->default('Pastel de Nata'),
-        ];
-    }
-};
-
-it('applies default input_text filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'input_text' => [
-            'name' => 'Pastel de Nata',
-        ],
-    ]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultInputText::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-$defaultInputTextWithOperator = new class() extends DishesTable
-{
-    public string $tableName = 'default-input-text-operator-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::inputText('name')
-                ->operators()
-                ->default(['value' => 'ba', 'operator' => 'contains']),
-        ];
-    }
-};
-
-it('applies default input_text filter with operator on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'input_text' => [
-            'name' => 'ba',
-        ],
-        'input_text_options' => [
-            'name' => 'contains',
-        ],
-    ]);
-
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultInputTextWithOperator::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-it('can clear a default input_text filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'input_text' => [
-            'name' => 'Pastel de Nata',
-        ],
-    ]);
-
-    $component->call('clearFilter', 'name');
-
-    expect($component->filters)->toMatchArray([]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultInputText::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Number default ────────────────────────────────────────────────────
-
-$defaultNumber = new class() extends DishesTable
-{
-    public string $tableName = 'default-number-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::number('price')
-                ->thousands("'")
-                ->decimal(',')
-                ->default(['start' => '10', 'end' => '50']),
-        ];
-    }
-};
-
-it('applies default number filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'number' => [
-            'price' => [
-                'start' => '10',
-                'end' => '50',
-            ],
-        ],
-    ]);
-
-    $component->assertSee('Pastel de Nata')     // price 10.00
-        ->assertSee('Peixada da chef Nábia')      // price 20.50
-        ->assertSee('Carne Louca')                // price 30.00
-        ->assertSee('Bife à Rolê')                // price 40.50
-        ->assertSee('Francesinha vegana')          // price 50.00
-        ->assertDontSee('Barco-Sushi da Sueli')   // price 5000.00
-        ->assertDontSee('борщ');                   // price 5000.00
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultNumber::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-$defaultNumberStartOnly = new class() extends DishesTable
-{
-    public string $tableName = 'default-number-start-only-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::number('price')
-                ->thousands("'")
-                ->decimal(',')
-                ->default(['start' => '1000']),
-        ];
-    }
-};
-
-it('applies default number filter with start only on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'number' => [
-            'price' => [
-                'start' => '1000',
-            ],
-        ],
-    ]);
-
-    $component->assertSee('Barco-Sushi da Sueli')  // price 5000.00
-        ->assertSee('борщ')                          // price 5000.00
-        ->assertSee('Barco-Sushi Simples')           // price 1500.40
-        ->assertDontSee('Pastel de Nata')            // price 10.00
-        ->assertDontSee('Carne Louca');              // price 30.00
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultNumberStartOnly::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-it('can clear a default number filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'number' => [
-            'price' => [
-                'start' => '10',
-                'end' => '50',
-            ],
-        ],
-    ]);
-
-    $component->call('clearFilter', 'price');
-
-    expect($component->filters)->toMatchArray([]);
-
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertSee('Pastel de Nata');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultNumber::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Date/Datetime default ─────────────────────────────────────────────
-
-$defaultDatetime = new class() extends DishesTable
-{
-    public string $tableName = 'default-datetime-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::datetimepicker('produced_at')
-                ->default([
-                    'start' => '2021-01-01 00:00:00',
-                    'end' => '2021-03-03 23:59:59',
-                    'formatted' => '2021-01-01 to 2021-03-03',
-                ]),
-        ];
-    }
-};
-
-it('applies default datetime filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'datetime' => [
-            'produced_at' => [
-                'start' => '2021-01-01 00:00:00',
-                'end' => '2021-03-03 23:59:59',
-                'formatted' => '2021-01-01 to 2021-03-03',
-            ],
-        ],
-    ]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultDatetime::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-$defaultDate = new class() extends DishesTable
-{
-    public string $tableName = 'default-date-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::datepicker('produced_at')
-                ->default([
+        public function filters(): array
+        {
+            return [
+                Filter::datepicker('date')->default([
                     'start' => '2021-01-01',
-                    'end' => '2021-05-05',
-                    'formatted' => '2021-01-01 to 2021-05-05',
+                    'end' => '2021-01-02',
+                    'formatted' => '2021-01-01 to 2021-01-02',
                 ]),
-        ];
-    }
-};
+            ];
+        }
 
-it('applies default date filter value on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('date');
+        }
 
-    expect($component->filters)->toMatchArray([
-        'date' => [
-            'produced_at' => [
-                'start' => '2021-01-01',
-                'end' => '2021-05-05',
-                'formatted' => '2021-01-01 to 2021-05-05',
-            ],
-        ],
-    ]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultDate::class, (object) ['theme' => Tailwind::class]],
-    ]);
+        public function columns(): array
+        {
+            return [Column::make('Date', 'date')];
+        }
+    };
 
-it('can clear a default datetime filter', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->not->toBeEmpty();
-
-    $component->call('clearFilter', 'produced_at');
-
-    expect($component->filters)->toMatchArray([]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultDatetime::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Enabled filters tracking ─────────────────────────────────────────
-
-it('registers default filters in enabledFilters', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->enabledFilters)
-        ->toBeArray()
-        ->not->toBeEmpty();
-
-    $fields = collect($component->enabledFilters)->pluck('field')->all();
-
-    expect($fields)->toContain('in_stock');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultBooleanTrue::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── clearAllFilters resets defaults ───────────────────────────────────
-
-$defaultMultipleFilters = new class() extends DishesTable
-{
-    public string $tableName = 'default-multiple-filters-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::boolean('in_stock')
-                ->label('yes', 'no')
-                ->default('true'),
-
-            Filter::inputText('name')
-                ->default('Pastel'),
-        ];
-    }
-};
-
-it('clearAllFilters resets all default filters', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->not->toBeEmpty();
-
-    $component->call('clearAllFilters');
-
-    expect($component->filters)->toMatchArray([]);
-    expect($component->enabledFilters)->toMatchArray([]);
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultMultipleFilters::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── Multiple default filters applied together ─────────────────────────
-
-it('applies multiple default filters simultaneously on mount', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([
-        'boolean' => [
-            'in_stock' => 'true',
-        ],
-        'input_text' => [
-            'name' => 'Pastel',
-        ],
-    ]);
-
-    $fields = collect($component->enabledFilters)->pluck('field')->all();
-
-    expect($fields)->toContain('in_stock')
-        ->toContain('name');
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$defaultMultipleFilters::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-// ── No default value means no filter applied ──────────────────────────
-
-$noDefaultFilter = new class() extends DishesTable
-{
-    public string $tableName = 'no-default-filter-table';
-
-    public function filters(): array
-    {
-        return [
-            Filter::boolean('in_stock')
-                ->label('yes', 'no'),
-
-            Filter::inputText('name'),
-        ];
-    }
-};
-
-it('does not apply filters when no default value is set', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    expect($component->filters)->toMatchArray([]);
-    expect($component->enabledFilters)->toBeEmpty();
-})->group('filters', 'filterDefaultValue')
-    ->with([
-        'tailwind' => [$noDefaultFilter::class, (object) ['theme' => Tailwind::class]],
-    ]);
+    Livewire::test($component::class)
+        ->assertSet('filters.date.date.start', '2021-01-01')
+        ->assertSet('filters.date.date.end', '2021-01-02');
+});

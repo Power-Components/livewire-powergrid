@@ -1,4 +1,4 @@
-<div x-data="{ countChecked: @entangle('checkboxValues').live }">
+<div x-data="{ countChecked: @entangle('checkboxValues').live }" wire:key="export-dropdown-{{ $tableName }}">
     @if (filled(data_get($setUp, 'exportable')))
         <flux:dropdown>
             <flux:button

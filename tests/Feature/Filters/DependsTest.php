@@ -1,69 +1,75 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Chef};
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-$component = new class() extends DishTableBase
-{
-    public function filters(): array
+it('"depends" works properly in select', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::select('category_name', 'category_id')
-                ->dataSource(Category::all())
-                ->optionLabel('name')
-                ->optionValue('id'),
+        public string $tableName = 'test-depends';
 
-            Filter::select('chef_name', 'chef_id')
-                ->depends(['category_id'])
-                ->dataSource(
-                    fn ($depends) => Chef::query()
-                        ->when(
-                            isset($depends['category_id']),
-                            fn (Builder $query) => $query->whereRelation(
-                                'categories',
-                                fn (Builder $builder) => $builder->where('id', $depends['category_id'])
-                            )
-                        )
-                        ->get()
-                )
-                ->optionLabel('name')
-                ->optionValue('id'),
-        ];
-    }
-};
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'category_id' => 1, 'chef_id' => 1],
+                ['id' => 2, 'name' => 'Dish 2', 'category_id' => 2, 'chef_id' => 2],
+            ]);
+        }
 
-dataset('action:depends', [
-    'tailwind' => [$component::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'tailwind join' => [$component::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-]);
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::header()->showSearchInput(),
+            ];
+        }
 
-it('"depends" works properly in select', function (string $component, object $params) {
-    livewire($component, [
-        'join' => $params->join,
-    ])
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', 6)
-        ->assertSeeHtmlInOrder([
-            'Luan',
-            'Dan',
-            'Vitor',
-            'Claudio',
-        ])
+        public function filters(): array
+        {
+            return [
+                Filter::select('category_id')
+                    ->dataSource(collect([['id' => 1, 'name' => 'Cat 1'], ['id' => 2, 'name' => 'Cat 2']]))
+                    ->optionValue('id')
+                    ->optionLabel('name'),
+
+                Filter::select('chef_id')
+                    ->depends(['category_id'])
+                    ->dataSource(function ($depends) {
+                        $catId = data_get($depends, 'category_id');
+                        if ($catId == 1) {
+                            return collect([['id' => 1, 'name' => 'Chef for Cat 1']]);
+                        }
+                        if ($catId == 2) {
+                            return collect([['id' => 2, 'name' => 'Chef for Cat 2']]);
+                        }
+
+                        return collect([]);
+                    })
+                    ->optionValue('id')
+                    ->optionLabel('name'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Name', 'name'),
+                Column::make('Category', 'category_id'),
+                Column::make('Chef', 'chef_id'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
         ->set('filters.select.category_id', 1)
-        ->assertSeeHtmlInOrder([
-            'Luan',
-            'Claudio',
-        ])
-        ->assertDontSeeHtml([
-            'Dan',
-            'Vitor',
-        ]);
-})
-    ->with('action:depends')
-    ->group('action')
-    ->skip('');
+        ->assertSeeHtml('Chef for Cat 1')
+        ->assertDontSeeHtml('Chef for Cat 2')
+        ->set('filters.select.category_id', 2)
+        ->assertDontSeeHtml('Chef for Cat 1')
+        ->assertSeeHtml('Chef for Cat 2');
+});

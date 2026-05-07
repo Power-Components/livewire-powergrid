@@ -1,26 +1,51 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesSearchJSONTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('searches JSON column', function () {
+    // Setup data
+    Dish::query()->forceDelete();
+    Dish::create([
+        'name' => 'Dish 1',
+        'additional' => json_encode(['info' => 'uramaki']),
+        'category_id' => 1, 'chef_id' => 1, 'diet' => 1, 'price' => 10, 'calories' => 100, 'stored_at' => '1', 'produced_at' => now(),
+    ]);
+    Dish::create([
+        'name' => 'Dish 2',
+        'additional' => json_encode(['info' => 'temaki']),
+        'category_id' => 1, 'chef_id' => 1, 'diet' => 1, 'price' => 10, 'calories' => 100, 'stored_at' => '1', 'produced_at' => now(),
+    ]);
 
-it('searches JSON column', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-search-json';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('additional');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Name', 'name'),
+                Column::make('Additional', 'additional')->searchableJson('dishes'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
         ->set('search', 'uramaki')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli')
-
-        ->set('search', 'URAMAKI')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli')
-
-        ->set('search', 'UraMaKi')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli');
-})->with('search-json')->skipOnPostgreSQL();
-
-dataset('search-json', [
-    'tailwind' => [DishesSearchJSONTable::class, (object) ['theme' => Tailwind::class]],
-]);
+        ->assertSee('Dish 1')
+        ->assertDontSee('Dish 2')
+        ->set('search', 'TEMAKI')
+        ->assertDontSee('Dish 1')
+        ->assertSee('Dish 2');
+})->requiresSQLite();

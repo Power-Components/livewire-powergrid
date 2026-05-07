@@ -1,9 +1,9 @@
 @if (data_get($setUp, 'header.toggleColumns'))
-    <div class="dropdown">
-        <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.layout.actions') }}">
+    <div class="dropdown dropdown-end" :class="{ 'dropdown-open': open }" x-data="{ open: false }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="toggle-columns-dropdown-{{ $tableName }}">
+        <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.layout.actions') }}" x-on:click="open = !open">
             <x-livewire-powergrid::icons.eye-off class="w-4 h-4" />
         </div>
-        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+        <ul tabindex="0" class="dropdown-content z-[50] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
             @foreach ($this->visibleColumns as $column)
                 <li wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                     data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"

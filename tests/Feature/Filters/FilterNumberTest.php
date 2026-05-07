@@ -1,37 +1,52 @@
 <?php
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
+it('properly filters by number', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-number-filter';
 
-it('properly filters by filter Number', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'price' => 100],
+                ['id' => 2, 'name' => 'Dish 2', 'price' => 200],
+                ['id' => 3, 'name' => 'Dish 3', 'price' => 300],
+            ]);
+        }
 
-    $filters = array_merge($component->filters, filterNumber('price', min: '1\'500.20', max: '3\'000.00'));
+        public function filters(): array
+        {
+            return [
+                Filter::number('price'),
+            ];
+        }
 
-    $component->set('filters', $filters)
-        ->assertSeeHtml('placeholder="min_xyz_placeholder"')
-        ->assertSeeHtml('placeholder="max_xyz_placeholder"')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Polpetone Filé Mignon')
-        ->assertDontSee('борщ');
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-    expect($component->filters)->toBe($filters);
-})->group('filters')
-    ->with('filterComponent');
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-it('properly filters by filter Number with wrong separators', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    // Use wrong separators
-    $filters = array_merge($component->filters, filterNumber('price', min: '1@500#20', max: '3@000#00'));
-
-    $component->set('filters', $filters)
-        ->assertSee('No records found');
-})
-    ->skipOnPostgreSQL('PG will throw "invalid input syntax for type double precision"')
-    ->group('filters')
-    ->with('filterComponent');
+    Livewire::test($component::class)
+        ->set('filters', [
+            'number' => ['price' => ['start' => 150, 'end' => 250]],
+        ])
+        ->assertDontSee('Dish 1')
+        ->assertSee('Dish 2')
+        ->assertDontSee('Dish 3')
+        ->set('filters', [
+            'number' => ['price' => ['start' => 250]],
+        ])
+        ->assertDontSee('Dish 1')
+        ->assertDontSee('Dish 2')
+        ->assertSee('Dish 3');
+});

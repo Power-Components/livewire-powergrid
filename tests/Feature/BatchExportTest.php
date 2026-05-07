@@ -2,29 +2,51 @@
 
 use Illuminate\Bus\PendingBatch;
 use Illuminate\Support\Facades\Bus;
-use Livewire\Features\SupportTesting\Testable;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\BatchExportTable;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields, Traits\WithExport};
+use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 
 use function Livewire\invade;
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 
-it('can pass class parameters in batch export.', function () {
+it('can pass class parameters in batch export', function () {
     Bus::fake();
 
-    /** @var Testable $component */
-    $component = livewire(BatchExportTable::class, [
-        'filterDataSourceId' => 77,
-    ])
+    $component = new class() extends PowerGridComponent
+    {
+        use WithExport;
+
+        public string $tableName = 'test-batch-export';
+
+        public int $filterDataSourceId = 77;
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1']]);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('export')->type(Exportable::TYPE_XLS)->queues(1)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('ID', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $lw = Livewire::test($component::class, ['filterDataSourceId' => 77])
         ->call('exportToXLS', false);
 
-    $getPublicPropertiesDefinedInComponent = $component->instance()->getPublicPropertiesDefinedInComponent();
-
-    Bus::assertBatched(function (PendingBatch $batch) use ($getPublicPropertiesDefinedInComponent) {
+    Bus::assertBatched(function (PendingBatch $batch) {
         $jobs = $batch->jobs[0];
-
         $properties = invade($jobs[0])->properties;
 
-        return $getPublicPropertiesDefinedInComponent['filterDataSourceId'] ===
-            $properties['filterDataSourceId'];
+        return $properties['filterDataSourceId'] === 77;
     });
 })->requiresOpenSpout();

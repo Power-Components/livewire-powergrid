@@ -452,7 +452,7 @@ trait Filter
 
                         if ($depends && $this->filters) {
                             $depends = collect($depends)
-                                ->mapWithKeys(fn ($field) => [$field => data_get($this->filters, 'select', $field)]);
+                                ->mapWithKeys(fn ($field) => [$field => data_get($this->filters, 'select.'.$field)]);
                         }
 
                         data_forget($filter, 'dataSource');

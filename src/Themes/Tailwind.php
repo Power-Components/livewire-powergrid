@@ -7,10 +7,10 @@ class Tailwind extends Theme
     protected ?string $parentTheme = null;
 
     /** @lang Tailwind CSS */
-    public function struct(): array
+    public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.frameworks.tailwind')
+            ->baseView('livewire-powergrid::components.themes.tailwind')
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
@@ -19,7 +19,7 @@ class Tailwind extends Theme
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap')
                     ->actions('focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
                 )
-                ->searchBox(fn (Components\Component $searchBox) => $searchBox
+                ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('header.search')
                     ->container('flex flex-row mt-3 md:mt-0 w-full rounded-full flex justify-start sm:justify-center md:justify-end')
                     ->relativeMain('group relative rounded-full w-full md:w-4/12 float-end float-right md:w-full lg:w-1/2')
@@ -31,15 +31,6 @@ class Tailwind extends Theme
                 )
             )
             ->table(fn (Components\Table $table) => $table
-                ->view('table-base')
-                ->viewHeader('table.tr')
-                ->viewRow('table.row')
-                ->viewCols('table.cols')
-                ->viewThEmpty('table.th-empty')
-                ->viewInlineFilters('table.inline-filters')
-                ->viewCheckboxAll('table.checkbox-all')
-                ->viewCheckboxRow('table.checkbox-row')
-                ->viewRadioRow('table.radio-row')
                 ->layout(fn (Components\Layout $layout) => $layout
                     ->container('rounded-t-lg relative border-x border-t border-pg-primary-200 dark:bg-pg-primary-700 dark:border-pg-primary-600')
                     ->table('min-w-full dark:!bg-primary-800')
@@ -49,13 +40,13 @@ class Tailwind extends Theme
                     ->tbody('text-pg-primary-800')
                     ->td('px-3 py-2 whitespace-nowrap dark:text-pg-primary-200')
                 )
-                ->checkbox(fn (Components\Component $checkbox) => $checkbox
+                ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
                     ->th('px-6 py-3 text-left text-xs font-medium text-pg-primary-500 tracking-wider')
                     ->base('')
                     ->label('flex items-center space-x-3')
                     ->input('form-checkbox dark:border-dark-600 border-1 dark:bg-dark-800 rounded border-gray-300 bg-white transition duration-100 ease-in-out h-4 w-4 text-primary-500 focus:ring-primary-500 dark:ring-offset-dark-900')
                 )
-                ->radio(fn (Components\Component $radio) => $radio
+                ->radio(fn (Components\Radio $radio) => $radio
                     ->th('px-6 py-3 text-left text-xs font-medium text-pg-primary-500 tracking-wider')
                     ->base('')
                     ->label('flex items-center space-x-3')
@@ -68,18 +59,15 @@ class Tailwind extends Theme
                     ->container('border-x border-b rounded-b-lg border-b border-pg-primary-200 dark:bg-pg-primary-700 dark:border-pg-primary-600')
                     ->select('focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
                 )
-                ->pagination(fn (Components\Component $pagination) => $pagination
-                    ->view('pagination')
-                )
-            )
-            ->toArray();
+                ->pagination('pagination')
+            );
     }
 
     public function editable(): array
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.frameworks.tailwind.editable')
+                ->view('livewire-powergrid::components.themes.tailwind.editable')
                 ->clickable('py-2')
                 ->input('focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-full')
                 ->error('text-sm text-red-800 p-1 transition-all duration-200')
@@ -91,7 +79,7 @@ class Tailwind extends Theme
     {
         return [
             'toggleable' => (new Components\Component())
-                ->view('livewire-powergrid::components.frameworks.tailwind.toggleable')
+                ->view('livewire-powergrid::components.themes.tailwind.toggleable')
                 ->toArray(),
         ];
     }
@@ -102,32 +90,32 @@ class Tailwind extends Theme
             'filter' => [
                 'label' => 'block text-sm font-medium text-pg-primary-700 dark:text-pg-primary-300',
                 'boolean' => [
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.boolean',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.boolean',
                     'base' => 'min-w-[5rem]',
                     'select' => 'focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 w-full rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
                 ],
                 'date_picker' => [
                     'base' => '',
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.date-picker',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.date-picker',
                     'input' => 'flatpickr flatpickr-input focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-auto',
                 ],
                 'multi_select' => [
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.multi-select',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.multi-select',
                     'base' => 'inline-block relative w-full',
                     'select' => 'mt-1',
                 ],
                 'number' => [
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.number',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.number',
                     'base' => '',
                     'input' => 'w-full min-w-[5rem] block focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 rounded-md border-0 bg-transparent py-1.5 pl-2 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6',
                 ],
                 'select' => [
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.select',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.select',
                     'base' => '',
                     'select' => 'focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
                 ],
                 'input_text' => [
-                    'view' => 'livewire-powergrid::components.frameworks.tailwind.filters.input-text',
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.input-text',
                     'base' => 'min-w-[9.5rem]',
                     'select' => 'focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 w-full rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
                     'input' => 'focus:ring-primary-600 focus-within:focus:ring-primary-600 focus-within:ring-primary-600 dark:focus-within:ring-primary-600 flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-pg-primary-600 dark:text-pg-primary-300 text-gray-600 ring-gray-300 dark:bg-pg-primary-800 bg-white dark:placeholder-pg-primary-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6 w-full',

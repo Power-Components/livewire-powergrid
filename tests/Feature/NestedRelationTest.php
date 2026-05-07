@@ -1,15 +1,58 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\NestedRelationSearchTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('searches data using nested relations in collection', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-nested-relation';
 
-it('searches data using nested relations', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
+        public function datasource()
+        {
+            return collect([
+                [
+                    'id' => 1,
+                    'name' => 'Pastel de Nata',
+                    'category' => [
+                        'name' => 'Sobremesas',
+                        'restaurant' => ['name' => 'Not McDonalds'],
+                    ],
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'Borsch',
+                    'category' => [
+                        'name' => 'Sopas',
+                        'restaurant' => ['name' => 'Sopa House'],
+                    ],
+                ],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name')
+                ->add('restaurant_name', fn ($row) => data_get($row, 'category.restaurant.name'));
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+                Column::make('Restaurant', 'restaurant_name', 'category.restaurant.name')->searchable(),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
         ->set('search', 'Not McDonalds')
-        ->assertSee('Not McDonalds');
-})->with([
-    'tailwind' => [NestedRelationSearchTable::class, (object) ['theme' => Tailwind::class]],
-]);
+        ->assertSee('Not McDonalds')
+        ->assertDontSee('Sopa House')
+        ->set('search', 'Sopa House')
+        ->assertSee('Sopa House')
+        ->assertDontSee('Not McDonalds');
+});

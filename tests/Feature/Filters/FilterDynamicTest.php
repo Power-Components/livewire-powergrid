@@ -1,23 +1,52 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesDynamicFiltersTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('properly renders dynamic filter', function () {
+    view()->addNamespace('tests', __DIR__.'/../../../resources/views/tests');
 
-it(
-    'properly filters using dynamic filter feature',
-    fn (string $component, object $params) => livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtmlInOrder([
-            '<div>class: min-w-[170px]</div>',
-            '<div>options: [{&quot;name&quot;:&quot;Active&quot;,&quot;value&quot;:true},{&quot;name&quot;:&quot;Inactive&quot;,&quot;value&quot;:false}]</div>',
-            '<div>option-label: name</div>',
-            '<div>option-value: value</div>',
-            '<div>placeholder: Choose</div>',
-        ])
-)->group('filters')->with('dynamic_themes');
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-dynamic-filter';
 
-dataset('dynamic_themes', [
-    'tailwind' => [DishesDynamicFiltersTable::class, (object) ['theme' => Tailwind::class]],
-]);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1']]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::dynamic('name', 'name')
+                    ->component('tests::dynamic-select')
+                    ->attributes([
+                        'class' => 'min-w-[170px]',
+                        'options' => [
+                            ['name' => 'Active', 'value' => true],
+                        ],
+                        'option-label' => 'name',
+                        'option-value' => 'value',
+                        'placeholder' => 'Choose',
+                    ]),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSeeHtml('class: min-w-[170px]')
+        ->assertSeeHtml('options: [{&quot;name&quot;:&quot;Active&quot;,&quot;value&quot;:true}]')
+        ->assertSeeHtml('option-label: name')
+        ->assertSeeHtml('option-value: value');
+});

@@ -1,45 +1,62 @@
 <?php
 
 use Illuminate\View\View;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\NoDataCollectionTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-$componentCustomMessage = new class() extends NoDataCollectionTable
-{
-    public function noDataLabel(): string|View
+it('shows the Powergrid default "no data" message', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return 'foo bar 1234';
-    }
-};
+        public string $tableName = 'test-no-data';
 
-$componentCustomView = new class() extends NoDataCollectionTable
-{
-    public function noDataLabel(): string|View
-    {
-        return view('no-data');
-    }
-};
+        public function datasource()
+        {
+            return collect([]);
+        }
+    };
 
-it('shows the Powergrid default "no data" message', function (string $theme) {
-    livewire(NoDataCollectionTable::class)
-        ->call('setTestThemeClass', $theme)
+    Livewire::test($component::class)
         ->assertSeeHtml('<span>No records found</span>');
-})->with([Tailwind::class]);
+});
 
-it('shows a custom string message', function ($component, $theme) {
-    livewire($component)
-        ->call('setTestThemeClass', $theme)
+it('shows a custom string message', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-no-data-string';
+
+        public function datasource()
+        {
+            return collect([]);
+        }
+
+        public function noDataLabel(): string|View
+        {
+            return 'foo bar 1234';
+        }
+    };
+
+    Livewire::test($component::class)
         ->assertSeeHtml('<span>foo bar 1234</span>');
-})->with(['string' => [$componentCustomMessage::class]])
-    ->with([Tailwind::class]);
+});
 
-it('show a view', function ($component, $theme) {
-    $this->app['view']->addLocation(fixturePath('views'));
+it('shows a custom view message', function () {
+    view()->addLocation(__DIR__.'/../Concerns/Fixtures/views');
 
-    livewire($component)
-        ->call('setTestThemeClass', $theme)
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-no-data-view';
+
+        public function datasource()
+        {
+            return collect([]);
+        }
+
+        public function noDataLabel(): string|View
+        {
+            return view('no-data');
+        }
+    };
+
+    Livewire::test($component::class)
         ->assertSeeHtml('<div><span class="custom">No Data Here!!!</span></div>');
-})->with(['view' => [$componentCustomView::class]])
-    ->with([Tailwind::class]);
+});

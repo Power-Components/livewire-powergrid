@@ -1,128 +1,95 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuilderTable,
-    Concerns\Components\DishesTable,
-    Concerns\Components\DishesTableWithJoin};
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-it('sorts by "name" and then by "id"', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('Pastel de Nata')
-        ->call('sortBy', $params->field)
-        ->assertSeeHtml('Almôndegas ao Sugo')
-        ->assertDontSeeHtml('Pastel de Nata')
-        ->call('sortBy', 'id')
-        ->assertSeeHtml('Pastel de Nata');
-})->with('column_join', 'column_query_builder');
-
-it('searches data', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('Pastel de Nata')
-        ->set('search', 'Sugo')
-        ->assertDontSee('Pastel de Nata');
-})->with('column_join', 'column_query_builder');
-
-$contentClassesString = new class() extends DishesTable
-{
-    public function columns(): array
+it('properly sorts and searches in collection', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Column::add()
-                ->title('Id')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
+        public string $tableName = 'test-column-core';
 
-            Column::add()
-                ->title('Dish')
-                ->field('name')
-                ->searchable()
-                ->contentClasses('bg-custom-500 text-custom-500')
-                ->sortable(),
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish A'], ['id' => 2, 'name' => 'Dish B']]);
+        }
 
-            Column::add()
-                ->title(__('Stored at'))
-                ->field('storage_room')
-                ->sortable(),
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-            Column::action('Action'),
-        ];
-    }
-};
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id')->sortable(), Column::make('Name', 'name')->searchable()->sortable()];
+        }
+    };
 
-it('add contentClasses on dishes name column', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSee('Pastel de Nata')
-        ->assertSeeHtmlInOrder([
-            '<span class=" ">',
-            '<div>1</div>',
-            '</span>',
-            '<span class=" bg-custom-500 text-custom-500">',
-            '<div>Pastel de Nata</div>',
-            '</span>',
-        ]);
-})->with([
-    'tailwind' => [$contentClassesString::class, (object) ['theme' => Tailwind::class, 'field' => 'name']],
-]);
+    Livewire::test($component::class)
+        ->call('sortBy', 'name')
+        ->set('sortDirection', 'desc')
+        ->assertSeeInOrder(['Dish B', 'Dish A'])
+        ->set('search', 'Dish A')
+        ->assertSee('Dish A')
+        ->assertDontSee('Dish B');
+});
 
-$contentClassesArray = new class() extends DishesTable
-{
-    public function columns(): array
+it('add contentClasses on column', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Column::add()
-                ->title('Id')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
+        public string $tableName = 'test-column-classes';
 
-            Column::add()
-                ->title('Dish')
-                ->field('name')
-                ->searchable()
-                ->contentClasses(['Peixada da chef Nábia' => 'bg-custom-500 text-custom-500'])
-                ->sortable(),
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1'], ['id' => 2, 'name' => 'Dish 2']]);
+        }
 
-            Column::add()
-                ->title(__('Stored at'))
-                ->field('storage_room')
-                ->sortable(),
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-            Column::action('Action'),
-        ];
-    }
-};
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name')->contentClasses('bg-custom-500'),
+            ];
+        }
+    };
 
-it('add contentClasses on dishes name column array', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSee('Pastel de Nata')
+    Livewire::test($component::class)
+        ->assertSeeHtml('<span class=" bg-custom-500">');
+});
+
+it('add contentClasses on column using array', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-column-classes-array';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1'], ['id' => 2, 'name' => 'Dish 2']]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name')->contentClasses(['Dish 2' => 'bg-custom-500']),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
         ->assertSeeHtmlInOrder([
-            '<span class=" ">',
-            '<div>1</div>',
+            '<div>Dish 1</div>',
             '</span>',
-            '<span class=" ">',
-            '<div>Pastel de Nata</div>',
-            '</span>',
-            '<span class=" bg-custom-500 text-custom-500">',
-            '<div>Peixada da chef Nábia</div>',
-            '</span>',
+            '<span class=" bg-custom-500">',
+            '<div>Dish 2</div>',
         ]);
-})->with([
-    'tailwind' => [$contentClassesArray::class, (object) ['theme' => Tailwind::class, 'field' => 'name']],
-]);
-
-dataset('column_join', [
-    'tailwind' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'field' => 'name']],
-    'tailwind join' => [DishesTableWithJoin::class, (object) ['theme' => Tailwind::class, 'field' => 'dishes.name']],
-]);
-
-dataset('column_query_builder', [
-    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-]);
+});

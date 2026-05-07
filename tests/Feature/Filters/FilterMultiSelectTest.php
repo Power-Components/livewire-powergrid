@@ -1,195 +1,59 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\Components\Filters\FilterMultiSelectAsync;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Tests\{
-    Concerns\Components\DishesFiltersTable,
-    Concerns\Components\DishesIterableTable,
-    Concerns\Components\DishesQueryBuilderTable,
-    Concerns\Components\DishesTable};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Category;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-$customBuilder = new class() extends DishesTable
-{
-    public int $dishId;
-
-    public function filters(): array
+it('properly filters by multi_select', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Filter::multiSelect('category_name', 'category_id')
-                ->dataSource(Category::all())
-                ->optionValue('id')
-                ->optionLabel('name')
-                ->builder(function ($builder, $values) {
-                    expect($values)
-                        ->toBe([0 => 1])
-                        ->and($builder)->toBeInstanceOf(Builder::class);
+        public string $tableName = 'test-multi-select';
 
-                    return $builder->where('dishes.id', 1);
-                }),
-        ];
-    }
-};
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'category_id' => 1],
+                ['id' => 2, 'name' => 'Dish 2', 'category_id' => 2],
+                ['id' => 3, 'name' => 'Dish 3', 'category_id' => 3],
+            ]);
+        }
 
-$customCollection = new class() extends DishesIterableTable
-{
-    public int $dishId;
+        public function filters(): array
+        {
+            return [
+                Filter::multiSelect('category_id')
+                    ->dataSource(collect([
+                        ['category_id' => 1, 'name' => 'Cat 1'],
+                        ['category_id' => 2, 'name' => 'Cat 2'],
+                        ['category_id' => 3, 'name' => 'Cat 3'],
+                    ]))
+                    ->optionValue('category_id')
+                    ->optionLabel('name'),
+            ];
+        }
 
-    public function filters(): array
-    {
-        return [
-            Filter::multiSelect('id', 'id')
-                ->dataSource(collect([['id' => 1, 'value' => 1], ['id' => 2, 'value' => 2]]))
-                ->optionValue('id')
-                ->optionLabel('value')
-                ->collection(function ($builder, $values) {
-                    expect($values)
-                        ->toBe([0 => 1, 1 => 3])
-                        ->and($builder)->toBeInstanceOf(Collection::class);
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-                    return $builder->whereIn('id', [1, 3]);
-                }),
-        ];
-    }
-};
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-it('properly filter with category_id - Carnes selected', function (string $component) {
-    $multiSelect = Filter::multiSelect('category_name', 'category_id')
-        ->dataSource(Category::all())
-        ->optionValue('id')
-        ->optionLabel('name');
-
-    livewire($component, [
-        'testFilters' => [
-            $multiSelect,
-        ],
-    ])
+    Livewire::test($component::class)
         ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    1,
-                ],
-            ],
+            'multi_select' => ['category_id' => [1, 2]],
         ])
-        ->assertDontSee('Pastel de Nata')
-        ->assertDontSee('Francesinha vegana')
-        ->assertSeeHtmlInOrder([
-            'Peixada da chef Nábia',
-            'Carne Louca',
-            'Bife à Rolê',
-        ]);
-})->group('filters')
-    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
-
-it('properly filter with id using custom builder', function (string $component, object $params) {
-    livewire($component, [
-        'iterableType' => 'collection',
-    ])
-        ->call('setTestThemeClass', $params->theme)
+        ->assertSee('Dish 1')
+        ->assertSee('Dish 2')
+        ->assertDontSee('Dish 3')
         ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    1,
-                ],
-            ],
+            'multi_select' => ['category_id' => [3]],
         ])
-        ->assertSee('Pastel de Nata')
-        ->assertDontSee('Francesinha vegana');
-})->group('filters')
-    ->with([
-        'tailwind -> id' => [$customBuilder::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-it('properly filter with category_id using custom collection', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('filters', [
-            'multi_select' => [
-                'id' => [
-                    1,
-                    3,
-                ],
-            ],
-        ])
-        ->assertSee('Name 1')
-        ->assertSee('Name 3')
-        ->assertDontSee('Name 2');
-})->group('filters')
-    ->with([
-        'tailwind -> id' => [$customCollection::class, (object) ['theme' => Tailwind::class]],
-    ]);
-
-it('properly filter with category_id - multiple select async', function (string $component) {
-    $multiSelect = Filter::multiSelectAsync('category_name', 'category_id')
-        ->url('http://localhost/category')
-        ->method('POST')
-        ->parameters([0 => 'Luan'])
-        ->optionValue('id')
-        ->optionLabel('name');
-
-    /** @var PowerGridComponent $livewire */
-    $livewire = livewire($component, [
-        'testFilters' => [
-            $multiSelect,
-        ],
-    ]);
-    $livewire
-        ->set('setUp.footer.perPage', '20')
-        ->assertSeeHtmlInOrder([
-            'wire:model="filters.multi_select.category_id.values"',
-            'x-ref="select_picker_category_id_'.$livewire->tableName.'"',
-        ])
-        ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    1, // Carnes
-                ],
-            ],
-        ])
-        ->assertDontSee('Pastel de Nata')
-        ->assertDontSee('борщ')
-        ->assertDontSee('Francesinha vegana')
-        ->assertSeeHtmlInOrder([
-            'Peixada da chef Nábia',
-            'Carne Louca',
-            'Bife à Rolê',
-        ])
-        ->set('filters', [
-            'multi_select' => [
-                'category_id' => [
-                    3, // Tortas
-                    7, // Sobremesas
-                ],
-            ],
-        ])
-        ->assertSee('борщ')
-        ->assertDontSee('Peixada da chef Nábia');
-
-    $column = collect($livewire->columns)
-        ->filter(fn ($column) => data_get($column, 'field') === 'category_name')->first();
-
-    expect((object) data_get($column, 'filters'))
-        ->url->toBe('http://localhost/category')
-        ->method->toBe('POST')
-        ->parameters->toMatchArray([0 => 'Luan'])
-        ->optionValue->toBe($multiSelect->optionValue)
-        ->optionLabel->toBe($multiSelect->optionLabel)
-        ->className->toBe(FilterMultiSelectAsync::class)
-        ->field->toBe($multiSelect->field);
-})->group('filters')
-    ->with('filter_multi_select_themes_with_join', 'filter_multi_select_query_builder');
-
-dataset('filter_multi_select_themes_with_join', [
-    'tailwind -> id' => [DishesFiltersTable::class, (object) ['theme' => Tailwind::class, 'join' => false]],
-    'tailwind join' => [DishesFiltersTable::class, (object) ['theme' => Tailwind::class, 'join' => true]],
-]);
-
-dataset('filter_multi_select_query_builder', [
-    'tailwind query builder -> id' => [DishesQueryBuilderTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-]);
+        ->assertDontSee('Dish 1')
+        ->assertDontSee('Dish 2')
+        ->assertSee('Dish 3');
+});

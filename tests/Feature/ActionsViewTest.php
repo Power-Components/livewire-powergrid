@@ -1,50 +1,46 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-$component = new class() extends DishesTable
-{
-    public function columns(): array
+it('can render actionsFromView property', function () {
+    $component = new class() extends PowerGridComponent
     {
-        return [
-            Column::add()
-                ->title('Id')
-                ->field('id')
-                ->searchable()
-                ->sortable(),
+        public string $tableName = 'test-actions-view';
 
-            Column::add()
-                ->title('Dish')
-                ->field('name')
-                ->searchable()
-                ->contentClasses('bg-custom-500 text-custom-500')
-                ->sortable(),
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1'],
+                ['id' => 2, 'name' => 'Dish 2'],
+            ]);
+        }
 
-            Column::action('Action'),
-        ];
-    }
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
 
-    public function actionsFromView($row)
-    {
-        return view('livewire-powergrid::tests.actions-view', compact('row'));
-    }
-};
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+                Column::action('Action'),
+            ];
+        }
 
-it('can render actionsFromView property', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
+        public function actionsFromView($row)
+        {
+            return view('livewire-powergrid::tests.actions-view', compact('row'));
+        }
+    };
+
+    Livewire::test($component::class)
         ->assertSeeInOrder([
             'Dish From Actions View: 1',
             'Dish From Actions View: 2',
-            'Dish From Actions View: 3',
-            'Dish From Actions View: 4',
-            'Dish From Actions View: 5',
-            'Dish From Actions View: 6',
         ]);
-})->with([
-    'tailwind' => [$component::class, (object) ['theme' => Tailwind::class, 'field' => 'name']],
-]);
+});

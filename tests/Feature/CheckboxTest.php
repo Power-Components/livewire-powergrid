@@ -1,121 +1,138 @@
 <?php
 
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishTableBase;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
-
-$componentWithActionRules = new class() extends DishTableBase
-{
-    public function actionRules($row): array
+it('selectCheckboxAll works properly', function () {
+    $component = new class() extends PowerGridComponent
     {
-        $idsWithCheckboxDisabled = [1, 2, 3];
+        public string $tableName = 'test-checkbox';
 
-        return [
-            Rule::checkbox()
-                ->when(fn ($dish) => in_array($dish->id, $idsWithCheckboxDisabled))
-                ->disable(),
-        ];
-    }
-};
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 15; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish '.$i];
+            }
 
-it('selectCheckboxAll works properly', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme)
+            return collect($data);
+        }
+
+        public function setUp(): array
+        {
+            $this->showCheckBox();
+
+            return [
+                PowerGrid::footer()->showPerPage(10),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
+
+    $lw = Livewire::test($component::class)
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
-        ->toMatchArray([
-            0 => '1',
-            1 => '2',
-            2 => '3',
-            3 => '4',
-            4 => '5',
-            5 => '6',
-            6 => '7',
-            7 => '8',
-            8 => '9',
-            9 => '10',
-        ]);
+    expect($lw->checkboxValues)
+        ->toMatchArray(range(1, 10));
 
-    $component->call('setPage', 2)
+    $lw->call('nextPage')
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
-        ->toMatchArray([
-            0 => '1',
-            1 => '2',
-            2 => '3',
-            3 => '4',
-            4 => '5',
-            5 => '6',
-            6 => '7',
-            7 => '8',
-            8 => '9',
-            9 => '10',
-            10 => '11',
-            11 => '12',
-            12 => '13',
-            13 => '14',
-            14 => '15',
-        ]);
+    expect($lw->checkboxValues)
+        ->toMatchArray(range(1, 15));
 
-    $component->call('setPage', 1)
-        ->set('checkboxAll', false)
+    $lw->set('checkboxAll', false)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
+    expect($lw->checkboxValues)
         ->toBe([]);
-})->with([
-    'tailwind -> id' => [DishTableBase::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-]);
+});
 
-it('selectCheckboxAll works properly with actionRules disable', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme)
+it('selectCheckboxAll works properly with actionRules disable', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-checkbox-rules';
+
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 15; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish '.$i];
+            }
+
+            return collect($data);
+        }
+
+        public function setUp(): array
+        {
+            $this->showCheckBox();
+
+            return [
+                PowerGrid::footer()->showPerPage(10),
+            ];
+        }
+
+        public function actionRules($row): array
+        {
+            return [
+                Rule::checkbox()
+                    ->when(fn ($dish) => in_array(data_get($dish, 'id'), [1, 2, 3]))
+                    ->disable(),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
+
+    $lw = Livewire::test($component::class)
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
-        ->toMatchArray([
-            0 => '4',
-            1 => '5',
-            2 => '6',
-            3 => '7',
-            4 => '8',
-            5 => '9',
-            6 => '10',
-        ]);
+    // IDs 1, 2, 3 are disabled, so they shouldn't be selected from the first 10
+    expect($lw->checkboxValues)
+        ->toMatchArray(range(4, 10));
 
-    $component->call('setPage', 2)
+    $lw->call('nextPage')
         ->set('checkboxAll', true)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
-        ->toMatchArray([
-            0 => '4',
-            1 => '5',
-            2 => '6',
-            3 => '7',
-            4 => '8',
-            5 => '9',
-            6 => '10',
-            7 => '11',
-            8 => '12',
-            9 => '13',
-            10 => '14',
-            11 => '15',
-        ]);
+    // Adds 11, 12, 13, 14, 15
+    expect($lw->checkboxValues)
+        ->toMatchArray(range(4, 15));
 
-    $component->call('setPage', 1)
-        ->set('checkboxAll', false)
+    $lw->set('checkboxAll', false)
         ->call('selectCheckboxAll');
 
-    expect($component->checkboxValues)
+    expect($lw->checkboxValues)
         ->toBe([]);
-})->with([
-    'tailwind -> id' => [$componentWithActionRules::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-]);
+});

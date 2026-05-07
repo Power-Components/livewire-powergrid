@@ -311,6 +311,7 @@ final class Column implements Wireable
 
         // Closures cannot be serialized, exclude them
         unset($data['sortCallback']);
+        unset($data['rawQueries']);
 
         return $data;
     }

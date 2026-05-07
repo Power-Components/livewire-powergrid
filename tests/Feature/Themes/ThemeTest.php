@@ -83,6 +83,8 @@ it('merges tokens with overrides', function () {
 it('inherits tokens from parent theme', function () {
     $theme = new class() extends Theme
     {
+        protected ?string $parentTheme = Tailwind::class;
+
         public function struct(): array
         {
             return [
@@ -124,6 +126,8 @@ it('resolves specific view from theme', function () {
 it('falls back to tailwind view when theme does not have the view', function () {
     $theme = new class() extends Theme
     {
+        protected ?string $parentTheme = Tailwind::class;
+
         public function struct(): array
         {
             return [];

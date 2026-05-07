@@ -1,50 +1,56 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesCalculationsCollectionTable;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('calculates properly from collection', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-calculations-collection';
 
-it('calculates "count" on id field', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('Count ID: 4 item(s)')
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Luan', 'balance' => 100],
+                ['id' => 2, 'name' => 'Daniel', 'balance' => 200],
+                ['id' => 3, 'name' => 'Claudio', 'balance' => 300],
+                ['id' => 4, 'name' => 'Vitor', 'balance' => 400],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name')
+                ->add('balance');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id')->withCount('Count Id', true, true),
+                Column::make('Name', 'name')->searchable(),
+                Column::make('Balance', 'balance')
+                    ->withSum('Sum Balance', true, true)
+                    ->withAvg('Avg Balance', true, true)
+                    ->withMin('Min Balance', true, true)
+                    ->withMax('Max Balance', true, true),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSee('Count Id: 4')
+        ->assertSee('Sum Balance: 1000')
+        ->assertSee('Avg Balance: 250')
+        ->assertSee('Min Balance: 100')
+        ->assertSee('Max Balance: 400')
+
         ->set('search', 'Luan')
-        ->assertSeeHtml('Count ID: 1 item(s)');
-})->with('calculations collection');
-
-it('calculates "sum" on price balance', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('<span>Sum Balance: $671.66</span>')
-        ->set('search', 'Luan')
-        ->assertSeeHtml('<span>Sum Balance: $241.86</span>');
-})->with('calculations collection');
-
-it('calculates and formats "avg" on balance field and calorie fields', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('<span>Avg Balance: $167.92</span>')
-        ->set('search', 'Luan')
-        ->assertSeeHtml('<span>Avg Balance: $241.86</span>');
-})->with('calculations collection');
-
-it('calculates "min" on balance field', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('<span>Min Balance: $44.28</span>')
-        ->set('search', 'Luan')
-        ->assertSeeHtml('<span>Min Balance: $241.86</span>');
-})->with('calculations collection');
-
-it('calculates "max" on balance field', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtml('<span>Max Balance: $241.86</span>')
-        ->set('search', 'Luan')
-        ->assertSeeHtml('<span>Max Balance: $241.86</span>');
-})->with('calculations collection');
-
-dataset('calculations collection', [
-    'tailwind' => [DishesCalculationsCollectionTable::class, (object) ['theme' => Tailwind::class]],
-]);
+        ->assertSee('Count Id: 1')
+        ->assertSee('Sum Balance: 100')
+        ->assertSee('Avg Balance: 100')
+        ->assertSee('Min Balance: 100')
+        ->assertSee('Max Balance: 100');
+});

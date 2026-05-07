@@ -2,11 +2,11 @@
     'loading' => false,
 ])
 <tr
-    class="{{ theme('table.tr') }}"
+    class="{{ theme('table.layout.tr') }}"
 >
     @if ($loading)
         <td
-            class="{{ theme('table.td') }}"
+            class="{{ theme('table.layout.td') }}"
             colspan="999"
         >
             @if ($loadingComponent)
@@ -19,7 +19,7 @@
         @if (data_get($setUp, 'detail.showCollapseIcon'))
             <th
                 scope="col"
-                class="{{ theme('table.th') }}"
+                class="{{ theme('table.layout.th') }}"
                 wire:key="show-collapse-{{ $tableName }}"
             >
             </th>
@@ -29,26 +29,25 @@
             <th
                 fixed
                 x-show="hasHiddenElements"
-                class="{{ theme('table.th') }}"
+                class="{{ theme('table.layout.th') }}"
             >
             </th>
         @endisset
 
         @if ($radio)
             <th
-                class="{{ theme('table.th') }}"
+                class="{{ theme('table.layout.th') }}"
             >
             </th>
         @endif
 
         @if ($checkbox)
-            @include('livewire-powergrid::components.checkbox-all')
+            @include(theme_view('table.checkbox-all'))
         @endif
 
         @foreach ($columns as $column)
-            @include('livewire-powergrid::components.cols', [
+            @include(theme_view('table.cols'), [
                 'column'         => $column,
-                'theme'          => $theme,
                 'enabledFilters' => $enabledFilters,
                 'setUp'          => $setUp,
                 'tableName'      => $tableName,
@@ -73,7 +72,7 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ theme('table.th') }}"
+                class="{{ theme('table.layout.th') }}"
                 scope="col"
                 colspan="999"
                 wire:key="{{ md5('actions') }}"

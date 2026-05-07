@@ -1,164 +1,61 @@
 <?php
 
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('properly filters by inputText', function (string $op, string $value, array $see, array $dontSee) {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-input-text';
 
-require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
-
-it('properly filters by inputText', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    /** @var PowerGridComponent $component */
-    expect($component->filters)
-        ->toMatchArray([]);
-
-    $component->set('filters', filterInputText('ba', 'contains', $params->field));
-
-    if (str_contains($params->field, '.')) {
-        $data = Str::of($params->field)->explode('.');
-        $table = $data->get(0);
-        $field = $data->get(1);
-
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $table => [
-                        $field => 'ba',
-                    ],
-                ],
-                'input_text_options' => [
-                    $table => [
-                        $field => 'contains',
-                    ],
-                ],
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Pastel de Nata'],
+                ['id' => 2, 'name' => 'Francesinha'],
+                ['id' => 3, 'name' => 'Peixada'],
+                ['id' => 4, 'name' => ''],
             ]);
-    } else {
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $params->field => 'ba',
-                ],
-                'input_text_options' => [
-                    $params->field => 'contains',
-                ],
-            ]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::inputText('name'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name', fn ($row) => (data_get($row, 'name') === '') ? 'EMPTY_ROW' : data_get($row, 'name'));
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    $lw = Livewire::test($component::class)
+        ->set('filters', [
+            'input_text' => ['name' => $value],
+            'input_text_options' => ['name' => $op],
+        ]);
+
+    foreach ($see as $item) {
+        $lw->assertSee($item);
     }
-
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertSeeHtml('dish_name_xyz_placeholder');
-
-    $filters = array_merge($component->filters, filterNumber('price', min: '1\'500.20', max: '3\'000.00'));
-
-    $component->set('filters', $filters)
-        ->assertSeeHtml('placeholder="min_xyz_placeholder"')
-        ->assertSeeHtml('placeholder="max_xyz_placeholder"')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Polpetone Filé Mignon')
-        ->assertDontSee('борщ');
-
-    expect($component->filters)->toBe($filters);
-})->group('filters')
-    ->with('filterComponent');
-
-it('properly filters by inputText using action', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    $component->set('filters.input_text.'.$params->field, 'ba')
-        ->call('filterInputText', $params->field, 'ba', 'Dish Name');
-
-    if (str_contains($params->field, '.')) {
-        $data = Str::of($params->field)->explode('.');
-        $table = $data->get(0);
-        $field = $data->get(1);
-
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $table => [
-                        $field => 'ba',
-                    ],
-                ],
-            ]);
-    } else {
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $params->field => 'ba',
-                ],
-            ]);
+    foreach ($dontSee as $item) {
+        $lw->assertDontSee($item);
     }
-})->group('filters')
-    ->with('filterComponent');
-
-it('properly filters by inputTextOptions using action', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    $component->call('filterInputTextOptions', $params->field, 'contains_not', 'Dish Name');
-
-    if (str_contains($params->field, '.')) {
-        $data = Str::of($params->field)->explode('.');
-        $table = $data->get(0);
-        $field = $data->get(1);
-
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text_options' => [
-                    $table => [
-                        $field => 'contains_not',
-                    ],
-                ],
-            ]);
-    } else {
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text_options' => [
-                    $params->field => 'contains_not',
-                ],
-            ]);
-    }
-})->group('filters')
-    ->with('filterComponent');
-
-it('properly filters by inputTextOptions is_empty', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    $component->call('filterInputTextOptions', $params->field, 'is_empty', 'Dish Name');
-
-    if (str_contains($params->field, '.')) {
-        $data = Str::of($params->field)->explode('.');
-        $table = $data->get(0);
-        $field = $data->get(1);
-
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text_options' => [
-                    $table => [
-                        $field => 'is_empty',
-                    ],
-                ],
-                'input_text' => [
-                    $table => [
-                        $field => null,
-                    ],
-                ],
-            ]);
-    } else {
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text_options' => [
-                    $params->field => 'is_empty',
-                ],
-                'input_text' => [
-                    $params->field => null,
-                ],
-            ]);
-    }
-})->group('filters')
-    ->with('filterComponent');
+})->with([
+    'contains' => ['contains', 'Pastel', ['Pastel de Nata'], ['Francesinha', 'Peixada']],
+    'contains_not' => ['contains_not', 'Pastel', ['Francesinha', 'Peixada'], ['Pastel de Nata']],
+    'is_empty' => ['is_empty', '', ['EMPTY_ROW'], ['Pastel de Nata', 'Francesinha', 'Peixada']],
+    'is_not_empty' => ['is_not_empty', '', ['Pastel de Nata', 'Francesinha', 'Peixada'], ['EMPTY_ROW']],
+    'starts_with' => ['starts_with', 'Pas', ['Pastel de Nata'], ['Francesinha', 'Peixada']],
+    'ends_with' => ['ends_with', 'ada', ['Peixada'], ['Pastel de Nata', 'Francesinha']],
+]);

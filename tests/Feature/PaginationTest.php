@@ -1,87 +1,128 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesCustomPageNameTable, DishesTable};
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-it('properly displays "full" showRecordCount')
-    ->livewire(DishesTable::class)
-    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results']);
+it('properly displays record count and navigates', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-pagination';
 
-it('properly displays "short" showRecordCount')
-    ->livewire(DishesTable::class)
-    ->set('setUp.footer.recordCount', 'short')
-    ->assertSeeHtmlInOrder(['1', '-', '10', '|', '15']);
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 15; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish-Item-'.str_pad($i, 2, '0', STR_PAD_LEFT)];
+            }
 
-it('properly displays "min" showRecordCount')
-    ->livewire(DishesTable::class)
-    ->set('setUp.footer.recordCount', 'min')
-    ->assertSeeHtmlInOrder(['1', '10']);
+            return collect($data);
+        }
 
-it('properly changes records and displays per page')
-    ->livewire(DishesTable::class)
-    ->set('setUp.footer.perPage', '11')
-    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '11', 'of', '15', 'Results'])
-    ->set('setUp.footer.perPage', '12')
-    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '12', 'of', '15', 'Results'])
-    ->set('setUp.footer.perPage', '0') // All items
-    ->assertSeeHtmlInOrder(['Showing', '1', 'to', '15', 'of', '15', 'Results'])
-    ->assertSeeHtml('Pastel de Nata');
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::footer()
+                    ->showPerPage(10)
+                    ->showRecordCount(),
+            ];
+        }
 
-it('navigates when click on "page #2"')
-    ->livewire(DishesTable::class)
-    ->assertSeeHtml('Pastel de Nata')
-    ->call('gotoPage', '2')
-    ->assertSeeHtml('Bife à Parmegiana')
-    ->assertDontSeeHtml('Pastel de Nata');
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
 
-it('navigates when click on "next page"')
-    ->livewire(DishesTable::class)
-    ->assertSeeHtml('Pastel de Nata')
-    ->call('nextPage')
-    ->assertSeeHtml('Bife à Parmegiana')
-    ->assertDontSeeHtml('Pastel de Nata');
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
 
-it('navigates when click on "goToPage" and "previousPage"')
-    ->livewire(DishesTable::class)
-    ->assertSeeHtml('Pastel de Nata')
-    ->call('gotoPage', 2)
-    ->assertSeeHtml('Bife à Parmegiana')
-    ->call('previousPage')
-    ->assertSeeHtml('Pastel de Nata')
-    ->assertDontSeeHtml('Bife à Parmegiana');
+    Livewire::test($component::class)
+        // Default "full" showRecordCount
+        ->assertSeeInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results'])
 
-it('displays next links ">" and ">>"')
-    ->livewire(DishesTable::class)
-    ->set('setUp.footer.perPage', '4')
+        // "short" showRecordCount
+        ->set('setUp.footer.recordCount', 'short')
+        ->assertSeeInOrder(['1', '-', '10', '|', '15'])
 
-    ->assertSeeHtml('wire:click="nextPage(\'page\')"')
-    // page #2
-    ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="nextPage(\'page\')"');
+        // "min" showRecordCount
+        ->set('setUp.footer.recordCount', 'min')
+        ->assertSeeInOrder(['1', '10'])
 
-it('displays previous links "<" and "<<"')
-    ->livewire(DishesTable::class)
-    ->assertDontSeeHtml('wire:click="previousPage(\'page\')"')
-    // page #2
-    ->call('gotoPage', '2')
-    ->assertSeeHtml('wire:click="previousPage(\'page\')"');
+        // Per page changes
+        ->set('setUp.footer.perPage', 11)
+        ->assertSeeInOrder(['1', '11'])
+        ->set('setUp.footer.perPage', 0) // All
+        ->assertSeeInOrder(['1', '15'])
+        ->assertSee('Dish-Item-15')
 
-it('searches for something that is not on the current page')
-    ->livewire(DishesTable::class)
-    ->assertSeeHtml('Francesinha vegana')
-    ->call('gotoPage', 2)
-    ->assertSeeHtml('Bife à Parmegiana')
-    ->assertDontSeeHtml('Francesinha vegana')
-    ->set('search', 'Francesinha vegana')
-    ->assertDontSeeHtml('Bife à Parmegiana')
-    ->assertSeeHtml('Francesinha vegana');
+        // Navigation
+        ->set('setUp.footer.perPage', 10)
+        ->assertSee('Dish-Item-01')
+        ->assertDontSee('Dish-Item-11')
+        ->call('nextPage')
+        ->assertSee('Dish-Item-11')
+        ->assertDontSee('Dish-Item-01')
+        ->call('previousPage')
+        ->assertSee('Dish-Item-01')
+        ->assertDontSee('Dish-Item-11')
+        ->call('gotoPage', 2)
+        ->assertSee('Dish-Item-11')
+        ->assertDontSee('Dish-Item-01');
+});
 
-test('set/sanitize and fallback pageName', function (string $pageNameCandidate, string $result) {
-    $this->livewire(DishesCustomPageNameTable::class, ['pageNameCandidate' => $pageNameCandidate])
+it('sanitizes pageName', function (string $pageNameCandidate, string $result) {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-pagename';
+
+        public string $pageNameCandidate = '';
+
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 10; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish '.$i];
+            }
+
+            return collect($data);
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::footer()
+                    ->showPerPage(5)
+                    ->pageName($this->pageNameCandidate),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class, ['pageNameCandidate' => $pageNameCandidate])
         ->assertSeeHtml("gotoPage(2, '{$result}')");
 })->with([
     'some invalid characters' => ['customPage12Ντόναλντ34', 'customPage1234'],
     'only invalid characters' => ['Ντόναλντ', 'page'],
     'empty page name' => ['', 'page'],
 ]);
-
-todo('prevents the "division by zero exception" when there is no data and when using toBase');

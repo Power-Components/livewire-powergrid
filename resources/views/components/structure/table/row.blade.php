@@ -19,11 +19,11 @@
     ]
 )
 
-@includeWhen($radio && $radioAttribute, 'livewire-powergrid::components.radio-row', [
+@includeWhen($radio && $radioAttribute, theme_view('table.radio-row'), [
     'attribute' => $row->{$radioAttribute},
 ])
 
-@includeWhen($checkbox && $checkboxAttribute, 'livewire-powergrid::components.checkbox-row', [
+@includeWhen($checkbox && $checkboxAttribute, theme_view('table.checkbox-row'), [
     'attribute' => $row->{$checkboxAttribute},
 ])
 
@@ -60,7 +60,7 @@
     @endphp
     <td
         @class([
-            theme('table.td'),
+            theme('table.layout.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([
@@ -85,7 +85,7 @@
                         @if (data_get($column, 'isAction'))
                             <div
                                 x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                                class="{{ theme('table.body.td.actions_wrapper') }}"
+                                class="{{ theme('table.layout.body.td.actions_wrapper') }}"
                                 x-html="toHtml"
                             >
                             </div>

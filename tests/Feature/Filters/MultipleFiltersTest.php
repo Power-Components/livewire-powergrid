@@ -1,86 +1,61 @@
 <?php
 
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('properly filters by multiple filters and clear all', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-multiple-filters';
 
-require __DIR__.'/../../Concerns/Components/ComponentsForFilterTest.php';
-
-it('properly filters by inputText, number, boolean filter and clearAll', function (string $component, object $params) {
-    $component = livewire($component)
-        ->call('setTestThemeClass', $params->theme);
-
-    /** @var PowerGridComponent $component */
-    expect($component->filters)
-        ->toMatchArray([]);
-
-    $component->set('filters', filterInputText('ba', 'contains', $params->field));
-
-    if (str_contains($params->field, '.')) {
-        $data = Str::of($params->field)->explode('.');
-        $table = $data->get(0);
-        $field = $data->get(1);
-
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $table => [
-                        $field => 'ba',
-                    ],
-                ],
-                'input_text_options' => [
-                    $table => [
-                        $field => 'contains',
-                    ],
-                ],
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Pastel', 'price' => 10, 'in_stock' => true],
+                ['id' => 2, 'name' => 'Francesinha', 'price' => 20, 'in_stock' => true],
+                ['id' => 3, 'name' => 'Peixada', 'price' => 30, 'in_stock' => false],
             ]);
-    } else {
-        expect($component->filters)
-            ->toMatchArray([
-                'input_text' => [
-                    $params->field => 'ba',
-                ],
-                'input_text_options' => [
-                    $params->field => 'contains',
-                ],
-            ]);
-    }
+        }
 
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertSeeHtml('dish_name_xyz_placeholder');
+        public function filters(): array
+        {
+            return [
+                Filter::inputText('name'),
+                Filter::number('price'),
+                Filter::boolean('in_stock'),
+            ];
+        }
 
-    $filters = array_merge($component->filters, filterNumber('price', min: '1\'500.20', max: '3\'000.00'));
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-    $component->set('filters', $filters)
-        ->assertSeeHtml('placeholder="min_xyz_placeholder"')
-        ->assertSeeHtml('placeholder="max_xyz_placeholder"')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertDontSee('Barco-Sushi da Sueli')
-        ->assertDontSee('Polpetone Filé Mignon')
-        ->assertDontSee('борщ');
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-    expect($component->filters)->toBe($filters);
+    Livewire::test($component::class)
+        // Filter by price and in_stock
+        ->set('filters', [
+            'number' => ['price' => ['start' => 15]],
+            'boolean' => ['in_stock' => 'true'],
+        ])
+        ->assertDontSee('Pastel')
+        ->assertSee('Francesinha')
+        ->assertDontSee('Peixada')
 
-    $filters = array_merge($component->filters, filterBoolean('in_stock', 'true'));
+        // Add text filter
+        ->set('filters.input_text.name', 'Peixada')
+        ->assertDontSee('Francesinha')
+        ->assertDontSee('Peixada') // Because in_stock is true and Peixada is false
 
-    $component->set('filters', $filters)
-        ->assertDontSee('Barco-Sushi Simples');
-
-    expect($component->filters)
-        ->toMatchArray($filters);
-
-    $component->call('clearFilter', $params->field);
-
-    $component->assertDontSee('Polpetone Filé Mignon');
-
-    $component->call('clearAllFilters');
-
-    $component->assertSee('Barco-Sushi da Sueli')
-        ->assertSee('Barco-Sushi Simples')
-        ->assertSee('Polpetone Filé Mignon')
-        ->assertSee('борщ');
-    expect($component->filters)
-        ->toMatchArray([]);
-})->group('filters')
-    ->with('filterComponent');
+        // Clear all
+        ->call('clearAllFilters')
+        ->assertSee('Pastel')
+        ->assertSee('Francesinha')
+        ->assertSee('Peixada');
+});

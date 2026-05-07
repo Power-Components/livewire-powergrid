@@ -27,14 +27,15 @@
         ? data_get($setUp, "responsive.sortOrder.{$field}", null)
         : null;
 @endphp
-<th x-data="{ sortable: @js(data_get($column, 'sortable')) }"
+<th wire:key="cols-{{ $field }}-{{ $tableName }}"
+    x-data="{ sortable: @js(data_get($column, 'sortable')) }"
     data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $tableName }}"
     wire:click="sortBy('{{ $field }}')" @endif
     @class([
-        theme('table.th') => true,
+        theme('table.layout.th') => true,
         data_get($column, 'headerClass') => true,
     ])
     @style([

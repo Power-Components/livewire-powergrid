@@ -15,25 +15,35 @@ class Header
         return $this;
     }
 
-    public function layout(Closure $callback): self
+    public function layout(Closure|array $callback): self
     {
         $component = new Layout();
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['layout'] = $component->toArray();
 
         return $this;
     }
 
-    public function searchBox(Closure $callback): self
+    public function searchBox(Closure|array $callback): self
     {
-        $component = new Component();
+        $component = new SearchBox();
 
         if ($this->baseView) {
             $component->setBaseView($this->baseView);
         }
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['searchBox'] = $component->toArray();
 
         return $this;

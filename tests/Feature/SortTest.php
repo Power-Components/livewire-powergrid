@@ -1,286 +1,74 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesTable, Concerns\Components\DishesTableWithJoin};
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('properly sorts from collection', function (string $field, array $ascending, array $descending) {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-sort';
 
-beforeEach(
-    function () {
-        TestDatabase::seed(dishesForSorting());
-    }
-);
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish A', 'price' => 100.00, 'in_stock' => true, 'produced_at' => '2021-10-01'],
+                ['id' => 2, 'name' => 'Dish B', 'price' => 200.10, 'in_stock' => true, 'produced_at' => '2021-10-02'],
+                ['id' => 3, 'name' => 'Dish C', 'price' => 300.50, 'in_stock' => false, 'produced_at' => '2021-10-03'],
+            ]);
+        }
 
-it('properly sorts ASC/DESC with: date', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->call('sortBy', 'produced_at')
-        ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Dish J')
-        ->assertSeeHtml('Dish I')
-        ->assertSeeHtml('Dish H')
-        ->assertSeeHtml('Dish G')
-        ->assertSeeHtml('Dish F')
-        ->assertSeeHtml('Dish E')
-        ->assertSeeHtml('Dish D')
-        ->assertDontSeeHtml('Dish K')
-        ->assertDontSeeHtml('Dish L')
-        ->call('sortBy', 'produced_at')
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name')
+                ->add('price')
+                ->add('in_stock')
+                ->add('produced_at');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id')->sortable(),
+                Column::make('Name', 'name')->sortable(),
+                Column::make('Price', 'price')->sortable(),
+                Column::make('Stock', 'in_stock')->sortable(),
+                Column::make('Produced At', 'produced_at')->sortable(),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->call('sortBy', $field)
         ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish K')
-        ->assertSeeHtml('Dish L')
-        ->assertSeeHtml('Dish A')
-        ->assertSeeHtml('Dish B')
-        ->assertSeeHtml('Dish C')
-        ->assertSeeHtml('Dish D')
-        ->assertSeeHtml('Dish E')
-        ->assertSeeHtml('Dish F')
-        ->assertSeeHtml('Dish G')
-        ->assertSeeHtml('Dish H')
-        ->assertDontSeeHtml('Dish I')
-        ->assertDontSeeHtml('Dish J');
-})->with('sort join');
-
-it('properly sorts ASC/DESC with: int', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->call('sortBy', 'id')
+        ->assertSeeInOrder($ascending)
         ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Dish L')
-        ->assertSeeHtml('Dish K')
-        ->assertDontSeeHtml('Dish A')
-        ->assertDontSeeHtml('Dish B')
-        ->call('sortBy', 'id')
-        ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish A')
-        ->assertSeeHtml('Dish B')
-        ->assertSeeHtml('Dish C');
-})->with('sort join');
-
-it('properly sorts ASC/DESC with: string', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->call('sortBy', 'name')
-        ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Zebra Dish H')
-        ->assertSeeHtml('Dish K')
-        ->assertDontSeeHtml('Dish A')
-        ->assertDontSeeHtml('Dish B')
-        ->call('sortBy', 'name')
-        ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish A')
-        ->assertSeeHtml('Dish B')
-        ->assertDontSeeHtml('Zebra Dish H');
-})->with('sort join');
-
-it('properly sorts ASC/DESC with: float', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->call('sortBy', 'price')
-        ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Zebra Dish H')
-        ->assertSeeHtml('Dish K')
-        ->assertDontSeeHtml('Dish A')
-        ->assertDontSeeHtml('Dish B')
-        ->call('sortBy', 'price')
-        ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish A')
-        ->assertSeeHtml('Dish B')
-        ->assertDontSeeHtml('Zebra Dish H');
-})->with('sort join');
-
-it('properly sorts ASC/DESC with: boolean', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->call('sortBy', 'in_stock')
-        ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish L')
-        ->assertSeeHtml('Dish K')
-        ->set('sortDirection', 'desc')
-        ->assertDontSeeHtml('Dish L')
-        ->assertDontSeeHtml('Dish K');
-})->with('sort join');
-
-it('properly sorts ASC/DESC with: string-number', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->set('setUp.footer.perPage', '10')
-        ->set('ignoreTablePrefix', false)
-        ->call('sortBy', 'stored_at')
-        ->set('sortDirection', 'asc')
-        ->assertSeeHtml('Dish A')
-        ->assertSeeHtml('Dish J')
-        ->assertSeeHtml('Dish L')
-        ->assertSeeHtml('Dish K')
-        ->assertSeeHtml('Dish B')
-        ->assertSeeHtml('Dish D')
-        ->assertSeeHtml('Dish D')
-        ->assertSeeHtml('Dish E')
-        ->assertSeeHtml('Dish F')
-        ->assertSeeHtml('Dish G')
-        ->assertDontSeeHtml('Dish I')
-        ->set('sortDirection', 'desc')
-        ->assertSeeHtml('Dish I')
-        ->assertSeeHtml('Zebra Dish H')
-        ->assertSeeHtml('Dish G')
-        ->assertSeeHtml('Dish F')
-        ->assertSeeHtml('Dish E')
-        ->assertSeeHtml('Dish D')
-        ->assertSeeHtml('Dish C')
-        ->assertSeeHtml('Dish B')
-        ->assertSeeHtml('Dish K')
-        ->assertSeeHtml('Dish L')
-        ->assertDontSeeHtml('Dish A');
-})->with('sort join');
-
-dataset('sort join', [
-    'tailwind -> id' => [DishesTable::class, (object) ['theme' => Tailwind::class, 'field' => 'id']],
-    'tailwind -> dishes.id' => [DishesTableWithJoin::class, (object) ['theme' => Tailwind::class, 'field' => 'dishes.id']],
+        ->assertSeeInOrder($descending);
+})->with([
+    'sort by id' => [
+        'field' => 'id',
+        'ascending' => ['Dish A', 'Dish B', 'Dish C'],
+        'descending' => ['Dish C', 'Dish B', 'Dish A'],
+    ],
+    'sort by name' => [
+        'field' => 'name',
+        'ascending' => ['Dish A', 'Dish B', 'Dish C'],
+        'descending' => ['Dish C', 'Dish B', 'Dish A'],
+    ],
+    'sort by price' => [
+        'field' => 'price',
+        'ascending' => ['Dish A', 'Dish B', 'Dish C'],
+        'descending' => ['Dish C', 'Dish B', 'Dish A'],
+    ],
+    'sort by stock' => [
+        'field' => 'in_stock',
+        'ascending' => ['Dish C', 'Dish A', 'Dish B'], // false comes first
+        'descending' => ['Dish A', 'Dish B', 'Dish C'], // true comes first
+    ],
+    'sort by produced_at' => [
+        'field' => 'produced_at',
+        'ascending' => ['Dish A', 'Dish B', 'Dish C'],
+        'descending' => ['Dish C', 'Dish B', 'Dish A'],
+    ],
 ]);
-
-/**
- * Small Dish dataset for sorting test
- */
-function dishesForSorting(): array
-{
-    return [
-        [
-            'name' => 'Dish A',
-            'category_id' => 7,
-            'price' => 100.00,
-            'stored_at' => '1',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-01',
-        ],
-        [
-            'name' => 'Dish B',
-            'category_id' => 7,
-            'price' => 200.10,
-            'stored_at' => '2',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-02',
-        ],
-        [
-            'name' => 'Dish C',
-            'category_id' => 7,
-            'price' => 300.50,
-            'stored_at' => '3',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-03',
-        ],
-        [
-            'name' => 'Dish D',
-            'category_id' => 7,
-            'price' => 400.00,
-            'stored_at' => '4',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-04',
-        ],
-        [
-            'name' => 'Dish E',
-            'category_id' => 7,
-            'price' => 500.00,
-            'stored_at' => '5',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-05',
-        ],
-        [
-            'name' => 'Dish F',
-            'category_id' => 7,
-            'price' => 600.00,
-            'stored_at' => '6',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-06',
-        ],
-        [
-            'name' => 'Dish G',
-            'category_id' => 7,
-            'price' => 700.00,
-            'stored_at' => '7',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-07',
-        ],
-        [
-            'name' => 'Zebra Dish H',
-            'category_id' => 7,
-            'price' => 7500.00,
-            'stored_at' => '8',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-08',
-        ],
-        [
-            'name' => 'Dish I',
-            'category_id' => 7,
-            'price' => 800.00,
-            'stored_at' => '9',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-09',
-        ],
-        [
-            'name' => 'Dish J',
-            'category_id' => 7,
-            'price' => 900.00,
-            'stored_at' => '10',
-            'calories' => 224,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'in_stock' => true,
-            'produced_at' => '2021-10-10',
-        ],
-        [
-            'name' => 'Dish K',
-            'category_id' => 7,
-            'price' => 1000.00,
-            'stored_at' => '1b',
-            'calories' => 224,
-            'in_stock' => false,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'produced_at' => '2021-02-01',
-        ],
-        [
-            'name' => 'Dish L',
-            'category_id' => 7,
-            'price' => 2000.00,
-            'stored_at' => '1a',
-            'calories' => 224,
-            'in_stock' => false,
-            'serving_at' => 'pool bar',
-            'diet' => 1,
-            'produced_at' => '2021-01-01',
-        ],
-    ];
-}

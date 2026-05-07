@@ -1,50 +1,85 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\OrderTable;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Order;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('removes <script> tag from custom field', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-fields-script';
 
-it('removes <script> tag from custom field', function (string $component, object $params) {
-    Order::first()->update(['link' => 'hello there! <script>alert(document.cookie)</script>']);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'link' => 'hello there! <script>alert(1)</script>']]);
+        }
 
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertDontSeeHtml('&lt;script&gt;alert')
-        ->assertDontSeeHtml('<script>alert')
-        ->assertSeeHtml('hello there!');
-})->with('order table');
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('link');
+        }
 
-it('runs e() helper in PG fields', function (string $component, object $params) {
-    Order::first()->update(['name' => '<img src="invalid_url.png" onerror=alert(document.cookie)>']);
+        public function columns(): array
+        {
+            return [Column::make('Link', 'link')];
+        }
+    };
 
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertDontSeeHtml('<img src="invalid_url.png"')
-        ->assertSeeHtml('<div>&lt;img src=&quot;invalid_url.png&quot; onerror=alert(document.cookie)&gt;');
-})->with('order table');
+    Livewire::test($component::class)
+        ->assertDontSeeHtml('<script>')
+        ->assertSee('hello there!');
+});
 
-it('does not run e() in custom PG fields', function (string $component, object $params) {
-    $link = '<a href="https://google.com" target="_blank">Link from closure</a>';
+it('runs e() helper in standard PG fields', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-fields-escape';
 
-    Order::first()->update(['link' => $link]);
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => '<img src=x onerror=alert(1)>']]);
+        }
 
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertDontSeeHtml(e($link))
-        ->assertSeeHtml($link);
-})->with('order table');
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
 
-it('can fields with casting and custom fields', function (string $component, object $params) {
-    livewire($component)
-        ->call('setTestThemeClass', $params->theme)
-        ->assertSeeHtmlInOrder(['Order 1', 'Order 2', 'Order 3'])
-        ->assertSeeHtmlInOrder(['active', 'active', 'inactive'])
-        ->assertSeeHtmlInOrder(['1000', '2000', '0'])
-        ->assertSeeHtmlInOrder(['127.3', '259.5', '']);
-})->with('order table');
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
 
-dataset('order table', [
-    'tailwind' => [OrderTable::class, (object) ['theme' => Tailwind::class]],
-]);
+    Livewire::test($component::class)
+        ->assertDontSeeHtml('<img')
+        ->assertSeeHtml('&lt;img');
+});
+
+it('does not run e() in closure-based PG fields', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-fields-no-escape';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'link' => 'https://google.com']]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('link', function ($row) {
+                    return '<a href="'.data_get($row, 'link').'">Link</a>';
+                });
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Link', 'link')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSeeHtml('<a href="https://google.com">Link</a>');
+});

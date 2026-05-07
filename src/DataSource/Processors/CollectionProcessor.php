@@ -34,6 +34,8 @@ class CollectionProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
+        $results = $this->component->transformQuery($results);
+
         $paginated = $results;
         $dataTransformer = new DataTransformer($this->component);
         $actionsByRow = [];

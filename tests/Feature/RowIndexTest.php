@@ -1,49 +1,55 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesRowIndex;
-use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
-use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
+it('properly displays row index', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-row-index';
 
-it('sorts by "name" and then by "id"', function (string $component, string $theme) {
-    livewire($component)
-        ->call('setTestThemeClass', $theme)
-        ->assertSeeHtmlInOrder([
-            '<div>1</div>',
-            '<div>Pastel de Nata</div>',
-            '<div>2</div>',
-            '<div>Peixada da chef Nábia</div>',
-            '<div>3</div>',
-            '<div>Carne Louca</div>',
-            '<div>4</div>',
-            '<div>Bife à Rolê</div>',
-            '<div>5</div>',
-            '<div>Francesinha vegana</div>',
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish A'],
+                ['id' => 2, 'name' => 'Dish B'],
+                ['id' => 3, 'name' => 'Dish C'],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Index', 'index')->index(),
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name')->searchable(),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSeeInOrder([
+            '1', 'Dish A',
+            '2', 'Dish B',
+            '3', 'Dish C',
         ])
-        ->set('filters', filterInputText('Pastel', 'contains_not'))
-        ->assertSeeHtmlInOrder([
-            '<div>1</div>',
-            '<div>Peixada da chef Nábia</div>',
-            '<div>2</div>',
-            '<div>Carne Louca</div>',
-            '<div>3</div>',
-            '<div>Bife à Rolê</div>',
-            '<div>4</div>',
-            '<div>Francesinha vegana</div>',
+        ->set('search', 'Dish B')
+        ->assertSeeInOrder([
+            '1', 'Dish B',
         ])
-        ->set('filters', filterInputText('Carne', 'contains_not'))
-        ->assertSeeHtmlInOrder([
-            '<div>1</div>',
-            '<div>Pastel de Nata</div>',
-            '<div>2</div>',
-            '<div>Peixada da chef Nábia</div>',
-            '<div>3</div>',
-            '<div>Bife à Rolê</div>',
-            '<div>4</div>',
-            '<div>Francesinha vegana</div>',
+        ->assertDontSee('Dish A')
+        ->assertDontSee('Dish C')
+        ->set('search', '')
+        ->assertSeeInOrder([
+            '1', 'Dish A',
+            '2', 'Dish B',
+            '3', 'Dish C',
         ]);
-})->with('row_index');
-
-dataset('row_index', [
-    'tailwind' => [DishesRowIndex::class, Tailwind::class],
-]);
+});

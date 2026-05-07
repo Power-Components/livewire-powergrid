@@ -24,7 +24,7 @@ class ThemeBuilder
         return $this;
     }
 
-    public function header(Closure $callback): self
+    public function header(Closure|array $callback): self
     {
         $component = new Header();
 
@@ -32,13 +32,18 @@ class ThemeBuilder
             $component->setBaseView($this->baseView);
         }
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['header'] = $component->toArray();
 
         return $this;
     }
 
-    public function table(Closure $callback): self
+    public function table(Closure|array $callback): self
     {
         $component = new Table();
 
@@ -46,13 +51,18 @@ class ThemeBuilder
             $component->setBaseView($this->baseView);
         }
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['table'] = $component->toArray();
 
         return $this;
     }
 
-    public function footer(Closure $callback): self
+    public function footer(Closure|array $callback): self
     {
         $component = new Footer();
 
@@ -60,7 +70,12 @@ class ThemeBuilder
             $component->setBaseView($this->baseView);
         }
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['footer'] = $component->toArray();
 
         return $this;

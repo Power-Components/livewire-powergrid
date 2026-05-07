@@ -19,6 +19,15 @@ trait HasProperties
         return $this;
     }
 
+    public function fill(array $properties): self
+    {
+        foreach ($properties as $key => $value) {
+            $this->properties[$key] = $value;
+        }
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         $result = [];

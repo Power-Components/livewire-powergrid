@@ -15,6 +15,13 @@ class Table
         return $this;
     }
 
+    public function viewLayout(string $viewLayout): self
+    {
+        $this->properties['viewLayout'] = $viewLayout;
+
+        return $this;
+    }
+
     // Alias 'table.header' → arquivo 'table.tr' (nome divergente, precisa ser declarado)
     public function viewHeader(string $viewHeader): self
     {
@@ -79,31 +86,46 @@ class Table
         return $this;
     }
 
-    public function layout(Closure $callback): self
+    public function layout(Closure|array $callback): self
     {
         $component = new Layout();
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['layout'] = $component->toArray();
 
         return $this;
     }
 
-    public function checkbox(Closure $callback): self
+    public function checkbox(Closure|array $callback): self
     {
-        $component = new Component();
+        $component = new Checkbox();
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['checkbox'] = $component->toArray();
 
         return $this;
     }
 
-    public function radio(Closure $callback): self
+    public function radio(Closure|array $callback): self
     {
-        $component = new Component();
+        $component = new Radio();
 
-        $callback($component);
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
         $this->properties['radio'] = $component->toArray();
 
         return $this;
