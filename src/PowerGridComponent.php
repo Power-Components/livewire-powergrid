@@ -147,8 +147,6 @@ class PowerGridComponent extends Component
 
         $results['actionsByRow'] = $this->transformActions($results['actionsByRow'], $results['results']->getCollection());
 
-        $this->js('pgActions', json_encode($results['actionsByRow']));
-
         return $this->applyAfterQuery($results['results']);
     }
 
@@ -162,8 +160,6 @@ class PowerGridComponent extends Component
             : new BaseCollection($processResult['results']);
 
         $processResult['actionsByRow'] = $this->transformActions($processResult['actionsByRow'], $actionsRows);
-
-        $this->js('pgActions', json_encode($processResult['actionsByRow']));
 
         return $this->applyAfterQuery($processResult['results']);
     }

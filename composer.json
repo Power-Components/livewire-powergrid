@@ -22,14 +22,15 @@
     "livewire/livewire": "^4.0",
     "laravel/prompts": "*",
     "power-components/partials": "*",
-    "openspout/openspout": "^5.7"
+    "openspout/openspout": "^5.7",
+    "livewire/blaze": "^1.0"
   },
   "require-dev": {
     "laravel/pint": "^1.29",
     "pestphp/pest": "^4.6",
     "orchestra/testbench": "^10.0",
     "larastan/larastan": "^3.0",
-    "laradumps/laradumps": "^4.6",
+    "laradumps/laradumps": "^5.0",
     "laravel/scout": "^10.11.3",
     "composer/composer": "^2.9",
     "laravel/pao": "^1.0"

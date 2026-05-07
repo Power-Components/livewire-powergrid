@@ -4,9 +4,12 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\Button;
 
 trait HasActions
 {
+    private array $iconRenderCache = [];
+
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
     {
         if (! method_exists($this, 'actionRules')) {
@@ -90,6 +93,116 @@ trait HasActions
         }
 
         return $formattedRules;
+    }
+
+    public function renderActions(object $row): string
+    {
+        if (! method_exists($this, 'actions')) {
+            return '';
+        }
+
+        $rules = method_exists($this, 'actionRules') ? $this->resolveActionRules($row) : [];
+
+        $actions = collect($this->actions($row)) // @phpstan-ignore-line
+            ->map(fn (Button $button) => $this->resolveButtonForBlade($button, $row, $rules))
+            ->filter(fn (array $action) => ! $action['hidden'])
+            ->values()
+            ->all();
+
+        if (empty($actions)) {
+            return '';
+        }
+
+        return view('livewire-powergrid::components.structure.actions', ['actions' => $actions])->render();
+    }
+
+    private function resolveButtonForBlade(Button $button, object $row, array $rules): array
+    {
+        $can = $button->can instanceof \Closure
+            ? ($button->can)($row)
+            : $button->can;
+
+        if (! $can) {
+            return ['hidden' => true, 'replaceHtml' => ''];
+        }
+
+        if (! empty($button->view)) {
+            return [
+                'hidden' => false,
+                'replaceHtml' => view($button->view, ['action' => $button, 'row' => $row])->render(),
+            ];
+        }
+
+        $attributes = $button->attributes;
+        $slot = $button->slot;
+        $replaceHtml = '';
+        $hidden = false;
+
+        foreach ($rules as $rule) {
+            $forAction = $rule['action'] ?? null;
+
+            $matches = is_array($forAction)
+                ? in_array($button->action, $forAction, strict: true)
+                : $forAction === $button->action;
+
+            if (! ($rule['apply'] ?? false) || ! $matches) {
+                continue;
+            }
+
+            if (data_get($rule, 'rule.hide')) {
+                $hidden = true;
+                break;
+            }
+
+            if (! empty($rule['replaceHtml'])) {
+                $replaceHtml = $rule['replaceHtml'];
+            }
+
+            $setAttr = data_get($rule, 'rule.setAttribute');
+
+            if (! empty($setAttr)) {
+                $entries = isset($setAttr['attribute']) ? [$setAttr] : $setAttr;
+
+                foreach ($entries as $entry) {
+                    $attributes[$entry['attribute']] = $entry['value'];
+                }
+            }
+
+            if ($slotOverride = data_get($rule, 'rule.slot')) {
+                $slot = $slotOverride;
+            }
+        }
+
+        if ($hidden) {
+            return ['hidden' => true, 'replaceHtml' => ''];
+        }
+
+        return [
+            'hidden' => false,
+            'tag' => $button->tag ?? 'button',
+            'slot' => $slot,
+            'iconHtml' => ! empty($button->icon) ? $this->renderIcon($button->icon, $button->iconAttributes) : '',
+            'attributes' => $attributes,
+            'replaceHtml' => $replaceHtml,
+        ];
+    }
+
+    private function renderIcon(string $icon, array $iconAttributes): string
+    {
+        $cacheKey = $icon.'::'.md5(serialize($iconAttributes));
+
+        if (! isset($this->iconRenderCache[$cacheKey])) {
+            try {
+                $this->iconRenderCache[$cacheKey] = Blade::render(
+                    '<x-dynamic-component :component="$component" :attributes="new \Illuminate\View\ComponentAttributeBag($attrs)" />',
+                    ['component' => $icon, 'attrs' => $iconAttributes],
+                );
+            } catch (\Throwable) {
+                $this->iconRenderCache[$cacheKey] = '';
+            }
+        }
+
+        return $this->iconRenderCache[$cacheKey];
     }
 
     public function resolveActionRules(mixed $row): array

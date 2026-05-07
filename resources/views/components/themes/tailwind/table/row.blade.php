@@ -83,11 +83,8 @@
 
                     <div wire:replace.self>
                         @if (data_get($column, 'isAction'))
-                            <div
-                                x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
-                                class="{{ theme('table.body.td.actions_wrapper') }}"
-                                x-html="toHtml"
-                            >
+                            <div class="{{ theme('table.body.td.actions_wrapper') }}">
+                                {!! $this->renderActions($row) !!}
                             </div>
                         @endif
                     </div>
