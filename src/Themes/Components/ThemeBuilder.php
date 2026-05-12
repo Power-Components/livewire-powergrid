@@ -80,4 +80,19 @@ class ThemeBuilder
 
         return $this;
     }
+
+    public function cols(Closure|array $callback): self
+    {
+        $component = new Cols();
+
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
+        $this->properties['cols'] = $component->toArray();
+
+        return $this;
+    }
 }

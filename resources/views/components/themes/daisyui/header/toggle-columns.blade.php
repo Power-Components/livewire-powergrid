@@ -1,5 +1,5 @@
 @if (data_get($setUp, 'header.toggleColumns'))
-    <div class="dropdown dropdown-end" :class="{ 'dropdown-open': open }" x-data="{ open: false }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="toggle-columns-dropdown-{{ $tableName }}">
+    <div class="dropdown" :class="{ 'dropdown-open': open }" x-data="{ open: false }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="toggle-columns-dropdown-{{ $tableName }}">
         <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.layout.actions') }}" x-on:click="open = !open">
             <x-livewire-powergrid::icons.eye-off class="w-4 h-4" />
         </div>

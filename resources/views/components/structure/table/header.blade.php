@@ -72,7 +72,7 @@
 
             <th
                 @if ($isActionFixedOnResponsive) fixed @endif
-                class="{{ theme('table.layout.th') }}"
+                class="{{ theme('table.layout.th_actions') }}"
                 scope="col"
                 colspan="999"
                 wire:key="{{ md5('actions') }}"

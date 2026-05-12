@@ -31,7 +31,7 @@
     >
         <div x-show="loading">
             <x-livewire-powergrid::icons.loading
-                class="text-pg-primary-300 dark:text-pg-primary-400 size-4 animate-spin"
+                class="text-zinc-300 dark:text-zinc-400 size-4 animate-spin"
             />
         </div>
 
@@ -45,7 +45,7 @@
                         '-rotate-0': !collapsed
                     }">
                     <x-livewire-powergrid::icons.arrow
-                        class="text-pg-primary-600 w-5 h-5 transition-all duration-300 dark:text-pg-primary-200"
+                        class="text-zinc-600 w-5 h-5 transition-all duration-300 dark:text-zinc-200"
                     />
                 </div>
             @endunless

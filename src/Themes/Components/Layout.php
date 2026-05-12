@@ -71,9 +71,23 @@ class Layout
         return $this;
     }
 
+    public function thActions(string $thActions): self
+    {
+        $this->properties['thActions'] = $thActions;
+
+        return $this;
+    }
+
     public function td(string $td): self
     {
         $this->properties['td'] = $td;
+
+        return $this;
+    }
+
+    public function tdActions(string $tdActions): self
+    {
+        $this->properties['tdActions'] = $tdActions;
 
         return $this;
     }

@@ -9,41 +9,44 @@
 @source '../resources/js/**/*.js';
 
 @theme {
-    --color-pg-primary-50: oklch(0.985 0 0);
-    --color-pg-primary-100: oklch(0.97 0 0);
-    --color-pg-primary-200: oklch(0.922 0 0);
-    --color-pg-primary-300: oklch(0.87 0 0);
-    --color-pg-primary-400: oklch(0.708 0 0);
-    --color-pg-primary-500: oklch(0.556 0 0);
-    --color-pg-primary-600: oklch(0.439 0 0);
-    --color-pg-primary-700: oklch(0.371 0 0);
-    --color-pg-primary-800: oklch(0.269 0 0);
-    --color-pg-primary-900: oklch(0.205 0 0);
-    --color-pg-primary-950: oklch(0.145 0 0);
+    /* Semantic Accent Scale - Defaults to Green */
+    --color-accent-50: var(--color-green-50);
+    --color-accent-100: var(--color-green-100);
+    --color-accent-200: var(--color-green-200);
+    --color-accent-300: var(--color-green-300);
+    --color-accent-400: var(--color-green-400);
+    --color-accent-500: var(--color-green-500);
+    --color-accent-600: var(--color-green-600);
+    --color-accent-700: var(--color-green-700);
+    --color-accent-800: var(--color-green-800);
+    --color-accent-900: var(--color-green-900);
+    --color-accent-950: var(--color-green-950);
 
-    --color-primary-50: oklch(0.984 0.003 247.858);
-    --color-primary-100: oklch(0.968 0.007 247.896);
-    --color-primary-200: oklch(0.929 0.013 255.508);
-    --color-primary-300: oklch(0.869 0.022 252.894);
-    --color-primary-400: oklch(0.704 0.04 256.788);
-    --color-primary-500: oklch(0.554 0.046 257.417);
-    --color-primary-600: oklch(0.446 0.043 257.281);
-    --color-primary-700: oklch(0.372 0.044 257.287);
-    --color-primary-800: oklch(0.279 0.041 260.031);
-    --color-primary-900: oklch(0.208 0.042 265.755);
-    --color-primary-950: oklch(0.129 0.042 264.695);
+    /* Main Accent Variables */
+    --color-accent: var(--color-accent-600);
+    --color-accent-content: var(--color-accent-600);
+    --color-accent-foreground: var(--color-white);
 
-    --color-pg-secondary-50: oklch(0.97 0.014 254.604);
-    --color-pg-secondary-100: oklch(0.932 0.032 255.585);
-    --color-pg-secondary-200: oklch(0.882 0.059 254.128);
-    --color-pg-secondary-300: oklch(0.809 0.105 251.813);
-    --color-pg-secondary-400: oklch(0.707 0.165 254.624);
-    --color-pg-secondary-500: oklch(0.623 0.214 259.815);
-    --color-pg-secondary-600: oklch(0.546 0.245 262.881);
-    --color-pg-secondary-700: oklch(0.488 0.243 264.376);
-    --color-pg-secondary-800: oklch(0.424 0.199 265.638);
-    --color-pg-secondary-900: oklch(0.379 0.146 265.522);
-    --color-pg-secondary-950: oklch(0.282 0.091 267.935);
+    /* Secondary Scale */
+    --color-pg-secondary-50: var(--color-blue-50);
+    --color-pg-secondary-100: var(--color-blue-100);
+    --color-pg-secondary-200: var(--color-blue-200);
+    --color-pg-secondary-300: var(--color-blue-300);
+    --color-pg-secondary-400: var(--color-blue-400);
+    --color-pg-secondary-500: var(--color-blue-500);
+    --color-pg-secondary-600: var(--color-blue-600);
+    --color-pg-secondary-700: var(--color-blue-700);
+    --color-pg-secondary-800: var(--color-blue-800);
+    --color-pg-secondary-900: var(--color-blue-900);
+    --color-pg-secondary-950: var(--color-blue-950);
+}
+
+@layer theme {
+    .dark {
+        --color-accent: var(--color-accent-600);
+        --color-accent-content: var(--color-accent-400);
+        --color-accent-foreground: var(--color-white);
+    }
 }
 
 @layer base {
@@ -52,12 +55,12 @@
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-pg-primary-200, currentColor);
+        border-color: var(--color-zinc-200, currentColor);
     }
 }
 
 .page-link {
-    @apply block bg-white text-pg-secondary-800 border-r border-gray-200 outline-none py-2 w-12 text-sm text-center
+    @apply block bg-white text-pg-secondary-800 border-r border-zinc-200 outline-none py-2 w-12 text-sm text-center dark:bg-zinc-800 dark:text-zinc-200 dark:border-zinc-700
 }
 
 .page-link:last-child {
@@ -73,13 +76,13 @@
 }
 
 .page-item.disabled .page-link {
-    @apply bg-white text-gray-300 border-gray-200
+    @apply bg-white text-zinc-300 border-zinc-200 dark:bg-zinc-900 dark:text-zinc-600 dark:border-zinc-800
 }
 
 .pg-btn-white {
     @apply outline-none inline-flex justify-center items-center focus:ring-1 focus:ring-offset-1 bg-white
-    hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-pg-primary-300
-    text-pg-primary-500 hover:bg-pg-primary-100 ring-pg-primary-200
+    hover:shadow-sm disabled:opacity-80 disabled:cursor-not-allowed rounded-lg gap-x-2 text-sm px-3 py-2 border border-zinc-300
+    text-zinc-500 hover:bg-zinc-100 ring-zinc-200 dark:bg-zinc-800 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-700
 }
 
 .pg-filter-container {

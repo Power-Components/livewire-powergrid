@@ -63,7 +63,7 @@ $alpineData =
     @if (filled($filter))
         <div class="{{ theme('filter.select.base') }}">
             @if (!$inline)
-                <label class="block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300">
+                <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                     {{ $title }}
                 </label>
             @endif

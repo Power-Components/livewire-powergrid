@@ -5,8 +5,8 @@ export default {
     theme: {
         extend: {
             colors: {
-                'pg-primary': colors.slate,
                 'pg-secondary': colors.blue,
+                'accent': colors.green,
             }
         }
     }

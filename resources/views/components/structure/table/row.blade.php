@@ -60,7 +60,7 @@
     @endphp
     <td
         @class([
-            theme('table.layout.td'),
+            data_get($column, 'isAction') ? theme('table.layout.td_actions') : theme('table.layout.td'),
             data_get($column, 'bodyClass'),
         ])
         @style([

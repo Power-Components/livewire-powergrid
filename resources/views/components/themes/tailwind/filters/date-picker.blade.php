@@ -38,7 +38,7 @@
         @class([theme('filter.date_picker.base'), 'space-y-1' => !$inline])
     >
         @if (!$inline)
-            <label class="{{ theme('filter.label', 'block text-sm font-semibold text-pg-primary-700 dark:text-pg-primary-300') }}">
+            <label class="{{ theme('filter.label', 'block text-sm font-semibold text-zinc-700 dark:text-zinc-300') }}">
                 {{ $title }}
             </label>
         @endif

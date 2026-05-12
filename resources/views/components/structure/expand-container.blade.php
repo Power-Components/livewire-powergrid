@@ -7,7 +7,7 @@
     <tr
         x-show="expanded == '{{ $rowId }}'"
         x-transition
-        class="text-pg-primary-500 border-pg-primary-100 dark:text-pg-primary-200 break-words w-full text-sm"
+        class="text-zinc-500 border-zinc-100 dark:text-zinc-200 break-words w-full text-sm"
     >
         <td colspan="999">
             <div class="flex gap-x-6 gap-y-2 flex-wrap p-2 responsive-row-expand-container"></div>

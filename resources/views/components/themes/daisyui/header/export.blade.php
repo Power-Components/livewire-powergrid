@@ -1,4 +1,4 @@
-<div class="dropdown dropdown-end" :class="{ 'dropdown-open': open }" x-data="{ open: false, countChecked: @entangle('checkboxValues').live }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="export-dropdown-{{ $tableName }}">
+<div class="dropdown" :class="{ 'dropdown-open': open }" x-data="{ open: false, countChecked: @entangle('checkboxValues').live }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="export-dropdown-{{ $tableName }}">
     <div tabindex="0" role="button" class="{{ theme('header.layout.actions') }}" x-on:click="open = !open">
         <x-livewire-powergrid::icons.download class="w-4 h-4" />
     </div>

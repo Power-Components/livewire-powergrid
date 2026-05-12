@@ -2,7 +2,7 @@
 
 use Illuminate\View\View;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 it('shows the Powergrid default "no data" message', function () {
     $component = new class() extends PowerGridComponent

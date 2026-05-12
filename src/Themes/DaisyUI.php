@@ -20,7 +20,7 @@ class DaisyUI extends Theme
                 )
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('header.search')
-                    ->container('w-full md:w-auto mt-2 md:mt-0')
+                    ->container('w-full md:w-auto mt-2 md:mt-0 ml-auto')
                     ->input('input input-bordered input-sm w-full md:w-80')
                     ->iconClose('text-base-content/50')
                     ->iconSearch('text-base-content/50 h-4 w-4')
@@ -33,8 +33,10 @@ class DaisyUI extends Theme
                     ->thead('text-base-content !capitalize')
                     ->tr('bg-base-200')
                     ->th('')
+                    ->thActions('text-end')
                     ->tbody('')
                     ->td('')
+                    ->tdActions('text-end')
                 )
                 ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
                     ->th('px-6 py-3 text-left text-xs font-medium tracking-wider')

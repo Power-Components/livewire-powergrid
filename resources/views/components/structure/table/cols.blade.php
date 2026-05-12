@@ -35,7 +35,7 @@
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $tableName }}"
     wire:click="sortBy('{{ $field }}')" @endif
     @class([
-        theme('table.layout.th') => true,
+        (data_get($column, 'isAction') ? theme('table.layout.th_actions') : theme('table.layout.th')) => true,
         data_get($column, 'headerClass') => true,
     ])
     @style([
