@@ -116,6 +116,15 @@ trait Sorting
         }
     }
 
+    public function resolveSortField(string $sortField): string
+    {
+        if (str_contains($sortField, '.') || $this->ignoreTablePrefix) {
+            return $sortField;
+        }
+
+        return $this->currentTable.'.'.$sortField;
+    }
+
     /**
      * Get the sort callback for a given field from the columns definition.
      * Returns null if no custom callback is defined.
