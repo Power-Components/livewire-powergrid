@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use OpenSpout\Reader\XLSX\Reader;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Components\SetUp\Exportable, PowerGridFields};
@@ -227,7 +228,7 @@ dataset('export_with_html', [
 
 $exportWithJoinedAliasSort = new class() extends ExportTable
 {
-    public function datasource(): \Illuminate\Database\Eloquent\Builder
+    public function datasource(): Builder
     {
         return parent::datasource()
             ->join('categories', function ($categories) {

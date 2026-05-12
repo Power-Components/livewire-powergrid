@@ -52,7 +52,14 @@ trait ExportableJob
 
         $filtered = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
+
+        /** @var array{sortField?: string, sortDirection?: string} $queryOptions */
         $queryOptions = data_get($this->exportable, 'queryOptions', []);
+
+        // data_get's default only applies when the key is missing, so guard against malformed query options.
+        if (! is_array($queryOptions)) {
+            $queryOptions = [];
+        }
 
         $property = function (string $property) use ($processDataSource, $currentTable) {
             $property = $processDataSource->component->{$property};
@@ -64,7 +71,9 @@ trait ExportableJob
 
         $sortField = $queryOptions['sortField']
             ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
-        $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
+
+        $sortDirection = $queryOptions['sortDirection']
+            ?? $processDataSource->component->sortDirection;
 
         $results = $processDataSource->datasource
             ->where(function ($query) {
