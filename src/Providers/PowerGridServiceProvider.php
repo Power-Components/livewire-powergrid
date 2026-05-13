@@ -82,6 +82,7 @@ class PowerGridServiceProvider extends ServiceProvider
     private function publishViews(): void
     {
         $this->loadViewsFrom(__DIR__.'/../../resources/views', $this->packageName);
+        $this->loadViewsFrom(__DIR__.'/../Plugins', 'powergrid-plugins');
 
         $this->publishes([
             __DIR__.'/../../resources/views' => resource_path('views/vendor/'.$this->packageName),

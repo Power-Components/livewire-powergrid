@@ -9,9 +9,23 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Header,
     Responsive
 };
+use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
 
 class PowerGridManager
 {
+    public static array $plugins = [
+        EditablePlugin::class,
+        FlatpickrPlugin::class,
+        ToggleablePlugin::class,
+    ];
+
+    public static function plugins(array $plugins): void
+    {
+        static::$plugins = $plugins;
+    }
+
     public function fields(): PowerGridFields
     {
         return app(PowerGridFields::class);

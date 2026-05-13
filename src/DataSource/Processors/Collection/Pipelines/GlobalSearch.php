@@ -28,14 +28,14 @@ final class GlobalSearch
             $row = (object) $row;
 
             return $searchableColumns->contains(function (Column|stdClass|array $column) use ($row) {
-                $field = $column->dataField ?: $column->field; // @phpstan-ignore-line
+                $field = strval(data_get($column, 'dataField', data_get($column, 'field')));
                 $value = data_get($row, $field);
 
-                $search = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+                $search = trim(strtolower(htmlspecialchars(strval($this->component->search), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
                 $search = $this->getBeforeSearchMethod($field, $search);
 
-                return Str::contains(strtolower((string) $value), strtolower((string) $search));
+                return Str::contains(strtolower(strval($value)), strtolower(strval($search)));
             });
         });
 
@@ -47,11 +47,11 @@ final class GlobalSearch
         $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
 
         if (method_exists($this->component, $method)) {
-            return $this->component->$method($search);
+            return strval($this->component->$method($search));
         }
 
         if (method_exists($this->component, 'beforeSearch')) {
-            return $this->component->beforeSearch($field, $search);
+            return strval($this->component->beforeSearch($field, $search));
         }
 
         return $search;

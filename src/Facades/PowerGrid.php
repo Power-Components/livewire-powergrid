@@ -14,6 +14,7 @@ use PowerComponents\LivewirePowerGrid\{PowerGridFields, PowerGridManager};
  * @method static Cache cache()
  * @method static Exportable exportable(string $fileName)
  * @method static Responsive responsive()
+ * @method static void plugins(array $plugins)
  */
 class PowerGrid extends Facade
 {

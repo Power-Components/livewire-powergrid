@@ -160,11 +160,14 @@ trait HasActions
 
             $setAttr = data_get($rule, 'rule.setAttribute');
 
-            if (! empty($setAttr)) {
+            if (is_array($setAttr) && ! empty($setAttr)) {
+                /** @var array<string, mixed>|array<int, array<string, mixed>> $setAttr */
                 $entries = isset($setAttr['attribute']) ? [$setAttr] : $setAttr;
 
                 foreach ($entries as $entry) {
-                    $attributes[$entry['attribute']] = $entry['value'];
+                    if (is_array($entry) && isset($entry['attribute'], $entry['value'])) {
+                        $attributes[strval($entry['attribute'])] = $entry['value'];
+                    }
                 }
             }
 

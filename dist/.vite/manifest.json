@@ -13,5 +13,32 @@
     "name": "powergrid",
     "src": "resources/js/powergrid.js",
     "isEntry": true
+  },
+  "src/Plugins/Editable/index.css": {
+    "file": "plugins/editable.css",
+    "name": "plugins/editable.css",
+    "names": [
+      "plugins/editable.css"
+    ],
+    "src": "src/Plugins/Editable/index.css",
+    "isEntry": true
+  },
+  "src/Plugins/Editable/index.js": {
+    "file": "plugins/editable.js.js",
+    "name": "plugins/editable.js",
+    "src": "src/Plugins/Editable/index.js",
+    "isEntry": true
+  },
+  "src/Plugins/Flatpickr/index.js": {
+    "file": "plugins/flatpickr.js",
+    "name": "plugins/flatpickr",
+    "src": "src/Plugins/Flatpickr/index.js",
+    "isEntry": true
+  },
+  "src/Plugins/Toggleable/index.js": {
+    "file": "plugins/toggleable.js",
+    "name": "plugins/toggleable",
+    "src": "src/Plugins/Toggleable/index.js",
+    "isEntry": true
   }
 }

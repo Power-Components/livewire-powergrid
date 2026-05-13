@@ -1,3 +1,12 @@
+@props([
+    'row' => null,
+    'column' => null,
+    'tableName' => null,
+    'primaryKey' => null,
+    'showToggleable' => true,
+    'js' => null,
+])
+
 @php
     $value = (int) $row->{data_get($column, 'field')};
 
@@ -5,12 +14,17 @@
     $falseValue = data_get($column, 'toggleable')['default'][1];
 @endphp
 
+@once
+<script>
+    {!! $js !!}
+</script>
+@endonce
+
 <div class="flex flex-row justify-center">
     @if ($showToggleable)
         @php
-
             $params = [
-                'id' => data_get($row, $this->realPrimaryKey),
+                'id' => data_get($row, $primaryKey),
                 'isHidden' => !$showToggleable,
                 'tableName' => $tableName,
                 'field' => data_get($column, 'field'),

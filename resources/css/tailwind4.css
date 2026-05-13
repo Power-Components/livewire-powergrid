@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "./base.css";
-@import "./editable.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

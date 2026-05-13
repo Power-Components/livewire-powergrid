@@ -95,20 +95,11 @@
             @endif
 
             @php
-                $showEditOnClick = $this->shouldShowEditOnClick($column, $row);
+                $pluginContent = $this->renderColumnContent($column, $row);
             @endphp
 
-            @if ($showEditOnClick === true)
-                <span @class([$contentClassField, $contentClass])>
-                    @include(theme_view('editable') ?? null, [
-                        'editable' => data_get($column, 'editable'),
-                    ])
-                </span>
-            @elseif(count(data_get($column, 'toggleable')) > 0)
-                @php
-                    $showToggleable = $this->shouldShowToggleable($column, $row);
-                @endphp
-                @include(theme_view('toggleable'), ['tableName' => $tableName])
+            @if ($pluginContent !== null)
+                {!! $pluginContent !!}
             @else
                 <span @class([$contentClassField, $contentClass])>
                     @if (filled($templateContent))

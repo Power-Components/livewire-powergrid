@@ -1,6 +1,3 @@
-import pgToggleable from './pg-toggleable'
-import pgFlatpickr from "./pg-flatpickr";
-import pgEditable from "./pg-editable";
 import pgResponsive from './pgResponsive';
 import pgTomSelect from "./select/tomSelect";
 import pgSlimSelect from "./select/slimSelect";
@@ -8,9 +5,6 @@ import pgLoadMore from "./pg-load-more";
 import pgRenderRowTemplate from "./pg-render-row-template";
 import pgRowAttributes from "./pg-row-attributes";
 
-window.pgToggleable = pgToggleable
-window.pgFlatpickr = pgFlatpickr
-window.pgEditable = pgEditable
 window.pgResponsive = pgResponsive
 window.pgTomSelect = pgTomSelect
 window.pgSlimSelect = pgSlimSelect

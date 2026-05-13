@@ -6,6 +6,11 @@
     'type' => 'datetime',
     'filter' => null,
 ])
+
+@assets
+    <script src="{{ asset('vendor/livewire-powergrid/plugins/flatpickr.js') }}" type="module"></script>
+@endassets
+
 @php
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');

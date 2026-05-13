@@ -38,8 +38,38 @@ class PowerGridComponent extends Component
     use Concerns\Summarize;
     use WithPagination;
 
+    protected array $plugins = [];
+
     public function template(): ?Theme
     {
+        return null;
+    }
+
+    public function resolvePlugins(): void
+    {
+        $plugins = PowerGridManager::$plugins;
+
+        foreach ($plugins as $plugin) {
+            $pluginInstance = new $plugin($this);
+            if ($pluginInstance->isEnabled()) {
+                $this->plugins[$pluginInstance->name()] = $pluginInstance;
+            }
+        }
+    }
+
+    public function getPlugins(): array
+    {
+        return $this->plugins;
+    }
+
+    public function renderColumnContent(Column|array $column, mixed $row): ?string
+    {
+        foreach ($this->plugins as $plugin) {
+            if ($plugin->handles($column)) {
+                return $plugin->render($column, $row);
+            }
+        }
+
         return null;
     }
 
@@ -277,6 +307,7 @@ class PowerGridComponent extends Component
     public function render(): Application|Factory|View
     {
         $this->resolveFilters();
+        $this->resolvePlugins();
 
         return view(theme_view('table'));
     }

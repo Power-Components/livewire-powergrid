@@ -6,10 +6,16 @@
     'tableName' => null,
     'showErrorBag' => null,
     'editable' => null,
+    'js' => null,
+    'css' => null,
 ])
 
 @php
-    $resolveContent = function (string $currentTable, string $field, \Illuminate\Database\Eloquent\Model|\stdClass $row): ?string {
+    $resolveContent = function (
+        string $currentTable,
+        string $field,
+        \Illuminate\Database\Eloquent\Model|\stdClass $row,
+    ): ?string {
         $currentField = $field;
         $replace = fn($content) => preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
 
@@ -37,14 +43,24 @@
     $params = [
         'theme' => theme('name'),
         'tableName' => $tableName,
-        'id' => data_get($row, $this->realPrimaryKey),
+        'id' => data_get($row, $primaryKey),
         'dataField' => $field,
         'content' => $content,
         'fallback' => $fallback,
         'inputClass' => theme('editable.input'),
-        'saveOnMouseOut' => data_get($editable, 'saveOnMouseOut'),
+        'saveOnMouseOut' => (bool) data_get($editable, 'saveOnMouseOut'),
     ];
 @endphp
+
+@once
+<script>
+    {!! $js !!}
+</script>
+<style>
+    {!! $css !!}
+</style>
+@endonce
+
 <div
     wire:key="editable-{{ uniqid() }}"
     x-cloak
@@ -63,16 +79,30 @@
             x-text="content"
         ></span>
     </div>
-    <template
-        x-if="showEditable"
-        style="margin-bottom: 4px"
-    >
-        <div x-html="editableInput"></div>
+
+    <template x-if="showEditable">
+        <div
+            x-ref="editable"
+            x-text="content"
+            :value="content"
+            :placeholder="content"
+            contenteditable
+            :class="'pg-single-line ' + inputClass"
+            @if ((bool) data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
+            x-on:keydown.enter="save()"
+            :id="`editable-` + dataField + `-` + id"
+            x-on:keydown.esc="cancel"
+        >
+        </div>
     </template>
+
     @if ($showErrorBag)
-        @error($field . '.' . $row->{$this->realPrimaryKey})
-            <div x-ref="error" class="{{ theme('editable.error') }}">
-                {{ str($message)->replace($field . '.' . $row->{$this->realPrimaryKey}, $field) }}
+        @error($field . '.' . $row->{$primaryKey})
+            <div
+                x-ref="error"
+                class="{{ theme('editable.error') }}"
+            >
+                {{ str($message)->replace($field . '.' . $row->{$primaryKey}, $field) }}
             </div>
         @enderror
     @endif
