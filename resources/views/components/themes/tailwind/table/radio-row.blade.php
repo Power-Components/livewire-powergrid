@@ -21,11 +21,13 @@
 @endphp
 @if ($hide)
     <td
+        wire:key="radio-row-hide-{{ $attribute }}"
         class="{{ theme('table.radio.td') }}"
     >
     </td>
 @elseif($disable)
     <td
+        wire:key="radio-row-disable-{{ $attribute }}"
         class="{{ theme('table.radio.td') }}"
     >
         <div class="{{ theme('table.radio.base') }}">
@@ -40,6 +42,7 @@
     </td>
 @else
     <td
+        wire:key="radio-row-{{ $attribute }}"
         class="{{ theme('table.radio.th') }}"
     >
         <div class="{{ theme('table.radio.base') }}">

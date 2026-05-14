@@ -20,6 +20,14 @@ class ThemeManager
 
     public static function view(string $alias): string
     {
+        if ($alias === 'table.thead') {
+            return 'livewire-powergrid::components.partials.thead';
+        }
+
+        if ($alias === 'table.tbody') {
+            return 'livewire-powergrid::components.partials.tbody';
+        }
+
         /** @var Theme|null $theme */
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 

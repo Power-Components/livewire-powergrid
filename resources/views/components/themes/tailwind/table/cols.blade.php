@@ -3,14 +3,17 @@
     'enabledFilters' => null,
     'actions' => null,
     'dataField' => null,
+    '__partial' => null,
 ])
 @php
+    $__partial = $__partial ?? $this;
+    $setUp = $__partial->setUp;
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
     $isFixedOnResponsive = false;
 
-    if (isset($this->setUp['responsive'])) {
-        if (in_array($field, data_get($this->setUp, 'responsive.fixedColumns'))) {
+    if (isset($setUp['responsive'])) {
+        if (in_array($field, data_get($setUp, 'responsive.fixedColumns'))) {
             $isFixedOnResponsive = true;
         }
 
@@ -18,7 +21,7 @@
             data_get($column, 'isAction') &&
             in_array(
                 \PowerComponents\LivewirePowerGrid\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME,
-                data_get($this->setUp, 'responsive.fixedColumns'),
+                data_get($setUp, 'responsive.fixedColumns'),
             )
         ) {
             $isFixedOnResponsive = true;
@@ -29,15 +32,16 @@
         }
     }
 
-    $sortOrder = isset($this->setUp['responsive'])
-        ? data_get($this->setUp, "responsive.sortOrder.{$field}", null)
+    $sortOrder = isset($setUp['responsive'])
+        ? data_get($setUp, "responsive.sortOrder.{$field}", null)
         : null;
 @endphp
-<th x-data="{ sortable: @js(data_get($column, 'sortable')) }"
+<th wire:key="cols-{{ $field }}-{{ $__partial->tableName }}"
+    x-data="{ sortable: @js(data_get($column, 'sortable')) }"
     data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif
-    @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $this->getId() }}"
+    @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $__partial->getId() }}"
     wire:click="sortBy('{{ $field }}')" @endif
     @class([
         theme('table.layout.th') => true,
@@ -54,7 +58,7 @@
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
-            @include($this->showSortIcon($field), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
+            @include($__partial->showSortIcon($field), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
         @endif
     </div>
 </th>

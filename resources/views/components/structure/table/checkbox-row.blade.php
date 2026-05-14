@@ -23,11 +23,13 @@
 
 @if ($hide)
     <td
+        wire:key="checkbox-row-hide-{{ $attribute }}"
         class="{{ theme('checkbox.th') }}"
     >
     </td>
 @elseif($disable)
     <td
+        wire:key="checkbox-row-disable-{{ $attribute }}"
         class="{{ theme('checkbox.th') }}"
     >
         <div class="{{ theme('checkbox.base') }}">
@@ -42,6 +44,7 @@
     </td>
 @else
     <td
+        wire:key="checkbox-row-{{ $attribute }}"
         class="{{ theme('checkbox.th') }}"
     >
         <div class="{{ theme('checkbox.base') }}">

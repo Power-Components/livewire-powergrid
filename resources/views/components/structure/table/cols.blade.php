@@ -1,4 +1,19 @@
+@props([
+    'column' => null,
+    'enabledFilters' => null,
+    'actions' => null,
+    'dataField' => null,
+    '__partial' => null,
+])
 @php
+    $__partial = $__partial ?? $this;
+    $setUp = $__partial->setUp;
+    $tableName = $__partial->tableName;
+    $multiSort = $__partial->multiSort;
+    $sortArray = $__partial->sortArray;
+    $sortField = $__partial->sortField;
+    $sortDirection = $__partial->sortDirection;
+
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
     $isFixedOnResponsive = false;
@@ -32,7 +47,7 @@
     data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif
-    @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $tableName }}"
+    @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $__partial->getId() }}"
     wire:click="sortBy('{{ $field }}')" @endif
     @class([
         (data_get($column, 'isAction') ? theme('table.layout.th_actions') : theme('table.layout.th')) => true,
@@ -49,7 +64,7 @@
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
-            @include(sort_icon($field, $multiSort ?? false, $sortArray ?? [], $sortField ?? '', $sortDirection ?? 'asc'), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
+            @include($__partial->showSortIcon($field), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
         @endif
     </div>
 </th>

@@ -24,6 +24,8 @@ trait Sorting
         if ($this->multiSort) {
             $this->sortByArray($field);
 
+            $this->afterSort();
+
             return;
         }
 
@@ -32,6 +34,22 @@ trait Sorting
         $this->sortField = $field;
 
         $this->persistState('sorting');
+
+        $this->afterSort();
+    }
+
+    public function afterSort(): void
+    {
+        if (isset($this->setUp['detail'])) {
+            return;
+        }
+
+        if (function_exists('partials')) {
+            partials($this)
+                ->partial("pg-thead-{$this->tableName}", theme_view('table.thead'))
+                ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
+                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+        }
     }
 
     public function reverseSort(): string

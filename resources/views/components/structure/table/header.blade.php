@@ -1,6 +1,18 @@
 @props([
     'loading' => false,
+    '__partial' => null,
 ])
+
+@php
+    $__partial = $__partial ?? $this;
+    $setUp = $__partial->setUp;
+    $tableName = $__partial->tableName;
+    $columns = $__partial->columns;
+    $enabledFilters = $__partial->enabledFilters;
+    $radio = $__partial->radio;
+    $checkbox = $__partial->checkbox;
+    $actions = $__partial->actions ?? [];
+@endphp
 <tr
     class="{{ theme('table.layout.tr') }}"
 >
@@ -9,8 +21,8 @@
             class="{{ theme('table.layout.td') }}"
             colspan="999"
         >
-            @if ($loadingComponent)
-                @include($loadingComponent)
+            @if ($__partial->loadingComponent)
+                @include($__partial->loadingComponent)
             @else
                 {{ __('Loading') }}
             @endif
@@ -42,7 +54,7 @@
         @endif
 
         @if ($checkbox)
-            @include(theme_view('table.checkbox-all'))
+            @include(theme_view('table.checkbox-all'), ['__partial' => $__partial])
         @endif
 
         @foreach ($columns as $column)
@@ -51,10 +63,11 @@
                 'enabledFilters' => $enabledFilters,
                 'setUp'          => $setUp,
                 'tableName'      => $tableName,
-                'multiSort'      => $this->multiSort,
-                'sortArray'      => $this->sortArray,
-                'sortField'      => $this->sortField,
-                'sortDirection'  => $this->sortDirection,
+                'multiSort'      => $__partial->multiSort,
+                'sortArray'      => $__partial->sortArray,
+                'sortField'      => $__partial->sortField,
+                'sortDirection'  => $__partial->sortDirection,
+                '__partial'      => $__partial,
             ])
         @endforeach
 
@@ -64,8 +77,8 @@
                     \PowerComponents\LivewirePowerGrid\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME;
 
                 $isActionFixedOnResponsive =
-                    isset($this->setUp['responsive']) &&
-                    in_array($responsiveActionsColumnName, data_get($this->setUp, 'responsive.fixedColumns'))
+                    isset($setUp['responsive']) &&
+                    in_array($responsiveActionsColumnName, data_get($setUp, 'responsive.fixedColumns'))
                         ? true
                         : false;
             @endphp

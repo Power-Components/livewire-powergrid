@@ -4,7 +4,13 @@
     'tableName' => null,
     'filtersFromColumns' => null,
     'showFilters' => false,
+    '__partial' => null,
 ])
+
+@php
+    $__partial = $__partial ?? $this;
+@endphp
+
 <div
     x-data="{ open: @entangle('showFilters').live }"
     class="mt-2 md:mt-0"
@@ -23,7 +29,7 @@
         @php
             $customConfig = [];
 
-            $componentFilters = collect($this->filters());
+            $componentFilters = collect($__partial->filters());
             $filterOrderMap = $componentFilters->pluck('field')->flip();
 
             // Sort filters based on the order they appear in filters() method
@@ -50,6 +56,7 @@
                             :filter="$filter"
                             :title="$title"
                             :initial-values="data_get(data_get($filter, 'multi_select'), data_get($filter, 'field'), [])"
+                            :__partial="$__partial"
                         />
                     @elseif ($className->contains(['FilterDateTimePicker', 'FilterDatePicker']))
                         @includeIf(theme_view('filter.date_picker'), [
@@ -57,27 +64,37 @@
                             'tableName' => $tableName,
                             'classAttr' => 'w-full',
                             'type' => $className->contains('FilterDateTimePicker') ? 'datetime' : 'date',
+                            '__partial' => $__partial,
                         ])
                     @elseif ($className->contains(['FilterSelect', 'FilterEnumSelect']))
                         @includeIf(theme_view('filter.select'), [
                             'filter' => $filter,
+                            '__partial' => $__partial,
                         ])
                     @elseif ($className->contains('FilterNumber'))
                         @includeIf(theme_view('filter.number'), [
                             'filter' => $filter,
+                            '__partial' => $__partial,
                         ])
                     @elseif ($className->contains('FilterInputText'))
                         @includeIf(theme_view('filter.input_text'), [
                             'filter' => $filter,
+                            '__partial' => $__partial,
                         ])
                     @elseif ($className->contains('FilterBoolean'))
                         @includeIf(theme_view('filter.boolean'), [
                             'filter' => $filter,
+                            '__partial' => $__partial,
                         ])
                     @elseif ($className->contains('FilterDynamic'))
                         <x-dynamic-component
                             :component="data_get($filter, 'component', '')"
-                            :attributes="new \Illuminate\View\ComponentAttributeBag(data_get($filter, 'attributes', []))"
+                            :attributes="new \Illuminate\View\ComponentAttributeBag(
+                                array_merge(
+                                    data_get($filter, 'attributes', []),
+                                    ['__partial' => $__partial]
+                                ),
+                            )"
                         />
                     @endif
                 </div>

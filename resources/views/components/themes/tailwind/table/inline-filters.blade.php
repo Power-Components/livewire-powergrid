@@ -7,9 +7,18 @@
     'tableName' => null,
     'filters' => [],
     'setUp' => null,
+    '__partial' => null,
 ])
 
 @php
+    $__partial = $__partial ?? $this;
+    $checkbox = $checkbox ?? $__partial->checkbox;
+    $columns = $columns ?? $__partial->columns;
+    $actions = $actions ?? []; // Actions are usually passed or handled differently
+    $tableName = $tableName ?? $__partial->tableName;
+    $filters = $filters ?? $__partial->filters;
+    $setUp = $setUp ?? $__partial->setUp;
+
     $trClasses = Arr::toCssClasses([theme('table.layout.tr'), theme('table.body.tr.filters')]);
     $tdClasses = Arr::toCssClasses([theme('table.layout.td'), theme('table.body.td.filters')]);
 @endphp
@@ -50,21 +59,25 @@
                             :title="data_get($column, 'title')"
                             :filter="(array) data_get($column, 'filters')"
                             :initial-values="data_get($filters, 'multi_select.' . data_get($column, 'filters.field'))"
+                            :__partial="$__partial"
                         />
                     @elseif ($filterClass->contains(['FilterSelect', 'FilterEnumSelect']))
                         @includeIf(theme_view('filter.select'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterInputText'))
                         @includeIf(theme_view('filter.input_text'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterNumber'))
                         @includeIf(theme_view('filter.number'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterDateTimePicker'))
                         @includeIf(theme_view('filter.date_picker'), [
@@ -73,6 +86,7 @@
                             'type' => 'datetime',
                             'tableName' => $tableName,
                             'classAttr' => 'w-full',
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterDatePicker'))
                         @includeIf(theme_view('filter.date_picker'), [
@@ -80,17 +94,22 @@
                             'filter' => (array) data_get($column, 'filters'),
                             'type' => 'date',
                             'classAttr' => 'w-full',
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterBoolean'))
                         @includeIf(theme_view('filter.boolean'), [
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
+                            '__partial' => $__partial,
                         ])
                     @elseif ($filterClass->contains('FilterDynamic'))
                         <x-dynamic-component
                             :component="data_get($column, 'filters.component')"
                             :attributes="new \Illuminate\View\ComponentAttributeBag(
-                                data_get($column, 'filters.attributes', []),
+                                array_merge(
+                                    data_get($column, 'filters.attributes', []),
+                                    ['__partial' => $__partial]
+                                ),
                             )"
                         />
                     @endif

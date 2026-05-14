@@ -196,6 +196,8 @@ trait Filter
         }
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -210,11 +212,15 @@ trait Filter
 
         $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
         $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
+
+        $this->renderOutsideFiltersPartial();
     }
 
     public function toggleFilters(): void
     {
         $this->showFilters = ! $this->showFilters;
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -276,6 +282,8 @@ trait Filter
         ];
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -300,6 +308,8 @@ trait Filter
         $this->afterChangedMultiSelectFilter($field, $values);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -320,6 +330,8 @@ trait Filter
         $this->afterChangedSelectFilter($field, $label, $value);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -340,6 +352,8 @@ trait Filter
         $this->afterChangedNumberStartFilter($field, $title, $value);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -360,6 +374,8 @@ trait Filter
         $this->afterChangedNumberEndFilter($field, $title, $value);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -378,6 +394,8 @@ trait Filter
         $this->afterChangedBooleanFilter($field, $label, $value);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -396,6 +414,8 @@ trait Filter
         $this->afterChangedInputTextFilter($field, $label, $value);
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
     }
 
     /**
@@ -432,6 +452,28 @@ trait Filter
         }
 
         $this->persistState('filters');
+
+        $this->renderOutsideFiltersPartial();
+    }
+
+    protected function renderOutsideFiltersPartial(): void
+    {
+        if (config('livewire-powergrid.filter') !== 'outside') {
+            return;
+        }
+
+        if (! function_exists('partials')) {
+            return;
+        }
+
+        if (isset($this->setUp['detail'])) {
+            return;
+        }
+
+        partials($this)
+            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+            ->partial("pg-pagination-{$this->tableName}", 'livewire-powergrid::components.structure.footer')
+            ->partial("pg-filters-{$this->tableName}", theme_view('filter'));
     }
 
     private function resolveFilters(): void

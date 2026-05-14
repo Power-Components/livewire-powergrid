@@ -1,12 +1,24 @@
 {{-- blade-formatter-disable --}}
-<tr class="{{ theme('table.layout.tr') }}">
-    @if(data_get($setUp, 'detail.showCollapseIcon'))
+@props([
+    '__partial' => null,
+    'isHeader' => true,
+])
+
+@php
+    $__partial = $__partial ?? $this;
+@endphp
+
+<tr
+    wire:key="summarize-{{ $isHeader ? 'header' : 'footer' }}-{{ $__partial->tableName }}"
+    class="{{ theme('table.layout.tr') }}"
+>
+    @if(data_get($__partial->setUp, 'detail.showCollapseIcon'))
         <td class="{{ theme('table.layout.td') }}"></td>
     @endif
-    @if($checkbox)
+    @if($__partial->checkbox)
         <td class="{{ theme('table.layout.td') }}"></td>
     @endif
-    @foreach ($this->visibleColumns as $column)
+    @foreach ($__partial->visibleColumns as $column)
         <td class="{{ theme('table.layout.td') . ' '.data_get($column, 'bodyClass') ?? '' }}"
             style="{{ data_get($column, 'hidden') === true ? 'display:none;': '' }} {{ data_get($column, 'bodyStyle') ?? ''  }}">
             @include(theme_view('summarize'), [

@@ -8,6 +8,7 @@
             </span>
             <input
                 wire:model.live.debounce.700ms="search"
+                wire:partial.ignore="pg-search-{{ $tableName }}"
                 type="text"
                 class="{{ theme('header.search_box.input') }}"
                 placeholder="{{ trans('livewire-powergrid::datatable.placeholders.search') }}"

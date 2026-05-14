@@ -2,32 +2,37 @@
     'rowIndex' => 0,
     'childIndex' => null,
     'parentId' => null,
+    '__partial' => null,
 ])
 
-@includeWhen(isset($setUp['responsive']), theme_view('toggle-detail-responsive'), [
-    'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+@php
+    $__partial = $__partial ?? $this;
+@endphp
+
+@includeWhen(isset($__partial->setUp['responsive']), theme_view('toggle-detail-responsive'), [
+    'view' => data_get($__partial->setUp, 'detail.viewIcon') ?? null,
 ])
 
 @php
     $defaultCollapseIcon = theme_view('toggle-detail');
 @endphp
 
-@includeWhen(data_get($setUp, 'detail.showCollapseIcon'),
+@includeWhen(data_get($__partial->setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView') ?? $defaultCollapseIcon,
     [
-        'view' => data_get($setUp, 'detail.viewIcon') ?? null,
+        'view' => data_get($__partial->setUp, 'detail.viewIcon') ?? null,
     ]
 )
 
-@includeWhen($radio && $radioAttribute, theme_view('table.radio-row'), [
-    'attribute' => $row->{$radioAttribute},
+@includeWhen($__partial->radio && $__partial->radioAttribute, theme_view('table.radio-row'), [
+    'attribute' => $row->{$__partial->radioAttribute},
 ])
 
-@includeWhen($checkbox && $checkboxAttribute, theme_view('table.checkbox-row'), [
-    'attribute' => $row->{$checkboxAttribute},
+@includeWhen($__partial->checkbox && $__partial->checkboxAttribute, theme_view('table.checkbox-row'), [
+    'attribute' => $row->{$__partial->checkboxAttribute},
 ])
 
-@foreach ($columns as $column)
+@foreach ($__partial->visibleColumns as $column)
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
@@ -67,7 +72,7 @@
             'display:none' => data_get($column, 'hidden'),
             data_get($column, 'bodyStyle'),
         ])
-        wire:key="row-{{ substr($rowId, 0, 6) }}-{{ $field }}-{{ $childIndex ?? 0 }}"
+        wire:key="row-{{ $rowId }}-{{ $field }}-{{ $childIndex ?? 0 }}"
         data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     >
         @if (count(data_get($column, 'customContent')) > 0)
@@ -75,8 +80,8 @@
         @else
             @if (data_get($column, 'isAction'))
                 <div class="pg-actions">
-                    @if (method_exists($this, 'actionsFromView') && ($actionsFromView = $this->actionsFromView($row)))
-                        <div wire:key="actions-view-{{ data_get($row, $this->realPrimaryKey) }}">
+                    @if (method_exists($__partial, 'actionsFromView') && ($actionsFromView = $__partial->actionsFromView($row)))
+                        <div wire:key="actions-view-{{ data_get($row, $__partial->realPrimaryKey) }}">
                             {!! $actionsFromView !!}
                         </div>
                     @endif
@@ -84,7 +89,7 @@
                     <div wire:replace.self>
                         @if (data_get($column, 'isAction'))
                             <div
-                                x-data="pgRenderActions({ rowId: @js(data_get($row, $this->realPrimaryKey)), parentId: @js($parentId) })"
+                                x-data="pgRenderActions({ rowId: @js(data_get($row, $__partial->realPrimaryKey)), parentId: @js($parentId) })"
                                 class="{{ theme('table.layout.body.td.actions_wrapper') }}"
                                 x-html="toHtml"
                             >
@@ -95,7 +100,7 @@
             @endif
 
             @php
-                $pluginContent = $this->renderColumnContent($column, $row);
+                $pluginContent = $__partial->renderColumnContent($column, $row);
             @endphp
 
             @if ($pluginContent !== null)

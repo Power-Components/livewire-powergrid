@@ -62,7 +62,7 @@ class PowerGridComponent extends Component
         return $this->plugins;
     }
 
-    public function renderColumnContent(Column|array $column, mixed $row): ?string
+    public function renderColumnContent(Column|array|\stdClass $column, mixed $row): ?string
     {
         foreach ($this->plugins as $plugin) {
             if ($plugin->handles($column)) {
@@ -120,14 +120,31 @@ class PowerGridComponent extends Component
         $this->readyToLoad = true;
     }
 
-    public function updatedPage(): void
+    public function updatedPaginators(): void
     {
         $this->checkboxAll = false;
+
+        partials($this)
+            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+    }
+
+    public function updated(string $name): void
+    {
+        if (str_contains($name, 'setUp.footer.perPage')) {
+            partials($this)
+                ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+        }
     }
 
     public function updatedSearch(): void
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
+
+        partials($this)
+            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
     }
 
     #[Computed]

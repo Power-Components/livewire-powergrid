@@ -7,9 +7,11 @@
     'options' => [],
     'title' => '',
     'theme' => null,
+    '__partial' => null,
 ])
 
 @php
+    $__partial = $__partial ?? $this;
     $framework = config('livewire-powergrid.plugins.select');
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
@@ -36,7 +38,7 @@ $params = [
     'optionLabel' => data_get($filter, 'optionLabel'),
     'options' => data_get($filter, 'params'),
     'initialValues' => $initialValues,
-    'appliedFilters' => data_get($this->filters, 'multi_select', []),
+    'appliedFilters' => data_get($__partial->filters, 'multi_select', []),
     'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
 ];
 

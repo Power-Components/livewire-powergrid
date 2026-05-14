@@ -1,5 +1,18 @@
-<div>
-    @includeIf(data_get($setUp, 'footer.includeViewOnTop'))
+@props([
+    '__partial' => null,
+])
+
+@php
+    $__partial = $__partial ?? $this;
+    $setUp = $__partial->setUp;
+    $tableName = $__partial->tableName;
+@endphp
+
+<div
+    wire:partial="pg-pagination-{{ $tableName }}"
+    wire:key="pagination-{{ $tableName }}"
+>
+    @includeIf(data_get($setUp, 'footer.includeViewOnTop'), ['__partial' => $__partial])
     <footer
         id="pg-footer"
         @class([
@@ -37,8 +50,8 @@
         @endif
 
         <div>
-            @if (method_exists($this->records, 'links'))
-                {!! $this->records->links(data_get($setUp, 'footer.pagination') ?: theme_view('pagination'), [
+            @if (method_exists($__partial->records, 'links'))
+                {!! $__partial->records->links(data_get($setUp, 'footer.pagination') ?: theme_view('pagination'), [
                     'recordCount' => data_get($setUp, 'footer.recordCount'),
                     'perPage' => data_get($setUp, 'footer.perPage'),
                     'perPageValues' => data_get($setUp, 'footer.perPageValues'),
@@ -46,5 +59,5 @@
             @endif
         </div>
     </footer>
-    @includeIf(data_get($setUp, 'footer.includeViewOnBottom'))
+    @includeIf(data_get($setUp, 'footer.includeViewOnBottom'), ['__partial' => $__partial])
 </div>
