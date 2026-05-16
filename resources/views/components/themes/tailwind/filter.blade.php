@@ -8,15 +8,15 @@
 ])
 
 @php
-    $__partial = $__partial ?? $this;
+    $__partial = $__partial ?? (isset($this) ? $this : null);
 @endphp
 
 <div
-    x-data="{ open: @entangle('showFilters').live }"
+    x-data
     class="mt-2 md:mt-0"
 >
     <div
-        x-show="open"
+        x-show="$wire.showFilters"
         x-cloak
         x-transition:enter="transform duration-100"
         x-transition:enter-start="opacity-0 scale-90"
@@ -29,7 +29,15 @@
         @php
             $customConfig = [];
 
-            $componentFilters = collect($__partial->filters());
+            $filtersFromColumns = collect($filtersFromColumns ?? [])
+                ->filter(fn($column) => filled(data_get($column, 'filters')));
+
+            if ($filtersFromColumns->isEmpty() && $__partial) {
+                 $filtersFromColumns = collect($__partial->columns)
+                    ->filter(fn($column) => filled(data_get($column, 'filters')));
+            }
+
+            $componentFilters = collect($__partial ? $__partial->filters() : []);
             $filterOrderMap = $componentFilters->pluck('field')->flip();
 
             // Sort filters based on the order they appear in filters() method
