@@ -101,6 +101,21 @@ class Table
         return $this;
     }
 
+    public function body(Closure|array $callback): self
+    {
+        $component = new Body();
+
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
+        $this->properties['body'] = $component->toArray();
+
+        return $this;
+    }
+
     public function checkbox(Closure|array $callback): self
     {
         $component = new Checkbox();

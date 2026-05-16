@@ -42,6 +42,12 @@ class Tailwind extends Theme
                     ->td('px-3 py-2 whitespace-nowrap dark:text-zinc-200')
                     ->tdActions('px-3 py-2 whitespace-nowrap dark:text-zinc-200 text-end')
                 )
+                ->body(fn (Components\Body $body) => $body
+                    ->tr(fn (Components\Tr $tr) => $tr
+                        ->responsive('text-zinc-500 border-zinc-100 dark:text-zinc-200 break-words w-full text-sm')
+                        ->responsiveToggleIcon('text-zinc-600 w-5 h-5 transition-all duration-300 dark:text-zinc-200')
+                    )
+                )
                 ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
                     ->th('px-6 py-3 text-left text-xs font-medium text-zinc-500 tracking-wider')
                     ->base('')

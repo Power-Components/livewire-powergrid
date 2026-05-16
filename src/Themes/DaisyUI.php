@@ -38,6 +38,12 @@ class DaisyUI extends Theme
                     ->td('')
                     ->tdActions('text-end')
                 )
+                ->body(fn (Components\Body $body) => $body
+                    ->tr(fn (Components\Tr $tr) => $tr
+                        ->responsive('text-base-content')
+                        ->responsiveToggleIcon('text-base-content')
+                    )
+                )
                 ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
                     ->th('px-6 py-3 text-left text-xs font-medium tracking-wider')
                     ->input('checkbox checkbox-sm')
