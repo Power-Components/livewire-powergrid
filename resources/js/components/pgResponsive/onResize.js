@@ -57,31 +57,32 @@ function getItemsToHide(element, tableWidth) {
 
 function hideItems(element, items) {
     for (const item of items) {
-        element.querySelectorAll(`tbody:not(tbody[expand]) tr td:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
+        element.querySelectorAll(`tbody tr:not([expand]) td:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
         element.querySelectorAll(`thead tr th:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
     }
 }
 
 function fillTableExpand(element, hideItems) {
-    if (!element.querySelectorAll('table tbody[expand] tr td div').length) return
+    if (!element.querySelectorAll('table tr[expand] td div').length) return
 
-    for (const expands of element.querySelectorAll('table tbody[expand] tr td div')) {
+    for (const expands of element.querySelectorAll('table tr[expand] td div')) {
         expands.innerHTML = ""
     }
 
     if (!hideItems.length) return
 
     for (const hideItem of hideItems) {
-        const rows = element.querySelectorAll('table tbody:not(tbody[expand])')
+        const rows = element.querySelectorAll('table tbody tr:not([expand])')
 
         for (const row of rows) {
-            const expandContainer = row.nextElementSibling?.querySelector('tr td div')
+            const nextRow = row.nextElementSibling
+            const expandContainer = nextRow?.hasAttribute('expand') ? nextRow.querySelector('td div') : null
 
             if (!expandContainer) continue
 
             let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`).textContent
 
-            const rowValue = row.querySelector(`tr:last-child td:nth-child(${hideItem})`)?.innerHTML
+            const rowValue = row.querySelector(`td:nth-child(${hideItem})`)?.innerHTML
 
             if (rowName.length) {
                 rowName += ':'

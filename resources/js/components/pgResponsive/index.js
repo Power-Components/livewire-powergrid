@@ -28,7 +28,7 @@ export default () => ({
 
         onResize(element)
 
-        this.hasHiddenElements = element.querySelector('table tbody[expand] tr td div')?.innerHTML
+        this.hasHiddenElements = !!element.querySelector('table tr[expand] td div')?.innerHTML
 
         if (!this.hasHiddenElements) this.expanded = null
     },

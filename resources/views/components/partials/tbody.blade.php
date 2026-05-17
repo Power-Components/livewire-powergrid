@@ -38,8 +38,8 @@
                         $class = theme('table.layout.tr');
                     @endphp
 
-                    <tbody
-                        wire:key="tbody-{{ $rowId }}"
+                    <tr
+                        wire:key="row-{{ $rowId }}"
                         class="{{ $class }}"
                         x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
                         x-bind="getAttributes"
@@ -48,39 +48,39 @@
                             'rowIndex' => $loop->index + 1,
                             '__partial' => $__partial,
                         ])
+                    </tr>
 
-                        @php
-                            $hasDetailView = (bool) data_get(
-                                collect($row->__powergrid_rules)->where('apply', true)->last(),
-                                'detailView',
-                            );
+                    @php
+                        $hasDetailView = (bool) data_get(
+                            collect($row->__powergrid_rules)->where('apply', true)->last(),
+                            'detailView',
+                        );
 
-                            if ($hasDetailView) {
-                                $detailView = data_get($row->__powergrid_rules, '0.detailView');
-                                $rulesValues = data_get($row->__powergrid_rules, '0.options', []);
-                            } else {
-                                $detailView = data_get($__partial->setUp, 'detail.view');
-                                $rulesValues = data_get($__partial->setUp, 'detail.options', []);
-                            }
-                        @endphp
+                        if ($hasDetailView) {
+                            $detailView = data_get($row->__powergrid_rules, '0.detailView');
+                            $rulesValues = data_get($row->__powergrid_rules, '0.options', []);
+                        } else {
+                            $detailView = data_get($__partial->setUp, 'detail.view');
+                            $rulesValues = data_get($__partial->setUp, 'detail.options', []);
+                        }
+                    @endphp
 
-                        @php
-                            if ($row instanceof stdClass) {
-                                $row = collect($row);
-                            }
-                        @endphp
+                    @php
+                        if ($row instanceof stdClass) {
+                            $row = collect($row);
+                        }
+                    @endphp
 
-                        <livewire:powergrid-detail
-                            key="powergrid-detail-{{ $rowId }}"
-                            :view="$detailView"
-                            :options="$rulesValues"
-                            :row-id="$rowId"
-                            tr-class="{{ $class }}"
-                            :row="(object) $row->toArray()"
-                            :collapse-others="data_get($__partial->setUp, 'detail.collapseOthers', false)"
-                            :table-name="$tableName"
-                        />
-                    </tbody>
+                    <livewire:powergrid-detail
+                        wire:key="powergrid-detail-{{ $rowId }}"
+                        :view="$detailView"
+                        :options="$rulesValues"
+                        :row-id="$rowId"
+                        tr-class="{{ $class }}"
+                        :row="(object) $row->toArray()"
+                        :collapse-others="data_get($__partial->setUp, 'detail.collapseOthers', false)"
+                        :table-name="$tableName"
+                    />
 
                     @includeWhen(isset($__partial->setUp['responsive']),
                         theme_view('table.responsive-container'), [
