@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent;
 use Illuminate\Support;
 use Illuminate\Support\{Collection, Str};
 use Illuminate\Support\Facades\Bus;
+use Livewire\Attributes\Computed;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\DataTransformer,
@@ -43,7 +44,8 @@ trait WithExport
 
     public bool $batchErrors = false;
 
-    public function getExportBatchProperty(): ?Batch
+    #[Computed]
+    public function exportBatch(): ?Batch
     {
         if (empty($this->batchId)) {
             return null;
