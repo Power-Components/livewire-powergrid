@@ -6,7 +6,7 @@
             <div class="{{ theme('header.layout.actions_container') }}">
                 @if (data_get($setUp, 'exportable'))
                     <div
-                        class="mr-2 mt-2 sm:mt-0"
+                        class="mt-2 sm:mt-0"
                         id="pg-header-export"
                     >
                         @include(theme_view('header.export'))

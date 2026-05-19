@@ -1,7 +1,7 @@
 <div
     wire:key="toggle-filters-{{ $tableName }}"
     id="toggle-filters"
-    class="flex mr-2 mt-2 sm:mt-0 gap-3"
+    class="flex mt-2 sm:mt-0 gap-3"
 >
     <button
         wire:click="toggleFilters"

@@ -1,7 +1,6 @@
 @if (data_get($setUp, 'header.toggleColumns'))
     <div
         x-data="{ open: false }"
-        class="mr-2 mt-2 sm:mt-0"
         @click.outside="open = false"
     >
         <button

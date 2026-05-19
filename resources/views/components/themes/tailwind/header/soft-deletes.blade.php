@@ -1,7 +1,6 @@
 @if (data_get($setUp, 'header.softDeletes'))
     <div
         x-data="{ open: false }"
-        class="mr-0 sm:mr-2 mt-2 sm:mt-0"
         @click.outside="open = false"
     >
         <button

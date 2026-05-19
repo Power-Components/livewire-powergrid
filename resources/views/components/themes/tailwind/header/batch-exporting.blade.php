@@ -2,7 +2,7 @@
     @php
         $queues = data_get($setUp, 'exportable.batchExport.queues', 0);
     @endphp
-    @if ($queues > 0 && $showExporting)
+    @if ($queues > 0 && ($showExporting ?? false))
         @if ($batchExporting && !$batchFinished)
             <div
                 wire:poll="updateExportProgress"
