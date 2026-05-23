@@ -94,29 +94,29 @@
                         @endif
                     </div>
                 </div>
-            @endif
-
-            @php
-                $pluginContent = $__partial->renderColumnContent($column, $row);
-            @endphp
-
-            @if ($pluginContent !== null)
-                {!! $pluginContent !!}
             @else
-                <span @class([$contentClassField, $contentClass])>
-                    @if (filled($templateContent))
-                        <div
-                            x-data="pgRenderRowTemplate({
-                                parentId: @js($parentId),
-                                templateContent: @js($templateContent)
-                            })"
-                            x-html="rendered"
-                        >
-                        </div>
-                    @else
-                        <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
-                    @endif
-                </span>
+                @php
+                    $pluginContent = $__partial->renderColumnContent($column, $row);
+                @endphp
+
+                @if ($pluginContent !== null)
+                    {!! $pluginContent !!}
+                @else
+                    <span @class([$contentClassField, $contentClass])>
+                        @if (filled($templateContent))
+                            <div
+                                x-data="pgRenderRowTemplate({
+                                    parentId: @js($parentId),
+                                    templateContent: @js($templateContent)
+                                })"
+                                x-html="rendered"
+                            >
+                            </div>
+                        @else
+                            <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                        @endif
+                    </span>
+                @endif
             @endif
         @endif
     </td>
