@@ -32,7 +32,7 @@ class EditablePlugin extends PluginBase
                 'primaryKey' => $this->component->realPrimaryKey,
                 'row' => $row,
                 'field' => data_get($column, 'dataField', data_get($column, 'field')),
-                'currentTable' => $this->component->datasource()->getModel()->getTable(),
+                'currentTable' => $this->component->currentTable,
                 'showErrorBag' => config('livewire-powergrid.show_error_bag'),
                 'editable' => data_get($column, 'editable'),
                 'js' => file_get_contents(__DIR__.'/index.js'),
