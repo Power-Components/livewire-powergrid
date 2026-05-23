@@ -10,10 +10,14 @@ class DaisyUI extends Theme
     {
         return Components\ThemeBuilder::make($this->name())
             ->baseView('livewire-powergrid::components.themes.daisyui')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->wrapper('space-y-4')
+                ->outsideFilters('')
+            )
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('mb-3 md:flex md:flex-row w-full justify-between items-center')
+                    ->container('md:flex md:flex-row w-full justify-between items-center')
                     ->subContainer('md:flex md:flex-row w-full gap-1')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
                     ->actions('btn btn-ghost btn-sm border-base-300')
@@ -21,9 +25,12 @@ class DaisyUI extends Theme
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('header.search')
                     ->container('w-full md:w-auto mt-2 md:mt-0 ml-auto')
-                    ->input('input input-bordered input-sm w-full md:w-80')
-                    ->iconClose('text-base-content/50')
-                    ->iconSearch('text-base-content/50 h-4 w-4')
+                    ->relativeMain('input input-bordered input-sm flex items-center gap-2 w-full md:w-80')
+                    ->input('grow border-0 bg-transparent px-0 focus:outline-none focus:ring-0')
+                    ->iconSearchWrapper('')
+                    ->iconSearch('text-base-content opacity-50 h-4 w-4')
+                    ->iconCloseWrapper('')
+                    ->iconClose('text-base-content opacity-50')
                 )
             )
             ->table(fn (Components\Table $table) => $table

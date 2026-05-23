@@ -1,6 +1,6 @@
 @if (data_get($setUp, 'header.searchInput'))
     <div class="{{ theme('header.search_box.container') }}">
-        <div class="{{ theme('header.search_box.relative_main') }}">
+        <label class="{{ theme('header.search_box.relative_main') }}">
             <span class="{{ theme('header.search_box.icon_search_wrapper') }}">
                 <x-livewire-powergrid::icons.search
                     class="{{ theme('header.search_box.icon_search') }}"
@@ -22,6 +22,6 @@
                     </a>
                 </span>
             @endif
-        </div>
+        </label>
     </div>
 @endif

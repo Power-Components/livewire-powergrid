@@ -21,7 +21,7 @@
         ])
 
         @if (config('livewire-powergrid.filter') === 'outside')
-            <div wire:partial="pg-filters-{{ $tableName }}">
+            <div wire:partial="pg-filters-{{ $tableName }}" class="{{ theme('layout.outsideFilters') }}">
                 @php
                     $filtersFromColumns = collect($columns)
                         ->filter(fn($column) => filled(data_get($column, 'filters')));
@@ -32,41 +32,44 @@
                     theme_view('filter'),
                     [
                         '__partial' => $this,
+                        'tableName' => $tableName,
                         'filtersFromColumns' => $filtersFromColumns,
                     ]
                 )
             </div>
         @endif
 
-        <div
-            @class([
-                'pg-table-responsive',
-                'overflow-auto' => $readyToLoad,
-                'overflow-hidden' => !$readyToLoad,
-                theme('table.layout.container'),
-            ])
-            @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset
-        >
-            <div x-data="{ expandedId: null }">
-                <table
-                    id="table_base_{{ $tableName }}"
-                    class="pg-table {{ theme('table.layout.table') }}"
-                >
-                    @include(theme_view('table.thead'), [
-                        'loading' => !$readyToLoad,
-                        '__partial' => $this,
-                    ])
+        <div>
+            <div
+                @class([
+                    'pg-table-responsive',
+                    'overflow-auto' => $readyToLoad,
+                    'overflow-hidden' => !$readyToLoad,
+                    theme('table.layout.container'),
+                ])
+                @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset
+            >
+                <div x-data="{ expandedId: null }">
+                    <table
+                        id="table_base_{{ $tableName }}"
+                        class="pg-table {{ theme('table.layout.table') }}"
+                    >
+                        @include(theme_view('table.thead'), [
+                            'loading' => !$readyToLoad,
+                            '__partial' => $this,
+                        ])
 
-                    @if ($readyToLoad)
-                        @include(theme_view('table.tbody'), ['__partial' => $this])
-                    @else
-                        @include(theme_view('table.tbody'), ['__partial' => $this, 'loading' => true])
-                    @endif
-                </table>
+                        @if ($readyToLoad)
+                            @include(theme_view('table.tbody'), ['__partial' => $this])
+                        @else
+                            @include(theme_view('table.tbody'), ['__partial' => $this, 'loading' => true])
+                        @endif
+                    </table>
+                </div>
             </div>
-        </div>
 
-        @include(theme_view('footer'), ['__partial' => $this])
+            @include(theme_view('footer'), ['__partial' => $this])
+        </div>
     </div>
 
     @script

@@ -7,9 +7,15 @@
     'filter' => null,
 ])
 
-@assets
-    <script src="{{ asset('vendor/livewire-powergrid/plugins/flatpickr.js') }}" type="module"></script>
-@endassets
+@once
+    @php
+        $pluginDir = dirname((new \ReflectionClass(\PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin::class))->getFileName());
+        $jsContent = file_get_contents($pluginDir . '/index.js');
+    @endphp
+    <script>
+        {!! $jsContent !!}
+    </script>
+@endonce
 
 @php
     $params = data_get($filter, 'params');

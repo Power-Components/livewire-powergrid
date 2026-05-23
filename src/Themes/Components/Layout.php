@@ -6,6 +6,20 @@ class Layout
 {
     use HasProperties;
 
+    public function wrapper(string $wrapper): self
+    {
+        $this->properties['wrapper'] = $wrapper;
+
+        return $this;
+    }
+
+    public function outsideFilters(string $outsideFilters): self
+    {
+        $this->properties['outsideFilters'] = $outsideFilters;
+
+        return $this;
+    }
+
     // Header
     public function container(string $container): self
     {

@@ -10,10 +10,14 @@ class Flux extends Theme
     {
         return Components\ThemeBuilder::make($this->name())
             ->baseView('livewire-powergrid::components.themes.flux')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->wrapper('space-y-4')
+                ->outsideFilters('')
+            )
             ->header(fn (Components\Header $header) => $header
                 ->view('livewire-powergrid::components.themes.tailwind.header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('mb-3 md:flex md:flex-row w-full justify-between items-center')
+                    ->container('md:flex md:flex-row w-full justify-between items-center')
                     ->subContainer('md:flex md:flex-row w-full gap-1.5')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
                     ->actions($this->button())

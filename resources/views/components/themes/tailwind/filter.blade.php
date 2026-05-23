@@ -9,6 +9,7 @@
 
 @php
     $__partial = $__partial ?? (isset($this) ? $this : null);
+    $tableName = $tableName ?? $__partial->tableName;
 @endphp
 
 <div

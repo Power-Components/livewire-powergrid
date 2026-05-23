@@ -8,7 +8,6 @@
     $__partial = $__partial ?? $this;
     $tableName = $tableName ?? $__partial->tableName;
 @endphp
-
 <tbody
     wire:partial="pg-tbody-{{ $tableName }}"
     wire:key="tbody-{{ $tableName }}"
@@ -19,6 +18,7 @@
     @else
         @includeWhen($__partial->hasColumnFilters, theme_view('table.inline-filters'), [
             '__partial' => $__partial,
+            'tableName' => $tableName,
         ])
 
         @if (count($__partial->records) === 0)

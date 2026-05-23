@@ -24,7 +24,9 @@
         @include(theme_view('header.search'))
     </div>
 
-    @includeIf(theme_view('header.enabled-filters'))
+    <div wire:partial="pg-enabled-filters-{{ $__partial->tableName }}">
+        @includeIf(theme_view('header.enabled-filters'))
+    </div>
 
     @includeWhen(data_get($setUp, 'exportable.batchExport.queues', 0), theme_view('header.batch-exporting'))
     @includeWhen($multiSort, theme_view('header.multi-sort'))

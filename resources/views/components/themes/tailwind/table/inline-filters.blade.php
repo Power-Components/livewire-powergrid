@@ -93,6 +93,7 @@
                             'inline' => true,
                             'filter' => (array) data_get($column, 'filters'),
                             'type' => 'date',
+                            'tableName' => $tableName,
                             'classAttr' => 'w-full',
                             '__partial' => $__partial,
                         ])

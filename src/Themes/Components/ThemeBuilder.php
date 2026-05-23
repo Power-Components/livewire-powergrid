@@ -24,6 +24,21 @@ class ThemeBuilder
         return $this;
     }
 
+    public function layout(Closure|array $callback): self
+    {
+        $component = new Layout();
+
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
+        $this->properties['layout'] = $component->toArray();
+
+        return $this;
+    }
+
     public function header(Closure|array $callback): self
     {
         $component = new Header();
