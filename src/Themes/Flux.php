@@ -84,7 +84,7 @@ class Flux extends Theme
                     ->select($this->select().' w-full')
                 )
                 ->datePicker(fn (Components\Component $datePicker) => $datePicker
-                    ->view('livewire-powergrid::components.themes.tailwind.filters.date-picker')
+                    ->view('powergrid-plugins::Flatpickr.index')
                     ->input('flatpickr flatpickr-input '.$this->input().' w-auto')
                 )
                 ->number(fn (Components\Component $number) => $number

@@ -92,7 +92,7 @@ class DaisyUI extends Theme
                     ->select('select select-sm select-bordered w-full')
                 )
                 ->datePicker(fn (Components\Component $datePicker) => $datePicker
-                    ->view('livewire-powergrid::components.themes.tailwind.filters.date-picker')
+                    ->view('powergrid-plugins::Flatpickr.index')
                     ->input('flatpickr flatpickr-input input input-sm input-bordered w-full')
                 )
                 ->multiSelect(fn (Components\Component $multiSelect) => $multiSelect
