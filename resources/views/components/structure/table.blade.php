@@ -74,9 +74,10 @@
 
     @script
         <script>
-            this.$js('pgRowTemplates', (rowTemplates) => {
+            $wire.on('pgRowTemplates', function (event) {
+                let rowTemplates = Array.isArray(event) ? event[0] : event;
                 window['pgRowTemplates_' + $wire.id] = JSON.parse(rowTemplates);
-            })
+            });
         </script>
     @endscript
 </div>

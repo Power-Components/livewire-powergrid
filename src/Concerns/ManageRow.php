@@ -11,7 +11,7 @@ trait ManageRow
     {
         $rowTemplates = json_encode($this->rowTemplates());
 
-        $this->js('pgRowTemplates', $rowTemplates);
+        $this->dispatch('pgRowTemplates', $rowTemplates);
     }
 
     public function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool
