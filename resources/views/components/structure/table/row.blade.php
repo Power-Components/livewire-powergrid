@@ -25,11 +25,11 @@
 )
 
 @includeWhen($__partial->radio && $__partial->radioAttribute, theme_view('table.radio-row'), [
-    'attribute' => $row->{$__partial->radioAttribute},
+    'attribute' => $row->{$__partial->radioAttribute} ?? null,
 ])
 
 @includeWhen($__partial->checkbox && $__partial->checkboxAttribute, theme_view('table.checkbox-row'), [
-    'attribute' => $row->{$__partial->checkboxAttribute},
+    'attribute' => $row->{$__partial->checkboxAttribute} ?? null,
 ])
 
 @foreach ($__partial->visibleColumns as $column)
