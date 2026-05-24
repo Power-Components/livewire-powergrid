@@ -11,7 +11,7 @@ class DaisyUI extends Theme
         return Components\ThemeBuilder::make($this->name())
             ->baseView('livewire-powergrid::components.themes.daisyui')
             ->layout(fn (Components\Layout $layout) => $layout
-                ->wrapper('space-y-4')
+                ->wrapper('space-y-4 text-sm')
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
@@ -39,11 +39,11 @@ class DaisyUI extends Theme
                     ->table('table table-zebra')
                     ->thead('text-base-content !capitalize')
                     ->tr('bg-base-200')
-                    ->th('')
-                    ->thActions('text-end')
-                    ->tbody('')
-                    ->td('')
-                    ->tdActions('text-end')
+                    ->th('text-sm')
+                    ->thActions('text-end text-sm')
+                    ->tbody('text-sm')
+                    ->td('text-sm')
+                    ->tdActions('text-end text-sm')
                 )
                 ->body(fn (Components\Body $body) => $body
                     ->tr(fn (Components\Tr $tr) => $tr
