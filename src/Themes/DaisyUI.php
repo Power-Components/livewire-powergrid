@@ -35,15 +35,15 @@ class DaisyUI extends Theme
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('rounded-t-lg relative border-x border-t border-base-300')
+                    ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-base-300')
                     ->table('table table-zebra')
-                    ->thead('text-base-content !capitalize')
-                    ->tr('bg-base-200')
-                    ->th('text-sm')
-                    ->thActions('text-end text-sm')
-                    ->tbody('text-sm')
-                    ->td('text-sm')
-                    ->tdActions('text-end text-sm')
+                    ->thead('')
+                    ->tr('')
+                    ->th('')
+                    ->thActions('text-end')
+                    ->tbody('')
+                    ->td('')
+                    ->tdActions('text-end')
                 )
                 ->body(fn (Components\Body $body) => $body
                     ->tr(fn (Components\Tr $tr) => $tr
@@ -52,12 +52,12 @@ class DaisyUI extends Theme
                     )
                 )
                 ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
-                    ->th('px-6 py-3 text-left text-xs font-medium tracking-wider')
+                    ->th('')
                     ->input('checkbox checkbox-sm')
                 )
                 ->radio(fn (Components\Radio $radio) => $radio
-                    ->th('px-6 py-3 text-left text-xs font-medium tracking-wider')
-                    ->input('radio')
+                    ->th('')
+                    ->input('radio radio-sm')
                 )
             )
             ->footer(fn (Components\Footer $footer) => $footer
