@@ -17,7 +17,7 @@ class DaisyUI extends Theme
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('md:flex md:flex-row w-full justify-between items-center')
+                    ->container('md:flex md:flex-row w-full justify-between items-center mb-3')
                     ->subContainer('md:flex md:flex-row w-full gap-1')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
                     ->actions('btn btn-ghost btn-sm border-base-300')

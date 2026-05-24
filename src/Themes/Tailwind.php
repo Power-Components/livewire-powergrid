@@ -18,7 +18,7 @@ class Tailwind extends Theme
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('md:flex md:flex-row w-full justify-between items-center')
+                    ->container('md:flex md:flex-row w-full justify-between items-center mb-3')
                     ->subContainer('md:flex md:flex-row w-full gap-1')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap')
                     ->actions('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
