@@ -10,10 +10,10 @@
         id="export-popover-{{ $tableName }}"
         popover="auto"
         x-data="{ countChecked: @entangle('checkboxValues').live }"
-        class="dropdown shadow bg-base-100 rounded-box w-max"
+        class="dropdown"
         style="position-anchor: --export-{{ $tableName }}"
     >
-        <div class="flex flex-col gap-3 p-3">
+        <div class="flex flex-col gap-3 p-3 shadow bg-base-100 rounded-box w-max mt-2 text-sm">
             @if (in_array('xlsx', data_get($setUp, 'exportable.type')))
             <div class="flex items-center gap-2">
                     <span class="w-12 font-medium text-sm">@lang('XLSX')</span>

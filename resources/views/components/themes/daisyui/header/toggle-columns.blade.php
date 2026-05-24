@@ -14,17 +14,12 @@
             class="dropdown"
             style="position-anchor: --toggle-{{ $tableName }}"
         >
-            <ul class="menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+            <ul class="menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 text-sm">
             @foreach ($this->visibleColumns as $column)
                 <li wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                     data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                 >
-                    <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="{{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
-                        @if (data_get($column, 'hidden'))
-                            <x-livewire-powergrid::icons.eye-off class="w-4 h-4 text-base-content/30" />
-                        @else
-                            <x-livewire-powergrid::icons.eye class="w-4 h-4 text-base-content/70" />
-                        @endif
+                    <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="text-sm {{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
                         {!! data_get($column, 'title') !!}
                     </a>
                 </li>
