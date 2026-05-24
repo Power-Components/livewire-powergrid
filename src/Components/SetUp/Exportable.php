@@ -30,6 +30,10 @@ final class Exportable implements Wireable
 
     public array $queryOptions = [];
 
+    public string $disk = 'local';
+
+    public string $directory = '';
+
     public function __construct(public string $fileName = 'export') {}
 
     public function type(string ...$types): self
@@ -93,6 +97,20 @@ final class Exportable implements Wireable
     public function onConnection(string $connection): self
     {
         data_set($this->batchExport, 'onConnection', $connection);
+
+        return $this;
+    }
+
+    public function disk(string $disk): self
+    {
+        $this->disk = $disk;
+
+        return $this;
+    }
+
+    public function directory(string $directory): self
+    {
+        $this->directory = $directory;
 
         return $this;
     }

@@ -9,5 +9,7 @@ interface ExportInterface
 {
     public function download(array $exportOptions): BinaryFileResponse;
 
+    public function store(array $exportOptions): void;
+
     public function build(Exportable|array $exportOptions): void;
 }

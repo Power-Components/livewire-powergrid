@@ -163,7 +163,7 @@ it('daisyui provides correct tokens using ThemeBuilder', function () {
     $theme = new DaisyUI();
 
     expect($theme->get('table.layout.table'))->toBe('table table-zebra')
-        ->and($theme->get('table.layout.container'))->toBe('rounded-t-lg relative border-x border-t border-base-300');
+        ->and($theme->get('table.layout.container'))->toBe('overflow-x-auto rounded-t-lg relative border-x border-t border-base-300');
 });
 
 it('flux provides correct tokens using ThemeBuilder', function () {

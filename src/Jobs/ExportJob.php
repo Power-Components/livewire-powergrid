@@ -56,9 +56,14 @@ class ExportJob implements ShouldQueue
             return $column;
         }, $this->componentTable->columns());
 
-        (new $this->exportableClass())
+        $exportable = (new $this->exportableClass())
             ->fileName($this->getFilename())
-            ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
-            ->download($this->exportable);
+            ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties));
+
+        if (method_exists($exportable, 'store')) {
+            $exportable->store($this->exportable);
+        } else {
+            $exportable->download($this->exportable);
+        }
     }
 }

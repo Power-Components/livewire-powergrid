@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4;
 
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\CSV\{Options, Writer};
@@ -25,6 +27,24 @@ class ExportToCsv extends Export implements ExportInterface
         return response()
             ->download(storage_path($this->fileName.'.csv'))
             ->deleteFileAfterSend($deleteFileAfterSend);
+    }
+
+    /**
+     * @throws WriterNotOpenedException|IOException
+     */
+    public function store(Exportable|array $exportOptions): void
+    {
+        $this->build($exportOptions);
+
+        $disk = strval(data_get($exportOptions, 'disk', 'local'));
+        $directory = strval(data_get($exportOptions, 'directory', ''));
+
+        $filePath = storage_path($this->fileName.'.csv');
+
+        Storage::disk($disk)
+            ->putFileAs($directory, new File($filePath), $this->fileName.'.csv');
+
+        @unlink($filePath);
     }
 
     /**
