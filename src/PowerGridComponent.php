@@ -173,7 +173,7 @@ class PowerGridComponent extends Component
             return collect();
         }
 
-        if (filled(data_get($this->setUp, 'cache.enabled')) && Cache::supportsTags()) {
+        if (filled(data_get($this->setUp, 'cache.enabled'))) {
             return $this->getRecordsFromCache();
         }
 
@@ -189,8 +189,12 @@ class PowerGridComponent extends Component
         $tag = $prefix.($customTag ?: 'powergrid-'.$this->datasource()->getModel()->getTable().'-'.$this->tableName);
         $cacheKey = implode('-', $this->getCacheKeys());
 
+        $getCacheClosure = fn () => ProcessDataSource::make($this)->get();
+
         /** @var array $results */
-        $results = Cache::tags($tag)->remember($cacheKey, $ttl, fn () => ProcessDataSource::make($this)->get());
+        $results = Cache::supportsTags()
+            ? Cache::tags($tag)->remember($cacheKey, $ttl, $getCacheClosure)
+            : Cache::remember($tag.'-'.$cacheKey, $ttl, $getCacheClosure);
 
         $results['actionsByRow'] = $this->transformActions($results['actionsByRow'], $results['results']->getCollection());
 
