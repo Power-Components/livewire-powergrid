@@ -1,20 +1,35 @@
 @if (data_get($setUp, 'header.toggleColumns'))
-    <div class="dropdown" :class="{ 'dropdown-open': open }" x-data="{ open: false }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="toggle-columns-dropdown-{{ $tableName }}">
-        <div tabindex="0" role="button" data-cy="toggle-columns-{{ $tableName }}" class="{{ theme('header.layout.actions') }}" x-on:click="open = !open">
+    <div wire:key="toggle-columns-container-{{ $tableName }}">
+        <button
+            data-cy="toggle-columns-{{ $tableName }}"
+            class="{{ theme('header.layout.actions') }}"
+            popovertarget="toggle-popover-{{ $tableName }}"
+            style="anchor-name: --toggle-{{ $tableName }}"
+        >
             <x-livewire-powergrid::icons.eye-off class="w-4 h-4" />
-        </div>
-        <ul tabindex="0" class="dropdown-content z-[50] menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
+        </button>
+        <div
+            id="toggle-popover-{{ $tableName }}"
+            popover="auto"
+            class="dropdown"
+            style="position-anchor: --toggle-{{ $tableName }}"
+        >
+            <ul class="menu p-2 shadow bg-base-100 rounded-box w-52 mt-2">
             @foreach ($this->visibleColumns as $column)
                 <li wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                     data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                 >
                     <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="{{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
-                        <div class="flex-1">
-                            {!! data_get($column, 'title') !!}
-                        </div>
+                        @if (data_get($column, 'hidden'))
+                            <x-livewire-powergrid::icons.eye-off class="w-4 h-4 text-base-content/30" />
+                        @else
+                            <x-livewire-powergrid::icons.eye class="w-4 h-4 text-base-content/70" />
+                        @endif
+                        {!! data_get($column, 'title') !!}
                     </a>
                 </li>
             @endforeach
-        </ul>
+            </ul>
+        </div>
     </div>
 @endif
