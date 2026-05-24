@@ -36,6 +36,11 @@
                     @php
                         $rowId = data_get($row, $__partial->realPrimaryKey);
                         $class = theme('table.layout.tr');
+                        if ($loop->odd) {
+                            $class .= ' ' . theme('table.layout.tr_striped');
+                        } else {
+                            $class .= ' ' . theme('table.layout.tr_not_striped');
+                        }
                     @endphp
 
                     <tr
@@ -92,6 +97,11 @@
                     @php
                         $rowId = data_get($row, $__partial->realPrimaryKey);
                         $class = theme('table.layout.tr');
+                        if ($loop->odd) {
+                            $class .= ' ' . theme('table.layout.tr_striped');
+                        } else {
+                            $class .= ' ' . theme('table.layout.tr_not_striped');
+                        }
                     @endphp
 
                     <tr

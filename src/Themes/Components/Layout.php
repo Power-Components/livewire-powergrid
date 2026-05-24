@@ -78,6 +78,20 @@ class Layout
         return $this;
     }
 
+    public function trStriped(string $trStriped): self
+    {
+        $this->properties['trStriped'] = $trStriped;
+
+        return $this;
+    }
+
+    public function trNotStriped(string $trNotStriped): self
+    {
+        $this->properties['trNotStriped'] = $trNotStriped;
+
+        return $this;
+    }
+
     public function th(string $th): self
     {
         $this->properties['th'] = $th;

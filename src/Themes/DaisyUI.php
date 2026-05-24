@@ -39,6 +39,8 @@ class DaisyUI extends Theme
                     ->table('table table-zebra')
                     ->thead('')
                     ->tr('')
+                    ->trStriped('bg-base-200')
+                    ->trNotStriped('bg-base-100')
                     ->th('')
                     ->thActions('text-end')
                     ->tbody('')
