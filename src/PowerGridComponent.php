@@ -196,7 +196,6 @@ class PowerGridComponent extends Component
             ? Cache::tags($tag)->remember($cacheKey, $ttl, $getCacheClosure)
             : Cache::remember($tag.'-'.$cacheKey, $ttl, $getCacheClosure);
 
-        $results['actionsByRow'] = $this->transformActions($results['actionsByRow'], $results['results']->getCollection());
 
         return $this->applyAfterQuery($results['results']);
     }
@@ -210,7 +209,6 @@ class PowerGridComponent extends Component
             ? $processResult['results']->getCollection()
             : new BaseCollection($processResult['results']);
 
-        $processResult['actionsByRow'] = $this->transformActions($processResult['actionsByRow'], $actionsRows);
 
         return $this->applyAfterQuery($processResult['results']);
     }
