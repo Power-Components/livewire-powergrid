@@ -196,7 +196,6 @@ class PowerGridComponent extends Component
             ? Cache::tags($tag)->remember($cacheKey, $ttl, $getCacheClosure)
             : Cache::remember($tag.'-'.$cacheKey, $ttl, $getCacheClosure);
 
-
         return $this->applyAfterQuery($results['results']);
     }
 
@@ -208,7 +207,6 @@ class PowerGridComponent extends Component
         $actionsRows = ($processResult['results'] instanceof AbstractPaginator || $processResult['results'] instanceof \Illuminate\Contracts\Pagination\Paginator)
             ? $processResult['results']->getCollection()
             : new BaseCollection($processResult['results']);
-
 
         return $this->applyAfterQuery($processResult['results']);
     }
