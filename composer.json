@@ -20,17 +20,17 @@
   "require": {
     "php": "^8.2",
     "livewire/livewire": "^3.7|^4.0",
-    "laravel/prompts": "*"
+    "laravel/prompts": "^0.1|^0.2|^0.3"
   },
   "require-dev": {
     "laravel/pint": "^1.26",
     "pestphp/pest": "^3.0|^4.0",
-    "orchestra/testbench": "^9.4|^10.0",
-    "larastan/larastan": "^2.0|^3.0",
-    "laradumps/laradumps": "^4.6",
+    "orchestra/testbench": "^9.4|^10.0|^11.0",
+    "larastan/larastan": "^2.0|^3.0|^4.0",
+    "laradumps/laradumps": "^4.6|^5.0",
     "laravel/scout": "^10.11.3",
     "openspout/openspout": "^4.24.5|^5.0",
-    "composer/composer": "^2.8"
+    "composer/composer": "^2.9"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"
@@ -95,11 +95,5 @@
       "composer/package-versions-deprecated": true,
       "pestphp/pest-plugin": true
     }
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../../../"
-    }
-  ]
+  }
 }
