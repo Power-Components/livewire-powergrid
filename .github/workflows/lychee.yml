@@ -1,22 +1,45 @@
 name: Check for broken Links
+
 on:
-  pull_request:
-    paths:
-      - '**.md'
   push:
     paths:
       - '**.md'
+  pull_request:
+    types: [ ready_for_review, synchronize, opened ]
+    paths:
+      - '**.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   linkChecker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Codebase
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: 🔗 Check Links
-        uses: lycheeverse/lychee-action@v2.0.2
+        uses: lycheeverse/lychee-action@v2
         with:
           fail: true
-          args: --config .github/lychee.toml './**/*.md'
+          args: >-
+            --base-url "https://github.com/$REPO_OWNER_PATH/blob/$BRANCH_NAME/"
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            --exclude "https?://(www\.)?(twitter\.com|x\.com|instagram\.com|linkedin\.com)"
+            --exclude "\.(png|jpg|jpeg|gif|svg|webp|ico)(\?.*)?$"
+            --max-retries 3
+            --retry-wait-time 5
+            --verbose
+            --no-progress
+            "**/*.md"
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER_PATH: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
