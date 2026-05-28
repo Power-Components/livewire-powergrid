@@ -18,6 +18,10 @@ permissions:
 
 jobs:
   linkChecker:
+    # Runs only when push/PR are targeting the default branch
+    if: |
+      (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) ||
+      (github.event_name == 'pull_request' && github.base_ref == github.event.repository.default_branch)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Codebase
