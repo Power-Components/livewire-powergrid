@@ -36,7 +36,7 @@
     "laravel/pao": "^1.0"
   },
   "suggest": {
-    "openspout/openspout": "Required to export XLS and CSV"
+    "openspout/openspout": "Required to export XLS and CSV "
   },
   "autoload": {
     "psr-4": {
