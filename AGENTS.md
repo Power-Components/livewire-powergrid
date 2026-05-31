@@ -40,7 +40,57 @@ The 7.x version prioritizes **simplicity, an adaptable native skeleton, and inde
 
 *Keep these guidelines in mind when refactoring, creating new features, or writing tests for PowerGrid 7.x.*
 
-## Skills
-Available skills for the agent are located in the `.ai/skills/` directory. To register a skill, ensure its file name and description are documented. Currently available:
-- **powergrid-theme**: Create or update a PowerGrid theme using ThemeManager.
-- **upgrade-theme-classfrom-v6-to-v7**: Migrates a v6 Theme class to the v7 unified struct() architecture.
+## 7. Skills & Specialized Workflows
+
+PowerGrid 7.x provides specialized skills for common tasks. Skills are located in `.ai/skills/` and provide detailed, step-by-step instructions for complex operations.
+
+### When to Use Skills
+
+**ALWAYS use the appropriate skill** when the user's request matches one of the following scenarios:
+
+#### Available Skills
+
+1. **powergrid-theme**
+   - **Use when:** Creating a new theme OR updating an existing theme
+   - **Triggers:** User asks to "create a theme", "add a new theme", "update theme X", "modify theme classes"
+   - **Examples:**
+     - "Create a new PrimeReact theme"
+     - "Update the Tailwind theme to add dark mode support"
+     - "I need a custom theme for Vuetify"
+   - **How to invoke:** `skill('powergrid-theme')`
+
+2. **upgrade-theme-classfrom-v6-to-v7**
+   - **Use when:** Migrating a v6 Theme class to v7 architecture
+   - **Triggers:** User mentions "migrate", "upgrade from v6", "convert v6 theme", "update old theme"
+   - **Examples:**
+     - "Migrate my Bootstrap theme from v6 to v7"
+     - "Upgrade the old Tailwind theme class to the new struct() format"
+     - "Convert this v6 theme to v7"
+   - **How to invoke:** `skill('upgrade-theme-classfrom-v6-to-v7')`
+
+### Skill Usage Protocol
+
+1. **Recognize the trigger:** Identify if the user's request matches a skill scenario
+2. **Load the skill:** Use the `skill()` tool with the appropriate skill name
+3. **Follow the workflow:** Skills contain detailed step-by-step instructions—follow them precisely
+4. **Use provided resources:** Skills may reference scripts, templates, or validation tools
+5. **Complete all steps:** Ensure all checklist items in the skill are completed before marking the task done
+
+### Example Usage
+
+```
+User: "I need to create a new Bulma theme for PowerGrid"
+
+Agent: I'll use the powergrid-theme skill to guide this process.
+[Loads skill('powergrid-theme')]
+[Follows the skill's step-by-step workflow]
+[Creates theme class, updates ThemeManager, runs tests]
+```
+
+### Registering New Skills
+
+To add a new skill:
+1. Create a `.md` file in `.ai/skills/`
+2. Document the skill name and description in this section
+3. Include clear triggers and examples
+4. Provide a detailed step-by-step workflow in the skill file
