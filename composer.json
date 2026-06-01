@@ -98,15 +98,5 @@
       "composer/package-versions-deprecated": true,
       "pestphp/pest-plugin": true
     }
-  },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../../../"
-    },
-    {
-      "type": "path",
-      "url": "/Users/luan.freitas/Dev/power-components/partials"
-    }
-  ]
+  }
 }
