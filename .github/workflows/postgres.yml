@@ -52,8 +52,6 @@ jobs:
           - laravel: 13.*
             pgsql_version: '17'
         exclude:
-          - php: 8.5
-            laravel: 11.*
           - php: 8.2
             laravel: 13.*
 

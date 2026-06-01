@@ -8,7 +8,7 @@ This guide details the steps required to upgrade your application from **PowerGr
 
 Ensure your environment meets the new minimum versions:
 *   **PHP:** `8.3` or higher
-*   **Laravel:** `11.x` or `12.x`
+*   **Laravel:** `12.x ` or higher (Laravel 11 is no longer supported)
 *   **Livewire:** `4.x` or higher (Livewire 3.x is no longer supported)
 *   **Tailwind CSS:** `4.x` or higher (if using Tailwind)
 
@@ -22,34 +22,8 @@ composer require power-components/partials
 
 **Note:** The following dependencies are now required (previously optional):
 - `livewire/blaze` - UI component library
-- `openspout/openspout` (v5.7+) - Excel/CSV export (moved from "suggest" to "require")
 
 ---
-
-## 2. Configuration File Setup
-
-**IMPORTANT:** PowerGrid 7.x no longer ships with a default configuration file. You must manually create one.
-
-### Create Configuration File
-
-Create `config/livewire-powergrid.php`:
-
-```php
-<?php
-
-return [
-    /*
-    |--------------------------------------------------------------------------
-    | Theme
-    |--------------------------------------------------------------------------
-    |
-    | Specify the theme class to use globally for PowerGrid components.
-    | Available: Tailwind::class, DaisyUI::class, Flux::class
-    |
-    */
-    'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
-];
-```
 
 ### Per-Component Theme Override
 
@@ -70,7 +44,7 @@ class MyTable extends PowerGridComponent
 
 ---
 
-## 3. Removed Dependencies & Cleanup
+## 2. Removed Dependencies & Cleanup
 
 The following legacy features and themes have been completely removed. You must search your codebase and remove any configurations, imports, or files referencing them:
 
@@ -97,7 +71,7 @@ The following legacy features and themes have been completely removed. You must 
 
 ---
 
-## 4. Helper Function Migration
+## 3. Helper Function Migration
 
 PowerGrid 7.x changes how you access theme styles and utilities in Blade views and PHP code.
 
@@ -156,7 +130,7 @@ $isTailwind = $theme instanceof \PowerComponents\LivewirePowerGrid\Themes\Tailwi
 
 ---
 
-## 5. Custom Theme Migration
+## 4. Custom Theme Migration
 
 In version 7.x, the theme architecture has been **completely rewritten**. This is not a simple key renaming - it's a fundamental architectural change.
 
@@ -849,14 +823,14 @@ composer require power-components/partials
 composer show | grep power-components
 ```
 
-### Step 2: Create Configuration File (15 min)
-Create `config/livewire-powergrid.php` (see Section 2)
+### Step 2: Run Pre-Migration Audit (1-2 hours)
+Run all search commands from Section 11 to identify affected areas
 
 ### Step 3: Migrate Custom Themes (4-8 hours each)
-Follow the detailed guide in Section 5
+Follow the detailed guide in Section 4
 
 ### Step 4: Update Helper Functions (1-3 hours)
-Replace `theme_style()` with `theme()` in all Blade views (see Section 4)
+Replace `theme_style()` with `theme()` in all Blade views (see Section 3)
 
 ### Step 5: Update View Paths (1-2 hours)
 Move views from `frameworks/` to `themes/` namespace (see Section 6)
@@ -867,7 +841,10 @@ Convert to Livewire native lazy loading (see Section 7)
 ### Step 7: Update Actions (1-2 hours)
 Remove JavaScript dependencies on `window.pgActions` (see Section 8)
 
-### Step 8: Test Everything (varies)
+### Step 8: Register Plugins (30 min)
+Configure plugins in your service provider (see Section 9)
+
+### Step 9: Test Everything (varies)
 - [ ] All tables render correctly
 - [ ] Filters work
 - [ ] Sorting works
@@ -878,7 +855,7 @@ Remove JavaScript dependencies on `window.pgActions` (see Section 8)
 - [ ] Lazy loading works
 - [ ] Editable/toggleable plugins work
 
-### Step 9: Update Tests (2-4 hours)
+### Step 10: Update Tests (2-4 hours)
 Update feature tests to use runtime mini-components (see Section 10)
 
 ---
@@ -901,9 +878,6 @@ Update feature tests to use runtime mini-components (see Section 10)
 
 #### "window.pgActions is undefined"
 **Solution:** Actions are now server-side rendered. Remove JavaScript dependencies (see Section 8).
-
-#### Configuration file not found
-**Solution:** Create `config/livewire-powergrid.php` manually (see Section 2).
 
 ---
 
