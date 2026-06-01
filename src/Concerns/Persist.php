@@ -29,7 +29,7 @@ trait Persist
     /**
      * @throws Exception
      */
-    protected function persistState(string $tableItem): void
+    public function persistState(string $tableItem): void
     {
         $state = [];
 

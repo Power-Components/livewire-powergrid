@@ -84,13 +84,13 @@ document.addEventListener('alpine:init', () => {
                 console.log(this.tableName)
                 if (selectedDates.length > 0 && (this.selectedDates !== dateStr)) {
                     Livewire.dispatch('pg:datePicker-' + this.tableName, {
-                        selectedDates: selectedDates,
-                        dateStr,
-                        timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
-                        type: this.type,
                         field: this.dataField,
+                        selectedDates: selectedDates,
+                        dateStr: dateStr,
                         label: this.label,
-                        dateFormat:  this.locale.dateFormat ?? 'Y-m-d H:i'
+                        type: this.type,
+                        timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
+                        dateFormat: this.locale.dateFormat ?? 'Y-m-d H:i'
                     });
                 }
             }

@@ -102,9 +102,9 @@ if (!window.pgEditableRegistered) {
                 }
 
                 this.$wire.dispatch('pg:editable-' + this.$wire.tableName, {
+                    field: this.dataField,
                     id: this.id,
-                    value: this.$el.textContent,
-                    field: this.dataField
+                    value: this.$el.textContent
                 });
 
                 this.oldContent = this.store().getTextContent(this.hash);

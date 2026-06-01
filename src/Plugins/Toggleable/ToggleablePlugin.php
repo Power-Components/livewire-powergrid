@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Toggleable;
 
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use stdClass;
@@ -36,6 +37,14 @@ class ToggleablePlugin extends PluginBase
             'showToggleable' => $showToggleable,
             'js' => file_get_contents(__DIR__.'/index.js'),
         ])->render();
+    }
+
+    #[On('pg:toggleable-{tableName}')]
+    public function toggleableChanged(...$params): void
+    {
+        [$field, $id, $value] = $params;
+
+        $this->component->onUpdatedToggleable($id, $field, $value);
     }
 
     private function shouldShowToggleable(stdClass|Column|array $column, mixed $row): bool

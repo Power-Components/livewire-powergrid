@@ -4,24 +4,36 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Livewire\Attributes\On;
+use ReflectionClass;
 
 /** @codeCoverageIgnore */
 trait Listeners
 {
-    #[On('pg:editable-{tableName}')]
-    public function inputTextChanged(string|int $id, string $field, string $value): void
+    public function getListeners(): array
     {
-        data_set($this, "$field.{$id}", $value);
+        if (empty($this->columns) && method_exists($this, 'columns')) {
+            $this->columns = $this->columns();
+        }
 
-        $this->onUpdatedEditable($id, $field, $value);
+        $listeners = [];
 
-        $this->dispatch('pg:editable-close-'.$id);
-    }
+        $this->resolvePlugins();
 
-    #[On('pg:toggleable-{tableName}')]
-    public function toggleableChanged(string $id, string $field, string $value): void
-    {
-        $this->onUpdatedToggleable($id, $field, $value);
+        foreach ($this->plugins as $plugin) {
+            $reflection = new ReflectionClass($plugin);
+            foreach ($reflection->getMethods() as $method) {
+                $attributes = $method->getAttributes(On::class);
+                foreach ($attributes as $attribute) {
+                    /** @var On $instance */
+                    $instance = $attribute->newInstance();
+                    $event = str_replace('{tableName}', $this->tableName, $instance->event);
+
+                    $listeners[$event] = $method->getName();
+                }
+            }
+        }
+
+        return $listeners;
     }
 
     /**
@@ -51,5 +63,41 @@ trait Listeners
         }
 
         $this->dispatch('$commit')->self();
+    }
+
+    /**
+     * Delegate to FlatpickrPlugin
+     */
+    public function datePickerChanged(...$params): void
+    {
+        $this->resolvePlugins();
+
+        if (isset($this->plugins['flatpickr']) && method_exists($this->plugins['flatpickr'], 'datePickerChanged')) {
+            $this->plugins['flatpickr']->datePickerChanged(...$params);
+        }
+    }
+
+    /**
+     * Delegate to EditablePlugin
+     */
+    public function inputTextChanged(...$params): void
+    {
+        $this->resolvePlugins();
+
+        if (isset($this->plugins['editable']) && method_exists($this->plugins['editable'], 'inputTextChanged')) {
+            $this->plugins['editable']->inputTextChanged(...$params);
+        }
+    }
+
+    /**
+     * Delegate to ToggleablePlugin
+     */
+    public function toggleableChanged(...$params): void
+    {
+        $this->resolvePlugins();
+
+        if (isset($this->plugins['toggleable']) && method_exists($this->plugins['toggleable'], 'toggleableChanged')) {
+            $this->plugins['toggleable']->toggleableChanged(...$params);
+        }
     }
 }

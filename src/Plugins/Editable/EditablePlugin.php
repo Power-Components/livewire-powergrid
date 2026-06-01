@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Editable;
 
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use stdClass;
@@ -41,6 +42,20 @@ class EditablePlugin extends PluginBase
         }
 
         return null;
+    }
+
+    #[On('pg:editable-{tableName}')]
+    public function inputTextChanged(...$params): void
+    {
+        // Livewire passes named parameters as positional args in declaration order
+        // Expected: field, id, value
+        [$field, $id, $value] = $params;
+
+        data_set($this->component, "$field.{$id}", $value);
+
+        $this->component->onUpdatedEditable($id, $field, $value);
+
+        $this->component->dispatch('pg:editable-close-'.$id);
     }
 
     private function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool

@@ -2,10 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Exception;
-use Illuminate\Support\{Arr, Carbon, Collection, Str};
+use Illuminate\Support\{Arr, Collection};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
@@ -125,12 +124,11 @@ trait Filter
     {
         collect($this->filters())
             ->each(function ($filter) use ($field) {
-                /**
-                 * Filter Number will generate FIELD_start and FIELD_end fields,
-                 * and both fields should also be cleaned.
-                 * Here we verify if there are filter numbers and their fields.
-                 */
                 $extraFieldsToClear = [];
+
+                if (isset($this->filters['datetime']) || isset($this->filters['date'])) {
+                    $this->dispatch('pg:clear_flatpickr::'.$this->tableName.':'.$field);
+                }
 
                 if (! empty($this->filters['number'])) {
                     $numberField = str($field)->beforeLast('_start')->beforeLast('_end')->append('')->toString();
@@ -219,69 +217,6 @@ trait Filter
     public function toggleFilters(): void
     {
         $this->showFilters = ! $this->showFilters;
-
-        $this->renderOutsideFiltersPartial();
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[On('pg:datePicker-{tableName}')]
-    public function datePickerChanged(
-        array $selectedDates,
-        string $field,
-        string $dateStr,
-        string $label,
-        string $type,
-        string $timezone = 'UTC',
-        string $dateFormat = 'Y-m-d H:i',
-    ): void {
-        if (! isset($selectedDates[1])) {
-            return;
-        }
-
-        $this->resetPage();
-
-        [$startRaw, $endRaw] = Str::contains($dateStr, 'to')
-            ? explode(' to ', $dateStr)
-            : [strval($selectedDates[0]), strval($selectedDates[1])];
-
-        $appTimezone = config('app.timezone');
-        $isDatetime = $type === 'datetime';
-        $hasTime = str_contains($dateFormat, 'H');
-
-        $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
-            try {
-                $date = Carbon::parse($dateStr, $appTimezone);
-            } catch (InvalidFormatException) {
-                return now($appTimezone);
-            }
-
-            if (! $hasTime) {
-                $date->setTime(0, 0, 0);
-            }
-
-            return $date->setTimezone($appTimezone);
-        };
-
-        $startDate = $makeDate($startRaw);
-        $endDate = $makeDate($endRaw);
-
-        if ($isDatetime && $endDate->isStartOfDay()) {
-            $endDate->endOfDay();
-        } elseif (! $isDatetime) {
-            $endDate->endOfDay();
-        }
-
-        $this->addEnabledFilters($field, $label);
-
-        $this->filters[$type][$field] = [
-            'start' => $startDate->toString(),
-            'end' => $endDate->toString(),
-            'formatted' => $dateStr,
-        ];
-
-        $this->persistState('filters');
 
         $this->renderOutsideFiltersPartial();
     }
@@ -456,7 +391,7 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
-    protected function renderOutsideFiltersPartial(): void
+    public function renderOutsideFiltersPartial(): void
     {
         if (config('livewire-powergrid.filter') !== 'outside') {
             return;

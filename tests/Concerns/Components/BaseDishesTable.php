@@ -16,7 +16,7 @@ abstract class BaseDishesTable extends PowerGridComponent
 
     public array $testFilters = [];
 
-    protected function getListeners()
+    public function getListeners(): array
     {
         return array_merge(
             parent::getListeners(),

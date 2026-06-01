@@ -62,6 +62,27 @@ class PowerGridComponent extends Component
         return $this->plugins;
     }
 
+    public function handlePlugin(string $plugin, string $action, array $arguments = []): void
+    {
+        $this->resolvePlugins();
+        if (isset($this->plugins[$plugin]) && method_exists($this->plugins[$plugin], $action)) {
+            $this->plugins[$plugin]->{$action}(...$arguments);
+        }
+    }
+
+    public function __call($method, $parameters)
+    {
+        $this->resolvePlugins();
+
+        foreach ($this->plugins as $plugin) {
+            if (method_exists($plugin, $method)) {
+                return $plugin->$method(...$parameters);
+            }
+        }
+
+        return parent::__call($method, $parameters);
+    }
+
     public function renderColumnContent(Column|array|\stdClass $column, mixed $row): ?string
     {
         foreach ($this->plugins as $plugin) {
