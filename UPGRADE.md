@@ -7,8 +7,8 @@ This guide details the steps required to upgrade your application from **PowerGr
 ## 1. System & Package Requirements
 
 Ensure your environment meets the new minimum versions:
-*   **PHP:** `8.3` or higher
-*   **Laravel:** `12.x ` or higher (Laravel 11 is no longer supported)
+*   **PHP:** `8.3` or higher (PHP 8.4+ recommended for Laravel 13 support)
+*   **Laravel:** `12.x` or higher (Laravel 11 is no longer supported)
 *   **Livewire:** `4.x` or higher (Livewire 3.x is no longer supported)
 *   **Tailwind CSS:** `4.x` or higher (if using Tailwind)
 
