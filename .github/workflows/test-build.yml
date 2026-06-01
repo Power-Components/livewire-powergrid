@@ -7,6 +7,13 @@ on:
   pull_request:
     types: [ ready_for_review, synchronize, opened ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   test-build:
     runs-on: ${{ matrix.os }}
@@ -16,18 +23,26 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '22.x'
+          node-version: 'lts/*'
+          cache: 'yarn'
 
-      - name: Install NPM Dependencies
-        run: npm install --force
+      - name: Validate and Install Yarn Dependencies
+        run: |
+          yarn config set network-timeout 300000
+          yarn install --frozen-lockfile --immutable
+
+      - name: Audit Dependencies for Vulnerabilities
+        run: yarn audit --level high
 
       - name: Build
-        run: npm run build
+        run: yarn build
 
       - name: Build Tailwind 4
-        run: npm run build:tailwind
+        run: yarn build:tailwind

@@ -47,7 +47,7 @@ function getItemsToHide(element, tableWidth) {
         if (fitsMoreItems && calc <= tableWidth && (calc + itemWidth <= tableWidth)) {
             calc += itemWidth;
         } else {
-            itemsToHide.push(visibleThs.indexOf(item) + 1)
+            itemsToHide.push(items.indexOf(item) + 1)
             fitsMoreItems = false
         }
     })
@@ -80,7 +80,7 @@ function fillTableExpand(element, hideItems) {
 
             if (!expandContainer) continue
 
-            let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`).textContent
+            let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`).textContent  ?? ''
 
             const rowValue = row.querySelector(`td:nth-child(${hideItem})`)?.innerHTML
 

@@ -605,9 +605,9 @@ fast-glob@^3.3.2:
     micromatch "^4.0.8"
 
 fast-uri@^3.0.1:
-  version "3.0.6"
-  resolved "https://registry.npmjs.org/fast-uri/-/fast-uri-3.0.6.tgz"
-  integrity sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==
+  version "3.1.2"
+  resolved "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.2.tgz"
+  integrity sha512-rVjf7ArG3LTk+FS6Yw81V1DLuZl1bRbNrev6Tmd/9RaroeeRRJhAt7jg/6YFxbvAQXUCavSoZhPPj6oOx+5KjQ==
 
 fastq@^1.6.0:
   version "1.19.1"
@@ -810,9 +810,9 @@ js-beautify@^1.15.4:
     nopt "^7.2.1"
 
 js-cookie@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.5.tgz"
-  integrity sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==
+  version "3.0.7"
+  resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.7.tgz"
+  integrity sha512-z/wZZgDrkNV1eA0ULjM/F9/50Ya8fbzgKneSpoPsXSGd0KnpdtHfOZWK+GcwLk+EZbS4F9RBhU+K2RgzuDaItw==
 
 json-schema-traverse@^1.0.0:
   version "1.0.0"

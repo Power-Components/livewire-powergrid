@@ -186,7 +186,13 @@ class PowerGridComponent extends Component
         $customTag = strval(data_get($this->setUp, 'cache.tag'));
         $ttl = intval(data_get($this->setUp, 'cache.ttl'));
 
-        $tag = $prefix.($customTag ?: 'powergrid-'.$this->datasource()->getModel()->getTable().'-'.$this->tableName);
+        if (filled($customTag)) {
+            $tag = $prefix.$customTag;
+        } else {
+            $datasource = $this->datasource();
+            $table = method_exists($datasource, 'getModel') ? $datasource->getModel()->getTable() : $this->tableName;
+            $tag = $prefix.'powergrid-'.$table.'-'.$this->tableName;
+        }
         $cacheKey = implode('-', $this->getCacheKeys());
 
         $getCacheClosure = fn () => ProcessDataSource::make($this)->get();

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields, Traits\WithExport};
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
@@ -99,7 +101,7 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
         data_get($downloadEffect, 'name')
     );
 
-    $content = str_replace(PHP_EOL, '<csv-divider>', base64_decode(data_get($downloadEffect, 'content')));
+    $content = str_replace(["\r\n", "\n", "\r"], '<csv-divider>', base64_decode(data_get($downloadEffect, 'content')));
 
     $expected = collect(array_merge([$headings], $rows))
         ->transform(function ($heading) use ($delimiter, $separator) {

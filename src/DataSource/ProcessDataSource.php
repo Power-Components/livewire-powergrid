@@ -10,6 +10,8 @@ use Throwable;
 
 class ProcessDataSource
 {
+    public mixed $datasource = null;
+
     public function __construct(
         public PowerGridComponent $component,
         public array $properties = [],
@@ -25,20 +27,25 @@ class ProcessDataSource
      */
     public function get(bool $isExport = false): array
     {
+        if (is_null($this->datasource)) {
+            $this->datasource = $this->component->datasource($this->properties);
+        }
+
+        $datasource = is_object($this->datasource) ? clone $this->datasource : $this->datasource;
+
         $processors = [
             CollectionProcessor::class,
             ScoutBuilderProcessor::class,
         ];
 
         foreach ($processors as $processor) {
-            // @phpstan-ignore-next-line
-            if ($processor::match($this->component->datasource($this->properties))) {
+            if ($processor::match($datasource)) {
                 $instance = new $processor($this->component, $isExport);
 
-                return $instance->process($this->properties);
+                return $instance->process($this->properties, $datasource);
             }
         }
 
-        return (new ModelProcessor($this->component, $isExport))->process($this->properties);
+        return (new ModelProcessor($this->component, $isExport))->process($this->properties, $datasource);
     }
 }

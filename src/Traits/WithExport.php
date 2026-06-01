@@ -169,7 +169,7 @@ trait WithExport
             $filtered = $processDataSource->component->checkboxValues;
         }
 
-        if ($processDataSource->component->datasource() instanceof Collection) {
+        if ($processDataSource->datasource instanceof Collection) {
             if ($filtered) {
                 $results = $processDataSource->get(isExport: true)['results']
                     ->whereIn($this->primaryKey, $filtered);
@@ -181,7 +181,7 @@ trait WithExport
 
             $dataTransformer = new DataTransformer($processDataSource->component);
 
-            return $dataTransformer->transform($processDataSource->component->datasource())->collection;
+            return $dataTransformer->transform($processDataSource->datasource)->collection;
         }
 
         /** @phpstan-ignore-next-line */
@@ -197,7 +197,7 @@ trait WithExport
 
         $queryOptions = data_get($this->setUp, 'exportable.queryOptions', []);
 
-        $results = $processDataSource->component->datasource()
+        $results = $processDataSource->datasource
             ->where(function ($query) {
                 app()->makeWith(SearchHandlerContract::class, [
                     'component' => $this,
@@ -207,8 +207,9 @@ trait WithExport
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->when($this->sortField, function ($query) use ($property, $processDataSource, $queryOptions) {
-                $sortField = $queryOptions['sortField'] ?? $property('sortField');
+            ->when($this->sortField, function ($query) use ($processDataSource, $queryOptions) {
+                $sortField = $queryOptions['sortField']
+                    ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
                 $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
 
                 return $query->orderBy($sortField, $sortDirection);

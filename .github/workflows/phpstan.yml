@@ -8,36 +8,43 @@ on:
       - "art/**"
       - ".github/DISCUSSION_TEMPLATE/**"
       - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE.md"
-      - "README.md"
-      - "CONTRIBUTING.md"
+      - "**/*.md"
   pull_request:
     types: [ready_for_review, synchronize, opened]
     paths-ignore:
       - "art/**"
       - ".github/DISCUSSION_TEMPLATE/**"
       - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE.md"
-      - "README.md"
-      - "CONTRIBUTING.md"
+      - "**/*.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.ref != 'refs/heads/todo-tests'
     strategy:
       fail-fast: false
       matrix:
-        php: [ 8.4 ]
-        laravel: [ 12.* ]
+        php: [ 8.3 ]
+        laravel: [ 13.* ]
         dependency-version: [ prefer-stable ]
-
     name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
 
-    if: github.ref != 'refs/heads/todo-tests'
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -52,15 +59,18 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          path: $(composer config cache-files-dir)
-          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-
 
       - name: Install Composer dependencies
+        env:
+          LARAVEL_VERSION: ${{ matrix.laravel }}
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer install
+          composer require "laravel/framework:${LARAVEL_VERSION}" --no-interaction --no-update
+          composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Larastan
         run: composer test:types

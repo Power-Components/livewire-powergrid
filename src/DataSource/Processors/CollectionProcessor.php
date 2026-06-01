@@ -17,9 +17,9 @@ class CollectionProcessor extends DataSourceBase
             || is_iterable($key);
     }
 
-    public function process(array $properties = []): array
+    public function process(array $properties = [], mixed $datasource = null): array
     {
-        $datasource = $this->component->datasource($properties);
+        $datasource = $datasource ?? $this->component->datasource($properties);
 
         $collection = new BaseCollection($datasource);
 

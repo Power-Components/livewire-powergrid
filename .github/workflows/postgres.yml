@@ -8,53 +8,66 @@ on:
       - "art/**"
       - ".github/DISCUSSION_TEMPLATE/**"
       - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE.md"
-      - "README.md"
-      - "CONTRIBUTING.md"
+      - "**/*.md"
   pull_request:
     types: [ready_for_review, synchronize, opened]
     paths-ignore:
       - "art/**"
       - ".github/DISCUSSION_TEMPLATE/**"
       - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE.md"
-      - "README.md"
-      - "CONTRIBUTING.md"
+      - "**/*.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }}
 
     services:
       postgres:
-        image: postgres:latest
+        image: postgres:${{ matrix.pgsql_version }}
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          POSTGRES_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD || 'password' }}
           POSTGRES_DB: powergridtest
         ports:
           - 5433:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: --health-cmd="pg_isready -U postgres -d powergridtest" --health-interval=10s --health-timeout=5s --health-retries=5
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
-        php: [8.5, 8.4, 8.3]
-        laravel: [12.*, 13.*]
-        livewire: [4.*]
-        dependency-version: [prefer-stable]
-
-    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }}
+        php: [ 8.5, 8.4, 8.3 ]
+        laravel: [ 13.*, 12.* ]
+        livewire: [ 4.* ]
+        include:
+          - laravel: 12.*
+            pgsql_version: '16'
+          - laravel: 13.*
+            pgsql_version: '17'
+        exclude:
+          - php: 8.5
+            laravel: 11.*
+          - php: 8.2
+            laravel: 13.*
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, pdo_pgsql, pgsql, bcmath, soap, intl, gd, exif, iconv
           tools: composer:v2
           coverage: none
 
@@ -63,18 +76,27 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          path: $(composer config cache-files-dir)
+          path: ${{ steps.composer-cache.outputs.dir }}
           key: dependencies-laravel-${{ matrix.laravel }}-livewire-${{ matrix.livewire}}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            dependencies-laravel-${{ matrix.laravel }}-livewire-${{ matrix.livewire}}-php-${{ matrix.php }}-
+
+      - name: Inject Matrix Dependencies Safely
+        env:
+          LARAVEL_VERSION: ${{ matrix.laravel }}
+          LIVEWIRE_VERSION: ${{ matrix.livewire }}
+        run: >
+          composer require 
+          "laravel/framework:$LARAVEL_VERSION" 
+          "livewire/livewire:$LIVEWIRE_VERSION" 
+          "openspout/openspout:^4.23" 
+          --no-interaction 
+          --no-update
 
       - name: Install Composer dependencies
-        run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "livewire/livewire:${{ matrix.livewire }}" --no-interaction --no-update
-          composer install
-
-      - name: Install openspout/openspout v5
-        run: composer require openspout/openspout ^5.0
+        run: composer install --no-progress --optimize-autoloader --no-scripts
 
       - name: PostGreSQL
         run: composer test:pgsql

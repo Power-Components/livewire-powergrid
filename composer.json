@@ -20,20 +20,20 @@
   "require": {
     "php": "^8.3",
     "livewire/livewire": "^4.0",
-    "laravel/prompts": "*",
-    "power-components/partials": "*",
-    "openspout/openspout": "^5.7",
+    "laravel/prompts": "^0.1|^0.2|^0.3",
+    "power-components/partials": "1.x-dev",
     "livewire/blaze": "^1.0"
   },
   "require-dev": {
     "laravel/pint": "^1.29",
     "pestphp/pest": "^4.6",
-    "orchestra/testbench": "^10.0",
-    "larastan/larastan": "^3.0",
+    "orchestra/testbench": "^10.0|^11.0",
+    "larastan/larastan": "^3.0|^4.0",
     "laradumps/laradumps": "^5.0",
     "laravel/scout": "^10.11.3",
-    "composer/composer": "^2.9",
-    "laravel/pao": "^1.0"
+    "laravel/pao": "^1.0",
+    "openspout/openspout": "^4.24.5|^5.0",
+    "composer/composer": "^2.10"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV"
