@@ -91,7 +91,7 @@ jobs:
           composer require 
           "laravel/framework:$LARAVEL_VERSION" 
           "livewire/livewire:$LIVEWIRE_VERSION" 
-          "openspout/openspout:^4.23" 
+          "openspout/openspout:^5.0" 
           --no-interaction 
           --no-update
 
