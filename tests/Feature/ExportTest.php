@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields, Traits\WithExport};
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
