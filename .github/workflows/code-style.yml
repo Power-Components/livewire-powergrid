@@ -6,36 +6,46 @@ on:
       - "**"
     paths-ignore:
       - "art/**"
-      - "README.md"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - "**/*.md"
   pull_request:
     types: [ready_for_review, synchronize, opened]
     paths-ignore:
       - "art/**"
-      - "README.md"
+      - ".github/DISCUSSION_TEMPLATE/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - "**/*.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }} / Livewire:${{ matrix.livewire }}
+
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         php: [ 8.3 ]
-        laravel: [ 12.* ]
-        dependency-version: [ prefer-stable ]
-
-    name: PHP:${{ matrix.php }} / L:${{ matrix.laravel }}
-
-    if: github.ref != 'refs/heads/todo-tests'
+        laravel: [ 13.* ]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv
           tools: composer:v2
           coverage: none
 
@@ -44,15 +54,25 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
-          path: $(composer config cache-files-dir)
-          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: dependencies-laravel-${{ matrix.laravel }}-livewire-${{ matrix.livewire}}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: |
+            dependencies-laravel-${{ matrix.laravel }}-livewire-${{ matrix.livewire}}-php-${{ matrix.php }}-
+
+      - name: Inject Matrix Dependencies Safely
+        env:
+          LARAVEL_VERSION: ${{ matrix.laravel }}
+        run: >
+          composer require 
+          "laravel/framework:$LARAVEL_VERSION" 
+          --no-interaction 
+          --no-scripts
+          --prefer-dist
 
       - name: Install Composer dependencies
-        run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
-          composer install
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-scripts
 
       - name: Pint
         run: composer test:pint
