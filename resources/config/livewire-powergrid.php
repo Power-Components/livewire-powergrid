@@ -143,6 +143,10 @@ return [
 
     'exportable' => [
         'default' => 'openspout_v4',
+        'storage' => [
+            'disk' => null,
+            'path' => 'livewire-powergrid/exports',
+        ],
         'openspout_v5' => [
             'xlsx' => ExportToXLS::class,
             'csv' => ExportToCsv::class,

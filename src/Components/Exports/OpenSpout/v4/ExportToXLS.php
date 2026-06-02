@@ -10,6 +10,7 @@ use OpenSpout\Writer\XLSX\{Options, Writer};
 use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\Support\ExportStorage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
@@ -30,8 +31,22 @@ class ExportToXLS extends Export implements ExportInterface
         $this->build($exportOptions);
 
         return response()
-            ->download(storage_path($this->fileName.'.xlsx'))
+            ->download($this->temporaryFile('xlsx'), $this->fileName.'.xlsx')
             ->deleteFileAfterSend($deleteFileAfterSend);
+    }
+
+    /**
+     * @throws WriterNotOpenedException|IOException
+     */
+    public function store(Exportable|array $exportOptions): string
+    {
+        $this->build($exportOptions);
+
+        try {
+            return ExportStorage::put($exportOptions, $this->fileName.'.xlsx', $this->temporaryFile('xlsx'));
+        } finally {
+            $this->deleteTemporaryFile('xlsx');
+        }
     }
 
     /**
@@ -45,7 +60,7 @@ class ExportToXLS extends Export implements ExportInterface
         $options = new Options();
         $writer = new Writer($options);
 
-        $writer->openToFile(storage_path($this->fileName.'.xlsx'));
+        $writer->openToFile($this->temporaryFile('xlsx'));
 
         $style = (new Style())
             ->setFontBold()

@@ -30,6 +30,10 @@ final class Exportable implements Wireable
 
     public array $queryOptions = [];
 
+    public ?string $disk = null;
+
+    public ?string $path = null;
+
     public function __construct(public string $fileName = 'export') {}
 
     public function type(string ...$types): self
@@ -100,6 +104,20 @@ final class Exportable implements Wireable
     public function queryOptions(array $options): self
     {
         $this->queryOptions = $options;
+
+        return $this;
+    }
+
+    public function disk(string $disk): self
+    {
+        $this->disk = $disk;
+
+        return $this;
+    }
+
+    public function path(string $path): self
+    {
+        $this->path = $path;
 
         return $this;
     }

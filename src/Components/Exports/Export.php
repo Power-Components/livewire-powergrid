@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Exports;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Support\ExportStorage;
 use stdClass;
 
 class Export
@@ -19,6 +20,9 @@ class Export
 
     /** @var array<Column> */
     public array $columns;
+
+    /** @var array<string, string> */
+    protected array $temporaryFiles = [];
 
     public function fileName(string $name): Export
     {
@@ -93,5 +97,23 @@ class Export
             'headers' => $header->all(),
             'rows' => $data->all(),
         ];
+    }
+
+    protected function temporaryFile(string $extension): string
+    {
+        if (! isset($this->temporaryFiles[$extension])) {
+            $this->temporaryFiles[$extension] = ExportStorage::temporaryFile($extension);
+        }
+
+        return $this->temporaryFiles[$extension];
+    }
+
+    protected function deleteTemporaryFile(string $extension): void
+    {
+        $file = $this->temporaryFiles[$extension] ?? null;
+
+        if (is_string($file) && file_exists($file)) {
+            unlink($file);
+        }
     }
 }

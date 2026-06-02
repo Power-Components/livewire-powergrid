@@ -43,9 +43,12 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
-        collect($this->componentTable->getPublicPropertiesDefinedInComponent())
-            ->intersectByKeys($this->properties)
-            ->each(fn ($value, $key) => $this->componentTable->{$key} = data_get($this->properties, $key));
+        collect($this->properties)
+            ->each(function ($value, $key): void {
+                if (property_exists($this->componentTable, $key)) {
+                    $this->componentTable->{$key} = $value;
+                }
+            });
 
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
@@ -56,9 +59,16 @@ class ExportJob implements ShouldQueue
             return $column;
         }, $this->componentTable->columns());
 
-        (new $this->exportableClass())
+        $exportable = (new $this->exportableClass())
             ->fileName($this->getFilename())
-            ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties))
-            ->download($this->exportable);
+            ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties));
+
+        if (method_exists($exportable, 'store')) {
+            $exportable->store($this->exportable);
+
+            return;
+        }
+
+        $exportable->download($this->exportable);
     }
 }

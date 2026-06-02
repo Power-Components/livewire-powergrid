@@ -9,6 +9,7 @@ use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\Support\ExportStorage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
@@ -23,8 +24,22 @@ class ExportToCsv extends Export implements ExportInterface
         $this->build($exportOptions);
 
         return response()
-            ->download(storage_path($this->fileName.'.csv'))
+            ->download($this->temporaryFile('csv'), $this->fileName.'.csv')
             ->deleteFileAfterSend($deleteFileAfterSend);
+    }
+
+    /**
+     * @throws WriterNotOpenedException|IOException
+     */
+    public function store(Exportable|array $exportOptions): string
+    {
+        $this->build($exportOptions);
+
+        try {
+            return ExportStorage::put($exportOptions, $this->fileName.'.csv', $this->temporaryFile('csv'));
+        } finally {
+            $this->deleteTemporaryFile('csv');
+        }
     }
 
     /**
@@ -41,7 +56,7 @@ class ExportToCsv extends Export implements ExportInterface
         $csvOptions = new Options($csvSeparator, $csvDelimiter);
 
         $writer = new Writer($csvOptions);
-        $writer->openToFile(storage_path($this->fileName.'.csv'));
+        $writer->openToFile($this->temporaryFile('csv'));
 
         $row = Row::fromValues($data['headers']);
 

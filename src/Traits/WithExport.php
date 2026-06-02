@@ -13,9 +13,10 @@ use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract};
+    DataSource\Processors\Database\Handlers\SearchHandlerContract,
+    Support\ExportStorage};
 use PowerComponents\LivewirePowerGrid\Jobs\ExportJob;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\{BinaryFileResponse, StreamedResponse};
 use Throwable;
 
 /**
@@ -69,9 +70,16 @@ trait WithExport
         $this->onBatchExecuting($this->exportBatch);
     }
 
-    public function downloadExport(string $file): BinaryFileResponse
+    public function downloadExport(string $file): StreamedResponse
     {
-        return response()->download(storage_path($file));
+        if (! in_array($file, $this->exportedFiles, true)) {
+            abort(404);
+        }
+
+        $exportOptions = $this->setUp['exportable'];
+        $filePath = ExportStorage::filePath($exportOptions, $file);
+
+        return Support\Facades\Storage::disk(ExportStorage::disk($exportOptions))->download($filePath, basename($file));
     }
 
     /**
