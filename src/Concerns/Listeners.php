@@ -11,7 +11,7 @@ trait Listeners
 {
     public function getListeners(): array
     {
-        if (empty($this->columns) && method_exists($this, 'columns')) {
+        if (empty($this->columns)) {
             $this->columns = $this->columns();
         }
 
@@ -67,8 +67,10 @@ trait Listeners
 
     /**
      * Delegate to FlatpickrPlugin
+     *
+     * @param  mixed  ...$params
      */
-    public function datePickerChanged(...$params): void
+    public function datePickerChanged(mixed ...$params): void
     {
         $this->resolvePlugins();
 
@@ -79,8 +81,10 @@ trait Listeners
 
     /**
      * Delegate to EditablePlugin
+     *
+     * @param  mixed  ...$params
      */
-    public function inputTextChanged(...$params): void
+    public function inputTextChanged(mixed ...$params): void
     {
         $this->resolvePlugins();
 
@@ -91,8 +95,10 @@ trait Listeners
 
     /**
      * Delegate to ToggleablePlugin
+     *
+     * @param  mixed  ...$params
      */
-    public function toggleableChanged(...$params): void
+    public function toggleableChanged(mixed ...$params): void
     {
         $this->resolvePlugins();
 

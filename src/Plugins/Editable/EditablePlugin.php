@@ -45,7 +45,7 @@ class EditablePlugin extends PluginBase
     }
 
     #[On('pg:editable-{tableName}')]
-    public function inputTextChanged(...$params): void
+    public function inputTextChanged(mixed ...$params): void
     {
         // Livewire passes named parameters as positional args in declaration order
         // Expected: field, id, value

@@ -18,6 +18,7 @@ class FlatpickrPlugin extends PluginBase
     {
         $hasFilterInColumns = collect($this->component->columns)
             ->contains(function ($column) {
+                /** @var array<int, mixed> $filters */
                 $filters = data_get($column, 'filters', []);
 
                 return collect($filters)
@@ -38,26 +39,24 @@ class FlatpickrPlugin extends PluginBase
             });
 
         $hasFilterInFilters = false;
-        if (method_exists($this->component, 'filters')) {
-            $hasFilterInFilters = collect($this->component->filters())
-                ->contains(function ($filter) {
-                    $className = get_class($filter);
+        $hasFilterInFilters = collect($this->component->filters())
+            ->contains(function ($filter) {
+                $className = get_class($filter);
 
-                    return str_contains($className, 'FilterDatePicker') || str_contains($className, 'FilterDateTimePicker');
-                });
-        }
+                return str_contains($className, 'FilterDatePicker') || str_contains($className, 'FilterDateTimePicker');
+            });
 
         return $hasFilterInColumns || $hasFilterInFilters;
     }
 
     #[On('pg:datePicker-{tableName}')]
-    public function datePickerChanged(...$params): void
+    public function datePickerChanged(mixed ...$params): void
     {
         [$field, $selectedDates, $dateStr, $label, $type, $timezone, $dateFormat] = $params;
 
         ds(get_defined_vars());
 
-        if (! isset($selectedDates[1])) {
+        if (! is_array($selectedDates) || ! isset($selectedDates[1])) {
             return;
         }
 

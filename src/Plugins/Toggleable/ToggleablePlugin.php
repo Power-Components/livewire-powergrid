@@ -40,7 +40,7 @@ class ToggleablePlugin extends PluginBase
     }
 
     #[On('pg:toggleable-{tableName}')]
-    public function toggleableChanged(...$params): void
+    public function toggleableChanged(mixed ...$params): void
     {
         [$field, $id, $value] = $params;
 

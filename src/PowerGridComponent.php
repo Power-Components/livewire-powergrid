@@ -70,6 +70,11 @@ class PowerGridComponent extends Component
         }
     }
 
+    /**
+     * @param  string  $method
+     * @param  array<int, mixed>  $parameters
+     * @return mixed
+     */
     public function __call($method, $parameters)
     {
         $this->resolvePlugins();
