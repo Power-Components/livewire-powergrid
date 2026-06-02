@@ -85,7 +85,18 @@ class Macros
         Column::macro('searchableJson', function (string $tableName): Column {
             $this->rawQueries[] = [
                 'method' => 'orWhereRaw',
-                'sql' => $tableName ? "LOWER(`$tableName`.`$this->dataField`) like ?" : "LOWER(`$this->dataField`) like ?",
+                'sql' => function () use ($tableName) {
+                    $driver = config('database.default');
+                    $connection = config("database.connections.{$driver}.driver");
+                    
+                    $quote = $connection === 'pgsql' ? '"' : '`';
+                    
+                    if ($tableName) {
+                        return "LOWER({$quote}{$tableName}{$quote}.{$quote}{$this->dataField}{$quote}) like ?";
+                    }
+                    
+                    return "LOWER({$quote}{$this->dataField}{$quote}) like ?";
+                },
                 'bindings' => [function (PowerGridComponent $component) {
                     $search = htmlspecialchars($component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 

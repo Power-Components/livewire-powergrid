@@ -62,9 +62,14 @@ it('tests Column withMax macro', function () {
 });
 
 it('tests Column searchableRaw macro', function () {
+    $driver = env('DB_DRIVER', config('database.default'));
+    $searchSql = $driver === 'pgsql' ? 'LOWER(name::text) ilike ?' : 'LOWER(name) like ?';
+
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-searchable-raw';
+
+        public static string $searchSql = '';
 
         public function datasource()
         {
@@ -82,10 +87,12 @@ it('tests Column searchableRaw macro', function () {
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw('LOWER(name) like ?'),
+                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
             ];
         }
     };
+
+    $component::$searchSql = $searchSql;
 
     Livewire::test($component::class)
         ->set('search', 'Peixada')
@@ -93,9 +100,14 @@ it('tests Column searchableRaw macro', function () {
 });
 
 it('tests Column searchableRaw macro with beforeSearch method', function () {
+    $driver = env('DB_DRIVER', config('database.default'));
+    $searchSql = $driver === 'pgsql' ? 'LOWER(name::text) ilike ?' : 'LOWER(name) like ?';
+
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-searchable-raw-before';
+
+        public static string $searchSql = '';
 
         public function datasource()
         {
@@ -113,7 +125,7 @@ it('tests Column searchableRaw macro with beforeSearch method', function () {
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw('LOWER(name) like ?'),
+                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
             ];
         }
 
@@ -123,6 +135,8 @@ it('tests Column searchableRaw macro with beforeSearch method', function () {
         }
     };
 
+    $component::$searchSql = $searchSql;
+
     $livewire = Livewire::test($component::class)
         ->set('search', 'peixada');
 
@@ -130,9 +144,14 @@ it('tests Column searchableRaw macro with beforeSearch method', function () {
 });
 
 it('tests Column searchableRaw macro with field-specific beforeSearch method', function () {
+    $driver = env('DB_DRIVER', config('database.default'));
+    $searchSql = $driver === 'pgsql' ? 'LOWER(name::text) ilike ?' : 'LOWER(name) like ?';
+
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-searchable-raw-field-before';
+
+        public static string $searchSql = '';
 
         public function datasource()
         {
@@ -150,7 +169,7 @@ it('tests Column searchableRaw macro with field-specific beforeSearch method', f
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw('LOWER(name) like ?'),
+                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
             ];
         }
 
@@ -159,6 +178,8 @@ it('tests Column searchableRaw macro with field-specific beforeSearch method', f
             return str_replace('test', 'replaced', $search);
         }
     };
+
+    $component::$searchSql = $searchSql;
 
     $livewire = Livewire::test($component::class)
         ->set('search', 'test');
@@ -175,7 +196,13 @@ it('tests Column searchableJson macro', function () {
         ->and($column->rawQueries[0])
         ->toHaveKeys(['method', 'sql', 'bindings', 'enabled'])
         ->method->toBe('orWhereRaw')
-        ->sql->toBe('LOWER(`dishes`.`name`) like ?');
+        ->and($column->rawQueries[0]['sql'])->toBeInstanceOf(Closure::class);
+
+    $sql = $column->rawQueries[0]['sql']();
+    $driver = config("database.connections.".config('database.default').".driver");
+    $quote = $driver === 'pgsql' ? '"' : '`';
+
+    expect($sql)->toBe("LOWER({$quote}dishes{$quote}.{$quote}name{$quote}) like ?");
 });
 
 it('tests Column searchableJson macro without table name', function () {
@@ -184,8 +211,13 @@ it('tests Column searchableJson macro without table name', function () {
     expect($column->rawQueries)
         ->toBeArray()
         ->toHaveCount(1)
-        ->and($column->rawQueries[0])
-        ->sql->toBe('LOWER(`name`) like ?');
+        ->and($column->rawQueries[0]['sql'])->toBeInstanceOf(Closure::class);
+
+    $sql = $column->rawQueries[0]['sql']();
+    $driver = config("database.connections.".config('database.default').".driver");
+    $quote = $driver === 'pgsql' ? '"' : '`';
+
+    expect($sql)->toBe("LOWER({$quote}name{$quote}) like ?");
 });
 
 it('tests Column naturalSort macro', function () {
@@ -495,7 +527,10 @@ it('tests Column with multiple summarize macros', function () {
 });
 
 it('tests searchableRaw closure bindings are executed', function () {
-    $column = Column::make('Name', 'name')->searchableRaw('LOWER(name) like ?');
+    $driver = env('DB_DRIVER', config('database.default'));
+    $searchSql = $driver === 'pgsql' ? 'LOWER(name::text) ilike ?' : 'LOWER(name) like ?';
+
+    $column = Column::make('Name', 'name')->searchableRaw($searchSql);
 
     expect($column->rawQueries[0]['bindings'])
         ->toBeArray()
@@ -513,7 +548,10 @@ it('tests searchableJson closure bindings are executed', function () {
 });
 
 it('tests searchableRaw enabled closure', function () {
-    $column = Column::make('Name', 'name')->searchableRaw('LOWER(name) like ?');
+    $driver = env('DB_DRIVER', config('database.default'));
+    $searchSql = $driver === 'pgsql' ? 'LOWER(name::text) ilike ?' : 'LOWER(name) like ?';
+
+    $column = Column::make('Name', 'name')->searchableRaw($searchSql);
 
     expect($column->rawQueries[0]['enabled'])->toBeInstanceOf(Closure::class);
 });

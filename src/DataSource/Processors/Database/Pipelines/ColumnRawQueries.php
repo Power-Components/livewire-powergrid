@@ -53,10 +53,14 @@ class ColumnRawQueries
         }
     }
 
-    private function resolvePlaceholders(?string $sql): ?string
+    private function resolvePlaceholders(string|Closure|null $sql): ?string
     {
         if (is_null($sql)) {
             return null;
+        }
+
+        if ($sql instanceof Closure) {
+            $sql = $sql();
         }
 
         return preg_replace_callback('/\{(\w+)\}/', function ($matches) {
