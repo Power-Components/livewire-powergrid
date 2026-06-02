@@ -88,13 +88,13 @@ class Macros
                 'sql' => function () use ($tableName) {
                     $driver = config('database.default');
                     $connection = config("database.connections.{$driver}.driver");
-                    
+
                     $quote = $connection === 'pgsql' ? '"' : '`';
-                    
+
                     if ($tableName) {
                         return "LOWER({$quote}{$tableName}{$quote}.{$quote}{$this->dataField}{$quote}) like ?";
                     }
-                    
+
                     return "LOWER({$quote}{$this->dataField}{$quote}) like ?";
                 },
                 'bindings' => [function (PowerGridComponent $component) {

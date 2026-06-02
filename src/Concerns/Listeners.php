@@ -67,8 +67,6 @@ trait Listeners
 
     /**
      * Delegate to FlatpickrPlugin
-     *
-     * @param  mixed  ...$params
      */
     public function datePickerChanged(mixed ...$params): void
     {
@@ -81,8 +79,6 @@ trait Listeners
 
     /**
      * Delegate to EditablePlugin
-     *
-     * @param  mixed  ...$params
      */
     public function inputTextChanged(mixed ...$params): void
     {
@@ -95,8 +91,6 @@ trait Listeners
 
     /**
      * Delegate to ToggleablePlugin
-     *
-     * @param  mixed  ...$params
      */
     public function toggleableChanged(mixed ...$params): void
     {

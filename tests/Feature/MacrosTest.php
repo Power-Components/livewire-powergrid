@@ -87,7 +87,7 @@ it('tests Column searchableRaw macro', function () {
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
+                Column::make('Name', 'name')->searchableRaw(self::$searchSql),
             ];
         }
     };
@@ -125,7 +125,7 @@ it('tests Column searchableRaw macro with beforeSearch method', function () {
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
+                Column::make('Name', 'name')->searchableRaw(self::$searchSql),
             ];
         }
 
@@ -169,7 +169,7 @@ it('tests Column searchableRaw macro with field-specific beforeSearch method', f
         {
             return [
                 Column::make('Id', 'id'),
-                Column::make('Name', 'name')->searchableRaw(static::$searchSql),
+                Column::make('Name', 'name')->searchableRaw(self::$searchSql),
             ];
         }
 
@@ -199,7 +199,7 @@ it('tests Column searchableJson macro', function () {
         ->and($column->rawQueries[0]['sql'])->toBeInstanceOf(Closure::class);
 
     $sql = $column->rawQueries[0]['sql']();
-    $driver = config("database.connections.".config('database.default').".driver");
+    $driver = config('database.connections.'.config('database.default').'.driver');
     $quote = $driver === 'pgsql' ? '"' : '`';
 
     expect($sql)->toBe("LOWER({$quote}dishes{$quote}.{$quote}name{$quote}) like ?");
@@ -214,7 +214,7 @@ it('tests Column searchableJson macro without table name', function () {
         ->and($column->rawQueries[0]['sql'])->toBeInstanceOf(Closure::class);
 
     $sql = $column->rawQueries[0]['sql']();
-    $driver = config("database.connections.".config('database.default').".driver");
+    $driver = config('database.connections.'.config('database.default').'.driver');
     $quote = $driver === 'pgsql' ? '"' : '`';
 
     expect($sql)->toBe("LOWER({$quote}name{$quote}) like ?");
