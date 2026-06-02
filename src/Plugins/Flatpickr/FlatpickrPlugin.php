@@ -53,7 +53,7 @@ class FlatpickrPlugin extends PluginBase
     public function datePickerChanged(mixed ...$params): void
     {
         [$field, $selectedDates, $dateStr, $label, $type, $timezone, $dateFormat] = $params;
-        
+
         if (! is_array($selectedDates) || ! isset($selectedDates[1])) {
             return;
         }
