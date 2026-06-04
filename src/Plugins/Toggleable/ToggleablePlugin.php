@@ -4,11 +4,49 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Toggleable;
 
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleManager, RuleToggleable};
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use stdClass;
 
 class ToggleablePlugin extends PluginBase
 {
+    public static function boot(): void
+    {
+        Column::macro('toggleable', function (
+            bool $hasPermission = true,
+            string $trueLabel = 'Yes',
+            string $falseLabel = 'No',
+        ): Column {
+            /** @var Column $this */
+            $this->pluginData['editable'] = [];
+            $this->pluginData['toggleable'] = [
+                'enabled' => $hasPermission,
+                'default' => [$trueLabel, $falseLabel],
+            ];
+
+            return $this;
+        });
+
+        RuleManager::registerModifiers(static::ruleModifiers());
+
+        RuleManager::macro('toggleable', function (string $column): RuleToggleable {
+            return new RuleToggleable($column);
+        });
+    }
+
+    public static function ruleModifiers(): array
+    {
+        return ['toggleableVisibility', 'fieldHideToggleable'];
+    }
+
+    public function processRuleModifiers(array $rule, bool $apply): array
+    {
+        return [
+            'toggleableVisibility' => $apply ? data_get($rule, 'rule.toggleableVisibility') : [],
+            'fieldHideToggleable' => $apply && (bool) data_get($rule, 'rule.fieldHideToggleable'),
+        ];
+    }
+
     public function name(): string
     {
         return 'toggleable';
@@ -17,12 +55,12 @@ class ToggleablePlugin extends PluginBase
     public function isEnabled(): bool
     {
         return collect($this->component->columns)
-            ->contains(fn ($column) => ! empty(data_get($column, 'toggleable')));
+            ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.toggleable')));
     }
 
     public function handles(Column|array $column): bool
     {
-        return ! empty(data_get($column, 'toggleable'));
+        return ! empty(data_get($column, 'pluginData.toggleable'));
     }
 
     public function render(Column|array $column, mixed $row): ?string
@@ -49,7 +87,7 @@ class ToggleablePlugin extends PluginBase
 
     private function shouldShowToggleable(stdClass|Column|array $column, mixed $row): bool
     {
-        $showToggleable = boolval(data_get($column, 'toggleable.enabled', false));
+        $showToggleable = boolval(data_get($column, 'pluginData.toggleable.enabled', false));
 
         $toggleableRowRules = data_get(
             collect((array) data_get($row, '__powergrid_rules'))

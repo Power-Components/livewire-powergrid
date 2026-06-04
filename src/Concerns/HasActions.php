@@ -39,13 +39,16 @@ trait HasActions
                         ? data_get($rule, 'rule.toggleDetailVisibility') === 'show'
                         : (bool) data_get($this->setUp, 'detail.showCollapseIcon');
 
-                    $toggleableVisibility = $apply ? data_get($rule, 'rule.toggleableVisibility') : [];
-                    $editOnClickVisibility = $apply ? data_get($rule, 'rule.editOnClickVisibility') : [];
-                    $fieldHideEditOnClick = $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick');
-                    $fieldHideToggleable = $apply && (bool) data_get($rule, 'rule.fieldHideToggleable');
                     $disabled = $apply && (bool) data_get($rule, 'rule.disable');
                     $hide = $apply && (bool) data_get($rule, 'rule.hide');
                     $detailView = (array) data_get($rule, 'rule.detailView', []);
+
+                    // Collect plugin rule modifiers dynamically
+                    $pluginModifiers = [];
+                    $this->resolvePlugins();
+                    foreach ($this->plugins as $plugin) {
+                        $pluginModifiers = array_merge($pluginModifiers, $plugin->processRuleModifiers((array) $rule, $apply));
+                    }
 
                     if ($apply || $applyLoop) {
                         return [
@@ -55,17 +58,14 @@ trait HasActions
                             'attributes' => $attributes,
                             'disable' => $disabled,
                             'hide' => $hide,
-                            'toggleableVisibility' => $toggleableVisibility,
                             'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
-                            'editOnClickVisibility' => $editOnClickVisibility,
-                            'fieldHideEditOnClick' => $fieldHideEditOnClick,
-                            'fieldHideToggleable' => $fieldHideToggleable,
+                            ...$pluginModifiers,
                             ...$detailView,
                         ];
                     }
 
                     return [
-                        'toggleableVisibility' => $toggleableVisibility,
+                        ...$pluginModifiers,
                         'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
                     ];
                 })

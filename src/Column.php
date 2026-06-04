@@ -68,9 +68,7 @@ final class Column implements Wireable
 
     public string $bodyStyle = '';
 
-    public array $toggleable = [];
-
-    public array $editable = [];
+    public array $pluginData = [];
 
     public mixed $filters = null;
 
@@ -241,45 +239,6 @@ final class Column implements Wireable
     public function visibleInExport(?bool $visible): Column
     {
         $this->visibleInExport = $visible;
-
-        return $this;
-    }
-
-    /**
-     * Adds Edit on click to a column
-     */
-    public function editOnClick(
-        bool $hasPermission = true,
-        string $dataField = '',
-        ?string $fallback = null,
-        bool $saveOnMouseOut = false
-    ): Column {
-        $this->editable = [
-            'hasPermission' => $hasPermission,
-            'fallback' => $fallback,
-            'saveOnMouseOut' => $saveOnMouseOut,
-        ];
-
-        if (filled($dataField)) {
-            $this->dataField = $dataField;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Adds Toggle to a column
-     */
-    public function toggleable(
-        bool $hasPermission = true,
-        string $trueLabel = 'Yes',
-        string $falseLabel = 'No',
-    ): Column {
-        $this->editable = [];
-        $this->toggleable = [
-            'enabled' => $hasPermission,
-            'default' => [$trueLabel,  $falseLabel],
-        ];
 
         return $this;
     }

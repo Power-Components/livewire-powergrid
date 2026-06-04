@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
+use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\Components\ThemeBuilder;
 
 abstract class Theme
@@ -48,12 +49,21 @@ abstract class Theme
                 $tokens = array_replace_recursive($parentTokens, $tokens);
             }
 
-            foreach (['filter', 'editable', 'toggleable'] as $method) {
+            // Merge theme-level method overrides (e.g. filter())
+            foreach ($this->themeTokenMethods() as $method) {
                 if (method_exists($this, $method)) {
                     $extra = $this->{$method}();
                     if (! empty($extra)) {
                         $tokens = array_replace_recursive($tokens, $extra);
                     }
+                }
+            }
+
+            // Merge plugin-contributed theme tokens
+            foreach (PowerGridManager::$plugins as $plugin) {
+                $pluginTokens = $plugin::themeTokens();
+                if (! empty($pluginTokens)) {
+                    $tokens = array_replace_recursive($tokens, $pluginTokens);
                 }
             }
 
@@ -158,6 +168,15 @@ abstract class Theme
         }
 
         return strval($value);
+    }
+
+    /**
+     * Returns theme token method names that this theme class provides.
+     * Override in subclasses to add custom token providers.
+     */
+    protected function themeTokenMethods(): array
+    {
+        return ['filter', 'editable', 'toggleable'];
     }
 
     public function editable(): array

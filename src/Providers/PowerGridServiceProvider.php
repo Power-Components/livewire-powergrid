@@ -74,6 +74,10 @@ class PowerGridServiceProvider extends ServiceProvider
         Macros::actions();
         Macros::builder();
 
+        foreach (PowerGridManager::$plugins as $plugin) {
+            $plugin::boot();
+        }
+
         $this->app->bind(SearchHandlerContract::class, function ($app, array $params) {
             return new SearchHandler($params['component']);
         });

@@ -19,6 +19,33 @@ abstract class PluginBase implements Wireable
         return new static($component);
     }
 
+    /**
+     * Boot the plugin (register macros, rule types, theme tokens, etc).
+     * Called once at service provider level.
+     */
+    public static function boot(): void {}
+
+    /**
+     * Return the rule modifiers this plugin contributes to the rules engine.
+     * Override in your plugin to register custom modifiers.
+     *
+     * @return array<string>
+     */
+    public static function ruleModifiers(): array
+    {
+        return [];
+    }
+
+    /**
+     * Process rule data for the row. Plugins can extract their own
+     * visibility/modifier data from the formatted rules array.
+     * Returns key-value pairs to merge into the row's __powergrid_rules entry.
+     */
+    public function processRuleModifiers(array $rule, bool $apply): array
+    {
+        return [];
+    }
+
     abstract public function name(): string;
 
     abstract public function isEnabled(): bool;
@@ -31,6 +58,15 @@ abstract class PluginBase implements Wireable
     public function render(Column|array $column, mixed $row): ?string
     {
         return null;
+    }
+
+    /**
+     * Return theme token overrides for this plugin.
+     * Merged into the theme's resolved tokens.
+     */
+    public static function themeTokens(): array
+    {
+        return [];
     }
 
     public function toLivewire(): array

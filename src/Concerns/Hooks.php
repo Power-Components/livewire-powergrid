@@ -6,9 +6,31 @@ use Illuminate\Support\Collection;
 
 trait Hooks
 {
-    public function onUpdatedEditable(string|int $id, string $field, string $value): void {}
+    /**
+     * Generic plugin hook. Called by plugins when they process updates.
+     * Override in your component to handle plugin events.
+     *
+     * @param  string  $plugin  Plugin name (e.g., 'editable', 'toggleable')
+     * @param  string  $event  Event name (e.g., 'updated')
+     * @param  array  $params  Event parameters [id, field, value, ...]
+     */
+    public function onPluginUpdated(string $plugin, string $event, array $params): void {}
 
-    public function onUpdatedToggleable(string $id, string $field, string $value): void {}
+    /**
+     * @deprecated Use onPluginUpdated('editable', 'updated', [...]) instead
+     */
+    public function onUpdatedEditable(string|int $id, string $field, string $value): void
+    {
+        $this->onPluginUpdated('editable', 'updated', compact('id', 'field', 'value'));
+    }
+
+    /**
+     * @deprecated Use onPluginUpdated('toggleable', 'updated', [...]) instead
+     */
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
+    {
+        $this->onPluginUpdated('toggleable', 'updated', compact('id', 'field', 'value'));
+    }
 
     public function afterChangedMultiSelectFilter(string $field, array $values): void {}
 

@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 class RuleToggleable extends BaseRule
 {
-    public string $forAction = RuleManager::TYPE_TOGGLEABLE;
+    public string $forAction = 'pg:toggleable';
 
     public function __construct(public string $column)
     {

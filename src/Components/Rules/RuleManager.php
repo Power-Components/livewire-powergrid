@@ -2,15 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
+use Illuminate\Support\Traits\Macroable;
+
 class RuleManager
 {
+    use Macroable;
+
     public const TYPE_ACTIONS = 'actions';
 
     public const TYPE_ROWS = 'pg:rows';
-
-    public const TYPE_TOGGLEABLE = 'pg:toggleable';
-
-    public const TYPE_EDIT_ON_CLICK = 'pg:editOnClick';
 
     public const TYPE_CHECKBOX = 'pg:checkbox';
 
@@ -18,9 +18,25 @@ class RuleManager
 
     public const TYPE_COLUMN = 'pg:column';
 
+    /**
+     * Rule modifiers registered by plugins.
+     */
+    protected static array $pluginModifiers = [];
+
+    /**
+     * Register rule modifiers from a plugin.
+     */
+    public static function registerModifiers(array $modifiers): void
+    {
+        static::$pluginModifiers = array_merge(static::$pluginModifiers, $modifiers);
+    }
+
     public static function applicableModifiers(): array
     {
-        return ['bladeComponent', 'detailView', 'disable', 'dispatch', 'dispatchTo', 'emit', 'hide', 'loop', 'redirect', 'rowClasses', 'setAttribute', 'slot', 'toggleableVisibility', 'toggleDetailVisibility', 'editOnClickVisibility', 'fieldHideEditOnClick', 'field_hide_toggleable'];
+        return array_merge(
+            ['bladeComponent', 'detailView', 'disable', 'dispatch', 'dispatchTo', 'emit', 'hide', 'loop', 'redirect', 'rowClasses', 'setAttribute', 'slot', 'toggleDetailVisibility'],
+            static::$pluginModifiers
+        );
     }
 
     public function button(string $button): RuleActions
@@ -31,16 +47,6 @@ class RuleManager
     public function rows(): RuleRows
     {
         return new RuleRows();
-    }
-
-    public function toggleable(string $column): RuleToggleable
-    {
-        return new RuleToggleable($column);
-    }
-
-    public function editOnClick(string $column): RuleEditOnClick
-    {
-        return new RuleEditOnClick($column);
     }
 
     public function checkbox(): RuleCheckbox

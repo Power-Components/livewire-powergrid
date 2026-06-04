@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules;
 
 class RuleEditOnClick extends BaseRule
 {
-    public string $forAction = RuleManager::TYPE_EDIT_ON_CLICK;
+    public string $forAction = 'pg:editOnClick';
 
     public function __construct(public string $column)
     {

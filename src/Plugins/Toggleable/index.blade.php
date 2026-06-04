@@ -10,8 +10,8 @@
 @php
     $value = (int) $row->{data_get($column, 'field')};
 
-    $trueValue = data_get($column, 'toggleable')['default'][0];
-    $falseValue = data_get($column, 'toggleable')['default'][1];
+    $trueValue = data_get($column, 'pluginData.toggleable')['default'][0];
+    $falseValue = data_get($column, 'pluginData.toggleable')['default'][1];
 @endphp
 
 @once

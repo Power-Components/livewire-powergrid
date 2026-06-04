@@ -9,6 +9,11 @@ use ReflectionClass;
 /** @codeCoverageIgnore */
 trait Listeners
 {
+    /**
+     * Maps plugin event names to [pluginName, methodName] for delegation.
+     */
+    private array $pluginListenerMap = [];
+
     public function getListeners(): array
     {
         if (empty($this->columns)) {
@@ -28,12 +33,63 @@ trait Listeners
                     $instance = $attribute->newInstance();
                     $event = str_replace('{tableName}', $this->tableName, $instance->event);
 
+                    $this->pluginListenerMap[$method->getName()] = $plugin->name();
                     $listeners[$event] = $method->getName();
                 }
             }
         }
 
         return $listeners;
+    }
+
+    /**
+     * Generic delegate for plugin listener methods.
+     * Livewire's Wrapped class requires method_exists(), so we override __call
+     * in PowerGridComponent. But since Wrapped bypasses __call, we provide
+     * explicit delegate methods for known plugin listener patterns.
+     */
+    public function delegateToPlugin(string $method, array $params): mixed
+    {
+        $this->resolvePlugins();
+
+        $pluginName = $this->pluginListenerMap[$method] ?? null;
+
+        if ($pluginName && isset($this->plugins[$pluginName])) {
+            return $this->plugins[$pluginName]->{$method}(...$params);
+        }
+
+        // Fallback: try all plugins
+        foreach ($this->plugins as $plugin) {
+            if (method_exists($plugin, $method)) {
+                return $plugin->{$method}(...$params);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Proxy for plugin listener: datePickerChanged
+     */
+    public function datePickerChanged(mixed ...$params): void
+    {
+        $this->delegateToPlugin('datePickerChanged', $params);
+    }
+
+    /**
+     * Proxy for plugin listener: inputTextChanged
+     */
+    public function inputTextChanged(mixed ...$params): void
+    {
+        $this->delegateToPlugin('inputTextChanged', $params);
+    }
+
+    /**
+     * Proxy for plugin listener: toggleableChanged
+     */
+    public function toggleableChanged(mixed ...$params): void
+    {
+        $this->delegateToPlugin('toggleableChanged', $params);
     }
 
     /**
@@ -63,41 +119,5 @@ trait Listeners
         }
 
         $this->dispatch('$commit')->self();
-    }
-
-    /**
-     * Delegate to FlatpickrPlugin
-     */
-    public function datePickerChanged(mixed ...$params): void
-    {
-        $this->resolvePlugins();
-
-        if (isset($this->plugins['flatpickr']) && method_exists($this->plugins['flatpickr'], 'datePickerChanged')) {
-            $this->plugins['flatpickr']->datePickerChanged(...$params);
-        }
-    }
-
-    /**
-     * Delegate to EditablePlugin
-     */
-    public function inputTextChanged(mixed ...$params): void
-    {
-        $this->resolvePlugins();
-
-        if (isset($this->plugins['editable']) && method_exists($this->plugins['editable'], 'inputTextChanged')) {
-            $this->plugins['editable']->inputTextChanged(...$params);
-        }
-    }
-
-    /**
-     * Delegate to ToggleablePlugin
-     */
-    public function toggleableChanged(mixed ...$params): void
-    {
-        $this->resolvePlugins();
-
-        if (isset($this->plugins['toggleable']) && method_exists($this->plugins['toggleable'], 'toggleableChanged')) {
-            $this->plugins['toggleable']->toggleableChanged(...$params);
-        }
     }
 }

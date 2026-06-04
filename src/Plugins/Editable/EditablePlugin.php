@@ -4,11 +4,56 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Editable;
 
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleEditOnClick, RuleManager};
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use stdClass;
 
 class EditablePlugin extends PluginBase
 {
+    public static function boot(): void
+    {
+        Column::macro('editOnClick', function (
+            bool $hasPermission = true,
+            string $dataField = '',
+            ?string $fallback = null,
+            bool $saveOnMouseOut = false,
+        ): Column {
+            /** @var Column $this */
+            $this->pluginData['editable'] = [
+                'hasPermission' => $hasPermission,
+                'fallback' => $fallback,
+                'saveOnMouseOut' => $saveOnMouseOut,
+            ];
+
+            if (filled($dataField)) {
+                $this->dataField = $dataField;
+            }
+
+            return $this;
+        });
+
+        // Register rule modifiers
+        RuleManager::registerModifiers(static::ruleModifiers());
+
+        // Register rule factory method on RuleManager
+        RuleManager::macro('editOnClick', function (string $column): RuleEditOnClick {
+            return new RuleEditOnClick($column);
+        });
+    }
+
+    public static function ruleModifiers(): array
+    {
+        return ['editOnClickVisibility', 'fieldHideEditOnClick'];
+    }
+
+    public function processRuleModifiers(array $rule, bool $apply): array
+    {
+        return [
+            'editOnClickVisibility' => $apply ? data_get($rule, 'rule.editOnClickVisibility') : [],
+            'fieldHideEditOnClick' => $apply && (bool) data_get($rule, 'rule.fieldHideEditOnClick'),
+        ];
+    }
+
     public function name(): string
     {
         return 'editable';
@@ -17,12 +62,12 @@ class EditablePlugin extends PluginBase
     public function isEnabled(): bool
     {
         return collect($this->component->columns)
-            ->contains(fn ($column) => ! empty(data_get($column, 'editable')));
+            ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.editable')));
     }
 
     public function handles(Column|array $column): bool
     {
-        return ! empty(data_get($column, 'editable'));
+        return ! empty(data_get($column, 'pluginData.editable'));
     }
 
     public function render(Column|array $column, mixed $row): ?string
@@ -35,7 +80,7 @@ class EditablePlugin extends PluginBase
                 'field' => data_get($column, 'dataField', data_get($column, 'field')),
                 'currentTable' => $this->component->currentTable,
                 'showErrorBag' => config('livewire-powergrid.show_error_bag'),
-                'editable' => data_get($column, 'editable'),
+                'editable' => data_get($column, 'pluginData.editable'),
                 'js' => file_get_contents(__DIR__.'/index.js'),
                 'css' => file_get_contents(__DIR__.'/index.css'),
             ])->render();
@@ -47,8 +92,6 @@ class EditablePlugin extends PluginBase
     #[On('pg:editable-{tableName}')]
     public function inputTextChanged(mixed ...$params): void
     {
-        // Livewire passes named parameters as positional args in declaration order
-        // Expected: field, id, value
         [$field, $id, $value] = $params;
 
         data_set($this->component, "$field.{$id}", $value);
@@ -60,7 +103,7 @@ class EditablePlugin extends PluginBase
 
     private function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool
     {
-        $hasPermission = boolval(data_get($column, 'editable.hasPermission', false));
+        $hasPermission = boolval(data_get($column, 'pluginData.editable.hasPermission', false));
 
         $editOnClickVisibility = data_get(
             collect((array) data_get($row, '__powergrid_rules'))

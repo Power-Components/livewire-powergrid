@@ -7,8 +7,6 @@ describe('RuleManager', function () {
     it('should have correct type constants', function () {
         expect(RuleManager::TYPE_ACTIONS)->toBe('actions')
             ->and(RuleManager::TYPE_ROWS)->toBe('pg:rows')
-            ->and(RuleManager::TYPE_TOGGLEABLE)->toBe('pg:toggleable')
-            ->and(RuleManager::TYPE_EDIT_ON_CLICK)->toBe('pg:editOnClick')
             ->and(RuleManager::TYPE_CHECKBOX)->toBe('pg:checkbox')
             ->and(RuleManager::TYPE_RADIO)->toBe('pg:radio')
             ->and(RuleManager::TYPE_COLUMN)->toBe('pg:column');
