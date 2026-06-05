@@ -93,11 +93,3 @@ Examples:
 3. **Follow the workflow:** Skills contain detailed step-by-step instructions -- follow them precisely
 4. **Use provided resources:** Skills may reference additional files (e.g., `REFERENCE.md`) in the same directory
 5. **Complete all steps:** Ensure all checklist items in the skill are completed before marking the task done
-
-### Registering New Skills
-
-To add a new skill:
-1. Create a directory in `.ai/skills/<skill-name>/`
-2. Add a `SKILL.md` file with YAML frontmatter (`name` and `description`) and Markdown instructions
-3. Optionally add reference materials as additional `.md` files in the same directory
-4. Document the skill in this section
