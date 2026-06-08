@@ -15,7 +15,7 @@ class Flux extends Theme
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
-                ->view('livewire-powergrid::components.themes.tailwind.header')
+                ->view('livewire-powergrid::components.themes.flux.header')
                 ->layout(fn (Components\Layout $layout) => $layout
                     ->container('mb-3 md:flex md:flex-row w-full justify-between items-center')
                     ->subContainer('md:flex md:flex-row w-full gap-1.5')
@@ -24,7 +24,7 @@ class Flux extends Theme
                 )
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('livewire-powergrid::components.themes.flux.header.search')
-                    ->container('flex flex-row mt-3 md:mt-0 w-full flex justify-start sm:justify-center md:justify-end')
+                    ->container('flex flex-row mt-2 md:mt-0 w-full justify-start sm:justify-center md:justify-end')
                     ->relativeMain('w-full md:w-4/12 lg:w-1/2')
                 )
             )
@@ -32,7 +32,7 @@ class Flux extends Theme
                 ->layout(fn (Components\Layout $layout) => $layout
                     ->container('rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
                     ->table('min-w-full')
-                    ->thead('bg-zinc-50 dark:bg-zinc-800')
+                    ->thead('bg-white dark:bg-white/10')
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
                     ->th('font-semibold px-3 py-3 text-left text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
                     ->thActions('font-semibold px-3 py-3 text-end text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
@@ -52,7 +52,7 @@ class Flux extends Theme
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('livewire-powergrid::components.themes.flux.footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex items-center gap-2 overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
+                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
                 )
                 ->pagination('pagination')
             );

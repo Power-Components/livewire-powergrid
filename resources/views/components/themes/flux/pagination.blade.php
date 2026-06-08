@@ -1,6 +1,6 @@
 @if($paginator->count() > 0)
     @if ($paginator->hasPages())
-        <flux:pagination :paginator="$paginator" class="justify-end! gap-2! border-t-0! pt-0!" />
+        <flux:pagination :paginator="$paginator" class="justify-between! md:justify-end! gap-2! border-t-0! pt-0!" scroll-to />
     @else
         @if($recordCount === 'full')
             <p class="{{ theme('pagination.count_text') }} ml-auto">

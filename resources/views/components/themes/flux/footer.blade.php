@@ -24,7 +24,7 @@
         @if (filled(data_get($setUp, 'footer.perPage')) &&
                 count(data_get($setUp, 'footer.perPageValues')) > 1 &&
                 blank(data_get($setUp, 'footer.pagination')))
-            <div class="flex flex-row justify-center md:justify-start mb-2 md:mb-0">
+            <div class="flex flex-row justify-center md:justify-start">
                 <flux:select
                     wire:model.live="setUp.footer.perPage"
                     size="sm"
@@ -43,7 +43,7 @@
             </div>
         @endif
 
-        <div class="min-w-0 flex-1">
+        <div class="min-w-0 w-full md:w-auto md:flex-1">
             @if (method_exists($__partial->records, 'links'))
                 {!! $__partial->records->links(data_get($setUp, 'footer.pagination') ?: theme_view('pagination'), [
                     'recordCount' => data_get($setUp, 'footer.recordCount'),
