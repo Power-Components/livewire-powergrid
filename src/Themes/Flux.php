@@ -52,7 +52,7 @@ class Flux extends Theme
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('livewire-powergrid::components.themes.flux.footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex items-center border border-t-0 rounded-b-lg border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
+                    ->container('flex items-center gap-2 overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
                 )
                 ->pagination('pagination')
             );
@@ -126,14 +126,6 @@ class Flux extends Theme
                 'count_wrapper' => 'flex items-center justify-between w-full gap-4',
                 'count_text' => 'text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap',
                 'count_value' => 'font-semibold text-zinc-700 dark:text-zinc-200',
-                'nav' => 'flex items-center',
-                'nav_buttons' => 'flex items-center bg-white border border-zinc-200 rounded-lg p-[1px] dark:bg-white/10 dark:border-white/10',
-                'nav_buttons_simple' => 'flex items-center bg-white border border-zinc-200 rounded-lg p-[1px] dark:bg-white/10 dark:border-white/10',
-                'button' => 'flex justify-center items-center size-7 rounded-md text-zinc-400 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/20 hover:text-zinc-800 dark:hover:text-white transition-colors cursor-pointer text-sm',
-                'button_disabled' => 'flex justify-center items-center size-7 rounded-md text-zinc-300 dark:text-zinc-500 cursor-not-allowed text-sm',
-                'button_text' => 'flex justify-center items-center px-2 h-7 rounded-md text-zinc-400 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/20 hover:text-zinc-800 dark:hover:text-white transition-colors cursor-pointer text-sm font-medium',
-                'page_active' => 'flex justify-center items-center h-7 px-2 rounded-md text-zinc-800 dark:text-white font-medium text-xs cursor-default',
-                'page_inactive' => 'flex justify-center items-center h-7 px-2 rounded-md text-zinc-400 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-white/20 hover:text-zinc-800 dark:hover:text-white transition-colors cursor-pointer text-xs font-medium',
             ],
         ]);
     }

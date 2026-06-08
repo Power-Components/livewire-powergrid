@@ -43,7 +43,7 @@
             </div>
         @endif
 
-        <div>
+        <div class="min-w-0 flex-1">
             @if (method_exists($__partial->records, 'links'))
                 {!! $__partial->records->links(data_get($setUp, 'footer.pagination') ?: theme_view('pagination'), [
                     'recordCount' => data_get($setUp, 'footer.recordCount'),
