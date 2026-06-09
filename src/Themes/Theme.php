@@ -11,6 +11,8 @@ abstract class Theme
 
     protected ?string $parentTheme = null;
 
+    protected static array $resolvedViews = [];
+
     public static function make(): static
     {
         return new static();
@@ -74,6 +76,20 @@ abstract class Theme
     }
 
     public function resolveView(string $alias): string
+    {
+        $cacheKey = static::class.'::'.$alias;
+
+        if (isset(static::$resolvedViews[$cacheKey])) {
+            return static::$resolvedViews[$cacheKey];
+        }
+
+        $resolved = $this->doResolveView($alias);
+        static::$resolvedViews[$cacheKey] = $resolved;
+
+        return $resolved;
+    }
+
+    protected function doResolveView(string $alias): string
     {
         $views = $this->views();
 

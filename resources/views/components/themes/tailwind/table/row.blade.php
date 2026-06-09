@@ -28,9 +28,56 @@
     'attribute' => $row->{$__partial->radioAttribute} ?? null,
 ])
 
-@includeWhen($__partial->checkbox && $__partial->checkboxAttribute, theme_view('table.checkbox-row'), [
-    'attribute' => $row->{$__partial->checkboxAttribute} ?? null,
-])
+{{-- Checkbox inline (optimized) --}}
+@if($__partial->checkbox && $__partial->checkboxAttribute)
+    @php
+        $checkboxAttribute = $row->{$__partial->checkboxAttribute} ?? null;
+        $inputAttributes = new \Illuminate\View\ComponentAttributeBag([
+            'class' => theme('table.checkbox.input'),
+        ]);
+
+        $rules = collect($row->__powergrid_rules)
+            ->where('apply', true)
+            ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_CHECKBOX)
+            ->last();
+
+        if (isset($rules['attributes'])) {
+            foreach ($rules['attributes'] as $key => $value) {
+                $inputAttributes = $inputAttributes->merge([$key => $value]);
+            }
+        }
+
+        $disable = (bool) data_get($rules, 'disable');
+        $hide = (bool) data_get($rules, 'hide');
+    @endphp
+
+    @if ($hide)
+        <td wire:key="checkbox-row-hide-{{ $checkboxAttribute }}" class="{{ theme('table.checkbox.th') }}"></td>
+    @elseif($disable)
+        <td wire:key="checkbox-row-disable-{{ $checkboxAttribute }}" class="{{ theme('table.checkbox.th') }}">
+            <div class="{{ theme('table.checkbox.base') }}">
+                <label class="{{ theme('table.checkbox.label') }}">
+                    <input {{ $inputAttributes }} disabled type="checkbox">
+                </label>
+            </div>
+        </td>
+    @else
+        <td wire:key="checkbox-row-{{ $checkboxAttribute }}" class="{{ theme('table.checkbox.th') }}">
+            <div class="{{ theme('table.checkbox.base') }}">
+                <label class="{{ theme('table.checkbox.label') }}">
+                    <input
+                        x-data="{}"
+                        type="checkbox"
+                        {{ $inputAttributes }}
+                        x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
+                        wire:model="checkboxValues"
+                        value="{{ $checkboxAttribute }}"
+                    >
+                </label>
+            </div>
+        </td>
+    @endif
+@endif
 
 @foreach ($__partial->visibleColumns as $column)
     @php

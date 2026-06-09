@@ -63,9 +63,13 @@ class ToggleablePlugin extends PluginBase
         return ! empty(data_get($column, 'pluginData.toggleable'));
     }
 
+    protected static ?string $cachedJs = null;
+
     public function render(Column|array $column, mixed $row): ?string
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
+
+        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js');
 
         return view('powergrid-plugins::Toggleable.index', [
             'tableName' => $this->component->tableName,
@@ -73,7 +77,7 @@ class ToggleablePlugin extends PluginBase
             'row' => $row,
             'column' => $column,
             'showToggleable' => $showToggleable,
-            'js' => file_get_contents(__DIR__.'/index.js'),
+            'js' => static::$cachedJs,
         ])->render();
     }
 

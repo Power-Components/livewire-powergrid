@@ -70,9 +70,16 @@ class EditablePlugin extends PluginBase
         return ! empty(data_get($column, 'pluginData.editable'));
     }
 
+    protected static ?string $cachedJs = null;
+
+    protected static ?string $cachedCss = null;
+
     public function render(Column|array $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
+            static::$cachedJs ??= file_get_contents(__DIR__.'/index.js');
+            static::$cachedCss ??= file_get_contents(__DIR__.'/index.css');
+
             return view('powergrid-plugins::Editable.index', [
                 'tableName' => $this->component->tableName,
                 'primaryKey' => $this->component->realPrimaryKey,
@@ -81,8 +88,8 @@ class EditablePlugin extends PluginBase
                 'currentTable' => $this->component->currentTable,
                 'showErrorBag' => config('livewire-powergrid.show_error_bag'),
                 'editable' => data_get($column, 'pluginData.editable'),
-                'js' => file_get_contents(__DIR__.'/index.js'),
-                'css' => file_get_contents(__DIR__.'/index.css'),
+                'js' => static::$cachedJs,
+                'css' => static::$cachedCss,
             ])->render();
         }
 

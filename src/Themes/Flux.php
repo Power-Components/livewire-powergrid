@@ -111,23 +111,27 @@ class Flux extends Theme
 
     public function resolveTokens(): array
     {
-        $tokens = parent::resolveTokens();
+        if (empty($this->tokens)) {
+            $tokens = parent::resolveTokens();
 
-        return array_replace_recursive($tokens, [
-            'table' => [
-                'body' => [
-                    'td' => [
-                        'actions_wrapper' => 'flex items-center gap-1 justify-end',
+            $this->tokens = array_replace_recursive($tokens, [
+                'table' => [
+                    'body' => [
+                        'td' => [
+                            'actions_wrapper' => 'flex items-center gap-1 justify-end',
+                        ],
                     ],
                 ],
-            ],
-            'pagination' => [
-                'wrapper' => 'flex items-center justify-between w-full',
-                'count_wrapper' => 'flex items-center justify-between w-full gap-4',
-                'count_text' => 'text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap',
-                'count_value' => 'font-semibold text-zinc-700 dark:text-zinc-200',
-            ],
-        ]);
+                'pagination' => [
+                    'wrapper' => 'flex items-center justify-between w-full',
+                    'count_wrapper' => 'flex items-center justify-between w-full gap-4',
+                    'count_text' => 'text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap',
+                    'count_value' => 'font-semibold text-zinc-700 dark:text-zinc-200',
+                ],
+            ]);
+        }
+
+        return $this->tokens;
     }
 
     private function input(): string

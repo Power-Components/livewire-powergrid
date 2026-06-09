@@ -13,6 +13,7 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
+use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Psr\SimpleCache\InvalidArgumentException;
 
@@ -47,6 +48,10 @@ class PowerGridComponent extends Component
 
     public function resolvePlugins(): void
     {
+        if (! empty($this->plugins)) {
+            return;
+        }
+
         $plugins = PowerGridManager::$plugins;
 
         foreach ($plugins as $plugin) {
@@ -112,6 +117,7 @@ class PowerGridComponent extends Component
             $themeInstance = $customTheme;
         }
 
+        ThemeManager::clearCache();
         app()->instance('powergrid.theme', $themeInstance);
     }
 

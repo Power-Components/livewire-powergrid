@@ -13,6 +13,8 @@ trait Listeners
 
     private ?string $lastDispatchedEvent = null;
 
+    private static array $reflectionCache = [];
+
     public function getListeners(): array
     {
         if (empty($this->columns)) {
@@ -24,24 +26,35 @@ trait Listeners
         $this->resolvePlugins();
 
         foreach ($this->plugins as $plugin) {
-            $reflection = new ReflectionClass($plugin);
-            foreach ($reflection->getMethods() as $method) {
-                $attributes = $method->getAttributes(On::class);
-                foreach ($attributes as $attribute) {
-                    /** @var On $instance */
-                    $instance = $attribute->newInstance();
-                    $event = str_replace('{tableName}', $this->tableName, $instance->event);
+            $pluginClass = get_class($plugin);
 
-                    $this->pluginListenerMap[$event] = [
-                        'plugin' => $plugin->name(),
-                        'method' => $method->getName(),
-                    ];
-
-                    if (method_exists($this, $method->getName())) {
-                        $listeners[$event] = $method->getName();
-                    } else {
-                        $listeners[$event] = 'pgPluginListener';
+            if (! isset(static::$reflectionCache[$pluginClass])) {
+                $reflection = new ReflectionClass($plugin);
+                $methods = [];
+                foreach ($reflection->getMethods() as $method) {
+                    $attributes = $method->getAttributes(On::class);
+                    foreach ($attributes as $attribute) {
+                        $methods[] = [
+                            'event' => $attribute->newInstance()->event,
+                            'method' => $method->getName(),
+                        ];
                     }
+                }
+                static::$reflectionCache[$pluginClass] = $methods;
+            }
+
+            foreach (static::$reflectionCache[$pluginClass] as $entry) {
+                $event = str_replace('{tableName}', $this->tableName, $entry['event']);
+
+                $this->pluginListenerMap[$event] = [
+                    'plugin' => $plugin->name(),
+                    'method' => $entry['method'],
+                ];
+
+                if (method_exists($this, $entry['method'])) {
+                    $listeners[$event] = $entry['method'];
+                } else {
+                    $listeners[$event] = 'pgPluginListener';
                 }
             }
         }
