@@ -28,7 +28,7 @@ trait Listeners
         foreach ($this->plugins as $plugin) {
             $pluginClass = get_class($plugin);
 
-            if (! isset(static::$reflectionCache[$pluginClass])) {
+            if (! isset(self::$reflectionCache[$pluginClass])) {
                 $reflection = new ReflectionClass($plugin);
                 $methods = [];
                 foreach ($reflection->getMethods() as $method) {
@@ -40,10 +40,10 @@ trait Listeners
                         ];
                     }
                 }
-                static::$reflectionCache[$pluginClass] = $methods;
+                self::$reflectionCache[$pluginClass] = $methods;
             }
 
-            foreach (static::$reflectionCache[$pluginClass] as $entry) {
+            foreach (self::$reflectionCache[$pluginClass] as $entry) {
                 $event = str_replace('{tableName}', $this->tableName, $entry['event']);
 
                 $this->pluginListenerMap[$event] = [
