@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\{Blade, Event};
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand, UpdateCommand};
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\Commands\GenerateThemeMetaCommand;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
@@ -26,7 +26,6 @@ class PowerGridServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([UpdateCommand::class]);
             $this->commands([PublishCommand::class]);
             $this->commands([CreateCommand::class]);
             $this->commands([GenerateThemeMetaCommand::class]);

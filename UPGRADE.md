@@ -49,7 +49,7 @@ class MyTable extends PowerGridComponent
 The following legacy features and themes have been completely removed. You must search your codebase and remove any configurations, imports, or files referencing them:
 
 1.  **Bootstrap 5 Theme:** The Bootstrap 5 PHP theme class (`src/Themes/Bootstrap5.php`) and its view templates have been deleted. Only **Tailwind**, **DaisyUI**, and **Flux** are supported natively.
-2.  **Third-Party Select Libraries:** Dependencies on third-party select scripts (e.g. TomSelect, Choices.js) have been discarded.
+2.  **Third-Party Select Libraries:** The CDN-based fallback for TomSelect/SlimSelect has been removed. The NPM-based integration (installed locally via `npm i tom-select` or `npm i slim-select`) remains supported.
 3.  **Lazy Loading API:**
     - `PowerGrid::lazy()` facade method has been removed
     - `LazyManager` trait removed from PowerGridComponent
