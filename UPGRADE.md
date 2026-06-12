@@ -20,28 +20,6 @@ PowerGrid 7.x requires new packages:
 composer require power-components/partials
 ```
 
-**Note:** The following dependencies are now required (previously optional):
-- `livewire/blaze` - UI component library
-
----
-
-### Per-Component Theme Override
-
-You can override the theme for individual components using the new `template()` method:
-
-```php
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Themes\DaisyUI;
-
-class MyTable extends PowerGridComponent
-{
-    public function template(): ?Theme
-    {
-        return new DaisyUI();
-    }
-}
-```
-
 ---
 
 ## 2. Removed Dependencies & Cleanup
@@ -561,6 +539,57 @@ In your custom Blade files, replace the legacy `theme_style` helper with the new
 <td class="{{ theme('table.layout.td') }}">...</td>
 ```
 
+### Step 5: Per-Component Theme Override
+
+The method for overriding the theme on a per-component basis has been renamed:
+
+```php
+// v6 — removed
+public function customThemeClass(): ?string
+{
+    return \App\PowerGridThemes\MyTheme::class;
+}
+
+// v7 — returns a Theme instance
+public function template(): ?Theme
+{
+    return new \App\PowerGridThemes\MyTheme();
+}
+```
+
+---
+
+## 5. Configuration File Changes
+
+The `config/livewire-powergrid.php` file has new and removed keys.
+
+### Removed Keys
+
+Remove these entries if present in your published config:
+
+```php
+// Remove — icon rendering is now inline via Blade
+'icon_resources' => [...],
+
+// Remove — Pulse integration removed
+'record_enabled' => env('POWERGRID_RECORD_ENABLED', false),
+```
+
+Also remove `POWERGRID_RECORD_ENABLED` from your `.env` file.
+
+### New Keys
+
+These keys are available in v7:
+
+```php
+// State persistence driver for both PowerGrid and PowerGrid Lite
+// Options: 'cookies' (default), 'session', 'cache'
+'persist_driver' => 'cookies',
+
+// Cache store name when using 'cache' as persist_driver (empty = default store)
+'persist_driver_store' => '',
+```
+
 ---
 
 ## 6. Blade Views & Layout Strategy
@@ -718,7 +747,108 @@ Views for plugins are loaded via the `powergrid-plugins` namespace. If overridin
 
 ---
 
-## 10. Testing Strategy
+## 10. PowerGrid Lite
+
+PowerGrid 7.x ships with a set of lightweight Blade components for building simple, themed tables without the full PowerGrid engine. No installation or configuration is required — components are registered automatically.
+
+### Available Components
+
+| Component | Props | Description |
+|-----------|-------|-------------|
+| `<x-pg-table>` | `:paginate`, `record-count` | Table wrapper. Renders the table skeleton and pagination via the active theme. |
+| `<x-pg-columns>` | `sticky` | `<thead>` wrapper with optional sticky positioning |
+| `<x-pg-column>` | `sortable`, `:sorted`, `:direction`, `field`, `align`, `sticky`, `checkbox` | `<th>` with optional sort icons or checkbox |
+| `<x-pg-rows>` | — | `<tbody>` wrapper |
+| `<x-pg-row>` | `:checkbox-value` | `<tr>` with optional checkbox column |
+| `<x-pg-cell>` | `align`, `sticky` | `<td>` with alignment and sticky support |
+
+> **Search and per-page are the user's responsibility.** Build them in your own Blade view and bind to `$search` and `$perPage` via `wire:model`. `<x-pg-table>` renders only the table structure and pagination.
+
+### Available Traits
+
+Add to your Livewire component as needed:
+
+| Trait | Namespace | Public Properties |
+|-------|-----------|-------------------|
+| `WithSorting` | `Lite\Traits` | `$sortField`, `$sortDirection`, `$multiSort`, `$sortArray` |
+| `WithSearch` | `Lite\Traits` | `$search` |
+| `WithCheckbox` | `Lite\Traits` | `$checkboxValues`, `$checkboxAll` |
+| `WithPersist` | `Lite\Traits` | — (config-driven, uses `$persist` array) |
+
+### Example
+
+```php
+use Livewire\Component;
+use PowerComponents\LivewirePowerGrid\Lite\Traits\{WithSorting, WithSearch, WithCheckbox};
+
+class UsersTable extends Component
+{
+    use WithSorting, WithSearch, WithCheckbox;
+
+    public function render()
+    {
+        return view('livewire.users-table', [
+            'users' => \App\Models\User::query()
+                ->when($this->search, fn ($q) => $q->where('name', 'like', "%{$this->search}%"))
+                ->orderBy($this->sortField ?: 'name', $this->sortDirection)
+                ->paginate(15),
+        ]);
+    }
+}
+```
+
+```blade
+{{-- Search and per-page are built by you, bound to $search and $perPage --}}
+<div class="flex items-center justify-between gap-3 mb-3">
+    <input wire:model.live.debounce.700ms="search" type="text" placeholder="Search..." />
+    <select wire:model.live="perPage">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+    </select>
+</div>
+
+{{-- Table renders structure + pagination via the active theme --}}
+<x-pg-table :paginate="$users" record-count="full">
+    <x-pg-columns>
+        <x-pg-column checkbox />
+        <x-pg-column sortable field="name"
+            :sorted="$this->isSorted('name')"
+            :direction="$this->sortDirectionFor('name')"
+            wire:click="sortBy('name')">
+            Name
+        </x-pg-column>
+        <x-pg-column align="end">Email</x-pg-column>
+    </x-pg-columns>
+
+    <x-pg-rows>
+        @foreach ($users as $user)
+            <x-pg-row :checkbox-value="$user->id">
+                <x-pg-cell>{{ $user->name }}</x-pg-cell>
+                <x-pg-cell align="end">{{ $user->email }}</x-pg-cell>
+            </x-pg-row>
+        @endforeach
+    </x-pg-rows>
+</x-pg-table>
+```
+
+### State Persistence with `WithPersist`
+
+Add `WithPersist` and declare a `$persist` array with the items to store:
+
+```php
+use WithSorting, WithPersist;
+
+public array $persist = ['sorting', 'perPage'];
+```
+
+Supported items: `sorting`, `checkbox`, `perPage`. The driver is configured via `persist_driver` in `config/livewire-powergrid.php`.
+
+> **No migration needed.** PowerGrid Lite is an additive feature — existing components are unaffected.
+
+---
+
+## 11. Testing Strategy
 
 If you write feature tests for your PowerGrid components:
 *   **Do Not Use Shared Fixtures:** Do not rely on shared component classes (like a global `DishesTable`) across your test suite.
@@ -737,7 +867,7 @@ If you write feature tests for your PowerGrid components:
 
 ---
 
-## 11. Pre-Migration Checklist
+## 12. Pre-Migration Checklist
 
 Before starting the upgrade, audit your codebase for affected areas:
 
@@ -784,7 +914,7 @@ grep -r "public function apply()" app/
 
 ---
 
-## 12. Migration Effort Estimates
+## 13. Migration Effort Estimates
 
 Plan your migration time based on project complexity:
 
@@ -809,7 +939,7 @@ Plan your migration time based on project complexity:
 
 ---
 
-## 13. Step-by-Step Migration Guide
+## 14. Step-by-Step Migration Guide
 
 Follow these steps in order:
 
@@ -824,7 +954,7 @@ composer show | grep power-components
 ```
 
 ### Step 2: Run Pre-Migration Audit (1-2 hours)
-Run all search commands from Section 11 to identify affected areas
+Run all search commands from Section 12 to identify affected areas
 
 ### Step 3: Migrate Custom Themes (4-8 hours each)
 Follow the detailed guide in Section 4
@@ -832,19 +962,22 @@ Follow the detailed guide in Section 4
 ### Step 4: Update Helper Functions (1-3 hours)
 Replace `theme_style()` with `theme()` in all Blade views (see Section 3)
 
-### Step 5: Update View Paths (1-2 hours)
+### Step 5: Update Configuration File (30 min)
+Remove deprecated keys and add new ones (see Section 5)
+
+### Step 6: Update View Paths (1-2 hours)
 Move views from `frameworks/` to `themes/` namespace (see Section 6)
 
-### Step 6: Migrate Lazy Loading (2-4 hours)
+### Step 7: Migrate Lazy Loading (2-4 hours)
 Convert to Livewire native lazy loading (see Section 7)
 
-### Step 7: Update Actions (1-2 hours)
+### Step 8: Update Actions (1-2 hours)
 Remove JavaScript dependencies on `window.pgActions` (see Section 8)
 
-### Step 8: Register Plugins (30 min)
+### Step 9: Register Plugins (30 min)
 Configure plugins in your service provider (see Section 9)
 
-### Step 9: Test Everything (varies)
+### Step 10: Test Everything (varies)
 - [ ] All tables render correctly
 - [ ] Filters work
 - [ ] Sorting works
@@ -855,12 +988,12 @@ Configure plugins in your service provider (see Section 9)
 - [ ] Lazy loading works
 - [ ] Editable/toggleable plugins work
 
-### Step 10: Update Tests (2-4 hours)
-Update feature tests to use runtime mini-components (see Section 10)
+### Step 11: Update Tests (2-4 hours)
+Update feature tests to use runtime mini-components (see Section 11)
 
 ---
 
-## 14. Troubleshooting
+## 15. Troubleshooting
 
 ### Common Issues
 
@@ -868,7 +1001,7 @@ Update feature tests to use runtime mini-components (see Section 10)
 **Solution:** Bootstrap5 theme was removed. Update your config to use Tailwind, DaisyUI, or Flux.
 
 #### "Call to undefined function theme_style()"
-**Solution:** Replace with `theme()` helper (see Section 4).
+**Solution:** Replace with `theme()` helper (see Section 3).
 
 #### "Call to undefined method lazy()"
 **Solution:** Migrate to Livewire native lazy loading (see Section 7).

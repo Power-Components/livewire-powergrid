@@ -36,7 +36,7 @@ class Tailwind extends Theme
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('rounded-t-lg relative border-x border-t border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
+                    ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
                     ->table('min-w-full dark:!bg-zinc-800')
                     ->thead('shadow-sm rounded-t-lg bg-zinc-100 dark:bg-zinc-900')
                     ->tr('border-b border-zinc-100 dark:border-zinc-600 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700')
@@ -71,7 +71,7 @@ class Tailwind extends Theme
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('border-x border-b rounded-b-lg border-b border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
+                    ->container('flex items-center px-3 py-2 border-x border-b rounded-b-lg border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
                     ->select('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
                 )
                 ->pagination('pagination')

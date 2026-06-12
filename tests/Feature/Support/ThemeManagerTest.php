@@ -3,7 +3,12 @@
 use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 use PowerComponents\LivewirePowerGrid\Themes\{Tailwind, Theme};
 
+beforeEach(fn () => ThemeManager::clearCache());
+
 it('resolves default value when no theme is bound', function () {
+    app()->forgetInstance('powergrid.theme');
+    app()->offsetUnset('powergrid.theme');
+
     expect(ThemeManager::theme('non.existent', 'default-value'))
         ->toBe('default-value');
 });

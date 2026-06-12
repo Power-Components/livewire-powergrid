@@ -30,7 +30,7 @@ class Flux extends Theme
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
+                    ->container('overflow-x-auto rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
                     ->table('min-w-full')
                     ->thead('bg-white dark:bg-white/10')
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')

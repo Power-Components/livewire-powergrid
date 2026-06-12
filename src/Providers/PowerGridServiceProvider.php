@@ -16,7 +16,9 @@ use PowerComponents\LivewirePowerGrid\{DataSource\Processors\Database\Handlers\S
     Livewire\Detail,
     PowerGridManager,
     Testing\TestActions};
+use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -35,14 +37,17 @@ class PowerGridServiceProvider extends ServiceProvider
             return "<?php echo theme($expression); ?>";
         });
 
-        //        $this->app->singleton('powergrid.theme', function ($app) {
-        //            $themeClass = strval(config('livewire-powergrid.theme'));
-        //
-        //            return $app->make($themeClass);
-        //        });
+        if (! $this->app->bound('powergrid.theme')) {
+            $this->app->singleton('powergrid.theme', function ($app) {
+                $themeClass = strval(config('livewire-powergrid.theme', Tailwind::class));
+
+                return $app->make($themeClass);
+            });
+        }
 
         $this->publishViews();
         $this->publishConfigs();
+        $this->registerLiteComponents();
         $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', $this->packageName);
 
         Testable::mixin(new TestActions());
@@ -104,5 +109,15 @@ class PowerGridServiceProvider extends ServiceProvider
         ], 'livewire-powergrid-config');
 
         $this->publishes([__DIR__.'/../../resources/lang' => lang_path('vendor/'.$this->packageName)], $this->packageName.'-lang');
+    }
+
+    private function registerLiteComponents(): void
+    {
+        Blade::component('pg-table', LiteComponents\Table::class);
+        Blade::component('pg-columns', LiteComponents\Columns::class);
+        Blade::component('pg-column', LiteComponents\Column::class);
+        Blade::component('pg-rows', LiteComponents\Rows::class);
+        Blade::component('pg-row', LiteComponents\Row::class);
+        Blade::component('pg-cell', LiteComponents\Cell::class);
     }
 }
