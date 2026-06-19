@@ -24,6 +24,7 @@ class ThemeBuilder
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
         $component = new Layout();
@@ -39,6 +40,7 @@ class ThemeBuilder
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function header(Closure|array $callback): self
     {
         $component = new Header();
@@ -58,6 +60,7 @@ class ThemeBuilder
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function table(Closure|array $callback): self
     {
         $component = new Table();
@@ -77,6 +80,7 @@ class ThemeBuilder
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function footer(Closure|array $callback): self
     {
         $component = new Footer();
@@ -96,6 +100,7 @@ class ThemeBuilder
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function cols(Closure|array $callback): self
     {
         $component = new Cols();

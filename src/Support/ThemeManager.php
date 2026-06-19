@@ -6,6 +6,7 @@ use PowerComponents\LivewirePowerGrid\Themes\{Tailwind, Theme};
 
 class ThemeManager
 {
+    /** @var array<string, string> */
     protected static array $tokenCache = [];
 
     public static function theme(string $key, string $default = ''): string

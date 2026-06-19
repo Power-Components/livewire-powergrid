@@ -72,6 +72,7 @@ class SearchHandler implements SearchHandlerContract
         }
     }
 
+    /** @param  array<string|int, mixed>  $columns */
     protected function filterNestedRelation(EloquentBuilder $query, string $table, array $columns, string $search): void
     {
         foreach ($columns as $nestedTable => $nestedColumns) {
@@ -113,6 +114,7 @@ class SearchHandler implements SearchHandlerContract
         }
     }
 
+    /** @return array<string, mixed> */
     protected function getColumnList(EloquentBuilder|QueryBuilder $query, string $modelTable): array
     {
         $connection = $query instanceof EloquentBuilder
@@ -131,6 +133,7 @@ class SearchHandler implements SearchHandlerContract
         }
     }
 
+    /** @param  Column|stdClass|array<string, mixed>  $column */
     protected function getDataField(Column|stdClass|array $column): string
     {
         return strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
@@ -151,6 +154,7 @@ class SearchHandler implements SearchHandlerContract
         return $search;
     }
 
+    /** @return array{0: mixed, 1: string} */
     protected function splitField(EloquentBuilder|QueryBuilder $query, string $field): array
     {
         $table = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();

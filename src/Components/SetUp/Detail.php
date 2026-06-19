@@ -10,8 +10,10 @@ final class Detail implements Wireable
 
     public string $view = '';
 
+    /** @var array<string, mixed> */
     public array $options = [];
 
+    /** @var array<string, mixed> */
     public array $state = [];
 
     public bool $showCollapseIcon = false;
@@ -27,7 +29,11 @@ final class Detail implements Wireable
         return $this;
     }
 
-    /** @deprecated - use params instead of options, it will deprecate in version 4 */
+    /**
+     * @deprecated - use params instead of options, it will deprecate in version 4
+     *
+     * @param  array<string, mixed>  $options
+     */
     public function options(array $options = []): Detail
     {
         $this->options = $options;
@@ -35,6 +41,7 @@ final class Detail implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $params */
     public function params(array $params = []): Detail
     {
         $this->options = $params;
@@ -57,6 +64,7 @@ final class Detail implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

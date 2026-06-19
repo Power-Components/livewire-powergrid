@@ -12,6 +12,7 @@ class FilterNumber extends FilterBase
 
     public string $decimal = '';
 
+    /** @var array{min?: string, max?: string} */
     public array $placeholder = [];
 
     public function thousands(string $thousands): FilterNumber
@@ -38,6 +39,10 @@ class FilterNumber extends FilterBase
         return $this;
     }
 
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return array<string, mixed>
+     */
     public static function getWireAttributes(string $field, array $filter): array
     {
         $configAttributes = config('livewire-powergrid.filter_attributes.number', Number::class);

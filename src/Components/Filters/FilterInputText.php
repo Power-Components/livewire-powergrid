@@ -8,10 +8,12 @@ class FilterInputText extends FilterBase
 {
     public string $key = 'input_text';
 
+    /** @var list<string> */
     public array $operators = [];
 
     public string $placeholder = '';
 
+    /** @var list<string> */
     private static array $inputTextOptions = [
         'contains',
         'contains_not',
@@ -27,6 +29,7 @@ class FilterInputText extends FilterBase
         'is_not_blank',
     ];
 
+    /** @param  list<string>  $value */
     public function operators(array $value = []): FilterInputText
     {
         if (! in_array('contains', $value)) {
@@ -38,6 +41,7 @@ class FilterInputText extends FilterBase
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public static function getWireAttributes(string $field, string $title): array
     {
         $configAttributes = config('livewire-powergrid.filter_attributes.input_text', InputText::class);
@@ -55,6 +59,7 @@ class FilterInputText extends FilterBase
         return $this;
     }
 
+    /** @return array<int, string> */
     public static function getInputTextOperators(): array
     {
         return self::$inputTextOptions;

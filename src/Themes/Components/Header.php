@@ -15,6 +15,7 @@ class Header
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
         $component = new Layout();
@@ -30,6 +31,7 @@ class Header
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function searchBox(Closure|array $callback): self
     {
         $component = new SearchBox();

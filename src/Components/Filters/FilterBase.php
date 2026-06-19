@@ -15,10 +15,12 @@ class FilterBase implements Wireable
 
     public string $component = '';
 
+    /** @var array<string, mixed> */
     public array $attributes = [];
 
     public string $baseClass = '';
 
+    /** @var array{relation?: string, field?: string} */
     public array $filterRelation = [];
 
     public mixed $defaultValue = null;
@@ -56,6 +58,7 @@ class FilterBase implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $attributes */
     public function component(string $component, array $attributes = []): self
     {
         $this->component = $component;
@@ -79,6 +82,7 @@ class FilterBase implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

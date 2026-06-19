@@ -6,6 +6,7 @@ use Illuminate\View\ComponentAttributeBag;
 
 class InputText
 {
+    /** @return array{inputAttributes: ComponentAttributeBag, selectAttributes: ComponentAttributeBag} */
     public function __invoke(string $field, string $title): array
     {
         return [

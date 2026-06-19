@@ -78,6 +78,7 @@ class Tailwind extends Theme
             );
     }
 
+    /** @return array<string, mixed> */
     public function editable(): array
     {
         return [
@@ -90,6 +91,7 @@ class Tailwind extends Theme
         ];
     }
 
+    /** @return array<string, mixed> */
     public function toggleable(): array
     {
         return [
@@ -99,6 +101,7 @@ class Tailwind extends Theme
         ];
     }
 
+    /** @return array<string, mixed> */
     public function filter(): array
     {
         return [

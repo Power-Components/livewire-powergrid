@@ -23,6 +23,7 @@ class RuleRows extends BaseRule
     /**
      * Sets the button's given attribute to the given value.
      */
+    /** @param  array<string, mixed>  $options */
     public function detailView(?string $detailView = null, array $options = []): self
     {
         $this->setModifier('detailView', [

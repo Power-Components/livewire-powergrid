@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\Computed;
-use PowerComponents\LivewirePowerGrid\{Facades\PowerGrid, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Components\Filters\FilterBase, Facades\PowerGrid, PowerGridFields};
 
 trait Base
 {
@@ -15,6 +15,7 @@ trait Base
 
     public string $tableName = '';
 
+    /** @var array<string, mixed> */
     public array $setUp = [];
 
     public bool $showErrorBag = false;
@@ -27,8 +28,10 @@ trait Base
 
     public string $loadingComponent = '';
 
+    /** @var list<mixed> */
     public array $columns = [];
 
+    /** @var list<mixed> */
     public array $headers = [];
 
     public string $search = '';
@@ -59,41 +62,49 @@ trait Base
         return null;
     }
 
+    /** @return array<string, list<string>> */
     public function relationSearch(): array
     {
         return [];
     }
 
+    /** @return array<string, string> */
     public function searchMorphs(): array
     {
         return [];
     }
 
+    /** @return list<mixed> */
     public function header(): array
     {
         return [];
     }
 
+    /** @return array<string, mixed> */
     public function setUp(): array
     {
         return [];
     }
 
+    /** @return list<mixed> */
     public function columns(): array
     {
         return [];
     }
 
+    /** @return list<FilterBase> */
     public function filters(): array
     {
         return [];
     }
 
+    /** @return array<string, mixed> */
     public function summarizeFormat(): array
     {
         return [];
     }
 
+    /** @return array<string, mixed> */
     public function rowTemplates(): array
     {
         return [];

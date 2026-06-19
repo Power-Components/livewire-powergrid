@@ -6,6 +6,7 @@ use Illuminate\View\ComponentAttributeBag;
 
 class Boolean
 {
+    /** @return array{selectAttributes: ComponentAttributeBag} */
     public function __invoke(string $field, string $title): array
     {
         return [

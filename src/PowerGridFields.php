@@ -9,6 +9,7 @@ final class PowerGridFields
 {
     use Macroable;
 
+    /** @var array<string, Closure> */
     public array $fields = [];
 
     /**

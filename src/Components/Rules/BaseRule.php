@@ -11,6 +11,7 @@ use Livewire\Wireable;
  */
 class BaseRule implements Wireable
 {
+    /** @var array<string, mixed> */
     public array $rule = [];
 
     public string $forAction = '';
@@ -37,6 +38,7 @@ class BaseRule implements Wireable
         $this->rule[$modifier] = $arguments;
     }
 
+    /** @param  array<string, mixed>  $argument */
     public function pushModifier(string $modifier, array $argument): void
     {
         if (isset($this->rule[$modifier]) && is_array($this->rule[$modifier])) {
@@ -48,6 +50,7 @@ class BaseRule implements Wireable
         $this->setModifier($modifier, [$argument]);
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

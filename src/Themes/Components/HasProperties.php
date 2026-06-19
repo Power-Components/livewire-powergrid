@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
 trait HasProperties
 {
+    /** @var array<string, mixed> */
     protected array $properties = [];
 
     protected ?string $baseView = null;
@@ -19,6 +20,7 @@ trait HasProperties
         return $this;
     }
 
+    /** @param  array<string, mixed>  $properties */
     public function fill(array $properties): self
     {
         foreach ($properties as $key => $value) {
@@ -28,6 +30,7 @@ trait HasProperties
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         $result = [];

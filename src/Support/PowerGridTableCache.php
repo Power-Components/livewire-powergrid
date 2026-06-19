@@ -13,6 +13,7 @@ final class PowerGridTableCache
 
     private static string $cachedTableTag = 'powergrid_columns_in_';
 
+    /** @return array<string, mixed> */
     public static function getOrCreate(string $tableName, callable $tableColumns): array
     {
         $tag = self::generateTag($tableName);

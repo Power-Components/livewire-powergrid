@@ -10,18 +10,22 @@ class FilterSelect extends FilterBase
 {
     public string $key = 'select';
 
+    /** @var array<int, mixed>|Collection<int, mixed>|Closure */
     public array|Collection|Closure $dataSource;
 
     public string $optionValue = '';
 
     public string $optionLabel = '';
 
+    /** @var list<string> */
     public array $depends = [];
 
+    /** @var array<string, mixed> */
     public array $params = [];
 
     public string $computedDatasource = '';
 
+    /** @param  list<string>  $fields */
     public function depends(array $fields): FilterSelect
     {
         $this->depends = $fields;
@@ -29,6 +33,7 @@ class FilterSelect extends FilterBase
         return $this;
     }
 
+    /** @param  Collection<int, mixed>|array<int, mixed>|Closure  $collection */
     public function dataSource(Collection|array|Closure $collection): FilterSelect
     {
         $this->dataSource = $collection;
@@ -57,6 +62,7 @@ class FilterSelect extends FilterBase
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public static function getWireAttributes(string $field, string $title): array
     {
         $configAttributes = config('livewire-powergrid.filter_attributes.select', Select::class);
@@ -67,6 +73,7 @@ class FilterSelect extends FilterBase
         return $class($field, $title);
     }
 
+    /** @param  array<string, mixed>  $params */
     public function params(array $params): FilterSelect
     {
         $this->params = $params;

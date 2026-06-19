@@ -15,6 +15,7 @@ class Export
 
     public string $striped = '';
 
+    /** @var array<string, mixed> */
     public array $columnWidth = [];
 
     /** @var array<Column> */
@@ -27,6 +28,7 @@ class Export
         return $this;
     }
 
+    /** @param  array<int, Column>  $columns */
     public function setData(array $columns, Collection $data): Export
     {
         $this->columns = $columns;
@@ -35,6 +37,10 @@ class Export
         return $this;
     }
 
+    /**
+     * @param  array<int, Column>  $columns
+     * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>}
+     */
     public function prepare(Collection $data, array $columns, bool $stripTags): array
     {
         $header = collect();
@@ -70,7 +76,7 @@ class Export
 
                 /** @var Column $column */
                 if ($column->visibleInExport || (! $column->hidden && is_null($column->visibleInExport)) && ! $isExportable) {
-                    /** @var array $row */
+                    /** @var array<string, mixed> $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
                             if ($stripTags === true) {

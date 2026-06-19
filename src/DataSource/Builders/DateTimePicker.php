@@ -9,6 +9,7 @@ use Illuminate\Support\{Carbon, Collection};
 
 class DateTimePicker extends BuilderBase
 {
+    /** @param  int|array{start: string, end: string}|string|null  $values */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (gettype($values) !== 'array') {
@@ -19,7 +20,7 @@ class DateTimePicker extends BuilderBase
             return;
         }
 
-        /** @var array $values */
+        /** @var array{start: string, end: string} $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values['start']),
             1 => Carbon::parse($values['end']),
@@ -37,13 +38,14 @@ class DateTimePicker extends BuilderBase
         $builder->whereBetween($field, [$startDate, $endDate]);
     }
 
+    /** @param  int|array{start: string, end: string}|string|null  $values */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (! isset($values['start']) && ! isset($values['end'])) {
             return $collection;
         }
 
-        /** @var array $values */
+        /** @var array{start: string, end: string} $values */
         [$startDate, $endDate] = [
             0 => Carbon::parse($values['start']),
             1 => Carbon::parse($values['end']),

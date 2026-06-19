@@ -7,6 +7,10 @@ use Illuminate\View\ComponentAttributeBag;
 
 class Number
 {
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return array{inputStartAttributes: ComponentAttributeBag, inputEndAttributes: ComponentAttributeBag}
+     */
     public function __invoke(string $field, array $filter): array
     {
         return [

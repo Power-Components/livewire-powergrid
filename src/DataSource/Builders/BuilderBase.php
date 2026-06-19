@@ -12,6 +12,9 @@ class BuilderBase
         return new self($component, $filterBase);
     }
 
+    /**
+     * @param  null|array<string, mixed>|FilterBase  $filterBase
+     */
     public function __construct(
         protected Component $component,
         protected null|array|FilterBase $filterBase = null

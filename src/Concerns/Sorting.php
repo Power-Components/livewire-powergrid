@@ -14,6 +14,7 @@ trait Sorting
 
     public bool $multiSort = false;
 
+    /** @var array<string, string> */
     public array $sortArray = [];
 
     /**

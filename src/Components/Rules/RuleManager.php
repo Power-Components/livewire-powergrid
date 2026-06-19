@@ -21,16 +21,19 @@ class RuleManager
     /**
      * Rule modifiers registered by plugins.
      */
+    /** @var list<string> */
     protected static array $pluginModifiers = [];
 
     /**
      * Register rule modifiers from a plugin.
      */
+    /** @param  list<string>  $modifiers */
     public static function registerModifiers(array $modifiers): void
     {
         static::$pluginModifiers = array_merge(static::$pluginModifiers, $modifiers);
     }
 
+    /** @return array<int, string> */
     public static function applicableModifiers(): array
     {
         return array_merge(

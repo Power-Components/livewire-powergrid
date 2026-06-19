@@ -13,8 +13,10 @@ final class Responsive implements Wireable
 
     public const CHECKBOX_COLUMN_NAME = 'checkbox';
 
+    /** @var list<string> */
     public array $fixedColumns = ['id', self::CHECKBOX_COLUMN_NAME, self::ACTIONS_COLUMN_NAME];
 
+    /** @var array<string, int> */
     public array $sortOrder = [];
 
     public function fixedColumns(string ...$columnNames): static
@@ -24,6 +26,7 @@ final class Responsive implements Wireable
         return $this;
     }
 
+    /** @param  string|list<string>  ...$columnNames */
     public function sortOrder(string|array ...$columnNames): static
     {
         if (is_array(data_get($columnNames, '0'))) {
@@ -43,6 +46,7 @@ final class Responsive implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

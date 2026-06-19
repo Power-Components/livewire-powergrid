@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use Illuminate\Support\Facades\Crypt;
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
 /** @codeCoverageIgnore */
@@ -19,8 +20,13 @@ class ExportJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    /** @var array<string, mixed> */
     private array $properties;
 
+    /**
+     * @param  array<int, Column>  $columns
+     * @param  array<string, mixed>  $params
+     */
     public function __construct(
         string $componentTable,
         array $columns,

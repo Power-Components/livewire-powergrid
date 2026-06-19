@@ -6,7 +6,7 @@ use Illuminate\Support\Traits\Macroable;
 
 /**
  * @method static disable()
- * @method static dispatch(string $event, array $params)
+ * @method static dispatch(string $event, array<string, mixed> $params)
  */
 class RuleActions extends BaseRule
 {
@@ -22,6 +22,7 @@ class RuleActions extends BaseRule
     /**
      * Sets the button's given attribute to the given value.
      */
+    /** @param  string|array<string, mixed>|null  $value */
     public function setAttribute(?string $attribute = null, string|array|null $value = null): self
     {
         $this->pushModifier('setAttribute', [
@@ -52,6 +53,7 @@ class RuleActions extends BaseRule
         return $this;
     }
 
+    /** @param  array<string, mixed>  $params */
     public function bladeComponent(string $component, array $params): self
     {
         $this->setModifier('bladeComponent', [

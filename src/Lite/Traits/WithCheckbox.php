@@ -6,6 +6,7 @@ trait WithCheckbox
 {
     public bool $checkboxAll = false;
 
+    /** @var list<string> */
     public array $checkboxValues = [];
 
     public string $checkboxAttribute = 'id';
@@ -36,6 +37,7 @@ trait WithCheckbox
         return in_array((string) $value, $this->checkboxValues, true);
     }
 
+    /** @return list<string> */
     public function getSelected(): array
     {
         return $this->checkboxValues;

@@ -7,15 +7,15 @@ use Illuminate\Support\Traits\Macroable;
 use Livewire\Wireable;
 
 /**
- * @method static dispatch(string $event, array $params)
- * @method static dispatchTo(string $component, string $event, array $params)
- * @method static dispatchSelf(string $event, array $params)
- * @method static openModal(string $component, array $params)
- * @method static parent(string $method, array $params)
- * @method static call(string $method, array $params)
+ * @method static dispatch(string $event, array<string, mixed> $params)
+ * @method static dispatchTo(string $component, string $event, array<string, mixed> $params)
+ * @method static dispatchSelf(string $event, array<string, mixed> $params)
+ * @method static openModal(string $component, array<string, mixed> $params)
+ * @method static parent(string $method, array<string, mixed> $params)
+ * @method static call(string $method, array<string, mixed> $params)
  * @method static toggleDetail(int|string $rowId)
  * @method static tooltip(string $value)
- * @method static route(string $route, array $params, string $target = '_self')
+ * @method static route(string $route, array<string, mixed> $params, string $target = '_self')
  * @method static method(string $method)
  * @method static target(string $target) _blank, _self, _top, _parent, null
  * @method static can(bool|Closure $closure = true)
@@ -31,6 +31,7 @@ final class Button implements Wireable
 
     public string $view = '';
 
+    /** @var array<string, mixed> */
     public array $attributes = [];
 
     public ?string $slot = '';
@@ -39,6 +40,7 @@ final class Button implements Wireable
 
     public ?string $icon = '';
 
+    /** @var array<string, mixed> */
     public array $iconAttributes = [];
 
     public bool|Closure $can = true;
@@ -77,6 +79,7 @@ final class Button implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $attributes */
     public function attributes(array $attributes): Button
     {
         $this->attributes = array_merge($attributes, $this->attributes);
@@ -84,6 +87,7 @@ final class Button implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $iconAttributes */
     public function icon(string $icon, array $iconAttributes = []): Button
     {
         $this->icon = $icon;
@@ -92,6 +96,7 @@ final class Button implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

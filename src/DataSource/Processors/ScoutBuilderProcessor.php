@@ -15,6 +15,10 @@ class ScoutBuilderProcessor extends DataSourceBase
         return $key instanceof ScoutBuilder;
     }
 
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array{results: mixed, transformTime: float}
+     */
     public function process(array $properties = [], mixed $datasource = null): array
     {
         /** @var ScoutBuilder $datasource */

@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class Boolean extends BuilderBase
 {
+    /** @param  int|array<string, mixed>|string|null  $values */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
@@ -35,6 +36,7 @@ class Boolean extends BuilderBase
         }
     }
 
+    /** @param  int|array<string, mixed>|string|null  $values */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {

@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 trait WithMultiSelectBuilder
 {
+    /** @param  list<string>|int|string|null  $values */
     public function builder(Builder|QueryBuilder $builder, string $field, array|int|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
@@ -33,6 +34,7 @@ trait WithMultiSelectBuilder
         $builder->whereIn($field, $values);
     }
 
+    /** @param  list<string>|int|string|null  $values */
     public function collection(Collection $collection, string $field, array|int|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {

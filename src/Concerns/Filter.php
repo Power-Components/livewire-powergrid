@@ -11,12 +11,16 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
 
 trait Filter
 {
+    /** @var array<string, array<string, mixed>> */
     public array $filters = [];
 
+    /** @var list<int|string> */
     public array $filtered = [];
 
+    /** @var list<array<string, string>> */
     public array $enabledFilters = [];
 
+    /** @var array<string, mixed> */
     public array $select = [];
 
     public bool $showFilters = false;
@@ -224,6 +228,11 @@ trait Filter
     /**
      * @throws Exception
      */
+    /**
+     * @param  list<string>  $values
+     *
+     * @throws Exception
+     */
     #[On('pg:multiSelect-{tableName}')]
     public function multiSelectChanged(
         string $field,
@@ -270,6 +279,8 @@ trait Filter
     }
 
     /**
+     * @param  array<string, mixed>  $params
+     *
      * @throws Exception
      */
     public function filterNumberStart(string $field, array $params, string $value): void
@@ -292,6 +303,8 @@ trait Filter
     }
 
     /**
+     * @param  array<string, mixed>  $params
+     *
      * @throws Exception
      */
     public function filterNumberEnd(string $field, array $params, string $value): void
@@ -502,6 +515,7 @@ trait Filter
 
     /**
      * @param  string  $prefix  Prefix each field in URL
+     * @return array<string, array{as: string, except: string}>
      */
     protected function powerGridQueryString(string $prefix = ''): array
     {
@@ -588,6 +602,7 @@ trait Filter
         return $queryString;
     }
 
+    /** @param  array<string, array<string, mixed>>  $array */
     private function removeNestedArrayKey(array &$array, string $parent, string $child): void
     {
         if (isset($array[$parent][$child])) {

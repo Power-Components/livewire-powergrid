@@ -7,6 +7,7 @@ use stdClass;
 
 final class RowTransformer
 {
+    /** @var array<string, \Closure> */
     private array $fieldClosures;
 
     public function __construct(protected PowerGridFields $powerGridFields)

@@ -46,8 +46,10 @@ final class Column implements Wireable
 
     public bool $index = false;
 
+    /** @var array<string, mixed> */
     public array $properties = [];
 
+    /** @var list<array<string, mixed>> */
     public array $rawQueries = [];
 
     public bool $isAction = false;
@@ -58,6 +60,7 @@ final class Column implements Wireable
 
     public string $contentClassField = '';
 
+    /** @var string|list<string> */
     public string|array $contentClasses = [];
 
     public string $headerClass = '';
@@ -68,10 +71,12 @@ final class Column implements Wireable
 
     public string $bodyStyle = '';
 
+    /** @var array<string, mixed> */
     public array $pluginData = [];
 
     public mixed $filters = null;
 
+    /** @var array<string, mixed> */
     public array $customContent = [];
 
     /**
@@ -250,6 +255,7 @@ final class Column implements Wireable
         return $this;
     }
 
+    /** @param  string|list<string>  $contentClasses */
     public function contentClasses(string|array $contentClasses): Column
     {
         $this->contentClasses = $contentClasses;
@@ -264,6 +270,7 @@ final class Column implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         $data = (array) $this;

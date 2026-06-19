@@ -9,12 +9,15 @@ use ReflectionClass;
 /** @codeCoverageIgnore */
 trait Listeners
 {
+    /** @var array<string, array{plugin: string, method: string}> */
     private array $pluginListenerMap = [];
 
     private ?string $lastDispatchedEvent = null;
 
+    /** @var array<class-string, list<array{event: string, method: string}>> */
     private static array $reflectionCache = [];
 
+    /** @return array<string, string> */
     public function getListeners(): array
     {
         if (empty($this->columns)) {
@@ -82,6 +85,7 @@ trait Listeners
         }
     }
 
+    /** @param  array<int, mixed>  $params */
     public function delegateToPlugin(string $method, array $params): mixed
     {
         $this->resolvePlugins();

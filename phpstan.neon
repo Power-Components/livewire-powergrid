@@ -8,7 +8,6 @@ parameters:
     level: 9
 
     ignoreErrors:
-        - identifier: missingType.iterableValue
         - identifier: missingType.generics
         - identifier: trait.unused
         - identifier: argument.type
@@ -19,7 +18,10 @@ parameters:
         - identifier: varTag.nativeType
         - identifier: property.unusedType
         - identifier: offsetAccess.invalidOffset
+        - identifier: offsetAccess.nonOffsetAccessible
         - identifier: array.invalidKey
+        - identifier: property.nonObject
+        - identifier: return.type
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'

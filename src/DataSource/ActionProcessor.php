@@ -16,12 +16,15 @@ final class ActionProcessor
         $this->shouldProcessActionRules = method_exists($component, 'actionRules');
     }
 
+    /**
+     * @return array<int, array{action: string, can: mixed, slot: ?string, tag: ?string, icon: ?string, iconAttributes: array<string, mixed>, attributes: array<string, mixed>, rules: array<int, array<string, mixed>>}>
+     */
     public function process(object $row): array
     {
         $actions = [];
 
         if ($this->shouldProcessActions) {
-            /** @var array $actions */
+            /** @var list<array<string, mixed>> $actions */
             $actions = $this->component->actions($row);
 
             $actions = collect($actions)
@@ -32,6 +35,7 @@ final class ActionProcessor
         return $actions;
     }
 
+    /** @return array{action: string, can: mixed, slot: ?string, tag: ?string, icon: ?string, iconAttributes: array<string, mixed>, attributes: array<string, mixed>, rules: array<int, array<string, mixed>>} */
     private function mapAction(Button $action, object $row): array
     {
         $can = $action->can;

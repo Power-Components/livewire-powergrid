@@ -12,17 +12,21 @@ class ProcessDataSource
 {
     public mixed $datasource = null;
 
+    /** @param  array<string, mixed>  $properties */
     public function __construct(
         public PowerGridComponent $component,
         public array $properties = [],
     ) {}
 
+    /** @param  array<string, mixed>  $properties */
     public static function make(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
     {
         return new self($powerGridComponent, $properties);
     }
 
     /**
+     * @return array{results: mixed, transformTime: float, actionsByRow?: array<int|string, list<array<string, mixed>>>}
+     *
      * @throws Throwable
      */
     public function get(bool $isExport = false): array

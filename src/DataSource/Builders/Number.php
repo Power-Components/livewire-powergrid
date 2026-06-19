@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 
 class Number extends BuilderBase
 {
+    /** @param  int|array{start?: string|int|float, end?: string|int|float}|string|null  $values */
     public function builder(Builder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if ($closure = data_get($this->filterBase, 'builder')) {
@@ -18,7 +19,7 @@ class Number extends BuilderBase
             return;
         }
 
-        /** @var array $values */
+        /** @var array{start?: string|int|float, end?: string|int|float} $values */
         $start = $this->parseNumber($values['start'] ?? null);
         $end = $this->parseNumber($values['end'] ?? null);
 
@@ -31,6 +32,7 @@ class Number extends BuilderBase
         }
     }
 
+    /** @param  int|array{start?: string|int|float, end?: string|int|float}|string|null  $values */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if ($closure = data_get($this->filterBase, 'collection')) {
@@ -38,7 +40,7 @@ class Number extends BuilderBase
             return $closure($collection, $values);
         }
 
-        /** @var array $values */
+        /** @var array{start?: string|int|float, end?: string|int|float} $values */
         $start = $this->parseNumber($values['start'] ?? null);
         $end = $this->parseNumber($values['end'] ?? null);
 

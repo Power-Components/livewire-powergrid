@@ -14,6 +14,7 @@ trait Checkbox
 
     public bool $checkboxAll = false;
 
+    /** @var list<string> */
     public array $checkboxValues = [];
 
     public string $checkboxAttribute = 'id';
@@ -70,6 +71,7 @@ trait Checkbox
         return $this;
     }
 
+    /** @return list<string> */
     public function checkedValues(): array
     {
         return $this->checkboxValues;

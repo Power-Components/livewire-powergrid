@@ -15,6 +15,7 @@ class Footer
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
         $component = new Layout();
@@ -30,6 +31,7 @@ class Footer
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>|string  $callback */
     public function pagination(Closure|array|string $callback): self
     {
         $component = is_string($callback)

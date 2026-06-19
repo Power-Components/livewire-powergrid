@@ -8,12 +8,14 @@ class FilterEnumSelect extends FilterBase
 {
     public string $key = 'select';
 
+    /** @var array<int, mixed>|Collection<int, mixed> */
     public array|Collection $dataSource;
 
     public string $optionValue = 'value';
 
     public string $optionLabel = '';
 
+    /** @param  Collection<int, mixed>|array<int, mixed>  $enumCases */
     public function dataSource(Collection|array $enumCases): FilterEnumSelect
     {
         $this->dataSource = $enumCases;

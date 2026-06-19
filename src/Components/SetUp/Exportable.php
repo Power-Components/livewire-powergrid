@@ -16,18 +16,22 @@ final class Exportable implements Wireable
 
     public string $csvDelimiter = '"';
 
+    /** @var list<string> */
     public array $type = [];
 
     public string $striped = '';
 
+    /** @var array<string, mixed> */
     public array $columnWidth = [];
 
     public bool $deleteFileAfterSend = true;
 
+    /** @var array<string, mixed> */
     public array $batchExport = [];
 
     public bool $stripTags = false;
 
+    /** @var array<string, mixed> */
     public array $queryOptions = [];
 
     public string $disk = 'local';
@@ -66,6 +70,7 @@ final class Exportable implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $columnWidth */
     public function columnWidth(array $columnWidth): self
     {
         $this->columnWidth = $columnWidth;
@@ -115,6 +120,7 @@ final class Exportable implements Wireable
         return $this;
     }
 
+    /** @param  array<string, mixed>  $options */
     public function queryOptions(array $options): self
     {
         $this->queryOptions = $options;
@@ -122,6 +128,7 @@ final class Exportable implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

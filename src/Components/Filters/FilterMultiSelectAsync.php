@@ -14,6 +14,7 @@ class FilterMultiSelectAsync extends FilterBase
 
     public string $optionLabel = '';
 
+    /** @var array<string, mixed> */
     public array $parameters = [];
 
     public function url(string $url): FilterMultiSelectAsync
@@ -30,6 +31,7 @@ class FilterMultiSelectAsync extends FilterBase
         return $this;
     }
 
+    /** @param  array<string, mixed>  $parameters */
     public function parameters(array $parameters): FilterMultiSelectAsync
     {
         $this->parameters = $parameters;

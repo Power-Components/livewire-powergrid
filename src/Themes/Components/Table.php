@@ -86,6 +86,7 @@ class Table
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
         $component = new Layout();
@@ -101,6 +102,7 @@ class Table
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function body(Closure|array $callback): self
     {
         $component = new Body();
@@ -116,6 +118,7 @@ class Table
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function checkbox(Closure|array $callback): self
     {
         $component = new Checkbox();
@@ -131,6 +134,7 @@ class Table
         return $this;
     }
 
+    /** @param  Closure|array<string, mixed>  $callback */
     public function radio(Closure|array $callback): self
     {
         $component = new Radio();

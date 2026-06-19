@@ -31,6 +31,7 @@ trait WithPersist
         };
     }
 
+    /** @return list<string> */
     private function getPersistItems(): array
     {
         return property_exists($this, 'persist') ? $this->persist : [];
@@ -41,6 +42,9 @@ trait WithPersist
         return property_exists($this, 'persistPrefix') ? $this->persistPrefix : '';
     }
 
+    /**
+     * @return array{sortField?: string, sortDirection?: string, sortArray?: list<mixed>, multiSort?: bool, checkboxValues?: list<string>, checkboxAll?: bool, perPage?: int}
+     */
     private function gatherPersistableState(): array
     {
         $state = [];

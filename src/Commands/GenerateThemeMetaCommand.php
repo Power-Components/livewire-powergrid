@@ -60,6 +60,10 @@ PHP;
         $this->components->info('Generated .phpstorm.meta.php file.');
     }
 
+    /**
+     * @param  array<string, mixed>  $flatTokens
+     * @return list<string>
+     */
     private function collectViewAliases(Tailwind $theme, array $flatTokens): array
     {
         $aliases = [];

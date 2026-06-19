@@ -71,6 +71,7 @@ class DaisyUI extends Theme
             );
     }
 
+    /** @return array<string, mixed> */
     public function editable(): array
     {
         return [
@@ -82,6 +83,7 @@ class DaisyUI extends Theme
         ];
     }
 
+    /** @return array<string, mixed> */
     public function toggleable(): array
     {
         return [
@@ -91,6 +93,7 @@ class DaisyUI extends Theme
         ];
     }
 
+    /** @return array<string, mixed> */
     public function filter(): array
     {
         return [

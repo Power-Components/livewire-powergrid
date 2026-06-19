@@ -17,6 +17,10 @@ class CollectionProcessor extends DataSourceBase
             || is_iterable($key);
     }
 
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array{results: mixed, transformTime: float, actionsByRow: array<int|string, list<array<string, mixed>>>}
+     */
     public function process(array $properties = [], mixed $datasource = null): array
     {
         $datasource = $datasource ?? $this->component->datasource($properties);

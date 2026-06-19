@@ -10,6 +10,7 @@ final class Footer implements Wireable
 
     public int $perPage;
 
+    /** @var list<int> */
     public array $perPageValues = [];
 
     public string $recordCount = '';
@@ -22,6 +23,7 @@ final class Footer implements Wireable
 
     public string $pageName = 'page';
 
+    /** @param  list<int>  $perPageValues */
     public function showPerPage(int $perPage = 10, array $perPageValues = [10, 25, 50, 100, 0]): Footer
     {
         if (! in_array($perPage, $perPageValues, true)) {
@@ -98,6 +100,7 @@ final class Footer implements Wireable
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function toLivewire(): array
     {
         return (array) $this;

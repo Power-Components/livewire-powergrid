@@ -8,10 +8,12 @@ class FilterDynamic extends FilterBase
 
     public string $component = '';
 
+    /** @var array<string, mixed> */
     public array $attributes = [];
 
     public string $baseClass = '';
 
+    /** @param  array<string, mixed>  $attributes */
     public function attributes(array $attributes): FilterDynamic
     {
         $this->attributes = $attributes;

@@ -29,6 +29,7 @@ class ColumnRawQueries
         return $next($query);
     }
 
+    /** @param  array<string, mixed>  $rawQueryConfig */
     private function executeRawQuery(mixed $query, array $rawQueryConfig): void
     {
         $isEnabled = data_get($rawQueryConfig, 'enabled', true);
@@ -70,6 +71,10 @@ class ColumnRawQueries
         }, $sql);
     }
 
+    /**
+     * @param  array<int|string, mixed>  $bindings
+     * @return array<int|string, mixed>
+     */
     private function resolveBindings(array $bindings): array
     {
         return array_map(function ($param) {

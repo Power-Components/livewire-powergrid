@@ -10,6 +10,7 @@ use Psr\SimpleCache\InvalidArgumentException;
 /** @codeCoverageIgnore */
 trait Persist
 {
+    /** @var list<string> */
     public array $persist = [];
 
     public string $persistPrefix = '';
@@ -18,6 +19,7 @@ trait Persist
      * $tableItems: 'filters', 'columns', 'sorting',
      * $prefix: Add prefix to the persist storage key
      */
+    /** @param  list<string>  $tableItems */
     public function persist(array $tableItems, string $prefix = ''): PowerGridComponent
     {
         $this->persist = $tableItems;

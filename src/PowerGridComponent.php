@@ -13,6 +13,7 @@ use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use Livewire\{Attributes\Computed, Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
+use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -20,7 +21,7 @@ use Psr\SimpleCache\InvalidArgumentException;
 /**
  * @property-read mixed $records
  * @property-read bool $hasColumnFilters
- * @property-read array|BaseCollection $visibleColumns
+ * @property-read array<int, Column>|BaseCollection<int, Column> $visibleColumns
  * @property-read string $realPrimaryKey
  */
 class PowerGridComponent extends Component
@@ -39,6 +40,7 @@ class PowerGridComponent extends Component
     use Concerns\Summarize;
     use WithPagination;
 
+    /** @var array<string, PluginBase> */
     protected array $plugins = [];
 
     public function template(): ?Theme
@@ -62,11 +64,13 @@ class PowerGridComponent extends Component
         }
     }
 
+    /** @return array<string, PluginBase> */
     public function getPlugins(): array
     {
         return $this->plugins;
     }
 
+    /** @param  array<int, mixed>  $arguments */
     public function handlePlugin(string $plugin, string $action, array $arguments = []): void
     {
         $this->resolvePlugins();
@@ -93,6 +97,7 @@ class PowerGridComponent extends Component
         return parent::__call($method, $parameters);
     }
 
+    /** @param  Column|array<string, mixed>|\stdClass  $column */
     public function renderColumnContent(Column|array|\stdClass $column, mixed $row): ?string
     {
         foreach ($this->plugins as $plugin) {
@@ -229,7 +234,7 @@ class PowerGridComponent extends Component
 
         $getCacheClosure = fn () => ProcessDataSource::make($this)->get();
 
-        /** @var array $results */
+        /** @var array{results: mixed, transformTime: float} $results */
         $results = Cache::supportsTags()
             ? Cache::tags($tag)->remember($cacheKey, $ttl, $getCacheClosure)
             : Cache::remember($tag.'-'.$cacheKey, $ttl, $getCacheClosure);
@@ -266,6 +271,7 @@ class PowerGridComponent extends Component
         return $results;
     }
 
+    /** @return list<string|false> */
     protected function getCacheKeys(): array
     {
         return [
@@ -326,6 +332,7 @@ class PowerGridComponent extends Component
         return view(theme_view('table.no-data-label'));
     }
 
+    /** @return array<string, mixed> */
     public function getPublicPropertiesDefinedInComponent(): array
     {
         return collect((new \ReflectionClass($this))->getProperties(\ReflectionProperty::IS_PUBLIC))

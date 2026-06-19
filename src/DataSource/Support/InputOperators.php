@@ -6,9 +6,10 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText;
 
 trait InputOperators
 {
+    /** @param  array<string, mixed>  $filter */
     public function validateInputTextOptions(array $filter, string $field): string
     {
-        /** @var array|string $selected */
+        /** @var array<int, string>|string $selected */
         $selected = data_get($filter, "input_text_options.$field");
 
         if (is_array($selected)) {

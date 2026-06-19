@@ -11,6 +11,7 @@ use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 
 class InputText extends BuilderBase
 {
+    /** @param  int|array{value: mixed, selected: string, searchMorphs: mixed}|string|null  $values */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if ($filterRelation = (array) data_get($this->filterBase, 'filterRelation')) {
@@ -33,7 +34,7 @@ class InputText extends BuilderBase
             return;
         }
 
-        /** @var array $values */
+        /** @var array{value: mixed, selected: string, searchMorphs: mixed} $values */
         $value = $values['value'];
         $selected = $values['selected'];
         $searchMorphs = $values['searchMorphs'];
@@ -88,6 +89,7 @@ class InputText extends BuilderBase
         $matchOperatorQuery($selected, $builder, $field, $value);
     }
 
+    /** @param  int|array{value: mixed, selected: string}|string|null  $values */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {
@@ -97,7 +99,7 @@ class InputText extends BuilderBase
             return $closure($collection, $values);
         }
 
-        /** @var array $values */
+        /** @var array{value: mixed, selected: string} $values */
         $value = $values['value'];
         $selected = $values['selected'];
 

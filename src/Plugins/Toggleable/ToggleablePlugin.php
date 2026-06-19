@@ -34,11 +34,16 @@ class ToggleablePlugin extends PluginBase
         });
     }
 
+    /** @return list<string> */
     public static function ruleModifiers(): array
     {
         return ['toggleableVisibility', 'fieldHideToggleable'];
     }
 
+    /**
+     * @param  array<string, mixed>  $rule
+     * @return array{toggleableVisibility: mixed, fieldHideToggleable: bool}
+     */
     public function processRuleModifiers(array $rule, bool $apply): array
     {
         return [
@@ -58,6 +63,7 @@ class ToggleablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.toggleable')));
     }
 
+    /** @param  Column|array<string, mixed>  $column */
     public function handles(Column|array $column): bool
     {
         return ! empty(data_get($column, 'pluginData.toggleable'));
@@ -65,6 +71,7 @@ class ToggleablePlugin extends PluginBase
 
     protected static ?string $cachedJs = null;
 
+    /** @param  Column|array<string, mixed>  $column */
     public function render(Column|array $column, mixed $row): ?string
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
@@ -89,6 +96,7 @@ class ToggleablePlugin extends PluginBase
         $this->component->onUpdatedToggleable($id, $field, $value);
     }
 
+    /** @param  stdClass|Column|array<string, mixed>  $column */
     private function shouldShowToggleable(stdClass|Column|array $column, mixed $row): bool
     {
         $showToggleable = boolval(data_get($column, 'pluginData.toggleable.enabled', false));

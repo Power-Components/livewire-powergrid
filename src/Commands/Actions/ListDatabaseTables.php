@@ -11,6 +11,8 @@ final class ListDatabaseTables
 
     /**
      * List tables in database
+     *
+     * @return array<int, mixed>
      */
     public static function handle(): array
     {

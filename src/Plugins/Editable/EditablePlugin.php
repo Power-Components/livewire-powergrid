@@ -41,11 +41,16 @@ class EditablePlugin extends PluginBase
         });
     }
 
+    /** @return list<string> */
     public static function ruleModifiers(): array
     {
         return ['editOnClickVisibility', 'fieldHideEditOnClick'];
     }
 
+    /**
+     * @param  array<string, mixed>  $rule
+     * @return array{editOnClickVisibility: mixed, fieldHideEditOnClick: bool}
+     */
     public function processRuleModifiers(array $rule, bool $apply): array
     {
         return [
@@ -65,6 +70,7 @@ class EditablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.editable')));
     }
 
+    /** @param  Column|array<string, mixed>  $column */
     public function handles(Column|array $column): bool
     {
         return ! empty(data_get($column, 'pluginData.editable'));
@@ -74,6 +80,7 @@ class EditablePlugin extends PluginBase
 
     protected static ?string $cachedCss = null;
 
+    /** @param  Column|array<string, mixed>  $column */
     public function render(Column|array $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
@@ -108,6 +115,7 @@ class EditablePlugin extends PluginBase
         $this->component->dispatch('pg:editable-close-'.$id);
     }
 
+    /** @param  stdClass|Column|array<string, mixed>  $column */
     private function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool
     {
         $hasPermission = boolval(data_get($column, 'pluginData.editable.hasPermission', false));

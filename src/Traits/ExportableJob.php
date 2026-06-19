@@ -17,6 +17,7 @@ trait ExportableJob
 
     private PowerGridComponent $componentTable;
 
+    /** @var array<int, \PowerComponents\LivewirePowerGrid\Column> */
     private array $columns;
 
     private string $exportableClass;
@@ -25,10 +26,13 @@ trait ExportableJob
 
     private int $limit;
 
+    /** @var array<string, mixed> */
     private array $filters;
 
+    /** @var list<int|string> */
     private array $filtered;
 
+    /** @var array<string, mixed> */
     private array $exportable;
 
     private function getFilename(): Stringable
@@ -38,6 +42,7 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
+    /** @param  array<string, mixed>  $properties */
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
         $this->componentTable->filters = $this->filters ?? [];

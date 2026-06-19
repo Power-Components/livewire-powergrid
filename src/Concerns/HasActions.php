@@ -8,8 +8,10 @@ use PowerComponents\LivewirePowerGrid\Button;
 
 trait HasActions
 {
+    /** @var array<string, string> */
     private array $iconRenderCache = [];
 
+    /** @return array<mixed> */
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
     {
         if (! method_exists($this, 'actionRules')) {
@@ -17,7 +19,7 @@ trait HasActions
         }
 
         $closure = function ($row, $loop) {
-            /** @var array $rules */
+            /** @var list<array<string, mixed>> $rules */
             $rules = $this->actionRules($row);
 
             return collect($rules)
@@ -76,7 +78,7 @@ trait HasActions
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}";
 
         if (intval(config('livewire-powergrid.cache_ttl')) > 0) {
-            /** @var array $formattedRules */
+            /** @var array<int, array<string, mixed>> $formattedRules */
             $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
                 $value = $closure($row, $loop);
 
@@ -116,6 +118,10 @@ trait HasActions
         return view('livewire-powergrid::components.structure.actions', ['actions' => $actions])->render();
     }
 
+    /**
+     * @param  array<int, array<string, mixed>>  $rules
+     * @return array<string, mixed>
+     */
     private function resolveButtonForBlade(Button $button, object $row, array $rules): array
     {
         $can = $button->can instanceof \Closure
@@ -190,6 +196,7 @@ trait HasActions
         ];
     }
 
+    /** @param  array<string, mixed>  $iconAttributes */
     private function renderIcon(string $icon, array $iconAttributes): string
     {
         $cacheKey = $icon.'::'.md5(serialize($iconAttributes));
@@ -208,6 +215,7 @@ trait HasActions
         return $this->iconRenderCache[$cacheKey];
     }
 
+    /** @return list<array<string, mixed>> */
     public function resolveActionRules(mixed $row): array
     {
         return collect($this->actionRules($row)) // @phpstan-ignore-line

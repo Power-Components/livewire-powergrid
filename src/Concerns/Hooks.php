@@ -12,7 +12,7 @@ trait Hooks
      *
      * @param  string  $plugin  Plugin name (e.g., 'editable', 'toggleable')
      * @param  string  $event  Event name (e.g., 'updated')
-     * @param  array  $params  Event parameters [id, field, value, ...]
+     * @param  array<string, mixed>  $params  Event parameters [id, field, value, ...]
      */
     public function onPluginUpdated(string $plugin, string $event, array $params): void {}
 
@@ -32,6 +32,7 @@ trait Hooks
         $this->onPluginUpdated('toggleable', 'updated', compact('id', 'field', 'value'));
     }
 
+    /** @param  list<string>  $values */
     public function afterChangedMultiSelectFilter(string $field, array $values): void {}
 
     public function afterChangedSelectFilter(string $field, string $label, mixed $value): void {}
@@ -54,6 +55,10 @@ trait Hooks
         return $query;
     }
 
+    /**
+     * @param  array<int|string, list<array<string, mixed>>>  $actionsByRow
+     * @return array<int|string, list<array<string, mixed>>>
+     */
     public function transformActions(array $actionsByRow, Collection $rows): array
     {
         return $actionsByRow;

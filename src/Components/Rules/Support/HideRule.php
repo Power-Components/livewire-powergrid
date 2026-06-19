@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Components\Rules\Support;
 
 class HideRule
 {
+    /** @return array{hide?: bool} */
     public function apply(bool $ruleData = false): array
     {
         $output = [];
