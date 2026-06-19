@@ -48,8 +48,8 @@ return [
         'select' => [
             'default' => 'slim',
             'slim' => [
-                'cdn' => 'https://unpkg.com/slim-select@latest/dist/slimselect.min.js',
-                'css' => 'https://unpkg.com/slim-select@latest/dist/slimselect.css',
+                'cdn' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.min.js',
+                'css' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.css',
             ],
             'tom' => [
                 'cdn' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/js/tom-select.complete.min.js',
