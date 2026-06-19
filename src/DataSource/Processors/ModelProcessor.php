@@ -48,16 +48,6 @@ class ModelProcessor extends DataSourceBase
         /** @var Collection $collection */
         $collection = $paginate->getCollection();
 
-        if (filled(data_get($this->component, 'setUp.lazy'))) {
-            $paginate->setCollection($collection);
-
-            return [
-                'results' => $paginate,
-                'transformTime' => 0,
-                'actionsByRow' => [],
-            ];
-        }
-
         $dataTransformer = new DataTransformer($this->component);
         $transformResult = $dataTransformer->transform($collection);
 
