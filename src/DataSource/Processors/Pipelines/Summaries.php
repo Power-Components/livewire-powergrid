@@ -43,7 +43,12 @@ class Summaries
 
         if (count($summarizeFormatTasks) > 0) {
             foreach ($summarizeFormatTasks as $field => $formattingClosure) {
-                [$fieldName, $methods] = explode('.', $field);
+                if (! str_contains($field, '.')) {
+                    continue;
+                }
+
+                $fieldName = Str::beforeLast($field, '.');
+                $methods = Str::afterLast($field, '.');
 
                 if (in_array($fieldName, [$column->field, $column->dataField])) {
                     $applyToMethods = Str::of($methods)

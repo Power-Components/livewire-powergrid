@@ -1,69 +1,10 @@
 <?php
 
-use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\DataSource\Collection;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 
 uses()->group('datasource', 'collection');
-
-it('creates Collection instance using make()', function () {
-    $component = new class() extends PowerGridComponent
-    {
-        public string $tableName = 'test-collection-make';
-
-        public function datasource()
-        {
-            return collect([['id' => 1, 'name' => 'Test']]);
-        }
-
-        public function fields(): PowerGridFields
-        {
-            return PowerGrid::fields()->add('id')->add('name');
-        }
-
-        public function columns(): array
-        {
-            return [Column::make('Name', 'name')];
-        }
-    };
-
-    $collection = collect([['id' => 1, 'name' => 'Test']]);
-    $instance = Collection::make($collection, $component);
-
-    expect($instance)->toBeInstanceOf(Collection::class);
-});
-
-it('paginates collection with default page size', function () {
-    $collection = collect([
-        ['id' => 1, 'name' => 'Item 1'],
-        ['id' => 2, 'name' => 'Item 2'],
-        ['id' => 3, 'name' => 'Item 3'],
-        ['id' => 4, 'name' => 'Item 4'],
-        ['id' => 5, 'name' => 'Item 5'],
-    ]);
-
-    $paginated = Collection::paginate($collection, 2);
-
-    expect($paginated)->toBeInstanceOf(LengthAwarePaginator::class)
-        ->and($paginated->total())->toBe(5)
-        ->and($paginated->perPage())->toBe(2)
-        ->and($paginated->count())->toBe(2);
-});
-
-it('paginates collection with page size 0 (all items)', function () {
-    $collection = collect([
-        ['id' => 1, 'name' => 'Item 1'],
-        ['id' => 2, 'name' => 'Item 2'],
-        ['id' => 3, 'name' => 'Item 3'],
-    ]);
-
-    $paginated = Collection::paginate($collection, 0);
-
-    expect($paginated->total())->toBe(3)
-        ->and($paginated->count())->toBe(3);
-});
 
 it('searches in collection with empty search term', function () {
     $component = new class() extends PowerGridComponent

@@ -73,9 +73,9 @@ trait HasActions
         };
 
         $value = strval(data_get($row, $this->realPrimaryKey()));
-        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}}";
+        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}";
 
-        if (intval(config('livewire-powergrid.cache_ttl') > 0)) {
+        if (intval(config('livewire-powergrid.cache_ttl')) > 0) {
             /** @var array $formattedRules */
             $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
                 $value = $closure($row, $loop);

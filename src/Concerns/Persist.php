@@ -61,7 +61,7 @@ trait Persist
         match ($this->getPersistDriverConfig()) {
             'session' => Session::put($this->getPersistKeyName(), $jsonState),
             'cache' => Cache::store($this->getPersistDriverStoreConfig())->put($this->getPersistKeyName(), $jsonState),
-            default => Cookie::queue($this->getPersistKeyName(), $jsonState, now()->addYears(5)->unix())
+            default => Cookie::queue($this->getPersistKeyName(), $jsonState, 60 * 24 * 365 * 5) // 5 years, in minutes (Cookie::queue expects minutes)
         };
     }
 

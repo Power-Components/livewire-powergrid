@@ -4,9 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handl
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class FilterHandler
@@ -26,39 +25,7 @@ class FilterHandler
         }
 
         foreach ($this->component->filters as $filterType => $columns) {
-            $columns = Arr::dot($columns);
-
-            $newColumns = [];
-
-            foreach ($columns as $key => $value) {
-                $parts = explode('.', $key);
-                $lastPart = end($parts);
-
-                if (is_numeric($lastPart) && intval($lastPart) == $lastPart) {
-                    array_pop($parts);
-                    $prefix = implode('.', $parts);
-
-                    if (! isset($newColumns[$prefix])) {
-                        $newColumns[$prefix] = [];
-                    }
-
-                    $index = intval($lastPart);
-
-                    $newColumns[$prefix][$index] = $value;
-                } elseif ($lastPart === 'start' || $lastPart === 'end') {
-                    $prefix = implode('.', array_slice($parts, 0, -1));
-
-                    if (! isset($newColumns[$prefix])) {
-                        $newColumns[$prefix] = [];
-                    }
-
-                    $newColumns[$prefix][$lastPart] = $value;
-                } else {
-                    $newColumns[$key] = $value;
-                }
-            }
-
-            foreach ($newColumns as $field => $value) {
+            foreach (FilterNormalizer::normalize($columns) as $field => $value) {
                 $query->where(function ($query) use ($filterType, $field, $value, $filterDefinitions) {
                     $filter = function ($query, $filterDefinitions, $filterType, $field, $value) {
                         $filter = $filterDefinitions->filter(function ($filter) use ($field) {

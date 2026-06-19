@@ -20,21 +20,17 @@ trait WithMultiSelectBuilder
             return;
         }
 
-        $empty = false;
-
-        if (! is_array($values) || count($values) === 0) {
+        if (! is_array($values)) {
             return;
         }
 
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
+        $values = array_values(array_filter($values, fn ($value) => $value !== ''));
+
+        if (count($values) === 0) {
+            return;
         }
 
-        if (! $empty) {
-            $builder->whereIn($field, $values);
-        }
+        $builder->whereIn($field, $values);
     }
 
     public function collection(Collection $collection, string $field, array|int|string|null $values): Collection
@@ -46,19 +42,13 @@ trait WithMultiSelectBuilder
             return $closure($collection, $values);
         }
 
-        $empty = false;
-
-        if (! is_array($values) || count($values) === 0) {
+        if (! is_array($values)) {
             return $collection;
         }
 
-        foreach ($values as $value) {
-            if ($value === '') {
-                $empty = true;
-            }
-        }
+        $values = array_values(array_filter($values, fn ($value) => $value !== ''));
 
-        if ($empty) {
+        if (count($values) === 0) {
             return $collection;
         }
 

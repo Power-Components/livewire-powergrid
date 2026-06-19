@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 use Closure;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\InputOperators;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Filters
@@ -24,7 +24,7 @@ final class Filters
         $results = $collection;
 
         foreach ($this->component->filters as $filterType => $columns) {
-            foreach ($columns as $field => $value) {
+            foreach (FilterNormalizer::normalize($columns) as $field => $value) {
                 $definition = $definitions->first(fn ($filter) => data_get($filter, 'field') === $field);
 
                 if (! $definition) {

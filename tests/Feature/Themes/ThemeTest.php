@@ -171,5 +171,5 @@ it('flux provides correct tokens using ThemeBuilder', function () {
 
     expect($theme->get('name'))->toBe('flux')
         ->and($theme->get('table.layout.table'))->toBe('min-w-full')
-        ->and($theme->get('table.layout.container'))->toBe('rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900');
+        ->and($theme->get('table.layout.container'))->toBe('overflow-x-auto rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900');
 });

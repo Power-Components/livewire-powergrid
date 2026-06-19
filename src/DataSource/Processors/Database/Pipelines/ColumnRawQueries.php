@@ -63,7 +63,7 @@ class ColumnRawQueries
             $sql = $sql();
         }
 
-        return preg_replace_callback('/\{(\w+)\}/', function ($matches) {
+        return preg_replace_callback('/\{([\w.]+)\}/', function ($matches) {
             $property = trim($matches[1]);
 
             return data_get($this->component, $property, '');

@@ -42,23 +42,12 @@ trait Checkbox
         collect($records->items())->each(function (array|Model|stdClass $model) {
             $value = $model->{$this->checkboxAttribute};
 
-            $hide = (bool) data_get(
-                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
-                    ->where('apply', true)
-                    ->where('forAction', 'pg:checkbox')
-                    ->last(),
-                'hide',
-            );
+            $checkboxRule = collect((array) data_get($model, '__powergrid_rules'))
+                ->where('apply', true)
+                ->where('forAction', 'pg:checkbox')
+                ->last();
 
-            $disable = (bool) data_get(
-                collect((array) $model->__powergrid_rules) // @phpstan-ignore-line
-                    ->where('apply', true)
-                    ->where('forAction', 'pg:checkbox')
-                    ->last(),
-                'disable',
-            );
-
-            if ($hide || $disable) {
+            if ((bool) data_get($checkboxRule, 'hide') || (bool) data_get($checkboxRule, 'disable')) {
                 return;
             }
 

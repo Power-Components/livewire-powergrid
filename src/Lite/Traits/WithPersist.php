@@ -27,7 +27,7 @@ trait WithPersist
         match ($this->resolvePersistDriver()) {
             'session' => Session::put($key, $jsonState),
             'cache' => Cache::store($this->resolvePersistStore())->put($key, $jsonState),
-            default => Cookie::queue($key, $jsonState, now()->addYears(5)->diffInMinutes()),
+            default => Cookie::queue($key, $jsonState, 60 * 24 * 365 * 5), // 5 years, in minutes (Cookie::queue expects minutes)
         };
     }
 

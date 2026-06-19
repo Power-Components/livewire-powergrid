@@ -10,10 +10,6 @@ class ThemeManager
 
     public static function theme(string $key, string $default = ''): string
     {
-        if (isset(static::$tokenCache[$key])) {
-            return static::$tokenCache[$key];
-        }
-
         /** @var Theme|null $theme */
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 
@@ -21,8 +17,15 @@ class ThemeManager
             return $default;
         }
 
+        // Key the cache by theme identity so multiple themes in one request don't leak tokens.
+        $cacheKey = $theme::class.'::'.$key;
+
+        if (isset(static::$tokenCache[$cacheKey])) {
+            return static::$tokenCache[$cacheKey];
+        }
+
         $value = strval(data_get($theme->resolveTokens(), $key, $default));
-        static::$tokenCache[$key] = $value;
+        static::$tokenCache[$cacheKey] = $value;
 
         return $value;
     }

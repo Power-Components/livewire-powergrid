@@ -57,3 +57,40 @@ it('properly filters by multi_select', function () {
         ->assertDontSee('Dish 2')
         ->assertSee('Dish 3');
 });
+
+it('ignores empty values instead of dropping the multi_select filter', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-multi-select-empty';
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'category_id' => 1],
+                ['id' => 2, 'name' => 'Dish 2', 'category_id' => 2],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [Filter::multiSelect('category_id')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('category_id');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name'), Column::make('Category', 'category_id')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->set('filters', [
+            'multi_select' => ['category_id' => ['', 1]],
+        ])
+        ->assertSee('Dish 1')
+        ->assertDontSee('Dish 2');
+});
