@@ -7,7 +7,6 @@ use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Collection;
 use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
 use Livewire\{Attributes\Computed, Component, WithPagination};
@@ -23,6 +22,9 @@ use Psr\SimpleCache\InvalidArgumentException;
  * @property-read bool $hasColumnFilters
  * @property-read array<int, Column>|BaseCollection<int, Column> $visibleColumns
  * @property-read string $realPrimaryKey
+ *
+ * @method mixed datasource(mixed ...$args)
+ * @method mixed actions(mixed $row)
  */
 class PowerGridComponent extends Component
 {
@@ -137,7 +139,10 @@ class PowerGridComponent extends Component
         $this->readyToLoad = ! $this->deferLoading;
 
         foreach ($this->setUp() as $setUp) {
-            $this->setUp[$setUp->name] = $setUp;
+            $name = is_object($setUp) ? data_get($setUp, 'name') : null;
+            if (is_string($name)) {
+                $this->setUp[$name] = $setUp;
+            }
         }
 
         $this->throwTableName();
@@ -242,22 +247,21 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($results['results']);
     }
 
-    private function getRecordsDataSource(): Paginator|MorphToMany|\Illuminate\Contracts\Pagination\LengthAwarePaginator|LengthAwarePaginator|BaseCollection
+    private function getRecordsDataSource(): AbstractPaginator|MorphToMany|BaseCollection
     {
         $processResult = ProcessDataSource::make($this)->get();
 
         /** @var BaseCollection $actionsRows */
-        $actionsRows = ($processResult['results'] instanceof AbstractPaginator || $processResult['results'] instanceof \Illuminate\Contracts\Pagination\Paginator)
+        $actionsRows = $processResult['results'] instanceof AbstractPaginator
             ? $processResult['results']->getCollection()
             : new BaseCollection($processResult['results']);
 
         return $this->applyAfterQuery($processResult['results']);
     }
 
-    private function applyAfterQuery(mixed $results): Paginator|MorphToMany|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator|BaseCollection
+    private function applyAfterQuery(mixed $results): AbstractPaginator|MorphToMany|BaseCollection
     {
-        if ($results instanceof AbstractPaginator || $results instanceof \Illuminate\Contracts\Pagination\Paginator) {
-            /** @var Paginator|LengthAwarePaginator|\Illuminate\Contracts\Pagination\LengthAwarePaginator $results */
+        if ($results instanceof AbstractPaginator) {
             $results->setCollection($this->transformRows($results->getCollection()));
 
             return $results;
@@ -339,7 +343,7 @@ class PowerGridComponent extends Component
             ->where('class', get_class($this))
             ->pluck('name')
             ->intersect(array_keys($this->all()))
-            ->mapWithKeys(fn ($property) => [$property => $this->$property])
+            ->mapWithKeys(fn (string $property) => [$property => $this->{$property}])
             ->all();
     }
 

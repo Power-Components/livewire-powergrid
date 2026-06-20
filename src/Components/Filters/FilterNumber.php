@@ -47,7 +47,7 @@ class FilterNumber extends FilterBase
     {
         $configAttributes = config('livewire-powergrid.filter_attributes.number', Number::class);
 
-        /** @var callable $class */
+        /** @var callable-object $class */
         $class = new $configAttributes();
 
         return $class($field, $filter);

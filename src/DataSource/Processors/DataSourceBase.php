@@ -6,7 +6,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\View\Concerns\ManagesLoops;
 use PowerComponents\LivewirePowerGrid\{Concerns\SoftDeletes, PowerGridComponent};
 
-class DataSourceBase
+abstract class DataSourceBase
 {
     use ManagesLoops;
     use SoftDeletes;
@@ -15,6 +15,14 @@ class DataSourceBase
         public PowerGridComponent $component,
         public bool $isExport = false
     ) {}
+
+    abstract public static function match(mixed $datasource): bool;
+
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return array{results: mixed, transformTime: float, actionsByRow?: array<int|string, list<array<string, mixed>>>}
+     */
+    abstract public function process(array $properties = [], mixed $datasource = null): array;
 
     protected function setCurrentTable(mixed $datasource): void
     {

@@ -25,7 +25,7 @@ class FilterBoolean extends FilterBase
     {
         $configAttributes = config('livewire-powergrid.filter_attributes.boolean', Boolean::class);
 
-        /** @var callable $class */
+        /** @var callable-object $class */
         $class = new $configAttributes();
 
         return $class($field, $title);

@@ -17,7 +17,7 @@ trait Filter
     /** @var list<int|string> */
     public array $filtered = [];
 
-    /** @var list<array<string, string>> */
+    /** @var list<array<string, mixed>> */
     public array $enabledFilters = [];
 
     /** @var array<string, mixed> */
@@ -30,6 +30,13 @@ trait Filter
     public function emitClearFiltersEvent(bool $emit): void
     {
         $this->emitClearFiltersEvent = $emit;
+    }
+
+    /** @param array<string, array<string, mixed>> $target */
+    private function setInFilters(array &$target, string $key, mixed $value): void
+    {
+        /** @phpstan-ignore parameterByRef.type */
+        data_set($target, $key, $value);
     }
 
     protected function applyDefaultFilters(): void
@@ -54,20 +61,20 @@ trait Filter
 
                 switch ($key) {
                     case 'select':
-                        data_set($this->filters, "select.{$field}", $defaultValue);
+                        $this->setInFilters($this->filters, "select.{$field}", $defaultValue);
                         $this->addEnabledFilters($field, $label);
                         $defaultFiltersApplied = true;
                         break;
 
                     case 'multi_select':
                         $values = is_array($defaultValue) ? $defaultValue : [$defaultValue];
-                        data_set($this->filters, "multi_select.{$field}", $values);
+                        $this->setInFilters($this->filters, "multi_select.{$field}", $values);
                         $this->addEnabledFilters($field, $label);
                         $defaultFiltersApplied = true;
                         break;
 
                     case 'boolean':
-                        data_set($this->filters, "boolean.{$field}", $defaultValue);
+                        $this->setInFilters($this->filters, "boolean.{$field}", $defaultValue);
                         $this->addEnabledFilters($field, $label);
                         $defaultFiltersApplied = true;
                         break;
@@ -75,12 +82,12 @@ trait Filter
                     case 'input_text':
                         if (is_array($defaultValue)) {
                             // Support for both value and operator
-                            data_set($this->filters, "input_text.{$field}", $defaultValue['value'] ?? '');
+                            $this->setInFilters($this->filters, "input_text.{$field}", $defaultValue['value'] ?? '');
                             if (isset($defaultValue['operator'])) {
-                                data_set($this->filters, "input_text_options.{$field}", $defaultValue['operator']);
+                                $this->setInFilters($this->filters, "input_text_options.{$field}", $defaultValue['operator']);
                             }
                         } else {
-                            data_set($this->filters, "input_text.{$field}", $defaultValue);
+                            $this->setInFilters($this->filters, "input_text.{$field}", $defaultValue);
                         }
                         $this->addEnabledFilters($field, $label);
                         $defaultFiltersApplied = true;
@@ -89,13 +96,13 @@ trait Filter
                     case 'number':
                         if (is_array($defaultValue)) {
                             if (isset($defaultValue['start'])) {
-                                data_set($this->filters, "number.{$field}.start", $defaultValue['start']);
+                                $this->setInFilters($this->filters, "number.{$field}.start", $defaultValue['start']);
                             }
                             if (isset($defaultValue['end'])) {
-                                data_set($this->filters, "number.{$field}.end", $defaultValue['end']);
+                                $this->setInFilters($this->filters, "number.{$field}.end", $defaultValue['end']);
                             }
                         } else {
-                            data_set($this->filters, "number.{$field}.start", $defaultValue);
+                            $this->setInFilters($this->filters, "number.{$field}.start", $defaultValue);
                         }
                         $this->addEnabledFilters($field, $label);
                         $defaultFiltersApplied = true;
@@ -174,10 +181,10 @@ trait Filter
                         unset($this->filters[$key]);
                     }
 
-                    $this->enabledFilters = array_filter(
+                    $this->enabledFilters = array_values(array_filter(
                         $this->enabledFilters,
                         fn ($filter) => $filter['field'] !== ($column ?? $field)
-                    );
+                    ));
                 };
 
                 if ($field === data_get($filter, 'column')) {
@@ -241,7 +248,7 @@ trait Filter
     ): void {
         $this->resetPage();
 
-        data_set($this->filters, "multi_select.$field", $values);
+        $this->setInFilters($this->filters, "multi_select.$field", $values);
 
         $this->addEnabledFilters($field, $label);
 
@@ -371,7 +378,7 @@ trait Filter
      */
     public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
-        data_set($this->filters, 'input_text_options.'.$field, $value);
+        $this->setInFilters($this->filters, 'input_text_options.'.$field, $value);
 
         $disabled = false;
 
@@ -381,9 +388,9 @@ trait Filter
             $disabled = true;
 
             if (str($field)->contains('.')) {
-                $this->filters['input_text'][str($field)->before('.')->toString()][str($field)->after('.')->toString()] = null;
+                $this->setInFilters($this->filters, 'input_text.'.str($field)->before('.').'.'.str($field)->after('.'), null);
             } else {
-                $this->filters['input_text'][$field] = null;
+                $this->setInFilters($this->filters, 'input_text.'.$field, null);
             }
         }
 
@@ -433,7 +440,7 @@ trait Filter
         }
 
         $filters->each(function ($filter) {
-            $this->columns = collect($this->columns)->map(function ($column) use ($filter) {
+            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($filter) {
                 if (data_get($column, 'field') === data_get($filter, 'column') ||
                     data_get($column, 'dataField') === data_get($filter, 'column')) {
                     if (data_get($filter, 'dataSource') instanceof Closure) {
@@ -442,7 +449,7 @@ trait Filter
 
                         if ($depends && $this->filters) {
                             $depends = collect($depends)
-                                ->mapWithKeys(fn ($field) => [$field => data_get($this->filters, 'select.'.$field)]);
+                                ->mapWithKeys(fn ($field) => [strval($field) => data_get($this->filters, 'select.'.strval($field))]);
                         }
 
                         data_forget($filter, 'dataSource');
@@ -462,8 +469,8 @@ trait Filter
                         && in_array(data_get($filter, 'field'), array_keys($this->filters[strval(data_get($filter, 'key'))]))
                         && array_values($this->filters[strval(data_get($filter, 'key'))])) {
                         $this->enabledFilters[] = [
-                            'field' => data_get($filter, 'field'),
-                            'label' => data_get($column, 'title'),
+                            'field' => strval(data_get($filter, 'field')),
+                            'label' => strval(data_get($column, 'title')),
                         ];
                     }
 
@@ -473,14 +480,14 @@ trait Filter
 
                         foreach ($attributes as $value) {
                             if (is_string($value) && str_contains($value, 'filters.') && is_null(data_get($this->filters, str($value)->after('filters.')))) {
-                                data_set($this->filters, str($value)->replace('filters.', ''), null);
+                                $this->setInFilters($this->filters, (string) str($value)->replace('filters.', ''), null);
                             }
                         }
                     }
                 }
 
                 return $column;
-            })->all();
+            })->all());
         });
     }
 
@@ -491,7 +498,7 @@ trait Filter
             ->count()) {
             $this->enabledFilters[] = [
                 'field' => $field,
-                'label' => $label,
+                'label' => $label ?? '',
             ];
         }
     }

@@ -46,10 +46,11 @@ trait ExportableJob
     /** @param  array<string, mixed>  $properties */
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
+        /** @phpstan-ignore assign.propertyType */
         $this->componentTable->filters = $this->filters ?? [];
         $this->componentTable->filtered = $this->filtered ?? [];
-        $this->componentTable->columns = $this->columns;
-        $this->componentTable->search = data_get($properties, 'search', '');
+        $this->componentTable->columns = array_values($this->columns);
+        $this->componentTable->search = strval(data_get($properties, 'search', ''));
 
         $processDataSource = tap(
             ProcessDataSource::make($this->componentTable, $properties),

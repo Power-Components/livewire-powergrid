@@ -76,7 +76,7 @@ class ToggleablePlugin extends PluginBase
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
 
-        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js');
+        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
 
         return view('powergrid-plugins::Toggleable.index', [
             'tableName' => $this->component->tableName,

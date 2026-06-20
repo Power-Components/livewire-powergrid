@@ -19,10 +19,14 @@ class SoftDeletes
 
         $softDeletes = data_get($this->component, 'softDeletes');
 
-        if ($softDeletes === 'withTrashed') {
-            $query->withTrashed();
-        } elseif ($softDeletes === 'onlyTrashed') {
-            $query->onlyTrashed();
+        if ($query instanceof EloquentBuilder) {
+            if ($softDeletes === 'withTrashed') {
+                /** @phpstan-ignore method.notFound */
+                $query->withTrashed();
+            } elseif ($softDeletes === 'onlyTrashed') {
+                /** @phpstan-ignore method.notFound */
+                $query->onlyTrashed();
+            }
         }
 
         return $next($query);

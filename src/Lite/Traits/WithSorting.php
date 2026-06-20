@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Lite\Traits;
 
+/** @phpstan-ignore trait.unused */
 trait WithSorting
 {
     public string $sortField = '';

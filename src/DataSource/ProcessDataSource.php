@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use PowerComponents\LivewirePowerGrid\DataSource\{Processors\CollectionProcessor,
+    Processors\DataSourceBase,
     Processors\ModelProcessor,
     Processors\ScoutBuilderProcessor};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -37,6 +38,7 @@ class ProcessDataSource
 
         $datasource = is_object($this->datasource) ? clone $this->datasource : $this->datasource;
 
+        /** @var list<class-string<DataSourceBase>> $processors */
         $processors = [
             CollectionProcessor::class,
             ScoutBuilderProcessor::class,

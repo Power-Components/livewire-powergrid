@@ -11,18 +11,19 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
 };
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
 
 class PowerGridManager
 {
-    /** @var list<class-string> */
+    /** @var list<class-string<PluginBase>> */
     public static array $plugins = [
         EditablePlugin::class,
         FlatpickrPlugin::class,
         ToggleablePlugin::class,
     ];
 
-    /** @param  list<class-string>  $plugins */
+    /** @param  list<class-string<PluginBase>>  $plugins */
     public static function plugins(array $plugins): void
     {
         static::$plugins = $plugins;

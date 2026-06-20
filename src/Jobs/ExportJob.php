@@ -33,15 +33,19 @@ class ExportJob implements ShouldQueue
         array $params
     ) {
         $this->columns = $columns;
-        $this->exportableClass = $params['exportableClass'];
-        $this->fileName = $params['fileName'];
-        $this->offset = $params['offset'];
-        $this->limit = $params['limit'];
-        $this->filtered = $params['filtered'];
-        $this->exportable = $params['exportable'];
-        $this->filters = (array) Crypt::decrypt($params['filters']);
-        $this->properties = (array) Crypt::decrypt($params['parameters']);
+        $this->exportableClass = strval($params['exportableClass'] ?? '');
+        $this->fileName = strval($params['fileName'] ?? '');
+        $this->offset = intval($params['offset'] ?? 0);
+        $this->limit = intval($params['limit'] ?? 0);
+        $filteredParam = is_array($params['filtered'] ?? null) ? $params['filtered'] : [];
+        $this->filtered = array_values(array_filter($filteredParam, fn ($v) => is_int($v) || is_string($v)));
+        $this->exportable = is_array($params['exportable'] ?? null) ? $params['exportable'] : [];
+        /** @phpstan-ignore-next-line */
+        $this->filters = (array) Crypt::decrypt($params['filters'] ?? '');
+        /** @phpstan-ignore-next-line */
+        $this->properties = (array) Crypt::decrypt($params['parameters'] ?? '');
 
+        /** @phpstan-ignore assign.propertyType */
         $this->componentTable = new $componentTable();
 
         $this->componentTable->isExporting = true;
@@ -54,16 +58,17 @@ class ExportJob implements ShouldQueue
             ->each(fn ($value, $key) => $this->componentTable->{$key} = data_get($this->properties, $key));
 
         $currentHiddenStates = collect($this->columns)
-            ->mapWithKeys(fn ($column) => [data_get($column, 'field') => data_get($column, 'hidden')]);
+            ->mapWithKeys(fn ($column) => [strval(data_get($column, 'field')) => data_get($column, 'hidden')]);
 
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
-            $column->hidden = data_get($currentHiddenStates, data_get($column, 'field'), true);
+            data_set($column, 'hidden', data_get($currentHiddenStates, data_get($column, 'field'), true));
 
             return $column;
         }, $this->componentTable->columns());
 
-        $exportable = (new $this->exportableClass())
-            ->fileName($this->getFilename())
+        $exportableInstance = new $this->exportableClass();
+        /** @phpstan-ignore method.notFound */
+        $exportable = $exportableInstance->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties));
 
         if (method_exists($exportable, 'store')) {

@@ -87,21 +87,30 @@ final class Exportable implements Wireable
 
     public function queues(string $queues): self
     {
-        data_set($this->batchExport, 'queues', $queues);
+        $batchExport = $this->batchExport;
+        data_set($batchExport, 'queues', $queues);
+        /** @var array<string, mixed> $batchExport */
+        $this->batchExport = $batchExport;
 
         return $this;
     }
 
     public function onQueue(string $onQueue): self
     {
-        data_set($this->batchExport, 'onQueue', $onQueue);
+        $batchExport = $this->batchExport;
+        data_set($batchExport, 'onQueue', $onQueue);
+        /** @var array<string, mixed> $batchExport */
+        $this->batchExport = $batchExport;
 
         return $this;
     }
 
     public function onConnection(string $connection): self
     {
-        data_set($this->batchExport, 'onConnection', $connection);
+        $batchExport = $this->batchExport;
+        data_set($batchExport, 'onConnection', $connection);
+        /** @var array<string, mixed> $batchExport */
+        $this->batchExport = $batchExport;
 
         return $this;
     }

@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Lite\Traits;
 
 use Illuminate\Support\Facades\{Cache, Cookie, Session};
 
+/** @phpstan-ignore trait.unused */
 trait WithPersist
 {
     public function mountWithPersist(): void

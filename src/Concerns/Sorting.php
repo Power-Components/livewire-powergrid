@@ -140,7 +140,7 @@ trait Sorting
             $columnDataField = data_get($column, 'dataField');
 
             if ($columnDataField === $field && data_get($column, 'sortCallback') instanceof \Closure) {
-                return $column->sortCallback;
+                return $column instanceof Column ? $column->sortCallback : null;
             }
         }
 

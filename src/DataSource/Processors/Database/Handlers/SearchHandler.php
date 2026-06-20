@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers;
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Query\{Builder as QueryBuilder, JoinClause};
 use Illuminate\Support\Facades\Schema;
@@ -38,13 +39,13 @@ class SearchHandler implements SearchHandlerContract
                     $search = $this->getBeforeSearchMethod($field, $search);
 
                     if (empty($table)) {
-                        $subQuery->orWhere($field, Sql::like($subQuery), "%{$search}%");
+                        $subQuery->orWhere($field, Sql::like($subQuery), '%'.($search ?? '').'%');
 
                         return;
                     }
 
                     if (isset($columnList[$field]) || ! $hasRelationSearch) {
-                        $subQuery->orWhere("{$table}.{$field}", Sql::like($subQuery), "%{$search}%");
+                        $subQuery->orWhere($table.'.'.$field, Sql::like($subQuery), '%'.($search ?? '').'%');
                     }
                 });
         });
@@ -98,8 +99,8 @@ class SearchHandler implements SearchHandlerContract
 
                     $query->orWhere(function (EloquentBuilder $subQuery) use ($nestedTable, $nestedColumns, $search) {
                         foreach ($nestedColumns as $nestedColumn) {
-                            $search = $this->getBeforeSearchMethod($nestedColumn, $search);
-                            $subQuery->when($search, fn ($q) => $q->where("$nestedTable.$nestedColumn", Sql::like($q), '%'.$search.'%'));
+                            $search = $this->getBeforeSearchMethod(strval($nestedColumn), $search);
+                            $subQuery->when($search, fn ($q) => $q->where($nestedTable.'.'.strval($nestedColumn), Sql::like($q), '%'.($search ?? '').'%'));
                         }
                     });
                 }
@@ -114,12 +115,13 @@ class SearchHandler implements SearchHandlerContract
         }
     }
 
-    /** @return array<string, mixed> */
+    /** @return array<string|int, mixed> */
     protected function getColumnList(EloquentBuilder|QueryBuilder $query, string $modelTable): array
     {
-        $connection = $query instanceof EloquentBuilder
-            ? $query->getModel()->getConnection()->getName()
-            : $query->getConnection()->getConfig('name');
+        $conn = $query instanceof EloquentBuilder
+            ? $query->getModel()->getConnection()
+            : $query->getConnection();
+        $connection = $conn instanceof Connection ? $conn->getName() : null;
 
         try {
             return PowerGridTableCache::getOrCreate(
@@ -154,10 +156,11 @@ class SearchHandler implements SearchHandlerContract
         return $search;
     }
 
-    /** @return array{0: mixed, 1: string} */
+    /** @return array{string|null, string} */
     protected function splitField(EloquentBuilder|QueryBuilder $query, string $field): array
     {
-        $table = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
+        $from = $query instanceof QueryBuilder ? $query->from : $query->getModel()->getTable();
+        $table = is_string($from) ? $from : null;
 
         if (str_contains($field, '.')) {
             $explodeField = explode('.', $field);

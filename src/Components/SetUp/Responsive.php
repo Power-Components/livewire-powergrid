@@ -21,7 +21,7 @@ final class Responsive implements Wireable
 
     public function fixedColumns(string ...$columnNames): static
     {
-        $this->fixedColumns = [...$columnNames];
+        $this->fixedColumns = array_values($columnNames);
 
         return $this;
     }
@@ -40,7 +40,7 @@ final class Responsive implements Wireable
                 continue;
             }
 
-            $this->sortOrder[$key] = $column;
+            $this->sortOrder[$key] = intval($column);
         }
 
         return $this;

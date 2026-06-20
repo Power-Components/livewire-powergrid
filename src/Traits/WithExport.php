@@ -23,6 +23,8 @@ use Throwable;
  * @property ?Batch $exportBatch
  *
  * @codeCoverageIgnore
+ *
+ * @phpstan-ignore trait.unused
  */
 trait WithExport
 {

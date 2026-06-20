@@ -19,6 +19,7 @@ final class PowerGridTableCache
         $tag = self::generateTag($tableName);
 
         if (Cache::has($tag)) {
+            /** @phpstan-ignore-next-line */
             return (array) Cache::get($tag);
         }
 

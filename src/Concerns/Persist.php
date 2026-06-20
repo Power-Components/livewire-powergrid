@@ -85,13 +85,15 @@ trait Persist
         $state = (array) json_decode(strval($storage), true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
-            $this->columns = collect($this->columns)->map(function ($column) use ($state) {
-                if (! $column->forceHidden && array_key_exists($column->field, $state['columns'])) {
-                    data_set($column, 'hidden', $state['columns'][$column->field]);
+            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($state) {
+                $column = (object) $column;
+
+                if (! $column->forceHidden && array_key_exists(strval($column->field), $state['columns'])) {
+                    data_set($column, 'hidden', $state['columns'][strval($column->field)]);
                 }
 
-                return (object) $column;
-            })->all();
+                return $column;
+            })->all());
         }
 
         if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {

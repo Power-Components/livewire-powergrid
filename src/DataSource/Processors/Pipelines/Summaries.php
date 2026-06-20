@@ -18,7 +18,8 @@ class Summaries
             return $next($query);
         }
 
-        $this->component->columns = collect($this->component->columns)
+        /** @var list<mixed> $updatedColumns */
+        $updatedColumns = collect($this->component->columns)
             ->map(function ($column) use ($query) {
                 $column = (object) $column;
                 $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
@@ -33,6 +34,7 @@ class Summaries
                 return $column;
             })
             ->toArray();
+        $this->component->columns = $updatedColumns;
 
         return $next($query);
     }

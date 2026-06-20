@@ -27,9 +27,9 @@ use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
  */
 final class PowerGridComponentMaker
 {
-    private ?PowerGridStub $stub;
+    private PowerGridStub $stub;
 
-    private ?Datasource $datasource;
+    private Datasource $datasource;
 
     private string $name;
 

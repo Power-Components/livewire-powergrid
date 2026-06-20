@@ -33,7 +33,7 @@ trait HasActions
 
                     if (is_array($attributes) && isset($attributes['attribute']) && isset($attributes['value'])) {
                         $attributes = [
-                            $attributes['attribute'] => $attributes['value'],
+                            strval($attributes['attribute']) => $attributes['value'],
                         ];
                     }
 

@@ -47,7 +47,7 @@ class InputText extends BuilderBase
         /**
          * @throws Exception
          */
-        $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, mixed $value) {
+        $matchOperatorQuery = function (string $selected, EloquentBuilder|QueryBuilder $query, string $field, string $value) {
             match ($selected) {
                 'is' => $query->where($field, '=', $value),
                 'is_not' => $query->where($field, '!=', $value),

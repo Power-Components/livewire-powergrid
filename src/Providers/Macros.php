@@ -16,41 +16,61 @@ class Macros
     public static function columns(): void
     {
         Column::macro('withSum', function (string $label, bool $header, bool $footer): Column {
-            data_set($this->properties, 'summarize.sum.label', $label);
-            data_set($this->properties, 'summarize.sum.header', $header);
-            data_set($this->properties, 'summarize.sum.footer', $footer);
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, 'summarize.sum.label', $label);
+            data_set($props, 'summarize.sum.header', $header);
+            data_set($props, 'summarize.sum.footer', $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
 
             return $this;
         });
 
         Column::macro('withCount', function (string $label, bool $header, bool $footer): Column {
-            data_set($this->properties, 'summarize.count.label', $label);
-            data_set($this->properties, 'summarize.count.header', $header);
-            data_set($this->properties, 'summarize.count.footer', $footer);
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, 'summarize.count.label', $label);
+            data_set($props, 'summarize.count.header', $header);
+            data_set($props, 'summarize.count.footer', $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
 
             return $this;
         });
 
         Column::macro('withAvg', function (string $label, bool $header, bool $footer): Column {
-            data_set($this->properties, 'summarize.avg.label', $label);
-            data_set($this->properties, 'summarize.avg.header', $header);
-            data_set($this->properties, 'summarize.avg.footer', $footer);
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, 'summarize.avg.label', $label);
+            data_set($props, 'summarize.avg.header', $header);
+            data_set($props, 'summarize.avg.footer', $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
 
             return $this;
         });
 
         Column::macro('withMin', function (string $label, bool $header, bool $footer): Column {
-            data_set($this->properties, 'summarize.min.label', $label);
-            data_set($this->properties, 'summarize.min.header', $header);
-            data_set($this->properties, 'summarize.min.footer', $footer);
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, 'summarize.min.label', $label);
+            data_set($props, 'summarize.min.header', $header);
+            data_set($props, 'summarize.min.footer', $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
 
             return $this;
         });
 
         Column::macro('withMax', function (string $label, bool $header, bool $footer): Column {
-            data_set($this->properties, 'summarize.max.label', $label);
-            data_set($this->properties, 'summarize.max.header', $header);
-            data_set($this->properties, 'summarize.max.footer', $footer);
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, 'summarize.max.label', $label);
+            data_set($props, 'summarize.max.header', $header);
+            data_set($props, 'summarize.max.footer', $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
 
             return $this;
         });
@@ -86,7 +106,7 @@ class Macros
             $this->rawQueries[] = [
                 'method' => 'orWhereRaw',
                 'sql' => function () use ($tableName) {
-                    $driver = config('database.default');
+                    $driver = strval(config('database.default'));
                     $connection = config("database.connections.{$driver}.driver");
 
                     $quote = $connection === 'pgsql' ? '"' : '`';
@@ -111,6 +131,7 @@ class Macros
         });
 
         Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null): Column {
+            /** @var Column $this */
             $this->enableSort();
 
             if ($when) {

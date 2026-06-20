@@ -84,8 +84,8 @@ class EditablePlugin extends PluginBase
     public function render(Column|array $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
-            static::$cachedJs ??= file_get_contents(__DIR__.'/index.js');
-            static::$cachedCss ??= file_get_contents(__DIR__.'/index.css');
+            static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
+            static::$cachedCss ??= file_get_contents(__DIR__.'/index.css') ?: '';
 
             return view('powergrid-plugins::Editable.index', [
                 'tableName' => $this->component->tableName,
@@ -108,7 +108,14 @@ class EditablePlugin extends PluginBase
     {
         [$field, $id, $value] = $params;
 
-        data_set($this->component, "$field.{$id}", $value);
+        if (! is_string($field) || ! is_scalar($id)) {
+            return;
+        }
+
+        $id = (string) $id;
+
+        $component = $this->component;
+        data_set($component, "$field.{$id}", $value);
 
         $this->component->onUpdatedEditable($id, $field, $value);
 
