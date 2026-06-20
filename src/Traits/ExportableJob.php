@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Traits;
 
 use Illuminate\Database\Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\Database\Handlers\FilterHandler,
@@ -17,7 +18,7 @@ trait ExportableJob
 
     private PowerGridComponent $componentTable;
 
-    /** @var array<int, \PowerComponents\LivewirePowerGrid\Column> */
+    /** @var array<int, Column> */
     private array $columns;
 
     private string $exportableClass;

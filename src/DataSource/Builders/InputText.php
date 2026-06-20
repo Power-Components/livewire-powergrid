@@ -64,7 +64,7 @@ class InputText extends BuilderBase
             };
         };
 
-        if (filled($searchMorphs) && $builder instanceof EloquentBuilder) {
+        if (filled($searchMorphs) && is_array($searchMorphs) && $builder instanceof EloquentBuilder) {
             $table = $searchMorphs[0];
             $relationship = $searchMorphs[1];
             $types = $searchMorphs[2];

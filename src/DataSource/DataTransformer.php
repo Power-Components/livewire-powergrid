@@ -45,8 +45,8 @@ final class DataTransformer
 
             $primaryKeyValue = data_get($row, $this->primaryKey);
 
-            if ($primaryKeyValue && ! empty($processedActions)) {
-                $actionsByRow[$primaryKeyValue] = $processedActions;
+            if ($primaryKeyValue && is_scalar($primaryKeyValue) && ! empty($processedActions)) {
+                $actionsByRow[(string) $primaryKeyValue] = $processedActions;
             }
 
             if ($this->component->supportModel && $row instanceof Model) {

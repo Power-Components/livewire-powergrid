@@ -54,6 +54,10 @@ class FlatpickrPlugin extends PluginBase
     {
         [$field, $selectedDates, $dateStr, $label, $type, $timezone, $dateFormat] = $params;
 
+        if (! is_string($field) || ! is_string($type)) {
+            return;
+        }
+
         if (! is_array($selectedDates) || ! isset($selectedDates[1])) {
             return;
         }

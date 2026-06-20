@@ -17,8 +17,6 @@ parameters:
         - identifier: encapsedStringPart.nonString
         - identifier: varTag.nativeType
         - identifier: property.unusedType
-        - identifier: offsetAccess.invalidOffset
-        - identifier: offsetAccess.nonOffsetAccessible
         - identifier: array.invalidKey
         - identifier: property.nonObject
         - identifier: return.type

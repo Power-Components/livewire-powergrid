@@ -158,7 +158,7 @@ trait Filter
                 }
 
                 $unset = function ($filter, $field, $column) {
-                    $key = data_get($filter, 'key');
+                    $key = strval(data_get($filter, 'key'));
 
                     if (str($field)->contains('.')) {
                         $explodeField = explode('.', $field);
@@ -458,9 +458,9 @@ trait Filter
 
                     data_set($column, 'filters', (array) $filter);
 
-                    if (isset($this->filters[data_get($filter, 'field')])
-                        && in_array(data_get($filter, 'field'), array_keys($this->filters[data_get($filter, 'key')]))
-                        && array_values($this->filters[data_get($filter, 'key')])) {
+                    if (isset($this->filters[strval(data_get($filter, 'field'))])
+                        && in_array(data_get($filter, 'field'), array_keys($this->filters[strval(data_get($filter, 'key'))]))
+                        && array_values($this->filters[strval(data_get($filter, 'key'))])) {
                         $this->enabledFilters[] = [
                             'field' => data_get($filter, 'field'),
                             'label' => data_get($column, 'title'),
@@ -583,7 +583,7 @@ trait Filter
                     )
                 );
 
-                if (count($wireModel)) {
+                if (count($wireModel) && is_string($wireModel[0])) {
                     $queryString[$wireModel[0]] = [
                         'as' => $as->toString(),
                         'except' => '',
