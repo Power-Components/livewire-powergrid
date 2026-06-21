@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class GlobalSearch
 {
