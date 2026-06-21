@@ -4,13 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use stdClass;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent};
 
 final class GlobalSearch
 {
     public function __construct(protected PowerGridComponent $component) {}
 
+    /**
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     public function handle(Collection $collection, Closure $next): Collection
     {
         if (blank($this->component->search)) {
@@ -18,7 +21,9 @@ final class GlobalSearch
         }
 
         $searchableColumns = collect($this->component->columns())
-            ->filter(fn (Column|stdClass|array $column) => (bool) data_get($column, 'searchable'));
+            ->filter(function (mixed $column): bool {
+                return (bool) data_get($column, 'searchable');
+            });
 
         if ($searchableColumns->isEmpty()) {
             return $next($collection);
@@ -27,15 +32,18 @@ final class GlobalSearch
         $results = $collection->filter(function ($row) use ($searchableColumns) {
             $row = (object) $row;
 
-            return $searchableColumns->contains(function (Column|stdClass|array $column) use ($row) {
-                $field = strval(data_get($column, 'dataField', data_get($column, 'field')));
+            return $searchableColumns->contains(function (mixed $column) use ($row) {
+                /** @var string $field */
+                $field = data_get($column, 'dataField', data_get($column, 'field'));
+                /** @var string $value */
                 $value = data_get($row, $field);
 
+                /** @var string $search */
                 $search = trim(strtolower(htmlspecialchars(strval($this->component->search), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
                 $search = $this->getBeforeSearchMethod($field, $search);
 
-                return Str::contains(strtolower(strval($value)), strtolower(strval($search)));
+                return Str::contains(strtolower($value), strtolower(strval($search)));
             });
         });
 

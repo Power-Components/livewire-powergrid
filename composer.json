@@ -30,12 +30,11 @@
   },
   "require-dev": {
     "laravel/pint": "^1.29",
-    "pestphp/pest": "^4.6",
+    "pestphp/pest": "^4.7",
     "orchestra/testbench": "^10.0|^11.0",
-    "larastan/larastan": "^3.0",
+    "larastan/larastan": "^3.10",
     "laradumps/laradumps": "^5.0",
-    "laravel/scout": "^10.11.3",
-    "laravel/pao": "^1.0",
+    "laravel/scout": "^11.3",
     "composer/composer": "^2.10"
   },
   "suggest": {

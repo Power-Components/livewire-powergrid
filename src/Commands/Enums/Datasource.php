@@ -12,9 +12,12 @@ enum Datasource
 
     case COLLECTION;
 
-    public static function from(string $datasource): mixed
+    public static function from(string $datasource): self
     {
-        return constant("self::{$datasource}");
+        /** @var self $result */
+        $result = constant("self::{$datasource}");
+
+        return $result;
     }
 
     public function label(): string

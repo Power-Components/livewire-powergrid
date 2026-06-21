@@ -32,8 +32,10 @@ trait HasActions
                     $applyLoop = is_callable($closureLoop) ? $closureLoop($loop) : false;
 
                     if (is_array($attributes) && isset($attributes['attribute']) && isset($attributes['value'])) {
+                        /** @var string $attributeKey */
+                        $attributeKey = $attributes['attribute'];
                         $attributes = [
-                            strval($attributes['attribute']) => $attributes['value'],
+                            $attributeKey => $attributes['value'],
                         ];
                     }
 
@@ -53,8 +55,11 @@ trait HasActions
                     }
 
                     if ($apply || $applyLoop) {
+                        /** @var string $forAction */
+                        $forAction = data_get($rule, 'forAction');
+
                         return [
-                            'forAction' => strval(data_get($rule, 'forAction')),
+                            'forAction' => $forAction,
                             'apply' => (bool) $apply,
                             'applyLoop' => (bool) $applyLoop,
                             'attributes' => $attributes,
@@ -74,12 +79,15 @@ trait HasActions
                 ->toArray();
         };
 
-        $value = strval(data_get($row, $this->realPrimaryKey()));
+        /** @var string $value */
+        $value = data_get($row, $this->realPrimaryKey());
         $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}";
 
-        if (intval(config('livewire-powergrid.cache_ttl')) > 0) {
+        /** @var int $cacheTtl */
+        $cacheTtl = config('livewire-powergrid.cache_ttl');
+        if ($cacheTtl > 0) {
             /** @var array<int, array<string, mixed>> $formattedRules */
-            $formattedRules = Cache::remember($cacheKey, intval(config('livewire-powergrid.cache_ttl')), function () use ($closure, $row, $loop) {
+            $formattedRules = Cache::remember($cacheKey, $cacheTtl, function () use ($closure, $row, $loop) {
                 $value = $closure($row, $loop);
 
                 return array_filter($value, function ($item) {
@@ -106,7 +114,10 @@ trait HasActions
         $rules = method_exists($this, 'actionRules') ? $this->resolveActionRules($row) : [];
 
         $actions = collect($this->actions($row)) // @phpstan-ignore-line
-            ->map(fn (Button $button) => $this->resolveButtonForBlade($button, $row, $rules))
+            ->map(function ($button) use ($row, $rules) {
+                /** @var Button $button */
+                return $this->resolveButtonForBlade($button, $row, $rules);
+            })
             ->filter(fn (array $action) => ! $action['hidden'])
             ->values()
             ->all();
@@ -115,7 +126,10 @@ trait HasActions
             return '';
         }
 
-        return view('livewire-powergrid::components.structure.actions', ['actions' => $actions])->render();
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::components.structure.actions';
+
+        return view($viewName, ['actions' => $actions])->render();
     }
 
     /**
@@ -172,7 +186,9 @@ trait HasActions
 
                 foreach ($entries as $entry) {
                     if (is_array($entry) && isset($entry['attribute'], $entry['value'])) {
-                        $attributes[strval($entry['attribute'])] = $entry['value'];
+                        /** @var string $attributeKey */
+                        $attributeKey = $entry['attribute'];
+                        $attributes[$attributeKey] = $entry['value'];
                     }
                 }
             }

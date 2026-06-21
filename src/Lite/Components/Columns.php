@@ -18,6 +18,9 @@ class Columns extends Component
 
     public function render()
     {
-        return view('livewire-powergrid::lite.columns');
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::lite.columns';
+
+        return view($viewName);
     }
 }

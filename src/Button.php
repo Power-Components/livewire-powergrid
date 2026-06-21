@@ -29,7 +29,8 @@ final class Button implements Wireable
 {
     use Macroable;
 
-    public string $view = '';
+    /** @var view-string|null */
+    public ?string $view = null;
 
     /** @var array<string, mixed> */
     public array $attributes = [];
@@ -52,6 +53,14 @@ final class Button implements Wireable
         return new Button($action);
     }
 
+    /** @param view-string $view */
+    public function view(string $view): Button
+    {
+        $this->view = $view;
+
+        return $this;
+    }
+
     public static function make(string $action, ?string $slot = null): self
     {
         return (new self($action))
@@ -68,13 +77,6 @@ final class Button implements Wireable
     public function slot(?string $slot = null): Button
     {
         $this->slot = $slot;
-
-        return $this;
-    }
-
-    public function view(string $view): Button
-    {
-        $this->view = $view;
 
         return $this;
     }

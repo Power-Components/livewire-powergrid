@@ -12,15 +12,18 @@ final class ListDatabaseTables
     /**
      * List tables in database
      *
-     * @return array<int, mixed>
+     * @return list<string>
      */
     public static function handle(): array
     {
         try {
-            return array_values(collect(Schema::getTables())
+            /** @var array<int, string> $tables */
+            $tables = collect(Schema::getTables())
                 ->pluck('name')
                 ->diff(self::HIDDEN_TABLES)
-                ->all());
+                ->all();
+
+            return array_values($tables);
         } catch (Exception) {
             return [];
         }

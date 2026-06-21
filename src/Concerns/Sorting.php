@@ -4,7 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use PowerComponents\LivewirePowerGrid\Column;
-use stdClass;
 
 trait Sorting
 {
@@ -78,11 +77,14 @@ trait Sorting
     public function getLabelFromColumn(string $field): string
     {
         $filter = collect($this->columns)->filter(
-            fn (Column|stdClass|array $column) => data_get($column, 'dataField') == $field
+            fn ($column) => data_get($column, 'dataField') == $field
         )->map(fn ($column) => (array) $column)
             ->first();
 
-        return strval(data_get($filter, 'title'));
+        /** @var string $title */
+        $title = data_get($filter, 'title');
+
+        return $title;
     }
 
     public function sortLabel(string $field): void

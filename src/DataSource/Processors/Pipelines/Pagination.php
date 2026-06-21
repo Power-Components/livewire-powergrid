@@ -11,11 +11,16 @@ class Pagination
 {
     public function __construct(protected PowerGridComponent $component) {}
 
+    /** @return LengthAwarePaginator<int, mixed>|Paginator<int, mixed> */
     public function handle(mixed $query, Closure $next): LengthAwarePaginator|Paginator
     {
-        $pageName = strval(data_get($this->component->setUp, 'footer.pageName', 'page'));
-        $perPage = intval(data_get($this->component->setUp, 'footer.perPage'));
-        $recordCount = strval(data_get($this->component->setUp, 'footer.recordCount'));
+        /** @var string $pageName */
+        $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
+        /** @var int $perPageFromSetup */
+        $perPageFromSetup = data_get($this->component->setUp, 'footer.perPage');
+        $perPage = intval($perPageFromSetup);
+        /** @var string $recordCount */
+        $recordCount = data_get($this->component->setUp, 'footer.recordCount');
 
         if ($query instanceof ScoutBuilder) {
             $paginate = match (true) {

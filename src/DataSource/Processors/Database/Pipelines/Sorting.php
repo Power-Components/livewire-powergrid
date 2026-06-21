@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -29,6 +29,7 @@ class Sorting
         return $next($query);
     }
 
+    /** @param  EloquentBuilder<Model>|MorphToMany<Model, Model>|QueryBuilder  $query */
     private function applySingleSort(EloquentBuilder|MorphToMany|QueryBuilder $query, string $sortField, string $direction): void
     {
         $sortCallback = $this->component->getSortCallback($sortField);
@@ -39,9 +40,11 @@ class Sorting
             return;
         }
 
+        /** @var 'asc'|'desc' $direction */
         $query->orderBy($this->component->resolveSortField($sortField), $direction);
     }
 
+    /** @param  EloquentBuilder<Model>|MorphToMany<Model, Model>|QueryBuilder  $results */
     private function applyMultipleSort(EloquentBuilder|MorphToMany|QueryBuilder $results): void
     {
         foreach ($this->component->sortArray as $sortField => $direction) {
@@ -53,6 +56,7 @@ class Sorting
                 continue;
             }
 
+            /** @var 'asc'|'desc' $direction */
             $results->orderBy($this->component->resolveSortField($sortField), $direction);
         }
     }

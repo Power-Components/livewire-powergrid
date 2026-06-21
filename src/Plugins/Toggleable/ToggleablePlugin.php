@@ -63,22 +63,25 @@ class ToggleablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.toggleable')));
     }
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function handles(Column|array $column): bool
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function handles(Column|array|stdClass $column): bool
     {
         return ! empty(data_get($column, 'pluginData.toggleable'));
     }
 
     protected static ?string $cachedJs = null;
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function render(Column|array $column, mixed $row): ?string
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function render(Column|array|stdClass $column, mixed $row): ?string
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
 
         static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
 
-        return view('powergrid-plugins::Toggleable.index', [
+        /** @var view-string $viewName */
+        $viewName = 'powergrid-plugins::Toggleable.index';
+
+        return view($viewName, [
             'tableName' => $this->component->tableName,
             'primaryKey' => $this->component->realPrimaryKey,
             'row' => $row,
@@ -91,7 +94,12 @@ class ToggleablePlugin extends PluginBase
     #[On('pg:toggleable-{tableName}')]
     public function toggleableChanged(mixed ...$params): void
     {
-        [$field, $id, $value] = $params;
+        /** @var string $field */
+        $field = $params[0];
+        /** @var string $id */
+        $id = $params[1];
+        /** @var string $value */
+        $value = $params[2];
 
         $this->component->onUpdatedToggleable($id, $field, $value);
     }
@@ -123,7 +131,8 @@ class ToggleablePlugin extends PluginBase
             'fieldHideToggleable'
         );
 
-        if ($fieldHideToggleable || str_contains(strval(data_get($column, 'field')), '.')) {
+        $field = data_get($column, 'field');
+        if ($fieldHideToggleable || (is_string($field) && str_contains($field, '.'))) {
             return false;
         }
 

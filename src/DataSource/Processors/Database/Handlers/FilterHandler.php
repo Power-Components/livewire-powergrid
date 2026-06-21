@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers;
 
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
@@ -16,6 +16,8 @@ class FilterHandler
         private readonly PowerGridComponent $component
     ) {}
 
+    /** @param  EloquentBuilder<Model>|QueryBuilder  $query
+     * @return EloquentBuilder<Model>|QueryBuilder */
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
         $filterDefinitions = collect($this->component->filters());

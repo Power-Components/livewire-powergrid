@@ -3,6 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines;
 
 use Closure;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -12,6 +14,7 @@ class Filters
 
     public function handle(mixed $query, Closure $next): mixed
     {
+        /** @var EloquentBuilder<Model>|QueryBuilder $query */
         app()->makeWith(SearchHandlerContract::class, [
             'component' => $this->component,
         ])->apply($query);

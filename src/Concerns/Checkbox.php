@@ -32,7 +32,7 @@ trait Checkbox
             return;
         }
 
-        /** @var AbstractPaginator $records */
+        /** @var AbstractPaginator<int, mixed> $records */
         $records = $this->records();
 
         if ($records->isEmpty()) {

@@ -24,7 +24,7 @@ final class ActionProcessor
         $actions = [];
 
         if ($this->shouldProcessActions) {
-            /** @var list<array<string, mixed>> $actions */
+            /** @var list<Button> $actions */
             $actions = $this->component->actions($row);
 
             $actions = collect($actions)

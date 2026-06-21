@@ -11,6 +11,7 @@ class Export
 {
     public string $fileName;
 
+    /** @var Collection<int, mixed> */
     public Collection $data;
 
     public string $striped = '';
@@ -28,7 +29,10 @@ class Export
         return $this;
     }
 
-    /** @param  array<int, Column>  $columns */
+    /**
+     * @param  array<int, Column>  $columns
+     * @param  Collection<int, mixed>  $data
+     */
     public function setData(array $columns, Collection $data): Export
     {
         $this->columns = $columns;
@@ -38,6 +42,7 @@ class Export
     }
 
     /**
+     * @param  Collection<int, mixed>  $data
      * @param  array<int, Column>  $columns
      * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>}
      */
@@ -79,6 +84,7 @@ class Export
                     /** @var array<string, mixed> $row */
                     foreach ($row as $key => $value) {
                         if ($key === $column->field) {
+                            /** @var string $value */
                             if ($stripTags === true) {
                                 $value = strip_tags($value);
                             }

@@ -22,7 +22,11 @@ class Summaries
         $updatedColumns = collect($this->component->columns)
             ->map(function ($column) use ($query) {
                 $column = (object) $column;
-                $field = strval(data_get($column, 'dataField')) ?: strval(data_get($column, 'field'));
+                /** @var string $dataField */
+                $dataField = data_get($column, 'dataField');
+                /** @var string $rawField */
+                $rawField = data_get($column, 'field');
+                $field = $dataField ?: $rawField;
 
                 foreach (self::SUMMARIES as $summary) {
                     if (data_get($column, 'properties.summarize.'.$summary)) {

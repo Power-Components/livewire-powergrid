@@ -86,8 +86,8 @@ describe('Scout Filters Pipeline', function () {
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
         expect($result->wheres)->toHaveCount(2)
-            ->and($result->wheres['category_id'])->toBe('1')
-            ->and($result->wheres['status'])->toBe('active');
+            ->and($result->wheres[0])->toBe(['field' => 'category_id', 'operator' => '=', 'value' => '1'])
+            ->and($result->wheres[1])->toBe(['field' => 'status', 'operator' => '=', 'value' => 'active']);
     });
 
     it('should not modify builder when filters are empty', function () {
@@ -120,9 +120,9 @@ describe('Scout Filters Pipeline', function () {
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
         expect($result->wheres)->toHaveCount(3)
-            ->and($result->wheres['category_id'])->toBe('1')
-            ->and($result->wheres['name'])->toBe('Pizza')
-            ->and($result->wheres['price'])->toBe('10');
+            ->and($result->wheres[0])->toBe(['field' => 'category_id', 'operator' => '=', 'value' => '1'])
+            ->and($result->wheres[1])->toBe(['field' => 'name', 'operator' => '=', 'value' => 'Pizza'])
+            ->and($result->wheres[2])->toBe(['field' => 'price', 'operator' => '=', 'value' => '10']);
     });
 
     it('should handle nested filter arrays', function () {
@@ -144,8 +144,8 @@ describe('Scout Filters Pipeline', function () {
         $result = $pipeline->handle($builder, fn ($builder) => $builder);
 
         expect($result->wheres)->toHaveCount(2)
-            ->and($result->wheres['field1'])->toBe('value1')
-            ->and($result->wheres['field2'])->toBe('value2');
+            ->and($result->wheres[0])->toBe(['field' => 'field1', 'operator' => '=', 'value' => 'value1'])
+            ->and($result->wheres[1])->toBe(['field' => 'field2', 'operator' => '=', 'value' => 'value2']);
     });
 });
 
@@ -314,7 +314,7 @@ describe('Scout Pipeline Integration', function () {
 
         expect($builder->query)->toBe('pizza,')
             ->and($builder->wheres)->toHaveCount(1)
-            ->and($builder->wheres['category_id'])->toBe('1')
+            ->and($builder->wheres[0])->toBe(['field' => 'category_id', 'operator' => '=', 'value' => '1'])
             ->and($orders)->toHaveCount(1)
             ->and($orders[0])->toBe(['column' => 'name', 'direction' => 'asc']);
     });

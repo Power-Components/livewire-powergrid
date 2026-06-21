@@ -1,7 +1,7 @@
 <div align="center">
    <p><a href="https://livewire-powergrid.com" target="_blank"><img src="art/header.jpg" alt="PowerGrid Logo"></a></p>
    <p align="center">
-      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Latest Version" src="https://img.shields.io/static/v1?label=laravel&message=%E2%89%A510.0&color=0078BE&logo=laravel&style=flat-square"></a>
+      <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="PHP 8.3+" src="https://img.shields.io/static/v1?label=php&message=%E2%89%A58.3&color=777BB4&logo=php&style=flat-square"></a>
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/power-components/livewire-powergrid"></a>
       <a href="https://github.com/Power-Components/livewire-powergrid/actions">
       <img alt="Tests Passing" src="https://img.shields.io/github/actions/workflow/status/power-components/livewire-powergrid/mysql.yml?label=Tests" /></a>
@@ -23,23 +23,23 @@
 
 Livewire PowerGrid creates modern, powerful and easy-to-customize data tables based on [Laravel Livewire](https://laravel-livewire.com) library.
 
-With PowerGrid, you can effortlessly create advanced data tables one in a matter of minutes.
+With PowerGrid, you can effortlessly create advanced data tables in a matter of minutes.
 
 <p>
     <a href="https://demo.livewire-powergrid.com/examples/demo-dish" target="_blank"><img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805"></a>
 </p>
 
-`🚀` **Minimal Configuration**
+`🚀` **Ready out of the box**
 
 Tables have basic features activated by default. Ready to go!
 
-`👍` **Minimal Configuration**
+`👍` **Extensible**
 
-Extend and customize your Table including components (checkbox, action buttons, editable fields), global search feature, column data filters and data export tool.
+Extend and customize your Table including plugins (inline editing, toggles, date pickers), global search, column filters, bulk actions, and data export.
 
-`🛠️` **Minimal Configuration**
+`🛠️` **Developer-friendly scaffold**
 
-Table components include feature examples. Just uncomment some code, enter your data, and it works!
+Generated table components include usage examples. Just uncomment some code, enter your data, and it works!
 
 <br/>
 
@@ -55,24 +55,30 @@ Take a look at our Online Interactive Demo showcasing the latest PowerGrid featu
 
 PowerGrid offers a range of features that are readily available:
 
-| Feature                                                            | PowerGrid                               |
-| :--------------------------------------------------------------------- | :-------------------------------------- |
-| Tailwind CSS                    x                                      | ✅                                      |
-| Pagination                                                             | ✅                                      |
-| Column Sorting                                                         | ✅                                      |
-| Filters & Global Search                                                | ✅                                      |
-| Custom Filter Builder                                                  | ✅                                      |
-| Inline Editing (Click to edit)                                         | ✅                                      |
-| Row Buttons, Checkboxes, Dropdown menu, and Toggle Switch              | ✅                                      |
-| Custom Cell Content (Links, images, currency formatting)               | ✅                                      |
-| Multi-row Bulk Actions                                                 | ✅                                      |
-| Conditional Action Rules for Rows, Buttons, and Checkboxes             | ✅                                      |
-| Column Summaries (Sum, Count & Average)                                | ✅                                      |
-| Data Export to XLSX/CSV (OpenSpout)                                    | ✅                                      |
-| Queue Export for large datasets                                        | ✅                                      |
-| Responsive                                                             | ✅                                      |
-| Livewire Modal Integration (Wire Elements Modal)                       | ✅                                      |
-| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/6.x/resources/lang) |
+| Feature                                                                | PowerGrid |
+| :--------------------------------------------------------------------- | :-------- |
+| Tailwind CSS / DaisyUI / Flux themes                                   | ✅        |
+| Custom Theme via `struct()` API                                        | ✅        |
+| Pagination                                                             | ✅        |
+| Column Sorting                                                         | ✅        |
+| Filters & Global Search                                                | ✅        |
+| Custom Filter Builder                                                  | ✅        |
+| Inline Editing plugin (click to edit)                                  | ✅        |
+| Toggle Switch plugin                                                   | ✅        |
+| Date Picker plugin (Flatpickr)                                         | ✅        |
+| Row Buttons, Checkboxes, Dropdown menu                                 | ✅        |
+| Custom Cell Content (links, images, currency formatting)               | ✅        |
+| Multi-row Bulk Actions                                                 | ✅        |
+| Conditional Action Rules for Rows, Buttons, and Checkboxes            | ✅        |
+| Column Summaries (Sum, Count & Average)                                | ✅        |
+| Server-side Actions (full Blade rendering, no JS cache)                | ✅        |
+| Livewire DOM isolation via Hot Zones (`pg-tbody`, `pg-pagination`, `pg-filters`) | ✅ |
+| Data Export to XLSX/CSV (OpenSpout)                                    | ✅        |
+| Queue Export for large datasets                                        | ✅        |
+| Responsive                                                             | ✅        |
+| Laravel Scout support                                                  | ✅        |
+| Plugin system (extendable column behaviors)                            | ✅        |
+| Multi Language                                                         | Available in 🇺🇸 🇧🇷 🇪🇸 🇮🇹 🇩🇪 and [more...](https://github.com/Power-Components/livewire-powergrid/tree/main/resources/lang) |
 
 `📚` Learn more in our [Documentation](https://livewire-powergrid.com).
 
@@ -82,10 +88,10 @@ PowerGrid offers a range of features that are readily available:
 
 ### Requirements
 
-- PHP 8.2+
-- [Laravel 10+](https://laravel.com/docs/installation)
-- [Livewire 3.0x](https://livewire.laravel.com)
-- [Tailwind 4x](https://tailwindcss.com)
+- PHP 8.3+
+- [Laravel 12+](https://laravel.com/docs/installation)
+- [Livewire 4.0+](https://livewire.laravel.com)
+- [Tailwind CSS 4.x](https://tailwindcss.com)
 
 <br/>
 

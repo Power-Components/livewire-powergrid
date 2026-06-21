@@ -70,8 +70,8 @@ class EditablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.editable')));
     }
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function handles(Column|array $column): bool
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function handles(Column|array|stdClass $column): bool
     {
         return ! empty(data_get($column, 'pluginData.editable'));
     }
@@ -80,14 +80,17 @@ class EditablePlugin extends PluginBase
 
     protected static ?string $cachedCss = null;
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function render(Column|array $column, mixed $row): ?string
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function render(Column|array|stdClass $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
             static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
             static::$cachedCss ??= file_get_contents(__DIR__.'/index.css') ?: '';
 
-            return view('powergrid-plugins::Editable.index', [
+            /** @var view-string $viewName */
+            $viewName = 'powergrid-plugins::Editable.index';
+
+            return view($viewName, [
                 'tableName' => $this->component->tableName,
                 'primaryKey' => $this->component->realPrimaryKey,
                 'row' => $row,
@@ -107,7 +110,7 @@ class EditablePlugin extends PluginBase
     public function inputTextChanged(mixed ...$params): void
     {
         [$field, $id, $value] = $params;
-
+        /** @var string $value */
         if (! is_string($field) || ! is_scalar($id)) {
             return;
         }

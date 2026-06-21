@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Support;
 
 use Exception;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\{DB, Schema};
 
@@ -17,6 +17,7 @@ class Sql
     /**
      * @throws Exception
      */
+    /** @param  EloquentBuilder<Model>|QueryBuilder|null  $query */
     public static function like(EloquentBuilder|QueryBuilder|null $query = null): string
     {
         if ($query) {

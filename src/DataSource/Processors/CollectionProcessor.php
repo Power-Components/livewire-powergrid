@@ -25,9 +25,10 @@ class CollectionProcessor extends DataSourceBase
     {
         $datasource = $datasource ?? $this->component->datasource($properties);
 
+        /** @var array<int, mixed>|BaseCollection<int, mixed> $datasource */
         $collection = new BaseCollection($datasource);
 
-        /** @var BaseCollection $results */
+        /** @var BaseCollection<int, mixed> $results */
         $results = app(Pipeline::class)
             ->send($collection)
             ->through([
@@ -40,13 +41,17 @@ class CollectionProcessor extends DataSourceBase
 
         $results = $this->component->transformQuery($results);
 
+        /** @var BaseCollection<int, mixed> $results */
         $paginated = $results;
         $dataTransformer = new DataTransformer($this->component);
         $actionsByRow = [];
         $timeInMs = 0;
 
         if ($results->count() > 0) {
-            $this->component->filtered = $results->pluck($this->component->primaryKey)->toArray();
+            $plucked = $results->pluck($this->component->primaryKey)->values();
+            /** @var list<int|string> $filtered */
+            $filtered = $plucked->toArray();
+            $this->component->filtered = $filtered;
             $paginated = $this->paginate($results);
 
             $transformResult = $dataTransformer->transform($paginated->getCollection());
@@ -63,13 +68,18 @@ class CollectionProcessor extends DataSourceBase
         ];
     }
 
+    /** @param  BaseCollection<int, mixed>  $results
+     * @return LengthAwarePaginator<int, mixed> */
     private function paginate(BaseCollection $results): LengthAwarePaginator
     {
+        /** @var int $perPageFromSetup */
+        $perPageFromSetup = data_get($this->component->setUp, 'footer.perPage', 10);
         $perPage = $this->isExport
             ? $results->count()
-            : intval(data_get($this->component->setUp, 'footer.perPage', 10));
+            : intval($perPageFromSetup);
 
         $perPage = $perPage > 0 ? $perPage : $results->count();
+        /** @var string $pageName */
         $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
 
         $page = Paginator::resolveCurrentPage($pageName);

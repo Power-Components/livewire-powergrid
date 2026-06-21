@@ -25,7 +25,8 @@ class ThemeManager
             return static::$tokenCache[$cacheKey];
         }
 
-        $value = strval(data_get($theme->resolveTokens(), $key, $default));
+        /** @var string $value */
+        $value = data_get($theme->resolveTokens(), $key, $default);
         static::$tokenCache[$cacheKey] = $value;
 
         return $value;

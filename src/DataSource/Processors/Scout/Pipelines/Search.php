@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipelines;
 
 use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Str, Stringable};
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -11,6 +12,8 @@ final class Search
 {
     public function __construct(protected PowerGridComponent $component) {}
 
+    /** @param  ScoutBuilder<Model>  $builder
+     * @return ScoutBuilder<Model> */
     public function handle(ScoutBuilder $builder, Closure $next): ScoutBuilder
     {
         if (blank($this->component->search)) {

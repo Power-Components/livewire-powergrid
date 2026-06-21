@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pipeline\Pipeline;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
@@ -21,10 +22,10 @@ class ScoutBuilderProcessor extends DataSourceBase
      */
     public function process(array $properties = [], mixed $datasource = null): array
     {
-        /** @var ScoutBuilder $datasource */
+        /** @var ScoutBuilder<Model> $datasource */
         $datasource = $datasource ?? $this->component->datasource($properties);
 
-        /** @var ScoutBuilder $query */
+        /** @var ScoutBuilder<Model> $query */
         $query = app(Pipeline::class)
             ->send($datasource)
             ->through([

@@ -35,7 +35,8 @@ final class Responsive implements Wireable
 
         foreach ((array) $columnNames as $key => $column) {
             if (is_int($key)) {
-                $this->sortOrder[strval($column)] = $key + 1;
+                /** @var string $column */
+                $this->sortOrder[$column] = $key + 1;
 
                 continue;
             }

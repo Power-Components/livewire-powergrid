@@ -22,6 +22,7 @@ class ColumnRawQueries
             ->filter(fn ($column) => filled(data_get($column, 'rawQueries')))
             ->each(function ($column) use ($query) {
                 foreach ((array) data_get($column, 'rawQueries', []) as $rawQueryConfig) {
+                    /** @var array<string, mixed> $rawQueryConfig */
                     $this->executeRawQuery($query, $rawQueryConfig);
                 }
             });
@@ -42,7 +43,9 @@ class ColumnRawQueries
             return;
         }
 
+        /** @var string|Closure|null $sql */
         $sql = data_get($rawQueryConfig, 'sql');
+        /** @var array<int|string, mixed> $bindings */
         $bindings = data_get($rawQueryConfig, 'bindings', []);
         $method = data_get($rawQueryConfig, 'method', 'whereRaw');
 
@@ -64,10 +67,13 @@ class ColumnRawQueries
             $sql = $sql();
         }
 
-        return preg_replace_callback('/\{([\w.]+)\}/', function ($matches) {
+        return preg_replace_callback('/\{([\w.]+)\}/', function (array $matches): string {
             $property = trim($matches[1]);
 
-            return data_get($this->component, $property, '');
+            /** @var string $value */
+            $value = data_get($this->component, $property, '');
+
+            return $value;
         }, $sql);
     }
 

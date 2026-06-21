@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Plugins;
 
 use Livewire\Wireable;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use stdClass;
 
 /**
  * @phpstan-consistent-constructor
@@ -53,14 +54,14 @@ abstract class PluginBase implements Wireable
 
     abstract public function isEnabled(): bool;
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function handles(Column|array $column): bool
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function handles(Column|array|stdClass $column): bool
     {
         return false;
     }
 
-    /** @param  Column|array<string, mixed>  $column */
-    public function render(Column|array $column, mixed $row): ?string
+    /** @param  Column|array<string, mixed>|stdClass  $column */
+    public function render(Column|array|stdClass $column, mixed $row): ?string
     {
         return null;
     }

@@ -16,7 +16,8 @@ trait ExportableJob
 {
     private string $fileName;
 
-    private PowerGridComponent $componentTable;
+    /** @var PowerGridComponent */
+    private object $componentTable;
 
     /** @var array<int, Column> */
     private array $columns;
@@ -27,7 +28,7 @@ trait ExportableJob
 
     private int $limit;
 
-    /** @var array<string, mixed> */
+    /** @var array<mixed, mixed> */
     private array $filters;
 
     /** @var list<int|string> */
@@ -43,14 +44,19 @@ trait ExportableJob
             ->replace('.csv', '');
     }
 
-    /** @param  array<string, mixed>  $properties */
+    /**
+     * @param  array<string, mixed>  $properties
+     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>
+     */
     private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
     {
         /** @phpstan-ignore assign.propertyType */
         $this->componentTable->filters = $this->filters ?? [];
         $this->componentTable->filtered = $this->filtered ?? [];
         $this->componentTable->columns = array_values($this->columns);
-        $this->componentTable->search = strval(data_get($properties, 'search', ''));
+        /** @var string $search */
+        $search = data_get($properties, 'search', '');
+        $this->componentTable->search = $search;
 
         $processDataSource = tap(
             ProcessDataSource::make($this->componentTable, $properties),

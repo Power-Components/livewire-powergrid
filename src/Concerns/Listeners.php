@@ -107,17 +107,17 @@ trait Listeners
 
     public function datePickerChanged(mixed ...$params): void
     {
-        $this->delegateToPlugin('datePickerChanged', $params);
+        $this->delegateToPlugin('datePickerChanged', array_values($params));
     }
 
     public function inputTextChanged(mixed ...$params): void
     {
-        $this->delegateToPlugin('inputTextChanged', $params);
+        $this->delegateToPlugin('inputTextChanged', array_values($params));
     }
 
     public function toggleableChanged(mixed ...$params): void
     {
-        $this->delegateToPlugin('toggleableChanged', $params);
+        $this->delegateToPlugin('toggleableChanged', array_values($params));
     }
 
     /**

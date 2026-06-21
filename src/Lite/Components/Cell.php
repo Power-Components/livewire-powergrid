@@ -37,6 +37,9 @@ class Cell extends Component
 
     public function render()
     {
-        return view('livewire-powergrid::lite.cell');
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::lite.cell';
+
+        return view($viewName);
     }
 }

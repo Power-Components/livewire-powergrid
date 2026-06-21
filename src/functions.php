@@ -5,8 +5,11 @@ use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 if (! function_exists('powergrid_components_path')) {
     function powergrid_components_path(string $filename = ''): string
     {
+        /** @var string $namespace */
+        $namespace = config('livewire.class_namespace');
+
         return base_path(
-            str(strval(config('livewire.class_namespace')))
+            str($namespace)
                 ->replace('App', 'app')
                 ->append(DIRECTORY_SEPARATOR.$filename)
                 ->replace('\\', '/')

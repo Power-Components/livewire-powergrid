@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid;
 
 use Exception;
 use Illuminate\Contracts\View\{Factory, View};
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
@@ -113,7 +114,8 @@ class PowerGridComponent extends Component
 
     public function boot(): void
     {
-        $themeClass = $this->customThemeClass() ?? strval(config('livewire-powergrid.theme'));
+        /** @var string $themeClass */
+        $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
         /** @var Theme $themeInstance */
         $themeInstance = app($themeClass);
@@ -196,16 +198,21 @@ class PowerGridComponent extends Component
             ->filter(fn ($column) => filled(data_get($column, 'filters')))->count() > 0;
     }
 
+    /** @return BaseCollection<int, Column> */
     #[Computed]
     public function visibleColumns(): BaseCollection
     {
-        return collect($this->columns)
+        /** @var BaseCollection<int, Column> $columns */
+        $columns = collect($this->columns)
             ->where('forceHidden', false)
             ->map(function ($column) {
+                /** @var Column $column */
                 data_forget($column, 'rawQueries');
 
                 return $column;
             });
+
+        return $columns;
     }
 
     #[Computed]
@@ -224,13 +231,17 @@ class PowerGridComponent extends Component
 
     private function getRecordsFromCache(): mixed
     {
-        $prefix = strval(data_get($this->setUp, 'cache.prefix'));
-        $customTag = strval(data_get($this->setUp, 'cache.tag'));
-        $ttl = intval(data_get($this->setUp, 'cache.ttl'));
+        /** @var string $prefix */
+        $prefix = data_get($this->setUp, 'cache.prefix');
+        /** @var string $customTag */
+        $customTag = data_get($this->setUp, 'cache.tag');
+        /** @var int $ttl */
+        $ttl = data_get($this->setUp, 'cache.ttl');
 
         if (filled($customTag)) {
             $tag = $prefix.$customTag;
         } else {
+            /** @var object|string $datasource */
             $datasource = $this->datasource();
             $table = method_exists($datasource, 'getModel') ? $datasource->getModel()->getTable() : $this->tableName;
             $tag = $prefix.'powergrid-'.$table.'-'.$this->tableName;
@@ -247,18 +258,25 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($results['results']);
     }
 
+    /** @return AbstractPaginator<int, mixed>|MorphToMany<Model, Model>|BaseCollection<int, mixed> */
     private function getRecordsDataSource(): AbstractPaginator|MorphToMany|BaseCollection
     {
         $processResult = ProcessDataSource::make($this)->get();
 
-        /** @var BaseCollection $actionsRows */
-        $actionsRows = $processResult['results'] instanceof AbstractPaginator
-            ? $processResult['results']->getCollection()
-            : new BaseCollection($processResult['results']);
+        if ($processResult['results'] instanceof AbstractPaginator) {
+            /** @var BaseCollection<int, mixed> $actionsRows */
+            $actionsRows = $processResult['results']->getCollection();
+        } else {
+            /** @var array<int, mixed> $processResultsData */
+            $processResultsData = $processResult['results'];
+            /** @var BaseCollection<int, mixed> $actionsRows */
+            $actionsRows = new BaseCollection($processResultsData);
+        }
 
         return $this->applyAfterQuery($processResult['results']);
     }
 
+    /** @return AbstractPaginator<int, mixed>|MorphToMany<Model, Model>|BaseCollection<int, mixed> */
     private function applyAfterQuery(mixed $results): AbstractPaginator|MorphToMany|BaseCollection
     {
         if ($results instanceof AbstractPaginator) {
@@ -271,7 +289,7 @@ class PowerGridComponent extends Component
             return $this->transformRows($results);
         }
 
-        /** @var MorphToMany|Collection $results */
+        /** @var MorphToMany<Model, Model>|Collection<int, mixed> $results */
         return $results;
     }
 
@@ -333,7 +351,10 @@ class PowerGridComponent extends Component
 
     public function noDataLabel(): string|View
     {
-        return view(theme_view('table.no-data-label'));
+        /** @var view-string $viewName */
+        $viewName = theme_view('table.no-data-label');
+
+        return view($viewName);
     }
 
     /** @return array<string, mixed> */
@@ -343,7 +364,10 @@ class PowerGridComponent extends Component
             ->where('class', get_class($this))
             ->pluck('name')
             ->intersect(array_keys($this->all()))
-            ->mapWithKeys(fn (string $property) => [$property => $this->{$property}])
+            ->mapWithKeys(function ($property): array {
+                /** @var string $property */
+                return [$property => $this->{$property}];
+            })
             ->all();
     }
 
@@ -355,11 +379,14 @@ class PowerGridComponent extends Component
     #[Computed]
     public function total(): ?int
     {
-        if (method_exists($this->records, 'total')) {
+        /** @var object|string $records */
+        $records = $this->records;
+
+        if (method_exists($records, 'total')) {
             return $this->records->total();
         }
 
-        if (method_exists($this->records, 'count')) {
+        if (method_exists($records, 'count')) {
             return $this->records->count();
         }
 
@@ -375,6 +402,9 @@ class PowerGridComponent extends Component
         $this->resolveFilters();
         $this->resolvePlugins();
 
-        return view(theme_view('table'));
+        /** @var view-string $viewName */
+        $viewName = theme_view('table');
+
+        return view($viewName);
     }
 }

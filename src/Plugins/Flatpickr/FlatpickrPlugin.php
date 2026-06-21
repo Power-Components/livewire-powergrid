@@ -64,12 +64,19 @@ class FlatpickrPlugin extends PluginBase
 
         $this->component->resetPage();
 
+        /** @var string $dateStr */
+        /** @var string $firstDate */
+        $firstDate = $selectedDates[0];
+        /** @var string $secondDate */
+        $secondDate = $selectedDates[1];
         [$startRaw, $endRaw] = Str::contains($dateStr, 'to')
             ? explode(' to ', $dateStr)
-            : [strval($selectedDates[0]), strval($selectedDates[1])];
+            : [strval($firstDate), strval($secondDate)];
 
+        /** @var string $appTimezone */
         $appTimezone = config('app.timezone');
         $isDatetime = $type === 'datetime';
+        /** @var string $dateFormat */
         $hasTime = str_contains($dateFormat, 'H');
 
         $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
@@ -95,6 +102,7 @@ class FlatpickrPlugin extends PluginBase
             $endDate->endOfDay();
         }
 
+        /** @var string|null $label */
         $this->component->addEnabledFilters($field, $label);
 
         $filters = $this->component->filters;

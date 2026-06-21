@@ -3,13 +3,16 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
 class Boolean extends BuilderBase
 {
-    /** @param  int|array<string, mixed>|string|null  $values */
+    /**
+     * @param  int|array<string, mixed>|string|null  $values
+     * @param  EloquentBuilder<Model>|QueryBuilder  $builder
+     */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (data_get($this->filterBase, 'builder')) {
@@ -36,7 +39,11 @@ class Boolean extends BuilderBase
         }
     }
 
-    /** @param  int|array<string, mixed>|string|null  $values */
+    /**
+     * @param  int|array<string, mixed>|string|null  $values
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {

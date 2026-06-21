@@ -32,23 +32,25 @@ final class PowerGridTableCache
     public static function forgetAll(): void
     {
         rescue(function (): void {
-            /** @phpstan-ignore-next-line */
             self::list()->each(fn (string $tag): bool => Cache::forget($tag));
 
             Cache::forget('pg_cached_tables');
         }, report: false);
     }
 
+    /** @return Collection<int, string> */
     private static function list(): Collection
     {
-        return collect(
-            /** @phpstan-ignore-next-line */
-            rescue(
-                fn () => (Cache::get(self::$cachedTablesListTag) ?? []),
-                [],
-                report: false
-            )
+        /** @var array<int, string> $cached */
+        $cached = rescue(
+            fn () => (Cache::get(self::$cachedTablesListTag) ?? []),
+            [],
+            report: false
         );
+
+        $collection = collect($cached);
+
+        return $collection;
     }
 
     private static function addToCachedTablesList(string $tag): void

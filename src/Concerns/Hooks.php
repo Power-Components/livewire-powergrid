@@ -45,6 +45,10 @@ trait Hooks
 
     public function afterChangedNumberEndFilter(string $field, string $label, string|false $value): void {}
 
+    /**
+     * @param  Collection<int, mixed>  $rows
+     * @return Collection<int, mixed>
+     */
     public function transformRows(Collection $rows): Collection
     {
         return $rows;
@@ -57,6 +61,7 @@ trait Hooks
 
     /**
      * @param  array<int|string, list<array<string, mixed>>>  $actionsByRow
+     * @param  Collection<int, mixed>  $rows
      * @return array<int|string, list<array<string, mixed>>>
      */
     public function transformActions(array $actionsByRow, Collection $rows): array

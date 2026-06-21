@@ -20,6 +20,9 @@ class Row extends Component
 
     public function render()
     {
-        return view('livewire-powergrid::lite.row');
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::lite.row';
+
+        return view($viewName);
     }
 }

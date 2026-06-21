@@ -3,13 +3,16 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Carbon, Collection};
 
 class DateTimePicker extends BuilderBase
 {
-    /** @param  int|array{start: string, end: string}|string|null  $values */
+    /**
+     * @param  int|array{start: string, end: string}|string|null  $values
+     * @param  EloquentBuilder<Model>|QueryBuilder  $builder
+     */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if (gettype($values) !== 'array') {
@@ -38,7 +41,11 @@ class DateTimePicker extends BuilderBase
         $builder->whereBetween($field, [$startDate, $endDate]);
     }
 
-    /** @param  int|array{start: string, end: string}|string|null  $values */
+    /**
+     * @param  int|array{start: string, end: string}|string|null  $values
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (! isset($values['start']) && ! isset($values['end'])) {

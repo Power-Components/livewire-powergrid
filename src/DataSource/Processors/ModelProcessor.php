@@ -45,7 +45,7 @@ class ModelProcessor extends DataSourceBase
             ])
             ->thenReturn();
 
-        /** @var Collection $collection */
+        /** @var Collection<int, mixed> $collection */
         $collection = $paginate->getCollection();
 
         $dataTransformer = new DataTransformer($this->component);

@@ -21,6 +21,7 @@ final class DataTransformer
         $this->primaryKey = $component->primaryKey;
     }
 
+    /** @param  BaseCollection<int, mixed>  $collection */
     public function transform(BaseCollection $collection): TransformResult
     {
         $startTime = microtime(true);
@@ -58,6 +59,8 @@ final class DataTransformer
 
         $endTime = round((microtime(true) - $startTime) * 1000);
 
+        /** @var array<int|string, list<array<string, mixed>>> $actionsByRow */
+        /** @var BaseCollection<int, mixed> $transformedCollection */
         return new TransformResult($transformedCollection, $endTime, $actionsByRow);
     }
 }

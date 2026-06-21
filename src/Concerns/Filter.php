@@ -42,13 +42,18 @@ trait Filter
     protected function applyDefaultFilters(): void
     {
         $columnsByField = collect($this->columns)
-            ->mapWithKeys(fn (Column $column) => [
-                filled($column->field) ? $column->field : $column->dataField => $column,
-            ]);
+            ->mapWithKeys(function ($column) {
+                /** @var Column $column */
+
+                return [
+                    filled($column->field) ? $column->field : $column->dataField => $column,
+                ];
+            });
 
         collect($this->filters())
             ->filter(fn ($filter) => filled($filter->defaultValue))
             ->each(function (FilterBase $filter) use (&$defaultFiltersApplied, $columnsByField) {
+                /** @var string $field */
                 $field = $filter->field;
                 $column = $filter->column;
 
@@ -57,6 +62,7 @@ trait Filter
                 $defaultValue = $filter->defaultValue;
 
                 $columnData = $columnsByField->get($column);
+                /** @var string|null $label */
                 $label = data_get($columnData, 'title', $field);
 
                 switch ($key) {
@@ -165,7 +171,8 @@ trait Filter
                 }
 
                 $unset = function ($filter, $field, $column) {
-                    $key = strval(data_get($filter, 'key'));
+                    /** @var string $key */
+                    $key = data_get($filter, 'key');
 
                     if (str($field)->contains('.')) {
                         $explodeField = explode('.', $field);
@@ -441,6 +448,7 @@ trait Filter
 
         $filters->each(function ($filter) {
             $this->columns = array_values(collect($this->columns)->map(function ($column) use ($filter) {
+                /** @var Column $column */
                 if (data_get($column, 'field') === data_get($filter, 'column') ||
                     data_get($column, 'dataField') === data_get($filter, 'column')) {
                     if (data_get($filter, 'dataSource') instanceof Closure) {
@@ -449,7 +457,10 @@ trait Filter
 
                         if ($depends && $this->filters) {
                             $depends = collect($depends)
-                                ->mapWithKeys(fn ($field) => [strval($field) => data_get($this->filters, 'select.'.strval($field))]);
+                                ->mapWithKeys(function ($field) {
+                                    /** @var string $field */
+                                    return [$field => data_get($this->filters, 'select.'.$field)];
+                                });
                         }
 
                         data_forget($filter, 'dataSource');
@@ -459,18 +470,26 @@ trait Filter
                     data_forget($filter, 'builder');
                     data_forget($filter, 'collection');
 
+                    /** @var object|string $filter */
                     if (! is_array($filter) && method_exists($filter, 'execute')) {
                         $filter = $filter->execute();
                     }
 
                     data_set($column, 'filters', (array) $filter);
 
-                    if (isset($this->filters[strval(data_get($filter, 'field'))])
-                        && in_array(data_get($filter, 'field'), array_keys($this->filters[strval(data_get($filter, 'key'))]))
-                        && array_values($this->filters[strval(data_get($filter, 'key'))])) {
+                    /** @var string $filterField */
+                    $filterField = data_get($filter, 'field');
+                    /** @var string $filterKey */
+                    $filterKey = data_get($filter, 'key');
+
+                    if (isset($this->filters[$filterField])
+                        && in_array($filterField, array_keys($this->filters[$filterKey]))
+                        && array_values($this->filters[$filterKey])) {
+                        /** @var string $labelValue */
+                        $labelValue = data_get($column, 'title');
                         $this->enabledFilters[] = [
-                            'field' => strval(data_get($filter, 'field')),
-                            'label' => strval(data_get($column, 'title')),
+                            'field' => $filterField,
+                            'label' => strval($labelValue),
                         ];
                     }
 
@@ -503,6 +522,7 @@ trait Filter
         }
     }
 
+    /** @return Collection<string, string> */
     public function listColumnForQueryString(): Collection
     {
         $columns = collect();
@@ -531,22 +551,28 @@ trait Filter
         $columns = $this->listColumnForQueryString();
 
         foreach (Arr::dot($this->filters()) as $filter) {
-            $as = str($filter->field)
+            /** @var FilterBase $filter */
+            /** @var string $field */
+            $field = $filter->field;
+            $as = str($field)
                 ->when(filled($prefix), fn ($c) => $c->prepend($prefix.'_'))
                 ->replace('.', '_')
                 ->replaceMatches('/\_+/', '_');
 
             if (filled(request()->get($as))) {
-                $this->addEnabledFilters($filter->field, strval($columns->get($filter->field, $filter->field)));
+                $this->addEnabledFilters($field, strval($columns->get($field, $field)));
             }
 
-            if ($filter->key === 'input_text') {
-                $queryString['filters.input_text.'.$filter->field] = [
+            /** @var string $key */
+            $key = data_get($filter, 'key');
+
+            if ($key === 'input_text') {
+                $queryString['filters.input_text.'.$field] = [
                     'as' => $as->toString(),
                     'except' => '',
                 ];
 
-                $queryString['filters.input_text_options.'.$filter->field] = [
+                $queryString['filters.input_text_options.'.$field] = [
                     'as' => $as->append('_operator')->toString(),
                     'except' => '',
                 ];
@@ -554,35 +580,35 @@ trait Filter
                 continue;
             }
 
-            if ($filter->key === 'number') {
+            if ($key === 'number') {
                 $_start = $as->append('_start')->toString();
                 $_end = $as->append('_end')->toString();
                 $fieldProcessed = false;
 
-                $queryString['filters.number.'.$filter->field.'.start'] = [
+                $queryString['filters.number.'.$field.'.start'] = [
                     'as' => $_start,
                     'except' => '',
                 ];
 
                 if (filled(request()->get($_start))) {
-                    $this->addEnabledFilters($filter->field.'_start', strval($columns->get($filter->field, $filter->field)));
+                    $this->addEnabledFilters($field.'_start', strval($columns->get($field, $field)));
 
                     $fieldProcessed = true;
                 }
 
-                $queryString['filters.number.'.$filter->field.'.end'] = [
+                $queryString['filters.number.'.$field.'.end'] = [
                     'as' => $_end,
                     'except' => '',
                 ];
 
                 if ($fieldProcessed === false && filled(request()->get($_end))) {
-                    $this->addEnabledFilters($filter->field.'_end', strval($columns->get($filter->field, $filter->field)));
+                    $this->addEnabledFilters($field.'_end', strval($columns->get($field, $field)));
                 }
 
                 continue;
             }
 
-            if ($filter->key === 'dynamic') {
+            if ($key === 'dynamic') {
                 $wireModel = array_values(
                     Arr::where(
                         (array) data_get($filter, 'attributes'),
@@ -600,7 +626,7 @@ trait Filter
                 continue;
             }
 
-            $queryString['filters.'.$filter->key.'.'.$filter->field] = [
+            $queryString['filters.'.$key.'.'.$field] = [
                 'as' => $as->toString(),
                 'except' => '',
             ];
@@ -609,15 +635,20 @@ trait Filter
         return $queryString;
     }
 
-    /** @param  array<string, array<string, mixed>>  $array */
+    /** @param  array<string, mixed>  $array */
     private function removeNestedArrayKey(array &$array, string $parent, string $child): void
     {
-        if (isset($array[$parent][$child])) {
-            unset($array[$parent][$child]);
-        }
+        if (isset($array[$parent]) && is_array($array[$parent])) {
+            /** @var array<string, mixed> $nested */
+            $nested = &$array[$parent];
 
-        if (isset($array[$parent]) && empty($array[$parent])) {
-            unset($array[$parent]);
+            if (isset($nested[$child])) {
+                unset($nested[$child]);
+            }
+
+            if (empty($array[$parent])) {
+                unset($array[$parent]);
+            }
         }
     }
 }

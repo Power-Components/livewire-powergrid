@@ -14,6 +14,10 @@ final class Filters
 
     public function __construct(protected PowerGridComponent $component) {}
 
+    /**
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     public function handle(Collection $collection, Closure $next): Collection
     {
         if (blank($this->component->filters)) {
@@ -32,12 +36,30 @@ final class Filters
                 }
 
                 $results = match ($filterType) {
-                    'datetime' => (new DateTimePicker($this->component, $definition))->collection($results, $field, $value),
-                    'date' => (new DatePicker($this->component, $definition))->collection($results, $field, $value),
-                    'multi_select' => (new MultiSelect($this->component, $definition))->collection($results, $field, $value),
-                    'select' => (new Select($this->component, $definition))->collection($results, $field, $value),
-                    'boolean' => (new Boolean($this->component, $definition))->collection($results, $field, $value),
-                    'number' => (new Number($this->component, $definition))->collection($results, $field, $value),
+                    'datetime' => (function () use ($results, $field, $value, $definition) {
+                        /** @var array{start: string, end: string}|int|string|null $value */
+                        return (new DateTimePicker($this->component, $definition))->collection($results, $field, $value);
+                    })(),
+                    'date' => (function () use ($results, $field, $value, $definition) {
+                        /** @var array{start: string, end: string}|int|string|null $value */
+                        return (new DatePicker($this->component, $definition))->collection($results, $field, $value);
+                    })(),
+                    'multi_select' => (function () use ($results, $field, $value, $definition) {
+                        /** @var int|list<string>|string|null $value */
+                        return (new MultiSelect($this->component, $definition))->collection($results, $field, $value);
+                    })(),
+                    'select' => (function () use ($results, $field, $value, $definition) {
+                        /** @var array<string, mixed>|int|string|null $value */
+                        return (new Select($this->component, $definition))->collection($results, $field, $value);
+                    })(),
+                    'boolean' => (function () use ($results, $field, $value, $definition) {
+                        /** @var array<string, mixed>|int|string|null $value */
+                        return (new Boolean($this->component, $definition))->collection($results, $field, $value);
+                    })(),
+                    'number' => (function () use ($results, $field, $value, $definition) {
+                        /** @var array{start?: float|int|string, end?: float|int|string}|int|string|null $value */
+                        return (new Number($this->component, $definition))->collection($results, $field, $value);
+                    })(),
                     'input_text' => (new InputText($this->component, $definition))->collection($results, $field, [
                         'selected' => $this->validateInputTextOptions($this->component->filters, $field),
                         'value' => $value,

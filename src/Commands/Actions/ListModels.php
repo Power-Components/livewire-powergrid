@@ -40,7 +40,10 @@ final class ListModels
             /**
              * @throws ReflectionException
              */
-            ->reject(fn (string $fqnClass) => rescue(fn () => (new ReflectionClass($fqnClass))->isSubclassOf(Model::class), false) === false)
+            ->reject(function (string $fqnClass) {
+                /** @var class-string $fqnClass */
+                return rescue(fn () => (new ReflectionClass($fqnClass))->isSubclassOf(Model::class), false) === false;
+            })
             ->all();
     }
 }

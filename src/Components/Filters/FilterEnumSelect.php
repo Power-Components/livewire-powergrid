@@ -37,8 +37,9 @@ class FilterEnumSelect extends FilterBase
             }
 
             return $option;
-        });
+        })->values();
 
+        /** @var Collection<int, mixed> $collection */
         $this->dataSource($collection);
 
         $this->optionLabel($optionLabel);

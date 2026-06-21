@@ -106,7 +106,8 @@ class Macros
             $this->rawQueries[] = [
                 'method' => 'orWhereRaw',
                 'sql' => function () use ($tableName) {
-                    $driver = strval(config('database.default'));
+                    /** @var string $driver */
+                    $driver = config('database.default');
                     $connection = config("database.connections.{$driver}.driver");
 
                     $quote = $connection === 'pgsql' ? '"' : '`';

@@ -8,22 +8,10 @@ parameters:
     level: 9
 
     ignoreErrors:
-        - identifier: missingType.generics
-        - identifier: argument.type
         - '#Cannot call method [a-zA-Z0-9\\_]#'
         - '#Variable \$title might not be defined.#'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
-        -
-            message: "#^Unable to resolve the template type TKey in call to function collect$#"
-            count: 1
-            path: src/Support/PowerGridTableCache.php
-
-        -
-            message: "#^Unable to resolve the template type TValue in call to function collect$#"
-            count: 1
-            path: src/Support/PowerGridTableCache.php
-
     excludePaths:
         - './src/Components/Exports/OpenSpout/*'
         - './src/Themes/Theme.php'

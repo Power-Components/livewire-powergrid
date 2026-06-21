@@ -4,19 +4,24 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
 use Closure;
 use Exception;
-use Illuminate\Database\Eloquent\{Builder, Builder as EloquentBuilder};
+use Illuminate\Database\Eloquent\{Builder, Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\{Collection, Str};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 
 class InputText extends BuilderBase
 {
-    /** @param  int|array{value: mixed, selected: string, searchMorphs: mixed}|string|null  $values */
+    /**
+     * @param  int|array{value: mixed, selected: string, searchMorphs: mixed}|string|null  $values
+     * @param  EloquentBuilder<Model>|QueryBuilder  $builder
+     */
     public function builder(EloquentBuilder|QueryBuilder $builder, string $field, int|array|string|null $values): void
     {
         if ($filterRelation = (array) data_get($this->filterBase, 'filterRelation')) {
-            $relation = strval(data_get($filterRelation, 'relation'));
-            $field = strval(data_get($filterRelation, 'field'));
+            /** @var string $relation */
+            $relation = data_get($filterRelation, 'relation');
+            /** @var string $field */
+            $field = data_get($filterRelation, 'field');
 
             $closure = $this->builderRelation($relation, $field);
 
@@ -35,7 +40,9 @@ class InputText extends BuilderBase
         }
 
         /** @var array{value: mixed, selected: string, searchMorphs: mixed} $values */
+        /** @var string|array<int|string, mixed> $value */
         $value = $values['value'];
+        /** @var string $selected */
         $selected = $values['selected'];
         $searchMorphs = $values['searchMorphs'];
 
@@ -44,6 +51,7 @@ class InputText extends BuilderBase
             $value = $value[key($value)];
         }
 
+        /** @var string $value */
         /**
          * @throws Exception
          */
@@ -65,8 +73,11 @@ class InputText extends BuilderBase
         };
 
         if (filled($searchMorphs) && is_array($searchMorphs) && $builder instanceof EloquentBuilder) {
+            /** @var string $table */
             $table = $searchMorphs[0];
+            /** @var string $relationship */
             $relationship = $searchMorphs[1];
+            /** @var array<int, string>|string $types */
             $types = $searchMorphs[2];
 
             $builder->whereHasMorph(
@@ -89,7 +100,11 @@ class InputText extends BuilderBase
         $matchOperatorQuery($selected, $builder, $field, $value);
     }
 
-    /** @param  int|array{value: mixed, selected: string}|string|null  $values */
+    /**
+     * @param  int|array{value: mixed, selected: string}|string|null  $values
+     * @param  Collection<int, mixed>  $collection
+     * @return Collection<int, mixed>
+     */
     public function collection(Collection $collection, string $field, int|array|string|null $values): Collection
     {
         if (data_get($this->filterBase, 'collection')) {
@@ -100,6 +115,7 @@ class InputText extends BuilderBase
         }
 
         /** @var array{value: mixed, selected: string} $values */
+        /** @var string $value */
         $value = $values['value'];
         $selected = $values['selected'];
 
@@ -108,18 +124,24 @@ class InputText extends BuilderBase
             'is_not' => $collection->where($field, '!=', $value),
             'starts_with' => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
+                /** @var string $rowValue */
+                $rowValue = $row->{$field};
 
-                return Str::startsWith(Str::lower($row->{$field}), Str::lower($value));
+                return Str::startsWith(Str::lower($rowValue), Str::lower($value));
             }),
             'ends_with' => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
+                /** @var string $rowValue */
+                $rowValue = $row->{$field};
 
-                return Str::endsWith(Str::lower($row->{$field}), Str::lower($value));
+                return Str::endsWith(Str::lower($rowValue), Str::lower($value));
             }),
             'contains_not' => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
+                /** @var string $rowValue */
+                $rowValue = $row->{$field};
 
-                return ! Str::Contains(Str::lower($row->{$field}), Str::lower($value));
+                return ! Str::Contains(Str::lower($rowValue), Str::lower($value));
             }),
             'is_empty' => $collection->filter(function ($row) use ($field) {
                 $row = (object) $row;
@@ -145,8 +167,10 @@ class InputText extends BuilderBase
             }),
             default => $collection->filter(function ($row) use ($field, $value) {
                 $row = (object) $row;
+                /** @var string $rowValue */
+                $rowValue = $row->{$field};
 
-                return stristr($row->{$field}, strtolower($value)) !== false;
+                return stristr($rowValue, strtolower($value)) !== false;
             }),
         };
     }

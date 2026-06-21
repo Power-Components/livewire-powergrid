@@ -280,7 +280,10 @@ final class PowerGridComponentMaker
 
     private function livewireNamespace(): string
     {
-        return strval(config('livewire.class_namespace'));
+        /** @var string $namespace */
+        $namespace = config('livewire.class_namespace');
+
+        return $namespace;
     }
 
     /**

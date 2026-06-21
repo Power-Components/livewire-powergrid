@@ -7,6 +7,7 @@ use Illuminate\Support\Collection as BaseCollection;
 final class TransformResult
 {
     /**
+     * @param  BaseCollection<int, mixed>  $collection
      * @param  array<int|string, list<array<string, mixed>>>  $actionsByRow
      */
     public function __construct(
@@ -21,6 +22,7 @@ final class TransformResult
         return $this->actionsByRow;
     }
 
+    /** @return BaseCollection<int, mixed> */
     public function getCollection(): BaseCollection
     {
         return $this->collection;

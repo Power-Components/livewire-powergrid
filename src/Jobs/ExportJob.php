@@ -7,7 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use Illuminate\Support\Facades\Crypt;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
 
 /** @codeCoverageIgnore */
@@ -20,7 +22,7 @@ class ExportJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    /** @var array<string, mixed> */
+    /** @var array<mixed, mixed> */
     private array $properties;
 
     /**
@@ -33,20 +35,31 @@ class ExportJob implements ShouldQueue
         array $params
     ) {
         $this->columns = $columns;
-        $this->exportableClass = strval($params['exportableClass'] ?? '');
-        $this->fileName = strval($params['fileName'] ?? '');
-        $this->offset = intval($params['offset'] ?? 0);
-        $this->limit = intval($params['limit'] ?? 0);
+        /** @var string $exportableClass */
+        $exportableClass = $params['exportableClass'] ?? '';
+        $this->exportableClass = $exportableClass;
+        /** @var string $fileName */
+        $fileName = $params['fileName'] ?? '';
+        $this->fileName = $fileName;
+        /** @var int $offset */
+        $offset = $params['offset'] ?? 0;
+        $this->offset = $offset;
+        /** @var int $limit */
+        $limit = $params['limit'] ?? 0;
+        $this->limit = $limit;
         $filteredParam = is_array($params['filtered'] ?? null) ? $params['filtered'] : [];
         $this->filtered = array_values(array_filter($filteredParam, fn ($v) => is_int($v) || is_string($v)));
         $this->exportable = is_array($params['exportable'] ?? null) ? $params['exportable'] : [];
-        /** @phpstan-ignore-next-line */
-        $this->filters = (array) Crypt::decrypt($params['filters'] ?? '');
-        /** @phpstan-ignore-next-line */
-        $this->properties = (array) Crypt::decrypt($params['parameters'] ?? '');
+        /** @var string $filters */
+        $filters = $params['filters'] ?? '';
+        $this->filters = (array) Crypt::decrypt($filters);
+        /** @var string $parameters */
+        $parameters = $params['parameters'] ?? '';
+        $this->properties = (array) Crypt::decrypt($parameters);
 
-        /** @phpstan-ignore assign.propertyType */
-        $this->componentTable = new $componentTable();
+        /** @var PowerGridComponent $tableInstance */
+        $tableInstance = new $componentTable();
+        $this->componentTable = $tableInstance;
 
         $this->componentTable->isExporting = true;
     }
@@ -58,16 +71,25 @@ class ExportJob implements ShouldQueue
             ->each(fn ($value, $key) => $this->componentTable->{$key} = data_get($this->properties, $key));
 
         $currentHiddenStates = collect($this->columns)
-            ->mapWithKeys(fn ($column) => [strval(data_get($column, 'field')) => data_get($column, 'hidden')]);
+            ->mapWithKeys(function ($column) {
+                /** @var string $field */
+                $field = data_get($column, 'field');
 
+                return [$field => data_get($column, 'hidden')];
+            });
+
+        /** @var array<int, Column> $columnsWithHiddenState */
         $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
-            data_set($column, 'hidden', data_get($currentHiddenStates, data_get($column, 'field'), true));
+            /** @var string|null $field */
+            $field = data_get($column, 'field');
+            data_set($column, 'hidden', data_get($currentHiddenStates, $field, true));
 
             return $column;
         }, $this->componentTable->columns());
 
+        /** @var Export&ExportInterface $exportableInstance */
         $exportableInstance = new $this->exportableClass();
-        /** @phpstan-ignore method.notFound */
+        /** @var Export&ExportInterface $exportable */
         $exportable = $exportableInstance->fileName($this->getFilename())
             ->setData($columnsWithHiddenState, $this->prepareToExport($this->properties));
 

@@ -14,6 +14,9 @@ class Rows extends Component
 {
     public function render()
     {
-        return view('livewire-powergrid::lite.rows');
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::lite.rows';
+
+        return view($viewName);
     }
 }

@@ -76,20 +76,24 @@ trait Persist
             return;
         }
 
+        /** @var string $storage */
         $storage = match ($this->getPersistDriverConfig()) {
             'session' => Session::get($this->getPersistKeyName()),
             'cache' => Cache::store($this->getPersistDriverStoreConfig())->get($this->getPersistKeyName()),
             default => Cookie::get($this->getPersistKeyName())
         };
 
-        $state = (array) json_decode(strval($storage), true);
+        $state = (array) json_decode($storage, true);
 
         if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
             $this->columns = array_values(collect($this->columns)->map(function ($column) use ($state) {
                 $column = (object) $column;
 
-                if (! $column->forceHidden && array_key_exists(strval($column->field), $state['columns'])) {
-                    data_set($column, 'hidden', $state['columns'][strval($column->field)]);
+                /** @var string $field */
+                $field = $column->field;
+
+                if (! $column->forceHidden && array_key_exists($field, $state['columns'])) {
+                    data_set($column, 'hidden', $state['columns'][$field]);
                 }
 
                 return $column;
@@ -114,7 +118,8 @@ trait Persist
      */
     private function getPersistDriverConfig(): string
     {
-        $persistDriver = strval(config('livewire-powergrid.persist_driver', 'cookies'));
+        /** @var string $persistDriver */
+        $persistDriver = config('livewire-powergrid.persist_driver', 'cookies');
 
         if (! in_array($persistDriver, ['session', 'cache', 'cookies'])) {
             throw new Exception('Invalid persist driver');
@@ -125,7 +130,10 @@ trait Persist
 
     private function getPersistDriverStoreConfig(): string
     {
-        return strval(config('livewire-powergrid.persist_driver_store'));
+        /** @var string $store */
+        $store = config('livewire-powergrid.persist_driver_store');
+
+        return $store;
     }
 
     private function getPersistKeyName(): string

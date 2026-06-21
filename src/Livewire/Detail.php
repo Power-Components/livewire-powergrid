@@ -45,6 +45,9 @@ class Detail extends Component
 
     public function render(): View
     {
-        return view('livewire-powergrid::livewire.detail');
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::livewire.detail';
+
+        return view($viewName);
     }
 }
