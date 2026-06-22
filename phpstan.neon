@@ -13,7 +13,7 @@ parameters:
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
     excludePaths:
-        - './src/Components/Exports/OpenSpout/*'
+        - './src/Plugins/Export/OpenSpout/*'
         - './src/Themes/Theme.php'
         - './src/Testing/TestActions.php'
 

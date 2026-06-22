@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields, Traits\WithExport};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
@@ -10,8 +10,6 @@ it('renders export dropdown with xlsx button', function () {
 
     $component = new class() extends PowerGridComponent
     {
-        use WithExport;
-
         public string $tableName = 'test-dropdown';
 
         public function datasource()

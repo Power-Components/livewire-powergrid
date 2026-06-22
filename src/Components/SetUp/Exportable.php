@@ -38,6 +38,12 @@ final class Exportable implements Wireable
 
     public string $directory = '';
 
+    public string $batchName = 'PowerGrid batch export';
+
+    public string $jobClass = '';
+
+    public ?string $progressView = null;
+
     public function __construct(public string $fileName = 'export') {}
 
     public function type(string ...$types): self
@@ -111,6 +117,32 @@ final class Exportable implements Wireable
         data_set($batchExport, 'onConnection', $connection);
         /** @var array<string, mixed> $batchExport */
         $this->batchExport = $batchExport;
+
+        return $this;
+    }
+
+    public function batchName(string $name): self
+    {
+        $this->batchName = $name;
+
+        return $this;
+    }
+
+    /** @param  class-string  $jobClass */
+    public function jobClass(string $jobClass): self
+    {
+        $this->jobClass = $jobClass;
+
+        return $this;
+    }
+
+    /**
+     * Opt-in batch-export progress UI. PowerGrid ships no progress view by
+     * default; pass your own Blade view name (it receives $exportState).
+     */
+    public function progressView(?string $view): self
+    {
+        $this->progressView = $view;
 
         return $this;
     }

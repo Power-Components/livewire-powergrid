@@ -4,14 +4,7 @@
     <div class="{{ theme('header.layout.container') }}">
         <div class="{{ theme('header.layout.sub_container') }}">
             <div class="{{ theme('header.layout.actions_container') }}">
-                @if (data_get($setUp, 'exportable'))
-                    <div
-                        class="mt-2 sm:mt-0"
-                        id="pg-header-export"
-                    >
-                        @include(theme_view('header.export'))
-                    </div>
-                @endif
+                {!! $this->renderPluginZone('header') !!}
                 @includeIf(theme_view('header.toggle-columns'))
                 @includeIf(theme_view('header.soft-deletes'))
                 @if (config('livewire-powergrid.filter') == 'outside' && count($this->filters()) > 0)
@@ -28,7 +21,8 @@
         @includeIf(theme_view('header.enabled-filters'))
     </div>
 
-    @includeWhen(data_get($setUp, 'exportable.batchExport.queues', 0), theme_view('header.batch-exporting'))
+    {!! $this->renderPluginZone('header.bottom') !!}
+
     @includeWhen($multiSort, theme_view('header.multi-sort'))
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))
     @includeIf(theme_view('header.message-soft-deletes'))

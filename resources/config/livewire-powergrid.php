@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 use PowerComponents\LivewirePowerGrid\FilterAttributes\{Boolean, InputText, Number, Select};
+use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Tailwind};
 
 return [
@@ -120,8 +120,8 @@ return [
             'csv' => ExportToCsv::class,
         ],
         'openspout_v4' => [
-            'xlsx' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToXLS::class,
-            'csv' => PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v4\ExportToCsv::class,
+            'xlsx' => PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4\ExportToXLS::class,
+            'csv' => PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4\ExportToCsv::class,
         ],
     ],
 

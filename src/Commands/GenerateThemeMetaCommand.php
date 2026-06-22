@@ -89,7 +89,6 @@ PHP;
         $canonicalAliases = [
             'header',
             'header.search',
-            'header.export',
             'header.toggle-columns',
             'header.soft-deletes',
             'header.enabled-filters',
@@ -97,7 +96,6 @@ PHP;
             'header.loading',
             'header.message-soft-deletes',
             'header.multi-sort',
-            'header.batch-exporting',
             'footer',
             'pagination',
             'table.header',

@@ -7,14 +7,11 @@ use PowerComponents\LivewirePowerGrid\{Column,
     Components\SetUp\Exportable,
     Facades\PowerGrid,
     PowerGridComponent,
-    PowerGridFields,
-    Traits\WithExport};
+    PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 class ExportTable extends PowerGridComponent
 {
-    use WithExport;
-
     public string $tableName = 'testing-export-table';
 
     public string $separator = ',';

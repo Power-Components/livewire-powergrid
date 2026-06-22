@@ -1,14 +1,28 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields, Traits\WithExport};
+use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+
+it('keeps both openspout v4 and v5 export drivers available', function () {
+    $drivers = config('livewire-powergrid.exportable');
+
+    expect($drivers)->toHaveKeys(['openspout_v4', 'openspout_v5']);
+
+    foreach (['openspout_v4', 'openspout_v5'] as $driver) {
+        foreach (['xlsx', 'csv'] as $type) {
+            $class = data_get($drivers, "$driver.$type");
+
+            expect(class_exists($class))->toBeTrue("$class should exist")
+                ->and(is_subclass_of($class, ExportInterface::class))->toBeTrue("$class should implement ExportInterface");
+        }
+    }
+});
 
 it('properly export xls - all data', function () {
     $component = new class() extends PowerGridComponent
     {
-        use WithExport;
-
         public string $tableName = 'test-export-xls';
 
         public function datasource()
@@ -40,8 +54,6 @@ it('properly export xls - all data', function () {
 it('properly export csv data with selected data', function () {
     $component = new class() extends PowerGridComponent
     {
-        use WithExport;
-
         public string $tableName = 'test-export-csv';
 
         public function datasource()

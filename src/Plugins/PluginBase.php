@@ -67,6 +67,25 @@ abstract class PluginBase implements Wireable
     }
 
     /**
+     * Whether this plugin renders content into the given UI zone
+     * (e.g. 'header', 'toolbar', 'footer'). Feature plugins that are not
+     * bound to a column override this to inject their own UI.
+     */
+    public function handlesZone(string $zone): bool
+    {
+        return false;
+    }
+
+    /**
+     * Render this plugin's content for the given UI zone. Return null to
+     * render nothing. The plugin reads any needed state from $this->component.
+     */
+    public function renderZone(string $zone): ?string
+    {
+        return null;
+    }
+
+    /**
      * Return theme token overrides for this plugin.
      * Merged into the theme's resolved tokens.
      *

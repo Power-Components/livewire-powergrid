@@ -7,7 +7,7 @@
         @if (data_get($setUp, 'exportable'))
             <li>
                 <div class="px-0 py-0 hover:bg-transparent">
-                    @include(theme_view('header.export'))
+                    {!! $this->renderPluginZone('header') !!}
                 </div>
             </li>
         @endif
