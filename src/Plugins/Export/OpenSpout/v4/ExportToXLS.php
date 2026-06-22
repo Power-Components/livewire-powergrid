@@ -1,17 +1,17 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use OpenSpout\Common\Entity\Row;
-use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Common\Entity\Style\{Color, Style};
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use OpenSpout\Writer\XLSX\{Options, Writer};
-use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
-use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
@@ -68,12 +68,14 @@ class ExportToXLS extends Export implements ExportInterface
         $writer->openToFile(storage_path($this->fileName.'.xlsx'));
 
         $style = (new Style())
-            ->withFontBold(true)
-            ->withFontSize(12)
-            ->withShouldWrapText(false)
-            ->withBackgroundColor('d0d3d8');
+            ->setFontBold()
+            ->setFontName('Arial')
+            ->setFontSize(12)
+            ->setFontColor(Color::BLACK)
+            ->setShouldWrapText(false)
+            ->setBackgroundColor('d0d3d8');
 
-        $row = Row::fromValuesWithStyle($data['headers'], $style);
+        $row = Row::fromValues($data['headers'], $style);
 
         $writer->addRow($row);
 
@@ -86,19 +88,21 @@ class ExportToXLS extends Export implements ExportInterface
         }
 
         $default = (new Style())
-            ->withFontSize(12);
+            ->setFontName('Arial')
+            ->setFontSize(12);
 
         $gray = (new Style())
-            ->withFontSize(12)
-            ->withBackgroundColor($this->striped);
+            ->setFontName('Arial')
+            ->setFontSize(12)
+            ->setBackgroundColor($this->striped);
 
         /** @var array<string> $row */
         foreach ($data['rows'] as $key => $row) {
             if (count($row)) {
                 if ($key % 2 && $this->striped) {
-                    $row = Row::fromValuesWithStyle($row, $gray);
+                    $row = Row::fromValues($row, $gray);
                 } else {
-                    $row = Row::fromValuesWithStyle($row, $default);
+                    $row = Row::fromValues($row, $default);
                 }
                 $writer->addRow($row);
             }

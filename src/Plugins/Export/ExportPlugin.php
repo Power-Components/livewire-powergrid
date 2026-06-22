@@ -1,0 +1,447 @@
+<?php
+
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export;
+
+use Exception;
+use Illuminate\Bus\Batch;
+use Illuminate\Database\Eloquent;
+use Illuminate\Support;
+use Illuminate\Support\{Collection, Str};
+use Illuminate\Support\Facades\Bus;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
+    DataSource\DataTransformer,
+    DataSource\ProcessDataSource,
+    DataSource\Processors\Database\Handlers\FilterHandler,
+    DataSource\Processors\Database\Handlers\SearchHandlerContract};
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Throwable;
+
+/**
+ * Feature plugin that renders the export UI into the header zone and handles
+ * synchronous (XLS/CSV download) and batched/queued exports.
+ *
+ * Runtime batch state lives in a single component property: $component->exportState.
+ *
+ * @codeCoverageIgnore
+ */
+class ExportPlugin extends PluginBase
+{
+    public function name(): string
+    {
+        return 'export';
+    }
+
+    public function isEnabled(): bool
+    {
+        return ! empty(data_get($this->component->setUp, 'exportable'));
+    }
+
+    public function handlesZone(string $zone): bool
+    {
+        return in_array($zone, ['header', 'header.bottom'], true) && $this->isEnabled();
+    }
+
+    public function renderZone(string $zone): ?string
+    {
+        if (! $this->handlesZone($zone)) {
+            return null;
+        }
+
+        return match ($zone) {
+            'header' => $this->renderDropdown(),
+            'header.bottom' => $this->renderProgress(),
+            default => null,
+        };
+    }
+
+    /**
+     * The export dropdown injected into the header actions row.
+     */
+    private function renderDropdown(): string
+    {
+        $exportable = data_get($this->component->setUp, 'exportable');
+
+        /** @var view-string $viewName */
+        $viewName = $this->resolveThemeView();
+
+        return view($viewName, [
+            'tableName' => $this->component->tableName,
+            'types' => (array) data_get($exportable, 'type', []),
+            'total' => $this->component->total(),
+            'enabledFiltersCount' => count($this->component->enabledFilters),
+            'checkbox' => $this->component->checkbox,
+        ])->render();
+    }
+
+    /**
+     * The batch-export progress/download panel rendered below the header.
+     * PowerGrid ships no default panel: the user opts in by registering their
+     * own view via Exportable::progressView(). The view receives $exportState
+     * (keys: exporting, finished, id, progress, files, errors) and $tableName.
+     */
+    private function renderProgress(): ?string
+    {
+        $exportable = data_get($this->component->setUp, 'exportable');
+
+        /** @var view-string|null $progressView */
+        $progressView = data_get($exportable, 'progressView');
+
+        if (! is_string($progressView) || blank($progressView)) {
+            return null;
+        }
+
+        return view($progressView, [
+            'exportState' => $this->component->exportState,
+            'tableName' => $this->component->tableName,
+        ])->render();
+    }
+
+    /**
+     * Pick the theme-specific export view so each theme keeps its native look
+     * (DaisyUI popover, Flux dropdown, Tailwind/Alpine dropdown). Custom themes
+     * fall back to the Tailwind-styled default view.
+     *
+     * @return view-string
+     */
+    private function resolveThemeView(): string
+    {
+        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
+
+        $variant = match (true) {
+            $theme instanceof DaisyUI => 'daisyui',
+            $theme instanceof Flux => 'flux',
+            default => 'index',
+        };
+
+        /** @var view-string $view */
+        $view = "powergrid-plugins::Export.themes.{$variant}";
+
+        return $view;
+    }
+
+    public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
+    {
+        return $this->export(Exportable::TYPE_XLS, $selected);
+    }
+
+    public function exportToCsv(bool $selected = false): BinaryFileResponse|bool
+    {
+        return $this->export(Exportable::TYPE_CSV, $selected);
+    }
+
+    public function downloadExport(string $file): BinaryFileResponse
+    {
+        /** @var string $disk */
+        $disk = data_get($this->component->setUp, 'exportable.disk', 'local');
+
+        /** @var string $directory */
+        $directory = data_get($this->component->setUp, 'exportable.directory', '');
+
+        $directory = trim($directory, '/');
+        $path = $directory !== '' ? $directory.'/'.$file : $file;
+
+        // Batch jobs store each chunk on the configured disk (Exportable::disk()),
+        // so resolve the download from that disk rather than assuming storage_path().
+        return response()->download(Support\Facades\Storage::disk($disk)->path($path));
+    }
+
+    public function exportBatch(): ?Batch
+    {
+        /** @var string|null $id */
+        $id = data_get($this->component->exportState, 'id');
+        $id = strval($id);
+
+        if (empty($id)) {
+            return null;
+        }
+
+        return Bus::findBatch($id);
+    }
+
+    public function updateExportProgress(): void
+    {
+        $batch = $this->exportBatch();
+
+        if (is_null($batch)) {
+            return;
+        }
+
+        $finished = $batch->finished();
+
+        $this->component->exportState = array_merge($this->component->exportState, [
+            'finished' => $finished,
+            'progress' => $batch->progress(),
+            'errors' => $batch->hasFailures(),
+            'exporting' => ! $finished,
+        ]);
+
+        $this->component->onPluginUpdated('export', 'batchExecuting', ['batch' => $batch]);
+    }
+
+    /**
+     * @throws Exception | Throwable
+     */
+    private function export(string $exportType, bool $selected): BinaryFileResponse|bool
+    {
+        $exportableClass = $this->getExportableClassFromConfig($exportType);
+
+        if ($this->getQueuesCount() > 0 && ! $selected) {
+            return $this->runOnQueue($exportableClass, $exportType);
+        }
+
+        if (count($this->component->checkboxValues) === 0 && $selected) {
+            return false;
+        }
+
+        $currentHiddenStates = collect($this->component->columns)
+            ->mapWithKeys(function ($column) {
+                /** @var string $field */
+                $field = data_get($column, 'field');
+
+                return [$field => data_get($column, 'hidden')];
+            });
+
+        /** @var array<int, Column> $columnsWithHiddenState */
+        $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
+            /** @var string|null $field */
+            $field = data_get($column, 'field');
+            data_set($column, 'hidden', data_get($currentHiddenStates, $field, true));
+
+            return $column;
+        }, $this->component->columns());
+
+        /** @var string $fileName */
+        $fileName = data_get($this->component->setUp, 'exportable.fileName');
+
+        /** @var Export&ExportInterface $exportable */
+        $exportable = new $exportableClass();
+        $exportable
+            ->fileName($fileName)
+            ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
+
+        /** @var array<string, mixed> $exportOptions */
+        $exportOptions = $this->component->setUp['exportable'];
+
+        return $exportable->download(
+            exportOptions: $exportOptions
+        );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function runOnQueue(string $exportFileType, string $exportType): bool
+    {
+        $this->component->exportState = array_merge($this->component->exportState, [
+            'exporting' => true,
+            'finished' => false,
+        ]);
+
+        $queues = $this->putQueuesToBus($exportFileType, $exportType);
+
+        $batch = Bus::batch($queues->toArray())
+            ->name($this->getBatchName())
+            ->onQueue($this->getOnQueue())
+            ->onConnection($this->getQueuesConnection())
+            ->then(fn (Batch $batch) => $this->component->onPluginUpdated('export', 'batchThen', ['batch' => $batch]))
+            ->catch(fn (Batch $batch, Throwable $e) => $this->component->onPluginUpdated('export', 'batchCatch', ['batch' => $batch, 'exception' => $e]))
+            ->finally(fn (Batch $batch) => $this->component->onPluginUpdated('export', 'batchFinally', ['batch' => $batch]))
+            ->dispatch();
+
+        $this->component->exportState = array_merge($this->component->exportState, [
+            'id' => $batch->id,
+        ]);
+
+        return true;
+    }
+
+    /** @return Collection<int, mixed> */
+    private function putQueuesToBus(string $exportableClass, string $fileExtension): Collection
+    {
+        $component = $this->component;
+        $processDataSource = tap(ProcessDataSource::make($component), fn ($datasource) => $datasource->get());
+
+        $files = [];
+        $filters = $processDataSource->component->filters;
+        $filtered = $processDataSource->component->filtered;
+        $queues = collect([]);
+
+        $total = (int) $component->total();
+        $queueCount = $total > $this->getQueuesCount() ? $this->getQueuesCount() : 1;
+
+        $perPage = (int) ceil($total / $queueCount);
+
+        $offset = 0;
+
+        /** @var class-string $jobClass */
+        $jobClass = $this->getJobClass();
+
+        /** @var string $exportFileName */
+        $exportFileName = data_get($component->setUp, 'exportable.fileName');
+
+        for ($i = 1; $i <= $queueCount; $i++) {
+            $fileName = Str::kebab($exportFileName).
+                '-'.round(($offset + 1), 2).
+                '-'.round(($offset + $perPage), 2).
+                '-'.$component->getId().
+                '.'.$fileExtension;
+
+            $params = [
+                'filtered' => $filtered,
+                'exportableClass' => $exportableClass,
+                'fileName' => $fileName,
+                'offset' => $offset,
+                'limit' => $perPage,
+                'filters' => Support\Facades\Crypt::encrypt($filters),
+                'exportable' => $processDataSource->component->setUp['exportable'],
+                'parameters' => Support\Facades\Crypt::encrypt($processDataSource->component->getPublicPropertiesDefinedInComponent()),
+            ];
+
+            $queues->push(new $jobClass(
+                get_class($component),
+                $component->columns(),
+                $params,
+            ));
+
+            $files[] = $fileName;
+
+            $offset += $perPage;
+        }
+
+        $this->component->exportState = array_merge($this->component->exportState, [
+            'files' => $files,
+        ]);
+
+        return $queues;
+    }
+
+    /**
+     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>
+     *
+     * @throws Exception
+     */
+    public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection
+    {
+        $component = $this->component;
+        $processDataSource = tap(ProcessDataSource::make($component), fn ($datasource) => $datasource->get());
+
+        $filtered = $processDataSource->component->filtered;
+
+        if ($selected && filled($processDataSource->component->checkboxValues)) {
+            $filtered = $processDataSource->component->checkboxValues;
+        }
+
+        if ($processDataSource->datasource instanceof Collection) {
+            if ($filtered) {
+                $results = $processDataSource->get(isExport: true)['results']
+                    ->whereIn($component->primaryKey, $filtered);
+
+                $dataTransformer = new DataTransformer($processDataSource->component);
+
+                return $dataTransformer->transform($results)->collection;
+            }
+
+            $dataTransformer = new DataTransformer($processDataSource->component);
+
+            return $dataTransformer->transform($processDataSource->datasource)->collection;
+        }
+
+        $currentTable = $processDataSource->component->currentTable;
+
+        $property = function (string $property) use ($processDataSource, $currentTable) {
+            $property = $processDataSource->component->{$property};
+
+            return Str::of($property)->contains('.')
+                ? $property
+                : $currentTable.'.'.$property;
+        };
+
+        /** @var array<string, mixed> $queryOptions */
+        $queryOptions = data_get($component->setUp, 'exportable.queryOptions', []);
+
+        $results = $processDataSource->datasource
+            ->where(function ($query) use ($component) {
+                app()->makeWith(SearchHandlerContract::class, [
+                    'component' => $component,
+                ])->apply($query);
+                (new FilterHandler($component))->apply($query);
+            })
+            ->when($filtered, function ($query, $filtered) use ($property) {
+                return $query->whereIn($property('primaryKey'), $filtered);
+            })
+            ->when($component->sortField, function ($query) use ($processDataSource, $queryOptions) {
+                $sortField = $queryOptions['sortField']
+                    ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
+                $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
+
+                return $query->orderBy($sortField, $sortDirection);
+            })
+            ->get();
+
+        $dataTransformer = new DataTransformer($processDataSource->component);
+
+        return $dataTransformer->transform($results)->collection;
+    }
+
+    private function getExportableClassFromConfig(string $exportType): string
+    {
+        /** @var string $defaultExportable */
+        $defaultExportable = config('livewire-powergrid.exportable.default');
+
+        /** @var string|null $exportableClass */
+        $exportableClass = data_get(config('livewire-powergrid.exportable'), $defaultExportable.'.'.$exportType);
+
+        if (empty($exportableClass) || ! class_exists($exportableClass)) {
+            throw new Exception(
+                "PowerGrid export driver not found for [{$defaultExportable}.{$exportType}]. ".
+                "Check 'livewire-powergrid.exportable.default' and make sure the '{$defaultExportable}' driver maps '{$exportType}' to an existing class (and that openspout/openspout is installed)."
+            );
+        }
+
+        return strval($exportableClass);
+    }
+
+    private function getQueuesCount(): int
+    {
+        /** @var int|string|null $queues */
+        $queues = data_get($this->component->setUp, 'exportable.batchExport.queues', 0);
+
+        return intval($queues);
+    }
+
+    private function getQueuesConnection(): string
+    {
+        /** @var string|null $connection */
+        $connection = data_get($this->component->setUp, 'exportable.batchExport.onConnection');
+
+        return strval($connection);
+    }
+
+    private function getOnQueue(): string
+    {
+        /** @var string|null $onQueue */
+        $onQueue = data_get($this->component->setUp, 'exportable.batchExport.onQueue');
+
+        return strval($onQueue);
+    }
+
+    private function getBatchName(): string
+    {
+        /** @var string $name */
+        $name = data_get($this->component->setUp, 'exportable.batchName', 'PowerGrid batch export');
+
+        return $name;
+    }
+
+    private function getJobClass(): string
+    {
+        /** @var string|null $jobClass */
+        $jobClass = data_get($this->component->setUp, 'exportable.jobClass');
+
+        return ! empty($jobClass) ? $jobClass : ExportJob::class;
+    }
+}

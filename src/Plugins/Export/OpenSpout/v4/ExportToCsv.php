@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4;
 
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
@@ -8,9 +8,9 @@ use OpenSpout\Common\Entity\Row;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Writer\CSV\{Options, Writer};
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
-use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
-use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
@@ -58,7 +58,9 @@ class ExportToCsv extends Export implements ExportInterface
         $csvSeparator = strval(data_get($exportOptions, 'csvSeparator', ','));
         $csvDelimiter = strval(data_get($exportOptions, 'csvDelimiter', '"'));
 
-        $csvOptions = new Options($csvSeparator, $csvDelimiter);
+        $csvOptions = new Options();
+        $csvOptions->FIELD_DELIMITER = $csvSeparator;
+        $csvOptions->FIELD_ENCLOSURE = $csvDelimiter;
 
         $writer = new Writer($csvOptions);
         $writer->openToFile(storage_path($this->fileName.'.csv'));

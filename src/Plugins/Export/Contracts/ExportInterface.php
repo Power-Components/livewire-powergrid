@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Exports\Contracts;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts;
 
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

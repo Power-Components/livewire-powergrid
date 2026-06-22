@@ -1,5 +1,15 @@
+@props([
+    'tableName' => null,
+    'types' => [],
+    'total' => 0,
+    'enabledFiltersCount' => 0,
+    'checkbox' => false,
+])
+
 <div
-    x-data="{ open: false, countChecked: @entangle('checkboxValues').live }"
+    class="mt-2 sm:mt-0"
+    id="pg-header-export"
+    x-data="{ open: false, countChecked: $wire.entangle('checkboxValues') }"
     x-on:keydown.esc="open = false"
     x-on:click.outside="open = false;"
 >
@@ -27,7 +37,7 @@
         @keydown.enter.prevent="open = false;"
         @keyup.space.prevent="open = false;"
     >
-        @if (in_array('xlsx', data_get($setUp, 'exportable.type')))
+        @if (in_array('xlsx', $types))
             <div class="flex items-center px-4 py-1 text-zinc-400 dark:text-zinc-300 border-b border-zinc-100 dark:border-zinc-600">
                 <span class="w-12">@lang('XLSX')</span>
                 <button
@@ -36,8 +46,8 @@
                     href="#"
                     class="px-2 py-1 block text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 rounded"
                 >
-                    <span class="export-count text-xs">({{ $this->total }})</span>
-                    @if (count($enabledFilters) === 0)
+                    <span class="export-count text-xs">({{ $total }})</span>
+                    @if ($enabledFiltersCount === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else
                         @lang('livewire-powergrid::datatable.labels.filtered')
@@ -56,7 +66,7 @@
                 @endif
             </div>
         @endif
-        @if (in_array('csv', data_get($setUp, 'exportable.type')))
+        @if (in_array('csv', $types))
             <div class="flex items-center px-4 py-1 text-zinc-400 dark:text-zinc-300">
                 <span class="w-12">@lang('Csv')</span>
                 <button
@@ -64,8 +74,8 @@
                     x-on:click="open = false"
                     class="px-2 py-1 block text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 rounded"
                 >
-                    <span class="export-count text-xs">({{ $this->total }})</span>
-                    @if (count($enabledFilters) === 0)
+                    <span class="export-count text-xs">({{ $total }})</span>
+                    @if ($enabledFiltersCount === 0)
                         @lang('livewire-powergrid::datatable.labels.all')
                     @else
                         @lang('livewire-powergrid::datatable.labels.filtered')

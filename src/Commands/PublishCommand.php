@@ -20,14 +20,14 @@ class PublishCommand extends Command
     public function handle(): void
     {
         if ($this->option('type') === 'job') {
-            $exportJobFile = __DIR__.'/../Jobs/ExportJob.php';
+            $exportJobFile = __DIR__.'/../Plugins/Export/ExportJob.php';
 
             if (File::exists($exportJobFile) === false && File::isReadable($exportJobFile) === true) {
                 throw new Exception('ExportJob.php not found.');
             }
 
             $file = (string) file_get_contents($exportJobFile);
-            $stub = str_replace('namespace PowerComponents\\LivewirePowerGrid\\Jobs', 'namespace App\Jobs', $file);
+            $stub = str_replace('namespace PowerComponents\\LivewirePowerGrid\\Plugins\\Export', 'namespace App\Jobs', $file);
 
             if (! is_dir(app_path('Jobs'))) {
                 (new Filesystem())->makeDirectory(app_path('Jobs'));

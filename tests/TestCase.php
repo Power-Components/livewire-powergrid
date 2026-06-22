@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use PowerComponents\LivewirePowerGrid\Components\Exports\OpenSpout\v5\{ExportToCsv, ExportToXLS};
+use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 

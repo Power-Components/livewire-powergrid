@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Traits;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns;
 
 use Illuminate\Database\Eloquent;
 use Illuminate\Support\{Collection, Str, Stringable};

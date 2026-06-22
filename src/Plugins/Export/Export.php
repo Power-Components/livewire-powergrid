@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Components\Exports;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

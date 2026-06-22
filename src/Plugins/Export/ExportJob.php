@@ -1,6 +1,6 @@
 <?php
 
-namespace PowerComponents\LivewirePowerGrid\Jobs;
+namespace PowerComponents\LivewirePowerGrid\Plugins\Export;
 
 use Illuminate\Bus\{Batchable, Queueable};
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -8,9 +8,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
 use Illuminate\Support\Facades\Crypt;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\Components\Exports\Contracts\ExportInterface;
-use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
-use PowerComponents\LivewirePowerGrid\Traits\ExportableJob;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns\ExportableJob;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 
 /** @codeCoverageIgnore */
 class ExportJob implements ShouldQueue

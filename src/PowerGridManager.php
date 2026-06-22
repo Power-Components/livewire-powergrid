@@ -10,23 +10,42 @@ use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Responsive
 };
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
 
 class PowerGridManager
 {
-    /** @var list<class-string<PluginBase>> */
-    public static array $plugins = [
+    /**
+     * Built-in plugins shipped with PowerGrid. Always registered so custom
+     * plugin registration can never drop them.
+     *
+     * @var list<class-string<PluginBase>>
+     */
+    public const DEFAULT_PLUGINS = [
         EditablePlugin::class,
+        ExportPlugin::class,
         FlatpickrPlugin::class,
         ToggleablePlugin::class,
     ];
 
-    /** @param  list<class-string<PluginBase>>  $plugins */
+    /** @var list<class-string<PluginBase>> */
+    public static array $plugins = self::DEFAULT_PLUGINS;
+
+    /**
+     * Register additional plugins. The built-in plugins are always kept;
+     * the given list is merged on top (de-duplicated), so customizing plugins
+     * never removes a built-in (e.g. Export).
+     *
+     * @param  list<class-string<PluginBase>>  $plugins
+     */
     public static function plugins(array $plugins): void
     {
-        static::$plugins = $plugins;
+        /** @var list<class-string<PluginBase>> $merged */
+        $merged = array_values(array_unique([...self::DEFAULT_PLUGINS, ...$plugins]));
+
+        static::$plugins = $merged;
     }
 
     public function fields(): PowerGridFields

@@ -18,7 +18,7 @@
         <div class="pg-header-sub {{ theme('header.layout.sub_container') }}">
             <div class="pg-actions {{ theme('header.layout.actions_container') }}">
                  @includeIf(theme_view('header.actions'), ['__partial' => $__partial])
-                 @includeIf(theme_view('header.export'), ['__partial' => $__partial])
+                 {!! $__partial->renderPluginZone('header') !!}
                  @includeIf(theme_view('header.toggle-columns'), ['__partial' => $__partial])
             </div>
 
@@ -27,5 +27,6 @@
             </div>
         </div>
     </header>
+    {!! $__partial->renderPluginZone('header.bottom') !!}
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'), ['__partial' => $__partial])
 </div>

@@ -35,10 +35,11 @@
     "larastan/larastan": "^3.10",
     "laradumps/laradumps": "^5.0",
     "laravel/scout": "^11.3",
-    "composer/composer": "^2.10"
+    "composer/composer": "^2.10",
+    "openspout/openspout": "^4 || ^5"
   },
   "suggest": {
-    "openspout/openspout": "Required to export XLS and CSV"
+    "openspout/openspout": "Required to export XLS and CSV (supports v4 and v5)"
   },
   "autoload": {
     "psr-4": {

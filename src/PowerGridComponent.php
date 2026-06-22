@@ -33,6 +33,7 @@ class PowerGridComponent extends Component
     use Concerns\Checkbox;
     use Concerns\Filter;
     use Concerns\HasActions;
+    use Concerns\HasExport;
     use Concerns\Hooks;
     use Concerns\Listeners;
     use Concerns\ManageRow;
@@ -110,6 +111,25 @@ class PowerGridComponent extends Component
         }
 
         return null;
+    }
+
+    /**
+     * Render the content every enabled plugin contributes to a UI zone
+     * (e.g. 'header'). Unlike columns, zones aggregate every plugin's output.
+     */
+    public function renderPluginZone(string $zone): string
+    {
+        $this->resolvePlugins();
+
+        $html = '';
+
+        foreach ($this->plugins as $plugin) {
+            if ($plugin->handlesZone($zone)) {
+                $html .= $plugin->renderZone($zone) ?? '';
+            }
+        }
+
+        return $html;
     }
 
     public function boot(): void
