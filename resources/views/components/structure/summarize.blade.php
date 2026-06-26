@@ -9,6 +9,7 @@
     'labelMax' => null,
     'avg' => null,
     'labelAvg' => null,
+    'custom' => [],
 ])
 <div>
     @if ($sum)
@@ -34,4 +35,11 @@
         <span>{!! $labelAvg !!}: {{ $avg }}</span>
         <br>
     @endif
+
+    @foreach ($custom as $customSummary)
+        @if (! is_null($customSummary['value']))
+            <span>{!! $customSummary['label'] !!}: {{ $customSummary['value'] }}</span>
+            <br>
+        @endif
+    @endforeach
 </div>

@@ -3,13 +3,11 @@
 namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines;
 
 use Closure;
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\DataSource\Summaries\SummaryCalculator;
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Summaries
 {
-    private const SUMMARIES = ['sum', 'count', 'avg', 'min', 'max'];
-
     public function __construct(protected PowerGridComponent $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
@@ -18,58 +16,11 @@ class Summaries
             return $next($query);
         }
 
-        /** @var list<mixed> $updatedColumns */
-        $updatedColumns = collect($this->component->columns)
-            ->map(function ($column) use ($query) {
-                $column = (object) $column;
-                /** @var string $dataField */
-                $dataField = data_get($column, 'dataField');
-                /** @var string $rawField */
-                $rawField = data_get($column, 'field');
-                $field = $dataField ?: $rawField;
-
-                foreach (self::SUMMARIES as $summary) {
-                    if (data_get($column, 'properties.summarize.'.$summary)) {
-                        $value = $query->{$summary}($field);
-                        $this->formatAndSetSummaryValue($column, $summary, $value);
-                    }
-                }
-
-                return $column;
-            })
-            ->toArray();
-        $this->component->columns = $updatedColumns;
+        // Compute the raw aggregate values once (single batched query for DB sources,
+        // single in-memory pass for collections). The query is forwarded untouched;
+        // formatting and column assignment happen at render via hydrateSummaries().
+        $this->component->summaryValues = (new SummaryCalculator($this->component))->compute($query);
 
         return $next($query);
-    }
-
-    private function formatAndSetSummaryValue(Column|\stdClass $column, string $summarizeMethod, mixed $value): void
-    {
-        $summarizeFormatTasks = $this->component->summarizeFormat();
-
-        if (count($summarizeFormatTasks) > 0) {
-            foreach ($summarizeFormatTasks as $field => $formattingClosure) {
-                if (! str_contains($field, '.')) {
-                    continue;
-                }
-
-                $fieldName = Str::beforeLast($field, '.');
-                $methods = Str::afterLast($field, '.');
-
-                if (in_array($fieldName, [$column->field, $column->dataField])) {
-                    $applyToMethods = Str::of($methods)
-                        ->replaceMatches('/\s+/', '')
-                        ->replace(['{', '}'], '')
-                        ->explode(',')
-                        ->all();
-
-                    if (in_array($summarizeMethod, $applyToMethods) && is_callable($formattingClosure)) {
-                        $value = $formattingClosure($value);
-                    }
-                }
-            }
-        }
-
-        data_set($column, 'properties.summarize_values.'.$summarizeMethod, $value);
     }
 }

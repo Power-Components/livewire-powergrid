@@ -15,7 +15,8 @@ class Macros
 {
     public static function columns(): void
     {
-        Column::macro('withSum', function (string $label, bool $header, bool $footer): Column {
+        // @deprecated since 7.x — withSum/withCount/withAvg/withMin/withMax are deprecated; use withSummary() with a closure instead.
+        Column::macro('withSum', function (string $label, bool $header = false, bool $footer = true): Column {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.sum.label', $label);
@@ -27,7 +28,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withCount', function (string $label, bool $header, bool $footer): Column {
+        Column::macro('withCount', function (string $label, bool $header = false, bool $footer = true): Column {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.count.label', $label);
@@ -39,7 +40,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withAvg', function (string $label, bool $header, bool $footer): Column {
+        Column::macro('withAvg', function (string $label, bool $header = false, bool $footer = true): Column {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.avg.label', $label);
@@ -51,7 +52,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMin', function (string $label, bool $header, bool $footer): Column {
+        Column::macro('withMin', function (string $label, bool $header = false, bool $footer = true): Column {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.min.label', $label);
@@ -63,7 +64,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMax', function (string $label, bool $header, bool $footer): Column {
+        Column::macro('withMax', function (string $label, bool $header = false, bool $footer = true): Column {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.max.label', $label);
@@ -71,6 +72,21 @@ class Macros
             data_set($props, 'summarize.max.footer', $footer);
             /** @var array<string, mixed> $props */
             $this->properties = $props;
+
+            return $this;
+        });
+
+        Column::macro('withSummary', function (string $key, string $label, \Closure $using, bool $header = false, bool $footer = true): Column {
+            /** @var Column $this */
+            $props = $this->properties;
+            data_set($props, "summarize.custom.{$key}.label", $label);
+            data_set($props, "summarize.custom.{$key}.header", $header);
+            data_set($props, "summarize.custom.{$key}.footer", $footer);
+            /** @var array<string, mixed> $props */
+            $this->properties = $props;
+
+            // Closure kept out of $properties (not serializable); resolved server-side.
+            $this->summaryCallbacks[$key] = $using;
 
             return $this;
         });

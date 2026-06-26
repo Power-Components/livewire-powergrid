@@ -9,14 +9,17 @@ use Livewire\Wireable;
 /**
  * Macros
  *
- * @method static withSum(string $label, bool $header, bool $footer)
- * @method static withCount(string $label, bool $header, bool $footer)
- * @method static withAvg(string $label, bool $header, bool $footer)
- * @method static withMin(string $label, bool $header, bool $footer)
- * @method static withMax(string $label, bool $header, bool $footer)
+ * @method static withSummary(string $key, string $label, \Closure $using, bool $header = false, bool $footer = true)
  * @method static naturalSort()
  * @method static searchableRaw(string $sql)
  * @method static searchableJson(string $tableName) // sqlite, mysql
+ *
+ * Deprecated summary helpers — prefer withSummary() with a closure.
+ * @method static withSum(string $label, bool $header = false, bool $footer = true) @deprecated since 7.x, use withSummary() instead
+ * @method static withCount(string $label, bool $header = false, bool $footer = true) @deprecated since 7.x, use withSummary() instead
+ * @method static withAvg(string $label, bool $header = false, bool $footer = true) @deprecated since 7.x, use withSummary() instead
+ * @method static withMin(string $label, bool $header = false, bool $footer = true) @deprecated since 7.x, use withSummary() instead
+ * @method static withMax(string $label, bool $header = false, bool $footer = true) @deprecated since 7.x, use withSummary() instead
  */
 final class Column implements Wireable
 {
@@ -73,6 +76,15 @@ final class Column implements Wireable
 
     /** @var array<string, mixed> */
     public array $pluginData = [];
+
+    /**
+     * Custom summary callbacks declared via withSummary(), keyed by summary key.
+     * Closures cannot be serialized, so they are stripped in toLivewire() and
+     * re-resolved server-side from the fresh columns() definition.
+     *
+     * @var array<string, Closure>
+     */
+    public array $summaryCallbacks = [];
 
     public mixed $filters = null;
 
@@ -278,6 +290,7 @@ final class Column implements Wireable
         // Closures cannot be serialized, exclude them
         unset($data['sortCallback']);
         unset($data['rawQueries']);
+        unset($data['summaryCallbacks']);
 
         return $data;
     }

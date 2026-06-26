@@ -251,21 +251,10 @@ class PowerGridComponent extends Component
 
     private function getRecordsFromCache(): mixed
     {
-        /** @var string $prefix */
-        $prefix = data_get($this->setUp, 'cache.prefix');
-        /** @var string $customTag */
-        $customTag = data_get($this->setUp, 'cache.tag');
         /** @var int $ttl */
         $ttl = data_get($this->setUp, 'cache.ttl');
 
-        if (filled($customTag)) {
-            $tag = $prefix.$customTag;
-        } else {
-            /** @var object|string $datasource */
-            $datasource = $this->datasource();
-            $table = method_exists($datasource, 'getModel') ? $datasource->getModel()->getTable() : $this->tableName;
-            $tag = $prefix.'powergrid-'.$table.'-'.$this->tableName;
-        }
+        $tag = $this->summariesCacheTag();
         $cacheKey = implode('-', $this->getCacheKeys());
 
         $getCacheClosure = fn () => ProcessDataSource::make($this)->get();
@@ -421,6 +410,14 @@ class PowerGridComponent extends Component
     {
         $this->resolveFilters();
         $this->resolvePlugins();
+
+        if ($this->hasSummarizeInColumns()) {
+            // Touch the dataset so the Summaries pipeline runs (when not served from
+            // cache) before hydrating totals onto the columns for rendering.
+            $this->records; // @phpstan-ignore-line
+
+            $this->hydrateSummaries();
+        }
 
         /** @var view-string $viewName */
         $viewName = theme_view('table');
