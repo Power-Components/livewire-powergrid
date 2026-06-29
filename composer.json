@@ -3,7 +3,7 @@
   "description": "PowerGrid generates Advanced Datatables using Laravel Livewire.",
   "homepage": "https://github.com/power-components/livewire-powergrid",
   "license": "MIT",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "authors": [
     {
@@ -17,12 +17,18 @@
       "role": "Developer"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Power-Components/partials"
+    }
+  ],
   "require": {
     "php": "^8.3",
     "livewire/livewire": "^4.0",
     "laravel/prompts": "^0.1|^0.2|^0.3",
-    "power-components/partials": "1.x-dev",
-    "livewire/blaze": "^1.0"
+    "livewire/blaze": "^1.0",
+    "power-components/partials": "^0.1.0"
   },
   "conflict": {
     "laravel/framework": "<12.0",
