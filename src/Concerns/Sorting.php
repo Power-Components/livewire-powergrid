@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use stdClass;
 
 trait Sorting
@@ -27,7 +28,7 @@ trait Sorting
             return;
         }
 
-        $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : $direction;
+        $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : Sql::sanitizeSortDirection($direction);
 
         $this->sortField = $field;
 
@@ -102,6 +103,8 @@ trait Sorting
 
     public function updatedSortDirection(): void
     {
+        $this->sortDirection = Sql::sanitizeSortDirection($this->sortDirection);
+
         if ($this->hasLazyEnabled) {
             data_set($this->setUp, 'lazy.items', 0);
 

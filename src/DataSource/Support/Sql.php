@@ -115,6 +115,20 @@ class Sql
     }
 
     /**
+     * Restrict a sort direction to a strict "asc"/"desc" allowlist.
+     *
+     * The direction keyword is interpolated verbatim into raw ORDER BY clauses
+     * (it cannot be a bound parameter), so anything outside the allowlist must
+     * be normalized to prevent SQL injection. Defaults to "asc".
+     */
+    public static function sanitizeSortDirection(?string $direction): string
+    {
+        $direction = strtolower(trim((string) $direction));
+
+        return in_array($direction, ['asc', 'desc'], true) ? $direction : 'asc';
+    }
+
+    /**
      * @throws Exception
      */
     public static function getSortFieldType(string $sortField): ?string

@@ -52,3 +52,18 @@ it('returns sortField', function (array $data) {
     [['db' => 'sqlsrv', 'version' => '20.80',  'expected' => "CAST(SUBSTRING(field, PATINDEX('%[a-z]%', field), LEN(field)-PATINDEX('%[a-z]%', field)) AS INT) {sortDirection}"]],
     [['db' => 'unsupported-db', 'version' => '29.00.00',  'expected' => 'field+0 {sortDirection}']],
 ]);
+
+it('restricts the sort direction to an asc/desc allowlist', function (?string $input, string $expected) {
+    expect(Sql::sanitizeSortDirection($input))->toBe($expected);
+})->with([
+    'asc' => ['asc', 'asc'],
+    'desc' => ['desc', 'desc'],
+    'uppercase asc' => ['ASC', 'asc'],
+    'uppercase desc' => ['DESC', 'desc'],
+    'trims surrounding space' => [' desc ', 'desc'],
+    'empty string' => ['', 'asc'],
+    'null' => [null, 'asc'],
+    'unknown keyword' => ['foo', 'asc'],
+    'time-based injection' => ['asc, (SELECT SLEEP(3))', 'asc'],
+    'quote break-out' => ["asc'; DROP TABLE users; --", 'asc'],
+]);
