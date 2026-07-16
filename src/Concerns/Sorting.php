@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use stdClass;
 
 trait Sorting
 {
