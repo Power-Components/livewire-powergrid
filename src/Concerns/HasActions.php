@@ -110,10 +110,6 @@ trait HasActions
      */
     public function renderHeaderActions(): string
     {
-        if (! method_exists($this, 'header')) {
-            return '';
-        }
-
         $row = (object) [];
 
         $actions = collect($this->header()) // @phpstan-ignore-line

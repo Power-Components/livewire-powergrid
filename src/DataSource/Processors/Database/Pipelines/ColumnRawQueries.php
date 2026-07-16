@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class ColumnRawQueries
@@ -69,6 +70,13 @@ class ColumnRawQueries
 
         return preg_replace_callback('/\{([\w.]+)\}/', function (array $matches): string {
             $property = trim($matches[1]);
+
+            // The sort direction is interpolated verbatim into a raw ORDER BY
+            // clause, so it must be restricted to an "asc"/"desc" allowlist to
+            // prevent SQL injection through the public sortDirection property.
+            if ($property === 'sortDirection') {
+                return Sql::sanitizeSortDirection($this->component->sortDirection);
+            }
 
             /** @var string $value */
             $value = data_get($this->component, $property, '');

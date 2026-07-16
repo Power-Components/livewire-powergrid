@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Support\Facades\{Cache, Cookie, Session};
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use Psr\SimpleCache\InvalidArgumentException;
 
@@ -107,7 +108,7 @@ trait Persist
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {
             $this->sortField = $state['sortField'];
-            $this->sortDirection = $state['sortDirection'];
+            $this->sortDirection = Sql::sanitizeSortDirection($state['sortDirection'] ?? null);
             $this->sortArray = $state['sortArray'];
             $this->multiSort = $state['multiSort'];
         }

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Sorting
@@ -32,6 +33,10 @@ class Sorting
     /** @param  EloquentBuilder<Model>|MorphToMany<Model, Model>|QueryBuilder  $query */
     private function applySingleSort(EloquentBuilder|MorphToMany|QueryBuilder $query, string $sortField, string $direction): void
     {
+        // A sort callback may interpolate the direction into a raw ORDER BY
+        // (e.g. orderByRaw), so it must be restricted to "asc"/"desc" here.
+        $direction = Sql::sanitizeSortDirection($direction);
+
         $sortCallback = $this->component->getSortCallback($sortField);
 
         if ($sortCallback !== null) {
@@ -48,6 +53,8 @@ class Sorting
     private function applyMultipleSort(EloquentBuilder|MorphToMany|QueryBuilder $results): void
     {
         foreach ($this->component->sortArray as $sortField => $direction) {
+            $direction = Sql::sanitizeSortDirection($direction);
+
             $sortCallback = $this->component->getSortCallback($sortField);
 
             if ($sortCallback !== null) {
