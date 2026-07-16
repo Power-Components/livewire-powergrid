@@ -105,6 +105,34 @@ trait HasActions
         return $formattedRules;
     }
 
+    /**
+     * Renders the buttons returned by the component's header() method.
+     */
+    public function renderHeaderActions(): string
+    {
+        if (! method_exists($this, 'header')) {
+            return '';
+        }
+
+        $row = (object) [];
+
+        $actions = collect($this->header()) // @phpstan-ignore-line
+            ->filter(fn ($button) => $button instanceof Button)
+            ->map(fn (Button $button) => $this->resolveButtonForBlade($button, $row, []))
+            ->filter(fn (array $action) => ! $action['hidden'])
+            ->values()
+            ->all();
+
+        if (empty($actions)) {
+            return '';
+        }
+
+        /** @var view-string $viewName */
+        $viewName = 'livewire-powergrid::components.structure.actions';
+
+        return view($viewName, ['actions' => $actions])->render();
+    }
+
     public function renderActions(object $row): string
     {
         if (! method_exists($this, 'actions')) {

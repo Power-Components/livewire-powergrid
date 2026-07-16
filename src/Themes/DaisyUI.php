@@ -88,7 +88,13 @@ class DaisyUI extends Theme
     {
         return [
             'toggleable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.toggleable')
+                ->fill([
+                    'colorOn' => 'var(--color-primary, oklch(0.45 0.24 277))',
+                    'colorOff' => 'var(--color-base-300, #d1d5db)',
+                    'colorOnDark' => 'var(--color-primary, oklch(0.45 0.24 277))',
+                    'colorOffDark' => 'var(--color-base-300, #d1d5db)',
+                    'knobOn' => 'var(--color-primary-content, #ffffff)',
+                ])
                 ->toArray(),
         ];
     }

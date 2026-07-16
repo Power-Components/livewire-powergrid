@@ -75,7 +75,13 @@ class Flux extends Theme
     {
         return [
             'toggleable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.toggleable')
+                ->fill([
+                    'colorOn' => 'var(--color-accent, #4f46e5)',
+                    'colorOff' => 'var(--color-zinc-200, #e4e4e7)',
+                    'colorOnDark' => 'var(--color-accent, #4f46e5)',
+                    'colorOffDark' => 'var(--color-zinc-700, #3f3f46)',
+                    'knobOn' => 'var(--color-accent-foreground, #ffffff)',
+                ])
                 ->toArray(),
         ];
     }

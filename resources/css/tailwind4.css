@@ -54,7 +54,18 @@
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-zinc-200, currentColor);
+        /* Concrete zinc-200 fallback (never currentColor) so borders never flash
+           black before --color-zinc-200 resolves on first paint. */
+        border-color: var(--color-zinc-200, #e4e4e7);
+    }
+
+    .dark *,
+    .dark ::after,
+    .dark ::before,
+    .dark ::backdrop,
+    .dark ::file-selector-button {
+        /* Dark-mode default border so bare borders don't stay light on dark. */
+        border-color: var(--color-zinc-700, #3f3f46);
     }
 }
 

@@ -96,7 +96,13 @@ class Tailwind extends Theme
     {
         return [
             'toggleable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.toggleable')
+                ->fill([
+                    'colorOn' => 'var(--color-accent, #16a34a)',
+                    'colorOff' => 'var(--color-zinc-200, #e4e4e7)',
+                    'colorOnDark' => 'var(--color-accent, #16a34a)',
+                    'colorOffDark' => 'var(--color-zinc-600, #52525b)',
+                    'knobOn' => 'var(--color-accent-foreground, #ffffff)',
+                ])
                 ->toArray(),
         ];
     }

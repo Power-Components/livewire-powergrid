@@ -4,6 +4,7 @@
     <div class="{{ theme('header.layout.container') }}">
         <div class="{{ theme('header.layout.sub_container') }}">
             <div class="{{ theme('header.layout.actions_container') }}">
+                {!! $this->renderHeaderActions() !!}
                 {!! $this->renderPluginZone('header') !!}
                 @includeIf(theme_view('header.toggle-columns'))
                 @includeIf(theme_view('header.soft-deletes'))
