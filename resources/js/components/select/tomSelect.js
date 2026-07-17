@@ -1,8 +1,15 @@
 import { storeMultiSelect } from "./store";
-import TomSelect from "tom-select";
 
 export default (params) => ({
     init() {
+        const TomSelect = window.TomSelect;
+
+        if (typeof TomSelect === 'undefined') {
+            console.error('[PowerGrid] tom-select is not available. Install it (`npm i tom-select`) and expose it globally, e.g. `import TomSelect from "tom-select"; window.TomSelect = TomSelect;`');
+
+            return;
+        }
+
         const element = this.$refs[`select_picker_${params.dataField}_${params.tableName}`];
 
         const defaultParams = {

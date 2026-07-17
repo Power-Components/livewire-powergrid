@@ -20,6 +20,7 @@
 @includeWhen(data_get($__partial->setUp, 'detail.showCollapseIcon'),
     data_get(collect($row->__powergrid_rules)->last(), 'toggleDetailView') ?? $defaultCollapseIcon,
     [
+        'setUp' => $__partial->setUp,
         'view' => data_get($__partial->setUp, 'detail.viewIcon') ?? null,
     ]
 )

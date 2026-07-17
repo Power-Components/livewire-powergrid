@@ -27,7 +27,17 @@ composer require power-components/partials
 The following legacy features and themes have been completely removed. You must search your codebase and remove any configurations, imports, or files referencing them:
 
 1.  **Bootstrap 5 Theme:** The Bootstrap 5 PHP theme class (`src/Themes/Bootstrap5.php`) and its view templates have been deleted. Only **Tailwind**, **DaisyUI**, and **Flux** are supported natively.
-2.  **Third-Party Select Libraries:** The CDN-based fallback for TomSelect/SlimSelect has been removed. The NPM-based integration (installed locally via `npm i tom-select` or `npm i slim-select`) remains supported.
+2.  **Third-Party Select Libraries:** The CDN-based fallback for TomSelect/SlimSelect has been removed. These libraries are now **optional** — PowerGrid no longer imports them, so your build never fails when they are absent. To use a multi-select filter, install the library and expose it globally in your bundle:
+    ```js
+    // resources/js/app.js
+    import TomSelect from 'tom-select' // npm i tom-select
+    window.TomSelect = TomSelect
+
+    // or, for SlimSelect (npm i slim-select)
+    import SlimSelect from 'slim-select'
+    window.SlimSelect = SlimSelect
+    ```
+    If the library is not exposed, the filter degrades gracefully and a console message explains what to install.
 3.  **Lazy Loading API:**
     - `PowerGrid::lazy()` facade method has been removed
     - `LazyManager` trait removed from PowerGridComponent
