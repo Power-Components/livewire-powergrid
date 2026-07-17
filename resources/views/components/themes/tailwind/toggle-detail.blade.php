@@ -22,7 +22,7 @@
         }
     }"
     x-on:pg-toggle-detail-{{ $tableName }}-hidden-all.window="collapsed = false"
-    x-on:pg-toggle-detail-{{ $tableName }}-loaded.window="loading = false;"
+    x-on:pg-toggle-detail-{{ strtolower($tableName) }}-loaded.window="loading = false;"
     class="{{ theme('table.layout.td') }}"
 >
     <div

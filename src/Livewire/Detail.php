@@ -34,7 +34,7 @@ class Detail extends Component
 
         $this->show = (bool) $collapsed;
 
-        $this->dispatch('pg-toggle-detail-'.$this->tableName.'-loaded');
+        $this->dispatch('pg-toggle-detail-'.strtolower($this->tableName).'-loaded');
     }
 
     #[On('pg-toggle-detail-{tableName}-hidden-all')]
