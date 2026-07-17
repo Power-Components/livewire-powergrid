@@ -420,11 +420,16 @@ trait Filter
 
     public function renderOutsideFiltersPartial(): void
     {
-        if (config('livewire-powergrid.filter') !== 'outside') {
+        if (! function_exists('partials')) {
             return;
         }
 
-        if (! function_exists('partials')) {
+        partials($this)
+            ->partial("pg-enabled-filters-{$this->tableName}", theme_view('header.enabled-filters'), [
+                'enabledFilters' => $this->enabledFilters,
+            ]);
+
+        if (config('livewire-powergrid.filter') !== 'outside') {
             return;
         }
 

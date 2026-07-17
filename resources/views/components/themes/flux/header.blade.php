@@ -18,9 +18,7 @@
         @include(theme_view('header.search'))
     </div>
 
-    <div wire:partial="pg-enabled-filters-{{ $__partial->tableName }}">
-        @includeIf(theme_view('header.enabled-filters'))
-    </div>
+    @includeIf(theme_view('header.enabled-filters'))
 
     {!! $this->renderPluginZone('header.bottom') !!}
 

@@ -1,8 +1,9 @@
-@if (count($enabledFilters))
-    <div
-        data-cy="enabled-filters"
-        class="pg-enabled-filters-base flex flex-wrap gap-2"
-    >
+<div
+    wire:partial="pg-enabled-filters-{{ $__partial->tableName }}"
+    @class(['pg-enabled-filters-base flex flex-wrap gap-2' => count($enabledFilters)])
+    @if (count($enabledFilters)) data-cy="enabled-filters" @endif
+>
+    @if (count($enabledFilters))
         @if (count($enabledFilters) > 1)
             <div class="flex group items-center cursor-pointer">
                 <span
@@ -32,5 +33,5 @@
                 </div>
             @endisset
         @endforeach
-    </div>
-@endif
+    @endif
+</div>
