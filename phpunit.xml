@@ -19,5 +19,12 @@
     <include>
       <directory suffix=".php">./src</directory>
     </include>
+    <exclude>
+      <!-- Blade views are compiled to storage/framework/views before execution,
+           so Xdebug cannot map their coverage back to the source .blade.php files.
+           They are template markup, not unit-testable logic — exclude them so the
+           report reflects real PHP coverage. -->
+      <directory suffix=".blade.php">./src</directory>
+    </exclude>
   </source>
 </phpunit>

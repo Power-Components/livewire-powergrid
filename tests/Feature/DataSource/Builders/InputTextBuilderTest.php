@@ -741,3 +741,74 @@ it('filters collection with custom collection logic', function () {
         ->assertSee('Item 2')
         ->assertSee('Item 3');
 });
+
+function collectionNullabilityComponent(string $tableName): PowerGridComponent
+{
+    return new class($tableName) extends PowerGridComponent
+    {
+        public function __construct(public string $tableName = 'collection-nullability') {}
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Item Empty', 'description' => ''],
+                ['id' => 2, 'name' => 'Item Text', 'description' => 'Some text'],
+                ['id' => 3, 'name' => 'Item Null', 'description' => null],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('description')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('description');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+}
+
+it('filters collection with input_text using is_null operator', function () {
+    Livewire::test(collectionNullabilityComponent('collection-is-null')::class)
+        ->set('filters.input_text_options.description.0', 'is_null')
+        ->set('filters.input_text.description', '')
+        ->assertSee('Item Null')
+        ->assertDontSee('Item Empty')
+        ->assertDontSee('Item Text');
+});
+
+it('filters collection with input_text using is_not_null operator', function () {
+    // is_not_null on a collection means: not null AND not empty string
+    Livewire::test(collectionNullabilityComponent('collection-is-not-null')::class)
+        ->set('filters.input_text_options.description.0', 'is_not_null')
+        ->set('filters.input_text.description', '')
+        ->assertSee('Item Text')
+        ->assertDontSee('Item Empty')
+        ->assertDontSee('Item Null');
+});
+
+it('filters collection with input_text using is_blank operator', function () {
+    // is_blank on a collection means: not null AND empty string
+    Livewire::test(collectionNullabilityComponent('collection-is-blank')::class)
+        ->set('filters.input_text_options.description.0', 'is_blank')
+        ->set('filters.input_text.description', '')
+        ->assertSee('Item Empty')
+        ->assertDontSee('Item Text')
+        ->assertDontSee('Item Null');
+});
+
+it('filters collection with input_text using is_not_blank operator', function () {
+    // is_not_blank on a collection means: not empty string OR null
+    Livewire::test(collectionNullabilityComponent('collection-is-not-blank')::class)
+        ->set('filters.input_text_options.description.0', 'is_not_blank')
+        ->set('filters.input_text.description', '')
+        ->assertSee('Item Text')
+        ->assertSee('Item Null')
+        ->assertDontSee('Item Empty');
+});
