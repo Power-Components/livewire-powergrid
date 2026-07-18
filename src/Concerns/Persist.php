@@ -46,6 +46,12 @@ trait Persist
         if (in_array('filters', $this->persist) || $tableItem === 'filters') {
             $state['filters'] = $this->filters;
             $state['enabledFilters'] = $this->enabledFilters;
+
+            // Only persist the builder when it is actually in use, keeping the
+            // stored payload backward-compatible for tables that never use it.
+            if (! empty($this->filterBuilder['rows'] ?? [])) {
+                $state['filterBuilder'] = $this->filterBuilder;
+            }
         }
 
         if (in_array('sorting', $this->persist) || $tableItem === 'sorting') {
@@ -104,6 +110,12 @@ trait Persist
         if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
             $this->filters = $state['filters'];
             $this->enabledFilters = $state['enabledFilters'];
+
+            if (array_key_exists('filterBuilder', $state) && is_array($state['filterBuilder'])) {
+                /** @var array<string, mixed> $restoredFilterBuilder */
+                $restoredFilterBuilder = $state['filterBuilder'];
+                $this->filterBuilder = $restoredFilterBuilder;
+            }
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {

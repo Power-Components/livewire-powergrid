@@ -16,7 +16,7 @@
     @if ($loading)
         @include(theme_view('table.header'), ['loading' => true, '__partial' => $__partial])
     @else
-        @includeWhen($__partial->hasColumnFilters, theme_view('table.inline-filters'), [
+        @includeWhen($__partial->hasColumnFilters && ! $__partial->filterBuilderHidesDefaultFilters(), theme_view('table.inline-filters'), [
             '__partial' => $__partial,
             'tableName' => $tableName,
         ])

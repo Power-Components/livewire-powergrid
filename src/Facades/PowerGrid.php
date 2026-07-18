@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache, Detail, Exportable, Footer, Header, Responsive};
+use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache, Detail, Exportable, FilterBuilder, Footer, Header, Responsive};
 use PowerComponents\LivewirePowerGrid\{PowerGridFields, PowerGridManager};
 
 /**
@@ -13,6 +13,7 @@ use PowerComponents\LivewirePowerGrid\{PowerGridFields, PowerGridManager};
  * @method static Detail detail()
  * @method static Cache cache()
  * @method static Exportable exportable(string $fileName)
+ * @method static FilterBuilder filterBuilder()
  * @method static Responsive responsive()
  * @method static void plugins(array<string, object> $plugins)
  */

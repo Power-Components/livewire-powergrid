@@ -1,0 +1,161 @@
+@props([
+    'tableName' => null,
+    'columns' => [],
+    'operatorLabels' => [],
+    'valuelessOperators' => [],
+    'rangeOperators' => [],
+    'applied' => ['match' => 'and', 'rows' => []],
+    'matchDefault' => 'and',
+    'appliedCount' => 0,
+    'js' => null,
+])
+
+@php
+    // Base field styles WITHOUT a width utility, so each control sets its own
+    // (flex-1 + min-w-0 to allow shrinking, or a fixed width for the connector).
+    $field = 'rounded-lg border border-zinc-300 bg-white px-2.5 py-2 text-sm text-zinc-700 [color-scheme:light] focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:[color-scheme:dark]';
+    $params = [
+        'tableName' => $tableName,
+        'columns' => $columns,
+        'operatorLabels' => $operatorLabels,
+        'valueless' => array_values($valuelessOperators),
+        'range' => array_values($rangeOperators),
+        'match' => $matchDefault,
+        'applied' => $applied,
+    ];
+@endphp
+
+@once
+    <script>
+        {!! $js !!}
+    </script>
+@endonce
+
+<div wire:key="pg-filter-builder-{{ $tableName }}">
+    <flux:modal.trigger name="pg-filter-builder-{{ $tableName }}">
+        <flux:button variant="filled" class="relative">
+            <span class="inline-flex items-center gap-1.5">
+                <x-livewire-powergrid::icons.filter class="h-5 w-5" />
+                {{ trans('livewire-powergrid::datatable.filter_builder.trigger') }}
+                @if ($appliedCount)
+                    <span
+                        class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white"
+                    >{{ $appliedCount }}</span>
+                @endif
+            </span>
+        </flux:button>
+    </flux:modal.trigger>
+
+    <flux:modal name="pg-filter-builder-{{ $tableName }}" class="w-full max-w-2xl md:max-w-3xl">
+        <div x-data="pgFilterBuilder(@js($params))" class="flex w-full min-w-0 flex-col gap-6">
+            <flux:heading size="lg">
+                {{ trans('livewire-powergrid::datatable.filter_builder.title') }}
+            </flux:heading>
+
+            <div class="min-w-0 rounded-xl border border-zinc-200 p-3 dark:border-zinc-700/70 sm:p-4">
+                <div class="flex flex-col gap-2.5">
+                    <template x-for="(row, index) in rows" :key="index">
+                        <div class="flex min-w-0 items-center gap-2">
+                            {{-- Per-row AND/OR connector (absent on the first row) --}}
+                            <template x-if="index > 0">
+                                <select
+                                    x-model="row.boolean"
+                                    class="{{ $field }} w-[4.5rem] shrink-0 font-medium"
+                                    aria-label="{{ trans('livewire-powergrid::datatable.filter_builder.connector') }}"
+                                >
+                                    <option value="and">{{ trans('livewire-powergrid::datatable.filter_builder.and') }}</option>
+                                    <option value="or">{{ trans('livewire-powergrid::datatable.filter_builder.or') }}</option>
+                                </select>
+                            </template>
+                            {{-- Keep columns aligned with the connector rows --}}
+                            <template x-if="index === 0">
+                                <span class="w-[4.5rem] shrink-0" aria-hidden="true"></span>
+                            </template>
+
+                            <select
+                                x-model="row.column"
+                                @change="onColumnChange(row)"
+                                class="{{ $field }} min-w-0 flex-1"
+                                aria-label="{{ trans('livewire-powergrid::datatable.filter_builder.column_placeholder') }}"
+                            >
+                                <template x-for="col in columns" :key="col.field">
+                                    <option :value="col.field" x-text="col.title"></option>
+                                </template>
+                            </select>
+
+                            <select
+                                x-model="row.operator"
+                                class="{{ $field }} min-w-0 flex-1"
+                                aria-label="{{ trans('livewire-powergrid::datatable.filter_builder.operator_placeholder') }}"
+                            >
+                                <template x-for="op in operatorsFor(row.column)" :key="op">
+                                    <option :value="op" x-text="operatorLabels[op] || op"></option>
+                                </template>
+                            </select>
+
+                            <div class="flex min-w-0 flex-1 items-center gap-2">
+                                <template x-if="needsNoValue(row.operator)">
+                                    <span class="w-full truncate text-xs italic text-zinc-400">
+                                        {{ trans('livewire-powergrid::datatable.filter_builder.no_value') }}
+                                    </span>
+                                </template>
+
+                                <template x-if="!needsNoValue(row.operator) && optionsFor(row.column).length">
+                                    <select x-model="row.value" class="{{ $field }} min-w-0 flex-1">
+                                        <option value="">{{ trans('livewire-powergrid::datatable.filter_builder.value_placeholder') }}</option>
+                                        <template x-for="opt in optionsFor(row.column)" :key="opt.value">
+                                            <option :value="opt.value" x-text="opt.label"></option>
+                                        </template>
+                                    </select>
+                                </template>
+
+                                <template x-if="!needsNoValue(row.operator) && !optionsFor(row.column).length">
+                                    <input
+                                        :type="inputType(row.column)"
+                                        x-model="row.value"
+                                        placeholder="{{ trans('livewire-powergrid::datatable.filter_builder.value_placeholder') }}"
+                                        class="{{ $field }} min-w-0 flex-1"
+                                    />
+                                </template>
+
+                                <template x-if="needsRange(row.operator)">
+                                    <input
+                                        :type="inputType(row.column)"
+                                        x-model="row.value2"
+                                        placeholder="{{ trans('livewire-powergrid::datatable.filter_builder.value_to') }}"
+                                        class="{{ $field }} min-w-0 flex-1"
+                                    />
+                                </template>
+                            </div>
+
+                            <flux:button
+                                variant="subtle"
+                                size="sm"
+                                icon="x-mark"
+                                type="button"
+                                x-on:click="removeRow(index)"
+                                class="shrink-0 text-red-500 hover:text-red-600"
+                                aria-label="{{ trans('livewire-powergrid::datatable.filter_builder.remove') }}"
+                            />
+                        </div>
+                    </template>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                    <flux:button variant="ghost" size="sm" icon="plus" type="button" x-on:click="addRow()">
+                        {{ trans('livewire-powergrid::datatable.filter_builder.add_condition') }}
+                    </flux:button>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 border-t border-zinc-200 pt-5 dark:border-zinc-700">
+                <flux:button variant="ghost" type="button" x-on:click="reset()">
+                    {{ trans('livewire-powergrid::datatable.filter_builder.reset') }}
+                </flux:button>
+                <flux:button variant="primary" type="button" x-on:click="apply()">
+                    {{ trans('livewire-powergrid::datatable.filter_builder.apply') }}
+                </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+</div>
