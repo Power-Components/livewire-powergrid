@@ -23,7 +23,7 @@ class Detail extends Component
 
     public mixed $options = null;
 
-    public bool $collapseOthers = false;
+    public bool $singleExpand = false;
 
     #[On('pg-toggle-detail-{tableName}-{rowId}')]
     public function toggle(?bool $collapsed = false): void

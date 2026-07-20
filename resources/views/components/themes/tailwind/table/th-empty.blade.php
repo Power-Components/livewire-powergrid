@@ -14,6 +14,6 @@
         class="{{ theme('table.body.td.empty_state') }}"
         colspan="999"
     >
-        {!! $__partial->processNoDataLabel !!}
+        {!! $__partial->processEmptyState !!}
     </th>
 </tr>

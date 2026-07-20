@@ -136,7 +136,7 @@ class CreateCommand extends Command
 
     private function AutoImportLabel(): string
     {
-        return 'Auto-import Data Source fields from '.
+        return 'Auto-import DataSource fields from '.
         (
             $this->component->requiresDatabaseTableName() ?
                  "[{$this->component->databaseTable}] table?" :

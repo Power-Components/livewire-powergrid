@@ -3,11 +3,11 @@
         return {
             collapsed: false,
             loading: false,
-            collapseOthers: @js(data_get($setUp, 'detail.collapseOthers', false)),
+            singleExpand: @js(data_get($setUp, 'detail.singleExpand', false)),
             toggleDetail() {
                 const isOpen = this.collapsed;
 
-                if (this.collapseOthers) {
+                if (this.singleExpand) {
                     this.$dispatch('pg-toggle-detail-{{ $tableName }}-hidden-all');
                     expandedId = '{{ $rowId }}';
                 }

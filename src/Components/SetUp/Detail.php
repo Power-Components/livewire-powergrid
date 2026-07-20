@@ -20,7 +20,7 @@ final class Detail implements Wireable
 
     public string $viewIcon = '';
 
-    public bool $collapseOthers = false;
+    public bool $singleExpand = false;
 
     public function view(string $view): Detail
     {
@@ -57,11 +57,17 @@ final class Detail implements Wireable
         return $this;
     }
 
-    public function collapseOthers(): Detail
+    public function singleExpand(): Detail
     {
-        $this->collapseOthers = true;
+        $this->singleExpand = true;
 
         return $this;
+    }
+
+    /** @deprecated since 7.x, use singleExpand() instead */
+    public function collapseOthers(): Detail
+    {
+        return $this->singleExpand();
     }
 
     /** @return array<string, mixed> */

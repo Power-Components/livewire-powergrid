@@ -15,7 +15,7 @@ final class AskComponentName
         while (self::$componentName === '') {
             self::$componentName = SanitizeComponentName::handle(
                 text(
-                    label: 'Enter a name for your new PowerGrid Component:',
+                    label: 'Enter a name for your new PowerGrid Table:',
                     placeholder: 'UserTable',
                     default: 'UserTable',
                     required: true
