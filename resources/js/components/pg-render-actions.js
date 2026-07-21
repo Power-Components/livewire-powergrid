@@ -55,7 +55,7 @@ export default (params) => ({
         if (action.rules && Object.values(action.rules).length > 0) {
             Object.values(action.rules).forEach((ruleObj) => {
                 if (
-                    ruleObj.action.includes(action.action)
+                    ruleObj.action === action.action
                     && ruleObj.apply
                     && ruleObj.rule.hide) {
                     hideAction = true;
@@ -73,7 +73,7 @@ export default (params) => ({
             Object.values(action.rules).forEach((ruleObj) => {
                 if (
                     ruleObj.apply
-                    && ruleObj.action.includes(action.action)
+                    && ruleObj.action === action.action
                     && ruleObj.replaceHtml) {
                     replaceHtml = ruleObj.replaceHtml;
                 }
@@ -89,7 +89,7 @@ export default (params) => ({
              Object.values(action.rules).forEach((ruleObj) => {
                  if (
                      ruleObj.apply
-                     && ruleObj.action.includes(action.action)
+                     && ruleObj.action === action.action
                  ) {
                      if (ruleObj.rule.setAttribute && ruleObj.rule.setAttribute.length > 0) {
                          Object.values(ruleObj.rule.setAttribute).forEach((attribute) => {
