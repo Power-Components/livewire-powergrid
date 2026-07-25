@@ -30,7 +30,7 @@ class SummaryCalculator
     public function __construct(private readonly PowerGridComponent $component) {}
 
     /**
-     * Compute the raw summary map for the given (already filtered) datasource.
+     * Compute the raw summary map for the given (already filtered) DataSource.
      * Keys are "field.operation" for built-ins and "custom.key" for closures.
      *
      * @return array<string, mixed>

@@ -7,7 +7,7 @@ use Illuminate\Support\Arr;
 class FilterNormalizer
 {
     /**
-     * Flatten and re-group a filter type's columns so that every datasource
+     * Flatten and re-group a filter type's columns so that every DataSource
      * (database, collection, …) sees the same field => value shape:
      *  - relation paths stay intact (e.g. 'user.roles')
      *  - multi_select arrays are rebuilt as [0 => v, 1 => v, …]

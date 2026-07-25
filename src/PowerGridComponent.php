@@ -342,23 +342,37 @@ class PowerGridComponent extends Component
     }
 
     #[Computed]
-    public function processNoDataLabel(): string
+    public function processEmptyState(): string
     {
-        $noDataLabel = $this->noDataLabel();
+        $emptyState = $this->renderEmptyState();
 
-        if ($noDataLabel instanceof View) {
-            return $noDataLabel->with(
+        if ($emptyState instanceof View) {
+            return $emptyState->with(
                 [
-                    'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'),
+                    'emptyState' => trans('livewire-powergrid::datatable.labels.no_data'),
+                    'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'), // @deprecated since 7.x, use $emptyState
                     'table' => 'livewire-powergrid::components.table',
                     'data' => [],
                 ]
             )->render();
         }
 
-        return "<span>{$noDataLabel}</span>";
+        return "<span>{$emptyState}</span>";
     }
 
+    /** @deprecated since 7.x, use processEmptyState() instead */
+    #[Computed]
+    public function processNoDataLabel(): string
+    {
+        return $this->processEmptyState();
+    }
+
+    public function renderEmptyState(): string|View
+    {
+        return $this->noDataLabel();
+    }
+
+    /** @deprecated since 7.x, use renderEmptyState() instead */
     public function noDataLabel(): string|View
     {
         /** @var view-string $viewName */

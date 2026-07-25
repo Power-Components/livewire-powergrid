@@ -15,7 +15,7 @@ final class AskComponentDatasource
         $datasource = Datasource::asOptions();
 
         $choice = strval(select(
-            label: 'Select your preferred Data source:',
+            label: 'Select your preferred DataSource:',
             options: $datasource->values()->toArray(), // @phpstan-ignore-line
             default: 0
         ));

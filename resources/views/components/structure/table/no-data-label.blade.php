@@ -1,1 +1,1 @@
-<span>{!! $noDataLabel !!}</span>
+<span>{!! $emptyState !!}</span>

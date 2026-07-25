@@ -29,16 +29,22 @@ it('builds the detail setup component through every setter', function () {
         ->options(['legacy' => true])
         ->params(['foo' => 'bar'])
         ->showCollapseIcon('custom-icon')
-        ->collapseOthers();
+        ->singleExpand();
 
     expect($detail->view)->toBe('components.detail')
         ->and($detail->options)->toBe(['foo' => 'bar']) // params overwrites options
         ->and($detail->showCollapseIcon)->toBeTrue()
         ->and($detail->viewIcon)->toBe('custom-icon')
-        ->and($detail->collapseOthers)->toBeTrue();
+        ->and($detail->singleExpand)->toBeTrue();
 
     $wired = $detail->toLivewire();
     expect($wired)->toBeArray()
         ->and($wired['view'])->toBe('components.detail')
         ->and(Detail::fromLivewire($wired))->toBe($wired);
+});
+
+it('keeps collapseOthers() as a deprecated alias of singleExpand()', function () {
+    $detail = (new Detail())->collapseOthers();
+
+    expect($detail->singleExpand)->toBeTrue();
 });

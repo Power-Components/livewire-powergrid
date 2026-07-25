@@ -83,7 +83,7 @@
                         :row-id="$rowId"
                         tr-class="{{ $class }}"
                         :row="(object) $row->toArray()"
-                        :collapse-others="data_get($__partial->setUp, 'detail.collapseOthers', false)"
+                        :single-expand="data_get($__partial->setUp, 'detail.singleExpand', false)"
                         :table-name="$tableName"
                     />
 
