@@ -7,7 +7,6 @@ if (!window.pgFilterBuilderRegistered) {
             operatorLabels: params.operatorLabels || {},
             valueless: params.valueless || [],
             range: params.range || [],
-            // Default connector applied to newly-added rows (the AND/OR is per row).
             defaultBoolean: params.match === 'or' ? 'or' : 'and',
             rows: [],
 

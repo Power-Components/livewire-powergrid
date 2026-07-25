@@ -17,21 +17,17 @@ use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 final class FilterBuilderValidator
 {
     /** Filter types the builder currently supports. */
-    public const SUPPORTED_TYPES = ['input_text', 'number', 'select', 'boolean', 'date', 'datetime'];
+    public const array SUPPORTED_TYPES = ['input_text', 'number', 'select', 'boolean', 'date', 'datetime'];
 
     /** Operators that take no value at all. */
-    public const VALUELESS_OPERATORS = [
+    public const array VALUELESS_OPERATORS = [
         'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank',
     ];
 
     /** Operators that require two values (value + value2). */
-    public const RANGE_OPERATORS = ['between'];
+    public const array RANGE_OPERATORS = ['between'];
 
     /**
-     * Allowed operators per filter type. NEVER derived from the request — the
-     * operator string is only ever matched against this whitelist and then
-     * routed through the hardcoded match() maps in DataSource/Builders/*.
-     *
      * @return array<string, list<string>>
      */
     public static function operators(): array
