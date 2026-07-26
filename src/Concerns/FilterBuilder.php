@@ -35,7 +35,6 @@ trait FilterBuilder
             intval($maxConditions),
         );
 
-        // User hook: throw to reject the submission before it is committed.
         $this->validateFilterBuilder($conditions);
 
         $this->filterBuilder = $conditions;

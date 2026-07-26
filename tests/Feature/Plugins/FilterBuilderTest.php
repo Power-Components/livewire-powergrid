@@ -462,7 +462,6 @@ it('persists the builder via FilterBuilder::persist() without persist([...])', f
 
     expect(session('pg:fb-persist'))->toContain('filterBuilder');
 
-    // A fresh mount restores the applied conditions and rebuilds the pill.
     Livewire::test(filterBuilderPersistComponent()::class)
         ->assertSet('filterBuilder.rows.0.column', 'name')
         ->assertSet('filterBuilder.rows.0.operator', 'contains')
@@ -503,7 +502,6 @@ it('invokes beforeFilterBuilderApply with the validated conditions and lets it m
         {
             $this->trackedConditions = $conditions;
 
-            // Track + narrow the query with an extra constraint of our own.
             return $query->where('active', true);
         }
 
@@ -576,7 +574,6 @@ it('rejects the apply when validateFilterBuilder throws, and commits when it pas
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'bad')]]))
         ->toThrow(InvalidArgumentException::class);
 
-    // A valid submission passes the hook and is committed as usual.
     Livewire::test($component::class)
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'Pas')]])
         ->assertSet('filterBuilder.rows.0.value', 'Pas');
