@@ -417,3 +417,63 @@ it('applies builder conditions on an Eloquent query', function () {
         ->assertSee('Barco-Sushi Simples')
         ->assertDontSee('Pastel de Nata');
 })->group('database');
+
+function filterBuilderPersistComponent(): PowerGridComponent
+{
+    return new class() extends PowerGridComponent
+    {
+        public string $tableName = 'fb-persist';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::filterBuilder()->persist()];
+        }
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Pastel'],
+                ['id' => 2, 'name' => 'Carne'],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+}
+
+it('persists the builder via FilterBuilder::persist() without persist([...])', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    Livewire::test(filterBuilderPersistComponent()::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
+
+    expect(session('pg:fb-persist'))->toContain('filterBuilder');
+
+    // A fresh mount restores the applied conditions and rebuilds the pill.
+    Livewire::test(filterBuilderPersistComponent()::class)
+        ->assertSet('filterBuilder.rows.0.column', 'name')
+        ->assertSet('filterBuilder.rows.0.operator', 'contains')
+        ->assertSet('enabledFilters.0.source', 'filterBuilder');
+})->group('filters');
+
+it('does not persist the builder without an opt-in', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    Livewire::test(filterBuilderCollectionComponent()::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
+
+    expect(session('pg:fb-collection'))->toBeNull();
+})->group('filters');

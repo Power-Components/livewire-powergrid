@@ -84,6 +84,15 @@ trait FilterBuilder
     }
 
     /**
+     * Whether the builder opts into persisting its applied conditions via
+     * FilterBuilder::persist(), independently of the component's persist([...]).
+     */
+    public function filterBuilderPersists(): bool
+    {
+        return (bool) data_get($this->setUp, 'filterBuilder.persist', false);
+    }
+
+    /**
      * Column metadata for the modal (allowlist + operators + options), without
      * the non-serializable FilterBase definitions.
      *

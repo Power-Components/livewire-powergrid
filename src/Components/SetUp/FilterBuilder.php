@@ -25,6 +25,8 @@ final class FilterBuilder implements Wireable
 
     public bool $hideDefaultFilters = false;
 
+    public bool $persist = false;
+
     /** @var list<string> Restrict which filters() columns appear (empty = all). */
     public array $only = [];
 
@@ -59,6 +61,19 @@ final class FilterBuilder implements Wireable
     public function hideDefaultFilters(bool $hide = true): self
     {
         $this->hideDefaultFilters = $hide;
+
+        return $this;
+    }
+
+    /**
+     * Persist the applied builder conditions across requests, reusing the same
+     * storage (driver + key) as persist(['filters']). This makes the builder
+     * survive reloads even when the component does not otherwise opt into
+     * filter persistence via persist([...]).
+     */
+    public function persist(bool $persist = true): self
+    {
+        $this->persist = $persist;
 
         return $this;
     }

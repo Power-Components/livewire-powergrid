@@ -43,7 +43,7 @@
         </flux:button>
     </flux:modal.trigger>
 
-    <flux:modal name="pg-filter-builder-{{ $tableName }}" class="w-full max-w-2xl md:max-w-3xl">
+    <flux:modal name="pg-filter-builder-{{ $tableName }}" class="w-full max-w-2xl md:max-w-4xl">
         <div x-data="pgFilterBuilder(@js($params))" class="flex w-full min-w-0 flex-col gap-6">
             <flux:heading size="lg">
                 {{ trans('livewire-powergrid::datatable.filter_builder.title') }}
@@ -99,7 +99,7 @@
                                 </flux:select>
                             </div>
 
-                            <div class="flex min-w-0 flex-1 items-center gap-2">
+                            <div class="flex min-w-0 flex-[1.6] flex-wrap items-center gap-2">
                                 <template x-if="needsNoValue(row.operator)">
                                     <span class="w-full truncate text-xs italic text-zinc-400">
                                         {{ trans('livewire-powergrid::datatable.filter_builder.no_value') }}
@@ -118,7 +118,7 @@
                                 </template>
 
                                 <template x-if="!needsNoValue(row.operator) && !optionsFor(row.column).length">
-                                    <div class="min-w-0 flex-1">
+                                    <div class="min-w-[8rem] flex-1">
                                         <flux:input
                                             size="sm"
                                             ::type="inputType(row.column)"
@@ -130,7 +130,7 @@
                                 </template>
 
                                 <template x-if="needsRange(row.operator)">
-                                    <div class="min-w-0 flex-1">
+                                    <div class="min-w-[8rem] flex-1">
                                         <flux:input
                                             size="sm"
                                             ::type="inputType(row.column)"
