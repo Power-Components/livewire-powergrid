@@ -477,3 +477,107 @@ it('does not persist the builder without an opt-in', function () {
 
     expect(session('pg:fb-collection'))->toBeNull();
 })->group('filters');
+
+it('invokes beforeFilterBuilderApply with the validated conditions and lets it modify the query', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        /** @var array<string, mixed> */
+        public array $trackedConditions = [];
+
+        public string $tableName = 'fb-before-hook';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::filterBuilder()];
+        }
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'PastelActive', 'active' => true],
+                ['id' => 2, 'name' => 'PastelInactive', 'active' => false],
+            ]);
+        }
+
+        public function beforeFilterBuilderApply(mixed $query, array $conditions): mixed
+        {
+            $this->trackedConditions = $conditions;
+
+            // Track + narrow the query with an extra constraint of our own.
+            return $query->where('active', true);
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('active');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name'), Column::make('Active', 'active')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'Pastel')]])
+        ->assertSet('trackedConditions.rows.0.column', 'name')
+        ->assertSet('trackedConditions.rows.0.operator', 'contains')
+        ->assertSee('PastelActive')        // matched the builder + the hook's active=true
+        ->assertDontSee('PastelInactive'); // dropped by the hook's extra constraint
+})->group('filters');
+
+it('rejects the apply when validateFilterBuilder throws, and commits when it passes', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'fb-validate-hook';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::filterBuilder()];
+        }
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Pastel']]);
+        }
+
+        public function validateFilterBuilder(array $conditions): void
+        {
+            foreach ($conditions['rows'] as $row) {
+                if (($row['value'] ?? '') === 'bad') {
+                    throw new InvalidArgumentException('Invalid condition');
+                }
+            }
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    // Throws before committing → applied state is never touched.
+    expect(fn () => Livewire::test($component::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'bad')]]))
+        ->toThrow(InvalidArgumentException::class);
+
+    // A valid submission passes the hook and is committed as usual.
+    Livewire::test($component::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'Pas')]])
+        ->assertSet('filterBuilder.rows.0.value', 'Pas');
+})->group('filters');

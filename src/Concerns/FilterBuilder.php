@@ -29,11 +29,16 @@ trait FilterBuilder
         /** @var int|string $maxConditions */
         $maxConditions = data_get($this->setUp, 'filterBuilder.maxConditions', 30);
 
-        $this->filterBuilder = FilterBuilderValidator::validate(
+        $conditions = FilterBuilderValidator::validate(
             $payload,
             FilterBuilderValidator::columnsMeta($this),
             intval($maxConditions),
         );
+
+        // User hook: throw to reject the submission before it is committed.
+        $this->validateFilterBuilder($conditions);
+
+        $this->filterBuilder = $conditions;
 
         $this->resetPage();
         $this->syncFilterBuilderPills();

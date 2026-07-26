@@ -42,6 +42,9 @@ final class FilterBuilderHandler
             return;
         }
 
+        /** @var EloquentBuilder<Model>|QueryBuilder $query */
+        $query = $this->component->beforeFilterBuilderApply($query, $state);
+
         $meta = $this->meta();
 
         // Outer group isolates the (possibly OR) conditions so they never leak
@@ -76,6 +79,9 @@ final class FilterBuilderHandler
         if (empty($state['rows'])) {
             return $collection;
         }
+
+        /** @var Collection<int, mixed> $collection */
+        $collection = $this->component->beforeFilterBuilderApply($collection, $state);
 
         $meta = $this->meta();
 
