@@ -31,6 +31,7 @@ class ModelProcessor extends DataSourceBase
                 new Pipelines\Filters($this->component),
                 new Pipelines\SoftDeletes($this->component),
                 new Pipelines\ColumnRawQueries($this->component),
+                new Pipelines\SelectColumns($this->component, $this->isExport),
                 new CommonPipelines\Summaries($this->component),
                 new Pipelines\Sorting($this->component),
             ])
