@@ -20,7 +20,7 @@
             '__partial' => $this,
         ])
 
-        @if (config('livewire-powergrid.filter') === 'outside')
+        @if (config('livewire-powergrid.filter') === 'outside' && ! $this->filterBuilderHidesDefaultFilters())
             <div wire:partial="pg-filters-{{ $tableName }}" class="{{ theme('layout.outsideFilters') }}">
                 @php
                     $filtersFromColumns = collect($columns)

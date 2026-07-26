@@ -18,13 +18,19 @@
 
         @foreach ($enabledFilters as $filter)
             @isset($filter['label'])
+                @php
+                    $isBuilderPill = ($filter['source'] ?? null) === 'filterBuilder';
+                    $pillClick = $isBuilderPill
+                        ? "clearFilterBuilderRow(".intval($filter['index'] ?? 0).")"
+                        : "clearFilter('".$filter['field']."')";
+                @endphp
                 <div
-                    wire:key="enabled-filters-{{ $filter['field'] }}"
+                    wire:key="enabled-filters-{{ $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'] }}"
                     class="flex group items-center gap-3 cursor-pointer"
                 >
                     <span
-                        data-cy="enabled-filters-clear-{{ $filter['field'] }}"
-                        wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
+                        data-cy="enabled-filters-clear-{{ $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'] }}"
+                        wire:click.prevent="{{ $pillClick }}"
                         class="select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500"
                     >
                         {{ $filter['label'] }}

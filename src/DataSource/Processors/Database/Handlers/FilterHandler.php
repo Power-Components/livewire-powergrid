@@ -28,6 +28,18 @@ class FilterHandler
 
         foreach ($this->component->filters as $filterType => $columns) {
             foreach (FilterNormalizer::normalize($columns) as $field => $value) {
+                // Only apply a filter for a field that was actually declared in
+                // filters(). Without this guard the field/column identifier is
+                // user-controlled (the $filters property is mass-assignable), so
+                // a crafted request could filter on an undeclared column.
+                $hasDefinition = $filterDefinitions->contains(
+                    fn ($filter) => data_get($filter, 'field') === $field
+                );
+
+                if (! $hasDefinition) {
+                    continue;
+                }
+
                 $query->where(function ($query) use ($filterType, $field, $value, $filterDefinitions) {
                     $filter = function ($query, $filterDefinitions, $filterType, $field, $value) {
                         $filter = $filterDefinitions->filter(function ($filter) use ($field) {

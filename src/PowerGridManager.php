@@ -5,12 +5,14 @@ namespace PowerComponents\LivewirePowerGrid;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache,
     Detail,
     Exportable,
+    FilterBuilder,
     Footer,
     Header,
     Responsive
 };
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
@@ -26,6 +28,7 @@ class PowerGridManager
     public const DEFAULT_PLUGINS = [
         EditablePlugin::class,
         ExportPlugin::class,
+        FilterBuilderPlugin::class,
         FlatpickrPlugin::class,
         ToggleablePlugin::class,
     ];
@@ -83,5 +86,10 @@ class PowerGridManager
         return app(Exportable::class, [
             'fileName' => $fileName,
         ]);
+    }
+
+    public function filterBuilder(): FilterBuilder
+    {
+        return app(FilterBuilder::class);
     }
 }

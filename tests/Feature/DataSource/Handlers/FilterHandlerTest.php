@@ -101,10 +101,7 @@ it('applies boolean filter through FilterHandler', function () {
         public function filters(): array
         {
             return [
-                Filter::multiSelect('category_id')
-                    ->dataSource(Category::all())
-                    ->optionValue('id')
-                    ->optionLabel('name'),
+                Filter::boolean('in_stock'),
             ];
         }
 

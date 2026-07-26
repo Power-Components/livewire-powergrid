@@ -60,6 +60,19 @@ trait Hooks
     }
 
     /**
+     * @param  array{match: string, rows: list<array<string, mixed>>}  $conditions
+     */
+    public function beforeFilterBuilderApply(mixed $query, array $conditions): mixed
+    {
+        return $query;
+    }
+
+    /**
+     * @param  array{match: string, rows: list<array<string, mixed>>}  $conditions
+     */
+    public function validateFilterBuilder(array $conditions): void {}
+
+    /**
      * @param  array<int|string, list<array<string, mixed>>>  $actionsByRow
      * @param  Collection<int, mixed>  $rows
      * @return array<int|string, list<array<string, mixed>>>

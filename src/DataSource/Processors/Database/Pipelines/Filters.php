@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
+use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderHandler;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Filters
@@ -19,6 +20,12 @@ class Filters
             'component' => $this->component,
         ])->apply($query);
         (new FilterHandler($this->component))->apply($query);
+
+        $filterBuilder = new FilterBuilderHandler($this->component);
+
+        if ($filterBuilder->isActive()) {
+            $filterBuilder->apply($query);
+        }
 
         return $next($query);
     }

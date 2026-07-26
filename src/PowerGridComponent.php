@@ -32,6 +32,7 @@ class PowerGridComponent extends Component
     use Concerns\Base;
     use Concerns\Checkbox;
     use Concerns\Filter;
+    use Concerns\FilterBuilder;
     use Concerns\HasActions;
     use Concerns\HasExport;
     use Concerns\Hooks;

@@ -223,6 +223,7 @@ trait Filter
     {
         $this->enabledFilters = [];
         $this->filters = [];
+        $this->filterBuilder = ['match' => 'and', 'rows' => []];
 
         $this->persistState('filters');
 

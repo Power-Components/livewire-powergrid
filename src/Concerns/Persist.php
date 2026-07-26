@@ -34,6 +34,12 @@ trait Persist
      */
     public function persistState(string $tableItem): void
     {
+        $persistFilterBuilder = $this->filterBuilderPersists();
+
+        if (empty($this->persist) && ! $persistFilterBuilder) {
+            return;
+        }
+
         $state = [];
 
         if (in_array('columns', $this->persist) || $tableItem === 'columns') {
@@ -43,9 +49,15 @@ trait Persist
                 ->all();
         }
 
-        if (in_array('filters', $this->persist) || $tableItem === 'filters') {
+        $persistFilters = in_array('filters', $this->persist) || $tableItem === 'filters';
+
+        if ($persistFilters) {
             $state['filters'] = $this->filters;
             $state['enabledFilters'] = $this->enabledFilters;
+        }
+
+        if (($persistFilters || $persistFilterBuilder) && ! empty($this->filterBuilder['rows'] ?? [])) {
+            $state['filterBuilder'] = $this->filterBuilder;
         }
 
         if (in_array('sorting', $this->persist) || $tableItem === 'sorting') {
@@ -53,10 +65,6 @@ trait Persist
             $state['sortDirection'] = $this->sortDirection;
             $state['sortArray'] = $this->sortArray;
             $state['multiSort'] = $this->multiSort;
-        }
-
-        if (empty($this->persist)) {
-            return;
         }
 
         $jsonState = strval(json_encode($state));
@@ -73,7 +81,9 @@ trait Persist
      */
     private function restoreState(): void
     {
-        if (empty($this->persist)) {
+        $persistFilterBuilder = $this->filterBuilderPersists();
+
+        if (empty($this->persist) && ! $persistFilterBuilder) {
             return;
         }
 
@@ -104,6 +114,18 @@ trait Persist
         if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
             $this->filters = $state['filters'];
             $this->enabledFilters = $state['enabledFilters'];
+        }
+
+        if (($persistFilterBuilder || in_array('filters', $this->persist))
+            && array_key_exists('filterBuilder', $state)
+            && is_array($state['filterBuilder'])) {
+            /** @var array<string, mixed> $restoredFilterBuilder */
+            $restoredFilterBuilder = $state['filterBuilder'];
+            $this->filterBuilder = $restoredFilterBuilder;
+
+            if ($persistFilterBuilder && ! in_array('filters', $this->persist)) {
+                $this->syncFilterBuilderPills();
+            }
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {

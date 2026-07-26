@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
+use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderHandler;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Filters
@@ -20,8 +21,12 @@ final class Filters
      */
     public function handle(Collection $collection, Closure $next): Collection
     {
+        $filterBuilder = new FilterBuilderHandler($this->component);
+
         if (blank($this->component->filters)) {
-            return $next($collection);
+            return $next(
+                $filterBuilder->isActive() ? $filterBuilder->applyCollection($collection) : $collection
+            );
         }
 
         $definitions = collect($this->component->filters());
@@ -67,6 +72,10 @@ final class Filters
                     default => $results
                 };
             }
+        }
+
+        if ($filterBuilder->isActive()) {
+            $results = $filterBuilder->applyCollection($results);
         }
 
         return $next($results);
