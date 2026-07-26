@@ -6,10 +6,6 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\Flux;
 
-/**
- * Feature plugin that renders the "Filter builder" modal into the header zone.
- * Flux-only: on any other theme it renders nothing.
- */
 class FilterBuilderPlugin extends PluginBase
 {
     protected static ?string $cachedJs = null;
@@ -66,8 +62,6 @@ class FilterBuilderPlugin extends PluginBase
     }
 
     /**
-     * Human-readable label for every operator the builder can expose.
-     *
      * @return array<string, string>
      */
     private function operatorLabels(): array

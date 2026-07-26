@@ -4,13 +4,6 @@ namespace PowerComponents\LivewirePowerGrid\Components\SetUp;
 
 use Livewire\Wireable;
 
-/**
- * Opt-in + configuration for the Filter Builder plugin (Flux-only modal).
- *
- * This object ONLY toggles/configures the feature. The list of filterable
- * columns, their types and operators come from the component's filters()
- * definitions — never redeclared here.
- */
 final class FilterBuilder implements Wireable
 {
     public const MATCH_AND = 'and';
@@ -27,15 +20,12 @@ final class FilterBuilder implements Wireable
 
     public bool $persist = false;
 
-    /** @var list<string> Restrict which filters() columns appear (empty = all). */
+    /** @var list<string> */
     public array $only = [];
 
-    /** @var list<string> Hide specific filters() columns from the builder. */
+    /** @var list<string> */
     public array $except = [];
 
-    /**
-     * Default match mode used when the modal opens with no conditions yet.
-     */
     public function match(string $match): self
     {
         $this->match = $match === self::MATCH_OR ? self::MATCH_OR : self::MATCH_AND;
@@ -43,9 +33,6 @@ final class FilterBuilder implements Wireable
         return $this;
     }
 
-    /**
-     * Hard cap on how many conditions may be applied (security / anti-abuse).
-     */
     public function maxConditions(int $max): self
     {
         $this->maxConditions = max(1, $max);
@@ -53,11 +40,6 @@ final class FilterBuilder implements Wireable
         return $this;
     }
 
-    /**
-     * Hide the default inline/outside filters (per-column inputs, the "Filters"
-     * toggle button and the outside filter panel) so the builder becomes the
-     * single filtering UI. The enabled-filter pills stay visible.
-     */
     public function hideDefaultFilters(bool $hide = true): self
     {
         $this->hideDefaultFilters = $hide;
@@ -65,12 +47,6 @@ final class FilterBuilder implements Wireable
         return $this;
     }
 
-    /**
-     * Persist the applied builder conditions across requests, reusing the same
-     * storage (driver + key) as persist(['filters']). This makes the builder
-     * survive reloads even when the component does not otherwise opt into
-     * filter persistence via persist([...]).
-     */
     public function persist(bool $persist = true): self
     {
         $this->persist = $persist;

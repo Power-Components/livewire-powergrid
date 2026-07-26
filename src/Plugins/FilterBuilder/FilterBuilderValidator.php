@@ -6,25 +6,14 @@ use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterBase, FilterInputText};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-/**
- * Single source of truth for Filter Builder security & normalization.
- *
- * The applied state ($component->filterBuilder) is an untrusted, mass-assignable
- * public Livewire property. Every row is validated HERE — both when the user
- * clicks "Apply" and again while the query is being built — so a forged payload
- * (unknown column, bogus operator, injected match mode) can never reach the DB.
- */
 final class FilterBuilderValidator
 {
-    /** Filter types the builder currently supports. */
     public const array SUPPORTED_TYPES = ['input_text', 'number', 'select', 'boolean', 'date', 'datetime'];
 
-    /** Operators that take no value at all. */
     public const array VALUELESS_OPERATORS = [
         'is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank',
     ];
 
-    /** Operators that require two values (value + value2). */
     public const array RANGE_OPERATORS = ['between'];
 
     /**
@@ -43,9 +32,6 @@ final class FilterBuilderValidator
     }
 
     /**
-     * Build the column allowlist from filters()/columns(). This is the ONLY
-     * source of filterable columns — nothing from the request is trusted.
-     *
      * @return array<string, array{
      *     field: string, title: string, type: string,
      *     operators: list<string>, options: array<int, array{value: mixed, label: string}>,
@@ -120,13 +106,6 @@ final class FilterBuilderValidator
     }
 
     /**
-     * Validate and normalize an incoming payload against the allowlist.
-     * Invalid rows are silently dropped. Never throws on bad input.
-     *
-     * The AND/OR connector is per row (row.boolean); the first row's connector
-     * is irrelevant (it is the base of the group). `match` is kept only as the
-     * default connector the modal seeds new rows with.
-     *
      * @param  array<string, array<string, mixed>>  $meta
      * @return array{match: string, rows: list<array{column: string, operator: string, value: mixed, value2: mixed, boolean: string}>}
      */
@@ -215,11 +194,6 @@ final class FilterBuilderValidator
     }
 
     /**
-     * Resolve the value options shown in the modal for a column. Booleans expose
-     * their true/false labels; selects resolve statically-known data sources
-     * (array/Collection) — closures are skipped (the modal falls back to a
-     * free-text value input, still validated). Other types have no options.
-     *
      * @return array<int, array{value: mixed, label: string}>
      */
     private static function optionsFor(mixed $definition): array

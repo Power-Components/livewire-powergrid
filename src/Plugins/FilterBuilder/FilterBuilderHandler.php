@@ -9,23 +9,12 @@ use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, Number, Select};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-/**
- * Applies the Filter Builder conditions to the query (database) or dataset
- * (collection), reusing the existing DataSource/Builders/* so the operator→SQL
- * logic (and its parameter binding) is shared with the normal filters.
- *
- * Every row is re-validated here through FilterBuilderValidator — the applied
- * state is never trusted just because it passed validation at "Apply" time.
- */
 final class FilterBuilderHandler
 {
     public function __construct(
         private readonly PowerGridComponent $component
     ) {}
 
-    /**
-     * Whether the feature is opted-in for this component.
-     */
     public function isActive(): bool
     {
         return filled(data_get($this->component->setUp, 'filterBuilder'));
@@ -118,9 +107,6 @@ final class FilterBuilderHandler
     }
 
     /**
-     * Split rows into consecutive AND-runs separated by OR connectors, so the
-     * collection path resolves AND/OR with the same precedence as the DB path.
-     *
      * @param  list<array{column: string, operator: string, value: mixed, value2: mixed, boolean: string}>  $rows
      * @return list<list<array{column: string, operator: string, value: mixed, value2: mixed, boolean: string}>>
      */
@@ -197,8 +183,6 @@ final class FilterBuilderHandler
     }
 
     /**
-     * Map a normalized row into the value shape each Builder expects.
-     *
      * @param  array{column: string, operator: string, value: mixed, value2: mixed, boolean: string}  $row
      * @return array<string, mixed>|int|string|null
      */
@@ -220,10 +204,6 @@ final class FilterBuilderHandler
         };
     }
 
-    /**
-     * Normalize a select/boolean value to a scalar the Builders accept, keeping
-     * int keys intact (so equality filters on integer columns still match).
-     */
     private function scalarValue(mixed $value): int|string|null
     {
         if (is_int($value) || is_string($value) || is_null($value)) {
