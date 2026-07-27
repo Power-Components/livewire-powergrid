@@ -9,6 +9,9 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 /**
  * Capture the paginated data SELECT issued against the `dishes` table
  * (ignoring the pagination count(*) query).
+ *
+ * The SQL is normalized (identifier quotes stripped, lowercased) so assertions
+ * are database-agnostic — SQLite quotes identifiers with " while MySQL uses `.
  */
 function captureDishesSelect(Closure $callback): string
 {
@@ -21,8 +24,10 @@ function captureDishesSelect(Closure $callback): string
     $callback();
 
     foreach (array_reverse($queries) as $sql) {
-        if (str_contains($sql, 'from "dishes"') && ! str_contains($sql, 'count(*)')) {
-            return $sql;
+        $normalized = strtolower(str_replace(['`', '"'], '', $sql));
+
+        if (str_contains($normalized, 'from dishes') && ! str_contains($normalized, 'count(*)')) {
+            return $normalized;
         }
     }
 
@@ -61,9 +66,9 @@ it('prunes hidden + searchable columns from the display SELECT', function () {
 
     expect($sql)
         ->not->toContain('select *')
-        ->not->toContain('"additional"')
-        ->toContain('"name"')
-        ->toContain('"id"');
+        ->not->toContain('additional')
+        ->toContain(', name,')
+        ->toContain('select id,');
 });
 
 it('still searches on a pruned hidden + searchable column', function () {
@@ -81,7 +86,7 @@ it('still searches on a pruned hidden + searchable column', function () {
             return PowerGrid::fields()
                 ->add('id')
                 ->add('name')
-                ->add('additional');
+                ->add('chef_name');
         }
 
         public function columns(): array
@@ -89,15 +94,17 @@ it('still searches on a pruned hidden + searchable column', function () {
             return [
                 Column::make('Id', 'id'),
                 Column::make('Name', 'name'),
-                Column::make('Additional', 'additional')->searchable()->hidden(),
+                // Pruned from the SELECT (hidden + searchable) but still filterable.
+                Column::make('Chef', 'chef_name')->searchable()->hidden(),
             ];
         }
     };
 
-    // "Hot-roll" only exists inside the JSON `additional` column of the sushi dishes.
+    // "Nábia" only exists in the pruned `chef_name` column (name is not searchable),
+    // so a hit proves the WHERE still applies to a non-selected column.
     Livewire::test($component::class)
-        ->set('search', 'Hot-roll')
-        ->assertSee('Barco-Sushi da Sueli')
+        ->set('search', 'Nábia')
+        ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Pastel de Nata');
 });
 
@@ -201,7 +208,7 @@ it('does not prune when the datasource has an explicit select', function () {
     $sql = captureDishesSelect(fn () => Livewire::test($component::class)->assertSee('Pastel de Nata'));
 
     // User's explicit projection is respected untouched.
-    expect($sql)->toContain('"additional"');
+    expect($sql)->toContain('additional');
 });
 
 it('does not prune when exporting so all columns remain available', function () {
