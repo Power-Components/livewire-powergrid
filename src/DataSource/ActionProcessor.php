@@ -27,16 +27,23 @@ final class ActionProcessor
             /** @var list<Button> $actions */
             $actions = $this->component->actions($row);
 
+            $rules = $this->shouldProcessActionRules
+                ? $this->component->resolveActionRules($row)
+                : [];
+
             $actions = collect($actions)
-                ->map(fn (Button $action) => $this->mapAction($action, $row))
+                ->map(fn (Button $action) => $this->mapAction($action, $row, $rules))
                 ->all();
         }
 
         return $actions;
     }
 
-    /** @return array{action: string, can: mixed, slot: ?string, tag: ?string, icon: ?string, iconAttributes: array<string, mixed>, attributes: array<string, mixed>, rules: array<int, array<string, mixed>>} */
-    private function mapAction(Button $action, object $row): array
+    /**
+     * @param  array<int, array<string, mixed>>  $rules
+     * @return array{action: string, can: mixed, slot: ?string, tag: ?string, icon: ?string, iconAttributes: array<string, mixed>, attributes: array<string, mixed>, rules: array<int, array<string, mixed>>}
+     */
+    private function mapAction(Button $action, object $row, array $rules): array
     {
         $can = $action->can;
 
@@ -48,9 +55,7 @@ final class ActionProcessor
             'icon' => $action->icon,
             'iconAttributes' => $action->iconAttributes,
             'attributes' => $action->attributes,
-            'rules' => $this->shouldProcessActionRules
-                ? $this->component->resolveActionRules($row)
-                : [],
+            'rules' => $rules,
         ];
     }
 }

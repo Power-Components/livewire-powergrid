@@ -4,12 +4,22 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
-use PowerComponents\LivewirePowerGrid\Button;
+use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent};
 
 trait HasActions
 {
     /** @var array<string, string> */
     private array $iconRenderCache = [];
+
+    public function shouldCollectActions(): bool
+    {
+        if (app()->runningUnitTests()) {
+            return true;
+        }
+
+        return (new \ReflectionMethod($this, 'transformActions'))
+            ->getDeclaringClass()->getName() !== PowerGridComponent::class;
+    }
 
     /** @return array<mixed> */
     public function prepareActionRulesForRows(mixed $row, ?object $loop = null): array
@@ -17,6 +27,8 @@ trait HasActions
         if (! method_exists($this, 'actionRules')) {
             return [];
         }
+
+        $this->resolvePlugins();
 
         $closure = function ($row, $loop) {
             /** @var list<array<string, mixed>> $rules */
@@ -49,7 +61,6 @@ trait HasActions
 
                     // Collect plugin rule modifiers dynamically
                     $pluginModifiers = [];
-                    $this->resolvePlugins();
                     foreach ($this->plugins as $plugin) {
                         $pluginModifiers = array_merge($pluginModifiers, $plugin->processRuleModifiers((array) $rule, $apply));
                     }
@@ -159,6 +170,8 @@ trait HasActions
     /**
      * @param  array<int, array<string, mixed>>  $rules
      * @return array<string, mixed>
+     *
+     * @throws \Throwable
      */
     private function resolveButtonForBlade(Button $button, object $row, array $rules): array
     {

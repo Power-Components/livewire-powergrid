@@ -2,17 +2,15 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Export;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
+use Generator;
 use PowerComponents\LivewirePowerGrid\Column;
-use stdClass;
 
 class Export
 {
     public string $fileName;
 
-    /** @var Collection<int, mixed> */
-    public Collection $data;
+    /** @var iterable<int, mixed> */
+    public iterable $data;
 
     public string $striped = '';
 
@@ -31,79 +29,101 @@ class Export
 
     /**
      * @param  array<int, Column>  $columns
-     * @param  Collection<int, mixed>  $data
+     * @param  iterable<int, mixed>  $data
      */
-    public function setData(array $columns, Collection $data): Export
+    public function setData(array $columns, iterable $data): Export
     {
         $this->columns = $columns;
-        $this->data = collect($data);
+
+        // Keep the source iterable lazy (e.g. a cursor-backed LazyCollection) so
+        // large exports are never fully materialized in memory.
+        $this->data = $data;
 
         return $this;
     }
 
     /**
-     * @param  Collection<int, mixed>  $data
+     * Titles of the columns that make it into the export file, in column order.
+     *
      * @param  array<int, Column>  $columns
-     * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>}
+     * @return list<string>
      */
-    public function prepare(Collection $data, array $columns, bool $stripTags): array
+    public function exportHeaders(array $columns): array
     {
-        $header = collect();
+        $headers = [];
 
-        $data = $data->transform(function ($row) use ($columns, $header, $stripTags) {
-            $item = collect();
+        foreach ($columns as $column) {
+            if (! $this->columnIsExportable($column)) {
+                continue;
+            }
 
-            collect($columns)->each(function ($column) use ($row, $header, $item, $stripTags) {
-                /** @var Model|stdClass $row */
-                if (method_exists($row, 'withoutRelations')) {
-                    $row = $row->withoutRelations()->toArray();
+            $title = data_get($column, 'title');
+            $headers[] = is_string($title) ? $title : '';
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Stream one export row (values aligned to exportHeaders()) at a time, so the
+     * caller/writer never holds the whole dataset in memory.
+     *
+     * @param  iterable<int, mixed>  $data
+     * @param  array<int, Column>  $columns
+     * @return Generator<int, list<mixed>>
+     */
+    public function streamRows(iterable $data, array $columns, bool $stripTags): Generator
+    {
+        $exportableColumns = collect($columns)
+            ->filter(fn ($column): bool => $this->columnIsExportable($column))
+            ->values();
+
+        foreach ($data as $row) {
+            if (is_object($row) && method_exists($row, 'withoutRelations')) {
+                $row = $row->withoutRelations()->toArray();
+            }
+
+            $row = (array) $row;
+
+            $values = [];
+
+            foreach ($exportableColumns as $column) {
+                /** @var string $field */
+                $field = data_get($column, 'field');
+
+                $value = data_get($row, $field, '');
+                $value = is_scalar($value) ? (string) $value : '';
+
+                if ($stripTags) {
+                    $value = strip_tags($value);
                 }
 
-                $isExportable = false;
+                $values[] = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            }
 
-                $hide = (bool) data_get(
-                    collect((array) data_get($row, '__powergrid_rules'))
-                        ->where('apply', true)
-                        ->last(),
-                    'disable',
-                );
+            yield $values;
+        }
+    }
 
-                $disable = (bool) data_get(
-                    collect((array) data_get($row, '__powergrid_rules'))
-                        ->where('apply', true)
-                        ->last(),
-                    'disable',
-                );
+    private function columnIsExportable(mixed $column): bool
+    {
+        return (bool) data_get($column, 'visibleInExport')
+            || (! data_get($column, 'hidden') && is_null(data_get($column, 'visibleInExport')));
+    }
 
-                if ($hide || $disable) {
-                    $isExportable = true;
-                }
-
-                /** @var Column $column */
-                if ($column->visibleInExport || (! $column->hidden && is_null($column->visibleInExport)) && ! $isExportable) {
-                    /** @var array<string, mixed> $row */
-                    foreach ($row as $key => $value) {
-                        if ($key === $column->field) {
-                            /** @var string $value */
-                            if ($stripTags === true) {
-                                $value = strip_tags($value);
-                            }
-                            $item->put($column->title, html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-                        }
-                    }
-
-                    if (! $header->contains($column->title)) {
-                        $header->push($column->title);
-                    }
-                }
-            });
-
-            return $item->all();
-        });
-
+    /**
+     * Backward-compatible eager helper (materializes all rows). Prefer
+     * exportHeaders() + streamRows() for large datasets.
+     *
+     * @param  iterable<int, mixed>  $data
+     * @param  array<int, Column>  $columns
+     * @return array{headers: list<string>, rows: list<list<mixed>>}
+     */
+    public function prepare(iterable $data, array $columns, bool $stripTags): array
+    {
         return [
-            'headers' => $header->all(),
-            'rows' => $data->all(),
+            'headers' => $this->exportHeaders($columns),
+            'rows' => iterator_to_array($this->streamRows($data, $columns, $stripTags), false),
         ];
     }
 }

@@ -60,7 +60,6 @@ class ExportToXLS extends Export implements ExportInterface
     public function build(Exportable|array $exportOptions): void
     {
         $stripTags = boolval(data_get($exportOptions, 'stripTags', false));
-        $data = $this->prepare($this->data, $this->columns, $stripTags);
 
         $options = new Options();
         $writer = new Writer($options);
@@ -73,9 +72,7 @@ class ExportToXLS extends Export implements ExportInterface
             ->withShouldWrapText(false)
             ->withBackgroundColor('d0d3d8');
 
-        $row = Row::fromValuesWithStyle($data['headers'], $style);
-
-        $writer->addRow($row);
+        $writer->addRow(Row::fromValuesWithStyle($this->exportHeaders($this->columns), $style));
 
         /**
          * @var int<1, max> $column
@@ -92,8 +89,8 @@ class ExportToXLS extends Export implements ExportInterface
             ->withFontSize(12)
             ->withBackgroundColor($this->striped);
 
-        /** @var array<string> $row */
-        foreach ($data['rows'] as $key => $row) {
+        // Stream rows one at a time so large exports never materialize in memory.
+        foreach ($this->streamRows($this->data, $this->columns, $stripTags) as $key => $row) {
             if (count($row)) {
                 if ($key % 2 && $this->striped) {
                     $row = Row::fromValuesWithStyle($row, $gray);
