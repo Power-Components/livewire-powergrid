@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent;
 use Illuminate\Support;
-use Illuminate\Support\{Collection, Str};
+use Illuminate\Support\{Collection, LazyCollection, Str};
 use Illuminate\Support\Facades\Bus;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
@@ -320,14 +320,19 @@ class ExportPlugin extends PluginBase
     }
 
     /**
-     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>
+     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>|LazyCollection<int, mixed>
      *
      * @throws Exception
      */
-    public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection
+    public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection|LazyCollection
     {
         $component = $this->component;
-        $processDataSource = tap(ProcessDataSource::make($component), fn ($datasource) => $datasource->get());
+        $processDataSource = ProcessDataSource::make($component);
+        $datasource = $processDataSource->resolveDatasource();
+
+        if ($datasource instanceof Collection) {
+            $processDataSource->get();
+        }
 
         $filtered = $processDataSource->component->filtered;
 
@@ -335,7 +340,7 @@ class ExportPlugin extends PluginBase
             $filtered = $processDataSource->component->checkboxValues;
         }
 
-        if ($processDataSource->datasource instanceof Collection) {
+        if ($datasource instanceof Collection) {
             if ($filtered) {
                 $results = $processDataSource->get(isExport: true)['results']
                     ->whereIn($component->primaryKey, $filtered);
@@ -347,7 +352,7 @@ class ExportPlugin extends PluginBase
 
             $dataTransformer = new DataTransformer($processDataSource->component);
 
-            return $dataTransformer->transform($processDataSource->datasource)->collection;
+            return $dataTransformer->transform($datasource)->collection;
         }
 
         $currentTable = $processDataSource->component->currentTable;
@@ -380,11 +385,13 @@ class ExportPlugin extends PluginBase
 
                 return $query->orderBy($sortField, $sortDirection);
             })
-            ->get();
+            // Stream from the database one row at a time instead of loading the
+            // whole result set into memory.
+            ->cursor();
 
         $dataTransformer = new DataTransformer($processDataSource->component);
 
-        return $dataTransformer->transform($results)->collection;
+        return $dataTransformer->transformForExport($results);
     }
 
     private function getExportableClassFromConfig(string $exportType): string

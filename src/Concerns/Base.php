@@ -46,6 +46,8 @@ trait Base
 
     public bool $isExporting = false;
 
+    public bool $pruneHiddenColumns = true;
+
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields();

@@ -4,6 +4,7 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 it('keeps both openspout v4 and v5 export drivers available', function () {
     $drivers = config('livewire-powergrid.exportable');
@@ -90,6 +91,38 @@ it('properly export csv data with selected data', function () {
     $rows = [['1', 'Pastel de Nata'], ['2', 'Peixada']];
 
     expect($downloadedFile)->toBeCsvDownload($headings, $rows);
+})->requiresOpenSpout();
+
+it('streams a database datasource to csv with correct content', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-export-csv-db';
+
+        public function datasource()
+        {
+            return Dish::query()->where('id', 1);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('export')->type(Exportable::TYPE_CSV)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('ID', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $downloadedFile = Livewire::test($component::class)
+        ->call('exportToCsv', false);
+
+    expect($downloadedFile)->toBeCsvDownload(['ID', 'Name'], [['1', 'Pastel de Nata']]);
 })->requiresOpenSpout();
 
 /*

@@ -452,8 +452,10 @@ trait Filter
             return;
         }
 
-        $filters->each(function ($filter) {
-            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($filter) {
+        $columns = $this->columns;
+
+        $filters->each(function ($filter) use (&$columns) {
+            foreach ($columns as $index => $column) {
                 /** @var Column $column */
                 if (data_get($column, 'field') === data_get($filter, 'column') ||
                     data_get($column, 'dataField') === data_get($filter, 'column')) {
@@ -509,11 +511,13 @@ trait Filter
                             }
                         }
                     }
-                }
 
-                return $column;
-            })->all());
+                    $columns[$index] = $column;
+                }
+            }
         });
+
+        $this->columns = $columns;
     }
 
     public function addEnabledFilters(string $field, ?string $label): void

@@ -53,7 +53,6 @@ class ExportToCsv extends Export implements ExportInterface
     public function build(Exportable|array $exportOptions): void
     {
         $stripTags = boolval(data_get($exportOptions, 'stripTags', false));
-        $data = $this->prepare($this->data, $this->columns, $stripTags);
 
         $csvSeparator = strval(data_get($exportOptions, 'csvSeparator', ','));
         $csvDelimiter = strval(data_get($exportOptions, 'csvDelimiter', '"'));
@@ -65,14 +64,11 @@ class ExportToCsv extends Export implements ExportInterface
         $writer = new Writer($csvOptions);
         $writer->openToFile(storage_path($this->fileName.'.csv'));
 
-        $row = Row::fromValues($data['headers']);
+        $writer->addRow(Row::fromValues($this->exportHeaders($this->columns)));
 
-        $writer->addRow($row);
-
-        /** @var array<string> $row */
-        foreach ($data['rows'] as $row) {
-            $row = Row::fromValues($row);
-            $writer->addRow($row);
+        // Stream rows one at a time so large exports never materialize in memory.
+        foreach ($this->streamRows($this->data, $this->columns, $stripTags) as $row) {
+            $writer->addRow(Row::fromValues($row));
         }
 
         $writer->close();

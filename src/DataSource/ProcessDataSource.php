@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\{Processors\CollectionProcessor,
     Processors\DataSourceBase,
     Processors\ModelProcessor,
@@ -23,6 +25,25 @@ class ProcessDataSource
     public static function make(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
     {
         return new self($powerGridComponent, $properties);
+    }
+
+    public function resolveDatasource(): mixed
+    {
+        if (is_null($this->datasource)) {
+            $this->datasource = $this->component->datasource($this->properties);
+        }
+
+        $datasource = $this->datasource;
+
+        if ($datasource instanceof QueryBuilder) {
+            /** @var string $from */
+            $from = $datasource->from;
+            $this->component->currentTable = $from;
+        } elseif ($datasource instanceof Relation || (is_object($datasource) && method_exists($datasource, 'getModel'))) {
+            $this->component->currentTable = $datasource->getModel()->getTable();
+        }
+
+        return $datasource;
     }
 
     /**

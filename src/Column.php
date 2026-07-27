@@ -292,6 +292,11 @@ final class Column implements Wireable
         unset($data['rawQueries']);
         unset($data['summaryCallbacks']);
 
+        // Filter metadata (including resolved dataSource option lists, which can be
+        // large) is rebuilt server-side from filters() on every render via
+        // resolveFilters(), so it never needs to travel in the Livewire payload.
+        unset($data['filters']);
+
         return $data;
     }
 

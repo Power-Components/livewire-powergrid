@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns;
 
 use Illuminate\Database\Eloquent;
-use Illuminate\Support\{Collection, Str, Stringable};
+use Illuminate\Support\{Collection, LazyCollection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
     DataSource\ProcessDataSource,
@@ -46,9 +46,9 @@ trait ExportableJob
 
     /**
      * @param  array<string, mixed>  $properties
-     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>
+     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>|LazyCollection<int, mixed>
      */
-    private function prepareToExport(array $properties = []): Eloquent\Collection|Collection
+    private function prepareToExport(array $properties = []): Eloquent\Collection|Collection|LazyCollection
     {
         /** @phpstan-ignore assign.propertyType */
         $this->componentTable->filters = $this->filters ?? [];
@@ -58,10 +58,12 @@ trait ExportableJob
         $search = data_get($properties, 'search', '');
         $this->componentTable->search = $search;
 
-        $processDataSource = tap(
-            ProcessDataSource::make($this->componentTable, $properties),
-            fn ($datasource) => $datasource->get()
-        );
+        $processDataSource = ProcessDataSource::make($this->componentTable, $properties);
+        $datasource = $processDataSource->resolveDatasource();
+
+        if ($datasource instanceof Collection) {
+            $processDataSource->get();
+        }
 
         $filtered = $processDataSource->component->filtered ?? [];
         $currentTable = $processDataSource->component->currentTable;
@@ -101,10 +103,11 @@ trait ExportableJob
             ->offset($this->offset)
             ->limit($this->limit)
             ->orderBy($sortField, $sortDirection)
-            ->get();
+            // Stream this chunk from the database one row at a time.
+            ->cursor();
 
         $dataTransformer = new DataTransformer($processDataSource->component);
 
-        return $dataTransformer->transform($results)->collection;
+        return $dataTransformer->transformForExport($results);
     }
 }
