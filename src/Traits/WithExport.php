@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent;
 use Illuminate\Support;
 use Illuminate\Support\{Collection, Str};
 use Illuminate\Support\Facades\Bus;
+use Livewire\Attributes\Locked;
 use PowerComponents\LivewirePowerGrid\Components\Exports\Export;
 use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\DataTransformer,
@@ -37,8 +38,10 @@ trait WithExport
 
     public int $batchProgress = 0;
 
+    #[Locked]
     public array $exportedFiles = [];
 
+    #[Locked]
     public string $exportableJobClass = ExportJob::class;
 
     public bool $batchErrors = false;
@@ -71,7 +74,24 @@ trait WithExport
 
     public function downloadExport(string $file): BinaryFileResponse
     {
-        return response()->download(storage_path($file));
+        abort_unless(
+            $file !== ''
+            && basename($file) === $file
+            && in_array($file, $this->exportedFiles, true),
+            403
+        );
+
+        $realPath = realpath(storage_path($file));
+        $storageBase = realpath(storage_path());
+
+        abort_if(
+            $realPath === false
+            || $storageBase === false
+            || ! str_starts_with($realPath, $storageBase.DIRECTORY_SEPARATOR),
+            403
+        );
+
+        return response()->download($realPath);
     }
 
     /**
