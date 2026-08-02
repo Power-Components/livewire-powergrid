@@ -133,8 +133,15 @@ class ExportPlugin extends PluginBase
         return $this->export(Exportable::TYPE_CSV, $selected);
     }
 
-    public function downloadExport(string $file): BinaryFileResponse
+    public function downloadExport(string $file): ?BinaryFileResponse
     {
+        /** @var array<int, string> $exportedFiles */
+        $exportedFiles = (array) data_get($this->component->exportState, 'files', []);
+
+        if ($file === '' || basename($file) !== $file || ! in_array($file, $exportedFiles, true)) {
+            return null;
+        }
+
         /** @var string $disk */
         $disk = data_get($this->component->setUp, 'exportable.disk', 'local');
 
@@ -144,9 +151,17 @@ class ExportPlugin extends PluginBase
         $directory = trim($directory, '/');
         $path = $directory !== '' ? $directory.'/'.$file : $file;
 
-        // Batch jobs store each chunk on the configured disk (Exportable::disk()),
-        // so resolve the download from that disk rather than assuming storage_path().
-        return response()->download(Support\Facades\Storage::disk($disk)->path($path));
+        $storage = Support\Facades\Storage::disk($disk);
+
+        $realPath = realpath($storage->path($path));
+        $base = realpath($storage->path($directory));
+
+        if ($realPath === false || $base === false
+            || ! str_starts_with($realPath, rtrim($base, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR)) {
+            return null;
+        }
+
+        return response()->download($realPath);
     }
 
     public function exportBatch(): ?Batch

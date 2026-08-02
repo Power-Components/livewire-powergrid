@@ -2,14 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Livewire\Attributes\Locked;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- * Minimal Livewire-facing surface for the Export feature. All export logic
- * lives in PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
- * these are the thin entry points Livewire can call (wire:click / wire:poll)
- * plus the single runtime state property the batch flow needs to persist
- * across requests.
  *
  * @codeCoverageIgnore
  */
@@ -17,9 +13,11 @@ trait HasExport
 {
     /**
      * Runtime batch-export state. Keys: exporting, finished, id, progress, files, errors.
+     * Server-owned: written only by the export flow, never accepted from the client.
      *
      * @var array<string, mixed>
      */
+    #[Locked]
     public array $exportState = [];
 
     public function exportToXLS(bool $selected = false): BinaryFileResponse|bool
@@ -38,9 +36,9 @@ trait HasExport
         return $result;
     }
 
-    public function downloadExport(string $file): BinaryFileResponse
+    public function downloadExport(string $file): ?BinaryFileResponse
     {
-        /** @var BinaryFileResponse $result */
+        /** @var BinaryFileResponse|null $result */
         $result = $this->delegateToPlugin('downloadExport', [$file]);
 
         return $result;
