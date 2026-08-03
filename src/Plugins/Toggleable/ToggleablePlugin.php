@@ -98,11 +98,11 @@ class ToggleablePlugin extends PluginBase
         $id = $params[1] ?? null;
         $value = $params[2] ?? null;
 
-        if (! is_string($field) || ! is_scalar($id) || ! $this->isHandledField($field)) {
+        if (! is_string($field) || ! is_scalar($id) || ! is_scalar($value) || ! $this->isHandledField($field)) {
             return;
         }
 
-        $this->component->onUpdatedToggleable((string) $id, $field, $value);
+        $this->component->onUpdatedToggleable((string) $id, $field, (string) $value);
     }
 
     /** @param  stdClass|Column|array<string, mixed>  $column */

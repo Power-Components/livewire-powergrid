@@ -54,7 +54,7 @@ abstract class PluginBase implements Wireable
 
     abstract public function isEnabled(): bool;
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
+    /** @param  Column|array<mixed>|stdClass  $column */
     public function handles(Column|array|stdClass $column): bool
     {
         return false;
@@ -67,7 +67,13 @@ abstract class PluginBase implements Wireable
         }
 
         return collect($this->component->columns)
-            ->filter(fn ($column) => $this->handles($column))
+            ->filter(function ($column): bool {
+                if ($column instanceof Column || $column instanceof stdClass || is_array($column)) {
+                    return $this->handles($column);
+                }
+
+                return false;
+            })
             ->contains(fn ($column) => data_get($column, 'dataField', data_get($column, 'field')) === $field);
     }
 

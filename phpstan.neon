@@ -9,7 +9,6 @@ parameters:
 
     ignoreErrors:
         - '#Cannot call method [a-zA-Z0-9\\_]#'
-        - '#Variable \$title might not be defined.#'
         - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
         - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
     excludePaths:
