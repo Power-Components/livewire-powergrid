@@ -50,7 +50,7 @@ class ColumnRawQueries
         $bindings = data_get($rawQueryConfig, 'bindings', []);
         $method = data_get($rawQueryConfig, 'method', 'whereRaw');
 
-        $resolvedSql = $this->resolvePlaceholders($sql);
+        $resolvedSql = $this->resolvePlaceholders($sql, true);
         $resolvedBindings = $this->resolveBindings($bindings);
 
         if ($resolvedSql) {
@@ -58,7 +58,7 @@ class ColumnRawQueries
         }
     }
 
-    private function resolvePlaceholders(string|Closure|null $sql): ?string
+    private function resolvePlaceholders(string|Closure|null $sql, bool $rawContext = false): ?string
     {
         if (is_null($sql)) {
             return null;
@@ -68,14 +68,15 @@ class ColumnRawQueries
             $sql = $sql();
         }
 
-        return preg_replace_callback('/\{([\w.]+)\}/', function (array $matches): string {
+        return preg_replace_callback('/\{([\w.]+)\}/', function (array $matches) use ($rawContext): string {
             $property = trim($matches[1]);
 
-            // The sort direction is interpolated verbatim into a raw ORDER BY
-            // clause, so it must be restricted to an "asc"/"desc" allowlist to
-            // prevent SQL injection through the public sortDirection property.
             if ($property === 'sortDirection') {
                 return Sql::sanitizeSortDirection($this->component->sortDirection);
+            }
+
+            if ($rawContext) {
+                return $matches[0];
             }
 
             /** @var string $value */

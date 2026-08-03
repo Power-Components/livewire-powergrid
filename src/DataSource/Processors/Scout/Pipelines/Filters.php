@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipeline
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder as ScoutBuilder;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\FilterNormalizer;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Filters
@@ -15,18 +16,25 @@ final class Filters
      * @return ScoutBuilder<Model> */
     public function handle(ScoutBuilder $builder, Closure $next): ScoutBuilder
     {
-        if (empty($this->component->filters)) {
+        $filterDefinitions = collect($this->component->filters());
+
+        if ($filterDefinitions->isEmpty() || empty($this->component->filters)) {
             return $next($builder);
         }
 
-        collect($this->component->filters)
-            ->each(function (mixed $filters) use ($builder) {
-                collect($filters)->each(function (mixed $value, mixed $field) use ($builder) {
-                    /** @var string $field */
-                    /** @var string $value */
-                    $builder->where($field, $value);
-                });
-            });
+        foreach ($this->component->filters as $columns) {
+            foreach (FilterNormalizer::normalize((array) $columns) as $field => $value) {
+                $hasDefinition = $filterDefinitions->contains(
+                    fn ($filter) => data_get($filter, 'field') === $field
+                );
+
+                if (! $hasDefinition) {
+                    continue;
+                }
+
+                $builder->where($field, $value);
+            }
+        }
 
         return $next($builder);
     }

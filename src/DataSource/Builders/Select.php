@@ -25,8 +25,7 @@ class Select extends BuilderBase
         }
 
         if (is_array($values)) {
-            $field = $field.'.'.key($values);
-            $values = $values[key($values)];
+            [$field, $values] = self::appendNestedField($field, $values);
         }
 
         if (filled($values)) {

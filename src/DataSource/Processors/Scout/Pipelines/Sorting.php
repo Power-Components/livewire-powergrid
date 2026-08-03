@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipeline
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder as ScoutBuilder;
+use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Sorting
@@ -21,13 +22,16 @@ final class Sorting
 
         if ($this->component->multiSort) {
             foreach ($this->component->sortArray as $sortField => $direction) {
-                $builder->orderBy($sortField, $direction);
+                $builder->orderBy($sortField, Sql::sanitizeSortDirection($direction));
             }
 
             return $next($builder);
         }
 
-        $builder->orderBy($this->component->sortField, $this->component->sortDirection);
+        $builder->orderBy(
+            $this->component->sortField,
+            Sql::sanitizeSortDirection($this->component->sortDirection)
+        );
 
         return $next($builder);
     }

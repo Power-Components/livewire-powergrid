@@ -19,4 +19,19 @@ class BuilderBase
         protected Component $component,
         protected null|array|FilterBase $filterBase = null
     ) {}
+
+    /**
+     * @param  array<int|string, mixed>  $value
+     * @return array{0: string, 1: mixed}
+     */
+    protected static function appendNestedField(string $field, array $value): array
+    {
+        $key = key($value);
+
+        if (is_string($key) && preg_match('/^[A-Za-z0-9_.>-]+$/', $key) === 1) {
+            $field = $field.'.'.$key;
+        }
+
+        return [$field, $value[$key]];
+    }
 }

@@ -111,7 +111,7 @@ class EditablePlugin extends PluginBase
     {
         [$field, $id, $value] = $params;
         /** @var string $value */
-        if (! is_string($field) || ! is_scalar($id)) {
+        if (! is_string($field) || ! is_scalar($id) || ! $this->isHandledField($field)) {
             return;
         }
 

@@ -300,7 +300,8 @@ trait Filter
      */
     public function filterNumberStart(string $field, array $params, string $value): void
     {
-        extract($params);
+        /** @var string $title */
+        $title = data_get($params, 'title');
 
         $this->resetPage();
 
@@ -324,7 +325,8 @@ trait Filter
      */
     public function filterNumberEnd(string $field, array $params, string $value): void
     {
-        extract($params);
+        /** @var string $title */
+        $title = data_get($params, 'title');
 
         $this->resetPage();
 

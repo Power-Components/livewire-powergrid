@@ -60,6 +60,17 @@ abstract class PluginBase implements Wireable
         return false;
     }
 
+    protected function isHandledField(mixed $field): bool
+    {
+        if (! is_string($field) || $field === '') {
+            return false;
+        }
+
+        return collect($this->component->columns)
+            ->filter(fn ($column) => $this->handles($column))
+            ->contains(fn ($column) => data_get($column, 'dataField', data_get($column, 'field')) === $field);
+    }
+
     /** @param  Column|array<string, mixed>|stdClass  $column */
     public function render(Column|array|stdClass $column, mixed $row): ?string
     {

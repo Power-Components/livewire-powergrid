@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Config;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipelines\{Filters, Search, Sorting};
+use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
@@ -78,6 +79,14 @@ describe('Scout Filters Pipeline', function () {
                     'status' => 'active',
                 ],
             ];
+
+            public function filters(): array
+            {
+                return [
+                    Filter::select('category_id'),
+                    Filter::select('status'),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -112,6 +121,15 @@ describe('Scout Filters Pipeline', function () {
                 'input_text' => ['name' => 'Pizza'],
                 'number' => ['price' => '10'],
             ];
+
+            public function filters(): array
+            {
+                return [
+                    Filter::select('category_id'),
+                    Filter::inputText('name'),
+                    Filter::number('price'),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -136,6 +154,14 @@ describe('Scout Filters Pipeline', function () {
                     'field2' => 'value2',
                 ],
             ];
+
+            public function filters(): array
+            {
+                return [
+                    Filter::select('field1'),
+                    Filter::inputText('field2'),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -295,6 +321,13 @@ describe('Scout Pipeline Integration', function () {
             public string $sortDirection = 'asc';
 
             public bool $multiSort = false;
+
+            public function filters(): array
+            {
+                return [
+                    Filter::select('category_id'),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -317,5 +350,102 @@ describe('Scout Pipeline Integration', function () {
             ->and($builder->wheres[0])->toBe(['field' => 'category_id', 'operator' => '=', 'value' => '1'])
             ->and($orders)->toHaveCount(1)
             ->and($orders[0])->toBe(['column' => 'name', 'direction' => 'asc']);
+    });
+});
+
+describe('Scout Pipeline field/direction validation', function () {
+    it('only applies filters for fields declared in filters()', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public array $filters = [
+                'select' => [
+                    'category_id' => '1',
+                    'undeclared_column' => 'x',
+                ],
+            ];
+
+            public function filters(): array
+            {
+                return [
+                    Filter::select('category_id'),
+                ];
+            }
+        };
+
+        $builder = new ScoutBuilder(new Dish(), '');
+        $pipeline = new Filters($component);
+
+        $result = $pipeline->handle($builder, fn ($builder) => $builder);
+
+        expect($result->wheres)->toHaveCount(1)
+            ->and($result->wheres[0])->toBe(['field' => 'category_id', 'operator' => '=', 'value' => '1']);
+    });
+
+    it('does not apply any filter when filters() is empty', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public array $filters = [
+                'select' => ['category_id' => '1'],
+            ];
+        };
+
+        $builder = new ScoutBuilder(new Dish(), '');
+        $pipeline = new Filters($component);
+
+        $result = $pipeline->handle($builder, fn ($builder) => $builder);
+
+        expect($result->wheres)->toBeEmpty();
+    });
+
+    it('normalizes an unexpected sort direction to asc (single sort)', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public string $sortField = 'name';
+
+            public string $sortDirection = 'asc, (select 1)';
+
+            public bool $multiSort = false;
+        };
+
+        $builder = new ScoutBuilder(new Dish(), '');
+        $pipeline = new Sorting($component);
+
+        $result = $pipeline->handle($builder, fn ($builder) => $builder);
+
+        $reflection = new ReflectionClass($result);
+        $ordersProperty = $reflection->getProperty('orders');
+        $orders = $ordersProperty->getValue($result);
+
+        expect($orders)->toHaveCount(1)
+            ->and($orders[0])->toBe(['column' => 'name', 'direction' => 'asc']);
+    });
+
+    it('normalizes an unexpected sort direction to asc (multi sort)', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public string $sortField = 'name';
+
+            public string $sortDirection = 'asc';
+
+            public bool $multiSort = true;
+
+            public array $sortArray = [
+                'name' => 'desc',
+                'price' => 'asc, (select 1)',
+            ];
+        };
+
+        $builder = new ScoutBuilder(new Dish(), '');
+        $pipeline = new Sorting($component);
+
+        $result = $pipeline->handle($builder, fn ($builder) => $builder);
+
+        $reflection = new ReflectionClass($result);
+        $ordersProperty = $reflection->getProperty('orders');
+        $orders = $ordersProperty->getValue($result);
+
+        expect($orders)->toHaveCount(2)
+            ->and($orders[0])->toBe(['column' => 'name', 'direction' => 'desc'])
+            ->and($orders[1])->toBe(['column' => 'price', 'direction' => 'asc']);
     });
 });

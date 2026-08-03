@@ -94,14 +94,15 @@ class ToggleablePlugin extends PluginBase
     #[On('pg:toggleable-{tableName}')]
     public function toggleableChanged(mixed ...$params): void
     {
-        /** @var string $field */
-        $field = $params[0];
-        /** @var string $id */
-        $id = $params[1];
-        /** @var string $value */
-        $value = $params[2];
+        $field = $params[0] ?? null;
+        $id = $params[1] ?? null;
+        $value = $params[2] ?? null;
 
-        $this->component->onUpdatedToggleable($id, $field, $value);
+        if (! is_string($field) || ! is_scalar($id) || ! $this->isHandledField($field)) {
+            return;
+        }
+
+        $this->component->onUpdatedToggleable((string) $id, $field, $value);
     }
 
     /** @param  stdClass|Column|array<string, mixed>  $column */

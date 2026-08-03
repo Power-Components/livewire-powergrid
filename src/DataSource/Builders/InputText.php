@@ -47,8 +47,7 @@ class InputText extends BuilderBase
         $searchMorphs = $values['searchMorphs'];
 
         if (is_array($value) && count($value) > 0 && blank($searchMorphs)) {
-            $field = $field.'.'.key($value);
-            $value = $value[key($value)];
+            [$field, $value] = self::appendNestedField($field, $value);
         }
 
         /** @var string $value */
