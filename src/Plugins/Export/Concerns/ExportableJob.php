@@ -103,7 +103,6 @@ trait ExportableJob
             ->offset($this->offset)
             ->limit($this->limit)
             ->orderBy($sortField, $sortDirection)
-            // Stream this chunk from the database one row at a time.
             ->cursor();
 
         $dataTransformer = new DataTransformer($processDataSource->component);

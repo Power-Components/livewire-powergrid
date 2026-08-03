@@ -15,6 +15,7 @@ use PowerComponents\LivewirePowerGrid\Plugins\Export\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
+/** @deprecated */
 class ExportToXLS extends Export implements ExportInterface
 {
     /**

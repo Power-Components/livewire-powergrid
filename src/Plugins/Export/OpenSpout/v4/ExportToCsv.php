@@ -14,6 +14,7 @@ use PowerComponents\LivewirePowerGrid\Plugins\Export\Export;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /** @codeCoverageIgnore */
+/** @deprecated */
 class ExportToCsv extends Export implements ExportInterface
 {
     /**

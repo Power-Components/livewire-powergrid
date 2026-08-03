@@ -6,7 +6,6 @@ use Livewire\Attributes\Locked;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
- *
  * @codeCoverageIgnore
  */
 trait HasExport

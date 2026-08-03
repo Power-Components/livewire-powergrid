@@ -36,10 +36,6 @@ final class FilterBuilderHandler
 
         $meta = $this->meta();
 
-        // Outer group isolates the (possibly OR) conditions so they never leak
-        // into search or other filters ANDed at the top level. Each row joins the
-        // previous ones with its own connector (row.boolean); SQL precedence makes
-        // "A AND B OR C AND D" resolve as "(A AND B) OR (C AND D)".
         $query->where(function ($group) use ($state, $meta) {
             foreach ($state['rows'] as $i => $row) {
                 /** @var string $type */
@@ -74,8 +70,6 @@ final class FilterBuilderHandler
 
         $meta = $this->meta();
 
-        // Mirror SQL precedence: split into OR-groups (a new group starts at each
-        // row whose connector is OR), AND the rows within a group, OR the groups.
         $groups = $this->orGroups($state['rows']);
 
         if (count($groups) <= 1) {
