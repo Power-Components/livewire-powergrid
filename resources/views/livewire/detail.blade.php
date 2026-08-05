@@ -1,9 +1,11 @@
 <tr
-    x-data="{ collapsed: @entangle('show'), singleExpand: @entangle('singleExpand') }"
+    x-data="pgDetailRow"
+    data-table-name="{{ $tableName }}"
+    data-row-id="{{ $rowId }}"
     class="{{ $trClass }}"
 >
     <td
-        x-show="collapsed || (collapsed && singleExpand && expandedId == '{{ $rowId }}')"
+        x-show="visible()"
         colspan="999"
     >
         @includeWhen($show, $view, [

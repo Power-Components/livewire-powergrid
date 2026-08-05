@@ -90,7 +90,8 @@
                     <div wire:replace.self>
                         @if (data_get($column, 'isAction'))
                             <div
-                                x-data="pgRenderActions({ rowId: @js(data_get($row, $__partial->realPrimaryKey)), parentId: @js($parentId) })"
+                                x-data="pgRenderActions"
+                                data-pg-params="{{ json_encode(['rowId' => data_get($row, $__partial->realPrimaryKey), 'parentId' => $parentId]) }}"
                                 class="{{ theme('table.layout.body.td.actions_wrapper') }}"
                                 x-html="toHtml"
                             >
@@ -110,10 +111,8 @@
                 <span @class([$contentClassField, $contentClass])>
                     @if (filled($templateContent))
                         <div
-                            x-data="pgRenderRowTemplate({
-                                parentId: @js($parentId),
-                                templateContent: @js($templateContent)
-                            })"
+                            x-data="pgRenderRowTemplate"
+                            data-pg-params="{{ json_encode(['parentId' => $parentId, 'templateContent' => $templateContent]) }}"
                             x-html="rendered"
                         >
                         </div>

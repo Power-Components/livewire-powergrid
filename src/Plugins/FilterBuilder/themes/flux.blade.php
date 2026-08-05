@@ -44,7 +44,7 @@
     </flux:modal.trigger>
 
     <flux:modal name="pg-filter-builder-{{ $tableName }}" class="w-full max-w-2xl md:max-w-4xl">
-        <div x-data="pgFilterBuilder(@js($params))" class="flex w-full min-w-0 flex-col gap-6">
+        <div x-data="pgFilterBuilder" data-pg-params="{{ json_encode($params) }}" class="flex w-full min-w-0 flex-col gap-6">
             <flux:heading size="lg">
                 {{ trans('livewire-powergrid::datatable.filter_builder.title') }}
             </flux:heading>
@@ -54,7 +54,7 @@
                     <template x-for="(row, index) in rows" :key="index">
                         <div class="flex min-w-0 items-center gap-2">
                             {{-- Per-row AND/OR connector (absent on the first row) --}}
-                            <template x-if="index > 0">
+                            <template x-if="notFirst(index)">
                                 <div class="w-[4.5rem] shrink-0">
                                     <flux:select
                                         size="sm"
@@ -68,7 +68,7 @@
                                 </div>
                             </template>
                             {{-- Keep columns aligned with the connector rows --}}
-                            <template x-if="index === 0">
+                            <template x-if="isFirst(index)">
                                 <span class="w-[4.5rem] shrink-0" aria-hidden="true"></span>
                             </template>
 
@@ -94,7 +94,7 @@
                                     aria-label="{{ trans('livewire-powergrid::datatable.filter_builder.operator_placeholder') }}"
                                 >
                                     <template x-for="op in operatorsFor(row.column)" :key="op">
-                                        <option :value="op" x-text="operatorLabels[op] || op"></option>
+                                        <option :value="op" x-text="operatorLabel(op)"></option>
                                     </template>
                                 </flux:select>
                             </div>
@@ -106,7 +106,7 @@
                                     </span>
                                 </template>
 
-                                <template x-if="!needsNoValue(row.operator) && optionsFor(row.column).length">
+                                <template x-if="showValueSelect(row)">
                                     <div class="min-w-0 flex-1">
                                         <flux:select size="sm" x-model="row.value" class="w-full">
                                             <option value="">{{ trans('livewire-powergrid::datatable.filter_builder.value_placeholder') }}</option>
@@ -117,7 +117,7 @@
                                     </div>
                                 </template>
 
-                                <template x-if="!needsNoValue(row.operator) && !optionsFor(row.column).length">
+                                <template x-if="showValueInput(row)">
                                     <div class="min-w-[8rem] flex-1">
                                         <flux:input
                                             size="sm"

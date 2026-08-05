@@ -1,16 +1,47 @@
 if (!window.pgFilterBuilderRegistered) {
     const register = () => {
-        window.Alpine.data('pgFilterBuilder', (params) => ({
-            tableName: params.tableName,
-            modalName: 'pg-filter-builder-' + params.tableName,
-            columns: params.columns || [],
-            operatorLabels: params.operatorLabels || {},
-            valueless: params.valueless || [],
-            range: params.range || [],
-            defaultBoolean: params.match === 'or' ? 'or' : 'and',
+        window.Alpine.data('pgFilterBuilder', () => ({
+            tableName: null,
+            modalName: null,
+            columns: [],
+            operatorLabels: {},
+            valueless: [],
+            range: [],
+            defaultBoolean: 'and',
             rows: [],
 
+            isFirst(index) {
+                return index === 0;
+            },
+
+            notFirst(index) {
+                return index > 0;
+            },
+
+            operatorLabel(op) {
+                return this.operatorLabels[op] || op;
+            },
+
+            showValueSelect(row) {
+                return !this.needsNoValue(row.operator) && this.optionsFor(row.column).length > 0;
+            },
+
+            showValueInput(row) {
+                return !this.needsNoValue(row.operator) && this.optionsFor(row.column).length === 0;
+            },
+
             init() {
+                const raw = this.$el.dataset.pgParams;
+                const params = raw ? JSON.parse(raw) : {};
+
+                this.tableName = params.tableName;
+                this.modalName = 'pg-filter-builder-' + params.tableName;
+                this.columns = params.columns || [];
+                this.operatorLabels = params.operatorLabels || {};
+                this.valueless = params.valueless || [];
+                this.range = params.range || [];
+                this.defaultBoolean = params.match === 'or' ? 'or' : 'and';
+
                 const applied = params.applied || {};
 
                 const rows = Array.isArray(applied.rows) ? applied.rows : [];

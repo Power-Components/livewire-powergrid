@@ -1,9 +1,15 @@
-export default (params) => ({
-    rowId: params.rowId,
-    rules: params.rules,
+export default () => ({
+    rowId: null,
+    rules: null,
     attributes: [],
     theme: [],
     init() {
+        const raw = this.$el.dataset.pgParams;
+        const params = raw ? JSON.parse(raw) : {};
+
+        this.rowId = params.rowId;
+        this.rules = params.rules;
+
         if (this.rules) {
             Object.values(this.rules).forEach((rule) => {
                 if ((rule.applyLoop || rule.apply) && rule?.attributes) {

@@ -1,7 +1,9 @@
 import { storeMultiSelect } from "./store";
 
-export default (params) => ({
+export default () => ({
     init() {
+        const params = JSON.parse(this.$el.dataset.pgParams || '{}');
+
         const TomSelect = window.TomSelect;
 
         if (typeof TomSelect === 'undefined') {

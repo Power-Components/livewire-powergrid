@@ -76,7 +76,7 @@ trait HasActions
                             'attributes' => $attributes,
                             'disable' => $disabled,
                             'hide' => $hide,
-                            'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                            'toggleDetailView' => theme_view($showToggleDetail ? 'toggle-detail' : 'no-toggle-detail'),
                             ...$pluginModifiers,
                             ...$detailView,
                         ];
@@ -84,7 +84,7 @@ trait HasActions
 
                     return [
                         ...$pluginModifiers,
-                        'toggleDetailView' => theme('root').($showToggleDetail ? '.toggle-detail' : '.no-toggle-detail'),
+                        'toggleDetailView' => theme_view($showToggleDetail ? 'toggle-detail' : 'no-toggle-detail'),
                     ];
                 })
                 ->toArray();

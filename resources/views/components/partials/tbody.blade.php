@@ -46,7 +46,8 @@
                     <tr
                         wire:key="row-{{ $rowId }}"
                         class="{{ $class }}"
-                        x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
+                        x-data="pgRowAttributes"
+                        data-pg-params="{{ json_encode(['rowId' => $rowId, 'rules' => $row->__powergrid_rules]) }}"
                         x-bind="getAttributes"
                     >
                         @include(theme_view('table.row'), [
@@ -107,7 +108,8 @@
                     <tr
                         wire:key="row-{{ $rowId }}"
                         class="{{ $class }}"
-                        x-data="pgRowAttributes({ rowId: @js($rowId), rules: @js($row->__powergrid_rules) })"
+                        x-data="pgRowAttributes"
+                        data-pg-params="{{ json_encode(['rowId' => $rowId, 'rules' => $row->__powergrid_rules]) }}"
                         x-bind="getAttributes"
                     >
                         @include(theme_view('table.row'), [

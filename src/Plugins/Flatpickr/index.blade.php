@@ -43,7 +43,8 @@
 @endphp
 <div
     wire:ignore
-    x-data="pgFlatpickr(@js($params))"
+    x-data="pgFlatpickr"
+    data-pg-params="{{ json_encode($params) }}"
 >
     <div
         @class([theme('filter.date_picker.base'), 'space-y-1' => !$inline])

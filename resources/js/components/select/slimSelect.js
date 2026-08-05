@@ -1,10 +1,15 @@
 import { storeMultiSelect } from "./store";
 
-export default (params) => ({
-    initialValues: params.initialValues,
-    framework: params.framework,
+export default () => ({
+    initialValues: null,
+    framework: null,
 
     init() {
+        const params = JSON.parse(this.$el.dataset.pgParams || '{}');
+
+        this.initialValues = params.initialValues;
+        this.framework = params.framework;
+
         const element = this.$refs["select_picker_" + params.dataField + "_" + params.tableName];
         const frameworkCopy = this.deepCopy(this.framework);
 

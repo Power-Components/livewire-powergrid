@@ -1,11 +1,11 @@
 @if (data_get($setUp, 'header.toggleColumns'))
     <div
-        x-data="{ open: false }"
-        @click.outside="open = false"
+        x-data="pgDropdown"
+        @click.outside="close()"
     >
         <button
             data-cy="toggle-columns-{{ $tableName }}"
-            @click.prevent="open = ! open"
+            @click.prevent="toggle()"
             class="focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto"
         >
             <div class="flex">
@@ -24,9 +24,9 @@
             x-transition:leave-end="transform opacity-0 scale-95"
             class="toggle-columns-base group absolute z-10 mt-2 w-56 rounded-md dark:bg-zinc-700 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
             tabindex="-1"
-            @keydown.tab="open = false"
-            @keydown.enter.prevent="open = false;"
-            @keyup.space.prevent="open = false;"
+            @keydown.tab="close()"
+            @keydown.enter.prevent="close()"
+            @keyup.space.prevent="close()"
         >
             <div
                 role="none"
@@ -35,7 +35,7 @@
                     <div
                         wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                         data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
-                        wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})"
+                        x-on:click="dispatch('pg:toggleColumn-{{ $tableName }}', 'field', '{{ data_get($column, 'field') }}')"
                         @class([
                             'font-semibold bg-zinc-100 dark:bg-zinc-800 ' => data_get($column, 'hidden'),
                             'py-1' => $loop->first || $loop->last,

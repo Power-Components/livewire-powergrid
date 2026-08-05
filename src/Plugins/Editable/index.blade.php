@@ -64,14 +64,15 @@
 <div
     wire:key="editable-{{ uniqid() }}"
     x-cloak
-    x-data="pgEditable(@js($params))"
+    x-data="pgEditable"
+    data-pg-params="{{ json_encode($params) }}"
     style="width: 100% !important; height: 100% !important;"
 >
     <div
         class="{{ theme('editable.clickable') }}"
-        x-show="!showEditable"
-        x-on:click="editable = true;"
-        :id="`clickable-` + dataField + '-' + id"
+        x-show="notEditing()"
+        x-on:click="startEdit()"
+        :id="clickableId()"
         style="cursor: pointer; width: 100%; height: 100%;"
     >
         <span
@@ -87,11 +88,11 @@
             :value="content"
             :placeholder="content"
             contenteditable
-            :class="'pg-single-line ' + inputClass"
+            :class="singleLineClass()"
             @if ((bool) data_get($editable, 'saveOnMouseOut')) x-on:mousedown.outside="save()" @endif
             x-on:keydown.enter="save()"
-            :id="`editable-` + dataField + `-` + id"
-            x-on:keydown.esc="cancel"
+            :id="editableId()"
+            x-on:keydown.esc="cancel()"
         >
         </div>
     </template>

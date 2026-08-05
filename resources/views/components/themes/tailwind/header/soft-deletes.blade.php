@@ -1,10 +1,10 @@
 @if (data_get($setUp, 'header.softDeletes'))
     <div
-        x-data="{ open: false }"
-        @click.outside="open = false"
+        x-data="pgDropdown"
+        @click.outside="close()"
     >
         <button
-            @click.prevent="open = ! open"
+            @click.prevent="toggle()"
             class="focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto"
         >
             <div class="flex">
@@ -25,19 +25,19 @@
         >
 
             <div
-                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: ''}); open = false"
+                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', '')"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
             </div>
             <div
-                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: 'withTrashed'}); open = false"
+                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', 'withTrashed')"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
             </div>
             <div
-                x-on:click="$wire.dispatch('pg:softDeletes-{{ $tableName }}', {softDeletes: 'onlyTrashed'}); open = false"
+                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', 'onlyTrashed')"
                 class="cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.only_trashed')

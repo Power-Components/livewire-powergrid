@@ -2,7 +2,7 @@
     x-cloak
     expand
     wire:key="{{ 'expand-' . substr($rowId, 0, 6) }}"
-    x-show="hasHiddenElements && expanded == '{{ $rowId }}'"
+    x-show="isExpanded('{{ $rowId }}')"
     x-transition
     class="{{ theme('table.body.tr.responsive') }}"
 >

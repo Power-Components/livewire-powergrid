@@ -67,10 +67,10 @@
             <div class="{{ theme('table.checkbox.base') }}">
                 <label class="{{ theme('table.checkbox.label') }}">
                     <input
-                        x-data="{}"
+                        x-data
                         type="checkbox"
                         {{ $inputAttributes }}
-                        x-on:click="window.Alpine.store('pgBulkActions').add($event.target.value, '{{ $tableName }}')"
+                        x-on:click="$store.pgBulkActions.add($event.target.value, '{{ $tableName }}')"
                         wire:model="checkboxValues"
                         value="{{ $checkboxAttribute }}"
                     >
@@ -153,10 +153,8 @@
                     <span @class([$contentClassField, $contentClass])>
                         @if (filled($templateContent))
                             <div
-                                x-data="pgRenderRowTemplate({
-                                    parentId: @js($parentId),
-                                    templateContent: @js($templateContent)
-                                })"
+                                x-data="pgRenderRowTemplate"
+                                data-pg-params="{{ json_encode(['parentId' => $parentId, 'templateContent' => $templateContent]) }}"
                                 x-html="rendered"
                             >
                             </div>

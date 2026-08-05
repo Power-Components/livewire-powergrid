@@ -11,6 +11,14 @@ export default () => ({
         this.expanded = this.expanded == index ? null : index
     },
 
+    isExpanded(rowId) {
+        return this.hasHiddenElements && this.expanded == rowId
+    },
+
+    rotateClass(rowId) {
+        return this.expanded == rowId ? 'rotate-90' : '-rotate-0'
+    },
+
     init() {
         this.$nextTick(() => {
             this.handleResize()

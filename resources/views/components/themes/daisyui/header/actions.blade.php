@@ -1,5 +1,5 @@
-<div class="dropdown dropdown-end" :class="{ 'dropdown-open': open }" x-data="{ open: false }" x-on:keydown.esc="open = false" x-on:click.outside="open = false" wire:key="actions-dropdown-{{ $tableName }}">
-    <div tabindex="0" role="button" class="btn btn-sm btn-outline" x-on:click="open = !open">
+<div class="dropdown dropdown-end" data-open-class="dropdown-open" :class="activeClass()" x-data="pgDropdown" x-on:keydown.esc="close()" x-on:click.outside="close()" wire:key="actions-dropdown-{{ $tableName }}">
+    <div tabindex="0" role="button" class="btn btn-sm btn-outline" x-on:click="toggle()">
         <x-livewire-powergrid::icons.down class="w-4 h-4" />
         Actions
     </div>

@@ -43,7 +43,7 @@
         : null;
 @endphp
 <th wire:key="cols-{{ $field }}-{{ $tableName }}"
-    x-data="{ sortable: @js(data_get($column, 'sortable')) }"
+    x-data
     data-column="{{ data_get($column, 'isAction') ? 'actions' : $field }}"
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif

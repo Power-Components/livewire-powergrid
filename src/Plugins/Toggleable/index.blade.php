@@ -79,16 +79,17 @@
             ];
         @endphp
         <div
-            x-data="pgToggleable(@js($params))"
+            x-data="pgToggleable"
+            data-pg-params="{{ json_encode($params) }}"
             role="switch"
             tabindex="0"
-            :aria-checked="toggle ? 'true' : 'false'"
-            :class="{ 'pg-toggleable-on': toggle }"
+            :aria-checked="ariaChecked()"
+            :class="onClass()"
             class="pg-toggleable-switch relative inline-block w-8 h-4 rounded-full cursor-pointer transition-colors duration-200 ease-linear"
             style="{{ $switchVars }}"
-            x-on:click="save"
-            x-on:keydown.enter.prevent="save"
-            x-on:keydown.space.prevent="save"
+            x-on:click="save()"
+            x-on:keydown.enter.prevent="save()"
+            x-on:keydown.space.prevent="save()"
         >
             <span
                 class="pg-toggleable-knob absolute left-0 top-0 block w-4 h-4 rounded-full"

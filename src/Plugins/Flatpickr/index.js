@@ -1,21 +1,33 @@
 document.addEventListener('alpine:init', () => {
-    Alpine.data('pgFlatpickr', (params) => ({
-        dataField: params.dataField,
-        tableName: params.tableName,
-        label: params.label ?? null,
-        locale: params.locale ?? {
-            locale: 'default',
-            dateFormat: 'Y-m-d H:i',
-            time_24hr: false,
-            enableTime: true
-        },
-        onlyFuture: params.onlyFuture ?? false,
-        noWeekEnds: params.noWeekEnds ?? false,
-        customConfig: params.customConfig ?? null,
-        type: params.type,
+    Alpine.data('pgFlatpickr', () => ({
+        dataField: null,
+        tableName: null,
+        label: null,
+        locale: null,
+        onlyFuture: false,
+        noWeekEnds: false,
+        customConfig: null,
+        type: null,
         element: null,
         selectedDates: null,
         async init() {
+            const raw = this.$el.dataset.pgParams;
+            const params = raw ? JSON.parse(raw) : {};
+
+            this.dataField = params.dataField;
+            this.tableName = params.tableName;
+            this.label = params.label ?? null;
+            this.locale = params.locale ?? {
+                locale: 'default',
+                dateFormat: 'Y-m-d H:i',
+                time_24hr: false,
+                enableTime: true
+            };
+            this.onlyFuture = params.onlyFuture ?? false;
+            this.noWeekEnds = params.noWeekEnds ?? false;
+            this.customConfig = params.customConfig ?? null;
+            this.type = params.type;
+
             if(typeof flatpickr == "undefined") {
                 console.log('%c%s',
                     'color: #f59e0c; font-size: 1.2em; font-weight: bold; line-height: 1.5',

@@ -1,20 +1,51 @@
 if (!window.pgEditableRegistered) {
     const register = () => {
-        window.Alpine.data('pgEditable', (params) => ({
-            theme: params.theme,
-            id: params.id ?? null,
-            dataField: params.dataField ?? null,
-            content: params.content,
-            fallback: params.fallback,
-            inputClass: params.inputClass,
-            saveOnMouseOut: params.saveOnMouseOut,
+        window.Alpine.data('pgEditable', () => ({
+            theme: null,
+            id: null,
+            dataField: null,
+            content: null,
+            fallback: null,
+            inputClass: null,
+            saveOnMouseOut: false,
             oldContent: null,
             editable: false,
             hash: null,
             hashError: true,
             showEditable: false,
 
+            notEditing() {
+                return !this.showEditable;
+            },
+
+            startEdit() {
+                this.editable = true;
+            },
+
+            clickableId() {
+                return 'clickable-' + this.dataField + '-' + this.id;
+            },
+
+            editableId() {
+                return 'editable-' + this.dataField + '-' + this.id;
+            },
+
+            singleLineClass() {
+                return 'pg-single-line ' + this.inputClass;
+            },
+
             init() {
+                const raw = this.$el.dataset.pgParams;
+                const params = raw ? JSON.parse(raw) : {};
+
+                this.theme = params.theme;
+                this.id = params.id ?? null;
+                this.dataField = params.dataField ?? null;
+                this.content = params.content;
+                this.fallback = params.fallback;
+                this.inputClass = params.inputClass;
+                this.saveOnMouseOut = params.saveOnMouseOut;
+
                 if (this.content.length === 0 && this.fallback) {
                     this.content = this.htmlSpecialChars(this.fallback);
                 }

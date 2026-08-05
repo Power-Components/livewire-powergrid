@@ -37,11 +37,13 @@ it('renders export dropdown with xlsx button', function () {
     $html = $lw->html();
     expect($html)->toContain('pg-header-export')
         ->and($html)->toContain('exportToXLS')
-        ->and($html)->toContain('open = true');
+        ->and($html)->toContain('x-data="pgExport"')
+        ->and($html)->toContain('openMenu()');
 
     $lw->call('fetchDatasource');
     $html2 = $lw->html();
     expect($html2)->toContain('pg-header-export')
         ->and($html2)->toContain('exportToXLS')
-        ->and($html2)->toContain('open = true');
+        ->and($html2)->toContain('x-data="pgExport"')
+        ->and($html2)->toContain('openMenu()');
 });

@@ -49,7 +49,7 @@
                 ])
                 @isset($this->setUp['responsive']) x-data="pgResponsive" @endisset
             >
-                <div x-data="{ expandedId: null }">
+                <div>
                     <table
                         id="table_base_{{ $tableName }}"
                         class="pg-table {{ theme('table.layout.table') }}"

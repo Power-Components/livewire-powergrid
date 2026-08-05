@@ -9,7 +9,7 @@
     >
         <x-livewire-powergrid::icons.arrow
             class="{{ theme('table.body.tr.responsive_toggle_icon') }} w-5 h-5 transition-all duration-300"
-            x-bind:class="expanded == '{{ $rowId }}' ? 'rotate-90' : '-rotate-0'"
+            x-bind:class="rotateClass('{{ $rowId }}')"
         />
     </button>
 </td>

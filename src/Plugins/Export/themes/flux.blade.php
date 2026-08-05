@@ -8,7 +8,7 @@
 
 <div
     id="pg-header-export"
-    x-data="{ countChecked: $wire.entangle('checkboxValues') }"
+    x-data="pgExport"
     wire:key="export-dropdown-{{ $tableName }}"
 >
     <flux:dropdown>
@@ -30,10 +30,10 @@
                 @if ($checkbox)
                     <flux:menu.item
                         wire:click.prevent="exportToXLS(true)"
-                        x-bind:disabled="countChecked.length === 0"
+                        x-bind:disabled="isEmpty()"
                     >
                         @lang('XLSX') - @lang('livewire-powergrid::datatable.labels.selected')
-                        <span x-text="`(${countChecked.length})`"></span>
+                        <span x-text="countLabel()"></span>
                     </flux:menu.item>
                 @endif
             @endif
@@ -51,10 +51,10 @@
                 @if ($checkbox)
                     <flux:menu.item
                         wire:click.prevent="exportToCsv(true)"
-                        x-bind:disabled="countChecked.length === 0"
+                        x-bind:disabled="isEmpty()"
                     >
                         @lang('CSV') - @lang('livewire-powergrid::datatable.labels.selected')
-                        <span x-text="`(${countChecked.length})`"></span>
+                        <span x-text="countLabel()"></span>
                     </flux:menu.item>
                 @endif
             @endif

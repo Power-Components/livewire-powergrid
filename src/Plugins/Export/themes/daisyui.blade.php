@@ -21,7 +21,7 @@
     <div
         id="export-popover-{{ $tableName }}"
         popover="auto"
-        x-data="{ countChecked: $wire.entangle('checkboxValues') }"
+        x-data="pgExport"
         class="dropdown"
         style="position-anchor: --export-{{ $tableName }}"
     >
@@ -43,13 +43,13 @@
                     @if ($checkbox)
                         <button
                             wire:click.prevent="exportToXLS(true)"
-                            x-bind:disabled="countChecked.length === 0"
-                            :class="{ 'cursor-not-allowed': countChecked.length === 0 }"
+                            x-bind:disabled="isEmpty()"
+                            :class="disabledClass()"
                             class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200"
                         >
                             <span
                                 class="export-count text-xs opacity-70"
-                                x-text="`(${countChecked.length})`"
+                                x-text="countLabel()"
                             ></span> @lang('livewire-powergrid::datatable.labels.selected')
                         </button>
                     @endif
@@ -72,13 +72,13 @@
                     @if ($checkbox)
                         <button
                             wire:click.prevent="exportToCsv(true)"
-                            x-bind:disabled="countChecked.length === 0"
-                            :class="{ 'cursor-not-allowed': countChecked.length === 0 }"
+                            x-bind:disabled="isEmpty()"
+                            :class="disabledClass()"
                             class="btn btn-sm font-normal bg-base-100 hover:bg-base-200 border-base-200"
                         >
                             <span
                                 class="export-count text-xs opacity-70"
-                                x-text="`(${countChecked.length})`"
+                                x-text="countLabel()"
                             ></span> @lang('livewire-powergrid::datatable.labels.selected')
                         </button>
                     @endif

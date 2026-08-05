@@ -51,16 +51,14 @@ if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
     ];
 }
 
-$alpineData =
-    $framework['default'] == 'tom'
-        ? 'pgTomSelect(' . \Illuminate\Support\Js::from($params) . ')'
-        : 'pgSlimSelect(' . \Illuminate\Support\Js::from($params) . ')';
+$alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
 @endphp
 
 <div
     x-cloak
     wire:ignore
     x-data="{{ $alpineData }}"
+    data-pg-params="{{ json_encode($params) }}"
 >
     @if (filled($filter))
         <div class="{{ theme('filter.select.base') }}">
