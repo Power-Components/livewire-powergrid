@@ -30,7 +30,7 @@
   },
   "require-dev": {
     "laravel/pint": "^1.29",
-    "pestphp/pest": "^4.7",
+    "pestphp/pest": "^4.7|^5.0",
     "orchestra/testbench": "^10.0|^11.0",
     "larastan/larastan": "^3.10",
     "laradumps/laradumps": "^5.0",
