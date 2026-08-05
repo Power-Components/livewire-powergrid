@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridComponentMaker, PowerGridStub};
 
 it('can make an eloquent component', function () {
@@ -28,6 +28,27 @@ it('can make an eloquent component', function () {
     expect($component->createdPath())->toBe('app/Livewire/UserTable.php');
 
     expect($component->savePath($component->filename))->toEndWith(str_replace('/', DIRECTORY_SEPARATOR, 'app/Livewire/UserTable.php'));
+});
+
+it('defaults the column source to fillable', function () {
+    $component = PowerGridComponentMaker::make('UserTable')
+        ->setDatasource(Datasource::ELOQUENT_BUILDER);
+
+    expect($component->columnSource)->toBe(ColumnSource::FILLABLE);
+});
+
+it('can switch the column source to the database table', function () {
+    $component = PowerGridComponentMaker::make('UserTable')
+        ->setDatasource(Datasource::ELOQUENT_BUILDER)
+        ->setColumnSource(ColumnSource::DATABASE_TABLE);
+
+    expect($component->columnSource)->toBe(ColumnSource::DATABASE_TABLE);
+});
+
+it('resolves a column source from its name', function () {
+    expect(ColumnSource::from('FILLABLE'))->toBe(ColumnSource::FILLABLE)
+        ->and(ColumnSource::from('DATABASE_TABLE'))->toBe(ColumnSource::DATABASE_TABLE)
+        ->and(ColumnSource::asOptions()->keys()->toArray())->toBe(['FILLABLE', 'DATABASE_TABLE']);
 });
 
 it('can make an query builder component', function () {

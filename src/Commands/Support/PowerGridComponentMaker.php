@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\SanitizeComponentName;
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 
 /**
  * @property-read PowerGridStub $stub;
@@ -24,6 +24,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
  * @property-read bool $autoCreateColumns
  * @property-read bool $usesCustomStub
  * @property-read bool $isProcessed
+ * @property-read ColumnSource $columnSource
  */
 final class PowerGridComponentMaker
 {
@@ -52,6 +53,8 @@ final class PowerGridComponentMaker
     private string $tableName = '';
 
     private bool $autoCreateColumns = false;
+
+    private ColumnSource $columnSource = ColumnSource::FILLABLE;
 
     private bool $usesCustomStub = false;
 
@@ -143,6 +146,13 @@ final class PowerGridComponentMaker
     public function setAutoCreateColumns(bool $autoCreateColumns = true): self
     {
         $this->autoCreateColumns = $autoCreateColumns;
+
+        return $this;
+    }
+
+    public function setColumnSource(ColumnSource $columnSource): self
+    {
+        $this->columnSource = $columnSource;
 
         return $this;
     }

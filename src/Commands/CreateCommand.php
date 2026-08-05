@@ -4,14 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
+    AskComponentName,
     AskDatabaseTableName,
     AskModelName,
     CheckIfDatabaseHasTables,
     ConfirmAutoImportFields};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 use function Laravel\Prompts\{error, info, note};
@@ -22,7 +23,9 @@ class CreateCommand extends Command
     use RenderAscii;
 
     /** @var string */
-    protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
+    protected $signature = 'powergrid:create
+        {--template= : name of the file that will be used as a template}
+        {--columns= : source for auto-generated columns (fillable|table)}';
 
     /** @var string */
     protected $description = 'Make a new PowerGrid table component.';
@@ -101,7 +104,22 @@ class CreateCommand extends Command
 
         $this->component->setAutoCreateColumns(true);
 
+        if ($this->component->datasource === Datasource::ELOQUENT_BUILDER) {
+            $this->component->setColumnSource($this->resolveColumnSource());
+        }
+
         return $this;
+    }
+
+    private function resolveColumnSource(): ColumnSource
+    {
+        $columns = $this->option('columns');
+
+        return match (is_string($columns) ? $columns : '') {
+            'fillable' => ColumnSource::FILLABLE,
+            'table', 'database', 'db' => ColumnSource::DATABASE_TABLE,
+            default => ColumnSource::from(AskColumnSource::handle()),
+        };
     }
 
     private function step6(): self
@@ -140,7 +158,7 @@ class CreateCommand extends Command
         (
             $this->component->requiresDatabaseTableName() ?
                  "[{$this->component->databaseTable}] table?" :
-                 "\$fillable in [{$this->component->model}] Model?"
+                 "[{$this->component->model}] Model?"
         );
     }
 }
