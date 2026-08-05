@@ -32,6 +32,24 @@ $params = [
     'daisyui -> id' => [$component::class, DaisyUI::class, 'name'],
 ];
 
+$multiSortComponent = new class() extends DishTableBase
+{
+    public bool $multiSort = true;
+
+    public function setUp(): array
+    {
+        $this->persist(['sorting']);
+
+        return parent::setUp();
+    }
+};
+
+$multiSortParams = [
+    'tailwind' => [$multiSortComponent::class, Tailwind::class],
+    'bootstrap' => [$multiSortComponent::class, Bootstrap5::class],
+    'daisyui' => [$multiSortComponent::class, DaisyUI::class],
+];
+
 it('should be able to set persist_driver for session', function (string $componentString, string $theme, string $field) {
     config()->set('livewire-powergrid.persist_driver', 'session');
 
@@ -65,6 +83,38 @@ it('should be able to set persist_driver for cookies', function (string $compone
     expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"'.$field.'","label":"test"}]}');
 })
     ->with($params);
+
+it('should persist sorting state when multiSort is enabled', function (string $componentString, string $theme) {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    livewire($componentString)
+        ->call('setTestThemeClass', $theme)
+        ->call('sortBy', 'name')
+        ->call('sortBy', 'id');
+
+    expect(session('pg:testing-dish-table'))
+        ->toBe('{"sortField":"id","sortDirection":"asc","sortArray":{"name":"asc","id":"asc"},"multiSort":true}');
+})->group('sorting')
+    ->with($multiSortParams);
+
+it('should restore the persisted sortArray when multiSort is enabled', function (string $componentString, string $theme) {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    livewire($componentString)
+        ->call('setTestThemeClass', $theme)
+        ->call('sortBy', 'name');
+
+    // A fresh mount must read the sortArray back from the persist storage.
+    $component = livewire($componentString)
+        ->call('setTestThemeClass', $theme);
+
+    /** @var PowerGridComponent $component */
+    expect($component->sortArray)
+        ->toMatchArray(['name' => 'asc'])
+        ->and($component->multiSort)
+        ->toBeTrue();
+})->group('sorting')
+    ->with($multiSortParams);
 
 it('should not be able to set invalid persist driver', function (string $componentString, string $theme) {
     // change config

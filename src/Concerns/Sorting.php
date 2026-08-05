@@ -24,13 +24,11 @@ trait Sorting
     {
         if ($this->multiSort) {
             $this->sortByArray($field);
+        } else {
+            $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : Sql::sanitizeSortDirection($direction);
 
-            return;
+            $this->sortField = $field;
         }
-
-        $this->sortDirection = $this->sortField === $field ? $this->reverseSort() : Sql::sanitizeSortDirection($direction);
-
-        $this->sortField = $field;
 
         $this->persistState('sorting');
     }
