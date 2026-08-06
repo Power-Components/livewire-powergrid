@@ -13,8 +13,8 @@ abstract class PluginBase implements Wireable
     public function processRuleModifiers(array $rule, bool $apply): array { return []; }
     abstract public function name(): string;
     abstract public function isEnabled(): bool;
-    public function handles(Column|array $column): bool { return false; }
-    public function render(Column|array $column, mixed $row): ?string { return null; }
+    public function handles(Column|array|\stdClass $column): bool { return false; }
+    public function render(Column|array|\stdClass $column, mixed $row): ?string { return null; }
     public static function themeTokens(): array { return []; }
 }
 ```
@@ -74,12 +74,12 @@ class {PluginName}Plugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.{pluginKey}')));
     }
 
-    public function handles(Column|array $column): bool
+    public function handles(Column|array|\stdClass $column): bool
     {
         return ! empty(data_get($column, 'pluginData.{pluginKey}'));
     }
 
-    public function render(Column|array $column, mixed $row): ?string
+    public function render(Column|array|\stdClass $column, mixed $row): ?string
     {
         return view('powergrid-plugins::{PluginName}.index', [
             'tableName' => $this->component->tableName,
@@ -94,9 +94,17 @@ class {PluginName}Plugin extends PluginBase
     #[On('pg:{eventName}-{tableName}')]
     public function {listenerMethod}(mixed ...$params): void
     {
-        [$field, $id, $value] = $params;
+        $field = $params[0] ?? null;
+        $id    = $params[1] ?? null;
+        $value = $params[2] ?? null;
 
-        $this->component->onUpdated{PluginName}($id, $field, $value);
+        // Guard: ignore events for fields this plugin does not handle
+        // (isHandledField() is provided by PluginBase and calls handles()).
+        if (! is_string($field) || ! is_scalar($id) || ! is_scalar($value) || ! $this->isHandledField($field)) {
+            return;
+        }
+
+        $this->component->onUpdated{PluginName}((string) $id, $field, (string) $value);
     }
 }
 ```
@@ -215,10 +223,10 @@ use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 public function boot(): void
 {
+    // Built-in plugins (Editable, Export, FilterBuilder, Flatpickr, Toggleable)
+    // are always registered automatically and de-duplicated by PowerGrid::plugins().
+    // Only add your custom plugin here.
     PowerGrid::plugins([
-        FlatpickrPlugin::class,
-        EditablePlugin::class,
-        ToggleablePlugin::class,
         {PluginName}Plugin::class,
     ]);
 }

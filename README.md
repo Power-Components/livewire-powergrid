@@ -107,6 +107,25 @@ Then, follow the steps indicated in the [Documentation - Install page](https://l
 
 <br/>
 
+### AI-assisted development (Laravel Boost)
+
+PowerGrid ships [Agent Skills](https://agentskills.io/home) and an AI guideline for [Laravel Boost](https://laravel.com/docs/13.x/boost) — so your AI agent (Claude Code, Cursor, Codex, Gemini, and more) understands PowerGrid's v7 conventions and can scaffold themes and plugins for you.
+
+If your app uses Boost, install PowerGrid's skills and guideline into your selected agents with:
+
+```bash
+composer require laravel/boost --dev
+php artisan boost:install
+```
+
+Already using Boost? Pick up PowerGrid's resources (and any other newly installed package's) with:
+
+```bash
+php artisan boost:update --discover
+```
+
+<br/>
+
 ## Support & Community
 
 `👥` **Interact with the PowerGrid community at our [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.**

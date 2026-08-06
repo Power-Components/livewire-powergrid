@@ -1,18 +1,18 @@
 ---
 description: >
-    Create or update a PowerGrid theme using ThemeManager, the Theme
-    abstract class, and the struct() token map pattern
+    Create or update a PowerGrid v7 theme using the Theme abstract class,
+    the ThemeBuilder struct() token map, and the filter()/editable()/toggleable()
+    token methods
 name: powergrid-theme
 ---
 
 ## What I do
 
-- Create new custom theme classes extending `Theme` with a complete `struct()` implementation
-- Update existing themes by adding or overriding tokens in `struct()`, `filter()`, `editable()`, or `toggleable()`
-- Register custom views via `views()` for any theme-exclusive Blade components
-- Wire per-component theme overrides via `customThemeClass()` or `template()` + `merge()`
-- Validate that all required token keys are present and correctly namespaced
-- Run any relevant tests after changes
+- Create a new theme class extending `Theme` with a `struct()` built from `ThemeBuilder`
+- Update an existing theme by adding or overriding tokens in `struct()`, `filter()`, `editable()`, or `toggleable()`
+- Wire per-component overrides via `customThemeClass()` (swap the class) or `template()` + `merge()` (patch tokens)
+- Register a new default theme in the published config
+- Run the theme test suite after changes
 
 ## When to use me
 
@@ -20,8 +20,10 @@ Use this when:
 
 - A new UI theme needs to be added (e.g. Bootstrap, Flowbite, ShadCN)
 - An existing theme's tokens need to be changed or extended
-- A specific PowerGrid component needs a one-off theme override
-- Token keys are missing or misnamed and causing empty class output
+- A single PowerGrid component needs a one-off theme override
+- Token keys are missing or misnamed and produce empty class output
+
+This skill is only about **creating and updating v7 themes**. It is self-contained — everything you need is here and in `REFERENCE.md` (same folder).
 
 ## How to use me
 
@@ -37,270 +39,59 @@ Theme class: src/Themes/Bootstrap.php
 ```
 Use the 'powergrid-theme' skill to update the DaisyUI theme:
   - Change table.layout.thead to use 'bg-neutral text-neutral-content'
-  - Add filter.boolean.select override for DaisyUI input sizing
+  - Add a filter.boolean.select override for DaisyUI input sizing
 ```
 
 ### Example 3: Per-component override
 
 ```
 Use the 'powergrid-theme' skill to apply a partial theme override to
-  MyTableComponent so that table.layout.tr has an extra 'stripe' class.
+MyTableComponent so that table.layout.tr gets an extra 'stripe' class.
 ```
 
 ---
 
-## Architecture Overview
+## How it fits together (the short version)
 
-### Key Files
+A theme is a PHP class in `src/Themes/`. It extends `Theme` (`src/Themes/Theme.php`) and returns a token map. Blade views read tokens with the `theme()` / `theme_view()` helpers, e.g. `{{ theme('table.layout.td') }}` and `{{ theme_view('pagination') }}`.
 
-| File | Role |
-|---|---|
-| `src/Themes/Theme.php` | Abstract base — all themes extend this |
-| `src/Themes/Tailwind.php` | Default theme; fallback for missing tokens and views |
-| `src/Themes/DaisyUI.php` | DaisyUI component library theme |
-| `src/Themes/Flux.php` | Livewire Flux UI theme |
-| `src/Themes/Components/ThemeBuilder.php` | Fluent builder used inside `struct()` |
-| `src/Themes/Components/Header.php` | Header section builder |
-| `src/Themes/Components/Table.php` | Table section builder |
-| `src/Themes/Components/Footer.php` | Footer section builder |
-| `src/Themes/Components/Layout.php` | CSS class grouping within a section |
-| `src/Themes/Components/Filter.php` | Filter token builder used in `filter()` |
-| `src/Themes/Components/Component.php` | Generic sub-component builder |
-| `src/Support/ThemeManager.php` | Static accessor — reads from `app('powergrid.theme')` |
-| `src/functions.php` | Global helpers `theme()` and `theme_view()` |
-| `src/PowerGridComponent.php` | Boots theme into IoC on every Livewire request |
+The three canonical themes are the patterns to copy:
 
-### Binding Flow
+- `src/Themes/Tailwind.php` — the base theme; every other theme inherits from it
+- `src/Themes/DaisyUI.php` — a compact subclass (start here for a new theme)
+- `src/Themes/Flux.php` — a subclass that also overrides `resolveTokens()`
 
-```
-config('livewire-powergrid.theme')   →  e.g. Tailwind::class
-         ↓
-PowerGridComponent::boot()
-  → customThemeClass() override?     (per-component class swap)
-  → template() override?             (per-component token merge)
-  → app()->instance('powergrid.theme', $themeInstance)
-         ↓
-ThemeManager::theme('table.layout.td')
-  → app('powergrid.theme')->resolveTokens()
-  → data_get($tokens, 'table.layout.td', $default)
-         ↓
-Blade: {{ theme('table.layout.td') }}
-       {{ theme_view('pagination') }}
-```
+`struct()` returns a `Components\ThemeBuilder` (fluent). It is split into top-level sections — `layout`, `header`, `table`, `cols`, `footer` — and CSS classes live inside each section's `->layout(Closure)`. Filters, editable cells, and the toggleable switch are **separate methods** (`filter()`, `editable()`, `toggleable()`), merged into the token map automatically by `resolveTokens()`.
 
-### Token Resolution Order
+Inheritance is explicit: `Theme::$parentTheme` defaults to `null`. Set `protected ?string $parentTheme = Tailwind::class;` so any token, filter, editable, or toggleable value you do not declare is inherited from Tailwind. (DaisyUI and Flux both do exactly this.)
 
-`resolveTokens()` builds tokens in this order:
-
-1. Parent theme tokens (via `parentTheme` chain, default = `Tailwind`)
-2. Current theme `struct()` (deep-merged via `array_replace_recursive`)
-3. `filter()` return value (merged in)
-4. `editable()` return value (merged in)
-5. `toggleable()` return value (merged in)
-
-Missing tokens always fall through to `Tailwind` automatically.
-
-### View Resolution Order (`resolveView($alias)`)
-
-1. Explicit `views()` map on the current theme
-2. Token at `$alias` directly (e.g. `header.view`)
-3. Token at `view_$alias` (e.g. `header.view_export`)
-4. Token at `$alias.view` (e.g. `header.export.view`)
-5. Special `search_box` alias handling
-6. Section-level `view_$alias` scan across `header`, `table`, `footer`
-7. **Automatic fallback**: `baseView + '.' + alias` — if `view()->exists()` returns true
-8. Delegated to `parentTheme->resolveView($alias)` (ultimately Tailwind)
+Full token maps, the builder API, and the resolution order are in **`REFERENCE.md`**.
 
 ---
 
-## Execution Checklist
+## Workflow
 
-Before I start, I will:
-
-1. **Identify the goal** — new theme, token update, or per-component override?
-2. **Read the target file** (if updating an existing theme)
-3. **Check the complete struct shape** against the reference below
-4. **Write or update the class**
-5. **Register the class** in `config/livewire-powergrid.php` if it is a new default theme
-6. **Run tests** after changes
-
----
-
-## 5-Step Process
-
-### 1. Identify Change Scope
-
-Determine which of the three patterns applies:
-
-| Pattern | When | Where |
-|---|---|---|
-| **New `Theme` subclass** | Adding a full UI framework | `src/Themes/MyTheme.php` |
-| **Token override via `merge()`** | One-off tweak on a component | `template()` method in the component |
-| **`customThemeClass()`** | Swap theme on a single component | Override in the component class |
+1. **Identify the goal.** New theme, token change on an existing theme, or a per-component override?
+2. **Read the closest real theme** (`Tailwind.php` for the full map, `DaisyUI.php` for a lean subclass) and, if updating, the target file.
+3. **Make the change:**
+   - *New theme* → create `src/Themes/MyTheme.php` from the template below.
+   - *Token change* → edit the relevant `->layout(...)`, `filter()`, `editable()`, or `toggleable()` value.
+   - *Per-component* → use `customThemeClass()` or `template()` + `merge()` (see below).
+4. **Register it** (new default theme only) in `resources/config/livewire-powergrid.php`:
+   ```php
+   'theme' => \PowerComponents\LivewirePowerGrid\Themes\MyTheme::class,
+   ```
+5. **Test:**
+   ```bash
+   composer test -- --filter="ThemeTest|ThemeBuilderTest|PowerGridComponentThemeTest"
+   composer test
+   ```
 
 ---
 
-### 2. Token Struct Reference
+## Minimal new-theme template
 
-`struct()` uses a **fluent builder** (`ThemeBuilder`) and is organized into three top-level sections: `header`, `table`, `footer`.
-
-CSS tokens live inside `->layout(Closure)`. Sub-components (checkbox, radio, searchBox, pagination) have their own closures. Feature views (export, toggleColumns, etc.) are resolved automatically via `baseView + alias` — **do not declare them in `struct()`**.
-
-The three extra methods (`filter()`, `editable()`, `toggleable()`) are merged into `resolveTokens()` automatically — define them as separate methods, not inside `struct()`.
-
-#### Complete struct() shape
-
-```php
-public function struct(): array
-{
-    return Components\ThemeBuilder::make($this->name())
-        ->baseView('livewire-powergrid::components.frameworks.my-theme')
-        ->header(fn (Components\Header $header) => $header
-            ->view('header')                          // Blade view alias (prefixed with baseView if no '::')
-            ->layout(fn (Components\Layout $layout) => $layout
-                ->container('')                       // outermost header wrapper
-                ->subContainer('')                    // inner flex wrapper
-                ->actionsContainer('')                // wraps action buttons
-                ->actions('')                         // action button classes
-            )
-            ->searchBox(fn (Components\Component $searchBox) => $searchBox
-                ->view('header.search')               // Blade view alias
-                ->container('')                       // search box outer wrapper
-                ->relativeMain('')                    // relative-positioned inner wrapper
-                ->input('')                           // text input classes
-                ->iconSearchWrapper('')               // wrapper around search icon
-                ->iconCloseWrapper('')                // wrapper around close icon
-                ->iconClose('')                       // close icon classes
-                ->iconSearch('')                      // search icon classes
-            )
-        )
-        ->table(fn (Components\Table $table) => $table
-            ->view('table-base')                      // main table Blade view alias
-            ->viewHeader('table.tr')                  // table header row view alias
-            ->viewRow('table.row')                    // table body row view alias
-            ->viewCols('table.cols')                  // table columns view alias
-            ->viewThEmpty('table.th-empty')           // empty th view alias
-            ->viewInlineFilters('table.inline-filters') // inline filters row view alias
-            ->viewCheckboxAll('table.checkbox-all')   // "select all" checkbox view alias
-            ->viewCheckboxRow('table.checkbox-row')   // per-row checkbox view alias
-            ->viewRadioRow('table.radio-row')         // per-row radio view alias
-            ->layout(fn (Components\Layout $layout) => $layout
-                ->container('')                       // outer table wrapper
-                ->table('')                           // <table> element classes
-                ->thead('')                           // <thead> classes
-                ->tr('')                              // header <tr> classes
-                ->th('')                              // <th> classes
-                ->tbody('')                           // <tbody> classes
-                ->td('')                              // <td> classes
-            )
-            ->checkbox(fn (Components\Component $checkbox) => $checkbox
-                ->th('')                              // checkbox column <th> classes
-                ->base('')                            // wrapper around the checkbox
-                ->label('')                           // <label> classes
-                ->input('')                           // <input type="checkbox"> classes
-            )
-            ->radio(fn (Components\Component $radio) => $radio
-                ->th('')                              // radio column <th> classes
-                ->base('')                            // wrapper around the radio
-                ->label('')                           // <label> classes
-                ->input('')                           // <input type="radio"> classes
-            )
-        )
-        ->footer(fn (Components\Footer $footer) => $footer
-            ->view('footer')                          // footer Blade view alias
-            ->layout(fn (Components\Layout $layout) => $layout
-                ->container('')                       // footer wrapper classes
-                ->select('')                          // per-page select classes
-            )
-            ->pagination(fn (Components\Component $pagination) => $pagination
-                ->view('pagination')                  // pagination Blade view alias
-            )
-        )
-        ->toArray();
-}
-```
-
-> **View aliases**: if the value does NOT contain `::`, it is automatically prefixed with `baseView + '.'`. Use a fully-qualified `livewire-powergrid::...` path only when pointing to a **different** theme's view (e.g. Flux reusing Tailwind's footer).
-
-#### filter() shape
-
-```php
-public function filter(): array
-{
-    return [
-        'filter' => (new Components\Filter())
-            ->label('')                               // filter label classes
-            ->boolean(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.boolean')
-                ->base('')
-                ->select('')
-            )
-            ->datePicker(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.date-picker')
-                ->base('')
-                ->input('')
-            )
-            ->multiSelect(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.multi-select')
-                ->base('')
-                ->select('')
-            )
-            ->number(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.number')
-                ->base('')
-                ->input('')
-            )
-            ->select(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.select')
-                ->base('')
-                ->select('')
-            )
-            ->inputText(fn (Components\Component $c) => $c
-                ->view('livewire-powergrid::components.frameworks.tailwind.filters.input-text')
-                ->base('')
-                ->select('')
-                ->input('')
-            )
-            ->input('')                               // generic filter input classes
-            ->toArray(),
-    ];
-}
-```
-
-#### editable() shape
-
-```php
-public function editable(): array
-{
-    return [
-        'editable' => (new Components\Component())
-            ->view('livewire-powergrid::components.frameworks.tailwind.editable')
-            ->clickable('')
-            ->input('')
-            ->error('')
-            ->toArray(),
-    ];
-}
-```
-
-#### toggleable() shape
-
-```php
-public function toggleable(): array
-{
-    return [
-        'toggleable' => (new Components\Component())
-            ->view('livewire-powergrid::components.frameworks.tailwind.toggleable')
-            ->toArray(),
-    ];
-}
-```
-
----
-
-### 3. Theme Class Patterns
-
-#### Full New Theme (inherits from Tailwind by default)
+Copy this, rename the class, point `baseView` at your own view folder, and fill the classes. It inherits Tailwind's `filter()`, `editable()`, and `toggleable()` — override those methods only if your framework needs different filter markup or switch colors (see `REFERENCE.md`).
 
 ```php
 <?php
@@ -309,72 +100,95 @@ namespace PowerComponents\LivewirePowerGrid\Themes;
 
 class MyTheme extends Theme
 {
-    // parentTheme defaults to Tailwind::class — tokens not declared here
-    // fall through to Tailwind automatically.
+    // Inherit Tailwind's base tokens, filter(), editable() and toggleable().
+    // Anything not declared below falls through to Tailwind.
+    protected ?string $parentTheme = Tailwind::class;
 
-    public function struct(): array
+    public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.frameworks.my-theme')
+            ->baseView('livewire-powergrid::components.themes.my-theme')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->wrapper('space-y-4')
+                ->outsideFilters('')
+            )
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('...')
-                    // ...
+                    ->container('md:flex md:flex-row w-full justify-between items-center mb-3')
+                    ->subContainer('md:flex md:flex-row w-full gap-1')
+                    ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
+                    ->actions('btn btn-sm')
+                )
+                ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
+                    ->view('header.search')
+                    ->container('w-full md:w-auto ml-auto')
+                    ->relativeMain('relative w-full md:w-80')
+                    ->input('w-full')
+                    ->iconSearchWrapper('absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none')
+                    ->iconSearch('h-4 w-4')
+                    ->iconCloseWrapper('absolute inset-y-0 right-0 flex items-center pr-1')
+                    ->iconClose('h-4 w-4')
                 )
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('...')
-                    ->table('...')
-                    // ...
+                    ->container('overflow-x-auto rounded-t-lg relative border')
+                    ->table('min-w-full')
+                    ->thead('bg-zinc-100')
+                    ->tr('border-b')
+                    ->th('px-3 py-3 text-left text-xs')
+                    ->thActions('px-3 py-3 text-end text-xs')
+                    ->tbody('')
+                    ->td('px-3 py-2')
+                    ->tdActions('px-3 py-2 text-end')
                 )
-                ->checkbox(fn (Components\Component $checkbox) => $checkbox
-                    ->input('...')
+                ->body(fn (Components\Body $body) => $body
+                    ->tr(fn (Components\Tr $tr) => $tr
+                        ->responsive('text-sm break-words w-full')
+                        ->responsiveToggleIcon('w-5 h-5 transition-all')
+                    )
                 )
-                ->radio(fn (Components\Component $radio) => $radio
-                    ->input('...')
+                ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
+                    ->th('px-6 py-3')
+                    ->input('h-4 w-4')
                 )
+                ->radio(fn (Components\Radio $radio) => $radio
+                    ->th('px-6 py-3')
+                    ->input('rounded-full')
+                )
+            )
+            ->cols(fn (Components\Cols $cols) => $cols
+                ->div('flex items-center gap-1')
             )
             ->footer(fn (Components\Footer $footer) => $footer
+                ->view('footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('...')
-                    ->select('...')
+                    ->container('flex items-center px-3 py-2 border')
+                    ->select('py-1.5 px-3 pr-8')
                 )
-                ->pagination(fn (Components\Component $pagination) => $pagination
-                    ->view('pagination')
-                )
-            )
-            ->toArray();
+                ->pagination('pagination')
+            );
     }
-
-    public function filter(): array { /* ... */ }
-
-    public function editable(): array { /* ... */ }
-
-    public function toggleable(): array { /* ... */ }
 }
 ```
 
-#### Reusing Another Theme's Views
+---
 
-When your theme does not have its own Blade file, point `->view()` to a fully-qualified existing view:
+## Per-component overrides
+
+Both hooks live on your Livewire PowerGrid component (see `src/Concerns/Base.php` and `src/PowerGridComponent.php`), and are applied in `boot()` — never bind `powergrid.theme` yourself.
+
+**Swap the whole theme class for one component:**
 
 ```php
-// Flux reuses Tailwind's header and footer Blade views:
-->header(fn (Components\Header $header) => $header
-    ->view('livewire-powergrid::components.frameworks.tailwind.header')
-    // ...
-)
-->footer(fn (Components\Footer $footer) => $footer
-    ->view('livewire-powergrid::components.frameworks.tailwind.footer')
-    // ...
-)
+public function customThemeClass(): ?string
+{
+    return MyTheme::class;
+}
 ```
 
-Do **not** declare `->view()` on sub-components (searchBox, pagination, etc.) if the sub-view does not exist in your theme — the fallback chain will resolve it via `parentTheme` automatically.
-
-#### Partial Override via `merge()` (per-component)
+**Patch a few tokens for one component** (deep merge, so pass only the keys you change):
 
 ```php
 public function template(): ?Theme
@@ -389,105 +203,32 @@ public function template(): ?Theme
 }
 ```
 
-#### Class Swap via `customThemeClass()` (per-component)
-
-```php
-public function customThemeClass(): ?string
-{
-    return MyTheme::class;
-}
-```
-
----
-
-### 4. Register a New Default Theme
-
-After creating the class, update the config so it becomes the project default:
-
-```php
-// config/livewire-powergrid.php
-'theme' => \PowerComponents\LivewirePowerGrid\Themes\MyTheme::class,
-```
-
-Or set it per-component without touching the config (see `customThemeClass()` above).
-
----
-
-### 5. Validate and Test
-
-After any change:
-
-```bash
-# Run theme-related tests
-composer test -- --filter="ThemeTest|ThemeBuilderTest|PowerGridComponentThemeTest"
-
-# Run the full suite to catch regressions
-composer test
-```
-
----
-
-## Dot-Notation Token Access
-
-Tokens are accessed via `data_get()` with dot notation in PHP and Blade:
-
-```php
-// PHP
-ThemeManager::theme('table.layout.td');
-ThemeManager::theme('filter.boolean.select', 'fallback-class');
-
-// Global helper (Blade or PHP)
-theme('header.layout.container');
-theme('table.layout.table');
-theme('table.checkbox.input');
-theme('table.radio.input');
-theme('filter.boolean.select');
-theme_view('pagination');   // resolves a Blade view path by alias
-theme_view('header.search');
-```
-
-Key structural changes from v6 → v7:
-
-| v6 key | v7 key |
-|---|---|
-| `table.table` | `table.layout.table` |
-| `table.container` | `table.layout.container` |
-| `table.thead` | `table.layout.thead` |
-| `table.tr` | `table.layout.tr` |
-| `table.th` | `table.layout.th` |
-| `table.td` | `table.layout.td` |
-| `checkbox.input` | `table.checkbox.input` |
-| `radio.input` | `table.radio.input` |
-| `header.container` | `header.layout.container` |
-| `header.sub_container` | `header.layout.sub_container` |
-| `footer.container` | `footer.layout.container` |
-| `footer.select` | `footer.layout.select` |
-| `root` | `base_view` (managed by `ThemeBuilder::baseView()`) |
-
 ---
 
 ## Rules
 
-- **`struct()` uses `ThemeBuilder`** — do not return a raw array from `struct()`, always use the fluent builder and call `->toArray()` at the end.
-- **CSS tokens live inside `->layout(Closure)`** — direct string properties on `Header`, `Table`, and `Footer` are for view aliases only.
-- **`filter()`, `editable()`, `toggleable()` are separate methods** — do not put them inside `struct()`. They are automatically merged into `resolveTokens()`.
-- **Feature views are automatic** — export, toggleColumns, softDeletes, batchExport views are resolved by `baseView + alias` fallback. Do not declare them in `struct()`.
-- **Sub-component views**: only declare `->view()` on a sub-component (searchBox, pagination) if your theme has a custom Blade file for it. Omit it to inherit from `parentTheme`.
-- **`merge()` is deep** — it uses `array_replace_recursive()`, so you only need to provide the keys you want to change.
-- **Do not bind `powergrid.theme` manually** — always let `PowerGridComponent::boot()` handle the IoC binding. Per-component overrides go through `customThemeClass()` or `template()`.
+- **`struct()` returns `Components\ThemeBuilder`.** Type the method `public function struct(): Components\ThemeBuilder` and return the builder directly. Do **not** call `->toArray()` on it — `resolveTokens()` handles that. (`filter()`, `editable()`, and `toggleable()` return plain arrays and *do* end each `Component` chain with `->toArray()`.)
+- **Declare `parentTheme` explicitly.** `Theme::$parentTheme` defaults to `null`; set it to `Tailwind::class` so undeclared tokens/filters inherit from the base theme. Tokens do **not** fall through to Tailwind unless you opt in this way.
+- **Correct closure type-hints.** The sub-builders are distinct classes: `->searchBox(fn (Components\SearchBox $s) => ...)`, `->checkbox(fn (Components\Checkbox $c) => ...)`, `->radio(fn (Components\Radio $r) => ...)`, `->body(fn (Components\Body $b) => $b->tr(fn (Components\Tr $tr) => ...))`, `->cols(fn (Components\Cols $c) => ...)`. Hinting these as `Components\Component` throws a `TypeError`.
+- **Pagination is a string.** `->pagination('pagination')` — `Footer::pagination()` accepts `Closure|array|string`; all three shipped themes use the string alias.
+- **CSS classes live in `->layout(Closure)`.** Direct string properties on `Header`/`Table`/`Footer` are for view aliases only.
+- **`filter()`, `editable()`, `toggleable()` are separate methods**, not part of `struct()`. They are merged into `resolveTokens()` automatically.
+- **`toggleable()` fills color tokens, not a view.** It sets `colorOn`/`colorOff`/`colorOnDark`/`colorOffDark`/`knobOn`; the shipped Toggleable blade reads them via `theme('toggleable.color_on')` etc. Do not give it a `->view()`.
+- **Feature views are auto-resolved.** export, toggle-columns, soft-deletes, etc. resolve via `baseView + alias` (then the `parentTheme` chain, then `components.structure.*`). Do not declare them in `struct()`.
+- **View aliases**: a value without `::` is prefixed with `baseView + '.'`. Use a fully-qualified `livewire-powergrid::...` path only to point at another theme's view.
 
 ---
 
-## Completion Checklist
+## Completion checklist
 
-Before closing the task, verify:
+- [ ] `struct()` is typed `: Components\ThemeBuilder` and returns the builder (no trailing `->toArray()`)
+- [ ] `protected ?string $parentTheme = Tailwind::class;` is declared
+- [ ] `baseView` points at a real folder under `resources/views/components/themes/`
+- [ ] Sub-builder closures use the correct classes (`SearchBox`/`Checkbox`/`Radio`/`Body`/`Tr`/`Cols`), never `Components\Component`
+- [ ] `->pagination('pagination')` (string form)
+- [ ] CSS classes are inside `->layout(Closure)`
+- [ ] `filter()`/`editable()`/`toggleable()` overridden only if needed, as separate methods
+- [ ] Theme registered in config (new default only)
+- [ ] `composer test` passes
 
-- [ ] `struct()` uses `ThemeBuilder` and calls `->toArray()`
-- [ ] `baseView` set correctly via `->baseView('livewire-powergrid::...')`
-- [ ] CSS tokens inside `->layout(Closure)`, not directly on section builders
-- [ ] `filter()`, `editable()`, `toggleable()` defined as separate methods (if overriding)
-- [ ] Sub-component `->view()` only declared when the theme has the Blade file
-- [ ] Theme class registered in config (if new default)
-- [ ] `ThemeTest`, `ThemeBuilderTest`, and `PowerGridComponentThemeTest` pass
-- [ ] Full suite passes: `composer test`
-- [ ] No raw `app()->instance('powergrid.theme', ...)` calls outside of boot flow
+See **`REFERENCE.md`** for the full `struct()` token map, the `filter()`/`editable()`/`toggleable()` shapes, the complete builder API, dot-notation token keys, and the token/view resolution order.

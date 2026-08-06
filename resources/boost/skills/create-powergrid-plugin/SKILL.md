@@ -52,4 +52,4 @@ They do NOT require modifying the PowerGrid package.
 6. Verify it works
 
 For complete templates, architecture details, and troubleshooting, see:
-`.ai/skills/create-powergrid-plugin/REFERENCE.md`
+`REFERENCE.md`

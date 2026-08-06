@@ -47,14 +47,14 @@ The 7.x version prioritizes **simplicity, an adaptable native skeleton, and inde
 
 ## 7. Skills
 
-PowerGrid 7.x provides specialized [Agent Skills](https://agentskills.io/home) for common tasks. Skills are located in `.ai/skills/` and provide detailed, step-by-step instructions for complex operations.
+PowerGrid 7.x provides specialized [Agent Skills](https://agentskills.io/home) for common tasks, distributed via [Laravel Boost](https://laravel.com/docs/13.x/boost). In this repository they live in `resources/boost/skills/`. Consumer apps install them into their AI agents by running `php artisan boost:install` (or `php artisan boost:update --discover`).
 
 ### Available Skills
 
 | Skill | Use When |
 |-------|----------|
 | `powergrid-theme` | Creating a new theme OR updating an existing theme |
-| `upgrade-theme-classfrom-v6-to-v7` | Migrating a v6 Theme class to v7 architecture |
+| `upgrade-theme-v6-to-v7` | Migrating a v6 Theme class to v7 architecture |
 | `create-powergrid-plugin` | Creating a new PowerGrid plugin (Column behavior with Blade/JS/events) |
 
 ### Skill Triggers
@@ -68,7 +68,7 @@ Examples:
 - "Update the Tailwind theme to add dark mode support"
 - "I need a custom theme for Vuetify"
 
-#### upgrade-theme-classfrom-v6-to-v7
+#### upgrade-theme-v6-to-v7
 
 Use this skill when the user mentions "migrate", "upgrade from v6", "convert v6 theme", "update old theme".
 
@@ -89,7 +89,7 @@ Examples:
 ### Skill Usage Protocol
 
 1. **Recognize the trigger:** Identify if the user's request matches a skill scenario
-2. **Load the skill:** Read the corresponding `.ai/skills/<skill-name>/SKILL.md` file
+2. **Load the skill:** Read the corresponding `resources/boost/skills/<skill-name>/SKILL.md` file
 3. **Follow the workflow:** Skills contain detailed step-by-step instructions -- follow them precisely
 4. **Use provided resources:** Skills may reference additional files (e.g., `REFERENCE.md`) in the same directory
 5. **Complete all steps:** Ensure all checklist items in the skill are completed before marking the task done
@@ -97,7 +97,7 @@ Examples:
 ### Registering New Skills
 
 To add a new skill:
-1. Create a directory in `.ai/skills/<skill-name>/`
+1. Create a directory in `resources/boost/skills/<skill-name>/`
 2. Add a `SKILL.md` file with YAML frontmatter (`name` and `description`) and Markdown instructions
 3. Optionally add reference materials as additional `.md` files in the same directory
 4. Document the skill in this section
