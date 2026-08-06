@@ -18,7 +18,7 @@ class Pagination
         $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
         /** @var int $perPageFromSetup */
         $perPageFromSetup = data_get($this->component->setUp, 'footer.perPage');
-        $perPage = intval($perPageFromSetup);
+        $perPage = $this->clampPerPage(intval($perPageFromSetup));
         /** @var string $recordCount */
         $recordCount = data_get($this->component->setUp, 'footer.recordCount');
 
@@ -44,6 +44,18 @@ class Pagination
 
         $this->component->gotoPage(1, pageName: $pageName);
 
-        return $query->$paginate($count ?: 10, pageName: $pageName);
+        return $query->$paginate($this->clampPerPage($count ?: 10), pageName: $pageName);
+    }
+
+    private function clampPerPage(int $perPage): int
+    {
+        $configured = config('livewire-powergrid.max_per_page', 1000);
+        $max = is_numeric($configured) ? (int) $configured : 0;
+
+        if ($max > 0 && $perPage > $max) {
+            return $max;
+        }
+
+        return $perPage;
     }
 }

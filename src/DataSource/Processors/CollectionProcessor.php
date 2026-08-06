@@ -76,9 +76,11 @@ class CollectionProcessor extends DataSourceBase
         $perPageFromSetup = data_get($this->component->setUp, 'footer.perPage', 10);
         $perPage = $this->isExport
             ? $results->count()
-            : intval($perPageFromSetup);
+            : $this->clampPerPage(intval($perPageFromSetup));
 
-        $perPage = $perPage > 0 ? $perPage : $results->count();
+        $perPage = $perPage > 0
+            ? $perPage
+            : ($this->isExport ? $results->count() : $this->clampPerPage($results->count()));
         /** @var string $pageName */
         $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
 
@@ -94,5 +96,17 @@ class CollectionProcessor extends DataSourceBase
                 'pageName' => $pageName,
             ]
         );
+    }
+
+    private function clampPerPage(int $perPage): int
+    {
+        $configured = config('livewire-powergrid.max_per_page', 1000);
+        $max = is_numeric($configured) ? (int) $configured : 0;
+
+        if ($max > 0 && $perPage > $max) {
+            return $max;
+        }
+
+        return $perPage;
     }
 }

@@ -23,6 +23,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Max per page
+    |--------------------------------------------------------------------------
+    |
+    | Upper bound for the number of rows fetched per page. The per-page value
+    | travels in the component state, so this ceiling keeps a single request
+    | from loading an unbounded number of rows. Set to 0 to disable the limit.
+    |
+    */
+
+    'max_per_page' => 1000,
+
+    /*
+    |--------------------------------------------------------------------------
     | Plugins
     |--------------------------------------------------------------------------
     |

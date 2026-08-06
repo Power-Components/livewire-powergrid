@@ -3,24 +3,29 @@
 namespace PowerComponents\LivewirePowerGrid\Livewire;
 
 use Illuminate\Contracts\View\View;
-use Livewire\Attributes\On;
+use Livewire\Attributes\{Locked, On};
 use Livewire\Component;
 
 /** @codeCoverageIgnore */
 class Detail extends Component
 {
+    #[Locked]
     public string $tableName = '';
 
+    #[Locked]
     public int|string $rowId = '';
 
     public string $trClass = '';
 
     public bool $show = false;
 
+    #[Locked]
     public mixed $row = null;
 
+    #[Locked]
     public string $view = '';
 
+    #[Locked]
     public mixed $options = null;
 
     public bool $singleExpand = false;

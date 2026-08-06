@@ -2,15 +2,18 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Livewire\Attributes\On;
+use Livewire\Attributes\{Locked, On};
 
 trait SoftDeletes
 {
+    #[Locked]
     public string $softDeletes = '';
 
     #[On('pg:softDeletes-{tableName}')]
     public function softDeletes(string $softDeletes): void
     {
-        $this->softDeletes = $softDeletes;
+        $this->softDeletes = in_array($softDeletes, ['withTrashed', 'onlyTrashed'], true)
+            ? $softDeletes
+            : '';
     }
 }

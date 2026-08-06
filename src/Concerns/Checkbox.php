@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
+use Livewire\Attributes\Locked;
 use stdClass;
 use Throwable;
 
@@ -17,6 +18,7 @@ trait Checkbox
     /** @var list<string> */
     public array $checkboxValues = [];
 
+    #[Locked]
     public string $checkboxAttribute = 'id';
 
     /**
