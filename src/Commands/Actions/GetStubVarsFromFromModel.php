@@ -3,15 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
+use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\ColumnSource;
+use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridComponentMaker, SchemaColumns};
 
 /** @codeCoverageIgnore */
 class GetStubVarsFromFromModel
 {
-    private static bool $hasEscapeExample = false;
-
     /**
      * @return array{'PowerGridFields': string, 'filters': string, 'columns': string}
      */
@@ -20,101 +18,48 @@ class GetStubVarsFromFromModel
         /** @var Model $model */
         $model = new $component->modelFqn();
 
-        $getFillable = $model->getFillable();
+        $types = SchemaColumns::handle($model->getTable(), $model->getConnectionName());
+
+        $fields = $component->columnSource === ColumnSource::DATABASE_TABLE
+            ? self::fromDatabaseTable($types)
+            : self::fromFillable($model);
+
+        $hidden = $model->getHidden();
+
+        $fields = array_values(array_filter(
+            $fields,
+            fn (string $field): bool => ! in_array($field, $hidden, true)
+        ));
+
+        return BuildStubVars::handle($fields, $types, $component->model);
+    }
+
+    /**
+     * @param  Collection<string, string>  $types
+     * @return list<string>
+     */
+    private static function fromDatabaseTable(Collection $types): array
+    {
+        return array_values($types->keys()
+            ->reject(fn (string $field): bool => in_array($field, SchemaColumns::SENSITIVE_COLUMNS, true))
+            ->all());
+    }
+
+    /**
+     * Primary key first, then $fillable, then created_at - the historical order.
+     *
+     * @return list<string>
+     */
+    private static function fromFillable(Model $model): array
+    {
+        $fields = $model->getFillable();
 
         if (filled($model->getKeyName())) {
-            $getFillable = array_merge([$model->getKeyName()], $getFillable);
+            array_unshift($fields, $model->getKeyName());
         }
 
-        $getFillable = array_merge(
-            $getFillable,
-            ['created_at']
-        );
+        $fields[] = 'created_at';
 
-        $datasource = '';
-        $columns = "[\n";
-        $filters = "[\n";
-
-        foreach ($getFillable as $field) {
-            if (in_array($field, $model->getHidden())) {
-                continue;
-            }
-
-            $connection = Schema::connection($model->getConnection()->getName());
-
-            $hasColumn = function () use ($model, $field, $connection) {
-                try {
-                    return $connection->hasColumn($model->getTable(), $field);
-                } catch (\Exception) {
-                    return Schema::hasColumn($model->getTable(), $field);
-                }
-            };
-
-            if ($hasColumn()) {
-                $columnType = $connection->getColumnType($model->getTable(), $field);
-
-                $title = Str::of($field)->replace('_', ' ')->ucfirst();
-
-                if (in_array($columnType, ['datetime', 'date', 'timestamp'])) {
-                    $columns .= '            Column::make(\''.$title.'\', \''.$field.'_formatted\', \''.$field.'\')'."\n".'                ->sortable(),'."\n\n";
-                }
-
-                if ($columnType === 'datetime') {
-                    $datasource .= "\n".'            ->add(\''.$field.'_formatted\', fn ('.$component->model.' $model) => Carbon::parse($model->'.$field.')->format(\'d/m/Y H:i:s\'))';
-                    $filters .= '            Filter::datetimepicker(\''.$field.'\'),'."\n";
-
-                    continue;
-                }
-
-                if ($columnType === 'date') {
-                    $datasource .= "\n".'            ->add(\''.$field.'_formatted\', fn ('.$component->model.' $model) => Carbon::parse($model->'.$field.')->format(\'d/m/Y\'))';
-                    $filters .= '            Filter::datepicker(\''.$field.'\'),'."\n";
-
-                    continue;
-                }
-
-                if ($columnType === 'boolean') {
-                    $datasource .= "\n".'            ->add(\''.$field.'\')';
-                    $columns .= '            Column::make(\''.$title.'\', \''.$field.'\')'."\n".'                ->toggleable(),'."\n\n";
-                    $filters .= '            Filter::boolean(\''.$field.'\'),'."\n";
-
-                    continue;
-                }
-
-                if (in_array($columnType, ['smallint', 'integer', 'bigint'])) {
-                    $datasource .= "\n".'            ->add(\''.$field.'\')';
-                    $columns .= '            Column::make(\''.$title.'\', \''.$field.'\'),'."\n";
-
-                    continue;
-                }
-
-                if ($columnType === 'string') {
-                    $datasource .= "\n".'            ->add(\''.$field.'\')';
-                    $columns .= '            Column::make(\''.$title.'\', \''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n\n";
-                    $filters .= '            Filter::inputText(\''.$field.'\')->operators([\'contains\']),'."\n";
-
-                    if (! self::$hasEscapeExample) {
-                        $datasource .= "\n\n           /** Example of custom column using a closure **/\n".'            ->add(\''.$field.'_lower\', fn ('.$component->model.' $model) => strtolower(e($model->'.$field.')))'."\n";
-                        self::$hasEscapeExample = true;
-                    }
-
-                    continue;
-                }
-
-                $datasource .= "\n".'            ->add(\''.$field.'\')';
-                $columns .= '            Column::make(\''.$title.'\', \''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n\n";
-            }
-        }
-
-        $columns .= '            Column::action(\'Action\')'."\n";
-
-        $columns .= '        ];';
-        $filters .= '        ];';
-
-        return [
-            'PowerGridFields' => $datasource,
-            'filters' => $filters,
-            'columns' => $columns,
-        ];
+        return array_values(array_unique($fields));
     }
 }
