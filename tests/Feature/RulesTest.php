@@ -560,7 +560,7 @@ describe('Rule::rows() painting is rendered server-side on the <tr>', function (
         // With the status inactive, the same rule that painted id 1 above must
         // produce no rule class at all — the server-side path re-evaluates every
         // render, so the equivalent post-morph state renders unpainted.
-        $html = Livewire::test(new class() extends PowerGridComponent
+        $html = Livewire::test((new class() extends PowerGridComponent
         {
             public string $tableName = 'rules-row-unpaint';
 
@@ -587,7 +587,7 @@ describe('Rule::rows() painting is rendered server-side on the <tr>', function (
                         ->setAttribute('class', 'pg-painted-row'),
                 ];
             }
-        }::class)->html();
+        })::class)->html();
 
         expect($html)->not->toContain('pg-painted-row');
     });
