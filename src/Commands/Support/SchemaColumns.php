@@ -21,7 +21,8 @@ final class SchemaColumns
 
     private const INTEGER_TYPES = ['int', 'integer', 'int2', 'int4', 'int8', 'smallint', 'mediumint', 'bigint', 'tinyint', 'serial', 'bigserial', 'smallserial'];
 
-    private const STRING_TYPES = ['varchar', 'char', 'nvarchar', 'nchar', 'text', 'tinytext', 'mediumtext', 'longtext', 'ntext', 'citext', 'uuid', 'enum', 'string'];
+    // `bpchar` is how PostgreSQL reports a blank-padded `char(n)`.
+    private const STRING_TYPES = ['varchar', 'char', 'bpchar', 'nvarchar', 'nchar', 'text', 'tinytext', 'mediumtext', 'longtext', 'ntext', 'citext', 'uuid', 'enum', 'string'];
 
     /**
      * Column name => normalized type bucket, in table column order.
