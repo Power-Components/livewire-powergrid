@@ -3,7 +3,6 @@
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\ColumnSource;
 use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridComponentMaker, SchemaColumns};
 
@@ -21,7 +20,7 @@ class GetStubVarsFromFromModel
         $types = SchemaColumns::handle($model->getTable(), $model->getConnectionName());
 
         $fields = $component->columnSource === ColumnSource::DATABASE_TABLE
-            ? self::fromDatabaseTable($types)
+            ? SchemaColumns::publicFields($types)
             : self::fromFillable($model);
 
         $hidden = $model->getHidden();
@@ -32,17 +31,6 @@ class GetStubVarsFromFromModel
         ));
 
         return BuildStubVars::handle($fields, $types, $component->model);
-    }
-
-    /**
-     * @param  Collection<string, string>  $types
-     * @return list<string>
-     */
-    private static function fromDatabaseTable(Collection $types): array
-    {
-        return array_values($types->keys()
-            ->reject(fn (string $field): bool => in_array($field, SchemaColumns::SENSITIVE_COLUMNS, true))
-            ->all());
     }
 
     /**

@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Schema;
  */
 final class SchemaColumns
 {
-    /** Columns never worth generating into a grid. */
-    public const SENSITIVE_COLUMNS = ['password', 'remember_token', 'email_verified_at'];
+    /** Columns never generated when the source is the database table. */
+    public const SENSITIVE_COLUMNS = ['password', 'remember_token', 'email_verified_at', 'two_factor_secret', 'two_factor_recovery_codes', 'api_token'];
 
     private const DATETIME_TYPES = ['datetime', 'datetime2', 'timestamp', 'timestamptz', 'datetimeoffset'];
 
@@ -45,6 +45,19 @@ final class SchemaColumns
         ]);
     }
 
+    /**
+     * Column names with the sensitive ones removed, in table column order.
+     *
+     * @param  Collection<string, string>  $types
+     * @return list<string>
+     */
+    public static function publicFields(Collection $types): array
+    {
+        return array_values($types->keys()->reject(
+            fn (string $field): bool => in_array($field, self::SENSITIVE_COLUMNS, true)
+        )->all());
+    }
+
     private static function normalize(string $typeName, string $type): string
     {
         if ($typeName === 'date') {
@@ -57,7 +70,9 @@ final class SchemaColumns
 
         // MySQL and SQLite both report a boolean as `tinyint`; only the
         // display width in the full type tells it apart from an integer.
-        if (in_array($typeName, self::BOOLEAN_TYPES, true) || str_starts_with($type, 'tinyint(1)')) {
+        // Match `tinyint(1)` exactly (or with a trailing modifier such as
+        // ` unsigned`) so `tinyint(10)`..`tinyint(19)` aren't mistaken for it.
+        if (in_array($typeName, self::BOOLEAN_TYPES, true) || $type === 'tinyint(1)' || str_starts_with($type, 'tinyint(1) ')) {
             return 'boolean';
         }
 

@@ -14,10 +14,7 @@ class GetStubVarsFromDbTable
     {
         $types = SchemaColumns::handle($component->databaseTable);
 
-        $fields = $types->keys()
-            ->reject(fn (string $field): bool => in_array($field, SchemaColumns::SENSITIVE_COLUMNS, true))
-            ->values()
-            ->all();
+        $fields = SchemaColumns::publicFields($types);
 
         return BuildStubVars::handle($fields, $types);
     }
