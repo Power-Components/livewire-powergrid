@@ -4,6 +4,8 @@
     'loading' => false,
 ])
 
+@use('PowerComponents\LivewirePowerGrid\Support\RowRenderer')
+
 @php
     $__partial = $__partial ?? $this;
     $tableName = $tableName ?? $__partial->tableName;
@@ -47,10 +49,14 @@
                         'wire:key' => 'row-' . $rowId,
                         'class' => $class,
                     ])) }}>
-                        @include(theme_view('table.row'), [
-                            'rowIndex' => $loop->index + 1,
-                            '__partial' => $__partial,
-                        ])
+                        @if (RowRenderer::canRenderDirect($__partial))
+                            {!! (new RowRenderer($__partial))->render($row, $loop->index + 1, null, null, $rowId) !!}
+                        @else
+                            @include(theme_view('table.row'), [
+                                'rowIndex' => $loop->index + 1,
+                                '__partial' => $__partial,
+                            ])
+                        @endif
                     </tr>
 
                     @php
@@ -106,10 +112,14 @@
                         'wire:key' => 'row-' . $rowId,
                         'class' => $class,
                     ])) }}>
-                        @include(theme_view('table.row'), [
-                            'rowIndex' => $loop->index + 1,
-                            '__partial' => $__partial,
-                        ])
+                        @if (RowRenderer::canRenderDirect($__partial))
+                            {!! (new RowRenderer($__partial))->render($row, $loop->index + 1, null, null, $rowId) !!}
+                        @else
+                            @include(theme_view('table.row'), [
+                                'rowIndex' => $loop->index + 1,
+                                '__partial' => $__partial,
+                            ])
+                        @endif
                     </tr>
 
                     @includeWhen(isset($__partial->setUp['responsive']),
