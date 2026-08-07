@@ -4,14 +4,15 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
+    AskComponentName,
     AskDatabaseTableName,
     AskModelName,
     CheckIfDatabaseHasTables,
     ConfirmAutoImportFields};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 use function Laravel\Prompts\{error, info, note};
@@ -101,6 +102,15 @@ class CreateCommand extends Command
 
         $this->component->setAutoCreateColumns(true);
 
+        // Query Builder has only one possible source, so it is not asked.
+        if ($this->component->canHaveModel()) {
+            $this->component->setColumnSource(
+                ColumnSource::from(
+                    AskColumnSource::handle($this->component?->model, $this->component->modelTable())
+                )
+            );
+        }
+
         return $this;
     }
 
@@ -140,7 +150,7 @@ class CreateCommand extends Command
         (
             $this->component->requiresDatabaseTableName() ?
                  "[{$this->component?->databaseTable}] table?" :
-                 "\$fillable in [{$this->component?->model}] Model?"
+                 "[{$this->component?->model}] Model?"
         );
     }
 }

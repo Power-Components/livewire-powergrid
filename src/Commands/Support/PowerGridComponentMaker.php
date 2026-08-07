@@ -3,11 +3,12 @@
 namespace PowerComponents\LivewirePowerGrid\Commands\Support;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\SanitizeComponentName;
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 
 /**
  * @property-read PowerGridStub $stub;
@@ -22,6 +23,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
  * @property-read string $model
  * @property-read string $modelFqn
  * @property-read bool $autoCreateColumns
+ * @property-read ColumnSource $columnSource
  * @property-read bool $usesCustomStub
  * @property-read bool $isProcessed
  */
@@ -52,6 +54,8 @@ final class PowerGridComponentMaker
     private string $tableName = '';
 
     private bool $autoCreateColumns = false;
+
+    private ColumnSource $columnSource = ColumnSource::FILLABLE;
 
     private bool $usesCustomStub = false;
 
@@ -116,6 +120,19 @@ final class PowerGridComponentMaker
         return $this;
     }
 
+    /** Table name of the configured model, or an empty string when there is no model. */
+    public function modelTable(): string
+    {
+        if ($this->modelFqn === '') {
+            return '';
+        }
+
+        /** @var Model $model */
+        $model = new $this->modelFqn();
+
+        return $model->getTable();
+    }
+
     public function loadCustomStub(string $path): self
     {
         $this->usesCustomStub = true;
@@ -143,6 +160,13 @@ final class PowerGridComponentMaker
     public function setAutoCreateColumns(bool $autoCreateColumns = true): self
     {
         $this->autoCreateColumns = $autoCreateColumns;
+
+        return $this;
+    }
+
+    public function setColumnSource(ColumnSource $columnSource): self
+    {
+        $this->columnSource = $columnSource;
 
         return $this;
     }
