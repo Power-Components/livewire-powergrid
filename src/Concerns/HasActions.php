@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent};
@@ -10,6 +11,8 @@ trait HasActions
 {
     /** @var array<string, string> */
     private array $iconRenderCache = [];
+
+    private ?bool $hasTransformActions = null;
 
     public function shouldCollectActions(): bool
     {
@@ -134,10 +137,7 @@ trait HasActions
             return '';
         }
 
-        /** @var view-string $viewName */
-        $viewName = 'livewire-powergrid::components.structure.actions';
-
-        return view($viewName, ['actions' => $actions])->render();
+        return $this->buildActionsHtml($actions);
     }
 
     public function renderActions(object $row): string
@@ -157,14 +157,77 @@ trait HasActions
             ->values()
             ->all();
 
+        if ($this->hasTransformActions()) {
+            $actions = $this->applyTransformActions($row, $actions);
+        }
+
         if (empty($actions)) {
             return '';
         }
 
-        /** @var view-string $viewName */
-        $viewName = 'livewire-powergrid::components.structure.actions';
+        return $this->buildActionsHtml($actions);
+    }
 
-        return view($viewName, ['actions' => $actions])->render();
+    private function hasTransformActions(): bool
+    {
+        return $this->hasTransformActions ??= (new \ReflectionMethod($this, 'transformActions'))
+            ->getDeclaringClass()->getName() !== PowerGridComponent::class;
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $actions
+     * @return array<int, array<string, mixed>>
+     */
+    private function applyTransformActions(object $row, array $actions): array
+    {
+        /** @var string|int $rowId */
+        $rowId = data_get($row, $this->realPrimaryKey());
+
+        /** @var Collection<int, mixed> $rows */
+        $rows = collect([$row]);
+
+        $transformed = $this->transformActions([$rowId => array_values($actions)], $rows);
+
+        return array_values($transformed[$rowId] ?? $actions);
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $actions
+     */
+    private function buildActionsHtml(array $actions): string
+    {
+        $html = '';
+
+        foreach ($actions as $action) {
+            $replaceHtml = $action['replaceHtml'] ?? '';
+
+            if (is_string($replaceHtml) && $replaceHtml !== '') {
+                $html .= $replaceHtml;
+
+                continue;
+            }
+
+            $tag = $action['tag'] ?? 'button';
+            $tag = is_string($tag) ? $tag : 'button';
+
+            $attributePairs = [];
+            $attributes = $action['attributes'] ?? [];
+            if (is_array($attributes)) {
+                foreach ($attributes as $key => $value) {
+                    $attributePairs[] = $key.'="'.e(is_scalar($value) ? (string) $value : '').'"';
+                }
+            }
+
+            $iconHtml = $action['iconHtml'] ?? '';
+            $slot = $action['slot'] ?? '';
+
+            $html .= '<'.$tag.' '.implode(' ', $attributePairs).'>'
+                .(is_string($iconHtml) ? $iconHtml : '')
+                .(is_string($slot) ? $slot : '')
+                .'</'.$tag.'>';
+        }
+
+        return $html;
     }
 
     /**
@@ -241,6 +304,7 @@ trait HasActions
 
         return [
             'hidden' => false,
+            'action' => $button->action,
             'tag' => $button->tag ?? 'button',
             'slot' => $slot,
             'iconHtml' => ! empty($button->icon) ? $this->renderIcon($button->icon, $button->iconAttributes) : '',

@@ -1,5 +1,7 @@
 <?php
 
+use Livewire\Livewire;
+use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleActions, RuleCheckbox, RuleEditOnClick, RuleManager, RuleRadio, RuleRows, RuleToggleable};
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
 
@@ -471,5 +473,122 @@ describe('Complex rule scenarios', function () {
             ->when(fn ($row) => $row->hasDetails === true);
 
         expect($rule)->toBeInstanceOf(RuleRows::class);
+    });
+});
+
+describe('Rule::rows() painting is rendered server-side on the <tr>', function () {
+    // Regression: row highlight used to be applied client-side by the pgRowAttributes
+    // Alpine component, which read the rules once at init() and never re-evaluated
+    // them. On a Livewire morph (e.g. flipping a Toggleable) a highlighted row never
+    // "unpainted". The class/attributes must now be computed server-side so the morph
+    // refreshes them on every render.
+    $makeComponent = fn () => new class() extends PowerGridComponent
+    {
+        public string $tableName = 'rules-row-paint';
+
+        public function datasource()
+        {
+            // id 1 => active (painted), id 2 => inactive (not painted)
+            return collect([
+                ['id' => 1, 'status' => 1],
+                ['id' => 2, 'status' => 0],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('status');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Status', 'status'),
+                Column::action('Action'),
+            ];
+        }
+
+        public function actions($row): array
+        {
+            return [
+                Button::add('view')->slot('View'),
+            ];
+        }
+
+        public function actionRules($row): array
+        {
+            return [
+                Rule::rows()
+                    ->when(fn ($row) => (int) data_get($row, 'status') === 1)
+                    ->setAttribute('class', 'pg-painted-row'),
+
+                // A non-class attribute must also reach the <tr>.
+                Rule::rows()
+                    ->when(fn ($row) => (int) data_get($row, 'status') === 1)
+                    ->setAttribute('data-active', 'yes'),
+
+                // Must NOT leak onto the <tr>: it targets the "view" button only.
+                Rule::button('view')
+                    ->when(fn ($row) => (int) data_get($row, 'status') === 1)
+                    ->setAttribute('class', 'pg-button-only'),
+            ];
+        }
+    };
+
+    it('paints the active row and leaves the inactive row untouched', function () use ($makeComponent) {
+        $html = Livewire::test($makeComponent()::class)->html();
+
+        // The old client-side markup is gone.
+        expect($html)
+            ->not->toContain('x-data="pgRowAttributes"')
+            ->not->toContain('data-pg-params');
+
+        // Grab the opening <tr> tag for the active row (id 1).
+        preg_match('/<tr\b[^>]*wire:key="row-1"[^>]*>/', $html, $m);
+        $activeTr = $m[0] ?? '';
+
+        // Active row carries the rule class + non-class attribute...
+        expect($activeTr)
+            ->toContain('pg-painted-row')
+            ->toContain('data-active="yes"')
+            // ...but a button-scoped rule never bleeds onto the <tr>.
+            ->not->toContain('pg-button-only');
+    });
+
+    it('does not paint a row whose Rule::rows() condition is false', function () {
+        // With the status inactive, the same rule that painted id 1 above must
+        // produce no rule class at all — the server-side path re-evaluates every
+        // render, so the equivalent post-morph state renders unpainted.
+        $html = Livewire::test(new class() extends PowerGridComponent
+        {
+            public string $tableName = 'rules-row-unpaint';
+
+            public function datasource()
+            {
+                return collect([['id' => 1, 'status' => 0]]);
+            }
+
+            public function fields(): PowerGridFields
+            {
+                return PowerGrid::fields()->add('id')->add('status');
+            }
+
+            public function columns(): array
+            {
+                return [Column::make('Id', 'id'), Column::make('Status', 'status')];
+            }
+
+            public function actionRules($row): array
+            {
+                return [
+                    Rule::rows()
+                        ->when(fn ($row) => (int) data_get($row, 'status') === 1)
+                        ->setAttribute('class', 'pg-painted-row'),
+                ];
+            }
+        }::class)->html();
+
+        expect($html)->not->toContain('pg-painted-row');
     });
 });

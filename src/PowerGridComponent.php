@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
 use Illuminate\Support\Collection;
-use Illuminate\Support\{Collection as BaseCollection, Facades\Cache};
+use Illuminate\View\ComponentAttributeBag;
 use Livewire\{Attributes\Computed, Component, WithPagination};
+use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
+use PowerComponents\LivewirePowerGrid\Support\{CellRenderer, ColumnViewModel, ThemeManager};
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
 use Psr\SimpleCache\InvalidArgumentException;
 
@@ -22,10 +24,12 @@ use Psr\SimpleCache\InvalidArgumentException;
  * @property-read mixed $records
  * @property-read bool $hasColumnFilters
  * @property-read array<int, Column>|BaseCollection<int, Column> $visibleColumns
+ * @property-read array<int, ColumnViewModel> $columnViewModels
  * @property-read string $realPrimaryKey
  *
  * @method mixed datasource(mixed ...$args)
  * @method mixed actions(mixed $row)
+ * @method mixed actionsFromView(object $row)
  */
 class PowerGridComponent extends Component
 {
@@ -112,6 +116,82 @@ class PowerGridComponent extends Component
         }
 
         return null;
+    }
+
+    public function renderCells(object $row, int $rowIndex, ?int $childIndex, mixed $parentId, string|int $rowId): string
+    {
+        return (new CellRenderer($this))->render($row, $rowIndex, $childIndex, $parentId, $rowId);
+    }
+
+    /**
+     * Build the <tr> attribute bag from the row's action rules, server-side.
+     *
+     * Replaces the previous client-side `pgRowAttributes` Alpine component, whose
+     * rule attributes were read once at init() and never re-evaluated. On a
+     * Livewire morph (e.g. flipping a Toggleable), Alpine kept the stale rule so a
+     * highlighted row never "unpainted". Computing here lets the morph refresh the
+     * class/attributes on every render.
+     *
+     * @param  ComponentAttributeBag  $attributes  the row's base bag (class, wire:key, ...)
+     */
+    public function rowAttributes(object $row, ComponentAttributeBag $attributes): ComponentAttributeBag
+    {
+        /** @var array<int, array<string, mixed>> $rules */
+        $rules = (array) data_get($row, '__powergrid_rules', []);
+
+        $ruleClasses = [];
+        $extra = [];
+
+        foreach ($rules as $rule) {
+            if (! (data_get($rule, 'applyLoop') || data_get($rule, 'apply'))) {
+                continue;
+            }
+
+            // Only Rule::rows() paints the <tr>; checkbox/radio/action rules are
+            // consumed by their own elements (see the checkbox partial).
+            if (data_get($rule, 'forAction') !== RuleManager::TYPE_ROWS) {
+                continue;
+            }
+
+            $ruleAttributes = data_get($rule, 'attributes');
+
+            if (! is_array($ruleAttributes)) {
+                continue;
+            }
+
+            foreach ($ruleAttributes as $key => $value) {
+                // Nested {key, value} form (e.g. arbitrary attribute pairs).
+                if (is_array($value) && isset($value['key'], $value['value']) && is_scalar($value['key']) && is_scalar($value['value'])) {
+                    $nestedKey = (string) $value['key'];
+                    $extra[$nestedKey] ??= (string) $value['value'];
+
+                    continue;
+                }
+
+                if (! is_scalar($value)) {
+                    continue;
+                }
+
+                $value = (string) $value;
+
+                if ($key === 'class') {
+                    $ruleClasses[] = $value;
+
+                    continue;
+                }
+
+                // First rule wins for a given attribute; later ones are appended.
+                $extra[$key] = isset($extra[$key])
+                    ? $extra[$key].' '.$value
+                    : $value;
+            }
+        }
+
+        // merge() appends to the existing class; base class stays intact.
+        return $attributes->merge(
+            array_merge($extra, ['class' => implode(' ', $ruleClasses)]),
+            escape: false,
+        );
     }
 
     /**
@@ -236,6 +316,57 @@ class PowerGridComponent extends Component
         return $columns;
     }
 
+    /**
+     * @return array<int, ColumnViewModel>
+     */
+    #[Computed]
+    public function columnViewModels(): array
+    {
+        $tdClass = theme('table.layout.td');
+
+        return $this->visibleColumns
+            ->map(function ($column) use ($tdClass) {
+                $field = $this->columnString($column, 'field');
+                $dataField = $this->columnString($column, 'dataField');
+                $contentClassField = $this->columnString($column, 'contentClassField');
+                /** @var array<array-key, mixed>|string $contentClasses */
+                $contentClasses = data_get($column, 'contentClasses', []);
+                $bodyClass = $this->columnString($column, 'bodyClass');
+                $bodyStyle = $this->columnString($column, 'bodyStyle');
+                $hidden = (bool) data_get($column, 'hidden');
+
+                $customView = data_get($column, 'customContent.view');
+                $customParams = data_get($column, 'customContent.params', []);
+
+                return new ColumnViewModel(
+                    column: $column,
+                    field: $field,
+                    dataField: $dataField !== '' ? $dataField : $field,
+                    isAction: (bool) data_get($column, 'isAction'),
+                    index: (bool) data_get($column, 'index'),
+                    contentClassField: $contentClassField,
+                    contentClasses: $contentClasses,
+                    hasCustomContent: is_string($customView) && $customView !== '',
+                    customView: is_string($customView) ? $customView : null,
+                    customParams: is_array($customParams) ? $customParams : [],
+                    tdClass: Arr::toCssClasses([$tdClass, $bodyClass]),
+                    tdStyle: Arr::toCssStyles(['display:none' => $hidden, $bodyStyle]),
+                    spanClassStatic: is_array($contentClasses)
+                        ? null
+                        : Arr::toCssClasses([$contentClassField, $contentClasses]),
+                );
+            })
+            ->values()
+            ->all();
+    }
+
+    private function columnString(mixed $column, string $key): string
+    {
+        $value = data_get($column, $key, '');
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+
     #[Computed]
     protected function records(): mixed
     {
@@ -272,16 +403,6 @@ class PowerGridComponent extends Component
     private function getRecordsDataSource(): AbstractPaginator|MorphToMany|BaseCollection
     {
         $processResult = ProcessDataSource::make($this)->get();
-
-        if ($processResult['results'] instanceof AbstractPaginator) {
-            /** @var BaseCollection<int, mixed> $actionsRows */
-            $actionsRows = $processResult['results']->getCollection();
-        } else {
-            /** @var array<int, mixed> $processResultsData */
-            $processResultsData = $processResult['results'];
-            /** @var BaseCollection<int, mixed> $actionsRows */
-            $actionsRows = new BaseCollection($processResultsData);
-        }
 
         return $this->applyAfterQuery($processResult['results']);
     }

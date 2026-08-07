@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Collection;
 use Livewire\Livewire;
 use PHPUnit\Framework\AssertionFailedError;
 use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, Facades\Rule, PowerGridComponent, PowerGridFields};
@@ -552,6 +553,130 @@ describe('renderActions – icon graceful degradation', function () {
         Livewire::test($component::class)
             ->assertOk()
             ->assertSee('Go');
+    });
+});
+
+describe('renderActions – transformActions hook', function () {
+    it('lets a transformActions override mutate the rendered action HTML', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public string $tableName = 'render-transform-actions';
+
+            public function datasource()
+            {
+                return collect([
+                    ['id' => 1, 'name' => 'Alpha'],
+                    ['id' => 2, 'name' => 'Beta'],
+                ]);
+            }
+
+            public function fields(): PowerGridFields
+            {
+                return PowerGrid::fields()->add('id')->add('name');
+            }
+
+            public function columns(): array
+            {
+                return [Column::make('Id', 'id'), Column::make('Name', 'name'), Column::action('Actions')];
+            }
+
+            public function actions($row): array
+            {
+                return [Button::add('edit')->slot('ORIGINAL')];
+            }
+
+            public function transformActions(array $actionsByRow, Collection $rows): array
+            {
+                foreach ($actionsByRow as $rowId => &$actions) {
+                    foreach ($actions as &$action) {
+                        if ($action['action'] === 'edit') {
+                            $action['slot'] = 'Edit #'.$rowId;
+                        }
+                    }
+                }
+
+                return $actionsByRow;
+            }
+        };
+
+        Livewire::test($component::class)
+            ->assertDontSee('ORIGINAL')
+            ->assertSee('Edit #1')
+            ->assertSee('Edit #2');
+    });
+
+    it('leaves output untouched when transformActions is not overridden', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public string $tableName = 'render-transform-actions-noop';
+
+            public function datasource()
+            {
+                return collect([['id' => 1, 'name' => 'Alpha']]);
+            }
+
+            public function fields(): PowerGridFields
+            {
+                return PowerGrid::fields()->add('id')->add('name');
+            }
+
+            public function columns(): array
+            {
+                return [Column::make('Id', 'id'), Column::make('Name', 'name'), Column::action('Actions')];
+            }
+
+            public function actions($row): array
+            {
+                return [Button::add('edit')->slot('ORIGINAL')];
+            }
+        };
+
+        Livewire::test($component::class)->assertSee('ORIGINAL');
+    });
+});
+
+describe('renderActions – JS / wire directives survive into HTML', function () {
+    it('renders wire:click from macros and custom Alpine attributes in the output', function () {
+        $component = new class() extends PowerGridComponent
+        {
+            public string $tableName = 'render-js-directives';
+
+            public function datasource()
+            {
+                return collect([['id' => 1, 'name' => 'Alpha']]);
+            }
+
+            public function fields(): PowerGridFields
+            {
+                return PowerGrid::fields()->add('id')->add('name');
+            }
+
+            public function columns(): array
+            {
+                return [Column::make('Id', 'id'), Column::make('Name', 'name'), Column::action('Actions')];
+            }
+
+            public function actions($row): array
+            {
+                return [
+                    Button::add('save')->slot('Save')->dispatch('itemSaved', ['id' => $row->id]),
+                    Button::add('del')->slot('Del')->confirm('Sure?'),
+                    Button::add('alpine')->slot('Alpine')
+                        ->attributes(['x-data' => '{ open: false }', 'x-on:click' => 'open = true']),
+                ];
+            }
+        };
+
+        $html = Livewire::test($component::class)->html();
+
+        // wire:click value is HTML-escaped exactly as the old blade did (e()).
+        expect($html)
+            ->toContain('wire:click')
+            ->toContain('$dispatch(')
+            ->toContain('itemSaved')
+            ->toContain('wire:confirm="Sure?"')
+            ->toContain('x-data="{ open: false }"')
+            ->toContain('x-on:click="open = true"');
     });
 });
 

@@ -43,13 +43,10 @@
                         }
                     @endphp
 
-                    <tr
-                        wire:key="row-{{ $rowId }}"
-                        class="{{ $class }}"
-                        x-data="pgRowAttributes"
-                        data-pg-params="{{ json_encode(['rowId' => $rowId, 'rules' => $row->__powergrid_rules]) }}"
-                        x-bind="getAttributes"
-                    >
+                    <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
+                        'wire:key' => 'row-' . $rowId,
+                        'class' => $class,
+                    ])) }}>
                         @include(theme_view('table.row'), [
                             'rowIndex' => $loop->index + 1,
                             '__partial' => $__partial,
@@ -105,13 +102,10 @@
                         }
                     @endphp
 
-                    <tr
-                        wire:key="row-{{ $rowId }}"
-                        class="{{ $class }}"
-                        x-data="pgRowAttributes"
-                        data-pg-params="{{ json_encode(['rowId' => $rowId, 'rules' => $row->__powergrid_rules]) }}"
-                        x-bind="getAttributes"
-                    >
+                    <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
+                        'wire:key' => 'row-' . $rowId,
+                        'class' => $class,
+                    ])) }}>
                         @include(theme_view('table.row'), [
                             'rowIndex' => $loop->index + 1,
                             '__partial' => $__partial,
