@@ -4,7 +4,7 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
 
 it('renders the detail collapse-icon toggle', function () {
-    $component = new class extends PowerGridComponent
+    $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'parity-detail';
 
@@ -40,7 +40,7 @@ it('renders the detail collapse-icon toggle', function () {
 });
 
 it('renders the responsive toggle', function () {
-    $component = new class extends PowerGridComponent
+    $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'parity-responsive';
 
@@ -71,7 +71,7 @@ it('renders the responsive toggle', function () {
 });
 
 it('renders the radio column', function () {
-    $component = new class extends PowerGridComponent
+    $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'parity-radio';
 
@@ -104,7 +104,7 @@ it('renders the radio column', function () {
 });
 
 it('renders the checkbox column', function () {
-    $component = new class extends PowerGridComponent
+    $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'parity-checkbox';
 
