@@ -10,10 +10,10 @@ final class RowRenderer
 {
     public const string DEFAULT_ROW_VIEW = 'livewire-powergrid::components.themes.tailwind.table.row';
 
+    public function __construct(private readonly PowerGridComponent $component) {}
+
     /** @var array<string, bool> memoized guard result, keyed by theme identity */
     private static array $directCache = [];
-
-    public function __construct(private readonly PowerGridComponent $component) {}
 
     public static function canRenderDirect(PowerGridComponent $component): bool
     {
