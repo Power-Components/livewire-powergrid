@@ -31,14 +31,17 @@ jobs:
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql/mysql-server:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD || 'password' }}
+          MYSQL_ROOT_HOST: "%"
           MYSQL_DATABASE: powergridtest
+          MYSQL_USER: powergrid
+          MYSQL_PASSWORD: password
         ports:
           - 3307:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -ppassword"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
