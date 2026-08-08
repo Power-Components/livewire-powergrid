@@ -8,14 +8,16 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
     AskComponentName,
     AskDatabaseTableName,
     AskModelName,
+    BuildStubVars,
     CheckIfDatabaseHasTables,
-    ConfirmAutoImportFields};
+    ConfirmAutoImportFields,
+    ResolveGeneratedColumns};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
-use function Laravel\Prompts\{error, info, note};
+use function Laravel\Prompts\{error, info, note, warning};
 
 /** @codeCoverageIgnore */
 class CreateCommand extends Command
@@ -111,7 +113,41 @@ class CreateCommand extends Command
             );
         }
 
+        $this->previewColumns();
+
         return $this;
+    }
+
+    /** Shows which columns the chosen source will generate, before the component is written. */
+    private function previewColumns(): void
+    {
+        $columns = ResolveGeneratedColumns::handle($this->component);
+
+        if ($columns->isEmpty()) {
+            warning("🚫 No fields found in {$this->columnSourceLabel()}. Only the Action column will be generated.");
+
+            return;
+        }
+
+        note("👀 Preview of the fields from {$this->columnSourceLabel()}:");
+
+        $this->table(
+            ['Field', 'Type', 'Generated as'],
+            $columns->map(
+                fn (string $type, string $field): array => [$field, $type, BuildStubVars::describe($type)]
+            )->values()->all()
+        );
+    }
+
+    private function columnSourceLabel(): string
+    {
+        if ($this->component->requiresDatabaseTableName()) {
+            return "the [{$this->component?->databaseTable}] table";
+        }
+
+        return $this->component?->columnSource === ColumnSource::DATABASE_TABLE
+            ? "the [{$this->component->modelTable()}] table"
+            : "\$fillable in [{$this->component?->model}]";
     }
 
     private function step6(): self

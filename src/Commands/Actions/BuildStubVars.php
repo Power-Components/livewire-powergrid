@@ -27,6 +27,23 @@ final class BuildStubVars
     }
 
     /**
+     * Short summary of what is generated for a type, for the create command preview.
+     *
+     * Must mirror the arms of the match in build().
+     */
+    public static function describe(string $type): string
+    {
+        return match ($type) {
+            'datetime' => 'Sortable column, formatted d/m/Y H:i:s + datetime filter',
+            'date' => 'Sortable column, formatted d/m/Y + date filter',
+            'boolean' => 'Toggleable column + boolean filter',
+            'integer' => 'Plain column',
+            'string' => 'Sortable, searchable column + text filter',
+            default => 'Sortable, searchable column',
+        };
+    }
+
+    /**
      * @param  list<string>  $fields
      * @param  Collection<string, string>  $types
      * @return array{'PowerGridFields': string, 'filters': string, 'columns': string}
