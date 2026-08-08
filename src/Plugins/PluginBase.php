@@ -66,15 +66,31 @@ abstract class PluginBase implements Wireable
             return false;
         }
 
-        return collect($this->component->columns)
-            ->filter(function ($column): bool {
-                if ($column instanceof Column || $column instanceof stdClass || is_array($column)) {
-                    return $this->handles($column);
-                }
+        return $this->handledColumn($field) !== null;
+    }
 
-                return false;
-            })
-            ->contains(fn ($column) => data_get($column, 'dataField', data_get($column, 'field')) === $field);
+    /**
+     * Whether the server-declared column for the given field is handled by
+     * this plugin. Unlike handles(), this inspects columns() — the declared
+     * definition — instead of the client-hydrated snapshot.
+     */
+    public function isDeclaredField(string $field): bool
+    {
+        return $this->handledColumn($field) !== null;
+    }
+
+    /** @return Column|array<mixed, mixed>|stdClass|null */
+    protected function handledColumn(string $field): mixed
+    {
+        foreach ($this->component->declaredColumns() as $column) {
+            if ($column instanceof Column || $column instanceof stdClass || is_array($column)) {
+                if ($this->handles($column) && data_get($column, 'dataField', data_get($column, 'field')) === $field) {
+                    return $column;
+                }
+            }
+        }
+
+        return null;
     }
 
     /** @param  Column|array<string, mixed>|stdClass  $column */

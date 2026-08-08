@@ -35,7 +35,11 @@ class SearchHandler implements SearchHandlerContract
             $modelTable = $subQuery instanceof QueryBuilder ? $subQuery->from : $subQuery->getModel()->getTable();
             $columnList = $this->getColumnList($subQuery, $modelTable);
 
-            collect($this->component->columns)
+            // The `columns` property is mass-assignable and hydrated from the
+            // client snapshot, so it cannot be trusted as the search surface.
+            // Derive the searchable fields from the server-declared columns()
+            // method instead (mirrors GlobalSearch and the FilterHandler guard).
+            collect($this->component->declaredColumns())
                 ->filter(function (mixed $column): bool {
                     return (bool) data_get($column, 'searchable');
                 })

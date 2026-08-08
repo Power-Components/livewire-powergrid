@@ -96,11 +96,7 @@ final readonly class CellRenderer
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
         }
 
-        $content = is_scalar($rawContent) || $rawContent instanceof \Stringable ? (string) $rawContent : '';
-
-        if (str_contains($content, '<script')) {
-            $content = (string) preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-        }
+        $content = is_scalar($rawContent) || $rawContent instanceof \Stringable ? e((string) $rawContent) : '';
 
         $spanClass = $column->spanClassStatic ?? Arr::toCssClasses([
             $column->contentClassField,

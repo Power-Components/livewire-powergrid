@@ -19,7 +19,7 @@ class ColumnRawQueries
             return $next($query);
         }
 
-        collect($this->component->columns())
+        collect($this->component->declaredColumns())
             ->filter(fn ($column) => filled(data_get($column, 'rawQueries')))
             ->each(function ($column) use ($query) {
                 foreach ((array) data_get($column, 'rawQueries', []) as $rawQueryConfig) {

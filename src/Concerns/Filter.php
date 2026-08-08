@@ -388,6 +388,10 @@ trait Filter
      */
     public function filterInputTextOptions(string $field, string $value, string $label = ''): void
     {
+        if (! $this->isDeclaredFilterField($field)) {
+            return;
+        }
+
         $this->setInFilters($this->filters, 'input_text_options.'.$field, $value);
 
         $disabled = false;
@@ -415,7 +419,6 @@ trait Filter
         if (blank($value)) {
             $this->clearFilter($field);
         }
-
         $this->persistState('filters');
 
         $this->renderOutsideFiltersPartial();
@@ -524,6 +527,10 @@ trait Filter
 
     public function addEnabledFilters(string $field, ?string $label): void
     {
+        if (! $this->isDeclaredFilterField($field)) {
+            return;
+        }
+
         if (! collect($this->enabledFilters)
             ->where('field', $field)
             ->count()) {
@@ -534,12 +541,36 @@ trait Filter
         }
     }
 
+    private function isDeclaredFilterField(string $field): bool
+    {
+        $declared = collect($this->declaredFilters())
+            ->flatMap(function ($filter) {
+                $fields = [
+                    data_get($filter, 'field'),
+                    data_get($filter, 'column'),
+                ];
+
+                /** @var string|null $filterField */
+                $filterField = data_get($filter, 'field');
+
+                if (is_string($filterField) && data_get($filter, 'key') === 'number') {
+                    $fields[] = $filterField.'_start';
+                    $fields[] = $filterField.'_end';
+                }
+
+                return $fields;
+            })
+            ->filter(fn ($value) => is_string($value) && $value !== '');
+
+        return $declared->contains($field);
+    }
+
     /** @return Collection<string, string> */
     public function listColumnForQueryString(): Collection
     {
         $columns = collect();
 
-        collect($this->columns())
+        collect($this->declaredColumns())
             ->ensure([Column::class])
             ->each(function ($column) use (&$columns) {
                 if (filled($column->dataField)) {

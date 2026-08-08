@@ -133,12 +133,25 @@ trait Sorting
     }
 
     /**
+     * Whether the given sort field is declared in the server-side columns().
+     * The `sortField`/`sortArray` properties are mass-assignable from the
+     * client snapshot, so they must never reach ORDER BY unvalidated.
+     */
+    public function isValidSortField(string $sortField): bool
+    {
+        return collect($this->declaredColumns())
+            ->map(fn ($column) => data_get($column, 'dataField') ?: data_get($column, 'field'))
+            ->filter()
+            ->contains($sortField);
+    }
+
+    /**
      * Get the sort callback for a given field from the columns definition.
      * Returns null if no custom callback is defined.
      */
     public function getSortCallback(string $field): ?\Closure
     {
-        $columns = $this->columns();
+        $columns = $this->declaredColumns();
 
         foreach ($columns as $column) {
             $columnDataField = data_get($column, 'dataField');

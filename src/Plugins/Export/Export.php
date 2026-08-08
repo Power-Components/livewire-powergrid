@@ -98,11 +98,31 @@ class Export
                     $value = strip_tags($value);
                 }
 
-                $values[] = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $values[] = $this->neutralizeFormula(html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
             }
 
             yield $values;
         }
+    }
+
+    /**
+     * Neutralize spreadsheet formula-injection payloads (CWE-1236): prefix a
+     * leading '='/'+'/'-'/'@'/tab/CR with a single quote so spreadsheet apps
+     * treat the cell as text instead of executing it as a formula.
+     */
+    private function neutralizeFormula(string $value): string
+    {
+        if ($value === '') {
+            return $value;
+        }
+
+        $first = $value[0];
+
+        if (in_array($first, ['=', '+', '-', '@', "\t", "\r"], true)) {
+            return "'".$value;
+        }
+
+        return $value;
     }
 
     private function columnIsExportable(mixed $column): bool

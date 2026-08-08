@@ -29,7 +29,7 @@ final class Filters
             );
         }
 
-        $definitions = collect($this->component->filters());
+        $definitions = collect($this->component->declaredFilters());
         $results = $collection;
 
         foreach ($this->component->filters as $filterType => $columns) {

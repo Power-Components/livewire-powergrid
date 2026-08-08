@@ -59,7 +59,7 @@ class ToggleablePlugin extends PluginBase
 
     public function isEnabled(): bool
     {
-        return collect($this->component->columns)
+        return collect($this->component->declaredColumns())
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.toggleable')));
     }
 
@@ -99,6 +99,11 @@ class ToggleablePlugin extends PluginBase
         $value = $params[2] ?? null;
 
         if (! is_string($field) || ! is_scalar($id) || ! is_scalar($value) || ! $this->isHandledField($field)) {
+            return;
+        }
+
+        $column = $this->handledColumn($field);
+        if ($column === null || ! boolval(data_get($column, 'pluginData.toggleable.enabled'))) {
             return;
         }
 

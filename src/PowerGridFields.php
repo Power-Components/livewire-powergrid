@@ -17,13 +17,12 @@ final class PowerGridFields
      */
     public function add(string $fieldName, ?Closure $closure = null): PowerGridFields
     {
-        $this->fields[$fieldName] = $closure ?? fn ($model) => $this->valueIsString(data_get($model, $fieldName));
+        // Escaping is NOT applied here: it happens at the render sink
+        // (CellRenderer / row.blade.php), which guarantees a single, consistent
+        // escape for every cell regardless of whether the value came from this
+        // default closure or a custom one.
+        $this->fields[$fieldName] = $closure ?? fn ($model) => data_get($model, $fieldName);
 
         return $this;
-    }
-
-    private function valueIsString(mixed $value): mixed
-    {
-        return is_string($value) ? e($value) : $value;
     }
 }

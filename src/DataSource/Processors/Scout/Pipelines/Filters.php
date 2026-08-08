@@ -16,7 +16,7 @@ final class Filters
      * @return ScoutBuilder<Model> */
     public function handle(ScoutBuilder $builder, Closure $next): ScoutBuilder
     {
-        $filterDefinitions = collect($this->component->filters());
+        $filterDefinitions = collect($this->component->declaredFilters());
 
         if ($filterDefinitions->isEmpty() || empty($this->component->filters)) {
             return $next($builder);

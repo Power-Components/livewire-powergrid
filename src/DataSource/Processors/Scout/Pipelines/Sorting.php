@@ -22,9 +22,17 @@ final class Sorting
 
         if ($this->component->multiSort) {
             foreach ($this->component->sortArray as $sortField => $direction) {
+                if (! $this->component->isValidSortField($sortField)) {
+                    continue;
+                }
+
                 $builder->orderBy($sortField, Sql::sanitizeSortDirection($direction));
             }
 
+            return $next($builder);
+        }
+
+        if (! $this->component->isValidSortField($this->component->sortField)) {
             return $next($builder);
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridManager};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridManager};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
@@ -77,11 +77,20 @@ it('keeps built-in plugins when registering custom plugins', function () {
 
 it('validates that the core component resolves active plugins', function () {
     PowerGrid::plugins($this->defaultPlugins);
-    $component = new DishesTable();
-    $component->columns = [
-        Column::add()->field('name')->editOnClick(),
-        Column::add()->field('in_stock')->toggleable(),
-    ];
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'plugin-system-resolve';
+
+        public function columns(): array
+        {
+            return [
+                Column::add()->field('name')->editOnClick(),
+                Column::add()->field('in_stock')->toggleable(),
+            ];
+        }
+    };
+
     $component->resolvePlugins();
 
     expect($component->getPlugins())->toHaveKeys(['editable', 'toggleable']);
@@ -89,13 +98,22 @@ it('validates that the core component resolves active plugins', function () {
 
 it('verifies that the plugin handles and renders column content', function () {
     PowerGrid::plugins($this->defaultPlugins);
-    $component = new DishesTable();
-    $component->columns = [
-        Column::add()->field('name')->editOnClick(),
-    ];
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'plugin-system-render';
+
+        public function columns(): array
+        {
+            return [
+                Column::add()->field('name')->editOnClick(),
+            ];
+        }
+    };
+
     $component->resolvePlugins();
 
-    $column = $component->columns[0];
+    $column = Column::add()->field('name')->editOnClick();
     $row = (object) ['name' => 'Dish Name', 'id' => 1];
 
     $content = $component->renderColumnContent($column, $row);
@@ -107,19 +125,27 @@ it('verifies that the plugin handles and renders column content', function () {
 
 it('verifies that toggleable plugin handles and renders column content', function () {
     PowerGrid::plugins($this->defaultPlugins);
-    $component = new DishesTable();
-    $component->columns = [
-        Column::add()->field('in_stock')->toggleable(),
-    ];
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'plugin-system-toggleable';
+
+        public function columns(): array
+        {
+            return [
+                Column::add()->field('in_stock')->toggleable(),
+            ];
+        }
+    };
+
     $component->resolvePlugins();
 
-    $column = $component->columns[0];
+    $column = Column::add()->field('in_stock')->toggleable();
     $row = (object) ['in_stock' => true, 'id' => 1];
 
     $content = $component->renderColumnContent($column, $row);
 
-    expect($content)
-        ->toContain('pgToggleable');
+    expect($content)->toContain('pgToggleable');
 });
 
 it('verifies that flatpickr plugin is enabled when date filters are present', function () {

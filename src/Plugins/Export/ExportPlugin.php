@@ -13,7 +13,8 @@ use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
     DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract};
+    DataSource\Processors\Database\Handlers\SearchHandlerContract,
+    DataSource\Support\Sql};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
@@ -394,14 +395,26 @@ class ExportPlugin extends PluginBase
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
             ->when($component->sortField, function ($query) use ($processDataSource, $queryOptions) {
-                $sortField = $queryOptions['sortField']
-                    ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
-                $sortDirection = $queryOptions['sortDirection'] ?? $processDataSource->component->sortDirection;
+                $sortField = $queryOptions['sortField'] ?? $processDataSource->component->sortField;
 
-                return $query->orderBy($sortField, $sortDirection);
+                if (! is_string($sortField)) {
+                    return $query;
+                }
+
+                if (! $processDataSource->component->isValidSortField($sortField)) {
+                    return $query;
+                }
+
+                $sortDirection = $processDataSource->component->sortDirection;
+
+                if (is_string($queryOptions['sortDirection'] ?? null)) {
+                    $sortDirection = $queryOptions['sortDirection'];
+                }
+
+                $sortField = $processDataSource->component->resolveSortField($sortField);
+
+                return $query->orderBy($sortField, Sql::sanitizeSortDirection($sortDirection));
             })
-            // Stream from the database one row at a time instead of loading the
-            // whole result set into memory.
             ->cursor();
 
         $dataTransformer = new DataTransformer($processDataSource->component);

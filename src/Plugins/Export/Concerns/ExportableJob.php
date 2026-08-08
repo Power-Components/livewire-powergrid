@@ -9,6 +9,7 @@ use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
     DataSource\ProcessDataSource,
     DataSource\Processors\Database\Handlers\FilterHandler,
     DataSource\Processors\Database\Handlers\SearchHandlerContract,
+    DataSource\Support\Sql,
     PowerGridComponent};
 
 /** @codeCoverageIgnore */
@@ -85,10 +86,9 @@ trait ExportableJob
         };
 
         $sortField = $queryOptions['sortField']
-            ?? $processDataSource->component->resolveSortField($processDataSource->component->sortField);
-
-        $sortDirection = $queryOptions['sortDirection']
-            ?? $processDataSource->component->sortDirection;
+            ?? $processDataSource->component->sortField;
+        $sortDirection = Sql::sanitizeSortDirection($queryOptions['sortDirection']
+            ?? $processDataSource->component->sortDirection);
 
         $results = $processDataSource->datasource
             ->where(function ($query) {
@@ -100,9 +100,14 @@ trait ExportableJob
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
+            ->when(is_string($sortField) && $processDataSource->component->isValidSortField($sortField), function ($query) use ($processDataSource, $sortField, $sortDirection) {
+                return $query->orderBy(
+                    $processDataSource->component->resolveSortField($sortField),
+                    $sortDirection
+                );
+            })
             ->offset($this->offset)
             ->limit($this->limit)
-            ->orderBy($sortField, $sortDirection)
             ->cursor();
 
         $dataTransformer = new DataTransformer($processDataSource->component);

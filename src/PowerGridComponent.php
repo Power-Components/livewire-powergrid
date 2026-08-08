@@ -109,8 +109,17 @@ class PowerGridComponent extends Component
     /** @param  Column|array<string, mixed>|\stdClass  $column */
     public function renderColumnContent(Column|array|\stdClass $column, mixed $row): ?string
     {
+        $field = data_get($column, 'dataField', data_get($column, 'field'));
+
+        if (! is_string($field) || $field === '') {
+            return null;
+        }
+
         foreach ($this->plugins as $plugin) {
-            if ($plugin->handles($column)) {
+            // The rendered column comes from the client snapshot, so its
+            // pluginData is attacker-controllable. Only render plugin content
+            // when the server-declared column for the field is handled too.
+            if ($plugin->handles($column) && $plugin->isDeclaredField($field)) {
                 return $plugin->render($column, $row);
             }
         }
@@ -303,9 +312,30 @@ class PowerGridComponent extends Component
     #[Computed]
     public function visibleColumns(): BaseCollection
     {
+        // The `columns` property is mass-assignable and hydrated from the
+        // client snapshot, so it cannot be trusted as the render surface.
+        // Only render columns whose field/dataField is actually declared in
+        // the server-side columns() method; client state may only toggle the
+        // `hidden` flag for already-declared columns.
+        $declaredFields = collect($this->declaredColumns())
+            ->map(fn ($column) => $this->columnString($column, 'dataField') ?: $this->columnString($column, 'field'))
+            ->filter()
+            ->flip();
+
         /** @var BaseCollection<int, Column> $columns */
         $columns = collect($this->columns)
             ->where('forceHidden', false)
+            ->filter(function ($column) use ($declaredFields): bool {
+                // Action/index columns carry no field but are legitimate
+                // declared columns; they never render row data.
+                if ((bool) data_get($column, 'isAction') || (bool) data_get($column, 'index')) {
+                    return true;
+                }
+
+                $field = $this->columnString($column, 'dataField') ?: $this->columnString($column, 'field');
+
+                return isset($declaredFields[$field]);
+            })
             ->map(function ($column) {
                 /** @var Column $column */
                 data_forget($column, 'rawQueries');

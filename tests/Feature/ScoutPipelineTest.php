@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Config;
 use Laravel\Scout\Builder as ScoutBuilder;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipelines\{Filters, Search, Sorting};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 beforeEach(function () {
@@ -184,6 +184,11 @@ describe('Scout Sorting Pipeline', function () {
             public string $sortDirection = 'asc';
 
             public bool $multiSort = false;
+
+            public function columns(): array
+            {
+                return [Column::add()->field('name')->sortable()];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -214,6 +219,15 @@ describe('Scout Sorting Pipeline', function () {
                 'price' => 'desc',
                 'category_id' => 'asc',
             ];
+
+            public function columns(): array
+            {
+                return [
+                    Column::add()->field('name')->sortable(),
+                    Column::add()->field('price')->sortable(),
+                    Column::add()->field('category_id')->sortable(),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -261,6 +275,11 @@ describe('Scout Sorting Pipeline', function () {
             public string $sortDirection = 'desc';
 
             public bool $multiSort = false;
+
+            public function columns(): array
+            {
+                return [Column::add()->field('created_at')->sortable()];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -289,6 +308,14 @@ describe('Scout Sorting Pipeline', function () {
                 'price' => 'desc',
                 'category_id' => 'asc',
             ];
+
+            public function columns(): array
+            {
+                return [
+                    Column::add()->field('price')->sortable(),
+                    Column::add()->field('category_id')->sortable(),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -321,6 +348,11 @@ describe('Scout Pipeline Integration', function () {
             public string $sortDirection = 'asc';
 
             public bool $multiSort = false;
+
+            public function columns(): array
+            {
+                return [Column::add()->field('name')->sortable()];
+            }
 
             public function filters(): array
             {
@@ -405,6 +437,11 @@ describe('Scout Pipeline field/direction validation', function () {
             public string $sortDirection = 'asc, (select 1)';
 
             public bool $multiSort = false;
+
+            public function columns(): array
+            {
+                return [Column::add()->field('name')->sortable()];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');
@@ -433,6 +470,14 @@ describe('Scout Pipeline field/direction validation', function () {
                 'name' => 'desc',
                 'price' => 'asc, (select 1)',
             ];
+
+            public function columns(): array
+            {
+                return [
+                    Column::add()->field('name')->sortable(),
+                    Column::add()->field('price')->sortable(),
+                ];
+            }
         };
 
         $builder = new ScoutBuilder(new Dish(), '');

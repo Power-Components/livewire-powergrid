@@ -20,7 +20,7 @@ class FilterHandler
      * @return EloquentBuilder<Model>|QueryBuilder */
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
-        $filterDefinitions = collect($this->component->filters());
+        $filterDefinitions = collect($this->component->declaredFilters());
 
         if ($filterDefinitions->isEmpty() || empty($this->component->filters)) {
             return $query;

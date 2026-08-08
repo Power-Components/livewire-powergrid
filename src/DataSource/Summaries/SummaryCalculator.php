@@ -151,7 +151,10 @@ class SummaryCalculator
 
         $callbacks = $this->customCallbacks();
 
-        foreach ($this->component->columns as $column) {
+        // The `columns` property is mass-assignable and hydrated from the client
+        // snapshot, so it cannot be trusted. Resolve aggregates only from the
+        // server-declared columns() method.
+        foreach ($this->component->declaredColumns() as $column) {
             /** @var string $dataField */
             $dataField = data_get($column, 'dataField');
             /** @var string $rawField */
@@ -189,7 +192,9 @@ class SummaryCalculator
      */
     private function customCallbacks(): array
     {
-        $hasCustom = collect($this->component->columns)
+        $declared = collect($this->component->declaredColumns());
+
+        $hasCustom = $declared
             ->contains(fn ($column) => filled(data_get($column, 'properties.summarize.custom')));
 
         if (! $hasCustom) {
@@ -198,7 +203,7 @@ class SummaryCalculator
 
         $callbacks = [];
 
-        foreach ($this->component->columns() as $column) {
+        foreach ($declared as $column) {
             if (! $column instanceof Column) {
                 continue;
             }

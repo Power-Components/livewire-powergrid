@@ -54,6 +54,7 @@
         }
 
         $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content ?? '');
+        $content = is_scalar($content) || $content instanceof \Stringable ? e((string) $content) : '';
         $field = data_get($column, 'dataField', data_get($column, 'field'));
 
         $contentClass = data_get($column, 'contentClasses');

@@ -66,7 +66,7 @@ class EditablePlugin extends PluginBase
 
     public function isEnabled(): bool
     {
-        return collect($this->component->columns)
+        return collect($this->component->declaredColumns())
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.editable')));
     }
 
@@ -112,6 +112,11 @@ class EditablePlugin extends PluginBase
         [$field, $id, $value] = $params;
         /** @var string $value */
         if (! is_string($field) || ! is_scalar($id) || ! $this->isHandledField($field)) {
+            return;
+        }
+
+        $column = $this->handledColumn($field);
+        if ($column === null || ! boolval(data_get($column, 'pluginData.editable.hasPermission'))) {
             return;
         }
 

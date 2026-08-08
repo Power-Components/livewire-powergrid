@@ -21,9 +21,19 @@ class Sorting
 
         if (filled($this->component->sortField)) {
             if ($this->component->multiSort) {
-                $this->applyMultipleSort($query);
+                // sortArray is mass-assignable; reject any key that is not a
+                // declared column instead of forwarding it to ORDER BY.
+                $valid = collect($this->component->sortArray)
+                    ->keys()
+                    ->every(fn (string $field) => $this->component->isValidSortField($field));
+
+                if ($valid) {
+                    $this->applyMultipleSort($query);
+                }
             } else {
-                $this->applySingleSort($query, $this->component->sortField, $this->component->sortDirection);
+                if ($this->component->isValidSortField($this->component->sortField)) {
+                    $this->applySingleSort($query, $this->component->sortField, $this->component->sortDirection);
+                }
             }
         }
 

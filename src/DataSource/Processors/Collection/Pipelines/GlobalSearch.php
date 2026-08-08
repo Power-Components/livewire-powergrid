@@ -20,7 +20,7 @@ final class GlobalSearch
             return $next($collection);
         }
 
-        $searchableColumns = collect($this->component->columns())
+        $searchableColumns = collect($this->component->declaredColumns())
             ->filter(function (mixed $column): bool {
                 return (bool) data_get($column, 'searchable');
             });

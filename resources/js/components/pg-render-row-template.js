@@ -20,7 +20,12 @@ export default () => ({
 
             for (const [key, value] of Object.entries(content)) {
                 const placeholder = `{{ ${key} }}`;
-                const safeValue = String(value).replace(/'/g, "\\'");
+                const safeValue = String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
                 renderedTemplate = renderedTemplate.replaceAll(placeholder, safeValue);
             }
 

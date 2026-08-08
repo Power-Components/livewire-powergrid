@@ -55,7 +55,7 @@ it('runs e() helper in standard PG fields', function () {
         ->assertSeeHtml('&lt;img');
 });
 
-it('does not run e() in closure-based PG fields', function () {
+it('escapes closure-based PG fields by default', function () {
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-fields-no-escape';
@@ -80,6 +80,9 @@ it('does not run e() in closure-based PG fields', function () {
         }
     };
 
+    // Escaping happens at the render sink: closure-returned HTML is escaped
+    // unless the developer opts into raw rendering via a custom cell view.
     Livewire::test($component::class)
-        ->assertSeeHtml('<a href="https://google.com">Link</a>');
+        ->assertDontSeeHtml('<a href="https://google.com">Link</a>')
+        ->assertSeeHtml('&lt;a href=&quot;https://google.com&quot;&gt;Link&lt;/a&gt;');
 });

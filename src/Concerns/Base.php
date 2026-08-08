@@ -59,9 +59,33 @@ trait Base
         return $this->primaryKeyAlias ?? $this->primaryKey;
     }
 
+    /** @var array<int, mixed>|null */
+    private ?array $declaredColumnsCache = null;
+
+    /** @var list<FilterBase>|null */
+    private ?array $declaredFiltersCache = null;
+
     public function customThemeClass(): ?string
     {
         return null;
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    public function declaredColumns(): array
+    {
+        return $this->declaredColumnsCache ??= $this->columns();
+    }
+
+    /**
+     * Server-declared filters, memoized once per request.
+     *
+     * @return list<FilterBase>
+     */
+    public function declaredFilters(): array
+    {
+        return $this->declaredFiltersCache ??= $this->filters();
     }
 
     /** @return array<string, list<string>> */

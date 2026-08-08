@@ -82,16 +82,28 @@ function fillTableExpand(element, hideItems) {
 
             let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`).textContent  ?? ''
 
-            const rowValue = row.querySelector(`td:nth-child(${hideItem})`)?.innerHTML
+            const sourceCell = row.querySelector(`td:nth-child(${hideItem})`)
 
             if (rowName.length) {
                 rowName += ':'
             }
             if (!expandContainer.querySelector(`div[data-expand-item-${hideItem}]`)) {
-                expandContainer.innerHTML += `<div class="responsive-row-expand-item-container" data-expand-item-${hideItem}>
-                    <span class="font-bold responsive-row-expand-item-name">${rowName}</span>
-                    <span class="responsive-row-expand-item-value">${rowValue}</span>
-                </div>`
+                const item = document.createElement('div')
+                item.className = 'responsive-row-expand-item-container'
+                item.setAttribute(`data-expand-item-${hideItem}`, '')
+
+                const name = document.createElement('span')
+                name.className = 'font-bold responsive-row-expand-item-name'
+                name.textContent = rowName
+
+                const value = document.createElement('span')
+                value.className = 'responsive-row-expand-item-value'
+                if (sourceCell) {
+                    value.appendChild(sourceCell.cloneNode(true))
+                }
+
+                item.append(name, value)
+                expandContainer.appendChild(item)
             }
         }
     }
