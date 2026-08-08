@@ -11,6 +11,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
     BuildStubVars,
     CheckIfDatabaseHasTables,
     ConfirmAutoImportFields,
+    ConfirmGeneratedColumns,
     ResolveGeneratedColumns};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
@@ -113,20 +114,30 @@ class CreateCommand extends Command
             );
         }
 
-        $this->previewColumns();
+        if ($this->previewColumns() && ConfirmGeneratedColumns::handle() === false) {
+            $this->component->setAutoCreateColumns(false);
+
+            // There is nothing else to read the fields from in this run:
+            // re-run the command to generate them from the other source.
+            warning('🚫 Fields discarded. Only the Action column will be generated.');
+        }
 
         return $this;
     }
 
-    /** Shows which columns the chosen source will generate, before the component is written. */
-    private function previewColumns(): void
+    /**
+     * Shows which columns the chosen source will generate, before the component is written.
+     *
+     * @return bool Whether the source has any field to generate.
+     */
+    private function previewColumns(): bool
     {
         $columns = ResolveGeneratedColumns::handle($this->component);
 
         if ($columns->isEmpty()) {
             warning("🚫 No fields found in {$this->columnSourceLabel()}. Only the Action column will be generated.");
 
-            return;
+            return false;
         }
 
         note("👀 Preview of the fields from {$this->columnSourceLabel()}:");
@@ -137,6 +148,8 @@ class CreateCommand extends Command
                 fn (string $type, string $field): array => [$field, $type, BuildStubVars::describe($type)]
             )->values()->all()
         );
+
+        return true;
     }
 
     private function columnSourceLabel(): string
