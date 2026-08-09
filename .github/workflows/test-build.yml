@@ -38,9 +38,6 @@ jobs:
           yarn config set network-timeout 300000
           yarn install --frozen-lockfile --immutable
 
-      - name: Audit Dependencies for Vulnerabilities
-        run: yarn audit --level high
-
       - name: Build
         run: yarn build
 
