@@ -76,9 +76,6 @@
     "test:pgsql": [
       "./vendor/bin/pest --compact --configuration phpunit.pgsql.xml"
     ],
-    "test:sqlsrv": [
-      "./vendor/bin/pest --configuration phpunit.sqlsrv.xml"
-    ],
     "test:types": "./vendor/bin/phpstan analyse --ansi --memory-limit=-1",
     "test:dbs": [
       "@test:sqlite",
