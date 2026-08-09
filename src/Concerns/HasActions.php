@@ -18,7 +18,6 @@ trait HasActions
     private array $actionRulesCache = [];
 
     /**
-     *
      * @param  object|array<mixed>  $row
      * @return list<object>
      */
@@ -358,7 +357,6 @@ trait HasActions
     }
 
     /**
-     *
      * @param  array<string, mixed>  $iconAttributes
      */
     private function compileIcon(string $icon, array $iconAttributes): string
@@ -377,7 +375,6 @@ trait HasActions
     }
 
     /**
-     *
      * @param  array<string, mixed>  $iconAttributes
      */
     private function iconIsStaticallyFoldable(string $icon, array $iconAttributes): bool
