@@ -1,7 +1,9 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use Illuminate\Support\Facades\Schema;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridComponentMaker, PowerGridStub};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Fixtures\Models\Waiter;
 
 it('can make an eloquent component', function () {
     $component = PowerGridComponentMaker::make('UserTable')
@@ -172,4 +174,49 @@ it('tableName appends Table to the end of the name', function () {
     $component = PowerGridComponentMaker::make('System/Office/Users/Admin/Active/List');
 
     expect($component->tableName)->toBe('listTable');
+});
+
+it('sources columns from the model $fillable by default', function () {
+    expect(PowerGridComponentMaker::make('UserTable'))->columnSource->toBe(ColumnSource::FILLABLE);
+});
+
+it('can source columns from the database table', function () {
+    $component = PowerGridComponentMaker::make('UserTable')
+        ->setColumnSource(ColumnSource::DATABASE_TABLE);
+
+    expect($component)->columnSource->toBe(ColumnSource::DATABASE_TABLE);
+});
+
+it('resolves the table name of the configured model', function () {
+    $component = PowerGridComponentMaker::make('WaiterTable')
+        ->setModelWithFqn('Waiter', Waiter::class);
+
+    expect($component->modelTable())->toBe('waiters');
+});
+
+it('has no model table when there is no model', function () {
+    expect(PowerGridComponentMaker::make('UserTable')->modelTable())->toBe('');
+});
+
+it('renders database table columns into the eloquent stub', function () {
+    createWaitersTable();
+
+    $code = PowerGridComponentMaker::make('WaiterTable')
+        ->setDatasource(Datasource::ELOQUENT_BUILDER)
+        ->setModelWithFqn('Waiter', Waiter::class)
+        ->setAutoCreateColumns()
+        ->setColumnSource(ColumnSource::DATABASE_TABLE)
+        ->loadPowerGridStub()
+        ->saveToString();
+
+    Schema::dropIfExists('waiters');
+
+    expect($code)
+        ->toContain('return Waiter::query();')
+        ->toContain('use '.Waiter::class.';')
+        ->toContain("->add('tips')")
+        ->toContain("Column::make('Hired at', 'hired_at_formatted', 'hired_at')")
+        ->toContain('fn (Waiter $model)')
+        ->not->toContain('password')
+        ->not->toContain('internal_note');
 });

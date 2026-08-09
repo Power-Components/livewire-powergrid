@@ -4,17 +4,21 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskComponentName,
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
+    AskComponentName,
     AskDatabaseTableName,
     AskModelName,
+    BuildStubVars,
     CheckIfDatabaseHasTables,
-    ConfirmAutoImportFields};
+    ConfirmAutoImportFields,
+    ConfirmGeneratedColumns,
+    ResolveGeneratedColumns};
+use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
-use PowerComponents\LivewirePowerGrid\Commands\Enums\Datasource;
+use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
-use function Laravel\Prompts\{error, info, note};
+use function Laravel\Prompts\{error, info, note, warning};
 
 /** @codeCoverageIgnore */
 class CreateCommand extends Command
@@ -101,7 +105,62 @@ class CreateCommand extends Command
 
         $this->component->setAutoCreateColumns(true);
 
+        // Query Builder has only one possible source, so it is not asked.
+        if ($this->component->canHaveModel()) {
+            $this->component->setColumnSource(
+                ColumnSource::from(
+                    AskColumnSource::handle($this->component?->model, $this->component->modelTable())
+                )
+            );
+        }
+
+        if ($this->previewColumns() && ConfirmGeneratedColumns::handle() === false) {
+            $this->component->setAutoCreateColumns(false);
+
+            // There is nothing else to read the fields from in this run:
+            // re-run the command to generate them from the other source.
+            warning('🚫 Fields discarded. Only the Action column will be generated.');
+        }
+
         return $this;
+    }
+
+    /**
+     * Shows which columns the chosen source will generate, before the component is written.
+     *
+     * @return bool Whether the source has any field to generate.
+     */
+    private function previewColumns(): bool
+    {
+        $columns = ResolveGeneratedColumns::handle($this->component);
+
+        if ($columns->isEmpty()) {
+            warning("🚫 No fields found in {$this->columnSourceLabel()}. Only the Action column will be generated.");
+
+            return false;
+        }
+
+        note("👀 Preview of the fields from {$this->columnSourceLabel()}:");
+
+        $this->table(
+            ['Field', 'Type', 'Generated as'],
+            $columns->map(
+                fn (string $type, string $field): array => [$field, $type, BuildStubVars::describe($type)]
+            )->values()->all()
+        );
+
+        return true;
+    }
+
+    private function columnSourceLabel(): string
+    {
+        if ($this->component->requiresDatabaseTableName()) {
+            return "the [{$this->component?->databaseTable}] table";
+        }
+
+        return $this->component?->columnSource === ColumnSource::DATABASE_TABLE
+            ? "the [{$this->component->modelTable()}] table"
+            : "\$fillable in [{$this->component?->model}]";
     }
 
     private function step6(): self
@@ -140,7 +199,7 @@ class CreateCommand extends Command
         (
             $this->component->requiresDatabaseTableName() ?
                  "[{$this->component?->databaseTable}] table?" :
-                 "\$fillable in [{$this->component?->model}] Model?"
+                 "[{$this->component?->model}] Model?"
         );
     }
 }
