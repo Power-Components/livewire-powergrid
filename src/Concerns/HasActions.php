@@ -14,6 +14,34 @@ trait HasActions
 
     private ?bool $hasTransformActions = null;
 
+    /** @var array<string, list<object>> */
+    private array $actionRulesCache = [];
+
+    /**
+     *
+     * @param  object|array<mixed>  $row
+     * @return list<object>
+     */
+    private function actionRulesForRow(object|array $row): array
+    {
+        $rawKey = data_get($row, $this->realPrimaryKey());
+
+        $key = is_scalar($rawKey) ? (string) $rawKey : '';
+
+        if ($key !== '' && array_key_exists($key, $this->actionRulesCache)) {
+            return $this->actionRulesCache[$key];
+        }
+
+        /** @var list<object> $rules */
+        $rules = $this->actionRules($row); // @phpstan-ignore-line
+
+        if ($key !== '') {
+            $this->actionRulesCache[$key] = $rules;
+        }
+
+        return $rules;
+    }
+
     public function shouldCollectActions(): bool
     {
         if (app()->runningUnitTests()) {
@@ -35,7 +63,7 @@ trait HasActions
 
         $closure = function ($row, $loop) {
             /** @var list<array<string, mixed>> $rules */
-            $rules = $this->actionRules($row);
+            $rules = $this->actionRulesForRow($row);
 
             return collect($rules)
                 ->transform(function ($rule) use ($row, $loop) {
@@ -320,10 +348,7 @@ trait HasActions
 
         if (! isset($this->iconRenderCache[$cacheKey])) {
             try {
-                $this->iconRenderCache[$cacheKey] = Blade::render(
-                    '<x-dynamic-component :component="$component" :attributes="new \Illuminate\View\ComponentAttributeBag($attrs)" />',
-                    ['component' => $icon, 'attrs' => $iconAttributes],
-                );
+                $this->iconRenderCache[$cacheKey] = $this->compileIcon($icon, $iconAttributes);
             } catch (\Throwable) {
                 $this->iconRenderCache[$cacheKey] = '';
             }
@@ -332,11 +357,83 @@ trait HasActions
         return $this->iconRenderCache[$cacheKey];
     }
 
+    /**
+     *
+     * @param  array<string, mixed>  $iconAttributes
+     */
+    private function compileIcon(string $icon, array $iconAttributes): string
+    {
+        if ($this->iconIsStaticallyFoldable($icon, $iconAttributes)) {
+            try {
+                return Blade::render($this->buildStaticIconTag($icon, $iconAttributes));
+            } catch (\Throwable) {
+            }
+        }
+
+        return Blade::render(
+            '<x-dynamic-component :component="$component" :attributes="new \Illuminate\View\ComponentAttributeBag($attrs)" />',
+            ['component' => $icon, 'attrs' => $iconAttributes],
+        );
+    }
+
+    /**
+     *
+     * @param  array<string, mixed>  $iconAttributes
+     */
+    private function iconIsStaticallyFoldable(string $icon, array $iconAttributes): bool
+    {
+        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/', $icon) !== 1) {
+            return false;
+        }
+
+        foreach ($iconAttributes as $key => $value) {
+            if (! is_string($key) || preg_match('/^[A-Za-z_:][A-Za-z0-9_:.\-]*$/', $key) !== 1) {
+                return false;
+            }
+
+            if (! is_scalar($value)) {
+                return false;
+            }
+
+            if (is_string($value) && (str_contains($value, '{{') || str_contains($value, '{!!'))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  array<string, mixed>  $iconAttributes
+     */
+    private function buildStaticIconTag(string $icon, array $iconAttributes): string
+    {
+        $attributes = '';
+
+        foreach ($iconAttributes as $key => $value) {
+            if (is_bool($value)) {
+                if ($value) {
+                    $attributes .= ' '.$key;
+                }
+
+                continue;
+            }
+
+            $attributes .= ' '.$key.'="'.e((string) $value).'"';
+        }
+
+        return "<x-{$icon}{$attributes} />";
+    }
+
     /** @return list<array<string, mixed>> */
     public function resolveActionRules(mixed $row): array
     {
-        return collect($this->actionRules($row)) // @phpstan-ignore-line
+        return collect($this->actionRulesForRow($row)) // @phpstan-ignore-line
             ->transform(function ($rule) use ($row) {
+                if (is_object($rule)) {
+                    $rule = clone $rule;
+                }
+
                 $when = data_get($rule, 'rule.when');
                 $loop = data_get($rule, 'rule.loop');
 

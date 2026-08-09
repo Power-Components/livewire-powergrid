@@ -11,6 +11,10 @@
     class="pg-container {{ theme('layout.container') }}"
     @if ($deferLoading) wire:init="fetchDatasource" @endif
 >
+    @once
+        {!! $this->renderPluginAssets() !!}
+    @endonce
+
     <div
         id="power-grid-table-container-{{ $tableName }}"
         class="pg-table-wrapper {{ theme('layout.wrapper') }}"

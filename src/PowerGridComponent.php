@@ -222,6 +222,23 @@ class PowerGridComponent extends Component
         return $html;
     }
 
+    /**
+     * Render the global assets (<script>/<style>) every enabled plugin needs.
+     * Called once from the root table layout — never from per-row cells.
+     */
+    public function renderPluginAssets(): string
+    {
+        $this->resolvePlugins();
+
+        $html = '';
+
+        foreach ($this->plugins as $plugin) {
+            $html .= $plugin->renderAssets();
+        }
+
+        return $html;
+    }
+
     public function boot(): void
     {
         /** @var string $themeClass */

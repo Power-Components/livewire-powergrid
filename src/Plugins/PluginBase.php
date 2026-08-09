@@ -99,6 +99,11 @@ abstract class PluginBase implements Wireable
         return null;
     }
 
+    public function renderAssets(): string
+    {
+        return '';
+    }
+
     /**
      * Whether this plugin renders content into the given UI zone
      * (e.g. 'header', 'toolbar', 'footer'). Feature plugins that are not

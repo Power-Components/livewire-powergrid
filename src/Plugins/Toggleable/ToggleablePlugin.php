@@ -71,24 +71,89 @@ class ToggleablePlugin extends PluginBase
 
     protected static ?string $cachedJs = null;
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
+    protected static ?string $cachedCss = null;
+
+    /**
+     * Global assets (<script>/<style>) emitted once per table by the root layout.
+     * Rendered as a plain string — no Blade view, no per-row compile.
+     */
+    public function renderAssets(): string
+    {
+        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
+        static::$cachedCss ??= file_get_contents(__DIR__.'/index.css') ?: '';
+
+        return '<script>'.static::$cachedJs.'</script>'
+            .'<style>'.static::$cachedCss.'</style>';
+    }
+
+    /**
+     * Build the per-row switch cell as a PHP HTML string (replaces the old
+     * per-row Blade view, which was the top cost in the tbody render path).
+     *
+     * @param  Column|array<string, mixed>|stdClass  $column
+     */
     public function render(Column|array|stdClass $column, mixed $row): ?string
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
 
-        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
+        $value = (int) data_get($row, data_get($column, 'field'));
 
-        /** @var view-string $viewName */
-        $viewName = 'powergrid-plugins::Toggleable.index';
+        $default = data_get($column, 'pluginData.toggleable.default');
+        $trueValue = $default[0] ?? 'Yes';
+        $falseValue = $default[1] ?? 'No';
 
-        return view($viewName, [
-            'tableName' => $this->component->tableName,
-            'primaryKey' => $this->component->realPrimaryKey,
-            'row' => $row,
-            'column' => $column,
-            'showToggleable' => $showToggleable,
-            'js' => static::$cachedJs,
-        ])->render();
+        $html = '<div class="flex flex-row justify-center">';
+
+        if ($showToggleable) {
+            $params = json_encode([
+                'id' => data_get($row, $this->component->realPrimaryKey),
+                'isHidden' => false,
+                'tableName' => $this->component->tableName,
+                'field' => data_get($column, 'field'),
+                'toggle' => $value,
+                'trueValue' => $trueValue,
+                'falseValue' => $falseValue,
+            ]);
+
+            $html .= '<div'
+                .' x-data="pgToggleable"'
+                .' data-pg-params="'.e((string) $params).'"'
+                .' role="switch"'
+                .' tabindex="0"'
+                .' :aria-checked="ariaChecked()"'
+                .' :class="onClass()"'
+                .' class="pg-toggleable-switch relative inline-block w-8 h-4 rounded-full cursor-pointer transition-colors duration-200 ease-linear"'
+                .' style="'.$this->switchVars().'"'
+                .' x-on:click="save()"'
+                .' x-on:keydown.enter.prevent="save()"'
+                .' x-on:keydown.space.prevent="save()"'
+                .'>'
+                .'<span class="pg-toggleable-knob absolute left-0 top-0 block w-4 h-4 rounded-full"></span>'
+                .'</div>';
+        } else {
+            $badgeClass = $value === 0 ? 'bg-red-200 text-red-800' : 'bg-blue-200 text-blue-800';
+
+            $html .= '<div class="text-xs px-4 w-auto py-1 text-center rounded-md '.$badgeClass.'">'
+                .e($value === 0 ? $falseValue : $trueValue)
+                .'</div>';
+        }
+
+        return $html.'</div>';
+    }
+
+    private function switchVars(): string
+    {
+        $colorOn = theme('toggleable.color_on', 'var(--color-accent, #16a34a)');
+        $colorOff = theme('toggleable.color_off', 'var(--color-zinc-200, #e4e4e7)');
+        $colorOnDark = theme('toggleable.color_on_dark', $colorOn);
+        $colorOffDark = theme('toggleable.color_off_dark', $colorOff);
+        $knobOn = theme('toggleable.knob_on', 'var(--color-accent-foreground, #ffffff)');
+
+        return "--pg-toggle-on-light: {$colorOn};"
+            ." --pg-toggle-off-light: {$colorOff};"
+            ." --pg-toggle-on-dark: {$colorOnDark};"
+            ." --pg-toggle-off-dark: {$colorOffDark};"
+            ." --pg-toggle-knob-on: {$knobOn};";
     }
 
     #[On('pg:toggleable-{tableName}')]

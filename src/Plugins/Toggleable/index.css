@@ -1,0 +1,27 @@
+/* Colorless mechanism: map the active on/off vars from the per-element source
+   vars (set inline from the theme tokens), swapping to the dark set under .dark. */
+.pg-toggleable-switch {
+    --pg-toggle-on: var(--pg-toggle-on-light);
+    --pg-toggle-off: var(--pg-toggle-off-light);
+    background-color: var(--pg-toggle-off);
+}
+.pg-toggleable-switch.pg-toggleable-on {
+    background-color: var(--pg-toggle-on);
+}
+.pg-toggleable-knob {
+    transform: translateX(0);
+    background-color: #fff;
+    /* Shadow + hairline ring keep the knob defined on any track color. */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.12);
+    transition: transform 0.1s ease-linear, background-color 0.15s ease-linear;
+}
+.pg-toggleable-on .pg-toggleable-knob {
+    transform: translateX(100%);
+    /* Use the accent's foreground color so the knob contrasts with the "on"
+       track — critical when the accent itself is white (Flux dark mode). */
+    background-color: var(--pg-toggle-knob-on);
+}
+.dark .pg-toggleable-switch {
+    --pg-toggle-on: var(--pg-toggle-on-dark);
+    --pg-toggle-off: var(--pg-toggle-off-dark);
+}

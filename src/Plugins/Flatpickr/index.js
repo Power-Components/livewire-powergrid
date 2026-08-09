@@ -29,10 +29,6 @@ document.addEventListener('alpine:init', () => {
             this.type = params.type;
 
             if(typeof flatpickr == "undefined") {
-                console.log('%c%s',
-                    'color: #f59e0c; font-size: 1.2em; font-weight: bold; line-height: 1.5',
-                    ` PowerGrid`);
-
                 console.error('%c%s',
                     'font-size: 1em; line-height: 1.5',
                     `
@@ -93,7 +89,6 @@ document.addEventListener('alpine:init', () => {
 
                 selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
 
-                console.log(this.tableName)
                 if (selectedDates.length > 0 && (this.selectedDates !== dateStr)) {
                     Livewire.dispatch('pg:datePicker-' + this.tableName, {
                         field: this.dataField,
