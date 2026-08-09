@@ -8,14 +8,17 @@ use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
     AskComponentName,
     AskDatabaseTableName,
     AskModelName,
+    BuildStubVars,
     CheckIfDatabaseHasTables,
-    ConfirmAutoImportFields};
+    ConfirmAutoImportFields,
+    ConfirmGeneratedColumns,
+    ResolveGeneratedColumns};
 use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
-use function Laravel\Prompts\{error, info, note};
+use function Laravel\Prompts\{error, info, note, warning};
 
 /** @codeCoverageIgnore */
 class CreateCommand extends Command
@@ -23,14 +26,12 @@ class CreateCommand extends Command
     use RenderAscii;
 
     /** @var string */
-    protected $signature = 'powergrid:create
-        {--template= : name of the file that will be used as a template}
-        {--columns= : source for auto-generated columns (fillable|table)}';
+    protected $signature = 'powergrid:create {--template= : name of the file that will be used as a template}';
 
     /** @var string */
     protected $description = 'Make a new PowerGrid table component.';
 
-    private PowerGridComponentMaker $component;
+    private ?PowerGridComponentMaker $component;
 
     public function handle(): int
     {
@@ -104,22 +105,62 @@ class CreateCommand extends Command
 
         $this->component->setAutoCreateColumns(true);
 
-        if ($this->component->datasource === Datasource::ELOQUENT_BUILDER) {
-            $this->component->setColumnSource($this->resolveColumnSource());
+        // Query Builder has only one possible source, so it is not asked.
+        if ($this->component->canHaveModel()) {
+            $this->component->setColumnSource(
+                ColumnSource::from(
+                    AskColumnSource::handle($this->component->model, $this->component->modelTable())
+                )
+            );
+        }
+
+        if ($this->previewColumns() && ConfirmGeneratedColumns::handle() === false) {
+            $this->component->setAutoCreateColumns(false);
+
+            // There is nothing else to read the fields from in this run:
+            // re-run the command to generate them from the other source.
+            warning('🚫 Fields discarded. Only the Action column will be generated.');
         }
 
         return $this;
     }
 
-    private function resolveColumnSource(): ColumnSource
+    /**
+     * Shows which columns the chosen source will generate, before the component is written.
+     *
+     * @return bool Whether the source has any field to generate.
+     */
+    private function previewColumns(): bool
     {
-        $columns = $this->option('columns');
+        $columns = ResolveGeneratedColumns::handle($this->component);
 
-        return match (is_string($columns) ? $columns : '') {
-            'fillable' => ColumnSource::FILLABLE,
-            'table', 'database', 'db' => ColumnSource::DATABASE_TABLE,
-            default => ColumnSource::from(AskColumnSource::handle()),
-        };
+        if ($columns->isEmpty()) {
+            warning("🚫 No fields found in {$this->columnSourceLabel()}. Only the Action column will be generated.");
+
+            return false;
+        }
+
+        note("👀 Preview of the fields from {$this->columnSourceLabel()}:");
+
+        $this->table(
+            ['Field', 'Type', 'Generated as'],
+            $columns->map(
+                fn (string $type, string $field): array => [$field, $type, BuildStubVars::describe($type)]
+            )->values()->all()
+        );
+
+        return true;
+    }
+
+    private function columnSourceLabel(): string
+    {
+        if ($this->component->requiresDatabaseTableName()) {
+            return "the [{$this->component?->databaseTable}] table";
+        }
+
+        return $this->component?->columnSource === ColumnSource::DATABASE_TABLE
+            ? "the [{$this->component->modelTable()}] table"
+            : "\$fillable in [{$this->component?->model}]";
     }
 
     private function step6(): self
@@ -145,20 +186,20 @@ class CreateCommand extends Command
 
     public function feedback(): void
     {
-        note("⚡ <comment>{$this->component->name}</comment> was successfully created at [<comment>{$this->component->createdPath()}</comment>].");
+        note("⚡ <comment>{$this->component?->name}</comment> was successfully created at [<comment>{$this->component?->createdPath()}</comment>].");
 
-        note("💡 include the <comment>{$this->component->name}</comment> component using the tag: <comment>{$this->component->htmlTag}</comment>");
+        note("💡 include the <comment>{$this->component?->name}</comment> component using the tag: <comment>{$this->component?->htmlTag}</comment>");
 
         info('👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>'.PHP_EOL);
     }
 
     private function AutoImportLabel(): string
     {
-        return 'Auto-import DataSource fields from '.
+        return 'Auto-import Data Source fields from '.
         (
             $this->component->requiresDatabaseTableName() ?
-                 "[{$this->component->databaseTable}] table?" :
-                 "[{$this->component->model}] Model?"
+                 "[{$this->component?->databaseTable}] table?" :
+                 "[{$this->component?->model}] Model?"
         );
     }
 }

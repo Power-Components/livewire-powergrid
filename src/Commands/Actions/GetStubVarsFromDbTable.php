@@ -2,8 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Commands\Actions;
 
-use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\Commands\Support\{PowerGridComponentMaker, StubColumnBuilder};
+use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 
 /** @codeCoverageIgnore */
 class GetStubVarsFromDbTable
@@ -13,16 +12,8 @@ class GetStubVarsFromDbTable
      */
     public static function handle(PowerGridComponentMaker $component): array
     {
-        $fieldTypes = [];
+        $columns = ResolveGeneratedColumns::handle($component);
 
-        foreach (Schema::getColumnListing($component->databaseTable) as $field) {
-            if (in_array($field, StubColumnBuilder::SENSITIVE_FIELDS)) {
-                continue;
-            }
-
-            $fieldTypes[$field] = Schema::getColumnType($component->databaseTable, $field);
-        }
-
-        return (new StubColumnBuilder())->build($fieldTypes, '', false);
+        return BuildStubVars::handle(array_values($columns->keys()->all()), $columns);
     }
 }

@@ -9,18 +9,22 @@ use function Laravel\Prompts\select;
 /** @codeCoverageIgnore */
 final class AskColumnSource
 {
-    public static function handle(): string
+    /** Asks where the generated fields should come from and returns the chosen ColumnSource case name. */
+    public static function handle(string $model, string $databaseTable): string
     {
-        $columnSource = ColumnSource::asOptions();
+        // Must pass options as array<int, "label"> to
+        // improve users experience when Laravel prompt falls back.
+        $options = collect([
+            ColumnSource::FILLABLE->name => '$fillable in ['.$model.'] Model',
+            ColumnSource::DATABASE_TABLE->name => 'Columns in ['.$databaseTable.'] DB table',
+        ]);
 
         $choice = strval(select(
-            label: 'Where should the columns be generated from?',
-            options: $columnSource->values()->toArray(), // @phpstan-ignore-line
+            label: 'Where should the fields come from?',
+            options: $options->values()->toArray(), // @phpstan-ignore-line
             default: 0
         ));
 
-        return (string) $columnSource->filter(function ($item) use ($choice) {
-            return $item === $choice;
-        })->keys()[0];
+        return (string) $options->filter(fn (string $item): bool => $item === $choice)->keys()[0];
     }
 }

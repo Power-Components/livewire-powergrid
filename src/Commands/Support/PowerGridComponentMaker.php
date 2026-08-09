@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Commands\Support;
 
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
@@ -117,6 +118,19 @@ final class PowerGridComponentMaker
         $this->modelFqn = $modelFqn;
 
         return $this;
+    }
+
+    /** Table name of the configured model, or an empty string when there is no model. */
+    public function modelTable(): string
+    {
+        if ($this->modelFqn === '') {
+            return '';
+        }
+
+        /** @var Model $model */
+        $model = new $this->modelFqn();
+
+        return $model->getTable();
     }
 
     public function loadCustomStub(string $path): self
