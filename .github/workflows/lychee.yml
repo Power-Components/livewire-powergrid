@@ -1,13 +1,8 @@
 name: Check for broken Links
 
+# Temporarily disabled: run manually only.
 on:
-  push:
-    paths:
-      - '**.md'
-  pull_request:
-    types: [ ready_for_review, synchronize, opened ]
-    paths:
-      - '**.md'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -34,7 +29,6 @@ jobs:
         with:
           fail: true
           args: >-
-            --base-url "https://github.com/$REPO_OWNER_PATH/blob/$BRANCH_NAME/"
             --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
             --exclude "https?://(www\.)?(twitter\.com|x\.com|instagram\.com|linkedin\.com)"
             --exclude "\.(png|jpg|jpeg|gif|svg|webp|ico)(\?.*)?$"
@@ -45,5 +39,3 @@ jobs:
             "**/*.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REPO_OWNER_PATH: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}

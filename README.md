@@ -150,9 +150,9 @@ Please read the [Contributing Guide](CONTRIBUTING.md) to see what kind of contri
 
 ## Credits
 
-- Created by [Luan Freitas](https://twitter.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
+- Created by [Luan Freitas](https://x.com/luanfreitasdev) and [@DanSysAnalyst](https://github.com/dansysanalyst)
 - [All Contributors](../../contributors)
-- Logo & artwork by [Caneco](https://twitter.com/caneco)
+- Logo & artwork by [Caneco](https://x.com/caneco)
 
 <hr>
 
