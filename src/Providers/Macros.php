@@ -270,7 +270,7 @@ class Macros
     {
         if (class_exists(ScoutBuilder::class)) {
             Builder::macro('paginateSafe', function ($perPage = null, $pageName = 'page', $page = null) {
-                $engine = $this->engine(); // @phpstan-ignore-line
+                $engine = $this->engine();
 
                 if ($engine instanceof PaginatesEloquentModels) {
                     return $engine->paginate($this, $perPage, $page)->appends('query', $this->query);
