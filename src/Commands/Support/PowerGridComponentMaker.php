@@ -23,6 +23,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
  * @property-read string $model
  * @property-read string $modelFqn
  * @property-read bool $autoCreateColumns
+ * @property-read ColumnSource $columnSource
  * @property-read bool $usesCustomStub
  * @property-read bool $isProcessed
  * @property-read ColumnSource $columnSource

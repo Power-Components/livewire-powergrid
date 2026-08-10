@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands\Enums;
 
 use Illuminate\Support\Collection;
 
+/** Where a generated component's fields are read from. */
 enum ColumnSource
 {
     case FILLABLE;
