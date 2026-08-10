@@ -333,18 +333,18 @@ it('filters results when search is set', function () {
     Livewire::test(LiteSearchComponent::class)
         ->set('search', 'Alice')
         ->assertSee('Alice')
-        ->assertDontSee('Bob')
-        ->assertDontSee('Charlie');
+        ->assertDontSee('bob@test.com')
+        ->assertDontSee('charlie@test.com');
 });
 
 it('shows all results when search is cleared', function () {
     Livewire::test(LiteSearchComponent::class)
         ->set('search', 'Alice')
-        ->assertDontSee('Bob')
+        ->assertDontSee('bob@test.com')
         ->set('search', '')
         ->assertSee('Alice')
-        ->assertSee('Bob')
-        ->assertSee('Charlie');
+        ->assertSee('bob@test.com')
+        ->assertSee('charlie@test.com');
 });
 
 it('per-page selector is rendered in user template (not inside pg-table)', function () {
