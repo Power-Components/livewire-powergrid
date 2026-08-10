@@ -78,4 +78,3 @@ final class ResolveGeneratedColumns
         return array_values(array_unique($fields));
     }
 }
-

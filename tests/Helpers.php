@@ -25,4 +25,3 @@ function createWaitersTable(): void
         $table->timestamps();
     });
 }
-

@@ -126,4 +126,3 @@ final class BuildStubVars
         $this->columns .= '            Column::make(\''.$title.'\', \''.$field.'\')'."\n".'                ->sortable()'."\n".'                ->searchable(),'."\n\n";
     }
 }
-

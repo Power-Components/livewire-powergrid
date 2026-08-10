@@ -88,4 +88,3 @@ final class SchemaColumns
         return 'other';
     }
 }
-
