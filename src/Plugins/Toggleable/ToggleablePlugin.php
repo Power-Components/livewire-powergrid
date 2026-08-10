@@ -96,11 +96,17 @@ class ToggleablePlugin extends PluginBase
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
 
-        $value = (int) data_get($row, data_get($column, 'field'));
+        $field = data_get($column, 'field');
+        $field = is_string($field) ? $field : '';
+
+        $rawValue = data_get($row, $field);
+        $value    = is_numeric($rawValue) ? (int) $rawValue : 0;
 
         $default = data_get($column, 'pluginData.toggleable.default');
-        $trueValue = $default[0] ?? 'Yes';
-        $falseValue = $default[1] ?? 'No';
+        $default = is_array($default) ? $default : [];
+
+        $trueValue  = isset($default[0]) && is_scalar($default[0]) ? (string) $default[0] : 'Yes';
+        $falseValue = isset($default[1]) && is_scalar($default[1]) ? (string) $default[1] : 'No';
 
         $html = '<div class="flex flex-row justify-center">';
 

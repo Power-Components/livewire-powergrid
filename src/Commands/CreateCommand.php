@@ -31,7 +31,7 @@ class CreateCommand extends Command
     /** @var string */
     protected $description = 'Make a new PowerGrid table component.';
 
-    private ?PowerGridComponentMaker $component;
+    private PowerGridComponentMaker $component;
 
     public function handle(): int
     {
@@ -155,12 +155,12 @@ class CreateCommand extends Command
     private function columnSourceLabel(): string
     {
         if ($this->component->requiresDatabaseTableName()) {
-            return "the [{$this->component?->databaseTable}] table";
+            return "the [{$this->component->databaseTable}] table";
         }
 
-        return $this->component?->columnSource === ColumnSource::DATABASE_TABLE
+        return $this->component->columnSource === ColumnSource::DATABASE_TABLE
             ? "the [{$this->component->modelTable()}] table"
-            : "\$fillable in [{$this->component?->model}]";
+            : "\$fillable in [{$this->component->model}]";
     }
 
     private function step6(): self
@@ -186,9 +186,9 @@ class CreateCommand extends Command
 
     public function feedback(): void
     {
-        note("⚡ <comment>{$this->component?->name}</comment> was successfully created at [<comment>{$this->component?->createdPath()}</comment>].");
+        note("⚡ <comment>{$this->component->name}</comment> was successfully created at [<comment>{$this->component->createdPath()}</comment>].");
 
-        note("💡 include the <comment>{$this->component?->name}</comment> component using the tag: <comment>{$this->component?->htmlTag}</comment>");
+        note("💡 include the <comment>{$this->component->name}</comment> component using the tag: <comment>{$this->component->htmlTag}</comment>");
 
         info('👍 Please consider <comment>⭐ starring ⭐</comment> <info>our repository. Visit: </info><comment>https://github.com/Power-Components/livewire-powergrid</comment>'.PHP_EOL);
     }
@@ -198,8 +198,8 @@ class CreateCommand extends Command
         return 'Auto-import Data Source fields from '.
         (
             $this->component->requiresDatabaseTableName() ?
-                 "[{$this->component?->databaseTable}] table?" :
-                 "[{$this->component?->model}] Model?"
+                 "[{$this->component->databaseTable}] table?" :
+                 "[{$this->component->model}] Model?"
         );
     }
 }

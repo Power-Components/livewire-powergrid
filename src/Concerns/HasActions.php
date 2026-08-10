@@ -416,7 +416,7 @@ trait HasActions
                 continue;
             }
 
-            $attributes .= ' '.$key.'="'.e((string) $value).'"';
+            $attributes .= ' '.$key.'="'.e(is_scalar($value) ? (string) $value : '').'"';
         }
 
         return "<x-{$icon}{$attributes} />";
