@@ -38,11 +38,11 @@ The following legacy features and themes have been completely removed. You must 
     window.SlimSelect = SlimSelect
     ```
     If the library is not exposed, the filter degrades gracefully and a console message explains what to install.
-3.  **Lazy Loading API:**
+3.  **Lazy Loading ("Load More") API:**
     - `PowerGrid::lazy()` facade method has been removed
     - `LazyManager` trait removed from PowerGridComponent
     - Methods removed: `loadMore()`, `hasLazyEnabled()`, `getLazyKeys()`, `canLoadMore()`
-    - Use Livewire's native deferred loading instead (see Section 8)
+    - No direct replacement; use standard pagination instead (see Section 7)
 4.  **Pulse Logger Integration:** Performance tracking files (`PowerGridPerformanceData`, `PowerGridPerformanceRecorder`, `PerformanceCard`) have been removed.
 5.  **Helper Functions Removed:**
     - `theme_style()` - Use `theme()` helper instead
@@ -646,9 +646,9 @@ cp -r vendor/power-components/livewire-powergrid/resources/views/components \
 
 ---
 
-## 7. Lazy Loading Migration
+## 7. Lazy Loading ("Load More") Migration
 
-PowerGrid 7.x removes the custom lazy loading system in favor of Livewire's native approach.
+PowerGrid 7.x removes the chunked "load more" lazy loading system (`PowerGrid::lazy()`, `LazyManager`). This feature is **not related** to Livewire's `#[Lazy]` attribute (component deferred mounting) — do not use it as a replacement.
 
 ### Removed APIs
 
@@ -670,34 +670,20 @@ $this->getLazyKeys();       // ❌ Removed
 $this->canLoadMore();       // ❌ Removed
 ```
 
-### Migration to Livewire Native Lazy Loading
+### Migration
 
-**v7 Approach:**
+There is **no 1:1 replacement** for the removed "load more" feature. Use PowerGrid's standard pagination instead — set a comfortable `$perPage` and let users navigate through the pages:
 
 ```php
-use Livewire\Attributes\Lazy;
+public array $perPageValues = [10, 25, 50, 100];
 
-#[Lazy]
-class MyTable extends PowerGridComponent
+public function setPerPage(int $perPage): void
 {
-    public function datasource()
-    {
-        return Model::query();
-    }
-
-    public function placeholder()
-    {
-        return view('livewire.placeholders.table-loading');
-    }
+    $this->perPage = $perPage;
 }
 ```
 
-**In Blade:**
-```blade
-<livewire:my-table lazy />
-```
-
-For more information, see [Livewire Lazy Loading documentation](https://livewire.laravel.com/docs/lazy).
+If you need chunked/streaming processing (e.g. for exports over large datasets), PowerGrid uses `LazyCollection` under the hood for that use case — unrelated to table rendering.
 
 ---
 
@@ -979,7 +965,7 @@ Remove deprecated keys and add new ones (see Section 5)
 Move views from `frameworks/` to `themes/` namespace (see Section 6)
 
 ### Step 7: Migrate Lazy Loading (2-4 hours)
-Convert to Livewire native lazy loading (see Section 7)
+Migrate away from the removed "load more" lazy loading (see Section 7)
 
 ### Step 8: Update Actions (1-2 hours)
 Remove JavaScript dependencies on `window.pgActions` (see Section 8)
@@ -1014,7 +1000,7 @@ Update feature tests to use runtime mini-components (see Section 11)
 **Solution:** Replace with `theme()` helper (see Section 3).
 
 #### "Call to undefined method lazy()"
-**Solution:** Migrate to Livewire native lazy loading (see Section 7).
+**Solution:** The feature was removed with no direct replacement. Use standard pagination (see Section 7).
 
 #### "View [livewire-powergrid::components.frameworks.tailwind.header] not found"
 **Solution:** Update view namespace from `frameworks` to `themes` (see Section 6).
