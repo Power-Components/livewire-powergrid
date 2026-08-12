@@ -430,6 +430,10 @@ trait Filter
             return;
         }
 
+        $enabledFilters = $this->enabledFilters;
+        $this->resolveFilters();
+        $this->enabledFilters = $enabledFilters;
+
         partials($this)
             ->partial("pg-enabled-filters-{$this->tableName}", theme_view('header.enabled-filters'), [
                 'enabledFilters' => $this->enabledFilters,
