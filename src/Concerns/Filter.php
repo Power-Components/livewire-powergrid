@@ -449,7 +449,7 @@ trait Filter
 
         partials($this)
             ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-            ->partial("pg-pagination-{$this->tableName}", 'livewire-powergrid::components.structure.footer')
+            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'))
             ->partial("pg-filters-{$this->tableName}", theme_view('filter'));
     }
 
