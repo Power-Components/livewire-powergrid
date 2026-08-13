@@ -28,6 +28,7 @@ Companion to `SKILL.md`. Everything here is verified against the v7 source in
 | `src/Themes/Components/Footer.php` | `view()`, `layout()`, `pagination(Closure\|array\|string)`. |
 | `src/Themes/Components/Pagination.php` | Holds the pagination `view`; usually set via the string form. |
 | `src/Themes/Components/Filter.php` | Fluent filter builder (used by DaisyUI/Flux `filter()`). |
+| `src/Themes/Components/Flyout.php` | Classes for the filter drawer, via `Filter::flyout(Closure)`. `view`, `overlay`, `panel`, `panelLeft`, `panelRight`, `header`, `title`, `close`, `body`, `footer`, `clearAll`. |
 | `src/Themes/Components/Component.php` | Generic sub-component (used in `filter()` array form, `editable()`, `toggleable()`). |
 | `src/Themes/Components/HasProperties.php` | Shared trait. `toArray()` snake_cases keys and prefixes `view*` values with `baseView`. |
 | `src/Support/ThemeManager.php` | `ThemeManager::theme($key, $default)` and `::view($alias)` — read `app('powergrid.theme')`. |
@@ -177,6 +178,19 @@ public function filter(): array
                 'input'  => '...input classes...',
             ],
             'input' => '...generic filter input classes...',
+            'flyout' => [
+                'view'        => 'livewire-powergrid::components.themes.tailwind.filter-flyout',
+                'overlay'     => '...backdrop classes...',
+                'panel'       => '...classes shared by both drawer sides...',
+                'panel_left'  => '...anchoring classes when position is left...',
+                'panel_right' => '...anchoring classes when position is right...',
+                'header'      => '...drawer header row...',
+                'title'       => '...drawer title...',
+                'close'       => '...close button...',
+                'body'        => '...scrollable filter area...',
+                'footer'      => '...drawer footer...',
+                'clear_all'   => '...clear all filters button...',
+            ],
         ],
     ];
 }
@@ -186,6 +200,24 @@ public function filter(): array
 `Components\Filter` builder (`->label(...)->boolean(fn ($c) => $c->view(...)->select(...))-> ... ->toArray()`).
 It is equivalent — pick whichever you find clearer, and copy the exact form from
 `src/Themes/DaisyUI.php` if you want the fluent version.
+
+### `filter.flyout` — the drawer
+
+`filter.flyout.*` styles the drawer used when `config('livewire-powergrid.filter')`
+is `flyout`. Its blade lives at
+`resources/views/components/themes/tailwind/filter-flyout.blade.php` and is shared
+by every theme through `parentTheme`, so a theme normally overrides the classes
+only, not `view`. Use the fluent `->flyout(fn (Components\Flyout $flyout) => ...)`
+setter (`Components\Flyout`) or the plain array form above.
+
+Two constraints the drawer markup relies on:
+
+- `panel` must position the drawer itself (`fixed inset-y-0`) and set a stacking
+  context above `overlay`. `panel_left` / `panel_right` add only the edge
+  anchoring, because the blade picks one of the two based on the configured
+  position and pairs it with a matching slide-in transform.
+- `panel` should be full width on small screens and constrained above the `sm`
+  breakpoint (`w-full max-w-full sm:w-96 sm:max-w-[90vw]`).
 
 Because a subclass with `parentTheme = Tailwind::class` inherits Tailwind's
 `filter()` wholesale, you only need to override `filter()` when your framework's
