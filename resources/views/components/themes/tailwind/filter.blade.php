@@ -14,7 +14,8 @@
 
 <div
     x-data
-    class="mt-2 md:mt-0"
+    wire:partial="pg-filters-{{ $tableName }}"
+    class="{{ theme('layout.outsideFilters') }} mt-2 md:mt-0"
 >
     <div
         x-show="$wire.showFilters"

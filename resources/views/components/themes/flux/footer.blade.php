@@ -43,7 +43,7 @@
             </div>
         @endif
 
-        <div class="min-w-0 w-full md:w-auto md:flex-1">
+        <div class="min-w-0 w-full md:w-auto md:flex-1 flex justify-end">
             @if (method_exists($__partial->records, 'links'))
                 {!! $__partial->records->links(data_get($setUp, 'footer.pagination') ?: theme_view('pagination'), [
                     'recordCount' => data_get($setUp, 'footer.recordCount'),

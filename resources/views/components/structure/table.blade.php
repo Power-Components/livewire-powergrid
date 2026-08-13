@@ -25,22 +25,16 @@
         ])
 
         @if (config('livewire-powergrid.filter') === 'outside' && ! $this->filterBuilderHidesDefaultFilters())
-            <div wire:partial="pg-filters-{{ $tableName }}" class="{{ theme('layout.outsideFilters') }}">
-                @php
-                    $filtersFromColumns = collect($columns)
-                        ->filter(fn($column) => filled(data_get($column, 'filters')));
-                @endphp
+            @php
+                $filtersFromColumns = collect($columns)
+                    ->filter(fn($column) => filled(data_get($column, 'filters')));
+            @endphp
 
-                @includeWhen(
-                    $filtersFromColumns->count() > 0,
-                    theme_view('filter'),
-                    [
-                        '__partial' => $this,
-                        'tableName' => $tableName,
-                        'filtersFromColumns' => $filtersFromColumns,
-                    ]
-                )
-            </div>
+            @include(theme_view('filter'), [
+                '__partial' => $this,
+                'tableName' => $tableName,
+                'filtersFromColumns' => $filtersFromColumns,
+            ])
         @endif
 
         <div>

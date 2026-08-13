@@ -36,7 +36,7 @@ class Flux extends Theme
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
                     ->th('font-semibold px-3 py-3 text-left text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
                     ->thActions('font-semibold px-3 py-3 text-end text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
-                    ->tbody('text-zinc-800 dark:text-zinc-200')
+                    ->tbody('text-sm text-zinc-800 dark:text-zinc-200')
                     ->td('px-3 py-2 whitespace-nowrap')
                     ->tdActions('px-3 py-2 whitespace-nowrap text-end')
                 )
@@ -98,7 +98,7 @@ class Flux extends Theme
                 )
                 ->datePicker(fn (Components\Component $datePicker) => $datePicker
                     ->view('powergrid-plugins::Flatpickr.index')
-                    ->input('flatpickr flatpickr-input '.$this->input().' w-auto')
+                    ->input('flatpickr flatpickr-input '.$this->input().' w-full')
                 )
                 ->number(fn (Components\Component $number) => $number
                     ->view('livewire-powergrid::components.themes.tailwind.filters.number')
