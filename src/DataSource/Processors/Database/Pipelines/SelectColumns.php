@@ -6,15 +6,13 @@ use Closure;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
+use PowerComponents\LivewirePowerGrid\Contracts\{PowerGridContext, SchemaInspector};
 use Throwable;
 
 class SelectColumns
 {
     public function __construct(
-        protected PowerGridComponent $component,
+        protected PowerGridContext $component,
         protected bool $isExport = false
     ) {}
 
@@ -49,8 +47,10 @@ class SelectColumns
             return $next($query);
         }
 
-        if (! in_array($this->component->primaryKey, $select, true) && in_array($this->component->primaryKey, $allColumns, true)) {
-            $select[] = $this->component->primaryKey;
+        $primaryKey = $this->component->state()->primaryKey;
+
+        if (! in_array($primaryKey, $select, true) && in_array($primaryKey, $allColumns, true)) {
+            $select[] = $primaryKey;
         }
 
         $query->select($select);
@@ -60,7 +60,7 @@ class SelectColumns
 
     protected function shouldPrune(mixed $query): bool
     {
-        if ($this->isExport || ! $this->component->pruneHiddenColumns) {
+        if ($this->isExport || ! $this->component->state()->pruneHiddenColumns) {
             return false;
         }
 
@@ -75,7 +75,7 @@ class SelectColumns
      */
     protected function excludedFields(): array
     {
-        $columns = collect($this->component->columns);
+        $columns = collect($this->component->state()->columns);
 
         $reservedByVisible = [];
 
@@ -125,7 +125,7 @@ class SelectColumns
      */
     protected function tableColumns(EloquentBuilder|QueryBuilder $query): array
     {
-        $table = $this->component->currentTable;
+        $table = $this->component->getCurrentTable();
 
         if ($table === '') {
             return [];
@@ -136,18 +136,15 @@ class SelectColumns
             : $query->getConnection();
         $connection = $conn instanceof Connection ? $conn->getName() : null;
 
+        $inspector = app(SchemaInspector::class);
+
         try {
-            $cached = PowerGridTableCache::getOrCreate(
-                $table,
-                fn (): array => collect(Schema::connection($connection)->getColumns($table))
-                    ->pluck('type', 'name')
-                    ->toArray()
-            );
+            $cached = $inspector->columnTypes($table, $connection);
 
             return array_is_list($cached) ? $cached : array_keys($cached);
         } catch (Throwable) {
             try {
-                return Schema::connection($connection)->getColumnListing($table);
+                return $inspector->columnListing($table, $connection);
             } catch (Throwable) {
                 return [];
             }

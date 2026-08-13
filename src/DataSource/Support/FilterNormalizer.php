@@ -13,7 +13,7 @@ class FilterNormalizer
      *  - multi_select arrays are rebuilt as [0 => v, 1 => v, …]
      *  - number/date ranges are rebuilt as ['start' => v, 'end' => v]
      *
-     * @param  array<string, mixed>  $columns
+     * @param  array<array-key, mixed>  $columns
      * @return array<string, mixed>
      */
     public static function normalize(array $columns): array

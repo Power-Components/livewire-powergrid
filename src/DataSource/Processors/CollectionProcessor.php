@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\{Collection, Collection as BaseCollection};
+use PowerComponents\LivewirePowerGrid\Contracts\GridConfig;
 use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pipelines;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Pipelines as CommonPipelines;
@@ -48,10 +49,10 @@ class CollectionProcessor extends DataSourceBase
         $timeInMs = 0;
 
         if ($results->count() > 0) {
-            $plucked = $results->pluck($this->component->primaryKey)->values();
+            $plucked = $results->pluck($this->component->state()->primaryKey)->values();
             /** @var list<int|string> $filtered */
             $filtered = $plucked->toArray();
-            $this->component->filtered = $filtered;
+            $this->component->setFilteredKeys($filtered);
             $paginated = $this->paginate($results);
 
             $transformResult = $dataTransformer->transform($paginated->getCollection());
@@ -73,7 +74,7 @@ class CollectionProcessor extends DataSourceBase
     private function paginate(BaseCollection $results): LengthAwarePaginator
     {
         /** @var int $perPageFromSetup */
-        $perPageFromSetup = data_get($this->component->setUp, 'footer.perPage', 10);
+        $perPageFromSetup = data_get($this->component->state()->setUp, 'footer.perPage', 10);
         $perPage = $this->isExport
             ? $results->count()
             : $this->clampPerPage(intval($perPageFromSetup));
@@ -82,7 +83,7 @@ class CollectionProcessor extends DataSourceBase
             ? $perPage
             : ($this->isExport ? $results->count() : $this->clampPerPage($results->count()));
         /** @var string $pageName */
-        $pageName = data_get($this->component->setUp, 'footer.pageName', 'page');
+        $pageName = data_get($this->component->state()->setUp, 'footer.pageName', 'page');
 
         $page = Paginator::resolveCurrentPage($pageName);
 
@@ -100,7 +101,7 @@ class CollectionProcessor extends DataSourceBase
 
     private function clampPerPage(int $perPage): int
     {
-        $configured = config('livewire-powergrid.max_per_page', 1000);
+        $configured = app(GridConfig::class)->get('livewire-powergrid.max_per_page', 1000);
         $max = is_numeric($configured) ? (int) $configured : 0;
 
         if ($max > 0 && $perPage > $max) {

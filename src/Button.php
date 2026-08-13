@@ -46,6 +46,9 @@ final class Button implements Wireable
 
     public bool|Closure $can = true;
 
+    /** @var array<string, mixed> */
+    public array $eventMeta = [];
+
     public function __construct(public string $action) {}
 
     public static function add(string $action = ''): Button

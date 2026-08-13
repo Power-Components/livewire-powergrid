@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource;
 
-use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Button, Contracts\PowerGridContext};
 
 final class ActionProcessor
 {
@@ -10,7 +10,7 @@ final class ActionProcessor
 
     private bool $shouldProcessActionRules;
 
-    public function __construct(protected PowerGridComponent $component)
+    public function __construct(protected PowerGridContext $component)
     {
         $this->shouldProcessActions = method_exists($component, 'actions');
         $this->shouldProcessActionRules = method_exists($component, 'actionRules');

@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, Contracts\GridCache, Contracts\PowerGridContext};
 
 /**
  * Computes the raw (unformatted) summary values for a datasource.
@@ -27,7 +26,7 @@ class SummaryCalculator
     /** @var list<string> */
     private const OPERATIONS = ['sum', 'count', 'avg', 'min', 'max'];
 
-    public function __construct(private readonly PowerGridComponent $component) {}
+    public function __construct(private readonly PowerGridContext $component) {}
 
     /**
      * Compute the raw summary map for the given (already filtered) DataSource.
@@ -45,7 +44,7 @@ class SummaryCalculator
             ? $this->fromCollection($source)
             : $this->fromQuery($source);
 
-        if (! filled(data_get($this->component->setUp, 'cache.enabled'))) {
+        if (! filled(data_get($this->component->state()->setUp, 'cache.enabled'))) {
             return $resolver();
         }
 
@@ -242,12 +241,14 @@ class SummaryCalculator
         $tag = $this->component->summariesCacheTag();
         $key = $this->component->summariesCacheKey();
         /** @var int $ttl */
-        $ttl = data_get($this->component->setUp, 'cache.ttl', 300);
+        $ttl = data_get($this->component->state()->setUp, 'cache.ttl', 300);
+
+        $cache = app(GridCache::class);
 
         /** @var array<string, mixed> $values */
-        $values = Cache::supportsTags()
-            ? Cache::tags($tag)->remember($key, $ttl, $resolver)
-            : Cache::remember($tag.'-'.$key, $ttl, $resolver);
+        $values = $cache->supportsTags()
+            ? $cache->taggedRemember($tag, $key, $ttl, $resolver)
+            : $cache->remember($tag.'-'.$key, $ttl, $resolver);
 
         return $values;
     }

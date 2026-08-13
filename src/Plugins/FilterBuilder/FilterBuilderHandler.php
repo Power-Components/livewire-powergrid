@@ -6,18 +6,18 @@ use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, Number, Select};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class FilterBuilderHandler
 {
     public function __construct(
-        private readonly PowerGridComponent $component
+        private readonly PowerGridContext $component
     ) {}
 
     public function isActive(): bool
     {
-        return filled(data_get($this->component->setUp, 'filterBuilder'));
+        return filled(data_get($this->component->state()->setUp, 'filterBuilder'));
     }
 
     /**
@@ -83,7 +83,7 @@ final class FilterBuilderHandler
         }
 
         /** @var string $primaryKey */
-        $primaryKey = $this->component->realPrimaryKey;
+        $primaryKey = $this->component->state()->realPrimaryKey();
 
         $matched = collect();
 
@@ -148,10 +148,10 @@ final class FilterBuilderHandler
     private function state(): array
     {
         /** @var int|string $maxConditions */
-        $maxConditions = data_get($this->component->setUp, 'filterBuilder.maxConditions', 30);
+        $maxConditions = data_get($this->component->state()->setUp, 'filterBuilder.maxConditions', 30);
 
         return FilterBuilderValidator::validate(
-            $this->component->filterBuilder,
+            $this->component->state()->filterBuilder,
             $this->meta(),
             intval($maxConditions),
         );

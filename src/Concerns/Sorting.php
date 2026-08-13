@@ -3,11 +3,13 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Concerns\State\ResolvesGridSorting;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 
 trait Sorting
 {
+    use ResolvesGridSorting;
+
     public string $sortField = 'id';
 
     public string $sortDirection = 'asc';
@@ -121,46 +123,5 @@ trait Sorting
     public function updatedSortDirection(): void
     {
         $this->sortDirection = Sql::sanitizeSortDirection($this->sortDirection);
-    }
-
-    public function resolveSortField(string $sortField): string
-    {
-        if (str_contains($sortField, '.') || $this->ignoreTablePrefix) {
-            return $sortField;
-        }
-
-        return $this->currentTable.'.'.$sortField;
-    }
-
-    /**
-     * Whether the given sort field is declared in the server-side columns().
-     * The `sortField`/`sortArray` properties are mass-assignable from the
-     * client snapshot, so they must never reach ORDER BY unvalidated.
-     */
-    public function isValidSortField(string $sortField): bool
-    {
-        return collect($this->declaredColumns())
-            ->map(fn ($column) => data_get($column, 'dataField') ?: data_get($column, 'field'))
-            ->filter()
-            ->contains($sortField);
-    }
-
-    /**
-     * Get the sort callback for a given field from the columns definition.
-     * Returns null if no custom callback is defined.
-     */
-    public function getSortCallback(string $field): ?\Closure
-    {
-        $columns = $this->declaredColumns();
-
-        foreach ($columns as $column) {
-            $columnDataField = data_get($column, 'dataField');
-
-            if ($columnDataField === $field && data_get($column, 'sortCallback') instanceof \Closure) {
-                return $column instanceof Column ? $column->sortCallback : null;
-            }
-        }
-
-        return null;
     }
 }

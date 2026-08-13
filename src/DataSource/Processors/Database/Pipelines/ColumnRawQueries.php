@@ -6,12 +6,12 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class ColumnRawQueries
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
@@ -72,7 +72,7 @@ class ColumnRawQueries
             $property = trim($matches[1]);
 
             if ($property === 'sortDirection') {
-                return Sql::sanitizeSortDirection($this->component->sortDirection);
+                return Sql::sanitizeSortDirection($this->component->state()->sortDirection);
             }
 
             if ($rawContext) {

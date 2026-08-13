@@ -5,11 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipel
 use Closure;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 
 class SoftDeletes
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
@@ -17,7 +17,7 @@ class SoftDeletes
             return $next($query);
         }
 
-        $softDeletes = data_get($this->component, 'softDeletes');
+        $softDeletes = $this->component->state()->softDeletes;
 
         if ($query instanceof EloquentBuilder) {
             if ($softDeletes === 'withTrashed') {

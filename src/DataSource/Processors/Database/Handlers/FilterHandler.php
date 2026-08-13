@@ -4,16 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handl
 
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class FilterHandler
 {
     use InputOperators;
 
     public function __construct(
-        private readonly PowerGridComponent $component
+        private readonly PowerGridContext $component
     ) {}
 
     /** @param  EloquentBuilder<Model>|QueryBuilder  $query
@@ -21,13 +21,14 @@ class FilterHandler
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
         $filterDefinitions = collect($this->component->declaredFilters());
+        $filters = $this->component->state()->filters;
 
-        if ($filterDefinitions->isEmpty() || empty($this->component->filters)) {
+        if ($filterDefinitions->isEmpty() || empty($filters)) {
             return $query;
         }
 
-        foreach ($this->component->filters as $filterType => $columns) {
-            foreach (FilterNormalizer::normalize($columns) as $field => $value) {
+        foreach ($filters as $filterType => $columns) {
+            foreach (FilterNormalizer::normalize((array) $columns) as $field => $value) {
                 // Only apply a filter for a field that was actually declared in
                 // filters(). Without this guard the field/column identifier is
                 // user-controlled (the $filters property is mass-assignable), so
@@ -55,7 +56,7 @@ class FilterHandler
                             'boolean' => (new Boolean($this->component, $filter))->builder($query, $field, $value),
                             'number' => (new Number($this->component, $filter))->builder($query, $field, $value),
                             'input_text' => (new InputText($this->component, $filter))->builder($query, $field, [
-                                'selected' => $this->validateInputTextOptions($this->component->filters, $field),
+                                'selected' => $this->validateInputTextOptions($this->component->state()->filters, $field),
                                 'value' => $value,
                                 'searchMorphs' => $this->component->searchMorphs(),
                             ]),

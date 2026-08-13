@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\{Collection as BaseCollection, LazyCollection};
-use PowerComponents\LivewirePowerGrid\{ManageLoops, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Contracts\PowerGridContext, ManageLoops};
 
 final class DataTransformer
 {
@@ -14,11 +14,11 @@ final class DataTransformer
 
     private string $primaryKey;
 
-    public function __construct(protected PowerGridComponent $component)
+    public function __construct(protected PowerGridContext $component)
     {
         $this->rowTransformer = new RowTransformer($component->fields());
         $this->actionProcessor = new ActionProcessor($component);
-        $this->primaryKey = $component->primaryKey;
+        $this->primaryKey = $component->state()->primaryKey;
     }
 
     /** @param  BaseCollection<int, mixed>  $collection */
@@ -53,7 +53,7 @@ final class DataTransformer
                 }
             }
 
-            if ($this->component->supportModel && $row instanceof Model) {
+            if ($this->component->state()->supportModel && $row instanceof Model) {
                 return (clone $row)->forceFill((array) $transformedData);
             }
 
@@ -83,7 +83,7 @@ final class DataTransformer
             foreach ($rows as $row) {
                 $transformedData = $this->rowTransformer->transform((object) $row);
 
-                if ($this->component->supportModel && $row instanceof Model) {
+                if ($this->component->state()->supportModel && $row instanceof Model) {
                     yield (clone $row)->forceFill((array) $transformedData);
 
                     continue;

@@ -11,12 +11,14 @@ use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\Commands\GenerateThemeMetaCommand;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
 use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
+use PowerComponents\LivewirePowerGrid\Contracts\{GridCache, GridConfig, SchemaInspector};
 use PowerComponents\LivewirePowerGrid\{DataSource\Processors\Database\Handlers\SearchHandler,
     DataSource\Processors\Database\Handlers\SearchHandlerContract,
     Livewire\Detail,
     PowerGridManager,
     Testing\TestActions};
 use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
+use PowerComponents\LivewirePowerGrid\Support\Environment\{LaravelGridCache, LaravelGridConfig, LaravelSchemaInspector};
 use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
@@ -86,6 +88,10 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->bind(SearchHandlerContract::class, function ($app, array $params) {
             return new SearchHandler($params['component']);
         });
+
+        $this->app->singleton(SchemaInspector::class, LaravelSchemaInspector::class);
+        $this->app->singleton(GridConfig::class, LaravelGridConfig::class);
+        $this->app->singleton(GridCache::class, LaravelGridCache::class);
     }
 
     private function publishViews(): void

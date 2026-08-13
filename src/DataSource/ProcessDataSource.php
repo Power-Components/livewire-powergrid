@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\DataSource;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\{Processors\CollectionProcessor,
     Processors\DataSourceBase,
     Processors\ModelProcessor,
     Processors\ScoutBuilderProcessor};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use Throwable;
 
 class ProcessDataSource
@@ -17,12 +17,12 @@ class ProcessDataSource
 
     /** @param  array<string, mixed>  $properties */
     public function __construct(
-        public PowerGridComponent $component,
+        public PowerGridContext $component,
         public array $properties = [],
     ) {}
 
     /** @param  array<string, mixed>  $properties */
-    public static function make(PowerGridComponent $powerGridComponent, array $properties = []): ProcessDataSource
+    public static function make(PowerGridContext $powerGridComponent, array $properties = []): ProcessDataSource
     {
         return new self($powerGridComponent, $properties);
     }
@@ -38,9 +38,9 @@ class ProcessDataSource
         if ($datasource instanceof QueryBuilder) {
             /** @var string $from */
             $from = $datasource->from;
-            $this->component->currentTable = $from;
+            $this->component->setCurrentTable($from);
         } elseif ($datasource instanceof Relation || (is_object($datasource) && method_exists($datasource, 'getModel'))) {
-            $this->component->currentTable = $datasource->getModel()->getTable();
+            $this->component->setCurrentTable($datasource->getModel()->getTable());
         }
 
         return $datasource;

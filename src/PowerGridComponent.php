@@ -31,7 +31,7 @@ use Psr\SimpleCache\InvalidArgumentException;
  * @method mixed actions(mixed $row)
  * @method mixed actionsFromView(object $row)
  */
-class PowerGridComponent extends Component
+class PowerGridComponent extends Component implements Contracts\PowerGridContext
 {
     use Concerns\Base;
     use Concerns\Checkbox;
@@ -44,13 +44,66 @@ class PowerGridComponent extends Component
     use Concerns\ManageRow;
     use Concerns\Persist;
     use Concerns\Radio;
+    use Concerns\RespondsWithData;
     use Concerns\SoftDeletes;
     use Concerns\Sorting;
+    use Concerns\State\ResolvesBeforeSearch;
     use Concerns\Summarize;
     use WithPagination;
 
     /** @var array<string, PluginBase> */
     protected array $plugins = [];
+
+    public function state(): Support\State\PowerGridState
+    {
+        return new Support\State\PowerGridState(
+            search: $this->search,
+            sortField: $this->sortField,
+            sortDirection: $this->sortDirection,
+            multiSort: $this->multiSort,
+            sortArray: $this->sortArray,
+            filters: $this->filters,
+            filterBuilder: $this->filterBuilder,
+            softDeletes: $this->softDeletes,
+            setUp: $this->setUp,
+            columns: $this->columns,
+            primaryKey: $this->primaryKey,
+            primaryKeyAlias: $this->primaryKeyAlias,
+            ignoreTablePrefix: $this->ignoreTablePrefix,
+            pruneHiddenColumns: $this->pruneHiddenColumns,
+            paginateRaw: $this->paginateRaw,
+            isExporting: $this->isExporting,
+            tableName: $this->tableName,
+            supportModel: $this->supportModel,
+        );
+    }
+
+    public function getCurrentTable(): string
+    {
+        return $this->currentTable;
+    }
+
+    public function setCurrentTable(string $table): void
+    {
+        $this->currentTable = $table;
+    }
+
+    /** @param  list<int|string>  $keys */
+    public function setFilteredKeys(array $keys): void
+    {
+        $this->filtered = $keys;
+    }
+
+    /** @param  array<string, mixed>  $values */
+    public function setSummaryValues(array $values): void
+    {
+        $this->summaryValues = $values;
+    }
+
+    public function resetToFirstPage(string $pageName = 'page'): void
+    {
+        $this->gotoPage(1, $pageName);
+    }
 
     public function template(): ?Theme
     {

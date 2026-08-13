@@ -5,13 +5,13 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipel
 use Closure;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
 use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderHandler;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Filters
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {

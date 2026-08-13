@@ -282,8 +282,8 @@ class ExportPlugin extends PluginBase
         $processDataSource = tap(ProcessDataSource::make($component), fn ($datasource) => $datasource->get());
 
         $files = [];
-        $filters = $processDataSource->component->filters;
-        $filtered = $processDataSource->component->filtered;
+        $filters = $component->filters;
+        $filtered = $component->filtered;
         $queues = collect([]);
 
         $total = (int) $component->total();
@@ -313,8 +313,8 @@ class ExportPlugin extends PluginBase
                 'offset' => $offset,
                 'limit' => $perPage,
                 'filters' => Support\Facades\Crypt::encrypt($filters),
-                'exportable' => $processDataSource->component->setUp['exportable'],
-                'parameters' => Support\Facades\Crypt::encrypt($processDataSource->component->getPublicPropertiesDefinedInComponent()),
+                'exportable' => $component->setUp['exportable'],
+                'parameters' => Support\Facades\Crypt::encrypt($component->getPublicPropertiesDefinedInComponent()),
             ];
 
             $queues->push(new $jobClass(
@@ -350,10 +350,10 @@ class ExportPlugin extends PluginBase
             $processDataSource->get();
         }
 
-        $filtered = $processDataSource->component->filtered;
+        $filtered = $component->filtered;
 
-        if ($selected && filled($processDataSource->component->checkboxValues)) {
-            $filtered = $processDataSource->component->checkboxValues;
+        if ($selected && filled($component->checkboxValues)) {
+            $filtered = $component->checkboxValues;
         }
 
         if ($datasource instanceof Collection) {
@@ -361,20 +361,20 @@ class ExportPlugin extends PluginBase
                 $results = $processDataSource->get(isExport: true)['results']
                     ->whereIn($component->primaryKey, $filtered);
 
-                $dataTransformer = new DataTransformer($processDataSource->component);
+                $dataTransformer = new DataTransformer($component);
 
                 return $dataTransformer->transform($results)->collection;
             }
 
-            $dataTransformer = new DataTransformer($processDataSource->component);
+            $dataTransformer = new DataTransformer($component);
 
             return $dataTransformer->transform($datasource)->collection;
         }
 
-        $currentTable = $processDataSource->component->currentTable;
+        $currentTable = $component->currentTable;
 
-        $property = function (string $property) use ($processDataSource, $currentTable) {
-            $property = $processDataSource->component->{$property};
+        $property = function (string $property) use ($component, $currentTable) {
+            $property = $component->{$property};
 
             return Str::of($property)->contains('.')
                 ? $property
@@ -394,30 +394,30 @@ class ExportPlugin extends PluginBase
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->when($component->sortField, function ($query) use ($processDataSource, $queryOptions) {
-                $sortField = $queryOptions['sortField'] ?? $processDataSource->component->sortField;
+            ->when($component->sortField, function ($query) use ($component, $queryOptions) {
+                $sortField = $queryOptions['sortField'] ?? $component->sortField;
 
                 if (! is_string($sortField)) {
                     return $query;
                 }
 
-                if (! $processDataSource->component->isValidSortField($sortField)) {
+                if (! $component->isValidSortField($sortField)) {
                     return $query;
                 }
 
-                $sortDirection = $processDataSource->component->sortDirection;
+                $sortDirection = $component->sortDirection;
 
                 if (is_string($queryOptions['sortDirection'] ?? null)) {
                     $sortDirection = $queryOptions['sortDirection'];
                 }
 
-                $sortField = $processDataSource->component->resolveSortField($sortField);
+                $sortField = $component->resolveSortField($sortField);
 
                 return $query->orderBy($sortField, Sql::sanitizeSortDirection($sortDirection));
             })
             ->cursor();
 
-        $dataTransformer = new DataTransformer($processDataSource->component);
+        $dataTransformer = new DataTransformer($component);
 
         return $dataTransformer->transformForExport($results);
     }

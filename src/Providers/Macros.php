@@ -180,6 +180,8 @@ class Macros
                 'wire:click' => "\$call('{$method}', ".Js::from($params).')',
             ]);
 
+            $this->eventMeta = ['type' => 'call', 'method' => $method, 'params' => $params];
+
             return $this;
         });
 
@@ -187,6 +189,8 @@ class Macros
             $this->attributes([
                 'wire:click' => "\$dispatch('{$event}', ".Js::from($params).')',
             ]);
+
+            $this->eventMeta = ['type' => 'dispatch', 'event' => $event, 'params' => $params];
 
             return $this;
         });
@@ -196,6 +200,8 @@ class Macros
                 'wire:click' => "\$dispatchTo('{$component}', '{$event}', ".Js::from($params).')',
             ]);
 
+            $this->eventMeta = ['type' => 'dispatchTo', 'to' => $component, 'event' => $event, 'params' => $params];
+
             return $this;
         });
 
@@ -204,6 +210,8 @@ class Macros
                 'wire:click' => "\$dispatchSelf('{$event}', ".Js::from($params).')',
             ]);
 
+            $this->eventMeta = ['type' => 'dispatchSelf', 'event' => $event, 'params' => $params];
+
             return $this;
         });
 
@@ -211,6 +219,8 @@ class Macros
             $this->attributes([
                 'wire:click' => "\$parent.{$method}(".Js::from($params).')',
             ]);
+
+            $this->eventMeta = ['type' => 'parent', 'method' => $method, 'params' => $params];
 
             return $this;
         });
@@ -224,6 +234,8 @@ class Macros
             $this->attributes([
                 'wire:click' => "\$dispatch('openModal', $encoded)",
             ]);
+
+            $this->eventMeta = ['type' => 'modal', 'component' => $component, 'params' => $params];
 
             return $this;
         });
@@ -249,10 +261,14 @@ class Macros
         Button::macro('route', function (string $route, array $params, string $target = '_self'): Button {
             $this->tag('a');
 
+            $href = route($route, $params);
+
             $this->attributes([
-                'href' => route($route, $params),
+                'href' => $href,
                 'target' => $target,
             ]);
+
+            $this->eventMeta = ['type' => 'link', 'href' => $href, 'target' => $target];
 
             return $this;
         });
@@ -294,6 +310,8 @@ class Macros
             $this->attributes([
                 'wire:click' => "toggleDetail('$rowId')",
             ]);
+
+            $this->eventMeta = ['type' => 'toggleDetail', 'rowId' => $rowId];
 
             return $this;
         });

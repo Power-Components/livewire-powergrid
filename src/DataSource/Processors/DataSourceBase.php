@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors;
 
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\View\Concerns\ManagesLoops;
-use PowerComponents\LivewirePowerGrid\{Concerns\SoftDeletes, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Concerns\SoftDeletes, Contracts\PowerGridContext};
 
 abstract class DataSourceBase
 {
@@ -12,7 +12,7 @@ abstract class DataSourceBase
     use SoftDeletes;
 
     public function __construct(
-        public PowerGridComponent $component,
+        public PowerGridContext $component,
         public bool $isExport = false
     ) {}
 
@@ -29,12 +29,12 @@ abstract class DataSourceBase
         if ($datasource instanceof QueryBuilder) {
             /** @var string $from */
             $from = $datasource->from;
-            $this->component->currentTable = $from;
+            $this->component->setCurrentTable($from);
 
             return;
         }
 
         /** @phpstan-ignore-next-line */
-        $this->component->currentTable = $datasource->getModel()->getTable();
+        $this->component->setCurrentTable($datasource->getModel()->getTable());
     }
 }

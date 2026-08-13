@@ -6,12 +6,12 @@ use Closure;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 class Sorting
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     public function handle(mixed $query, Closure $next): mixed
     {
@@ -19,11 +19,13 @@ class Sorting
             return $next($query);
         }
 
-        if (filled($this->component->sortField)) {
-            if ($this->component->multiSort) {
+        $state = $this->component->state();
+
+        if (filled($state->sortField)) {
+            if ($state->multiSort) {
                 // sortArray is mass-assignable; reject any key that is not a
                 // declared column instead of forwarding it to ORDER BY.
-                $valid = collect($this->component->sortArray)
+                $valid = collect($state->sortArray)
                     ->keys()
                     ->every(fn (string $field) => $this->component->isValidSortField($field));
 
@@ -31,8 +33,8 @@ class Sorting
                     $this->applyMultipleSort($query);
                 }
             } else {
-                if ($this->component->isValidSortField($this->component->sortField)) {
-                    $this->applySingleSort($query, $this->component->sortField, $this->component->sortDirection);
+                if ($this->component->isValidSortField($state->sortField)) {
+                    $this->applySingleSort($query, $state->sortField, $state->sortDirection);
                 }
             }
         }
@@ -62,7 +64,7 @@ class Sorting
     /** @param  EloquentBuilder<Model>|MorphToMany<Model, Model>|QueryBuilder  $results */
     private function applyMultipleSort(EloquentBuilder|MorphToMany|QueryBuilder $results): void
     {
-        foreach ($this->component->sortArray as $sortField => $direction) {
+        foreach ($this->component->state()->sortArray as $sortField => $direction) {
             $direction = Sql::sanitizeSortDirection($direction);
 
             $sortCallback = $this->component->getSortCallback($sortField);

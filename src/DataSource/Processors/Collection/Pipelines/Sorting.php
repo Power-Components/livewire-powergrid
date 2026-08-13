@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 
 final class Sorting
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     /**
      * @param  Collection<int, mixed>  $collection
@@ -16,15 +16,17 @@ final class Sorting
      */
     public function handle(Collection $collection, Closure $next): Collection
     {
-        if (blank($this->component->sortField)) {
+        $state = $this->component->state();
+
+        if (blank($state->sortField)) {
             return $next($collection);
         }
 
-        if ($this->component->multiSort) {
+        if ($state->multiSort) {
             return $next($this->applyMultipleSort($collection));
         }
 
-        return $next($this->applySingleSort($collection, $this->component->sortField, $this->component->sortDirection));
+        return $next($this->applySingleSort($collection, $state->sortField, $state->sortDirection));
     }
 
     /** @param  Collection<int, mixed>  $collection
@@ -52,7 +54,7 @@ final class Sorting
         $sortArray = [];
         $callbackFields = [];
 
-        foreach ($this->component->sortArray as $sortField => $sortDirection) {
+        foreach ($this->component->state()->sortArray as $sortField => $sortDirection) {
             /** @var 'asc'|'desc' $sortDirection */
             $sortCallback = $this->component->getSortCallback($sortField);
 

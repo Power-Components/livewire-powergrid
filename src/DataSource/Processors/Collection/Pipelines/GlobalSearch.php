@@ -4,11 +4,11 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\{Collection, Str};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 
 final class GlobalSearch
 {
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     /**
      * @param  Collection<int, mixed>  $collection
@@ -16,7 +16,7 @@ final class GlobalSearch
      */
     public function handle(Collection $collection, Closure $next): Collection
     {
-        if (blank($this->component->search)) {
+        if (blank($this->component->state()->search)) {
             return $next($collection);
         }
 
@@ -39,7 +39,7 @@ final class GlobalSearch
                 $value = data_get($row, $field);
 
                 /** @var string $search */
-                $search = trim(strtolower(htmlspecialchars(strval($this->component->search), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+                $search = trim(strtolower(htmlspecialchars(strval($this->component->state()->search), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
 
                 $search = $this->getBeforeSearchMethod($field, $search);
 
@@ -52,16 +52,6 @@ final class GlobalSearch
 
     protected function getBeforeSearchMethod(string $field, ?string $search): ?string
     {
-        $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
-
-        if (method_exists($this->component, $method)) {
-            return strval($this->component->$method($search));
-        }
-
-        if (method_exists($this->component, 'beforeSearch')) {
-            return strval($this->component->beforeSearch($field, $search));
-        }
-
-        return $search;
+        return $this->component->applyBeforeSearch($field, $search);
     }
 }

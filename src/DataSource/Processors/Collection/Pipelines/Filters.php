@@ -4,16 +4,16 @@ namespace PowerComponents\LivewirePowerGrid\DataSource\Processors\Collection\Pip
 
 use Closure;
 use Illuminate\Support\Collection;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 use PowerComponents\LivewirePowerGrid\DataSource\Builders\{Boolean, DatePicker, DateTimePicker, InputText, MultiSelect, Number, Select};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\{FilterNormalizer, InputOperators};
 use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderHandler;
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final class Filters
 {
     use InputOperators;
 
-    public function __construct(protected PowerGridComponent $component) {}
+    public function __construct(protected PowerGridContext $component) {}
 
     /**
      * @param  Collection<int, mixed>  $collection
@@ -22,8 +22,9 @@ final class Filters
     public function handle(Collection $collection, Closure $next): Collection
     {
         $filterBuilder = new FilterBuilderHandler($this->component);
+        $filters = $this->component->state()->filters;
 
-        if (blank($this->component->filters)) {
+        if (blank($filters)) {
             return $next(
                 $filterBuilder->isActive() ? $filterBuilder->applyCollection($collection) : $collection
             );
@@ -32,8 +33,8 @@ final class Filters
         $definitions = collect($this->component->declaredFilters());
         $results = $collection;
 
-        foreach ($this->component->filters as $filterType => $columns) {
-            foreach (FilterNormalizer::normalize($columns) as $field => $value) {
+        foreach ($filters as $filterType => $columns) {
+            foreach (FilterNormalizer::normalize((array) $columns) as $field => $value) {
                 $definition = $definitions->first(fn ($filter) => data_get($filter, 'field') === $field);
 
                 if (! $definition) {
@@ -66,7 +67,7 @@ final class Filters
                         return (new Number($this->component, $definition))->collection($results, $field, $value);
                     })(),
                     'input_text' => (new InputText($this->component, $definition))->collection($results, $field, [
-                        'selected' => $this->validateInputTextOptions($this->component->filters, $field),
+                        'selected' => $this->validateInputTextOptions($this->component->state()->filters, $field),
                         'value' => $value,
                     ]),
                     default => $results

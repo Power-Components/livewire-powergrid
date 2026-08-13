@@ -6,28 +6,28 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, RelationNotFoundException};
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\{Builder as QueryBuilder, JoinClause};
-use Illuminate\Support\Facades\Schema;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, Contracts\PowerGridContext, Contracts\SchemaInspector};
 use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
 use stdClass;
 use Throwable;
 
 class SearchHandler implements SearchHandlerContract
 {
     public function __construct(
-        protected readonly PowerGridComponent $component
+        protected readonly PowerGridContext $component
     ) {}
 
     /** @param  EloquentBuilder<Model>|QueryBuilder  $query
      * @return EloquentBuilder<Model>|QueryBuilder */
     public function apply(EloquentBuilder|QueryBuilder $query): EloquentBuilder|QueryBuilder
     {
-        if ($this->component->search == '') {
+        $searchTerm = $this->component->state()->search;
+
+        if ($searchTerm == '') {
             return $query;
         }
 
-        $search = trim(strtolower(htmlspecialchars($this->component->search, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+        $search = trim(strtolower(htmlspecialchars($searchTerm, ENT_QUOTES | ENT_HTML5, 'UTF-8')));
         $hasRelationSearch = count($this->component->relationSearch()) && $query instanceof EloquentBuilder;
 
         $query->where(function (EloquentBuilder|QueryBuilder $subQuery) use ($search, $hasRelationSearch) {
@@ -143,15 +143,12 @@ class SearchHandler implements SearchHandlerContract
             : $query->getConnection();
         $connection = $conn instanceof Connection ? $conn->getName() : null;
 
+        $inspector = app(SchemaInspector::class);
+
         try {
-            return PowerGridTableCache::getOrCreate(
-                $modelTable,
-                fn () => collect(Schema::connection($connection)->getColumns($modelTable))
-                    ->pluck('type', 'name')
-                    ->toArray()
-            );
+            return $inspector->columnTypes($modelTable, $connection);
         } catch (Throwable) {
-            return Schema::connection($connection)->getColumnListing($modelTable);
+            return $inspector->columnListing($modelTable, $connection);
         }
     }
 
@@ -168,17 +165,7 @@ class SearchHandler implements SearchHandlerContract
 
     protected function getBeforeSearchMethod(string $field, ?string $search): ?string
     {
-        $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
-
-        if (method_exists($this->component, $method)) {
-            return $this->component->$method($search);
-        }
-
-        if (method_exists($this->component, 'beforeSearch')) {
-            return $this->component->beforeSearch($field, $search);
-        }
-
-        return $search;
+        return $this->component->applyBeforeSearch($field, $search);
     }
 
     /** @param  EloquentBuilder<Model>|QueryBuilder  $query

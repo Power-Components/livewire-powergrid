@@ -2,12 +2,12 @@
 
 namespace PowerComponents\LivewirePowerGrid\DataSource\Builders;
 
-use Livewire\Component;
 use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 
 class BuilderBase
 {
-    public static function make(Component $component, FilterBase $filterBase): self
+    public static function make(PowerGridContext $component, FilterBase $filterBase): self
     {
         return new self($component, $filterBase);
     }
@@ -16,7 +16,7 @@ class BuilderBase
      * @param  null|array<string, mixed>|FilterBase  $filterBase
      */
     public function __construct(
-        protected Component $component,
+        protected PowerGridContext $component,
         protected null|array|FilterBase $filterBase = null
     ) {}
 
@@ -26,7 +26,11 @@ class BuilderBase
      */
     protected static function appendNestedField(string $field, array $value): array
     {
-        $key = key($value);
+        $key = array_key_first($value);
+
+        if ($key === null) {
+            return [$field, null];
+        }
 
         if (is_string($key) && preg_match('/^[A-Za-z0-9_.>-]+$/', $key) === 1) {
             $field = $field.'.'.$key;

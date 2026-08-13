@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder;
 
 use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterBase, FilterInputText};
-use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Contracts\PowerGridContext;
 
 final class FilterBuilderValidator
 {
@@ -38,9 +38,9 @@ final class FilterBuilderValidator
      *     definition: FilterBase|null
      * }>
      */
-    public static function columnsMeta(PowerGridComponent $component): array
+    public static function columnsMeta(PowerGridContext $component): array
     {
-        $config = data_get($component->setUp, 'filterBuilder');
+        $config = data_get($component->state()->setUp, 'filterBuilder');
 
         /** @var list<string> $only */
         $only = (array) data_get($config, 'only', []);
@@ -49,7 +49,7 @@ final class FilterBuilderValidator
 
         $operatorsByType = self::operators();
 
-        $titles = collect($component->columns)
+        $titles = collect($component->state()->columns)
             ->flatMap(function ($column) {
                 /** @var string $field */
                 $field = data_get($column, 'field', '');
@@ -69,7 +69,7 @@ final class FilterBuilderValidator
 
         $meta = [];
 
-        foreach ($component->filters() as $definition) {
+        foreach ($component->declaredFilters() as $definition) {
             /** @var string $type */
             $type = data_get($definition, 'key', '');
             /** @var string $field */
