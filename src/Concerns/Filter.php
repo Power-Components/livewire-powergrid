@@ -240,6 +240,17 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
+    /**
+     * The flyout's close paths (Escape, backdrop, close button) assign `$showFilters`
+     * straight from Alpine so the drawer hides without waiting on the response. That
+     * assignment registers no partial on its own, which would drop the commit out of
+     * the `pg-filters` Hot Zone and force a full re-render.
+     */
+    public function updatedShowFilters(): void
+    {
+        $this->renderOutsideFiltersPartial();
+    }
+
     /** Configured filter position: `inline`, `outside`, `flyout`, or an empty string when filters are disabled. */
     public function filterPosition(): string
     {
