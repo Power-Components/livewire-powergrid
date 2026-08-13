@@ -10,7 +10,7 @@
                 @includeIf(theme_view('header.toggle-columns'))
                 @includeIf(theme_view('header.soft-deletes'))
 
-                @if (config('livewire-powergrid.filter') == 'outside' && count($this->filters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
+                @if ($this->usesFilterPanel() && count($this->filters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
                     @includeIf(theme_view('header.filters'))
                 @endif
             </div>
