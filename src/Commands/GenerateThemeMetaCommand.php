@@ -118,6 +118,7 @@ PHP;
             'filter.input_text',
             'filter.number',
             'filter.select',
+            'filter.flyout',
         ];
 
         $aliases = array_unique(array_merge($aliases, $canonicalAliases));
