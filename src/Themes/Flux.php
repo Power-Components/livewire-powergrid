@@ -114,6 +114,18 @@ class Flux extends Theme
                     ->input($this->input().' w-full')
                 )
                 ->input($this->input().' w-full')
+                ->flyout(fn (Components\Flyout $flyout) => $flyout
+                    ->overlay('fixed inset-0 z-40 bg-zinc-900/40')
+                    ->panel('fixed inset-y-0 z-50 flex w-full max-w-full flex-col bg-white shadow-xl dark:bg-zinc-900 sm:w-96 sm:max-w-[90vw]')
+                    ->panelLeft('left-0 border-r border-zinc-200 dark:border-zinc-700')
+                    ->panelRight('right-0 border-l border-zinc-200 dark:border-zinc-700')
+                    ->header('flex items-center justify-between gap-3 border-b border-zinc-200 px-4 py-3 dark:border-zinc-700')
+                    ->title('text-sm font-semibold text-zinc-800 dark:text-zinc-200')
+                    ->close('rounded-lg p-1.5 text-zinc-500 transition-colors hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700')
+                    ->body('flex-1 overflow-y-auto px-4 py-4')
+                    ->footer('border-t border-zinc-200 px-4 py-3 dark:border-zinc-700')
+                    ->clearAll($this->button().' w-full justify-center')
+                )
                 ->toArray(),
         ];
     }
