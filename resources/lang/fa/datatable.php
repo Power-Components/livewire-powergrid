@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'فیلتر',
         'clear_all_filters' => 'حذف همه',
+        'close' => 'بستن',
     ],
     'labels' => [
         'action' => 'اقدام ها',

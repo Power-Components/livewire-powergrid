@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Filtrovat',
         'clear_all_filters' => 'Vymazat vše',
+        'close' => 'Zavřít',
     ],
     'labels' => [
         'action' => 'Akce',

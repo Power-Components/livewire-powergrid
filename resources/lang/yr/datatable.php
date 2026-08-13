@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'àlẹmọ',
         'clear_all_filters' => 'Clear all',
+        'close' => 'Tì',
     ],
     'labels' => [
         'action' => 'Awọn Igbese',

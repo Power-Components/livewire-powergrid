@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Filter',
         'clear_all_filters' => 'Hapus semua',
+        'close' => 'Tutup',
     ],
     'labels' => [
         'action' => 'Aksi',

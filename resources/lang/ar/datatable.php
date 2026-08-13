@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'تصفية',
         'clear_all_filters' => 'مسح الكل',
+        'close' => 'إغلاق',
     ],
     'labels' => [
         'action' => 'العمليات',

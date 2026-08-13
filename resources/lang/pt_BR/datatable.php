@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Filtrar',
         'clear_all_filters' => 'Limpar Todos',
+        'close' => 'Fechar',
     ],
     'labels' => [
         'action' => 'Ações',
