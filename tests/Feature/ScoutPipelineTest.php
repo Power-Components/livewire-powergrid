@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Config;
 use Laravel\Scout\Builder as ScoutBuilder;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Scout\Pipelines\{Filters, Search, Sorting};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\DataSource\Processors\Scout\Pipelines\{Filters, Search, Sorting};
 
 beforeEach(function () {
     Config::set('livewire-powergrid.filter', 'outside');

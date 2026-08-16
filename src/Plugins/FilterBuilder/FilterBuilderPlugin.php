@@ -2,9 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder;
 
-use PowerComponents\LivewirePowerGrid\Components\Filters\FilterInputText;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\Flux;
+use PowerComponents\Turbine\Components\Filters\FilterInputText;
+use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
 
 class FilterBuilderPlugin extends PluginBase
 {

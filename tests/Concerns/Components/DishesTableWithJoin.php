@@ -4,8 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\Rule, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\Rule;
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\Column;
 
 class DishesTableWithJoin extends BaseDishesTable
 {

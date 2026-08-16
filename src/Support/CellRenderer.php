@@ -6,12 +6,6 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-/**
- * Builds every <td> of a table row as a single PHP HTML string, replacing the
- * per-cell Blade @foreach. The cell *structure* lives here (engine concern);
- * every class/style is injected from the active theme's tokens via the column
- * view-models and theme() — no theme conditionals, so themes stay swappable.
- */
 final readonly class CellRenderer
 {
     public function __construct(private PowerGridComponent $component) {}

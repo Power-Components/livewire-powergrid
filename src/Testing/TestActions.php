@@ -14,7 +14,7 @@ class TestActions
             $rows = $this->records->items();
 
             $allActions = collect($rows)
-                ->pluck('__powergrid_actions')
+                ->pluck('__turbine_actions')
                 ->flatten(1);
 
             $actionFound = $allActions->contains(fn (array $dishAction): bool => $dishAction['action'] === $action);
@@ -31,7 +31,7 @@ class TestActions
             /** @var PowerGridComponent $this */
             $rows = $this->records->items();
 
-            $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
+            $allActions = collect($rows)->pluck('__turbine_actions')->flatten(1);
 
             /** @var array|null $actionFound */
             $actionFound = $allActions->first(function ($dishAction) use ($action, $icon) {
@@ -56,7 +56,7 @@ class TestActions
             /** @var PowerGridComponent $this */
             $rows = $this->records->items();
 
-            $allActions = collect($rows)->pluck('__powergrid_actions')->flatten(1);
+            $allActions = collect($rows)->pluck('__turbine_actions')->flatten(1);
 
             $attributeFound = $allActions->first(function ($dishAction) use ($action, $attribute, $expected, $expectedParams) {
                 /** @var array $dishAction */

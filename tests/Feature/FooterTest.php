@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\SetUp\Footer;
+use PowerComponents\Turbine\Components\SetUp\Footer;
 
 it('adds custom perPage value when not in default array', function () {
     $footer = new Footer();

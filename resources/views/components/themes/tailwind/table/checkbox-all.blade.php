@@ -10,7 +10,7 @@
 
 @php
     $responsiveCheckboxColumnName =
-        \PowerComponents\LivewirePowerGrid\Components\SetUp\Responsive::CHECKBOX_COLUMN_NAME;
+        \PowerComponents\Turbine\Components\SetUp\Responsive::CHECKBOX_COLUMN_NAME;
 
     $isCheckboxFixedOnResponsive =
         isset($setUp['responsive']) &&

@@ -4,20 +4,29 @@ namespace PowerComponents\LivewirePowerGrid\Concerns\State;
 
 trait ResolvesBeforeSearch
 {
+    /**
+     * Resolve an optional user "before search" hook off the host instance.
+     *
+     * Both a field-specific ("beforeSearchName") and a global ("beforeSearch")
+     * hook are resolved dynamically: the host that carries this trait (a
+     * Turbine component) MAY define either, neither, or both. A headless
+     * context defines none, so the raw term is returned unchanged.
+     */
     public function applyBeforeSearch(string $field, ?string $search): ?string
     {
-        $method = 'beforeSearch'.str($field)->headline()->replace(' ', '');
+        $fieldHook = 'beforeSearch'.str($field)->headline()->replace(' ', '');
+        $globalHook = 'beforeSearch';
 
-        if (method_exists($this, $method)) {
+        if (method_exists($this, $fieldHook)) {
             /** @var string|null $result */
-            $result = $this->{$method}($search);
+            $result = $this->{$fieldHook}($search);
 
             return $result;
         }
 
-        if (method_exists($this, 'beforeSearch')) {
+        if (method_exists($this, $globalHook)) {
             /** @var string|null $result */
-            $result = $this->beforeSearch($field, $search);
+            $result = $this->{$globalHook}($field, $search);
 
             return $result;
         }

@@ -1,14 +1,15 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\{Button, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Rule;
-use PowerComponents\LivewirePowerGrid\Support\Actions\ActionsResolver;
-use PowerComponents\LivewirePowerGrid\Support\State\{ArrayGridContext, PowerGridState};
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
+use PowerComponents\Turbine\Button;
+use PowerComponents\Turbine\Support\Actions\ActionsResolver;
+use PowerComponents\Turbine\Support\State\{ArrayGridContext, State};
 
 function actionsContext(?callable $actions, ?callable $rules = null): ArrayGridContext
 {
     return new ArrayGridContext(
-        state: PowerGridState::fromArray(['primaryKey' => 'id']),
+        state: State::fromArray(['primaryKey' => 'id']),
         datasourceResolver: fn () => collect([]),
         fields: new PowerGridFields(),
         actionsResolver: $actions,

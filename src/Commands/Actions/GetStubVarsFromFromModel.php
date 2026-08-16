@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;
 class GetStubVarsFromFromModel
 {
     /**
-     * @return array{'PowerGridFields': string, 'filters': string, 'columns': string}
+     * @return array{'Fields': string, 'filters': string, 'columns': string}
      */
     public static function handle(PowerGridComponentMaker $component): array
     {

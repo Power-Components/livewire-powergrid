@@ -20,7 +20,7 @@
         if (
             data_get($column, 'isAction') &&
             in_array(
-                \PowerComponents\LivewirePowerGrid\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME,
+                \PowerComponents\Turbine\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME,
                 data_get($setUp, 'responsive.fixedColumns'),
             )
         ) {

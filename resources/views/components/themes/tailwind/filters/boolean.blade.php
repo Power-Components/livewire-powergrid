@@ -5,14 +5,13 @@
     'filter' => null,
 ])
 @php
-    $fieldClassName = data_get($filter, 'className');
     $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
 
     $trueLabel = data_get($filter, 'trueLabel');
     $falseLabel = data_get($filter, 'falseLabel');
 
-    $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $field, $title);
 
     $selectClasses = Arr::toCssClasses([
         theme('filter.boolean.select'),

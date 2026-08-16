@@ -5,13 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\{Button,
-    Column,
-    Components\SetUp\Exportable,
-    Facades\PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\{Button, Column};
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 class DishesMakeTable extends PowerGridComponent
 {

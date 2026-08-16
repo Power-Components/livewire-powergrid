@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 it('finds database driver name', function () {
     expect(Sql::getDatabaseDriverName())->not->toBeNull();

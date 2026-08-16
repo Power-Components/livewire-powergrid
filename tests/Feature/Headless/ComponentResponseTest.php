@@ -2,15 +2,11 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\{Button, Column};
 
-/**
- * Proves a real PowerGridComponent (Livewire table) produces the same JSON
- * envelope headlessly — reusing its own datasource/columns/fields/filters/actions
- * definitions, driven by request state, with no Livewire lifecycle.
- */
 function dishGridComponent(): PowerGridComponent
 {
     return new class() extends PowerGridComponent
@@ -60,8 +56,8 @@ it('builds the envelope from a PowerGridComponent and echoes request state', fun
     expect($envelope['data'])->not->toBeEmpty()
         ->and($envelope['data'][0])->toHaveKeys(['id', 'name'])
         // rows are clean — no Livewire display metadata leaks into the JSON
-        ->and($envelope['data'][0])->not->toHaveKey('__powergrid_actions')
-        ->and($envelope['data'][0])->not->toHaveKey('__powergrid_rules')
+        ->and($envelope['data'][0])->not->toHaveKey('__turbine_actions')
+        ->and($envelope['data'][0])->not->toHaveKey('__turbine_rules')
         ->and($envelope['meta']['pagination']['per_page'])->toBe(5)
         ->and($envelope['meta']['pagination']['total'])->toBe(Dish::query()->count())
         ->and($envelope['columns'])->toHaveCount(2)

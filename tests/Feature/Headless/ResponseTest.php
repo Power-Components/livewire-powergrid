@@ -1,15 +1,16 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Http\PowerGridResponse;
-use PowerComponents\LivewirePowerGrid\Support\State\{ArrayGridContext, PowerGridState};
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\{Button, Column};
+use PowerComponents\Turbine\Response;
+use PowerComponents\Turbine\Support\State\{ArrayGridContext, State};
 
 function responseContext(array $statePayload = []): ArrayGridContext
 {
     return new ArrayGridContext(
-        state: PowerGridState::fromArray(array_merge([
+        state: State::fromArray(array_merge([
             'primaryKey' => 'id',
             'tableName' => 'dishes',
             'sortField' => 'id',
@@ -30,7 +31,7 @@ function responseContext(array $statePayload = []): ArrayGridContext
 }
 
 it('builds a JSON envelope with data, meta, columns, filters and actions', function () {
-    $envelope = PowerGridResponse::make(responseContext())->toArray();
+    $envelope = Response::make(responseContext())->toArray();
 
     expect($envelope['data'])->toBeArray()->not->toBeEmpty()
         ->and($envelope['data'][0])->toHaveKeys(['id', 'name'])
@@ -49,7 +50,7 @@ it('builds a JSON envelope with data, meta, columns, filters and actions', funct
 });
 
 it('keys resolved action descriptors by primary key', function () {
-    $envelope = PowerGridResponse::make(responseContext())->toArray();
+    $envelope = Response::make(responseContext())->toArray();
 
     $firstId = (int) $envelope['data'][0]['id'];
 
@@ -62,7 +63,7 @@ it('keys resolved action descriptors by primary key', function () {
 });
 
 it('echoes search state and narrows data in the envelope', function () {
-    $envelope = PowerGridResponse::make(responseContext(['search' => 'Pastel']))->toArray();
+    $envelope = Response::make(responseContext(['search' => 'Pastel']))->toArray();
 
     expect($envelope['meta']['search'])->toBe('Pastel')
         ->and($envelope['meta']['pagination']['total'])->toBe(
@@ -71,7 +72,7 @@ it('echoes search state and narrows data in the envelope', function () {
 });
 
 it('produces a JSON response', function () {
-    $response = PowerGridResponse::make(responseContext())->toResponse();
+    $response = Response::make(responseContext())->toResponse();
 
     expect($response->getStatusCode())->toBe(200)
         ->and($response->headers->get('content-type'))->toContain('application/json');

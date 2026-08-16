@@ -2,13 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Support;
 
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\Turbine\Column;
 
-/**
- * Immutable per-column render metadata, resolved once per request. Row-invariant
- * values — including the theme-resolved `class`/`style` token strings — are
- * precomputed here so the per-cell render path does no repeated theme/data_get work.
- */
 final readonly class ColumnViewModel
 {
     /**

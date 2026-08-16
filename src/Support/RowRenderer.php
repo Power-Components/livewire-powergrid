@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\View\ComponentAttributeBag;
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\Turbine\Components\Rules\RuleManager;
 
 final class RowRenderer
 {
@@ -37,7 +37,7 @@ final class RowRenderer
         }
 
         if (data_get($this->component->setUp, 'detail.showCollapseIcon')) {
-            $rules = (array) data_get($row, '__powergrid_rules', []);
+            $rules = (array) data_get($row, '__turbine_rules', []);
 
             /** @var view-string $toggleDetailView */
             $toggleDetailView = data_get(collect($rules)->last(), 'toggleDetailView')
@@ -77,7 +77,7 @@ final class RowRenderer
         ]);
 
         /** @var array<int, array<string, mixed>> $allRules */
-        $allRules = (array) data_get($row, '__powergrid_rules', []);
+        $allRules = (array) data_get($row, '__turbine_rules', []);
 
         $rules = collect($allRules)
             ->where('apply', true)

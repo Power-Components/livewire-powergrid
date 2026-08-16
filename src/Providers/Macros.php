@@ -7,16 +7,18 @@ use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Js;
 use Laravel\Scout\{Builder, Builder as ScoutBuilder};
 use Laravel\Scout\Contracts\PaginatesEloquentModels;
-use PowerComponents\LivewirePowerGrid\{Button, Column, PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleActions;
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
+use PowerComponents\LivewirePowerGrid\{Button, Column};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\Turbine\{Button as TurbineButton, Column as TurbineColumn};
+use PowerComponents\Turbine\Components\Rules\RuleActions;
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 class Macros
 {
     public static function columns(): void
     {
         // @deprecated since 7.x — withSum/withCount/withAvg/withMin/withMax are deprecated; use withSummary() with a closure instead.
-        Column::macro('withSum', function (string $label, bool $header = false, bool $footer = true): Column {
+        Column::macro('withSum', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.sum.label', $label);
@@ -28,7 +30,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withCount', function (string $label, bool $header = false, bool $footer = true): Column {
+        Column::macro('withCount', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.count.label', $label);
@@ -40,7 +42,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withAvg', function (string $label, bool $header = false, bool $footer = true): Column {
+        Column::macro('withAvg', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.avg.label', $label);
@@ -52,7 +54,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMin', function (string $label, bool $header = false, bool $footer = true): Column {
+        Column::macro('withMin', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.min.label', $label);
@@ -64,7 +66,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withMax', function (string $label, bool $header = false, bool $footer = true): Column {
+        Column::macro('withMax', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, 'summarize.max.label', $label);
@@ -76,7 +78,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('withSummary', function (string $key, string $label, \Closure $using, bool $header = false, bool $footer = true): Column {
+        Column::macro('withSummary', function (string $key, string $label, \Closure $using, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
             $props = $this->properties;
             data_set($props, "summarize.custom.{$key}.label", $label);
@@ -91,7 +93,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('searchableRaw', function (string $sql = ''): Column {
+        Column::macro('searchableRaw', function (string $sql = ''): TurbineColumn {
             /** @var Column $this */
             $field = $this->dataField ?: $this->field;
 
@@ -118,7 +120,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('searchableJson', function (string $tableName): Column {
+        Column::macro('searchableJson', function (string $tableName): TurbineColumn {
             $this->rawQueries[] = [
                 'method' => 'orWhereRaw',
                 'sql' => function () use ($tableName) {
@@ -147,7 +149,7 @@ class Macros
             return $this;
         });
 
-        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null): Column {
+        Column::macro('naturalSort', function (bool $when = false, ?string $tableName = null): TurbineColumn {
             /** @var Column $this */
             $this->enableSort();
 
@@ -167,7 +169,7 @@ class Macros
 
     public static function actions(): void
     {
-        Button::macro('class', function (string $classes): Button {
+        Button::macro('class', function (string $classes): TurbineButton {
             $this->attributes([
                 'class' => $classes,
             ]);
@@ -175,7 +177,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('call', function (string $method, array $params): Button {
+        Button::macro('call', function (string $method, array $params): TurbineButton {
             $this->attributes([
                 'wire:click' => "\$call('{$method}', ".Js::from($params).')',
             ]);
@@ -185,7 +187,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatch', function (string $event, array $params): Button {
+        Button::macro('dispatch', function (string $event, array $params): TurbineButton {
             $this->attributes([
                 'wire:click' => "\$dispatch('{$event}', ".Js::from($params).')',
             ]);
@@ -195,7 +197,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatchTo', function (string $component, string $event, array $params): Button {
+        Button::macro('dispatchTo', function (string $component, string $event, array $params): TurbineButton {
             $this->attributes([
                 'wire:click' => "\$dispatchTo('{$component}', '{$event}', ".Js::from($params).')',
             ]);
@@ -205,7 +207,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('dispatchSelf', function (string $event, array $params): Button {
+        Button::macro('dispatchSelf', function (string $event, array $params): TurbineButton {
             $this->attributes([
                 'wire:click' => "\$dispatchSelf('{$event}', ".Js::from($params).')',
             ]);
@@ -215,7 +217,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('parent', function (string $method, array $params): Button {
+        Button::macro('parent', function (string $method, array $params): TurbineButton {
             $this->attributes([
                 'wire:click' => "\$parent.{$method}(".Js::from($params).')',
             ]);
@@ -225,7 +227,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('openModal', function (string $component, array $params): Button {
+        Button::macro('openModal', function (string $component, array $params): TurbineButton {
             $encoded = Js::from([
                 'component' => $component,
                 'arguments' => $params,
@@ -240,7 +242,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('disable', function (bool $disable = true): Button {
+        Button::macro('disable', function (bool $disable = true): TurbineButton {
             if ($disable) {
                 $this->attributes([
                     'disabled' => 'disabled',
@@ -250,7 +252,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('tooltip', function (string $value): Button {
+        Button::macro('tooltip', function (string $value): TurbineButton {
             $this->attributes([
                 'title' => $value,
             ]);
@@ -258,7 +260,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('route', function (string $route, array $params, string $target = '_self'): Button {
+        Button::macro('route', function (string $route, array $params, string $target = '_self'): TurbineButton {
             $this->tag('a');
 
             $href = route($route, $params);
@@ -273,7 +275,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('id', function (?string $id = null): Button {
+        Button::macro('id', function (?string $id = null): TurbineButton {
             $this->attributes([
                 'id' => $id,
             ]);
@@ -281,13 +283,13 @@ class Macros
             return $this;
         });
 
-        Button::macro('can', function (bool|\Closure $closure): Button {
+        Button::macro('can', function (bool|\Closure $closure): TurbineButton {
             $this->can = $closure;
 
             return $this;
         });
 
-        Button::macro('confirm', function (?string $message = null): Button {
+        Button::macro('confirm', function (?string $message = null): TurbineButton {
             $this->attributes([
                 'wire:confirm' => $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm.message'),
             ]);
@@ -295,7 +297,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm'): Button {
+        Button::macro('confirmPrompt', function (?string $message = null, string $confirmValue = 'Confirm'): TurbineButton {
             $message = $message ?? trans('livewire-powergrid::datatable.buttons_macros.confirm_prompt.message', ['confirm_value' => $confirmValue]);
             $confirmValue = trim($confirmValue);
 
@@ -306,7 +308,7 @@ class Macros
             return $this;
         });
 
-        Button::macro('toggleDetail', function (int|string $rowId): Button {
+        Button::macro('toggleDetail', function (int|string $rowId): TurbineButton {
             $this->attributes([
                 'wire:click' => "toggleDetail('$rowId')",
             ]);

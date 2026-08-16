@@ -1,5 +1,5 @@
 @php
-    use PowerComponents\LivewirePowerGrid\DataSource\DataTransformer;
+    use PowerComponents\Turbine\DataSource\DataTransformer;
     use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
     $dataTransformer = new DataTransformer($this);

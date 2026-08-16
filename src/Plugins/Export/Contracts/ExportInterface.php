@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts;
 
-use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 interface ExportInterface

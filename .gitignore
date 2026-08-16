@@ -11,7 +11,7 @@ vendor
 
 pnpm-lock.yaml
 tmp/
-dist/powergrid.js.LICENSE.txt
+dist/turbine.js.LICENSE.txt
 .env
 
 tests/cypress/app/
@@ -21,3 +21,4 @@ tests/cypress/cypress/screenshots/*
 composer.lock
 /packages/*
 /workspace
+.junie

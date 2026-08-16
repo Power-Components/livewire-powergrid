@@ -61,13 +61,13 @@
 
                     @php
                         $hasDetailView = (bool) data_get(
-                            collect($row->__powergrid_rules)->where('apply', true)->last(),
+                            collect($row->__turbine_rules)->where('apply', true)->last(),
                             'detailView',
                         );
 
                         if ($hasDetailView) {
-                            $detailView = data_get($row->__powergrid_rules, '0.detailView');
-                            $rulesValues = data_get($row->__powergrid_rules, '0.options', []);
+                            $detailView = data_get($row->__turbine_rules, '0.detailView');
+                            $rulesValues = data_get($row->__turbine_rules, '0.options', []);
                         } else {
                             $detailView = data_get($__partial->setUp, 'detail.view');
                             $rulesValues = data_get($__partial->setUp, 'detail.options', []);

@@ -3,9 +3,9 @@
         'class' => theme('table.checkbox.input'),
     ]);
 
-    $rules = collect($row->__powergrid_rules)
+    $rules = collect($row->__turbine_rules)
         ->where('apply', true)
-        ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_CHECKBOX)
+        ->where('forAction', \PowerComponents\Turbine\Components\Rules\RuleManager::TYPE_CHECKBOX)
         ->last();
 
     if (isset($rules['attributes'])) {

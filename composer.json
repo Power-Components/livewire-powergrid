@@ -22,7 +22,8 @@
     "livewire/livewire": "^4.0",
     "laravel/prompts": "^0.1|^0.2|^0.3",
     "livewire/blaze": "^1.0",
-    "power-components/partials": "^0.1.0"
+    "power-components/partials": "^0.1.0",
+    "power-components/turbine": "dev-main"
   },
   "conflict": {
     "laravel/framework": "<12.0",
@@ -97,5 +98,10 @@
       "composer/package-versions-deprecated": true,
       "pestphp/pest-plugin": true
     }
-  }
+  },
+  "repositories": [{
+    "name": "turbine",
+    "type": "path",
+    "url": "../turbine"
+  }]
 }

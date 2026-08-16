@@ -1,7 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 uses()->group('helpers', 'sql');
 

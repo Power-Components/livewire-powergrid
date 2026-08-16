@@ -23,7 +23,7 @@
 
         unset($filter['placeholder']);
 
-        $defaultAttributes = $fieldClassName::getWireAttributes($field, $title);
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $field, $title);
 
         $selectClasses = theme('filter.input_text.select');
         $inputClasses = theme('filter.input_text.input');

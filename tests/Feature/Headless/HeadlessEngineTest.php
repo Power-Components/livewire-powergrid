@@ -2,17 +2,12 @@
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
-use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Support\State\{ArrayGridContext, PowerGridState};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\Components\Filters\FilterBase;
+use PowerComponents\Turbine\DataSource\ProcessDataSource;
+use PowerComponents\Turbine\Support\State\{ArrayGridContext, State};
 
-/**
- * These tests exercise the data engine (search / filter / sort / paginate)
- * through a plain PHP {@see ArrayGridContext} with NO Livewire component booted
- * and no Livewire::test() — proving the backend is usable headless (Inertia/React).
- */
 function headlessFields(): PowerGridFields
 {
     return (new PowerGridFields())
@@ -37,7 +32,7 @@ function headlessColumns(): array
  */
 function headlessContext(array $statePayload = [], ?callable $datasource = null, array $filters = []): ArrayGridContext
 {
-    $state = PowerGridState::fromArray(array_merge([
+    $state = State::fromArray(array_merge([
         'primaryKey' => 'id',
         'tableName' => 'dishes',
         'sortField' => 'id',
@@ -115,8 +110,6 @@ it('runs search and sort over a collection datasource headlessly', function () {
 });
 
 it('ignores an undeclared filter field (mass-assignment guard) headlessly', function () {
-    // 'price' is a real column but NOT declared as a filter, so a crafted
-    // filter payload for it must be ignored — total stays the full set.
     $context = headlessContext(
         statePayload: ['filters' => ['input_text' => ['price' => '10']]],
         filters: [Filter::inputText('name')],

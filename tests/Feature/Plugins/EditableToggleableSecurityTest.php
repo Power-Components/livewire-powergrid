@@ -1,6 +1,7 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
 

@@ -2,7 +2,8 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;

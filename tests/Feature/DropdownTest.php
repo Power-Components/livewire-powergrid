@@ -1,9 +1,10 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 it('renders export dropdown with xlsx button', function () {
     config(['livewire-powergrid.theme' => Tailwind::class]);

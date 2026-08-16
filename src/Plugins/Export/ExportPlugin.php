@@ -9,15 +9,13 @@ use Illuminate\Support;
 use Illuminate\Support\{Collection, LazyCollection, Str};
 use Illuminate\Support\Facades\Bus;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\{Components\SetUp\Exportable,
-    DataSource\DataTransformer,
-    DataSource\ProcessDataSource,
-    DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract,
-    DataSource\Support\Sql};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
+use PowerComponents\Turbine\Components\SetUp\Exportable;
+use PowerComponents\Turbine\DataSource\{DataTransformer, ProcessDataSource};
+use PowerComponents\Turbine\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
+use PowerComponents\Turbine\DataSource\Support\Sql;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -80,7 +78,7 @@ class ExportPlugin extends PluginBase
 
     /**
      * The batch-export progress/download panel rendered below the header.
-     * PowerGrid ships no default panel: the user opts in by registering their
+     * Turbine ships no default panel: the user opts in by registering their
      * own view via Exportable::progressView(). The view receives $exportState
      * (keys: exporting, finished, id, progress, files, errors) and $tableName.
      */

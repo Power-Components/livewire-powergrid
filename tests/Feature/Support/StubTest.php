@@ -42,7 +42,7 @@ it('properly replaces legacy variables', function () {
         ->setVar('model', 'User')
         ->setVar('modelFqn', 'App\Models\User')
         ->setVar('databaseTableName', 'users')
-        ->setVar('PowerGridFields', "->add('created_at')")
+        ->setVar('Fields', "->add('created_at')")
         ->render();
 
     expect($stub)

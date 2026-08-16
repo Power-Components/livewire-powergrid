@@ -41,7 +41,7 @@ final class {{ componentName }} extends PowerGridComponent
 
     public function fields(): PowerGridFields
     {
-        return PowerGrid::fields(){{ PowerGridFields }};
+        return PowerGrid::fields(){{ Fields }};
     }
 
     public function columns(): array

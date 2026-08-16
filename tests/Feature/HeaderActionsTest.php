@@ -1,8 +1,10 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Themes\DaisyUI;
+use PowerComponents\Turbine\{Button, Column};
 
 describe('renderHeaderActions – HTML structure', function () {
     it('renders the buttons returned by header()', function () {

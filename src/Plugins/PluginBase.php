@@ -2,14 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins;
 
-use Livewire\Wireable;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\Turbine\Column as TurbineColumn;
 use stdClass;
 
 /**
  * @phpstan-consistent-constructor
  */
-abstract class PluginBase implements Wireable
+abstract class PluginBase
 {
     public function __construct(
         protected PowerGridComponent $component
@@ -40,7 +40,7 @@ abstract class PluginBase implements Wireable
     /**
      * Process rule data for the row. Plugins can extract their own
      * visibility/modifier data from the formatted rules array.
-     * Returns key-value pairs to merge into the row's __powergrid_rules entry.
+     * Returns key-value pairs to merge into the row's __turbine_rules entry.
      *
      * @param  array<string, mixed>  $rule
      * @return array<string, mixed>
@@ -54,8 +54,8 @@ abstract class PluginBase implements Wireable
 
     abstract public function isEnabled(): bool;
 
-    /** @param  Column|array<mixed>|stdClass  $column */
-    public function handles(Column|array|stdClass $column): bool
+    /** @param  TurbineColumn|array<mixed>|stdClass  $column */
+    public function handles(TurbineColumn|array|stdClass $column): bool
     {
         return false;
     }
@@ -93,8 +93,8 @@ abstract class PluginBase implements Wireable
         return null;
     }
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
-    public function render(Column|array|stdClass $column, mixed $row): ?string
+    /** @param  TurbineColumn|array<string, mixed>|stdClass  $column */
+    public function render(TurbineColumn|array|stdClass $column, mixed $row): ?string
     {
         return null;
     }
@@ -132,16 +132,5 @@ abstract class PluginBase implements Wireable
     public static function themeTokens(): array
     {
         return [];
-    }
-
-    /** @return array<string, mixed> */
-    public function toLivewire(): array
-    {
-        return [];
-    }
-
-    public static function fromLivewire($value): static
-    {
-        return new static(app(PowerGridComponent::class));
     }
 }

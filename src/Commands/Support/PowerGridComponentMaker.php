@@ -6,8 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel};
-use PowerComponents\LivewirePowerGrid\Commands\Actions\SanitizeComponentName;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{GetStubVarsFromDbTable, GetStubVarsFromFromModel, SanitizeComponentName};
 use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 
 /**
@@ -214,15 +213,15 @@ final class PowerGridComponentMaker
 
         if ($this->autoCreateColumns() === true) {
             if ($this->datasource === Datasource::ELOQUENT_BUILDER) {
-                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromFromModel::handle($this);
+                ['Fields' => $Fields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromFromModel::handle($this);
             }
 
             if ($this->datasource === Datasource::QUERY_BUILDER) {
-                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromDbTable::handle($this);
+                ['Fields' => $Fields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromDbTable::handle($this);
             }
         }
 
-        $this->stub->setVar('PowerGridFields', $PowerGridFields ?? '');
+        $this->stub->setVar('Fields', $Fields ?? '');
 
         $this->stub->setVar('filters', $filters ?? '');
 

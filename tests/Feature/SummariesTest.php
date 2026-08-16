@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\{DB, Schema};
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Chef, Dish};
 
 function seedSummaryDishes(): void
@@ -54,7 +55,7 @@ it('collapses every aggregate into a single batched query', function () {
     $aggregateQueries = 0;
 
     DB::listen(function ($query) use (&$aggregateQueries) {
-        if (str_contains($query->sql, 'pg_summary_')) {
+        if (str_contains($query->sql, 'turbine_summary_')) {
             $aggregateQueries++;
         }
     });
@@ -110,7 +111,7 @@ it('keeps showing totals when the dataset is served from cache', function () {
     // no aggregate query runs and totals come from the dedicated summaries cache.
     $aggregateQueries = 0;
     DB::listen(function ($query) use (&$aggregateQueries) {
-        if (str_contains($query->sql, 'pg_summary_')) {
+        if (str_contains($query->sql, 'turbine_summary_')) {
             $aggregateQueries++;
         }
     });

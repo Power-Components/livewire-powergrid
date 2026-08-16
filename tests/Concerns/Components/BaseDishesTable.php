@@ -4,11 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Carbon\Carbon;
 use NumberFormatter;
-use PowerComponents\LivewirePowerGrid\{Column,
-    Components\SetUp\Exportable,
-    Facades\PowerGrid,
-    PowerGridComponent,
-    PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
+use PowerComponents\Turbine\Column;
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 abstract class BaseDishesTable extends PowerGridComponent
 {

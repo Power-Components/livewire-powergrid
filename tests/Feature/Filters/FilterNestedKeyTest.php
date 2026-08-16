@@ -1,8 +1,8 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\DataSource\Builders\Select;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\DataSource\Builders\Select;
 
 uses()->group('filters', 'security', 'database');
 

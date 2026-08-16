@@ -4,7 +4,7 @@ use Illuminate\View\View;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
-it('shows the PowerGrid default empty state message', function () {
+it('shows the Turbine default empty state message', function () {
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-empty-state';

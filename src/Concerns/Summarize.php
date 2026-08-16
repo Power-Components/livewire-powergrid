@@ -4,11 +4,12 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use PowerComponents\LivewirePowerGrid\Column;
-use stdClass;
+use PowerComponents\Turbine\Concerns\State\ResolvesSummaries;
 
 trait Summarize
 {
+    use ResolvesSummaries;
+
     public bool $headerTotalColumn = false;
 
     public bool $footerTotalColumn = false;
@@ -46,14 +47,6 @@ trait Summarize
                 $this->headerTotalColumn = $this->headerTotalColumn || $hasHeader;
                 $this->footerTotalColumn = $this->footerTotalColumn || $hasFooter;
             });
-    }
-
-    public function hasSummarizeInColumns(): bool
-    {
-        return collect($this->columns)
-            ->filter(function (array|stdClass|Column $column) { // @phpstan-ignore-line
-                return data_get($column, 'properties.summarize');
-            })->count() > 0;
     }
 
     /**

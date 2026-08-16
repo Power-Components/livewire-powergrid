@@ -2,9 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleActions;
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\{Button, Column};
+use PowerComponents\Turbine\Components\Rules\RuleActions;
 
 it('tests Column withSum macro', function () {
     $column = Column::make('Price', 'price')

@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache, Detail, Exportable, FilterBuilder, Footer, Header, Responsive};
 use PowerComponents\LivewirePowerGrid\{PowerGridFields, PowerGridManager};
+use PowerComponents\Turbine\Components\SetUp\{Cache, Detail, Exportable, FilterBuilder, Footer, Header, Responsive};
 
 /**
  * @method static PowerGridFields fields()

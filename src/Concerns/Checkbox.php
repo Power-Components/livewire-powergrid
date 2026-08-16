@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use Livewire\Attributes\Locked;
+use PowerComponents\Turbine\Components\Rules\RuleManager;
 use stdClass;
 use Throwable;
 
@@ -45,9 +46,9 @@ trait Checkbox
         collect($records->items())->each(function (array|Model|stdClass $model) {
             $value = $model->{$this->checkboxAttribute};
 
-            $checkboxRule = collect((array) data_get($model, '__powergrid_rules'))
+            $checkboxRule = collect((array) data_get($model, '__turbine_rules'))
                 ->where('apply', true)
-                ->where('forAction', 'pg:checkbox')
+                ->where('forAction', RuleManager::TYPE_CHECKBOX)
                 ->last();
 
             if ((bool) data_get($checkboxRule, 'hide') || (bool) data_get($checkboxRule, 'disable')) {

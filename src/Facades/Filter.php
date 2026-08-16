@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterBoolean, FilterDatePicker, FilterDateTimePicker, FilterDynamic, FilterEnumSelect, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect};
+use PowerComponents\Turbine\Components\Filters\{FilterBoolean, FilterDatePicker, FilterDateTimePicker, FilterDynamic, FilterEnumSelect, FilterInputText, FilterMultiSelect, FilterNumber, FilterSelect};
 
 /**
  * @method static FilterMultiSelect multiSelect(string $column, ?string $field = null)

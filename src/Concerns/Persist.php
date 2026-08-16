@@ -4,8 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
 use Illuminate\Support\Facades\{Cache, Cookie, Session};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\Turbine\DataSource\Support\Sql;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /** @codeCoverageIgnore */

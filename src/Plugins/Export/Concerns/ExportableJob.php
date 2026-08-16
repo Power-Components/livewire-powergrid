@@ -4,13 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns;
 
 use Illuminate\Database\Eloquent;
 use Illuminate\Support\{Collection, LazyCollection, Str, Stringable};
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
-    DataSource\ProcessDataSource,
-    DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract,
-    DataSource\Support\Sql,
-    PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\Turbine\DataSource\{DataTransformer, ProcessDataSource};
+use PowerComponents\Turbine\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 /** @codeCoverageIgnore */
 trait ExportableJob

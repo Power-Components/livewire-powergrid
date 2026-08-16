@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Http\{JsonResponse, Request};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
-use PowerComponents\LivewirePowerGrid\Http\PowerGridResponse;
+use PowerComponents\Turbine\DataSource\Support\Sql;
+use PowerComponents\Turbine\Response;
 
 trait RespondsWithData
 {
@@ -15,7 +15,7 @@ trait RespondsWithData
     {
         $this->prepareForData($request ?? request());
 
-        return PowerGridResponse::make($this)->toArray();
+        return Response::make($this)->toArray();
     }
 
     public function toDataResponse(?Request $request = null): JsonResponse
@@ -38,7 +38,7 @@ trait RespondsWithData
         $this->applyDefaultFilters();
 
         /** @var array<string, mixed> $payload */
-        $payload = (array) $request->input('powergrid', []);
+        $payload = (array) ($request->input('powergrid') ?? $request->input('turbine', []));
 
         $search = $payload['search'] ?? null;
 

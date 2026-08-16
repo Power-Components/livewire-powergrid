@@ -4,16 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Commands;
 
 use Exception;
 use Illuminate\Console\Command;
-use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource,
-    AskComponentName,
-    AskDatabaseTableName,
-    AskModelName,
-    BuildStubVars,
-    CheckIfDatabaseHasTables,
-    ConfirmAutoImportFields,
-    ConfirmGeneratedColumns,
-    ResolveGeneratedColumns};
-use PowerComponents\LivewirePowerGrid\Commands\Actions\AskComponentDatasource;
+use PowerComponents\LivewirePowerGrid\Commands\Actions\{AskColumnSource, AskComponentDatasource, AskComponentName, AskDatabaseTableName, AskModelName, BuildStubVars, CheckIfDatabaseHasTables, ConfirmAutoImportFields, ConfirmGeneratedColumns, ResolveGeneratedColumns};
 use PowerComponents\LivewirePowerGrid\Commands\Concerns\RenderAscii;
 use PowerComponents\LivewirePowerGrid\Commands\Enums\{ColumnSource, Datasource};
 use PowerComponents\LivewirePowerGrid\Commands\Support\PowerGridComponentMaker;

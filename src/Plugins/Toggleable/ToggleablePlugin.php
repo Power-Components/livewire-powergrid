@@ -4,8 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Toggleable;
 
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleManager, RuleToggleable};
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
+use PowerComponents\Turbine\Column as TurbineColumn;
+use PowerComponents\Turbine\Components\Rules\{RuleManager, RuleToggleable};
 use stdClass;
 
 class ToggleablePlugin extends PluginBase
@@ -16,8 +17,8 @@ class ToggleablePlugin extends PluginBase
             bool $hasPermission = true,
             string $trueLabel = 'Yes',
             string $falseLabel = 'No',
-        ): Column {
-            /** @var Column $this */
+        ): TurbineColumn {
+            /** @var TurbineColumn $this */
             $this->pluginData['editable'] = [];
             $this->pluginData['toggleable'] = [
                 'enabled' => $hasPermission,
@@ -63,8 +64,8 @@ class ToggleablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.toggleable')));
     }
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
-    public function handles(Column|array|stdClass $column): bool
+    /** @param  TurbineColumn|array<string, mixed>|stdClass  $column */
+    public function handles(TurbineColumn|array|stdClass $column): bool
     {
         return ! empty(data_get($column, 'pluginData.toggleable'));
     }
@@ -90,9 +91,9 @@ class ToggleablePlugin extends PluginBase
      * Build the per-row switch cell as a PHP HTML string (replaces the old
      * per-row Blade view, which was the top cost in the tbody render path).
      *
-     * @param  Column|array<string, mixed>|stdClass  $column
+     * @param  TurbineColumn|array<string, mixed>|stdClass  $column
      */
-    public function render(Column|array|stdClass $column, mixed $row): ?string
+    public function render(TurbineColumn|array|stdClass $column, mixed $row): ?string
     {
         $showToggleable = $this->shouldShowToggleable($column, $row);
 
@@ -181,8 +182,8 @@ class ToggleablePlugin extends PluginBase
         $this->component->onUpdatedToggleable((string) $id, $field, (string) $value);
     }
 
-    /** @param  stdClass|Column|array<string, mixed>  $column */
-    private function shouldShowToggleable(stdClass|Column|array $column, mixed $row): bool
+    /** @param  stdClass|TurbineColumn|array<string, mixed>  $column */
+    private function shouldShowToggleable(stdClass|TurbineColumn|array $column, mixed $row): bool
     {
         $showToggleable = boolval(data_get($column, 'pluginData.toggleable.enabled', false));
 

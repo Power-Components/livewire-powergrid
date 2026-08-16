@@ -3,8 +3,8 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use PowerComponents\LivewirePowerGrid\Concerns\State\ResolvesGridSorting;
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
+use PowerComponents\Turbine\Concerns\State\ResolvesGridSorting;
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 trait Sorting
 {

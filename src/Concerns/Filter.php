@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Support\{Arr, Collection};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Components\Filters\FilterBase;
+use PowerComponents\Turbine\Components\Filters\FilterBase;
 
 trait Filter
 {
@@ -510,7 +510,7 @@ trait Filter
                         ];
                     }
 
-                    if (data_get($filter, 'className') === 'PowerComponents\LivewirePowerGrid\Components\Filters\FilterDynamic' &&
+                    if (data_get($filter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
                         filled(data_get($filter, 'attributes'))) {
                         $attributes = array_values((array) data_get($filter, 'attributes'));
 

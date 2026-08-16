@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
-use PowerComponents\LivewirePowerGrid\{Button, Column};
+use PowerComponents\Turbine\{Button, Column};
 
 class DishesQueryBuilderTable extends BaseDishesTable
 {
