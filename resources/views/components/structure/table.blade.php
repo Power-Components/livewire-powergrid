@@ -24,13 +24,13 @@
             '__partial' => $this,
         ])
 
-        @if (config('livewire-powergrid.filter') === 'outside' && ! $this->filterBuilderHidesDefaultFilters())
+        @if ($this->usesFilterPanel() && ! $this->filterBuilderHidesDefaultFilters())
             @php
                 $filtersFromColumns = collect($columns)
                     ->filter(fn($column) => filled(data_get($column, 'filters')));
             @endphp
 
-            @include(theme_view('filter'), [
+            @include(theme_view($this->filterPanelView()), [
                 '__partial' => $this,
                 'tableName' => $tableName,
                 'filtersFromColumns' => $filtersFromColumns,

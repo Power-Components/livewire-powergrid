@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Фильтр',
         'clear_all_filters' => 'Очистити все',
+        'close' => 'Закрити',
     ],
     'labels' => [
         'action' => 'Дія',

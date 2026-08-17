@@ -161,6 +161,53 @@ trait Filter
     }
 
     /**
+     * The flyout's close paths (Escape, backdrop, close button) assign `$showFilters`
+     * straight from Alpine so the drawer hides without waiting on the response. That
+     * assignment registers no partial on its own, which would drop the commit out of
+     * the `pg-filters` Hot Zone and force a full re-render.
+     */
+    public function updatedShowFilters(): void
+    {
+        $this->renderOutsideFiltersPartial();
+    }
+
+    /** Configured filter position: `inline`, `outside`, `flyout`, or an empty string when filters are disabled. */
+    public function filterPosition(): string
+    {
+        $position = config('livewire-powergrid.filter');
+
+        return is_string($position) ? $position : '';
+    }
+
+    /** True when filters live in their own panel instead of inside the table. */
+    public function usesFilterPanel(): bool
+    {
+        return in_array($this->filterPosition(), ['outside', 'flyout'], true);
+    }
+
+    /** Theme view alias for the filter panel matching the configured position. */
+    public function filterPanelView(): string
+    {
+        return $this->filterPosition() === 'flyout' ? 'filter.flyout' : 'filter';
+    }
+
+    /**
+     * Flyout settings, normalised so a bad config value can never break the drawer.
+     *
+     * @return array{position: string, close_on_escape: bool, close_on_click_outside: bool}
+     */
+    public function filterFlyoutOptions(): array
+    {
+        $position = config('livewire-powergrid.filter_flyout.position', 'right');
+
+        return [
+            'position' => in_array($position, ['left', 'right'], true) ? $position : 'right',
+            'close_on_escape' => boolval(config('livewire-powergrid.filter_flyout.close_on_escape', true)),
+            'close_on_click_outside' => boolval(config('livewire-powergrid.filter_flyout.close_on_click_outside', true)),
+        ];
+    }
+
+    /**
      * @throws Exception
      */
     /**
@@ -344,6 +391,10 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
+    /**
+     * Refreshes the filter Hot Zones. Despite the name, it covers every panel
+     * position (`outside` and `flyout`), which share the `pg-filters` partial.
+     */
     public function renderOutsideFiltersPartial(): void
     {
         if (! function_exists('partials')) {
@@ -359,7 +410,7 @@ trait Filter
                 'enabledFilters' => $this->enabledFilters,
             ]);
 
-        if (config('livewire-powergrid.filter') !== 'outside') {
+        if (! $this->usesFilterPanel()) {
             return;
         }
 
@@ -370,7 +421,7 @@ trait Filter
         partials($this)
             ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
             ->partial("pg-pagination-{$this->tableName}", theme_view('footer'))
-            ->partial("pg-filters-{$this->tableName}", theme_view('filter'));
+            ->partial("pg-filters-{$this->tableName}", theme_view($this->filterPanelView()));
     }
 
     private function resolveFilters(): void

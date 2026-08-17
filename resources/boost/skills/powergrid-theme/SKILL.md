@@ -213,6 +213,7 @@ public function template(): ?Theme
 - **Pagination is a string.** `->pagination('pagination')` — `Footer::pagination()` accepts `Closure|array|string`; all three shipped themes use the string alias.
 - **CSS classes live in `->layout(Closure)`.** Direct string properties on `Header`/`Table`/`Footer` are for view aliases only.
 - **`filter()`, `editable()`, `toggleable()` are separate methods**, not part of `struct()`. They are merged into `resolveTokens()` automatically.
+- **The filter drawer is styled, not rebuilt.** `filter.flyout.*` (set with `->flyout(fn (Components\Flyout $f) => ...)`) drives the drawer used when `config('livewire-powergrid.filter')` is `flyout`. Its blade is shared by every theme through `parentTheme`, so override the classes and leave `view` alone. `panel` must carry the positioning (`fixed inset-y-0`) and stay above `overlay`; `panel_left`/`panel_right` add only the edge anchoring.
 - **`toggleable()` fills color tokens, not a view.** It sets `colorOn`/`colorOff`/`colorOnDark`/`colorOffDark`/`knobOn`; the shipped Toggleable blade reads them via `theme('toggleable.color_on')` etc. Do not give it a `->view()`.
 - **Feature views are auto-resolved.** export, toggle-columns, soft-deletes, etc. resolve via `baseView + alias` (then the `parentTheme` chain, then `components.structure.*`). Do not declare them in `struct()`.
 - **View aliases**: a value without `::` is prefixed with `baseView + '.'`. Use a fully-qualified `livewire-powergrid::...` path only to point at another theme's view.
