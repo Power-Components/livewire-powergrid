@@ -98,10 +98,5 @@
       "composer/package-versions-deprecated": true,
       "pestphp/pest-plugin": true
     }
-  },
-  "repositories": [{
-    "name": "turbine",
-    "type": "path",
-    "url": "../turbine"
-  }]
+  }
 }
