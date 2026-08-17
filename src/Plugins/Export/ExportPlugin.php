@@ -299,7 +299,7 @@ class ExportPlugin extends PluginBase
                 'offset' => $offset,
                 'limit' => $perPage,
                 'filters' => Support\Facades\Crypt::encrypt($filters),
-                'exportable' => $component->setUp['exportable'],
+                'exportable' => (array) $component->setUp['exportable'],
                 'parameters' => Support\Facades\Crypt::encrypt($component->getPublicPropertiesDefinedInComponent()),
             ];
 

@@ -48,7 +48,8 @@ class ExportJob implements ShouldQueue
         $this->limit = $limit;
         $filteredParam = is_array($params['filtered'] ?? null) ? $params['filtered'] : [];
         $this->filtered = array_values(array_filter($filteredParam, fn ($v) => is_int($v) || is_string($v)));
-        $this->exportable = is_array($params['exportable'] ?? null) ? $params['exportable'] : [];
+        $exportableParam = $params['exportable'] ?? [];
+        $this->exportable = is_object($exportableParam) ? (array) $exportableParam : (is_array($exportableParam) ? $exportableParam : []);
         /** @var string $filters */
         $filters = $params['filters'] ?? '';
         $this->filters = (array) Crypt::decrypt($filters);
