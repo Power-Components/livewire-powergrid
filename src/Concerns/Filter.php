@@ -45,6 +45,7 @@ trait Filter
         $applied = $filterManager->applyDefaults(
             declaredFilters: $this->filters(),
             columns: $this->columns,
+            /** @phpstan-ignore assign.propertyType */
             filters: $this->filters,
             enabledFilters: $this->enabledFilters
         );

@@ -52,11 +52,17 @@ trait Checkbox
                 return;
             }
 
-            if (! in_array($value, $this->checkboxValues)) {
-                $this->checkboxValues[] = (string) $value;
+            if (! is_string($value) && ! is_numeric($value) && ! is_bool($value) && ! is_null($value)) {
+                return;
+            }
+
+            $stringValue = (string) $value;
+
+            if (! in_array($stringValue, $this->checkboxValues)) {
+                $this->checkboxValues[] = $stringValue;
 
                 $this->dispatch('pgBulkActions::addMore', [
-                    'value' => strval($value),
+                    'value' => $stringValue,
                     'tableName' => $this->tableName,
                 ]);
             }

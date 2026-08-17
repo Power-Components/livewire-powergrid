@@ -47,7 +47,7 @@ trait Persist
             columns: $this->columns,
             filters: $this->filters,
             enabledFilters: $this->enabledFilters,
-            filterBuilder: $this->filterBuilder ?? [],
+            filterBuilder: $this->filterBuilder,
             sortField: $this->sortField,
             sortDirection: $this->sortDirection,
             sortArray: $this->sortArray,
@@ -78,24 +78,29 @@ trait Persist
             return;
         }
 
-        if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
-            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($state) {
+        if (in_array('columns', $this->persist) && array_key_exists('columns', $state) && is_array($state['columns'])) {
+            $columnsState = $state['columns'];
+            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($columnsState) {
                 $column = (object) $column;
 
                 /** @var string $field */
                 $field = $column->field;
 
-                if (! $column->forceHidden && array_key_exists($field, $state['columns'])) {
-                    data_set($column, 'hidden', $state['columns'][$field]);
+                if (! $column->forceHidden && array_key_exists($field, $columnsState)) {
+                    data_set($column, 'hidden', $columnsState[$field]);
                 }
 
                 return $column;
             })->all());
         }
 
-        if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
-            $this->filters = $state['filters'];
-            $this->enabledFilters = $state['enabledFilters'];
+        if (in_array('filters', $this->persist) && isset($state['filters'], $state['enabledFilters']) && is_array($state['filters']) && is_array($state['enabledFilters'])) {
+            /** @var array<string, array<string, mixed>> $filters */
+            $filters = $state['filters'];
+            /** @var list<array<string, mixed>> $enabledFilters */
+            $enabledFilters = array_values($state['enabledFilters']);
+            $this->filters = $filters;
+            $this->enabledFilters = $enabledFilters;
         }
 
         if (($persistFilterBuilder || in_array('filters', $this->persist))
@@ -111,10 +116,24 @@ trait Persist
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {
-            $this->sortField = $state['sortField'];
-            $this->sortDirection = Sql::sanitizeSortDirection($state['sortDirection'] ?? null);
-            $this->sortArray = $state['sortArray'];
-            $this->multiSort = $state['multiSort'];
+            $sortField = $state['sortField'] ?? '';
+            if (is_string($sortField)) {
+                $this->sortField = $sortField;
+            }
+
+            $sortDirection = $state['sortDirection'] ?? null;
+            $this->sortDirection = Sql::sanitizeSortDirection(is_string($sortDirection) ? $sortDirection : null);
+
+            $sortArray = $state['sortArray'] ?? [];
+            if (is_array($sortArray)) {
+                /** @var array<string, string> $sortArray */
+                $this->sortArray = $sortArray;
+            }
+
+            $multiSort = $state['multiSort'] ?? false;
+            if (is_bool($multiSort)) {
+                $this->multiSort = $multiSort;
+            }
         }
     }
 

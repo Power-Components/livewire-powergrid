@@ -61,7 +61,7 @@ trait Base
         return $this->primaryKeyAlias ?? $this->primaryKey;
     }
 
-    /** @var array<int, mixed>|null */
+    /** @var list<mixed>|null */
     private ?array $declaredColumnsCache = null;
 
     /** @var list<FilterBase>|null */
@@ -73,11 +73,11 @@ trait Base
     }
 
     /**
-     * @return array<int, mixed>
+     * @return list<mixed>
      */
     public function declaredColumns(): array
     {
-        return $this->declaredColumnsCache ??= $this->columns();
+        return $this->declaredColumnsCache ??= array_values($this->columns());
     }
 
     public function hasResolvedColumns(): bool
