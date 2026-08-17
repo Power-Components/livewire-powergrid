@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use Livewire\Attributes\Locked;
 use PowerComponents\Turbine\Components\Rules\RuleManager;
+use PowerComponents\Turbine\Support\Actions\ActionsResolver;
 use stdClass;
 use Throwable;
 
@@ -44,14 +45,10 @@ trait Checkbox
 
         /** @phpstan-ignore-next-line  */
         collect($records->items())->each(function (array|Model|stdClass $model) {
-            $value = $model->{$this->checkboxAttribute};
+            $value = data_get($model, $this->checkboxAttribute);
 
-            $checkboxRule = collect((array) data_get($model, '__turbine_rules'))
-                ->where('apply', true)
-                ->where('forAction', RuleManager::TYPE_CHECKBOX)
-                ->last();
-
-            if ((bool) data_get($checkboxRule, 'hide') || (bool) data_get($checkboxRule, 'disable')) {
+            $actionsResolver = new ActionsResolver($this);
+            if (! $actionsResolver->isRowSelectable($model, RuleManager::TYPE_CHECKBOX)) {
                 return;
             }
 

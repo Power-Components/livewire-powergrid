@@ -2,13 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid;
 
+use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
-use PowerComponents\Turbine\Components\SetUp\{Cache, Detail, Exportable, FilterBuilder, Footer, Header, Responsive};
+use PowerComponents\Turbine\Components\SetUp\{Cache, Detail, FilterBuilder, Footer, Header, Responsive};
 
 class PowerGridManager
 {

@@ -60,6 +60,10 @@ class PowerGridComponent extends Component implements Context
 
     public function state(): State
     {
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
+
         return new State(
             search: $this->search,
             sortField: $this->sortField,
@@ -274,6 +278,10 @@ class PowerGridComponent extends Component implements Context
 
     public function boot(): void
     {
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
+
         /** @var string $themeClass */
         $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
@@ -310,7 +318,9 @@ class PowerGridComponent extends Component implements Context
         $this->throwTableName();
         $this->throwColumnAction();
 
-        $this->columns = $this->columns();
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
 
         $this->restoreState();
 

@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Support\{Arr, Collection};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\Turbine\Components\Filters\FilterBase;
+use PowerComponents\Turbine\Components\Filters\{FilterBase, FilterManager};
 
 trait Filter
 {
@@ -41,95 +41,15 @@ trait Filter
 
     protected function applyDefaultFilters(): void
     {
-        $columnsByField = collect($this->columns)
-            ->mapWithKeys(function ($column) {
-                /** @var Column $column */
+        $filterManager = new FilterManager();
+        $applied = $filterManager->applyDefaults(
+            declaredFilters: $this->filters(),
+            columns: $this->columns,
+            filters: $this->filters,
+            enabledFilters: $this->enabledFilters
+        );
 
-                return [
-                    filled($column->field) ? $column->field : $column->dataField => $column,
-                ];
-            });
-
-        collect($this->filters())
-            ->filter(fn ($filter) => filled($filter->defaultValue))
-            ->each(function (FilterBase $filter) use (&$defaultFiltersApplied, $columnsByField) {
-                /** @var string $field */
-                $field = $filter->field;
-                $column = $filter->column;
-
-                /** @var string $key */
-                $key = data_get($filter, 'key');
-                $defaultValue = $filter->defaultValue;
-
-                $columnData = $columnsByField->get($column);
-                /** @var string|null $label */
-                $label = data_get($columnData, 'title', $field);
-
-                switch ($key) {
-                    case 'select':
-                        $this->setInFilters($this->filters, "select.{$field}", $defaultValue);
-                        $this->addEnabledFilters($field, $label);
-                        $defaultFiltersApplied = true;
-                        break;
-
-                    case 'multi_select':
-                        $values = is_array($defaultValue) ? $defaultValue : [$defaultValue];
-                        $this->setInFilters($this->filters, "multi_select.{$field}", $values);
-                        $this->addEnabledFilters($field, $label);
-                        $defaultFiltersApplied = true;
-                        break;
-
-                    case 'boolean':
-                        $this->setInFilters($this->filters, "boolean.{$field}", $defaultValue);
-                        $this->addEnabledFilters($field, $label);
-                        $defaultFiltersApplied = true;
-                        break;
-
-                    case 'input_text':
-                        if (is_array($defaultValue)) {
-                            // Support for both value and operator
-                            $this->setInFilters($this->filters, "input_text.{$field}", $defaultValue['value'] ?? '');
-                            if (isset($defaultValue['operator'])) {
-                                $this->setInFilters($this->filters, "input_text_options.{$field}", $defaultValue['operator']);
-                            }
-                        } else {
-                            $this->setInFilters($this->filters, "input_text.{$field}", $defaultValue);
-                        }
-                        $this->addEnabledFilters($field, $label);
-                        $defaultFiltersApplied = true;
-                        break;
-
-                    case 'number':
-                        if (is_array($defaultValue)) {
-                            if (isset($defaultValue['start'])) {
-                                $this->setInFilters($this->filters, "number.{$field}.start", $defaultValue['start']);
-                            }
-                            if (isset($defaultValue['end'])) {
-                                $this->setInFilters($this->filters, "number.{$field}.end", $defaultValue['end']);
-                            }
-                        } else {
-                            $this->setInFilters($this->filters, "number.{$field}.start", $defaultValue);
-                        }
-                        $this->addEnabledFilters($field, $label);
-                        $defaultFiltersApplied = true;
-                        break;
-
-                    case 'date':
-                    case 'datetime':
-                        if (is_array($defaultValue) && isset($defaultValue['start']) && isset($defaultValue['end'])) {
-                            $this->filters[$key][$field] = [
-                                'start' => $defaultValue['start'],
-                                'end' => $defaultValue['end'],
-                                'formatted' => $defaultValue['formatted'] ?? '',
-                            ];
-                            $this->addEnabledFilters($field, $label);
-                            $defaultFiltersApplied = true;
-                        }
-                        break;
-                }
-            });
-
-        if ($defaultFiltersApplied) {
+        if ($applied) {
             $this->persistState('filters');
         }
     }

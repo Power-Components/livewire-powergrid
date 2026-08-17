@@ -8,14 +8,11 @@ use Illuminate\Database\Eloquent;
 use Illuminate\Support;
 use Illuminate\Support\{Collection, LazyCollection, Str};
 use Illuminate\Support\Facades\Bus;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\Turbine\Components\SetUp\Exportable;
-use PowerComponents\Turbine\DataSource\{DataTransformer, ProcessDataSource};
-use PowerComponents\Turbine\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
-use PowerComponents\Turbine\DataSource\Support\Sql;
+use PowerComponents\Turbine\DataSource\{ProcessDataSource};
+use PowerComponents\Turbine\Export\ExportEngine;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
 
@@ -201,9 +198,9 @@ class ExportPlugin extends PluginBase
      */
     private function export(string $exportType, bool $selected): BinaryFileResponse|bool
     {
-        $exportableClass = $this->getExportableClassFromConfig($exportType);
-
         if ($this->getQueuesCount() > 0 && ! $selected) {
+            $exportableClass = $this->getExportableClassFromConfig($exportType);
+
             return $this->runOnQueue($exportableClass, $exportType);
         }
 
@@ -211,38 +208,29 @@ class ExportPlugin extends PluginBase
             return false;
         }
 
-        $currentHiddenStates = collect($this->component->columns)
-            ->mapWithKeys(function ($column) {
-                /** @var string $field */
-                $field = data_get($column, 'field');
-
-                return [$field => data_get($column, 'hidden')];
-            });
-
-        /** @var array<int, Column> $columnsWithHiddenState */
-        $columnsWithHiddenState = array_map(function ($column) use ($currentHiddenStates) {
-            /** @var string|null $field */
-            $field = data_get($column, 'field');
-            data_set($column, 'hidden', data_get($currentHiddenStates, $field, true));
-
-            return $column;
-        }, $this->component->columns());
-
         /** @var string $fileName */
         $fileName = data_get($this->component->setUp, 'exportable.fileName');
 
-        /** @var Export&ExportInterface $exportable */
-        $exportable = new $exportableClass();
-        $exportable
-            ->fileName($fileName)
-            ->setData($columnsWithHiddenState, $this->prepareToExport($selected));
-
         /** @var array<string, mixed> $exportOptions */
-        $exportOptions = $this->component->setUp['exportable'];
+        $exportOptions = (array) data_get($this->component->setUp, 'exportable', []);
+        if ($selected) {
+            $exportOptions['selectedKeys'] = $this->component->checkboxValues;
+        }
 
-        return $exportable->download(
-            exportOptions: $exportOptions
+        $exportEngine = new ExportEngine();
+        $filePath = $exportEngine->build(
+            context: $this->component,
+            exportType: $exportType,
+            fileName: $fileName,
+            exportOptions: $exportOptions,
+            selected: $selected
         );
+
+        $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend', true));
+
+        return response()
+            ->download($filePath)
+            ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
     /**
@@ -340,84 +328,14 @@ class ExportPlugin extends PluginBase
      */
     public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection|LazyCollection
     {
-        $component = $this->component;
-        $processDataSource = ProcessDataSource::make($component);
-        $datasource = $processDataSource->resolveDatasource();
-
-        if ($datasource instanceof Collection) {
-            $processDataSource->get();
+        $exportEngine = new ExportEngine();
+        /** @var array<string, mixed> $exportOptions */
+        $exportOptions = (array) data_get($this->component->setUp, 'exportable', []);
+        if ($selected) {
+            $exportOptions['selectedKeys'] = $this->component->checkboxValues;
         }
 
-        $filtered = $component->filtered;
-
-        if ($selected && filled($component->checkboxValues)) {
-            $filtered = $component->checkboxValues;
-        }
-
-        if ($datasource instanceof Collection) {
-            if ($filtered) {
-                $results = $processDataSource->get(isExport: true)['results']
-                    ->whereIn($component->primaryKey, $filtered);
-
-                $dataTransformer = new DataTransformer($component);
-
-                return $dataTransformer->transform($results)->collection;
-            }
-
-            $dataTransformer = new DataTransformer($component);
-
-            return $dataTransformer->transform($datasource)->collection;
-        }
-
-        $currentTable = $component->currentTable;
-
-        $property = function (string $property) use ($component, $currentTable) {
-            $property = $component->{$property};
-
-            return Str::of($property)->contains('.')
-                ? $property
-                : $currentTable.'.'.$property;
-        };
-
-        /** @var array<string, mixed> $queryOptions */
-        $queryOptions = data_get($component->setUp, 'exportable.queryOptions', []);
-
-        $results = $processDataSource->datasource
-            ->where(function ($query) use ($component) {
-                app()->makeWith(SearchHandlerContract::class, [
-                    'component' => $component,
-                ])->apply($query);
-                (new FilterHandler($component))->apply($query);
-            })
-            ->when($filtered, function ($query, $filtered) use ($property) {
-                return $query->whereIn($property('primaryKey'), $filtered);
-            })
-            ->when($component->sortField, function ($query) use ($component, $queryOptions) {
-                $sortField = $queryOptions['sortField'] ?? $component->sortField;
-
-                if (! is_string($sortField)) {
-                    return $query;
-                }
-
-                if (! $component->isValidSortField($sortField)) {
-                    return $query;
-                }
-
-                $sortDirection = $component->sortDirection;
-
-                if (is_string($queryOptions['sortDirection'] ?? null)) {
-                    $sortDirection = $queryOptions['sortDirection'];
-                }
-
-                $sortField = $component->resolveSortField($sortField);
-
-                return $query->orderBy($sortField, Sql::sanitizeSortDirection($sortDirection));
-            })
-            ->cursor();
-
-        $dataTransformer = new DataTransformer($component);
-
-        return $dataTransformer->transformForExport($results);
+        return $exportEngine->prepareDataset($this->component, $exportOptions, $selected);
     }
 
     private function getExportableClassFromConfig(string $exportType): string

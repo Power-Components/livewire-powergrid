@@ -82,7 +82,7 @@ trait Base
 
     public function hasResolvedColumns(): bool
     {
-        return true;
+        return ! empty($this->declaredColumns());
     }
 
     /**
