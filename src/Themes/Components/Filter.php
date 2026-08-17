@@ -75,4 +75,13 @@ class Filter
 
         return $this;
     }
+
+    public function flyout(Closure $callback): self
+    {
+        $component = new Flyout();
+        $callback($component);
+        $this->properties['flyout'] = $component->toArray();
+
+        return $this;
+    }
 }

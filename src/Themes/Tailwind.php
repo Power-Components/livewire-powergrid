@@ -145,6 +145,19 @@ class Tailwind extends Theme
                     'input' => 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
                 ],
                 'input' => 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
+                'flyout' => [
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filter-flyout',
+                    'overlay' => 'fixed inset-0 z-40 bg-zinc-900/40',
+                    'panel' => 'fixed inset-y-0 z-50 flex w-full max-w-full flex-col bg-white shadow-xl dark:bg-zinc-800 sm:w-96 sm:max-w-[90vw]',
+                    'panel_left' => 'left-0 border-r border-zinc-200 dark:border-zinc-700',
+                    'panel_right' => 'right-0 border-l border-zinc-200 dark:border-zinc-700',
+                    'header' => 'flex items-center justify-between gap-3 border-b border-zinc-200 px-4 py-3 dark:border-zinc-700',
+                    'title' => 'text-sm font-semibold text-zinc-700 dark:text-zinc-200',
+                    'close' => 'rounded-md p-1 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-200',
+                    'body' => 'flex-1 overflow-y-auto px-4 py-4',
+                    'footer' => 'border-t border-zinc-200 px-4 py-3 dark:border-zinc-700',
+                    'clear_all' => 'w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-xs font-bold text-zinc-600 transition hover:text-zinc-500 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-400',
+                ],
             ],
         ];
     }

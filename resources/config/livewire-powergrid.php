@@ -76,14 +76,35 @@ return [
     | Filters
     |--------------------------------------------------------------------------
     |
-    | PowerGrid supports inline and outside filters.
+    | PowerGrid supports inline, outside and flyout filters.
     | 'inline': Filters data inside the table.
     | 'outside': Filters data outside the table.
+    | 'flyout': Filters data in a drawer sliding in from the side.
     | 'null'
     |
     */
 
     'filter' => 'inline',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Filter Flyout
+    |--------------------------------------------------------------------------
+    |
+    | Settings for the drawer used when 'filter' is set to 'flyout'.
+    | 'position': which edge the drawer slides in from ('left' or 'right').
+    | 'close_on_escape': close the drawer when the Escape key is pressed.
+    | 'close_on_click_outside': close the drawer when its backdrop is clicked.
+    |
+    | Override these per table by calling config() in the table's boot() method.
+    |
+    */
+
+    'filter_flyout' => [
+        'position' => 'right',
+        'close_on_escape' => true,
+        'close_on_click_outside' => true,
+    ],
 
     /*
     |--------------------------------------------------------------------------

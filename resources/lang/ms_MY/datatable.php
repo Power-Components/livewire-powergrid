@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Carian',
         'clear_all_filters' => 'Clear all',
+        'close' => 'Tutup',
     ],
     'labels' => [
         'action' => 'Action',

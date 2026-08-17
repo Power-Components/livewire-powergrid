@@ -131,6 +131,18 @@ class DaisyUI extends Theme
                     ->input('input input-sm input-bordered w-full')
                 )
                 ->input('input input-sm')
+                ->flyout(fn (Components\Flyout $flyout) => $flyout
+                    ->overlay('fixed inset-0 z-40 bg-neutral/40')
+                    ->panel('fixed inset-y-0 z-50 flex w-full max-w-full flex-col bg-base-100 shadow-xl sm:w-96 sm:max-w-[90vw]')
+                    ->panelLeft('left-0 border-r border-base-300')
+                    ->panelRight('right-0 border-l border-base-300')
+                    ->header('flex items-center justify-between gap-3 border-b border-base-300 px-4 py-3')
+                    ->title('font-semibold text-base-content')
+                    ->close('btn btn-ghost btn-sm btn-square')
+                    ->body('flex-1 overflow-y-auto px-4 py-4')
+                    ->footer('border-t border-base-300 px-4 py-3')
+                    ->clearAll('btn btn-outline btn-sm w-full')
+                )
                 ->toArray(),
         ];
     }

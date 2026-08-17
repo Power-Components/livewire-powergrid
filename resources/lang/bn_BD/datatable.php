@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'ফিল্টার',
         'clear_all_filters' => 'সব ফিল্টার মুছুন',
+        'close' => 'বন্ধ করুন',
     ],
     'labels' => [
         'action' => 'কার্যসমূহ',

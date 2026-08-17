@@ -4,6 +4,7 @@ return [
     'buttons' => [
         'filter' => 'Filtre',
         'clear_all_filters' => 'Tümünü Temizle',
+        'close' => 'Kapat',
     ],
     'labels' => [
         'action' => 'İşlemler',
