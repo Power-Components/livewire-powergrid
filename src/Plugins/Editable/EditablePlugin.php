@@ -137,7 +137,7 @@ class EditablePlugin extends PluginBase
         $hasPermission = boolval(data_get($column, 'pluginData.editable.hasPermission', false));
 
         $editOnClickVisibility = data_get(
-            collect((array) data_get($row, '__powergrid_rules'))
+            collect((array) data_get($row, '__turbine_rules'))
                 ->where('apply', true)
                 ->last(),
             'editOnClickVisibility'

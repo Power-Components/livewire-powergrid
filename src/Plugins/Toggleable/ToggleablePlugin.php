@@ -188,7 +188,7 @@ class ToggleablePlugin extends PluginBase
         $showToggleable = boolval(data_get($column, 'pluginData.toggleable.enabled', false));
 
         $toggleableRowRules = data_get(
-            collect((array) data_get($row, '__powergrid_rules'))
+            collect((array) data_get($row, '__turbine_rules'))
                 ->where('apply', true)
                 ->last(),
             'toggleableVisibility'
@@ -203,7 +203,7 @@ class ToggleablePlugin extends PluginBase
         }
 
         $fieldHideToggleable = (bool) data_get(
-            collect((array) data_get($row, '__powergrid_rules'))
+            collect((array) data_get($row, '__turbine_rules'))
                 ->where('apply', true)
                 ->last(),
             'fieldHideToggleable'

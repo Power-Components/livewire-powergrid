@@ -10,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, GenerateThemeMeta
 use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
 use PowerComponents\LivewirePowerGrid\Livewire\Detail;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
+use PowerComponents\LivewirePowerGrid\Support\CompatAliases;
 use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
 use PowerComponents\LivewirePowerGrid\Testing\TestActions;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
@@ -56,6 +57,8 @@ class PowerGridServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        CompatAliases::register();
+
         $this->mergeConfigFrom(
             __DIR__.'/../../resources/config/livewire-powergrid.php',
             $this->packageName
