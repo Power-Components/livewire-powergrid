@@ -19,7 +19,7 @@ final class BuildStubVars
      * @param  list<string>  $fields  Column names, in the order they should be generated.
      * @param  Collection<string, string>  $types  Column name => normalized type bucket.
      * @param  string  $model  Model class used to type-hint generated closures; empty leaves them untyped.
-     * @return array{'Fields': string, 'filters': string, 'columns': string}
+     * @return array{'PowerGridFields': string, 'filters': string, 'columns': string}
      */
     public static function handle(array $fields, Collection $types, string $model = ''): array
     {
@@ -46,7 +46,7 @@ final class BuildStubVars
     /**
      * @param  list<string>  $fields
      * @param  Collection<string, string>  $types
-     * @return array{'Fields': string, 'filters': string, 'columns': string}
+     * @return array{'PowerGridFields': string, 'filters': string, 'columns': string}
      */
     private function build(array $fields, Collection $types, string $model): array
     {
@@ -74,7 +74,7 @@ final class BuildStubVars
         $this->columns .= '            Column::action(\'Action\')'."\n";
 
         return [
-            'Fields' => $this->fields,
+            'PowerGridFields' => $this->fields,
             'filters' => $this->filters.'        ];',
             'columns' => $this->columns.'        ];',
         ];

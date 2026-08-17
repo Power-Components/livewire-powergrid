@@ -22,7 +22,7 @@ function waiterComponent(ColumnSource $columnSource, string $modelFqn = Waiter::
 it('reads the primary key, $fillable and created_at when the source is the model', function () {
     $vars = GetStubVarsFromFromModel::handle(waiterComponent(ColumnSource::FILLABLE));
 
-    expect($vars['Fields'])
+    expect($vars['PowerGridFields'])
         ->toContain("->add('id')")
         ->toContain("->add('name')")
         ->toContain("->add('email')")
@@ -32,7 +32,7 @@ it('reads the primary key, $fillable and created_at when the source is the model
 it('ignores columns outside $fillable when the source is the model', function () {
     $vars = GetStubVarsFromFromModel::handle(waiterComponent(ColumnSource::FILLABLE));
 
-    expect($vars['Fields'])
+    expect($vars['PowerGridFields'])
         ->not->toContain('tips')
         ->not->toContain('hired_at')
         ->not->toContain('updated_at');
@@ -41,7 +41,7 @@ it('ignores columns outside $fillable when the source is the model', function ()
 it('reads every table column when the source is the database table', function () {
     $vars = GetStubVarsFromFromModel::handle(waiterComponent(ColumnSource::DATABASE_TABLE));
 
-    expect($vars['Fields'])
+    expect($vars['PowerGridFields'])
         ->toContain("->add('id')")
         ->toContain("->add('name')")
         ->toContain("->add('email')")
@@ -79,14 +79,14 @@ it('does not repeat a field listed in both $fillable and the historical order', 
         waiterComponent(ColumnSource::FILLABLE, WaiterWithKeyInFillable::class)
     );
 
-    expect(substr_count($vars['Fields'], "->add('id')"))->toBe(1)
-        ->and(substr_count($vars['Fields'], "->add('created_at_formatted'"))->toBe(1);
+    expect(substr_count($vars['PowerGridFields'], "->add('id')"))->toBe(1)
+        ->and(substr_count($vars['PowerGridFields'], "->add('created_at_formatted'"))->toBe(1);
 });
 
 it('type-hints the model in the generated closures', function () {
     $vars = GetStubVarsFromFromModel::handle(waiterComponent(ColumnSource::DATABASE_TABLE));
 
-    expect($vars['Fields'])->toContain('fn (Waiter $model)')
+    expect($vars['PowerGridFields'])->toContain('fn (Waiter $model)')
         ->not->toContain('fn ($model)');
 });
 
@@ -95,7 +95,7 @@ it('generates nothing when the table has not been migrated yet', function () {
 
     $vars = GetStubVarsFromFromModel::handle(waiterComponent(ColumnSource::DATABASE_TABLE));
 
-    expect($vars['Fields'])->toBe('')
+    expect($vars['PowerGridFields'])->toBe('')
         ->and($vars['filters'])->toBe("[\n        ];")
         ->and($vars['columns'])->toBe("[\n            Column::action('Action')\n        ];");
 });

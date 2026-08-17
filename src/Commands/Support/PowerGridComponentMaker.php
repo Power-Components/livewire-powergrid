@@ -213,15 +213,15 @@ final class PowerGridComponentMaker
 
         if ($this->autoCreateColumns() === true) {
             if ($this->datasource === Datasource::ELOQUENT_BUILDER) {
-                ['Fields' => $Fields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromFromModel::handle($this);
+                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromFromModel::handle($this);
             }
 
             if ($this->datasource === Datasource::QUERY_BUILDER) {
-                ['Fields' => $Fields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromDbTable::handle($this);
+                ['PowerGridFields' => $PowerGridFields, 'filters' => $filters, 'columns' => $columns] = GetStubVarsFromDbTable::handle($this);
             }
         }
 
-        $this->stub->setVar('Fields', $Fields ?? '');
+        $this->stub->setVar('PowerGridFields', $PowerGridFields ?? '');
 
         $this->stub->setVar('filters', $filters ?? '');
 

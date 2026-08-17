@@ -35,7 +35,7 @@ final class PowerGridStub
             ->replace('\{{ modelName }}', '{{ model }}')
             ->replace('{{ modelName }}', '{{ modelFqn }}')
             ->replace('{{ modelLastName }}', '{{ model }}')
-            ->replace('{{ datasource }}', '{{ Fields }}')
+            ->replace('{{ datasource }}', '{{ PowerGridFields }}')
             ->replace('{{ dataBaseTableName }}', '{{ databaseTableName }}')
             ->toString();
     }

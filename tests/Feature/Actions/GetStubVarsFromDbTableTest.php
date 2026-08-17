@@ -20,7 +20,7 @@ function waiterQueryBuilderComponent(): PowerGridComponentMaker
 it('reads every column of the given table', function () {
     $vars = GetStubVarsFromDbTable::handle(waiterQueryBuilderComponent());
 
-    expect($vars['Fields'])
+    expect($vars['PowerGridFields'])
         ->toContain("->add('id')")
         ->toContain("->add('name')")
         ->toContain("->add('email')")
@@ -39,13 +39,13 @@ it('drops sensitive columns', function () {
 it('has no model to hide columns with, unlike the Eloquent source', function () {
     $vars = GetStubVarsFromDbTable::handle(waiterQueryBuilderComponent());
 
-    expect($vars['Fields'])->toContain("->add('internal_note')");
+    expect($vars['PowerGridFields'])->toContain("->add('internal_note')");
 });
 
 it('leaves the generated closures untyped', function () {
     $vars = GetStubVarsFromDbTable::handle(waiterQueryBuilderComponent());
 
-    expect($vars['Fields'])->toContain('fn ($model)');
+    expect($vars['PowerGridFields'])->toContain('fn ($model)');
 });
 
 it('generates nothing when the table does not exist', function () {
@@ -54,7 +54,7 @@ it('generates nothing when the table does not exist', function () {
         ->setDatabaseTable('table_that_does_not_exist')
         ->setAutoCreateColumns();
 
-    expect(GetStubVarsFromDbTable::handle($component)['Fields'])->toBe('');
+    expect(GetStubVarsFromDbTable::handle($component)['PowerGridFields'])->toBe('');
 });
 
 it('renders the generated columns into the query builder stub', function () {

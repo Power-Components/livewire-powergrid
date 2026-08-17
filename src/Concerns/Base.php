@@ -4,8 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\Computed;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\Turbine\Components\Filters\FilterBase;
-use PowerComponents\Turbine\Fields;
 
 trait Base
 {
@@ -50,7 +50,7 @@ trait Base
 
     public bool $pruneHiddenColumns = true;
 
-    public function fields(): Fields
+    public function fields(): PowerGridFields
     {
         return PowerGrid::fields();
     }
