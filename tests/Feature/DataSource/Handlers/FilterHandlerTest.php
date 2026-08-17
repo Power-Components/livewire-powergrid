@@ -279,7 +279,7 @@ it('applies multi_select filter through FilterHandler', function () {
 
         public function datasource()
         {
-            return Dish::query();
+            return Dish::query()->orderBy('id');
         }
 
         public function filters(): array
@@ -399,7 +399,7 @@ it('handles numeric indexed arrays in filters', function () {
 
         public function datasource()
         {
-            return Dish::query();
+            return Dish::query()->orderBy('id');
         }
 
         public function filters(): array

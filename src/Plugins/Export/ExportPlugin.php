@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Bus;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\Turbine\Components\SetUp\Exportable;
-use PowerComponents\Turbine\DataSource\{ProcessDataSource};
+use PowerComponents\Turbine\DataSource\ProcessDataSource;
 use PowerComponents\Turbine\Export\ExportEngine;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Throwable;
