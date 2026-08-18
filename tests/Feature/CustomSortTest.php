@@ -1,7 +1,9 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
 
 it('uses custom sort callback for collection datasource', function () {
     $component = new class() extends PowerGridComponent
@@ -48,14 +50,12 @@ it('uses custom sort callback for collection datasource', function () {
         ->assertSeeInOrder(['Zebra Dish', 'Apple Pie', 'Banana Split', 'Cherry Tart', 'Donut']);
 });
 
-it('sortCallback is excluded from toLivewire serialization', function () {
+it('sortCallback is excluded from the serialized payload', function () {
     $column = Column::make('Test', 'test')
         ->sortUsing(fn ($c, $d) => $c);
 
-    // Ensure sortCallback exists on the column object
     expect($column->sortCallback)->toBeInstanceOf(Closure::class);
 
-    // But it should be excluded from the serialized array
-    $serialized = $column->toLivewire();
+    $serialized = PowerGridWireableSynth::unwrapForValidation($column);
     expect($serialized)->not->toHaveKey('sortCallback');
 });

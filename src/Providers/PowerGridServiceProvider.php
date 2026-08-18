@@ -2,23 +2,20 @@
 
 namespace PowerComponents\LivewirePowerGrid\Providers;
 
-use Illuminate\Database\Events\MigrationsEnded;
-use Illuminate\Support\Facades\{Blade, Event};
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, PublishCommand};
-use PowerComponents\LivewirePowerGrid\Commands\GenerateThemeMetaCommand;
-use PowerComponents\LivewirePowerGrid\Components\Filters\FilterManager;
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\{DataSource\Processors\Database\Handlers\SearchHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract,
-    Livewire\Detail,
-    PowerGridManager,
-    Testing\TestActions};
+use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, GenerateThemeMetaCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
-use PowerComponents\LivewirePowerGrid\Support\PowerGridTableCache;
+use PowerComponents\LivewirePowerGrid\Livewire\Detail;
+use PowerComponents\LivewirePowerGrid\PowerGridManager;
+use PowerComponents\LivewirePowerGrid\Support\CompatAliases;
+use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
+use PowerComponents\LivewirePowerGrid\Testing\TestActions;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
+use PowerComponents\Turbine\Components\Filters\FilterManager;
+use PowerComponents\Turbine\Components\Rules\RuleManager;
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -27,6 +24,10 @@ class PowerGridServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->bound('livewire')) {
+            app('livewire')->propertySynthesizer(PowerGridWireableSynth::class);
+        }
+
         if ($this->app->runningInConsole()) {
             $this->commands([PublishCommand::class]);
             $this->commands([CreateCommand::class]);
@@ -56,6 +57,8 @@ class PowerGridServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        CompatAliases::register();
+
         $this->mergeConfigFrom(
             __DIR__.'/../../resources/config/livewire-powergrid.php',
             $this->packageName
@@ -71,8 +74,6 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
 
-        Event::listen(MigrationsEnded::class, fn () => PowerGridTableCache::forgetAll());
-
         Livewire::component('powergrid-detail', Detail::class);
 
         Macros::columns();
@@ -82,10 +83,6 @@ class PowerGridServiceProvider extends ServiceProvider
         foreach (PowerGridManager::$plugins as $plugin) {
             $plugin::boot();
         }
-
-        $this->app->bind(SearchHandlerContract::class, function ($app, array $params) {
-            return new SearchHandler($params['component']);
-        });
     }
 
     private function publishViews(): void

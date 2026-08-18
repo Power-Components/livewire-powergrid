@@ -1,17 +1,18 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleActions, RuleCheckbox, RuleEditOnClick, RuleManager, RuleRadio, RuleRows, RuleToggleable};
-use PowerComponents\LivewirePowerGrid\Facades\Rule;
+use PowerComponents\LivewirePowerGrid\Facades\{PowerGrid, Rule};
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
+use PowerComponents\Turbine\{Button, Column};
+use PowerComponents\Turbine\Components\Rules\{RuleActions, RuleCheckbox, RuleEditOnClick, RuleManager, RuleRadio, RuleRows, RuleToggleable};
 
 describe('RuleManager', function () {
     it('should have correct type constants', function () {
         expect(RuleManager::TYPE_ACTIONS)->toBe('actions')
-            ->and(RuleManager::TYPE_ROWS)->toBe('pg:rows')
-            ->and(RuleManager::TYPE_CHECKBOX)->toBe('pg:checkbox')
-            ->and(RuleManager::TYPE_RADIO)->toBe('pg:radio')
-            ->and(RuleManager::TYPE_COLUMN)->toBe('pg:column');
+            ->and(RuleManager::TYPE_ROWS)->toBe('turbine-rows')
+            ->and(RuleManager::TYPE_CHECKBOX)->toBe('turbine-checkbox')
+            ->and(RuleManager::TYPE_RADIO)->toBe('turbine-radio')
+            ->and(RuleManager::TYPE_COLUMN)->toBe('turbine-column');
     });
 
     it('should return applicable modifiers', function () {

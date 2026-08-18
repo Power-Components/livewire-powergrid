@@ -4,8 +4,9 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Editable;
 
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Components\Rules\{RuleEditOnClick, RuleManager};
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
+use PowerComponents\Turbine\Column as TurbineColumn;
+use PowerComponents\Turbine\Components\Rules\{RuleEditOnClick, RuleManager};
 use stdClass;
 
 class EditablePlugin extends PluginBase
@@ -70,8 +71,8 @@ class EditablePlugin extends PluginBase
             ->contains(fn ($column) => ! empty(data_get($column, 'pluginData.editable')));
     }
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
-    public function handles(Column|array|stdClass $column): bool
+    /** @param  TurbineColumn|array<string, mixed>|stdClass  $column */
+    public function handles(TurbineColumn|array|stdClass $column): bool
     {
         return ! empty(data_get($column, 'pluginData.editable'));
     }
@@ -80,8 +81,8 @@ class EditablePlugin extends PluginBase
 
     protected static ?string $cachedCss = null;
 
-    /** @param  Column|array<string, mixed>|stdClass  $column */
-    public function render(Column|array|stdClass $column, mixed $row): ?string
+    /** @param  TurbineColumn|array<string, mixed>|stdClass  $column */
+    public function render(TurbineColumn|array|stdClass $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
             static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
@@ -130,13 +131,13 @@ class EditablePlugin extends PluginBase
         $this->component->dispatch('pg:editable-close-'.$id);
     }
 
-    /** @param  stdClass|Column|array<string, mixed>  $column */
-    private function shouldShowEditOnClick(stdClass|Column|array $column, mixed $row): bool
+    /** @param  stdClass|TurbineColumn|array<string, mixed>  $column */
+    private function shouldShowEditOnClick(stdClass|TurbineColumn|array $column, mixed $row): bool
     {
         $hasPermission = boolval(data_get($column, 'pluginData.editable.hasPermission', false));
 
         $editOnClickVisibility = data_get(
-            collect((array) data_get($row, '__powergrid_rules'))
+            collect((array) data_get($row, '__turbine_rules'))
                 ->where('apply', true)
                 ->last(),
             'editOnClickVisibility'

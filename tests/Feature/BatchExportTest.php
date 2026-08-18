@@ -4,12 +4,10 @@ use Illuminate\Bus\PendingBatch;
 use Illuminate\Support\Facades\{Bus, Storage};
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column,
-    Facades\PowerGrid,
-    PowerGridComponent,
-    PowerGridFields,
-    Tests\Concerns\Components\BatchExportTable};
-use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\BatchExportTable;
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 use function Livewire\invade;
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;

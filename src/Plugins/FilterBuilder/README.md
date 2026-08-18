@@ -127,7 +127,7 @@ public function validateFilterBuilder(array $conditions): void
 
 ## Persistence
 
-The Filter Builder plugs into PowerGrid's persistence layer, so applied conditions
+The Filter Builder plugs into Turbine's persistence layer, so applied conditions
 survive page reloads using the configured driver (`cookies`, `session` or `cache`).
 
 There are two ways to enable it:

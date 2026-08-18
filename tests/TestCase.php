@@ -8,8 +8,9 @@ use LaraDumps\LaraDumps\LaraDumpsServiceProvider;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
-use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider;
+use PowerComponents\LivewirePowerGrid\Providers\PowerGridServiceProvider as LivewirePowerGridServiceProvider;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\Turbine\Providers\TurbineServiceProvider as TurbineCoreServiceProvider;
 
 class TestCase extends BaseTestCase
 {
@@ -24,7 +25,7 @@ class TestCase extends BaseTestCase
     }
 
     /**
-     * Delete PowerGrid cached views
+     * Delete Turbine cached views
      */
     protected function clearViewsCache(): void
     {
@@ -79,7 +80,8 @@ class TestCase extends BaseTestCase
     {
         return [
             LivewireServiceProvider::class,
-            PowerGridServiceProvider::class,
+            LivewirePowerGridServiceProvider::class,
+            TurbineCoreServiceProvider::class,
             LaraDumpsServiceProvider::class,
         ];
     }

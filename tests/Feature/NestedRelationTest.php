@@ -1,7 +1,8 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 it('searches data using nested relations in collection', function () {
     $component = new class() extends PowerGridComponent

@@ -4,13 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns;
 
 use Illuminate\Database\Eloquent;
 use Illuminate\Support\{Collection, LazyCollection, Str, Stringable};
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\{DataSource\DataTransformer,
-    DataSource\ProcessDataSource,
-    DataSource\Processors\Database\Handlers\FilterHandler,
-    DataSource\Processors\Database\Handlers\SearchHandlerContract,
-    DataSource\Support\Sql,
-    PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\Turbine\DataSource\{DataTransformer, ProcessDataSource};
+use PowerComponents\Turbine\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
+use PowerComponents\Turbine\DataSource\Support\Sql;
 
 /** @codeCoverageIgnore */
 trait ExportableJob
@@ -66,8 +63,8 @@ trait ExportableJob
             $processDataSource->get();
         }
 
-        $filtered = $processDataSource->component->filtered ?? [];
-        $currentTable = $processDataSource->component->currentTable;
+        $filtered = $this->componentTable->filtered;
+        $currentTable = $this->componentTable->currentTable;
 
         /** @var array{sortField?: string, sortDirection?: string} $queryOptions */
         $queryOptions = data_get($this->exportable, 'queryOptions', []);
@@ -77,8 +74,8 @@ trait ExportableJob
             $queryOptions = [];
         }
 
-        $property = function (string $property) use ($processDataSource, $currentTable) {
-            $property = $processDataSource->component->{$property};
+        $property = function (string $property) use ($currentTable) {
+            $property = $this->componentTable->{$property};
 
             return Str::of($property)->contains('.')
                 ? $property
@@ -86,9 +83,9 @@ trait ExportableJob
         };
 
         $sortField = $queryOptions['sortField']
-            ?? $processDataSource->component->sortField;
+            ?? $this->componentTable->sortField;
         $sortDirection = Sql::sanitizeSortDirection($queryOptions['sortDirection']
-            ?? $processDataSource->component->sortDirection);
+            ?? $this->componentTable->sortDirection);
 
         $results = $processDataSource->datasource
             ->where(function ($query) {
@@ -100,9 +97,9 @@ trait ExportableJob
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
-            ->when(is_string($sortField) && $processDataSource->component->isValidSortField($sortField), function ($query) use ($processDataSource, $sortField, $sortDirection) {
+            ->when(is_string($sortField) && $this->componentTable->isValidSortField($sortField), function ($query) use ($sortField, $sortDirection) {
                 return $query->orderBy(
-                    $processDataSource->component->resolveSortField($sortField),
+                    $this->componentTable->resolveSortField($sortField),
                     $sortDirection
                 );
             })

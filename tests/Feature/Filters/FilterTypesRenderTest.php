@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Collection;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\Filters\{FilterEnumSelect, FilterMultiSelectAsync};
-use PowerComponents\LivewirePowerGrid\Facades\Filter;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Enums\Diet;
+use PowerComponents\Turbine\Components\Filters\{FilterEnumSelect, FilterMultiSelectAsync};
 
 uses()->group('filters');
 
@@ -42,14 +42,14 @@ it('builds an enum select filter and resolves its option labels', function () {
     };
 
     // Rendering resolves the filters, invoking FilterEnumSelect::execute(),
-    // which maps each enum case using labelPowergridFilter().
+    // which maps each enum case using labelTurbineFilter().
     Livewire::test($component::class)
         ->assertOk()
         ->assertSee('Vegan Dish')
         ->assertSee('Celiac Dish');
 });
 
-it('resolves enum option labels through execute() using labelPowergridFilter', function () {
+it('resolves enum option labels through execute() using labelTurbineFilter', function () {
     $filter = (new FilterEnumSelect('diet'))->dataSource(Diet::cases());
 
     $filter->execute();

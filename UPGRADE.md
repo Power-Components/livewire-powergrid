@@ -1010,4 +1010,65 @@ Update feature tests to use runtime mini-components (see Section 11)
 
 ---
 
+## 16. Engine Extraction to Turbine (Internal Architecture)
+
+> **No action required for standard usage.** This section documents an internal
+> architectural change for completeness. If you only use PowerGrid's public API
+> (component, facades, `Column`, `Button`, filters, rules, setup objects), your
+> code keeps working unchanged.
+
+### What changed
+
+The framework-agnostic data engine (search, filters, sort, pagination, export,
+state persistence, summaries, action/rule resolution) was extracted into a
+separate package, **`power-components/turbine`** (namespace
+`PowerComponents\Turbine\`). PowerGrid 7.x now consumes Turbine as its engine.
+This is why PowerGrid 7.x requires `illuminate/* 12.x|13.x` (see Section 1).
+
+### Public API is unchanged
+
+These keep the `PowerComponents\LivewirePowerGrid\` namespace and their existing
+signatures — no import or code changes needed:
+
+- `PowerGridComponent` (base class) and its `datasource()`, `fields()`, `columns()`,
+  `filters()`, `setUp()`, etc. Only additive methods were introduced.
+- Facades `PowerGrid`, `Filter`, `Rule` and helpers in `functions.php`.
+- `Column`, `Button`, `PowerGridFields` and setup objects.
+
+### Legacy imports still resolve
+
+Classes physically moved into Turbine (`Column`, `Button`, filters, rules, setup
+components) remain usable under their **old** `PowerComponents\LivewirePowerGrid\...`
+FQCN, handled two ways:
+
+- **Thin subclasses** for the commonly-constructed types: `Column`, `Button`,
+  `PowerGridFields`, and `Components\SetUp\{Detail, Header, Footer, Exportable}`.
+- **Lazy `class_alias` compat layer** (`Support\CompatAliases`, registered in the
+  service provider) for the facade/factory-returned types:
+  `Components\Filters\*`, `Components\Rules\*`, and `Components\SetUp\{Cache, Responsive, FilterBuilder}`.
+  The alias makes the old FQCN identical to the Turbine class, so `use`,
+  type-hints and `instanceof` all keep working — including against instances
+  returned by `Filter::...()` / `Rule::...()`.
+
+### Internal contract renames (only if you reached into internals)
+
+If you hardcoded any of the following strings instead of using the provided
+constants, update them:
+
+- **Row-meta keys:** `__powergrid_rules` / `__powergrid_loop` / `__powergrid_actions`
+  → `__turbine_rules` / `__turbine_loop` / `__turbine_actions`.
+- **Rule-type strings (`RuleManager::TYPE_*`):** `pg:rows` / `pg:checkbox` /
+  `pg:radio` / `pg:column` / `pg:editOnClick` / `pg:toggleable` → `turbine-*`.
+  Always reference `RuleManager::TYPE_*`, never the literal string. The `TYPE_TOGGLEABLE`
+  and `TYPE_EDIT_ON_CLICK` constants were removed.
+
+### Preserved for compatibility (no change)
+
+- Request key is still `powergrid` (with a `turbine` fallback).
+- Persist configuration is still read from `livewire-powergrid.persist_driver`
+  and `livewire-powergrid.persist_driver_store`.
+- Persisted-state key prefix is still `pg:` — existing persisted grid state stays valid.
+
+---
+
 *Keep these guidelines in mind when upgrading to PowerGrid 7.x. The architectural changes are substantial, but the result is a cleaner, more maintainable codebase with better performance and flexibility.*

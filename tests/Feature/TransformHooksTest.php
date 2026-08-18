@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Collection;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 class TestTransformRowsTable extends PowerGridComponent
 {

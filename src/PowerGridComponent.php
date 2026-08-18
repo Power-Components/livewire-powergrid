@@ -8,16 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Application;
 use Illuminate\Pagination\AbstractPaginator;
-use Illuminate\Support\{Arr, Collection as BaseCollection, Facades\Cache};
-use Illuminate\Support\Collection;
+use Illuminate\Support\{Arr, Collection, Collection as BaseCollection};
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\ComponentAttributeBag;
-use Livewire\{Attributes\Computed, Component, WithPagination};
-use PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager;
-use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
+use Livewire\Attributes\Computed;
+use Livewire\{Component, WithPagination};
 use PowerComponents\LivewirePowerGrid\Exceptions\TableNameCannotCalledDefault;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Support\{CellRenderer, ColumnViewModel, ThemeManager};
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
+use PowerComponents\Turbine\Column;
+use PowerComponents\Turbine\Components\Rules\RuleManager;
+use PowerComponents\Turbine\Contracts\Context;
+use PowerComponents\Turbine\DataSource\ProcessDataSource;
+use PowerComponents\Turbine\Support\State\State;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /**
@@ -31,7 +35,7 @@ use Psr\SimpleCache\InvalidArgumentException;
  * @method mixed actions(mixed $row)
  * @method mixed actionsFromView(object $row)
  */
-class PowerGridComponent extends Component
+class PowerGridComponent extends Component implements Context
 {
     use Concerns\Base;
     use Concerns\Checkbox;
@@ -44,13 +48,70 @@ class PowerGridComponent extends Component
     use Concerns\ManageRow;
     use Concerns\Persist;
     use Concerns\Radio;
+    use Concerns\RespondsWithData;
     use Concerns\SoftDeletes;
     use Concerns\Sorting;
+    use Concerns\State\ResolvesBeforeSearch;
     use Concerns\Summarize;
     use WithPagination;
 
     /** @var array<string, PluginBase> */
     protected array $plugins = [];
+
+    public function state(): State
+    {
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
+
+        return new State(
+            search: $this->search,
+            sortField: $this->sortField,
+            sortDirection: $this->sortDirection,
+            multiSort: $this->multiSort,
+            sortArray: $this->sortArray,
+            filters: $this->filters,
+            filterBuilder: $this->filterBuilder,
+            softDeletes: $this->softDeletes,
+            setUp: $this->setUp,
+            columns: $this->columns,
+            primaryKey: $this->primaryKey,
+            primaryKeyAlias: $this->primaryKeyAlias,
+            ignoreTablePrefix: $this->ignoreTablePrefix,
+            pruneHiddenColumns: $this->pruneHiddenColumns,
+            paginateRaw: $this->paginateRaw,
+            isExporting: $this->isExporting,
+            tableName: $this->tableName,
+            supportModel: $this->supportModel,
+        );
+    }
+
+    public function getCurrentTable(): string
+    {
+        return $this->currentTable;
+    }
+
+    public function setCurrentTable(string $table): void
+    {
+        $this->currentTable = $table;
+    }
+
+    /** @param  list<int|string>  $keys */
+    public function setFilteredKeys(array $keys): void
+    {
+        $this->filtered = $keys;
+    }
+
+    /** @param  array<string, mixed>  $values */
+    public function setSummaryValues(array $values): void
+    {
+        $this->summaryValues = $values;
+    }
+
+    public function resetToFirstPage(string $pageName = 'page'): void
+    {
+        $this->gotoPage(1, $pageName);
+    }
 
     public function template(): ?Theme
     {
@@ -116,9 +177,6 @@ class PowerGridComponent extends Component
         }
 
         foreach ($this->plugins as $plugin) {
-            // The rendered column comes from the client snapshot, so its
-            // pluginData is attacker-controllable. Only render plugin content
-            // when the server-declared column for the field is handled too.
             if ($plugin->handles($column) && $plugin->isDeclaredField($field)) {
                 return $plugin->render($column, $row);
             }
@@ -133,20 +191,12 @@ class PowerGridComponent extends Component
     }
 
     /**
-     * Build the <tr> attribute bag from the row's action rules, server-side.
-     *
-     * Replaces the previous client-side `pgRowAttributes` Alpine component, whose
-     * rule attributes were read once at init() and never re-evaluated. On a
-     * Livewire morph (e.g. flipping a Toggleable), Alpine kept the stale rule so a
-     * highlighted row never "unpainted". Computing here lets the morph refresh the
-     * class/attributes on every render.
-     *
      * @param  ComponentAttributeBag  $attributes  the row's base bag (class, wire:key, ...)
      */
     public function rowAttributes(object $row, ComponentAttributeBag $attributes): ComponentAttributeBag
     {
         /** @var array<int, array<string, mixed>> $rules */
-        $rules = (array) data_get($row, '__powergrid_rules', []);
+        $rules = (array) data_get($row, '__turbine_rules', []);
 
         $ruleClasses = [];
         $extra = [];
@@ -156,8 +206,6 @@ class PowerGridComponent extends Component
                 continue;
             }
 
-            // Only Rule::rows() paints the <tr>; checkbox/radio/action rules are
-            // consumed by their own elements (see the checkbox partial).
             if (data_get($rule, 'forAction') !== RuleManager::TYPE_ROWS) {
                 continue;
             }
@@ -169,7 +217,6 @@ class PowerGridComponent extends Component
             }
 
             foreach ($ruleAttributes as $key => $value) {
-                // Nested {key, value} form (e.g. arbitrary attribute pairs).
                 if (is_array($value) && isset($value['key'], $value['value']) && is_scalar($value['key']) && is_scalar($value['value'])) {
                     $nestedKey = (string) $value['key'];
                     $extra[$nestedKey] ??= (string) $value['value'];
@@ -189,24 +236,18 @@ class PowerGridComponent extends Component
                     continue;
                 }
 
-                // First rule wins for a given attribute; later ones are appended.
                 $extra[$key] = isset($extra[$key])
                     ? $extra[$key].' '.$value
                     : $value;
             }
         }
 
-        // merge() appends to the existing class; base class stays intact.
         return $attributes->merge(
             array_merge($extra, ['class' => implode(' ', $ruleClasses)]),
             escape: false,
         );
     }
 
-    /**
-     * Render the content every enabled plugin contributes to a UI zone
-     * (e.g. 'header'). Unlike columns, zones aggregate every plugin's output.
-     */
     public function renderPluginZone(string $zone): string
     {
         $this->resolvePlugins();
@@ -222,10 +263,6 @@ class PowerGridComponent extends Component
         return $html;
     }
 
-    /**
-     * Render the global assets (<script>/<style>) every enabled plugin needs.
-     * Called once from the root table layout — never from per-row cells.
-     */
     public function renderPluginAssets(): string
     {
         $this->resolvePlugins();
@@ -241,6 +278,10 @@ class PowerGridComponent extends Component
 
     public function boot(): void
     {
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
+
         /** @var string $themeClass */
         $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
@@ -277,7 +318,9 @@ class PowerGridComponent extends Component
         $this->throwTableName();
         $this->throwColumnAction();
 
-        $this->columns = $this->columns();
+        if (empty($this->columns)) {
+            $this->columns = $this->declaredColumns();
+        }
 
         $this->restoreState();
 
@@ -329,11 +372,6 @@ class PowerGridComponent extends Component
     #[Computed]
     public function visibleColumns(): BaseCollection
     {
-        // The `columns` property is mass-assignable and hydrated from the
-        // client snapshot, so it cannot be trusted as the render surface.
-        // Only render columns whose field/dataField is actually declared in
-        // the server-side columns() method; client state may only toggle the
-        // `hidden` flag for already-declared columns.
         $declaredFields = collect($this->declaredColumns())
             ->map(fn ($column) => $this->columnString($column, 'dataField') ?: $this->columnString($column, 'field'))
             ->filter()
@@ -343,8 +381,6 @@ class PowerGridComponent extends Component
         $columns = collect($this->columns)
             ->where('forceHidden', false)
             ->filter(function ($column) use ($declaredFields): bool {
-                // Action/index columns carry no field but are legitimate
-                // declared columns; they never render row data.
                 if ((bool) data_get($column, 'isAction') || (bool) data_get($column, 'index')) {
                     return true;
                 }
@@ -446,7 +482,9 @@ class PowerGridComponent extends Component
         return $this->applyAfterQuery($results['results']);
     }
 
-    /** @return AbstractPaginator<int, mixed>|MorphToMany<Model, Model>|BaseCollection<int, mixed> */
+    /** @return AbstractPaginator<int, mixed>|MorphToMany<Model, Model>|BaseCollection<int, mixed>
+     * @throws \Throwable
+     */
     private function getRecordsDataSource(): AbstractPaginator|MorphToMany|BaseCollection
     {
         $processResult = ProcessDataSource::make($this)->get();
@@ -597,8 +635,6 @@ class PowerGridComponent extends Component
         $this->resolvePlugins();
 
         if ($this->hasSummarizeInColumns()) {
-            // Touch the dataset so the Summaries pipeline runs (when not served from
-            // cache) before hydrating totals onto the columns for rendering.
             $this->records; // @phpstan-ignore-line
 
             $this->hydrateSummaries();

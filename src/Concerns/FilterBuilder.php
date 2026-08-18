@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderValidator;
+use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
 
 trait FilterBuilder
 {

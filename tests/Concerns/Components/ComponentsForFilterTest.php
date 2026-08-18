@@ -1,9 +1,7 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
-use PowerComponents\LivewirePowerGrid\Tests\{Concerns\Components\DishesQueryBuilderTable,
-    Concerns\Components\DishesTable,
-    Concerns\Components\DishesTableWithJoin};
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesQueryBuilderTable, DishesTable, DishesTableWithJoin};
 
 $component = new class() extends DishesTable
 {

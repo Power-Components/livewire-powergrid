@@ -1,26 +1,37 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\SetUp\{Cache, Detail};
+use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
+use PowerComponents\Turbine\Components\SetUp\{Cache, Detail};
 
 uses()->group('setup');
+
+function wireRoundTrip(object $definition): object
+{
+    /** @var PowerGridWireableSynth $synth */
+    $synth = (new ReflectionClass(PowerGridWireableSynth::class))->newInstanceWithoutConstructor();
+
+    [$data, $meta] = $synth->dehydrate($definition, fn ($key, $value) => $value);
+
+    return $synth->hydrate($data, $meta, fn ($key, $value) => $value);
+}
 
 it('builds the cache setup component through every setter', function () {
     $cache = (new Cache())
         ->disabled()
         ->customTag('my-tag')
-        ->prefix('pg_')
+        ->prefix('turbine_')
         ->ttl(600);
 
     expect($cache->enabled)->toBeFalse()
         ->and($cache->tag)->toBe('my-tag')
-        ->and($cache->prefix)->toBe('pg_')
+        ->and($cache->prefix)->toBe('turbine_')
         ->and($cache->ttl)->toBe(600);
 
-    // Wireable round-trip
-    $wired = $cache->toLivewire();
-    expect($wired)->toBeArray()
-        ->and($wired['tag'])->toBe('my-tag')
-        ->and(Cache::fromLivewire($wired))->toBe($wired);
+    $restored = wireRoundTrip($cache);
+    expect($restored)->toBeInstanceOf(Cache::class)
+        ->and($restored->tag)->toBe('my-tag')
+        ->and($restored->enabled)->toBeFalse()
+        ->and($restored->ttl)->toBe(600);
 });
 
 it('builds the detail setup component through every setter', function () {
@@ -37,10 +48,10 @@ it('builds the detail setup component through every setter', function () {
         ->and($detail->viewIcon)->toBe('custom-icon')
         ->and($detail->singleExpand)->toBeTrue();
 
-    $wired = $detail->toLivewire();
-    expect($wired)->toBeArray()
-        ->and($wired['view'])->toBe('components.detail')
-        ->and(Detail::fromLivewire($wired))->toBe($wired);
+    $restored = wireRoundTrip($detail);
+    expect($restored)->toBeInstanceOf(Detail::class)
+        ->and($restored->view)->toBe('components.detail')
+        ->and($restored->singleExpand)->toBeTrue();
 });
 
 it('keeps collapseOthers() as a deprecated alias of singleExpand()', function () {

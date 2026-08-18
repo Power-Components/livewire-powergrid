@@ -2,9 +2,10 @@
 
 use Composer\InstalledVersions;
 use Illuminate\Support\Facades\DB;
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\TestCase;
+use PowerComponents\Turbine\Column;
 
 uses(TestCase::class)->in(__DIR__);
 

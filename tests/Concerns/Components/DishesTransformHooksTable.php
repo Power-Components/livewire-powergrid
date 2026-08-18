@@ -4,8 +4,10 @@ namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\{Button, Column};
 
 class DishesTransformHooksTable extends PowerGridComponent
 {

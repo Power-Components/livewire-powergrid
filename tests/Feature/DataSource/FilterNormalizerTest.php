@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\DataSource\Support\FilterNormalizer;
+use PowerComponents\Turbine\DataSource\Support\FilterNormalizer;
 
 uses()->group('datasource', 'filter-normalizer');
 

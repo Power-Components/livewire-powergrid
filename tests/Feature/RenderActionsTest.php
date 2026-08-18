@@ -3,7 +3,9 @@
 use Illuminate\Support\Collection;
 use Livewire\Livewire;
 use PHPUnit\Framework\AssertionFailedError;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, Facades\Rule, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{PowerGrid, Rule};
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
+use PowerComponents\Turbine\{Button, Column};
 
 describe('renderActions – HTML structure', function () {
     it('renders a <button> tag by default', function () {

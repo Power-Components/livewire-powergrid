@@ -3,8 +3,10 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Illuminate\Database\Eloquent\Builder;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\Column;
 
 class DishesRowIndex extends PowerGridComponent
 {

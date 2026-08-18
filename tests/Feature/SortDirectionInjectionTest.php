@@ -1,9 +1,9 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
-use PowerComponents\LivewirePowerGrid\DataSource\Processors\Database\Pipelines\{ColumnRawQueries, Sorting};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesCustomSortTable, DishesNaturalSortTable};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines\{ColumnRawQueries, Sorting};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
 

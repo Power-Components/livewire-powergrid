@@ -3,7 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Livewire\Attributes\Computed;
-use PowerComponents\LivewirePowerGrid\{Components\Filters\FilterBase, Facades\PowerGrid, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
+use PowerComponents\Turbine\Components\Filters\FilterBase;
 
 trait Base
 {
@@ -59,7 +61,7 @@ trait Base
         return $this->primaryKeyAlias ?? $this->primaryKey;
     }
 
-    /** @var array<int, mixed>|null */
+    /** @var list<mixed>|null */
     private ?array $declaredColumnsCache = null;
 
     /** @var list<FilterBase>|null */
@@ -71,11 +73,16 @@ trait Base
     }
 
     /**
-     * @return array<int, mixed>
+     * @return list<mixed>
      */
     public function declaredColumns(): array
     {
-        return $this->declaredColumnsCache ??= $this->columns();
+        return $this->declaredColumnsCache ??= array_values($this->columns());
+    }
+
+    public function hasResolvedColumns(): bool
+    {
+        return ! empty($this->declaredColumns());
     }
 
     /**

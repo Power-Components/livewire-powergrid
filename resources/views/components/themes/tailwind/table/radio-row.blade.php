@@ -3,9 +3,9 @@
         'class' => theme('table.radio.input'),
     ]);
 
-    $rules = collect($row->__powergrid_rules)
+    $rules = collect($row->__turbine_rules)
         ->where('apply', true)
-        ->where('forAction', \PowerComponents\LivewirePowerGrid\Components\Rules\RuleManager::TYPE_RADIO)
+        ->where('forAction', \PowerComponents\Turbine\Components\Rules\RuleManager::TYPE_RADIO)
         ->last();
 
     if (isset($rules['attributes'])) {

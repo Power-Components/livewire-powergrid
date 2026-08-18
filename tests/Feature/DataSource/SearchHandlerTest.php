@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\{DB, Schema};
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 // Tests use seeded data from TestDatabase:

@@ -1,12 +1,13 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridManager};
+use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridManager};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
 
 beforeEach(function () {

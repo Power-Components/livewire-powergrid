@@ -3,9 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
-use Illuminate\Support\Facades\{Cache, Cookie, Session};
-use PowerComponents\LivewirePowerGrid\DataSource\Support\Sql;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\Turbine\DataSource\Support\Sql;
+use PowerComponents\Turbine\Support\State\StatePersister;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /** @codeCoverageIgnore */
@@ -40,40 +40,23 @@ trait Persist
             return;
         }
 
-        $state = [];
+        $persister = new StatePersister();
+        $jsonState = $persister->serializeState(
+            persistItems: $this->persist,
+            tableItem: $tableItem,
+            columns: $this->columns,
+            filters: $this->filters,
+            enabledFilters: $this->enabledFilters,
+            filterBuilder: $this->filterBuilder,
+            sortField: $this->sortField,
+            sortDirection: $this->sortDirection,
+            sortArray: $this->sortArray,
+            multiSort: $this->multiSort,
+            persistFilterBuilder: $persistFilterBuilder
+        );
 
-        if (in_array('columns', $this->persist) || $tableItem === 'columns') {
-            $state['columns'] = collect($this->columns)
-                ->map(fn ($column) => (object) $column)
-                ->mapWithKeys(fn ($column) => [$column->field => $column->hidden])
-                ->all();
-        }
-
-        $persistFilters = in_array('filters', $this->persist) || $tableItem === 'filters';
-
-        if ($persistFilters) {
-            $state['filters'] = $this->filters;
-            $state['enabledFilters'] = $this->enabledFilters;
-        }
-
-        if (($persistFilters || $persistFilterBuilder) && ! empty($this->filterBuilder['rows'] ?? [])) {
-            $state['filterBuilder'] = $this->filterBuilder;
-        }
-
-        if (in_array('sorting', $this->persist) || $tableItem === 'sorting') {
-            $state['sortField'] = $this->sortField;
-            $state['sortDirection'] = $this->sortDirection;
-            $state['sortArray'] = $this->sortArray;
-            $state['multiSort'] = $this->multiSort;
-        }
-
-        $jsonState = strval(json_encode($state));
-
-        match ($this->getPersistDriverConfig()) {
-            'session' => Session::put($this->getPersistKeyName(), $jsonState),
-            'cache' => Cache::store($this->getPersistDriverStoreConfig())->put($this->getPersistKeyName(), $jsonState),
-            default => Cookie::queue($this->getPersistKeyName(), $jsonState, 60 * 24 * 365 * 5) // 5 years, in minutes (Cookie::queue expects minutes)
-        };
+        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $persister->save($key, $jsonState, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
     }
 
     /**
@@ -87,33 +70,37 @@ trait Persist
             return;
         }
 
-        /** @var string $storage */
-        $storage = match ($this->getPersistDriverConfig()) {
-            'session' => Session::get($this->getPersistKeyName()),
-            'cache' => Cache::store($this->getPersistDriverStoreConfig())->get($this->getPersistKeyName()),
-            default => Cookie::get($this->getPersistKeyName())
-        };
+        $persister = new StatePersister();
+        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $state = $persister->retrieve($key, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
 
-        $state = (array) json_decode($storage, true);
+        if (is_null($state)) {
+            return;
+        }
 
-        if (in_array('columns', $this->persist) && array_key_exists('columns', $state)) {
-            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($state) {
+        if (in_array('columns', $this->persist) && array_key_exists('columns', $state) && is_array($state['columns'])) {
+            $columnsState = $state['columns'];
+            $this->columns = array_values(collect($this->columns)->map(function ($column) use ($columnsState) {
                 $column = (object) $column;
 
                 /** @var string $field */
                 $field = $column->field;
 
-                if (! $column->forceHidden && array_key_exists($field, $state['columns'])) {
-                    data_set($column, 'hidden', $state['columns'][$field]);
+                if (! $column->forceHidden && array_key_exists($field, $columnsState)) {
+                    data_set($column, 'hidden', $columnsState[$field]);
                 }
 
                 return $column;
             })->all());
         }
 
-        if (in_array('filters', $this->persist) && array_key_exists('filters', $state)) {
-            $this->filters = $state['filters'];
-            $this->enabledFilters = $state['enabledFilters'];
+        if (in_array('filters', $this->persist) && isset($state['filters'], $state['enabledFilters']) && is_array($state['filters']) && is_array($state['enabledFilters'])) {
+            /** @var array<string, array<string, mixed>> $filters */
+            $filters = $state['filters'];
+            /** @var list<array<string, mixed>> $enabledFilters */
+            $enabledFilters = array_values($state['enabledFilters']);
+            $this->filters = $filters;
+            $this->enabledFilters = $enabledFilters;
         }
 
         if (($persistFilterBuilder || in_array('filters', $this->persist))
@@ -129,10 +116,24 @@ trait Persist
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {
-            $this->sortField = $state['sortField'];
-            $this->sortDirection = Sql::sanitizeSortDirection($state['sortDirection'] ?? null);
-            $this->sortArray = $state['sortArray'];
-            $this->multiSort = $state['multiSort'];
+            $sortField = $state['sortField'] ?? '';
+            if (is_string($sortField)) {
+                $this->sortField = $sortField;
+            }
+
+            $sortDirection = $state['sortDirection'] ?? null;
+            $this->sortDirection = Sql::sanitizeSortDirection(is_string($sortDirection) ? $sortDirection : null);
+
+            $sortArray = $state['sortArray'] ?? [];
+            if (is_array($sortArray)) {
+                /** @var array<string, string> $sortArray */
+                $this->sortArray = $sortArray;
+            }
+
+            $multiSort = $state['multiSort'] ?? false;
+            if (is_bool($multiSort)) {
+                $this->multiSort = $multiSort;
+            }
         }
     }
 
@@ -151,12 +152,12 @@ trait Persist
         return $persistDriver;
     }
 
-    private function getPersistDriverStoreConfig(): string
+    private function getPersistDriverStoreConfig(): ?string
     {
-        /** @var string $store */
+        /** @var string|null $store */
         $store = config('livewire-powergrid.persist_driver_store');
 
-        return $store;
+        return is_string($store) && $store !== '' ? $store : null;
     }
 
     private function getPersistKeyName(): string

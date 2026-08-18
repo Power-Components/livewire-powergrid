@@ -1,7 +1,8 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 
 uses()->group('summaries');
 
@@ -52,7 +53,7 @@ it('builds the summaries cache tag from a custom tag', function () {
         public function setUp(): array
         {
             return [
-                PowerGrid::cache()->customTag('my-custom-tag')->prefix('pg_'),
+                PowerGrid::cache()->customTag('my-custom-tag')->prefix('turbine_'),
             ];
         }
 
@@ -78,7 +79,7 @@ it('builds the summaries cache tag from a custom tag', function () {
 
     $test = Livewire::test($component::class)->assertOk();
 
-    expect($test->instance()->summariesCacheTag())->toBe('pg_my-custom-tag');
+    expect($test->instance()->summariesCacheTag())->toBe('turbine_my-custom-tag');
 });
 
 it('builds the summaries cache tag from the datasource table when no custom tag is set', function () {

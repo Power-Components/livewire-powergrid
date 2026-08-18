@@ -1,8 +1,8 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\Filter;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 

@@ -1,10 +1,11 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Components\SetUp\Exportable;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 it('keeps both openspout v4 and v5 export drivers available', function () {
     $drivers = config('livewire-powergrid.exportable');

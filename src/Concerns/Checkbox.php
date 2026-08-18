@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use Livewire\Attributes\Locked;
+use PowerComponents\Turbine\Components\Rules\RuleManager;
+use PowerComponents\Turbine\Support\Actions\ActionsResolver;
 use stdClass;
 use Throwable;
 
@@ -43,22 +45,24 @@ trait Checkbox
 
         /** @phpstan-ignore-next-line  */
         collect($records->items())->each(function (array|Model|stdClass $model) {
-            $value = $model->{$this->checkboxAttribute};
+            $value = data_get($model, $this->checkboxAttribute);
 
-            $checkboxRule = collect((array) data_get($model, '__powergrid_rules'))
-                ->where('apply', true)
-                ->where('forAction', 'pg:checkbox')
-                ->last();
-
-            if ((bool) data_get($checkboxRule, 'hide') || (bool) data_get($checkboxRule, 'disable')) {
+            $actionsResolver = new ActionsResolver($this);
+            if (! $actionsResolver->isRowSelectable($model, RuleManager::TYPE_CHECKBOX)) {
                 return;
             }
 
-            if (! in_array($value, $this->checkboxValues)) {
-                $this->checkboxValues[] = (string) $value;
+            if (! is_string($value) && ! is_numeric($value) && ! is_bool($value) && ! is_null($value)) {
+                return;
+            }
+
+            $stringValue = (string) $value;
+
+            if (! in_array($stringValue, $this->checkboxValues)) {
+                $this->checkboxValues[] = $stringValue;
 
                 $this->dispatch('pgBulkActions::addMore', [
-                    'value' => strval($value),
+                    'value' => $stringValue,
                     'tableName' => $this->tableName,
                 ]);
             }

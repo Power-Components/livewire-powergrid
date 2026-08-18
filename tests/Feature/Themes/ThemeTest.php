@@ -1,7 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
-use PowerComponents\LivewirePowerGrid\Themes\{Tailwind, Theme};
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Tailwind, Theme};
 
 it('resolves tokens properly', function () {
     $theme = new class() extends Theme

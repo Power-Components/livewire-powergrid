@@ -74,7 +74,7 @@
         @if (isset($actions) && count($actions))
             @php
                 $responsiveActionsColumnName =
-                    \PowerComponents\LivewirePowerGrid\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME;
+                    \PowerComponents\Turbine\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME;
 
                 $isActionFixedOnResponsive =
                     isset($setUp['responsive']) &&

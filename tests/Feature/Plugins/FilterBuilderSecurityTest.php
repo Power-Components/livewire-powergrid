@@ -1,10 +1,11 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\Filter, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\{FilterBuilderHandler, FilterBuilderValidator};
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
+use PowerComponents\Turbine\Plugins\FilterBuilder\{FilterBuilderHandler, FilterBuilderValidator};
 
 uses()->group('filters', 'filter-builder', 'security');
 

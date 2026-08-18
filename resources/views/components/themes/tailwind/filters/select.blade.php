@@ -9,10 +9,7 @@
     $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
 
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\Components\Filters\FilterSelect::getWireAttributes(
-        $field,
-        $title,
-    );
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('select', $field, $title);
 
     $filterClasses = \Illuminate\Support\Arr::toCssClasses([
        theme('filter.select.select'),

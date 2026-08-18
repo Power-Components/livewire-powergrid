@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\DataSource\ProcessDataSource;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
+use PowerComponents\Turbine\DataSource\ProcessDataSource;
 
 /**
  * Capture the paginated data SELECT issued against the `dishes` table

@@ -5,7 +5,8 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
-use PowerComponents\LivewirePowerGrid\{Button, PowerGridComponent};
+use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\Turbine\Button;
 
 trait HasActions
 {

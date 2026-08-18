@@ -84,7 +84,7 @@ it('returns no columns when the table does not exist', function () {
 it('returns no columns when the connection is unusable', function () {
     config()->set('database.connections.broken', [
         'driver' => 'sqlite',
-        'database' => '/does/not/exist/powergrid.sqlite',
+        'database' => '/does/not/exist/turbine.sqlite',
         'prefix' => '',
     ]);
 

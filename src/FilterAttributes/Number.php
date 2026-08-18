@@ -10,6 +10,8 @@ class Number
     /**
      * @param  array<string, mixed>  $filter
      * @return array{inputStartAttributes: ComponentAttributeBag, inputEndAttributes: ComponentAttributeBag}
+     *
+     * @throws \JsonException
      */
     public function __invoke(string $field, array $filter): array
     {

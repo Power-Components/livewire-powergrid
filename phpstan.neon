@@ -9,8 +9,6 @@ parameters:
 
     ignoreErrors:
         - '#Cannot call method [a-zA-Z0-9\\_]#'
-        - '#^Method .*::fromLivewire\(\) has no return type specified\.#'
-        - '#^Method .*::fromLivewire\(\) has parameter \$value with no type specified\.#'
     excludePaths:
         - './src/Plugins/Export/OpenSpout/*'
         - './src/Themes/Theme.php'

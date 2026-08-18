@@ -1,6 +1,6 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\Components\Rules\Support\{DisableRule, HideRule, SlotRule};
+use PowerComponents\Turbine\Components\Rules\Support\{DisableRule, HideRule, SlotRule};
 
 describe('DisableRule', function () {
     it('should return disabled attribute when rule data is true', function () {

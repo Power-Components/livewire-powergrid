@@ -3,7 +3,9 @@
 namespace PowerComponents\LivewirePowerGrid\Tests\Concerns\Components;
 
 use Carbon\Carbon;
-use PowerComponents\LivewirePowerGrid\{Button, Column, Facades\PowerGrid, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\PowerGridFields;
+use PowerComponents\Turbine\{Button, Column};
 
 class DishesIterableTable extends BaseDishesTable
 {

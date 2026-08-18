@@ -1,8 +1,8 @@
 <?php
 
 use Livewire\Livewire;
-use PowerComponents\LivewirePowerGrid\{Column, Facades\PowerGrid, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\Filter;
+use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\{Category, Dish};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\TestDatabase;
 
@@ -279,7 +279,7 @@ it('applies multi_select filter through FilterHandler', function () {
 
         public function datasource()
         {
-            return Dish::query();
+            return Dish::query()->orderBy('id');
         }
 
         public function filters(): array
@@ -399,7 +399,7 @@ it('handles numeric indexed arrays in filters', function () {
 
         public function datasource()
         {
-            return Dish::query();
+            return Dish::query()->orderBy('id');
         }
 
         public function filters(): array

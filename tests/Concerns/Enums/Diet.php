@@ -18,9 +18,9 @@ enum Diet: int
     }
 
     /**
-     * Sends labels to PowerGrid Enum Input
+     * Sends labels to Turbine Enum Input
      */
-    public function labelPowergridFilter(): string
+    public function labelTurbineFilter(): string
     {
         return $this->labels();
     }

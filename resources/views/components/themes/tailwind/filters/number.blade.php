@@ -5,13 +5,12 @@
 ])
 @php
 
-    $fieldClassName = data_get($filter, 'className');
-
     $field = data_get($filter, 'field');
 
     $componentAttributes = (array) data_get($filter, 'attributes');
 
-    $defaultAttributes = $fieldClassName::getWireAttributes(
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get(
+        'number',
         $field,
         array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')])
     );
