@@ -56,7 +56,9 @@ trait Hooks
 
     public function transformQuery(mixed $query): mixed
     {
-        return $query;
+        $definition = $this->definition();
+
+        return $definition !== null ? $definition->transformQuery($query) : $query;
     }
 
     /**
