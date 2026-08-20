@@ -6,6 +6,7 @@ use Livewire\Attributes\Computed;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\Turbine\Components\Filters\FilterBase;
+use PowerComponents\Turbine\Contracts\GridSchema;
 
 trait Base
 {
@@ -50,9 +51,26 @@ trait Base
 
     public bool $pruneHiddenColumns = true;
 
+    protected function definition(): ?GridSchema
+    {
+        return null;
+    }
+
     public function fields(): PowerGridFields
     {
-        return PowerGrid::fields();
+        $definition = $this->definition();
+
+        if ($definition === null) {
+            return PowerGrid::fields();
+        }
+
+        $fields = PowerGrid::fields();
+
+        foreach ($definition->fields()->fields as $name => $closure) {
+            $fields->add($name, $closure);
+        }
+
+        return $fields;
     }
 
     #[Computed]
@@ -98,13 +116,25 @@ trait Base
     /** @return array<string, list<string>> */
     public function relationSearch(): array
     {
-        return [];
+        $definition = $this->definition();
+
+        if ($definition === null) {
+            return [];
+        }
+
+        $out = [];
+
+        foreach ($definition->relationSearch() as $relation => $columns) {
+            $out[$relation] = is_array($columns) ? array_values($columns) : [$columns];
+        }
+
+        return $out;
     }
 
     /** @return array<string, string> */
     public function searchMorphs(): array
     {
-        return [];
+        return $this->definition()?->searchMorphs() ?? [];
     }
 
     /** @return list<mixed> */
@@ -116,19 +146,35 @@ trait Base
     /** @return array<string, mixed> */
     public function setUp(): array
     {
-        return [];
+        $definition = $this->definition();
+
+        if ($definition === null) {
+            return [];
+        }
+
+        $out = [];
+
+        foreach ($definition->setUp() as $component) {
+            $name = data_get($component, 'name');
+
+            if (is_string($name)) {
+                $out[$name] = $component;
+            }
+        }
+
+        return $out;
     }
 
     /** @return list<mixed> */
     public function columns(): array
     {
-        return [];
+        return array_values($this->definition()?->columns() ?? []);
     }
 
     /** @return list<FilterBase> */
     public function filters(): array
     {
-        return [];
+        return array_values($this->definition()?->filters() ?? []);
     }
 
     /** @return array<string, mixed> */

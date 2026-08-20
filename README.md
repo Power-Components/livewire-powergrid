@@ -126,6 +126,35 @@ php artisan boost:update --discover
 
 <br/>
 
+## Reusing a Grid Definition
+
+PowerGrid runs on the framework-agnostic [Turbine](https://github.com/power-components/turbine) engine. You can describe a grid **once** in a portable `Turbine\GridDefinition` class and share it between a Livewire PowerGrid component and an Inertia (React / Vue) or REST endpoint — handy when migrating a screen from one front-end to another without rewriting the grid.
+
+Extend `TurbineTable` and point `definition()` at a portable `Turbine\GridDefinition`. PowerGrid pulls `datasource`, `columns`, `fields`, `filters`, `setUp`, `relationSearch`, `searchMorphs` and `transformQuery` from it.
+
+```php
+use PowerComponents\LivewirePowerGrid\TurbineTable;
+use PowerComponents\Turbine\Contracts\GridSchema;
+
+class UserTable extends TurbineTable
+{
+    public string $tableName = 'users';
+
+    protected function definition(): GridSchema
+    {
+        return new UsersGrid(); // the same class an Inertia controller uses
+    }
+}
+```
+
+`UsersGrid` is the portable class shown in the [Turbine README](https://github.com/power-components/turbine#portable-grid-definitions). Migrating between Livewire and Inertia keeps that class untouched — only the adapter changes.
+
+`definition()` is also available on plain `PowerGridComponent` (returns `null` by default, so existing components are unaffected). `TurbineTable` just adds the `datasource()` wiring on top; use it whenever a component is fully driven by a definition.
+
+**Row actions stay explicit:** forward `actions()` / `actionRules()` on the component only when the grid has them, and add a `Column::action()` in the definition's `columns()` — PowerGrid requires an action column whenever an `actions()` method exists.
+
+<br/>
+
 ## Support & Community
 
 `👥` **Interact with the PowerGrid community at our [Discussions](https://github.com/Power-Components/livewire-powergrid/discussions) tab.**
