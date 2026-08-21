@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder;
 
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\LivewirePowerGrid\Themes\Flux;
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\Turbine\Components\Filters\FilterInputText;
 use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
 
@@ -24,7 +24,7 @@ class FilterBuilderPlugin extends PluginBase
 
     public function handlesZone(string $zone): bool
     {
-        return $zone === 'header' && $this->isEnabled() && $this->isFlux();
+        return $zone === 'header' && $this->isEnabled() && $this->resolveThemeView() !== '';
     }
 
     public function renderZone(string $zone): ?string
@@ -40,9 +40,10 @@ class FilterBuilderPlugin extends PluginBase
         $matchDefault = data_get($this->component->setUp, 'filterBuilder.match', 'and');
 
         /** @var view-string $view */
-        $view = 'powergrid-plugins::FilterBuilder.themes.flux';
+        $view = $this->resolveThemeView();
 
         return view($view, [
+            'element' => $this->component->headerElement('filterBuilder'),
             'tableName' => $this->component->tableName,
             'columns' => $this->component->filterBuilderMeta(),
             'operatorLabels' => $this->operatorLabels(),
@@ -55,11 +56,32 @@ class FilterBuilderPlugin extends PluginBase
         ])->render();
     }
 
-    private function isFlux(): bool
+    /**
+     * Resolve the trigger/modal view for the active theme.
+     *
+     * A theme may point at its own view through the `header.filter_builder.view`
+     * token; otherwise the packaged variant for the theme is used. Themes with no
+     * variant available render nothing, keeping the grid untouched.
+     */
+    private function resolveThemeView(): string
     {
+        $tokenView = theme_view('header.filter_builder');
+
+        if ($tokenView !== '' && view()->exists($tokenView)) {
+            return $tokenView;
+        }
+
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 
-        return $theme instanceof Flux;
+        $variant = match (true) {
+            $theme instanceof Flux => 'flux',
+            $theme instanceof DaisyUI => 'daisyui',
+            default => 'index',
+        };
+
+        $view = "powergrid-plugins::FilterBuilder.themes.{$variant}";
+
+        return view()->exists($view) ? $view : '';
     }
 
     /**

@@ -1,4 +1,5 @@
 @props([
+    'element' => [],
     'tableName' => null,
     'types' => [],
     'total' => 0,
@@ -12,11 +13,16 @@
     wire:key="export-dropdown-wrapper-{{ $tableName }}"
 >
     <button
-        class="{{ theme('header.layout.actions') }}"
+        class="{{ theme('header.export.button', theme('header.layout.actions')) }}"
         popovertarget="export-popover-{{ $tableName }}"
         style="anchor-name: --export-{{ $tableName }}"
+        title="{{ data_get($element, 'title') }}"
+        aria-label="{{ data_get($element, 'title') }}"
     >
-        <x-livewire-powergrid::icons.download class="w-4 h-4" />
+        {!! data_get($element, 'iconHtml') !!}
+        @if (data_get($element, 'showLabel'))
+            <span class="{{ theme('header.export.label') }}">{{ data_get($element, 'title') }}</span>
+        @endif
     </button>
     <div
         id="export-popover-{{ $tableName }}"

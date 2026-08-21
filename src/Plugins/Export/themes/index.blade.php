@@ -1,4 +1,5 @@
 @props([
+    'element' => [],
     'tableName' => null,
     'types' => [],
     'total' => 0,
@@ -15,10 +16,15 @@
 >
     <button
         @click.prevent="openMenu()"
-        class="focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto"
+        title="{{ data_get($element, 'title') }}"
+        aria-label="{{ data_get($element, 'title') }}"
+        class="{{ theme('header.export.button', theme('header.layout.actions')) }}"
     >
-        <div class="flex">
-            <x-livewire-powergrid::icons.download class="h-5 w-5 text-zinc-500 dark:text-zinc-300" />
+        <div class="flex items-center">
+            {!! data_get($element, 'iconHtml') !!}
+            @if (data_get($element, 'showLabel'))
+                <span class="{{ theme('header.export.label') }}">{{ data_get($element, 'title') }}</span>
+            @endif
         </div>
     </button>
 

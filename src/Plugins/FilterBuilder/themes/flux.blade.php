@@ -1,4 +1,5 @@
 @props([
+    'element' => [],
     'tableName' => null,
     'columns' => [],
     'operatorLabels' => [],
@@ -30,13 +31,20 @@
 
 <div wire:key="pg-filter-builder-{{ $tableName }}">
     <flux:modal.trigger name="pg-filter-builder-{{ $tableName }}">
-        <flux:button variant="filled" class="relative">
+        <flux:button
+            variant="filled"
+            class="{{ theme('header.filter_builder.button', 'relative') }}"
+            title="{{ data_get($element, 'title') }}"
+            aria-label="{{ data_get($element, 'title') }}"
+        >
             <span class="inline-flex items-center gap-1.5">
-                <x-livewire-powergrid::icons.filter class="h-5 w-5" />
-                {{ trans('livewire-powergrid::datatable.filter_builder.trigger') }}
+                {!! data_get($element, 'iconHtml') !!}
+                @if (data_get($element, 'showLabel'))
+                    <span class="{{ theme('header.filter_builder.label') }}">{{ data_get($element, 'title') }}</span>
+                @endif
                 @if ($appliedCount)
                     <span
-                        class="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white"
+                        class="{{ theme('header.filter_builder.badge') }}"
                     >{{ $appliedCount }}</span>
                 @endif
             </span>

@@ -21,7 +21,7 @@ class Tailwind extends Theme
                     ->container('md:flex md:flex-row w-full justify-between items-center mb-3')
                     ->subContainer('md:flex md:flex-row w-full gap-1')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap')
-                    ->actions('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
+                    ->actions($this->headerButtonClass())
                 )
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('header.search')
@@ -32,6 +32,47 @@ class Tailwind extends Theme
                     ->iconCloseWrapper('absolute opacity-0 group-hover:opacity-100 transition-all inset-y-0 right-0 flex items-center pr-1')
                     ->iconClose('text-zinc-400 dark:text-zinc-200')
                     ->iconSearch('text-zinc-300 mr-2 w-5 h-5 dark:text-zinc-200')
+                    ->icon('livewire-powergrid::icons.search')
+                    ->iconClear('livewire-powergrid::icons.x')
+                )
+                ->toggleColumns(fn (Components\HeaderButton $button) => $button
+                    ->button($this->headerButtonClass())
+                    ->iconClass('w-5 h-5 text-zinc-500 dark:text-zinc-300')
+                    ->label('ml-2')
+                    ->menu('toggle-columns-base group absolute z-10 mt-2 w-56 rounded-md dark:bg-zinc-700 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none')
+                    ->menuItem('cursor-pointer text-sm flex gap-2 justify-between block px-4 py-2 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800')
+                )
+                ->softDeletes(fn (Components\HeaderButton $button) => $button
+                    ->button($this->headerButtonClass())
+                    ->iconClass('text-zinc-500 dark:text-zinc-300')
+                    ->label('ml-2')
+                    ->menu('mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-zinc-700')
+                    ->menuItem('cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700')
+                )
+                ->filters(fn (Components\HeaderButton $button) => $button
+                    ->wrapper('flex mt-2 sm:mt-0 gap-3')
+                    ->button($this->headerButtonClass())
+                    ->iconClass('h-4 w-4 text-zinc-500 dark:text-zinc-300')
+                    ->label('ml-2')
+                )
+                ->filterBuilder(fn (Components\HeaderButton $button) => $button
+                    ->button($this->headerButtonClass())
+                    ->iconClass('h-5 w-5 text-zinc-500 dark:text-zinc-300')
+                    ->label('ml-2')
+                    ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white')
+                )
+                ->export(fn (Components\HeaderButton $button) => $button
+                    ->button($this->headerButtonClass())
+                    ->iconClass('h-5 w-5 text-zinc-500 dark:text-zinc-300')
+                    ->label('ml-2')
+                    ->menu('mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-zinc-700')
+                    ->menuItem('cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700')
+                )
+                ->enabledFilters(fn (Components\HeaderButton $button) => $button
+                    ->wrapper('flex group items-center gap-3 cursor-pointer')
+                    ->iconClass('w-4 h-4 ml-1')
+                    ->pill('select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500')
+                    ->pillClearAll('select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-500 bg-zinc-100 dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500')
                 )
             )
             ->table(fn (Components\Table $table) => $table
@@ -160,5 +201,10 @@ class Tailwind extends Theme
                 ],
             ],
         ];
+    }
+
+    private function headerButtonClass(): string
+    {
+        return 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex items-center rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto';
     }
 }

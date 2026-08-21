@@ -26,6 +26,38 @@ class Flux extends Theme
                     ->view('livewire-powergrid::components.themes.flux.header.search')
                     ->container('flex flex-row mt-2 md:mt-0 w-full justify-start sm:justify-center md:justify-end')
                     ->relativeMain('w-full md:w-4/12 lg:w-1/2')
+                    ->icon('magnifying-glass')
+                    ->iconClear('')
+                )
+                ->toggleColumns(fn (Components\HeaderButton $button) => $button
+                    ->button($this->iconButton())
+                    ->iconClass('w-6 h-6')
+                    ->label('ml-2')
+                    ->menu('dark:bg-zinc-900')
+                )
+                ->softDeletes(fn (Components\HeaderButton $button) => $button
+                    ->button($this->iconButton())
+                    ->iconClass('w-6 h-6')
+                    ->label('ml-2')
+                    ->menu('dark:bg-zinc-900')
+                )
+                ->filters(fn (Components\HeaderButton $button) => $button
+                    ->wrapper('flex mt-2 sm:mt-0 gap-3')
+                    ->button($this->iconButton())
+                    ->iconClass('w-6 h-6')
+                    ->label('ml-2')
+                )
+                ->filterBuilder(fn (Components\HeaderButton $button) => $button
+                    ->button('relative')
+                    ->iconClass('h-5 w-5')
+                    ->label('')
+                    ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white')
+                )
+                ->export(fn (Components\HeaderButton $button) => $button
+                    ->button($this->iconButton())
+                    ->iconClass('w-6 h-6')
+                    ->label('ml-2')
+                    ->menu('dark:bg-zinc-900')
                 )
             )
             ->table(fn (Components\Table $table) => $table
@@ -169,5 +201,10 @@ class Flux extends Theme
     private function button(): string
     {
         return 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 border-b-zinc-300/80 dark:border-zinc-600 bg-white dark:bg-zinc-700 shadow-xs px-3 py-2 text-sm font-medium text-zinc-700 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-600/75 focus:outline-none cursor-pointer transition-colors';
+    }
+
+    private function iconButton(): string
+    {
+        return '!w-12 !h-10 !flex !items-center !justify-center';
     }
 }

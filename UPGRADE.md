@@ -1072,3 +1072,78 @@ constants, update them:
 ---
 
 *Keep these guidelines in mind when upgrading to PowerGrid 7.x. The architectural changes are substantial, but the result is a cleaner, more maintainable codebase with better performance and flexibility.*
+
+---
+
+## Configurable Header Buttons (icons, titles and theme classes)
+
+Header buttons no longer hardcode their icon or label. Each element resolves them, field by field, as:
+
+**user `setUp()` configuration → theme token → package default**
+
+### Configuring from the component
+
+```php
+use PowerComponents\Turbine\Components\SetUp\HeaderElement;
+
+public function setUp(): array
+{
+    return [
+        PowerGrid::header()
+            ->showToggleColumns(fn (HeaderElement $element) => $element->icon('columns')->title('Columns'))
+            ->showSoftDeletes(config: fn (HeaderElement $element) => $element->icon('icons.trash', ['class' => 'size-5']))
+            ->showSearchInput(fn (HeaderElement $element) => $element->title('Search documents...'))
+            ->filtersToggle(fn (HeaderElement $element) => $element->icon('funnel')->showLabel())
+            ->clearFiltersPill(fn (HeaderElement $element) => $element->hideLabel())
+            ->searchClearIcon(fn (HeaderElement $element) => $element->icon('x-mark')),
+
+        PowerGrid::filterBuilder()->title('Filter')->icon('funnel'),
+
+        PowerGrid::exportable('report')->title('Export')->icon('icons.download'),
+    ];
+}
+```
+
+`HeaderElement` methods: `icon(string $icon, array $iconAttributes = [])`, `iconAttributes()`, `withoutIcon()`,
+`title()` (literal text or a lang key), `showLabel()` / `hideLabel()`, `view()` (swap the element blade).
+
+Icons resolve exactly like `Button::icon()`: `funnel` renders `<x-funnel />` from your application,
+`icons.funnel` renders `<x-icons.funnel />`, and `livewire-powergrid::icons.filter` renders a packaged icon.
+The title is always emitted as `title` / `aria-label`; it becomes visible text only when `showLabel()` is set.
+
+### Theme tokens
+
+```
+header.toggle_columns.{view, button, wrapper, icon, icon_class, label, menu, menu_item}
+header.soft_deletes.{view, button, wrapper, icon, icon_class, label, menu, menu_item}
+header.filters.{view, button, wrapper, icon, icon_class, label}
+header.filter_builder.{view, button, wrapper, icon, icon_class, label, badge}
+header.export.{view, button, wrapper, icon, icon_class, label, menu, menu_item}
+header.enabled_filters.{view, wrapper, pill, pill_clear_all, icon, icon_class, label}
+header.search_box.{icon, icon_clear}   # added to the existing search_box tokens
+```
+
+Set them with the new `Components\HeaderButton` builder:
+
+```php
+->header(fn (Components\Header $header) => $header
+    ->toggleColumns(fn (Components\HeaderButton $button) => $button
+        ->button('my-button-classes')
+        ->icon('icons.columns')
+        ->iconClass('size-5')
+        ->menu('my-dropdown-classes')
+    )
+)
+```
+
+The `view` token (or `HeaderElement::view()`) replaces the element blade entirely.
+
+### Notes
+
+* Themes that define none of the new tokens keep their current look: every blade falls back to
+  `header.layout.actions` and the previous hardcoded classes.
+* Apps that published the package views keep their own copies (hardcoded icons). Re-publish them to
+  get the configurable version.
+* `FilterBuilder` is no longer hard-gated to the Flux theme: it renders whenever a view exists for the
+  active theme, or when the theme points `header.filter_builder.view` at its own blade.
+* New lang keys: `buttons.toggle_columns`, `buttons.soft_deletes`, `buttons.export`.

@@ -65,6 +65,7 @@ class ExportPlugin extends PluginBase
         $viewName = $this->resolveThemeView();
 
         return view($viewName, [
+            'element' => $this->component->headerElement('export'),
             'tableName' => $this->component->tableName,
             'types' => (array) data_get($exportable, 'type', []),
             'total' => $this->component->total(),
@@ -105,6 +106,13 @@ class ExportPlugin extends PluginBase
      */
     private function resolveThemeView(): string
     {
+        $tokenView = theme_view('header.export');
+
+        if ($tokenView !== '' && view()->exists($tokenView)) {
+            /** @var view-string&non-empty-string $tokenView */
+            return $tokenView;
+        }
+
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 
         $variant = match (true) {
