@@ -1,4 +1,5 @@
 @props([
+    'element' => [],
     'tableName' => null,
     'types' => [],
     'total' => 0,
@@ -12,11 +13,19 @@
     wire:key="export-dropdown-{{ $tableName }}"
 >
     <flux:dropdown>
-        <flux:button variant="filled" class="!w-12 !h-10 !flex !items-center !justify-center">
-            <x-livewire-powergrid::icons.download class="w-6 h-6" />
+        <flux:button
+            variant="filled"
+            class="{{ theme('header.export.button', theme('header.layout.actions')) }}"
+            title="{{ data_get($element, 'title') }}"
+            aria-label="{{ data_get($element, 'title') }}"
+        >
+            {!! data_get($element, 'iconHtml') !!}
+            @if (data_get($element, 'showLabel'))
+                <span class="{{ theme('header.export.label') }}">{{ data_get($element, 'title') }}</span>
+            @endif
         </flux:button>
 
-        <flux:menu class="dark:bg-zinc-900">
+        <flux:menu class="{{ theme('header.export.menu') }}">
             @if (in_array('xlsx', $types))
                 <flux:menu.item wire:click.prevent="exportToXLS">
                     @lang('XLSX') -

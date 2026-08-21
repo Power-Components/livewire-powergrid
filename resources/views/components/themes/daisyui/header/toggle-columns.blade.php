@@ -1,12 +1,18 @@
 @if (data_get($setUp, 'header.toggleColumns'))
-    <div wire:key="toggle-columns-container-{{ $tableName }}">
+    @php($element = ($__partial ?? $this)->headerElement('toggleColumns'))
+    <div wire:key="toggle-columns-container-{{ $tableName }}" class="{{ theme('header.toggle_columns.wrapper') }}">
         <button
             data-cy="toggle-columns-{{ $tableName }}"
-            class="{{ theme('header.layout.actions') }}"
+            class="{{ theme('header.toggle_columns.button', theme('header.layout.actions')) }}"
             popovertarget="toggle-popover-{{ $tableName }}"
             style="anchor-name: --toggle-{{ $tableName }}"
+            title="{{ $element['title'] }}"
+            aria-label="{{ $element['title'] }}"
         >
-            <x-livewire-powergrid::icons.eye-off class="w-4 h-4" />
+            {!! $element['iconHtml'] !!}
+            @if ($element['showLabel'])
+                <span class="{{ theme('header.toggle_columns.label') }}">{{ $element['title'] }}</span>
+            @endif
         </button>
         <div
             id="toggle-popover-{{ $tableName }}"
@@ -14,12 +20,12 @@
             class="dropdown"
             style="position-anchor: --toggle-{{ $tableName }}"
         >
-            <ul class="menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 text-sm">
+            <ul class="{{ theme('header.toggle_columns.menu') }}">
             @foreach ($this->visibleColumns as $column)
                 <li wire:key="toggle-column-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                     data-cy="toggle-field-{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'field') }}"
                 >
-                    <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="text-sm {{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
+                    <a wire:click="$dispatch('pg:toggleColumn-{{ $tableName }}', { field: '{{ data_get($column, 'field') }}'})" class="{{ theme('header.toggle_columns.menu_item') }} {{ data_get($column, 'hidden') ? 'opacity-50' : '' }}">
                         {!! data_get($column, 'title') !!}
                     </a>
                 </li>

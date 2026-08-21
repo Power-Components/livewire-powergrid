@@ -61,4 +61,21 @@ class SearchBox
 
         return $this;
     }
+
+    /**
+     * Icon component (or framework icon name) used in the search input.
+     */
+    public function icon(string $icon): self
+    {
+        $this->properties['icon'] = $icon;
+
+        return $this;
+    }
+
+    public function iconClear(string $iconClear): self
+    {
+        $this->properties['iconClear'] = $iconClear;
+
+        return $this;
+    }
 }

@@ -6,13 +6,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
+use PowerComponents\LivewirePowerGrid\Support\IconRenderer;
 use PowerComponents\Turbine\Button;
 
 trait HasActions
 {
-    /** @var array<string, string> */
-    private array $iconRenderCache = [];
-
     private ?bool $hasTransformActions = null;
 
     /** @var array<string, list<object>> */
@@ -344,83 +342,7 @@ trait HasActions
     /** @param  array<string, mixed>  $iconAttributes */
     private function renderIcon(string $icon, array $iconAttributes): string
     {
-        $cacheKey = $icon.'::'.md5(serialize($iconAttributes));
-
-        if (! isset($this->iconRenderCache[$cacheKey])) {
-            try {
-                $this->iconRenderCache[$cacheKey] = $this->compileIcon($icon, $iconAttributes);
-            } catch (\Throwable) {
-                $this->iconRenderCache[$cacheKey] = '';
-            }
-        }
-
-        return $this->iconRenderCache[$cacheKey];
-    }
-
-    /**
-     * @param  array<string, mixed>  $iconAttributes
-     */
-    private function compileIcon(string $icon, array $iconAttributes): string
-    {
-        if ($this->iconIsStaticallyFoldable($icon, $iconAttributes)) {
-            try {
-                return Blade::render($this->buildStaticIconTag($icon, $iconAttributes));
-            } catch (\Throwable) {
-            }
-        }
-
-        return Blade::render(
-            '<x-dynamic-component :component="$component" :attributes="new \Illuminate\View\ComponentAttributeBag($attrs)" />',
-            ['component' => $icon, 'attrs' => $iconAttributes],
-        );
-    }
-
-    /**
-     * @param  array<string, mixed>  $iconAttributes
-     */
-    private function iconIsStaticallyFoldable(string $icon, array $iconAttributes): bool
-    {
-        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/', $icon) !== 1) {
-            return false;
-        }
-
-        foreach ($iconAttributes as $key => $value) {
-            if (! is_string($key) || preg_match('/^[A-Za-z_:][A-Za-z0-9_:.\-]*$/', $key) !== 1) {
-                return false;
-            }
-
-            if (! is_scalar($value)) {
-                return false;
-            }
-
-            if (is_string($value) && (str_contains($value, '{{') || str_contains($value, '{!!'))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param  array<string, mixed>  $iconAttributes
-     */
-    private function buildStaticIconTag(string $icon, array $iconAttributes): string
-    {
-        $attributes = '';
-
-        foreach ($iconAttributes as $key => $value) {
-            if (is_bool($value)) {
-                if ($value) {
-                    $attributes .= ' '.$key;
-                }
-
-                continue;
-            }
-
-            $attributes .= ' '.$key.'="'.e(is_scalar($value) ? (string) $value : '').'"';
-        }
-
-        return "<x-{$icon}{$attributes} />";
+        return IconRenderer::render($icon, $iconAttributes);
     }
 
     /** @return list<array<string, mixed>> */

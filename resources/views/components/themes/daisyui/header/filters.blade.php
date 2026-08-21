@@ -1,13 +1,19 @@
+@php($element = ($__partial ?? $this)->headerElement('filters'))
 <div
     wire:key="toggle-filters-{{ $tableName }}"
     id="toggle-filters"
-    class="flex mt-2 sm:mt-0 gap-3"
+    class="{{ theme('header.filters.wrapper') }}"
 >
     <button
         wire:click="toggleFilters"
         type="button"
-        class="{{ theme('header.layout.actions') }}"
+        title="{{ $element['title'] }}"
+        aria-label="{{ $element['title'] }}"
+        class="{{ theme('header.filters.button', theme('header.layout.actions')) }}"
     >
-        <x-livewire-powergrid::icons.filter class="h-4 w-4" />
+        {!! $element['iconHtml'] !!}
+        @if ($element['showLabel'])
+            <span class="{{ theme('header.filters.label') }}">{{ $element['title'] }}</span>
+        @endif
     </button>
 </div>

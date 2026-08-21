@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Columns',
+        'soft_deletes' => 'Deleted records',
+        'export' => 'Export',
         'filter' => 'Filter',
         'clear_all_filters' => 'Clear all',
         'close' => 'Close',

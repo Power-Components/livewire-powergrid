@@ -43,6 +43,7 @@ class PowerGridComponent extends Component implements Context
     use Concerns\FilterBuilder;
     use Concerns\HasActions;
     use Concerns\HasExport;
+    use Concerns\HasHeaderElements;
     use Concerns\Hooks;
     use Concerns\Listeners;
     use Concerns\ManageRow;

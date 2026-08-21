@@ -4,14 +4,18 @@
     @if (count($enabledFilters)) data-cy="enabled-filters" @endif
 >
     @if (count($enabledFilters))
+        @php($element = $__partial->headerElement('clearFilters'))
         @if (count($enabledFilters) > 1)
-            <div class="flex group items-center cursor-pointer">
+            <div class="{{ theme('header.enabled_filters.wrapper', 'flex group items-center cursor-pointer') }}">
                 <span
                     wire:click.prevent="clearAllFilters"
-                    class="badge badge-neutral gap-1 hover:bg-base-300 transition-colors"
+                    title="{{ $element['title'] }}"
+                    class="{{ theme('header.enabled_filters.pill_clear_all', 'badge badge-neutral gap-1 hover:bg-base-300 transition-colors') }}"
                 >
-                    {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
-                    <x-livewire-powergrid::icons.x class="w-3.5 h-3.5" />
+                    @if ($element['showLabel'])
+                        {{ $element['title'] }}
+                    @endif
+                    {!! $element['iconHtml'] !!}
                 </span>
             </div>
         @endif
@@ -20,15 +24,15 @@
             @isset($filter['label'])
                 <div
                     wire:key="enabled-filters-{{ $filter['field'] }}"
-                    class="flex group items-center cursor-pointer"
+                    class="{{ theme('header.enabled_filters.wrapper', 'flex group items-center cursor-pointer') }}"
                 >
                     <span
                         data-cy="enabled-filters-clear-{{ $filter['field'] }}"
                         wire:click.prevent="clearFilter('{{ $filter['field'] }}')"
-                        class="badge badge-outline gap-1 hover:bg-base-200 transition-colors"
+                        class="{{ theme('header.enabled_filters.pill', 'badge badge-outline gap-1 hover:bg-base-200 transition-colors') }}"
                     >
                         {{ $filter['label'] }}
-                        <x-livewire-powergrid::icons.x class="w-3.5 h-3.5" />
+                        {!! $element['iconHtml'] !!}
                     </span>
                 </div>
             @endisset
