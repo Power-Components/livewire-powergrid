@@ -84,4 +84,13 @@ class Filter
 
         return $this;
     }
+
+    public function dropdown(Closure $callback): self
+    {
+        $component = new Dropdown();
+        $callback($component);
+        $this->properties['dropdown'] = $component->toArray();
+
+        return $this;
+    }
 }

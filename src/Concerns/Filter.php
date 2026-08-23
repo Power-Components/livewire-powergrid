@@ -7,12 +7,18 @@ use Exception;
 use Illuminate\Support\{Arr, Collection};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\Turbine\Components\Filters\{FilterBase, FilterManager};
 
 trait Filter
 {
     /** @var array<string, array<string, mixed>> */
     public array $filters = [];
+
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    public array $draftFilters = [];
 
     /** @var list<int|string> */
     public array $filtered = [];
@@ -144,7 +150,10 @@ trait Filter
     {
         $this->enabledFilters = [];
         $this->filters = [];
+        $this->draftFilters = [];
         $this->filterBuilder = ['match' => 'and', 'rows' => []];
+
+        $this->resetPage();
 
         $this->persistState('filters');
 
@@ -154,6 +163,178 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
+    /**
+     * @throws Exception
+     */
+    public function applyFilters(): void
+    {
+        /** @var array<string, mixed> $draft */
+        $draft = $this->draftFilters;
+
+        foreach (['date', 'datetime'] as $dateKey) {
+            /** @var array<string, mixed> $entries */
+            $entries = (array) data_get($draft, $dateKey, []);
+
+            foreach ($entries as $field => $value) {
+                $formatted = data_get($value, 'formatted');
+
+                if (blank($formatted)) {
+                    unset($entries[$field]);
+
+                    continue;
+                }
+
+                $entries[$field] = FlatpickrPlugin::computeRange($dateKey, is_scalar($formatted) ? (string) $formatted : '');
+            }
+
+            $draft[$dateKey] = $entries;
+
+            if (empty($draft[$dateKey])) {
+                unset($draft[$dateKey]);
+            }
+        }
+
+        /** @var array<string, mixed> $operators */
+        $operators = (array) data_get($draft, 'input_text_options', []);
+
+        foreach ($operators as $field => $operator) {
+            if (in_array($operator, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'], true)) {
+                data_set($draft, 'input_text.'.$field, null);
+            }
+        }
+
+        /** @var array<string, mixed> $draft */
+        $filters = $this->pruneBlankFilters($draft);
+
+        $this->filters = $filters;
+        $this->draftFilters = $filters;
+
+        $this->rebuildEnabledFilters();
+        $this->syncFilterBuilderPills();
+
+        $this->resetPage();
+        $this->persistState('filters');
+        $this->renderOutsideFiltersPartial();
+    }
+
+    public function resetFilters(): void
+    {
+        $this->draftFilters = $this->filters;
+
+        $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
+        $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
+
+        $this->renderOutsideFiltersPartial();
+    }
+
+    public function activeFilterCount(): int
+    {
+        return collect($this->enabledFilters)
+            ->reject(fn ($filter) => ($filter['source'] ?? null) === 'filterBuilder')
+            ->map(function ($filter) {
+                $field = data_get($filter, 'field');
+                $field = is_string($field) ? $field : '';
+
+                return (string) str($field)->beforeLast('_start')->beforeLast('_end');
+            })
+            ->filter(fn ($field) => $field !== '')
+            ->unique()
+            ->count();
+    }
+
+    private function rebuildEnabledFilters(): void
+    {
+        $this->enabledFilters = [];
+
+        $titles = [];
+
+        foreach ($this->columns as $column) {
+            $titleValue = data_get($column, 'title');
+            $title = is_scalar($titleValue) ? (string) $titleValue : '';
+
+            if (($field = data_get($column, 'field')) && is_string($field)) {
+                $titles[$field] = $title;
+            }
+
+            if (($dataField = data_get($column, 'dataField')) && is_string($dataField)) {
+                $titles[$dataField] = $title;
+            }
+        }
+
+        foreach ($this->filters() as $filter) {
+            $key = data_get($filter, 'key');
+            $key = is_string($key) ? $key : '';
+            $field = data_get($filter, 'field');
+            $field = is_string($field) ? $field : '';
+            $column = data_get($filter, 'column');
+            $column = is_string($column) ? $column : '';
+
+            $title = $titles[$column] ?? $titles[$field] ?? $field;
+
+            if ($key === 'number') {
+                $range = data_get($this->filters, 'number.'.$field);
+
+                if (filled(data_get($range, 'start')) || filled(data_get($range, 'end'))) {
+                    $this->addEnabledFilters($field, $title);
+                }
+
+                continue;
+            }
+
+            if (filled(data_get($this->filters, $key.'.'.$field))) {
+                $this->addEnabledFilters($field, $title);
+            }
+        }
+
+        // Valueless operators produce an enabled (value-less) filter of their own.
+        /** @var array<string, mixed> $operators */
+        $operators = (array) data_get($this->filters, 'input_text_options', []);
+
+        foreach ($operators as $field => $operator) {
+            if (in_array($operator, ['is_empty', 'is_not_empty', 'is_null', 'is_not_null', 'is_blank', 'is_not_blank'], true)) {
+                $this->addEnabledFilters(strval($field), $titles[$field] ?? strval($field));
+            }
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<string, array<string, mixed>>
+     */
+    private function pruneBlankFilters(array $filters): array
+    {
+        foreach ($filters as $key => $values) {
+            if (! is_array($values)) {
+                if (blank($values)) {
+                    unset($filters[$key]);
+                }
+
+                continue;
+            }
+
+            foreach ($values as $field => $value) {
+                if (! is_array($value) && blank($value)) {
+                    unset($values[$field]);
+                }
+
+                if (is_array($value) && $key === 'multi_select' && blank(array_filter($value, fn ($v) => filled($v)))) {
+                    unset($values[$field]);
+                }
+            }
+
+            if (empty($values)) {
+                unset($filters[$key]);
+
+                continue;
+            }
+
+            $filters[$key] = $values;
+        }
+
+        /** @var array<string, array<string, mixed>> $filters */
+        return $filters;
+    }
+
     public function toggleFilters(): void
     {
         $this->showFilters = ! $this->showFilters;
@@ -161,18 +342,11 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
-    /**
-     * The flyout's close paths (Escape, backdrop, close button) assign `$showFilters`
-     * straight from Alpine so the drawer hides without waiting on the response. That
-     * assignment registers no partial on its own, which would drop the commit out of
-     * the `pg-filters` Hot Zone and force a full re-render.
-     */
     public function updatedShowFilters(): void
     {
         $this->renderOutsideFiltersPartial();
     }
 
-    /** Configured filter position: `inline`, `outside`, `flyout`, or an empty string when filters are disabled. */
     public function filterPosition(): string
     {
         $position = config('livewire-powergrid.filter');
@@ -183,18 +357,36 @@ trait Filter
     /** True when filters live in their own panel instead of inside the table. */
     public function usesFilterPanel(): bool
     {
-        return in_array($this->filterPosition(), ['outside', 'flyout'], true);
+        return in_array($this->filterPosition(), ['dropdown', 'flyout'], true);
     }
 
-    /** Theme view alias for the filter panel matching the configured position. */
+    public function usesFilterDropdown(): bool
+    {
+        return $this->filterPosition() === 'dropdown';
+    }
+
+    public function usesFilterFlyout(): bool
+    {
+        return $this->filterPosition() === 'flyout';
+    }
+
     public function filterPanelView(): string
     {
-        return $this->filterPosition() === 'flyout' ? 'filter.flyout' : 'filter';
+        return $this->filterPosition() === 'flyout' ? 'filter.flyout' : 'filter.dropdown';
+    }
+
+    public function filterPanelColumns(): int
+    {
+        $count = count($this->filters());
+
+        return match (true) {
+            $count > 6 => 3,
+            $count > 4 => 2,
+            default => 1,
+        };
     }
 
     /**
-     * Flyout settings, normalised so a bad config value can never break the drawer.
-     *
      * @return array{position: string, close_on_escape: bool, close_on_click_outside: bool}
      */
     public function filterFlyoutOptions(): array
@@ -392,10 +584,6 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
-    /**
-     * Refreshes the filter Hot Zones. Despite the name, it covers every panel
-     * position (`outside` and `flyout`), which share the `pg-filters` partial.
-     */
     public function renderOutsideFiltersPartial(): void
     {
         if (! function_exists('partials')) {
@@ -413,6 +601,11 @@ trait Filter
 
         if (! $this->usesFilterPanel()) {
             return;
+        }
+
+        if ($this->usesFilterFlyout()) {
+            partials($this)
+                ->partial("pg-filter-trigger-{$this->tableName}", theme_view('header.filters'));
         }
 
         if (isset($this->setUp['detail'])) {

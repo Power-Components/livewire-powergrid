@@ -13,20 +13,21 @@ class Tailwind extends Theme
             ->baseView('livewire-powergrid::components.themes.tailwind')
             ->layout(fn (Components\Layout $layout) => $layout
                 ->wrapper('space-y-4')
+                ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800 overflow-visible')
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
                 ->view('header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('md:flex md:flex-row w-full justify-between items-center mb-3')
-                    ->subContainer('md:flex md:flex-row w-full gap-1')
+                    ->container('md:flex md:flex-row w-full justify-between items-center gap-3 p-4')
+                    ->subContainer('flex flex-row flex-wrap items-center gap-1')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap')
                     ->actions($this->headerButtonClass())
                 )
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('header.search')
                     ->container('flex flex-row w-full rounded-full flex justify-start sm:justify-center md:justify-end items-center')
-                    ->relativeMain('group relative rounded-full w-full md:w-4/12 md:w-full lg:w-1/2')
+                    ->relativeMain('group relative rounded-full w-full')
                     ->input('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex items-center rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 pr-2 pl-8 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6')
                     ->iconSearchWrapper('absolute inset-y-0 left-0 flex items-center h-full pl-2 pointer-events-none')
                     ->iconCloseWrapper('absolute opacity-0 group-hover:opacity-100 transition-all inset-y-0 right-0 flex items-center pr-1')
@@ -37,14 +38,14 @@ class Tailwind extends Theme
                 )
                 ->toggleColumns(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
-                    ->iconClass('w-5 h-5 text-zinc-500 dark:text-zinc-300')
+                    ->iconClass('w-5 h-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                     ->label('ml-2')
                     ->menu('toggle-columns-base group absolute z-10 mt-2 w-56 rounded-md dark:bg-zinc-700 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none')
                     ->menuItem('cursor-pointer text-sm flex gap-2 justify-between block px-4 py-2 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
-                    ->iconClass('text-zinc-500 dark:text-zinc-300')
+                    ->iconClass('w-5 h-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                     ->label('ml-2')
                     ->menu('mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-zinc-700')
                     ->menuItem('cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700')
@@ -52,32 +53,33 @@ class Tailwind extends Theme
                 ->filters(fn (Components\HeaderButton $button) => $button
                     ->wrapper('flex mt-2 sm:mt-0 gap-3')
                     ->button($this->headerButtonClass())
-                    ->iconClass('h-4 w-4 text-zinc-500 dark:text-zinc-300')
+                    ->iconClass('w-5 h-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                     ->label('ml-2')
                 )
                 ->filterBuilder(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
-                    ->iconClass('h-5 w-5 text-zinc-500 dark:text-zinc-300')
+                    ->iconClass('h-5 w-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                     ->label('ml-2')
                     ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white')
                 )
                 ->export(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
-                    ->iconClass('h-5 w-5 text-zinc-500 dark:text-zinc-300')
+                    ->iconClass('h-5 w-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                     ->label('ml-2')
                     ->menu('mt-2 py-2 w-48 bg-white shadow-xl absolute z-10 dark:bg-zinc-700')
                     ->menuItem('cursor-pointer flex justify-start block px-4 py-2 text-zinc-800 hover:bg-zinc-50 hover:text-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 dark:hover:bg-zinc-700')
                 )
                 ->enabledFilters(fn (Components\HeaderButton $button) => $button
                     ->wrapper('flex group items-center gap-3 cursor-pointer')
-                    ->iconClass('w-4 h-4 ml-1')
-                    ->pill('select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500')
-                    ->pillClearAll('select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-500 bg-zinc-100 dark:border-zinc-500 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500')
+                    ->label('text-xs font-medium text-zinc-500 dark:text-zinc-400')
+                    ->iconClass('size-5')
+                    ->pill('select-none rounded-md outline-none inline-flex items-center gap-1 border border-accent bg-transparent px-2 py-0.5 font-medium text-xs text-accent hover:bg-accent/10 transition-colors cursor-pointer')
+                    ->pillClearAll('cursor-pointer')
                 )
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
+                    ->container('overflow-x-auto relative border-t border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
                     ->table('min-w-full dark:!bg-zinc-800')
                     ->thead('shadow-sm rounded-t-lg bg-zinc-100 dark:bg-zinc-900')
                     ->tr('border-b border-zinc-100 dark:border-zinc-600 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700')
@@ -112,7 +114,7 @@ class Tailwind extends Theme
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex items-center px-3 py-2 border-x border-b rounded-b-lg border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
+                    ->container('flex items-center px-3 py-2 border-t rounded-b-xl border-zinc-200 dark:bg-zinc-700 dark:border-zinc-600')
                     ->select('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-1.5 px-3 pr-8 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto')
                 )
                 ->pagination('pagination')
@@ -186,6 +188,21 @@ class Tailwind extends Theme
                     'input' => 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
                 ],
                 'input' => 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-full',
+                'dropdown' => [
+                    'view' => 'livewire-powergrid::components.themes.tailwind.filter',
+                    'wrapper' => 'relative inline-block text-left',
+                    'trigger' => $this->headerButtonClass().' relative justify-center',
+                    'badge' => 'absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-semibold text-white',
+                    'panel' => 'absolute left-0 sm:left-auto sm:right-0 z-40 mt-2 w-[90vw] origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800',
+                    'header' => 'flex items-center justify-between px-4 pt-4 pb-2',
+                    'title' => 'text-base font-semibold text-zinc-800 dark:text-zinc-100',
+                    'body' => 'px-4 py-3 max-h-96 overflow-y-auto',
+                    'grid' => 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4',
+                    'footer' => 'flex items-center justify-end gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-700',
+                    'reset' => 'text-sm font-medium text-red-500 transition hover:text-red-600',
+                    'clear' => 'rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600',
+                    'apply' => 'rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+                ],
                 'flyout' => [
                     'view' => 'livewire-powergrid::components.themes.tailwind.filter-flyout',
                     'overlay' => 'fixed inset-0 z-40 bg-zinc-900/40',
@@ -205,6 +222,6 @@ class Tailwind extends Theme
 
     private function headerButtonClass(): string
     {
-        return 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex items-center rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto';
+        return 'focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex items-center justify-center rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-2 px-3 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto';
     }
 }

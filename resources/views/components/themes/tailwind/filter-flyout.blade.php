@@ -93,14 +93,37 @@
         </div>
 
         <div class="pg-filter-flyout-footer {{ theme('filter.flyout.footer') }}">
-            <button
-                type="button"
-                data-cy="filter-flyout-clear-all"
-                wire:click.prevent="clearAllFilters"
-                class="{{ theme('filter.flyout.clear_all') }}"
-            >
-                {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
-            </button>
+            <div class="flex items-center justify-between gap-2">
+                <button
+                    type="button"
+                    data-cy="filter-flyout-reset"
+                    wire:click.prevent="resetFilters"
+                    class="{{ theme('filter.dropdown.reset') }}"
+                >
+                    {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
+                </button>
+
+                <div class="flex items-center gap-2">
+                    <button
+                        type="button"
+                        data-cy="filter-flyout-clear-all"
+                        wire:click.prevent="clearAllFilters"
+                        class="{{ theme('filter.dropdown.clear') }}"
+                    >
+                        {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
+                    </button>
+
+                    <button
+                        type="button"
+                        data-cy="filter-flyout-apply"
+                        wire:click.prevent="applyFilters"
+                        x-on:click="$wire.showFilters = false"
+                        class="{{ theme('filter.dropdown.apply') }}"
+                    >
+                        {{ trans('livewire-powergrid::datatable.buttons.apply_filters') }}
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

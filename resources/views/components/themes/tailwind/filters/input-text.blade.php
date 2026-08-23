@@ -23,7 +23,8 @@
 
         unset($filter['placeholder']);
 
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $field, $title);
+        $deferred = ($__partial ?? $this)->usesFilterPanel();
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $field, $title, $deferred);
 
         $selectClasses = theme('filter.input_text.select');
         $inputClasses = theme('filter.input_text.input');

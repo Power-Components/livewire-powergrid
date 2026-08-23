@@ -18,6 +18,9 @@
 @endonce
 
 @php
+    $__partial = $__partial ?? $this;
+    $deferred = $__partial->usesFilterPanel();
+    $filtersProperty = $deferred ? 'draftFilters' : 'filters';
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
@@ -33,6 +36,8 @@
         'type' => $type,
         'dataField' => $field,
         'tableName' => $tableName,
+        'deferred' => $deferred,
+        'filtersProperty' => $filtersProperty,
         'filterKey' => 'enabledFilters.datetime.' . $field,
         'label' => $title,
         'locale' => config('livewire-powergrid.plugins.flatpickr.locales.' . app()->getLocale()),
@@ -58,7 +63,7 @@
             <input
                 id="input_{{ $field }}"
                 x-ref="rangeInput"
-                wire:model="filters.{{ $type }}.{{ $field }}.formatted"
+                wire:model="{{ $filtersProperty }}.{{ $type }}.{{ $field }}.formatted"
                 autocomplete="off"
                 data-field="{{ $field }}"
                 class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"

@@ -362,11 +362,12 @@ it('renders the header zone only under the Flux theme', function () {
     app()->instance('powergrid.theme', new Tailwind());
 
     expect($plugin->isEnabled())->toBeTrue()
-        ->and($plugin->handlesZone('header'))->toBeFalse();
+        ->and($plugin->handlesZone('header.filter'))->toBeFalse();
 
     app()->instance('powergrid.theme', new Flux());
 
-    expect($plugin->handlesZone('header'))->toBeTrue();
+    expect($plugin->handlesZone('header.filter'))->toBeTrue()
+        ->and($plugin->handlesZone('header'))->toBeFalse();
 });
 
 /* ---- Database datasource ---- */
@@ -469,13 +470,59 @@ it('persists the builder via FilterBuilder::persist() without persist([...])', f
         ->assertSet('enabledFilters.0.source', 'filterBuilder');
 })->group('filters');
 
-it('does not persist the builder without an opt-in', function () {
+it('does not persist the builder when withoutPersist() opts out', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'fb-no-persist';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::filterBuilder()];
+        }
+
+        public function boot(): void
+        {
+            $this->withoutPersist();
+        }
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Pastel', 'price' => 10.00, 'active' => true],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
+
+    expect(session('pg:fb-no-persist'))->toBeNull();
+})->group('filters');
+
+it('persists table state by default without any opt-in', function () {
     config()->set('livewire-powergrid.persist_driver', 'session');
 
     Livewire::test(filterBuilderCollectionComponent()::class)
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
 
-    expect(session('pg:fb-collection'))->toBeNull();
+    expect(session('pg:fb-collection'))->not->toBeNull();
 })->group('filters');
 
 it('invokes beforeFilterBuilderApply with the validated conditions and lets it modify the query', function () {

@@ -10,12 +10,16 @@ document.addEventListener('alpine:init', () => {
         type: null,
         element: null,
         selectedDates: null,
+        deferred: false,
+        filtersProperty: 'filters',
         async init() {
             const raw = this.$el.dataset.pgParams;
             const params = raw ? JSON.parse(raw) : {};
 
             this.dataField = params.dataField;
             this.tableName = params.tableName;
+            this.deferred = params.deferred ?? false;
+            this.filtersProperty = params.filtersProperty ?? 'filters';
             this.label = params.label ?? null;
             this.locale = params.locale ?? {
                 locale: 'default',
@@ -60,7 +64,7 @@ document.addEventListener('alpine:init', () => {
             if(this.$refs.rangeInput && typeof flatpickr != "undefined") {
                 this.element = flatpickr(this.$refs.rangeInput, options);
 
-                this.selectedDates = this.$wire.get(`filters.${this.type}.${this.dataField}.formatted`)
+                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
 
                 this.element.setDate(this.selectedDates)
             }
@@ -90,6 +94,11 @@ document.addEventListener('alpine:init', () => {
                 selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
 
                 if (selectedDates.length > 0 && (this.selectedDates !== dateStr)) {
+                    // Panel modes defer to Apply: the draftFilters wire:model captures
+                    // `formatted`; start/end are derived server-side on applyFilters().
+                    if (this.deferred) {
+                        return;
+                    }
                     Livewire.dispatch('pg:datePicker-' + this.tableName, {
                         field: this.dataField,
                         selectedDates: selectedDates,

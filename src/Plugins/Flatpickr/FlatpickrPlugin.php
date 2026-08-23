@@ -64,24 +64,42 @@ class FlatpickrPlugin extends PluginBase
 
         $this->component->resetPage();
 
-        /** @var string $dateStr */
-        /** @var string $firstDate */
-        $firstDate = $selectedDates[0];
-        /** @var string $secondDate */
-        $secondDate = $selectedDates[1];
-        [$startRaw, $endRaw] = Str::contains($dateStr, 'to')
-            ? explode(' to ', $dateStr)
-            : [strval($firstDate), strval($secondDate)];
+        $dateStr = is_string($dateStr) ? $dateStr : '';
+        $firstDate = is_scalar($selectedDates[0] ?? null) ? strval($selectedDates[0]) : '';
+        $secondDate = is_scalar($selectedDates[1] ?? null) ? strval($selectedDates[1]) : '';
+        $formatted = Str::contains($dateStr, 'to')
+            ? $dateStr
+            : $firstDate.' to '.$secondDate;
+
+        /** @var string|null $label */
+        $this->component->addEnabledFilters($field, $label);
+
+        $filters = $this->component->filters;
+        $filters[$type][$field] = self::computeRange($type, $formatted);
+        $this->component->filters = $filters;
+
+        $this->component->persistState('filters');
+
+        $this->component->renderOutsideFiltersPartial();
+    }
+
+    /**
+     * @return array{start: string, end: string, formatted: string}
+     */
+    public static function computeRange(string $type, string $formatted): array
+    {
+        [$startRaw, $endRaw] = Str::contains($formatted, ' to ')
+            ? explode(' to ', $formatted, 2)
+            : [$formatted, $formatted];
 
         /** @var string $appTimezone */
         $appTimezone = config('app.timezone');
         $isDatetime = $type === 'datetime';
-        /** @var string $dateFormat */
-        $hasTime = str_contains($dateFormat, 'H');
+        $hasTime = $isDatetime;
 
-        $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
+        $makeDate = function (string $value) use ($hasTime, $appTimezone) {
             try {
-                $date = Carbon::parse($dateStr, $appTimezone);
+                $date = Carbon::parse(trim($value), $appTimezone);
             } catch (InvalidFormatException) {
                 return now($appTimezone);
             }
@@ -102,19 +120,10 @@ class FlatpickrPlugin extends PluginBase
             $endDate->endOfDay();
         }
 
-        /** @var string|null $label */
-        $this->component->addEnabledFilters($field, $label);
-
-        $filters = $this->component->filters;
-        $filters[$type][$field] = [
+        return [
             'start' => $startDate->toString(),
             'end' => $endDate->toString(),
-            'formatted' => $dateStr,
+            'formatted' => $formatted,
         ];
-        $this->component->filters = $filters;
-
-        $this->component->persistState('filters');
-
-        $this->component->renderOutsideFiltersPartial();
     }
 }

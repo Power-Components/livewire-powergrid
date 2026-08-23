@@ -13,8 +13,19 @@ class Number
      *
      * @throws \JsonException
      */
-    public function __invoke(string $field, array $filter): array
+    public function __invoke(string $field, array $filter, bool $deferred = false): array
     {
+        if ($deferred) {
+            return [
+                'inputStartAttributes' => new ComponentAttributeBag([
+                    'wire:model' => "draftFilters.number.{$field}.start",
+                ]),
+                'inputEndAttributes' => new ComponentAttributeBag([
+                    'wire:model' => "draftFilters.number.{$field}.end",
+                ]),
+            ];
+        }
+
         return [
             'inputStartAttributes' => new ComponentAttributeBag([
                 'wire:model' => "filters.number.{$field}.start",

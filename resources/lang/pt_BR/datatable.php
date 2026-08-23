@@ -6,6 +6,10 @@ return [
         'soft_deletes' => 'Registros excluídos',
         'export' => 'Exportar',
         'filter' => 'Filtrar',
+        'filters_title' => 'Filtros',
+        'apply_filters' => 'Aplicar filtros',
+        'apply_columns' => 'Aplicar colunas',
+        'reset_filters' => 'Redefinir',
         'clear_all_filters' => 'Limpar Todos',
         'close' => 'Fechar',
     ],
@@ -17,6 +21,7 @@ return [
         'all' => 'Todos',
         'selected' => 'Selecionados',
         'filtered' => 'Filtrados',
+        'active_filters' => 'Filtros ativos',
     ],
     'placeholders' => [
         'search' => 'Buscar ...',

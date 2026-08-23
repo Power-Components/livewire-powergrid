@@ -9,10 +9,12 @@
 
     $componentAttributes = (array) data_get($filter, 'attributes');
 
+    $deferred = ($__partial ?? $this)->usesFilterPanel();
     $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get(
         'number',
         $field,
-        array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')])
+        array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')]),
+        $deferred
     );
 
     $filterClasses = theme('filter.number.input');

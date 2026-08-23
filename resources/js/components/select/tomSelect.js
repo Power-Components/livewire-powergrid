@@ -18,6 +18,9 @@ export default () => ({
             items: params.initialValues,
             ...params.framework,
             onChange: (value) => {
+                if (params.deferred) {
+                    return;
+                }
                 storeMultiSelect(params, value)
             },
             onInitialize: () => {

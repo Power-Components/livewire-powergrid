@@ -9,6 +9,11 @@ use ReflectionClass;
 /** @codeCoverageIgnore */
 trait Listeners
 {
+    /**
+     * @var array<string, bool>
+     */
+    public array $draftColumns = [];
+
     /** @var array<string, array{plugin: string, method: string}> */
     private array $pluginListenerMap = [];
 
@@ -135,6 +140,82 @@ trait Listeners
         }
 
         $this->persistState('columns');
+    }
+
+    /**
+     * @return array<string, bool>
+     */
+    public function columnVisibilityState(): array
+    {
+        $state = [];
+
+        foreach ($this->columns as $column) {
+            $field = data_get($column, 'field');
+
+            if (! is_string($field) || $field === '' || data_get($column, 'isAction') || data_get($column, 'forceHidden')) {
+                continue;
+            }
+
+            $state[$field] = ! (bool) data_get($column, 'hidden');
+        }
+
+        return $state;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function applyColumns(): void
+    {
+        foreach ($this->columns as &$column) {
+            $field = data_get($column, 'field');
+
+            if (! is_string($field) || data_get($column, 'forceHidden') || ! array_key_exists($field, $this->draftColumns)) {
+                continue;
+            }
+
+            data_set($column, 'hidden', ! (bool) $this->draftColumns[$field]);
+        }
+        unset($column);
+
+        $this->persistState('columns');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function resetColumns(): void
+    {
+        $defaults = collect($this->declaredColumns())
+            ->mapWithKeys(function ($column) {
+                $field = data_get($column, 'field');
+
+                return [(is_string($field) ? $field : '') => (bool) data_get($column, 'hidden')];
+            });
+
+        foreach ($this->columns as &$column) {
+            $field = data_get($column, 'field');
+
+            if (! is_string($field) || data_get($column, 'forceHidden') || ! $defaults->has($field)) {
+                continue;
+            }
+
+            data_set($column, 'hidden', $defaults->get($field));
+        }
+        unset($column);
+
+        $this->draftColumns = $this->columnVisibilityState();
+
+        $this->persistState('columns');
+    }
+
+    public function hiddenColumnsCount(): int
+    {
+        return collect($this->columns)
+            ->filter(fn ($column) => ! data_get($column, 'isAction')
+                && ! data_get($column, 'forceHidden')
+                && data_get($column, 'hidden'))
+            ->count();
     }
 
     #[On('pg:eventRefresh-{tableName}')]

@@ -327,6 +327,10 @@ class PowerGridComponent extends Component implements Context
 
         $this->applyDefaultFilters();
 
+        $this->draftFilters = $this->filters;
+
+        $this->draftColumns = $this->columnVisibilityState();
+
         $this->resolveSummarizeColumn();
     }
 

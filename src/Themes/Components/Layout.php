@@ -20,6 +20,13 @@ class Layout
         return $this;
     }
 
+    public function card(string $card): self
+    {
+        $this->properties['card'] = $card;
+
+        return $this;
+    }
+
     // Header
     public function container(string $container): self
     {

@@ -18,6 +18,9 @@ export default () => ({
             ...frameworkCopy,
             events: {
                 afterChange: (value) => {
+                    if (params.deferred) {
+                        return;
+                    }
                     let newValue = value.map(item => item.value);
                     storeMultiSelect(params, newValue);
                 },

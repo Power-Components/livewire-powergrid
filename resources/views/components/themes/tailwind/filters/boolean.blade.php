@@ -11,7 +11,8 @@
     $trueLabel = data_get($filter, 'trueLabel');
     $falseLabel = data_get($filter, 'falseLabel');
 
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $field, $title);
+    $deferred = ($__partial ?? $this)->usesFilterPanel();
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $field, $title, $deferred);
 
     $selectClasses = Arr::toCssClasses([
         theme('filter.boolean.select'),

@@ -24,7 +24,7 @@ class FilterBuilderPlugin extends PluginBase
 
     public function handlesZone(string $zone): bool
     {
-        return $zone === 'header' && $this->isEnabled() && $this->resolveThemeView() !== '';
+        return $zone === 'header.filter' && $this->isEnabled() && $this->resolveThemeView() !== '';
     }
 
     public function renderZone(string $zone): ?string
