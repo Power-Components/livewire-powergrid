@@ -73,6 +73,7 @@ document.addEventListener('alpine:init', () => {
             const options = {
                 mode: 'range',
                 defaultHour: 0,
+                static: true,
                 ...this.locale,
                 ...this.customConfig
             }

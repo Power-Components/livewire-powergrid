@@ -46,3 +46,33 @@ table thead {
     border-top-right-radius: 0.5rem;
 }
 
+.flatpickr-calendar.static,
+.flatpickr-calendar.static.open {
+    width: 100%;
+}
+
+.flatpickr-calendar.static .flatpickr-innerContainer,
+.flatpickr-calendar.static .flatpickr-rContainer,
+.flatpickr-calendar.static .flatpickr-days {
+    width: 100%;
+}
+
+.flatpickr-calendar.static .dayContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.flatpickr-calendar.static .flatpickr-day {
+    max-width: none;
+}
+
+input.flatpickr-input {
+    width: 100%;
+}
+
+.flatpickr-wrapper {
+    display: block;
+    width: 100%;
+}
+
