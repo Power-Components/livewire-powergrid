@@ -53,7 +53,7 @@
                         class="pg-table {{ theme('table.layout.table') }}"
                     >
                         @include(theme_view('table.thead'), [
-                            'loading' => !$readyToLoad,
+                            'loading' => false,
                             '__partial' => $this,
                         ])
 
