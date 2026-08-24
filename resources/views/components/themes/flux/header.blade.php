@@ -35,7 +35,12 @@
 
     @includeIf(theme_view('header.enabled-filters'))
 
-    {!! $this->renderPluginZone('header.bottom') !!}
+    @php($headerBottomZone = $this->renderPluginZone('header.bottom'))
+    @if (trim($headerBottomZone) !== '')
+        <div class="px-4 pb-3">
+            {!! $headerBottomZone !!}
+        </div>
+    @endif
 
     @includeWhen($multiSort, theme_view('header.multi-sort'))
     @includeIf(data_get($setUp, 'header.includeViewOnBottom'))

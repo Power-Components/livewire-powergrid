@@ -9,8 +9,15 @@ export default () => ({
         this.countChecked = this.$wire.entangle('checkboxValues')
     },
 
+    count() {
+        const checked = this.countChecked
+        if (Array.isArray(checked)) return checked.length
+        if (checked && typeof checked.length === 'number') return checked.length
+        return 0
+    },
+
     isEmpty() {
-        return this.countChecked.length === 0
+        return this.count() === 0
     },
 
     disabledClass() {
@@ -18,6 +25,6 @@ export default () => ({
     },
 
     countLabel() {
-        return '(' + this.countChecked.length + ')'
+        return '(' + this.count() + ')'
     },
 })

@@ -2,7 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Support;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\Support\{Htmlable, Renderable};
 use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
@@ -90,7 +90,11 @@ final readonly class CellRenderer
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
         }
 
-        $content = is_scalar($rawContent) || $rawContent instanceof \Stringable ? e((string) $rawContent) : '';
+        $content = match (true) {
+            $rawContent instanceof Htmlable => $rawContent->toHtml(),
+            is_scalar($rawContent) || $rawContent instanceof \Stringable => e((string) $rawContent),
+            default => '',
+        };
 
         $spanClass = $column->spanClassStatic ?? Arr::toCssClasses([
             $column->contentClassField,
