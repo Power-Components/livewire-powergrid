@@ -146,8 +146,6 @@ use PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class CustomTheme extends Theme
 {
-    public string $name = 'custom';
-
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
@@ -157,6 +155,101 @@ class CustomTheme extends Theme
     }
 }
 ```
+
+> ⚠️ **Do not declare a `public string $name` property.** In v7 the name is derived
+> automatically from the class basename (kebab-cased) by `Theme::name()`. A declared
+> property is dead code and will not be used.
+
+#### Shortcut used in real-world upgrades: inherit from the base Tailwind theme
+
+If your v6 theme was a *branded Tailwind variant* (same structure, different classes),
+you do **not** need to re-declare all 41 struct tokens. Point `parentTheme` at
+`Tailwind::class`, override only the tokens that differ in `struct()`, and merge the
+rest through `filter()` / `editable()`. Everything you skip is inherited:
+
+```php
+<?php
+
+namespace App\Helpers;
+
+use PowerComponents\LivewirePowerGrid\Themes\{Components, Tailwind, Theme};
+
+class PowerGridTheme extends Theme
+{
+    // Every token not overridden here is inherited from the base Tailwind theme.
+    protected ?string $parentTheme = Tailwind::class;
+
+    public function struct(): Components\ThemeBuilder
+    {
+        // checkbox(), radio(), cols(), footer(), searchBox()... omitted = inherited
+        return Components\ThemeBuilder::make($this->name())
+            ->baseView('livewire-powergrid::components.themes.tailwind')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('p-3 align-middle sm:px-6 lg:px-8')
+            )
+            ->table(fn (Components\Table $table) => $table
+                ->layout(fn (Components\Layout $layout) => $layout
+                    ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-gray-200')
+                    ->th('font-semibold px-3 py-3 text-left text-xs text-white whitespace-nowrap')
+                    ->td('px-3 py-2 whitespace-nowrap')
+                    // ...
+                )
+            );
+    }
+
+    public function filter(): array
+    {
+        // Only the filter tokens that differ; the rest come from Tailwind.
+        return [
+            'filter' => [
+                'boolean' => [
+                    'base'   => 'min-w-[5rem]',
+                    'select' => '...',
+                ],
+                'input_text' => [
+                    'input'  => '...',
+                    'select' => '...',
+                ],
+            ],
+        ];
+    }
+}
+```
+
+Tokens without a dedicated builder method (e.g. `table.body.td.actions_wrapper`,
+the filter panel tokens `filter.dropdown.*` / `filter.flyout.*`, or the header
+element tokens) can be added by overriding `resolveTokens()` and merging them into
+the resolved set:
+
+```php
+public function resolveTokens(): array
+{
+    if (empty($this->tokens)) {
+        $tokens = parent::resolveTokens();
+
+        $this->tokens = array_replace_recursive($tokens, [
+            'table' => [
+                'body' => [
+                    'td' => [
+                        'actions_wrapper' => 'flex gap-2',
+                    ],
+                ],
+            ],
+            'filter' => [
+                'dropdown' => [
+                    'body' => 'px-4 py-3',
+                ],
+            ],
+        ]);
+    }
+
+    return $this->tokens;
+}
+```
+
+This is exactly how a large production app migrated its v6 theme with a fraction of
+the full mapping work — see Section 4 Step 3 only when your theme diverges structurally
+from Tailwind.
 
 ### Step 2: Understand the Component Classes
 
@@ -598,7 +691,63 @@ These keys are available in v7:
 
 // Cache store name when using 'cache' as persist_driver (empty = default store)
 'persist_driver_store' => '',
+
+// Upper bound for rows fetched per page. The per-page value travels in the
+// component state, so this ceiling keeps one request from loading an unbounded
+// number of rows. Set to 0 to disable.
+'max_per_page' => 1000,
+
+// Filter placement now also supports panel modes that hold edits in a draft and
+// only commit when the user presses "Apply filters" (no live/debounce requests):
+// 'inline'   - filters inside the table (live, debounced)
+// 'dropdown' - popover anchored to a Filter button (draft + Apply)
+// 'flyout'   - drawer sliding from a side edge (draft + Apply)
+'filter' => 'inline',
+
+// Options for 'flyout'
+'filter_flyout' => [
+    'position'               => 'right', // 'left' or 'right'
+    'close_on_escape'        => true,
+    'close_on_click_outside' => true,
+],
 ```
+
+### Changed Keys
+
+These keys changed shape or meaning between v6 and v7:
+
+```php
+// Export classes moved to the Plugins namespace, with an OpenSpout v5 driver.
+// Update FQCNs referenced by your published config:
+use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
+
+'exportable' => [
+    'default'      => 'openspout_v5',
+    'openspout_v5' => [
+        'xlsx' => ExportToXLS::class,
+        'csv'  => ExportToCsv::class,
+    ],
+],
+
+// Select plugin: the tom/slim option arrays were replaced by CDN asset URLs.
+// The libraries are optional; when absent the filter degrades gracefully
+// (see Section 2). Prefer bundling via npm and exposing the global.
+'select' => [
+    'default' => 'slim',
+    'slim'    => [
+        'cdn' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.min.js',
+        'css' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.css',
+    ],
+    'tom'     => [
+        'cdn' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/js/tom-select.complete.min.js',
+        'css' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/css/tom-select.css',
+    ],
+],
+```
+
+Also note: `plugins.flatpickr.locales` is keyed by your **app locale**
+(e.g. `'pt_BR' => ['locale' => 'pt', 'dateFormat' => 'd/m/Y H:i', ...]`) — make sure
+a matching key exists for every locale your application serves.
 
 ---
 
@@ -861,6 +1010,24 @@ If you write feature tests for your PowerGrid components:
     };
     ```
 
+### Testing panel filters (`dropdown` / `flyout`)
+
+Panel modes never filter live: edits land in the **draft** state and only commit on
+Apply. In tests, drive them through `draftFilters.*` + `applyFilters()` — including
+date ranges, whose raw value is the flatpickr `formatted` string:
+
+```php
+Livewire::test(SimonHistoryTable::class)
+    ->call('fetchDatasource')
+    ->set('draftFilters.datetime.created_at_formatted.formatted', '2026-08-04 00:00 to 2026-08-06 23:59')
+    ->call('applyFilters')
+    ->assertSee('INRANGE_CONVERSATION')
+    ->assertDontSee('OUTRANGE_CONVERSATION');
+```
+
+Note the datetime filter is keyed by the **field name** (`created_at_formatted`),
+not by the database column.
+
 ---
 
 ## 12. Pre-Migration Checklist
@@ -897,6 +1064,12 @@ cat config/livewire-powergrid.php
 grep -r "extends Theme" app/
 grep -r "public function table()" app/
 grep -r "public function apply()" app/
+
+# 8. Legacy dist assets (see Section 18)
+grep -rn "livewire-powergrid/dist" resources/ vite.config.js
+
+# 9. Old export class references (see Section 5)
+grep -rn "Components\\\\Exports\\\\OpenSpout" config/ app/
 ```
 
 ### Components to Review
@@ -907,6 +1080,8 @@ grep -r "public function apply()" app/
 - [ ] Components with custom actions
 - [ ] JavaScript code interacting with PowerGrid
 - [ ] Tests using PowerGrid components
+- [ ] Fields closures returning HTML strings (see Section 17)
+- [ ] Asset pipeline: CSS/JS imports and Tailwind version (see Section 18)
 
 ---
 
@@ -973,7 +1148,14 @@ Remove JavaScript dependencies on `window.pgActions` (see Section 8)
 ### Step 9: Register Plugins (30 min)
 Configure plugins in your service provider (see Section 9)
 
-### Step 10: Test Everything (varies)
+### Step 10: Wrap Raw HTML Fields in HtmlString (varies)
+Audit `fields()` closures and wrap HTML-returning values in `HtmlString` (see Section 17)
+
+### Step 11: Rebuild the Asset Pipeline (2-4 hours)
+Import PowerGrid CSS/JS from package source, migrate to Tailwind 4 and add `@source`
+scans (see Section 18)
+
+### Step 12: Test Everything (varies)
 - [ ] All tables render correctly
 - [ ] Filters work
 - [ ] Sorting works
@@ -984,8 +1166,9 @@ Configure plugins in your service provider (see Section 9)
 - [ ] Lazy loading works
 - [ ] Editable/toggleable plugins work
 
-### Step 11: Update Tests (2-4 hours)
-Update feature tests to use runtime mini-components (see Section 11)
+### Step 13: Update Tests (2-4 hours)
+Update feature tests to use runtime mini-components (see Section 11); drive panel
+filters via `draftFilters` + `applyFilters()`
 
 ---
 
@@ -1007,6 +1190,21 @@ Update feature tests to use runtime mini-components (see Section 11)
 
 #### "window.pgActions is undefined"
 **Solution:** Actions are now server-side rendered. Remove JavaScript dependencies (see Section 8).
+
+#### HTML appearing escaped in cells (raw `<span ...>` shown as text)
+**Solution:** v7 escapes plain-string field values with `e()`. Return an
+`Illuminate\Support\HtmlString` from the `fields()` closure instead of a raw
+string (see Section 17).
+
+#### "ReferenceError: pgFlatpickr / pgExport / pgTomSelect is not defined" in console
+**Solution:** The pre-built `dist/powergrid` bundle is gone. Import the package's
+JS source through your bundler (`resources/js/components/index`) so the Alpine
+components get registered, and rebuild assets (see Section 18).
+
+#### PowerGrid styles missing or partially applied after upgrading
+**Solution:** Import `resources/css/tailwind4.css` from the package and make sure
+Tailwind 4 scans the package views plus your table/theme classes via `@source`
+directives (see Section 18).
 
 ---
 
@@ -1147,3 +1345,99 @@ The `view` token (or `HeaderElement::view()`) replaces the element blade entirel
 * `FilterBuilder` is no longer hard-gated to the Flux theme: it renders whenever a view exists for the
   active theme, or when the theme points `header.filter_builder.view` at its own blade.
 * New lang keys: `buttons.toggle_columns`, `buttons.soft_deletes`, `buttons.export`.
+
+---
+
+## 17. Field Output: Raw HTML Requires HtmlString
+
+Field closures no longer render plain strings as raw HTML. The cell renderer escapes
+scalar values with `e()`; only `Htmlable` values are emitted untouched
+(`match` on `$rawContent`: `Htmlable` → `toHtml()`, scalar/`Stringable` → `e(...)`).
+
+If your v6 tables returned HTML snippets (badges, styled spans, rendered Blade) as
+plain strings, those now show up **escaped as visible text** in v7. Wrap them in
+`Illuminate\Support\HtmlString`:
+
+```php
+// ❌ v6 - rendered raw, but v7 escapes this
+->add('status_badge', fn (Order $model): string => $this->statusBadge($model->status));
+
+// ✅ v7 - Htmlable values bypass escaping
+use Illuminate\Support\HtmlString;
+
+->add('status_badge', fn (Order $model): HtmlString => new HtmlString(
+    '<span class="badge ...">'.$model->status->label.'</span>'
+));
+```
+
+Audit every `fields()` closure whose return type is not purely textual — a quick way
+is grepping your table classes for `return '<` and `Blade::render(` inside helpers
+called from `fields()`.
+
+---
+
+## 18. Front-end Assets & Tailwind CSS 4
+
+PowerGrid 7.x no longer ships pre-built `dist/` bundles. You compile PowerGrid's
+assets from package source inside your own Vite/Tailwind build. A real-world
+upgrade (large production app) surfaced this checklist:
+
+### JavaScript
+
+Import the component registry (registers all Alpine components such as
+`pgFlatpickr`, `pgTomSelect`, `pgSlimSelect`, `pgExport`, etc.) instead of the old
+dist bundle:
+
+```js
+// resources/js/app.js
+
+// ❌ v6
+import "../../vendor/power-components/livewire-powergrid/dist/powergrid";
+
+// ✅ v7
+import "../../vendor/power-components/livewire-powergrid/resources/js/components/index";
+```
+
+Without this import the Alpine data components are never registered and the console
+fills with `pgFlatpickr is not defined` style errors.
+
+### CSS & Tailwind 4
+
+Point your stylesheet at the package's Tailwind 4 entry (it imports `tailwindcss`,
+the base layer and its own `@source` scans):
+
+```css
+/* resources/css/app.css */
+
+/* ❌ v6 */
+@import "./../../vendor/power-components/livewire-powergrid/dist/tailwind.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ v7 */
+@import "flatpickr/dist/flatpickr.css";          /* keep third-party deps you use */
+@import "./../../vendor/power-components/livewire-powergrid/resources/css/tailwind4.css";
+
+/* Tailwind 3 -> 4 bridging, if you keep a legacy JS config */
+@config "../../tailwind.config.js";
+
+/* Scan your own table/theme sources so their classes are generated */
+@source '../../app/Livewire/**/*Table.php';
+@source '../../app/Helpers/*Table.php';
+@source '../../vendor/power-components/livewire-powergrid/resources/views/components/**/*.blade.php';
+```
+
+Build-pipeline changes required by Tailwind 4:
+
+1. Add `@tailwindcss/vite` to `vite.config.js` plugins.
+2. Delete `postcss.config.js` (Tailwind 4 handles processing itself).
+3. Remove `presets` entries pointing at `vendor/**/tailwind.config.js`
+   (e.g. WireUI or PowerGrid presets) from `tailwind.config.js`.
+4. Keep explicit `@source` lines for paths Tailwind cannot auto-discover — anything
+   under `vendor/` or referenced only from PHP classes will otherwise be pruned
+   from the generated CSS.
+
+> If other legacy libraries depended on utilities provided by removed presets,
+> port those few rules into your own CSS (a small compatibility stylesheet) rather
+> than restoring the preset.

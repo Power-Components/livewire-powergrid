@@ -39,6 +39,12 @@ export default () => ({
         window.addEventListener('pg:clear_all_multi_select::' + params.tableName, () => {
             element.slim.setSelected([], false);
         });
+
+        window.addEventListener('pg:restore_multi_select::' + params.tableName, () => {
+            this.$wire.get('filters.multi_select.' + params.dataField).then((values) => {
+                element.slim.setSelected(Array.isArray(values) ? values : [], false);
+            });
+        });
     },
 
     applyFilterForDataField(appliedFilters, dataField, element) {

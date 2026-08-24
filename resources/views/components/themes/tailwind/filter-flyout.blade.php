@@ -106,15 +106,6 @@
                 <div class="flex items-center gap-2">
                     <button
                         type="button"
-                        data-cy="filter-flyout-clear-all"
-                        wire:click.prevent="clearAllFilters"
-                        class="{{ theme('filter.dropdown.clear') }}"
-                    >
-                        {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
-                    </button>
-
-                    <button
-                        type="button"
                         data-cy="filter-flyout-apply"
                         wire:click.prevent="applyFilters"
                         x-on:click="$wire.showFilters = false"

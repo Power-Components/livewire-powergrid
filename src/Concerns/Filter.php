@@ -221,8 +221,8 @@ trait Filter
     {
         $this->draftFilters = $this->filters;
 
-        $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
-        $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
+        $this->dispatch('pg:restore_flatpickr::'.$this->tableName);
+        $this->dispatch('pg:restore_multi_select::'.$this->tableName);
 
         $this->renderOutsideFiltersPartial();
     }

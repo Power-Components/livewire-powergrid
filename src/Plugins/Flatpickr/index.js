@@ -57,6 +57,28 @@ document.addEventListener('alpine:init', () => {
                 }
             })
 
+            window.addEventListener(`pg:restore_flatpickr::${this.tableName}`, async () => {
+                if (!this.$refs.rangeInput || !this.element) {
+                    return
+                }
+
+                const formatted = await this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
+
+                this.selectedDates = formatted
+
+                if (!formatted) {
+                    this.element.setDate([])
+
+                    return
+                }
+
+                const dates = String(formatted)
+                    .split(' to ')
+                    .map((date) => this.element.parseDate(date))
+
+                this.element.setDate(dates)
+            })
+
 
 
             const options = this.getOptions()

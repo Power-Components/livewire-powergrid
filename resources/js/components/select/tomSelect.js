@@ -39,6 +39,16 @@ export default () => ({
                         element.tomselect.clear(true)
                     }
                 })
+
+                window.addEventListener(`pg:restore_multi_select::${params.tableName}`, () => {
+                    if (!element) {
+                        return
+                    }
+
+                    this.$wire.get('filters.multi_select.' + params.dataField).then((values) => {
+                        element.tomselect.setValue(Array.isArray(values) ? values : [])
+                    })
+                })
             },
         }
 
