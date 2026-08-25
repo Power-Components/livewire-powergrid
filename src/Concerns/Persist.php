@@ -69,7 +69,7 @@ trait Persist
             persistFilterBuilder: $persistFilterBuilder
         );
 
-        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $key = $this->getPersistKeyName();
         $persister->save($key, $jsonState, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
     }
 
@@ -85,7 +85,7 @@ trait Persist
         }
 
         $persister = new StatePersister();
-        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $key = $this->getPersistKeyName();
         $state = $persister->retrieve($key, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
 
         if (is_null($state)) {
