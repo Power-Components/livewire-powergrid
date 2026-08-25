@@ -3,24 +3,25 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Illuminate\Http\{JsonResponse, Request};
+use PowerComponents\LivewirePowerGrid\Support\Actions\ActionsResolver;
 use PowerComponents\Turbine\DataSource\Support\Sql;
 use PowerComponents\Turbine\Response;
+use PowerComponents\Turbine\Response\GridResponse;
 
 trait RespondsWithData
 {
-    /**
-     * @return array<string, mixed>
-     */
-    public function toDataArray(?Request $request = null): array
+    public function toDataArray(?Request $request = null): GridResponse
     {
         $this->prepareForData($request ?? request());
 
-        return Response::make($this)->toArray();
+        return Response::make($this)->envelope(
+            actionsResolver: new ActionsResolver($this),
+        );
     }
 
     public function toDataResponse(?Request $request = null): JsonResponse
     {
-        return new JsonResponse($this->toDataArray($request));
+        return new JsonResponse($this->toDataArray($request)->all());
     }
 
     protected function prepareForData(Request $request): void
