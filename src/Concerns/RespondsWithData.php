@@ -21,7 +21,7 @@ trait RespondsWithData
 
     public function toDataResponse(?Request $request = null): JsonResponse
     {
-        return new JsonResponse($this->toDataArray($request)->all());
+        return new JsonResponse($this->toDataArray($request));
     }
 
     protected function prepareForData(Request $request): void
