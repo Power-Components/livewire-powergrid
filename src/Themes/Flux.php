@@ -149,10 +149,10 @@ class Flux extends Theme
                 ->input($this->input().' w-full')
                 ->dropdown(fn (Components\Dropdown $dropdown) => $dropdown
                     ->view('livewire-powergrid::components.themes.tailwind.filter')
-                    ->wrapper('relative inline-block text-left')
+                    ->wrapper('inline-block text-left')
                     ->trigger($this->triggerButton())
                     ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
-                    ->panel('absolute left-0 sm:left-auto sm:right-0 z-40 mt-2 w-[90vw] origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
+                    ->panel('absolute right-0 z-40 mt-2 w-[90vw] max-w-[calc(100vw-2rem)] origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
                     ->header('flex items-center justify-between px-4 pt-4 pb-2')
                     ->title('text-base font-semibold text-zinc-800 dark:text-zinc-100')
                     ->body('px-4 py-3 max-h-96 overflow-y-auto')

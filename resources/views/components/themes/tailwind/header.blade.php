@@ -15,7 +15,7 @@
         <div class="{{ theme('header.layout.sub_container') }} flex flex-row flex-wrap items-center gap-2 w-full mt-2 md:mt-0 md:flex-1 md:max-w-xl md:ml-auto md:justify-end">
             @includeIf(theme_view('header.toggle-columns'))
             {!! $this->renderPluginZone('header') !!}
-            <div class="flex flex-1 min-w-0 flex-row items-center gap-2">
+            <div class="relative flex flex-1 min-w-0 flex-row items-center gap-2">
                 {!! $this->renderPluginZone('header.filter') !!}
                 @if ($this->usesFilterFlyout() && count($this->filters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
                     @includeIf(theme_view('header.filters'))

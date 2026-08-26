@@ -22,7 +22,7 @@
     $trClasses = Arr::toCssClasses([theme('table.layout.tr'), theme('table.body.tr.filters')]);
     $tdClasses = Arr::toCssClasses([theme('table.layout.td'), theme('table.body.td.filters')]);
 @endphp
-@if (config('livewire-powergrid.filter') === 'inline')
+@if ($__partial->usesFilterInline())
     <tr
         class="{{ $trClasses }}"
     >

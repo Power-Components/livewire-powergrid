@@ -7,13 +7,15 @@
     'tableName' => null,
     'filters' => [],
     'setUp' => null,
+    '__partial' => null,
 ])
 
 @php
+    $__partial = $__partial ?? $this;
     $trClasses = Arr::toCssClasses([theme('table.layout.tr'), theme('table.layout.body.tr.filters')]);
     $tdClasses = Arr::toCssClasses([theme('table.layout.td'), theme('table.layout.body.td.filters')]);
 @endphp
-@if (config('livewire-powergrid.filter') === 'inline')
+@if ($__partial->usesFilterInline())
     <tr
         class="{{ $trClasses }}"
     >

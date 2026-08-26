@@ -354,6 +354,12 @@ trait Filter
         return is_string($position) ? $position : '';
     }
 
+    /** True when filters render inline, inside the table header row. */
+    public function usesFilterInline(): bool
+    {
+        return $this->filterPosition() === 'inline';
+    }
+
     /** True when filters live in their own panel instead of inside the table. */
     public function usesFilterPanel(): bool
     {

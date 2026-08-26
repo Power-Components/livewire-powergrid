@@ -8,7 +8,7 @@
     <div
         x-data="{ open: false }"
         wire:key="pg-toggle-columns-{{ $tableName }}"
-        class="{{ theme('filter.dropdown.wrapper') }}"
+        class="relative {{ theme('filter.dropdown.wrapper') }}"
     >
         <button
             type="button"
@@ -46,7 +46,7 @@
             x-on:keydown.escape.window="open = false"
             role="dialog"
             data-cy="toggle-columns-panel"
-            class="{{ theme('filter.dropdown.panel') }} sm:w-72"
+            class="{{ theme('filter.dropdown.panel') }} sm:w-72 right-auto! left-0!"
         >
             <div class="{{ theme('filter.dropdown.header') }}">
                 <span class="{{ theme('filter.dropdown.title') }}">{{ $element['title'] }}</span>
