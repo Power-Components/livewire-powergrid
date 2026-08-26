@@ -19,14 +19,42 @@
         default => 'grid grid-cols-1 gap-4',
     };
     $panelWidth = match ($columns) {
-        3 => 'sm:w-[48rem]',
-        2 => 'sm:w-[36rem]',
-        default => 'sm:w-96',
+        3 => 'lg:w-[48rem]',
+        2 => 'lg:w-[36rem]',
+        default => 'lg:w-96',
     };
 @endphp
 
+{{--
+    Alpine `open` is local UI state. Livewire snapshots Alpine *before* a
+    wire:click handler runs, so Apply/Clear must close first and then call
+    $wire — otherwise the morph restores open=true and the panel stays up.
+    Portaled widgets (flatpickr, tom-select, slim-select) render on <body>,
+    so click.outside has to ignore them or the panel closes mid-interaction.
+--}}
 <div
-    x-data="{ open: false }"
+    x-data="{
+        open: false,
+        closeOnOutside(event) {
+            const target = event.target;
+            if (! (target instanceof Element)) {
+                this.open = false;
+                return;
+            }
+            if (target.closest('.flatpickr-calendar, .ts-dropdown, .ss-content')) {
+                return;
+            }
+            this.open = false;
+        },
+        apply() {
+            this.open = false;
+            this.$wire.applyFilters();
+        },
+        clearAll() {
+            this.open = false;
+            this.$wire.clearAllFilters();
+        },
+    }"
     wire:partial="pg-filters-{{ $tableName }}"
     wire:key="pg-filter-dropdown-{{ $tableName }}"
     class="{{ theme('filter.dropdown.wrapper') }}"
@@ -58,7 +86,7 @@
         x-transition:leave="transition ease-in duration-100"
         x-transition:leave-start="opacity-100 translate-y-0"
         x-transition:leave-end="opacity-0 -translate-y-1"
-        x-on:click.outside="open = false"
+        x-on:click.outside="closeOnOutside($event)"
         x-on:keydown.escape.window="open = false"
         role="dialog"
         aria-modal="true"
@@ -94,8 +122,7 @@
             <button
                 type="button"
                 data-cy="filter-dropdown-clear"
-                wire:click.prevent="clearAllFilters"
-                x-on:click="open = false"
+                x-on:click="clearAll()"
                 class="{{ theme('filter.dropdown.clear') }}"
             >
                 {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
@@ -104,8 +131,7 @@
             <button
                 type="button"
                 data-cy="filter-dropdown-apply"
-                wire:click.prevent="applyFilters"
-                x-on:click="open = false"
+                x-on:click="apply()"
                 class="{{ theme('filter.dropdown.apply') }}"
             >
                 {{ trans('livewire-powergrid::datatable.buttons.apply_filters') }}

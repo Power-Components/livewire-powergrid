@@ -75,7 +75,7 @@
                                 wire:model="draftColumns.{{ $field }}"
                                 class="{{ theme('header.toggle_columns.checkbox', theme('table.checkbox.input')) }}"
                             >
-                            <span class="text-sm text-zinc-700 dark:text-zinc-200">{!! data_get($column, 'title') !!}</span>
+                            <span class="{{ theme('header.toggle_columns.menu_item', 'text-sm text-base-content') }}">{!! data_get($column, 'title') !!}</span>
                         </label>
                     @endif
                 @endforeach
@@ -85,8 +85,7 @@
                 <button
                     type="button"
                     data-cy="toggle-columns-apply"
-                    wire:click.prevent="applyColumns"
-                    x-on:click="open = false"
+                    x-on:click="open = false; $wire.applyColumns()"
                     class="{{ theme('filter.dropdown.apply') }}"
                 >
                     {{ trans('livewire-powergrid::datatable.buttons.apply_columns') }}

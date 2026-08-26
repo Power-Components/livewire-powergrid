@@ -22,8 +22,8 @@
     "livewire/livewire": "^4.0",
     "laravel/prompts": "^0.1|^0.2|^0.3",
     "livewire/blaze": "^1.0",
-    "power-components/partials": "^0.1.0",
-    "power-components/turbine": "^0.6.0"
+    "power-components/partials": "^0.2.0",
+    "power-components/turbine": "^0.7.0"
   },
   "conflict": {
     "laravel/framework": "<12.0",

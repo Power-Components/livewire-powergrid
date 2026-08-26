@@ -43,12 +43,7 @@ trait Sorting
             return;
         }
 
-        if (function_exists('partials')) {
-            partials($this)
-                ->partial("pg-thead-{$this->tableName}", theme_view('table.thead'))
-                ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
-                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
-        }
+        $this->renderGridPartials(includeThead: true);
     }
 
     public function reverseSort(): string

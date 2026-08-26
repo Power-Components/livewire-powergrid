@@ -343,17 +343,13 @@ class PowerGridComponent extends Component implements Context
     {
         $this->checkboxAll = false;
 
-        partials($this)
-            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+        $this->renderGridPartials();
     }
 
     public function updated(string $name): void
     {
         if (str_contains($name, 'setUp.footer.perPage')) {
-            partials($this)
-                ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+            $this->renderGridPartials();
         }
     }
 
@@ -361,8 +357,31 @@ class PowerGridComponent extends Component implements Context
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
-        partials($this)
-            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+        $this->renderGridPartials();
+    }
+
+    /** Register tbody/pagination (and optionally thead) as Livewire partials. */
+    public function renderGridPartials(bool $includeThead = false): void
+    {
+        if (! function_exists('partials')) {
+            return;
+        }
+
+        $enabledFilters = $this->enabledFilters;
+        $this->resolveFilters();
+        $this->enabledFilters = $enabledFilters;
+        unset($this->hasColumnFilters);
+
+        $this->resolvePlugins();
+
+        $partials = partials($this);
+
+        if ($includeThead) {
+            $partials->partial("pg-thead-{$this->tableName}", theme_view('table.thead'));
+        }
+
+        $partials
+            ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
             ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
     }
 

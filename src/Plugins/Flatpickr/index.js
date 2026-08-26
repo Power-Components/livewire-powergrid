@@ -95,7 +95,10 @@ document.addEventListener('alpine:init', () => {
             const options = {
                 mode: 'range',
                 defaultHour: 0,
-                static: true,
+                // Portaled to <body> so overflow-y-auto filter panels and
+                // table cells do not clip the calendar. click.outside on the
+                // dropdown ignores `.flatpickr-calendar` for the same reason.
+                static: false,
                 ...this.locale,
                 ...this.customConfig
             }

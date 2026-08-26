@@ -25,6 +25,8 @@
 @if ($__partial->usesFilterInline())
     <tr
         class="{{ $trClasses }}"
+        wire:key="pg-inline-filters-{{ $tableName }}"
+        wire:partial.ignore="pg-inline-filters-{{ $tableName }}"
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))

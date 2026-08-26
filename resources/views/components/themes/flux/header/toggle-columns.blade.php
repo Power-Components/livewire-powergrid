@@ -62,7 +62,7 @@
             </div>
 
             <div class="{{ theme('filter.dropdown.body') }} space-y-3">
-                @foreach ($this->visibleColumns as $column)
+                @foreach ($__partial->visibleColumns as $column)
                     @php($field = data_get($column, 'field'))
                     @if (is_string($field) && $field !== '' && ! data_get($column, 'isAction'))
                         <label

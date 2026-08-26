@@ -142,6 +142,31 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
         ->and($html)->not->toContain('wire:input.live.debounce.600ms="filterInputText');
 });
 
+it('closes apply and clear through alpine before the livewire snapshot', function () {
+    $html = Livewire::test(dropdownComponent('dropdown-alpine-apply')::class)->html();
+
+    expect($html)->toContain('$wire.applyFilters()')
+        ->and($html)->toContain('$wire.clearAllFilters()')
+        ->and($html)->not->toContain('wire:click.prevent="applyFilters"')
+        ->and($html)->not->toContain('wire:click.prevent="clearAllFilters"');
+});
+
+it('ignores portaled date and select widgets on click outside', function () {
+    $html = Livewire::test(dropdownComponent('dropdown-outside')::class)->html();
+
+    expect($html)->toContain('closeOnOutside($event)')
+        ->and($html)->toContain('.flatpickr-calendar')
+        ->and($html)->toContain('.ts-dropdown');
+});
+
+it('pins the panel to the viewport on small screens', function () {
+    $html = Livewire::test(dropdownComponent('dropdown-panel')::class)->html();
+
+    expect($html)->toContain('max-w-[calc(100vw-2rem)]')
+        ->and($html)->toContain('fixed inset-x-4')
+        ->and($html)->not->toContain('w-[90vw]');
+});
+
 it('uses a single grid column for four or fewer filters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-grid')::class);
 
@@ -157,4 +182,23 @@ it('keeps the inline flow live and bound to filters', function () {
     expect($html)->toContain('filters.input_text.name')
         ->and($html)->toContain('wire:input.live.debounce.600ms="filterInputText')
         ->and($html)->not->toContain('draftFilters.input_text.name');
+});
+
+it('registers tbody and pagination partials when applying an inline filter', function () {
+    Config::set('livewire-powergrid.filter', 'inline');
+
+    $test = Livewire::test(dropdownComponent('inline-partials')::class)
+        ->call('filterInputText', 'name', 'Expensive', 'Name');
+
+    $fragments = \Livewire\store($test->instance())->get('partialFragments') ?? [];
+
+    $names = [];
+
+    foreach ($fragments as $renderUsing) {
+        $names = array_merge($names, array_keys($renderUsing()));
+    }
+
+    expect($names)
+        ->toContain('pg-tbody-'.$test->instance()->tableName)
+        ->toContain('pg-pagination-'.$test->instance()->tableName);
 });

@@ -66,7 +66,7 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
     @if (filled($filter))
         <div class="{{ theme('filter.select.base') }}">
             @if (!$inline)
-                <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                <label class="{{ theme('filter.label', 'block text-sm font-semibold text-zinc-700 dark:text-zinc-300') }}">
                     {{ $title }}
                 </label>
             @endif

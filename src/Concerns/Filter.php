@@ -605,6 +605,10 @@ trait Filter
                 'enabledFilters' => $this->enabledFilters,
             ]);
 
+        if (! isset($this->setUp['detail'])) {
+            $this->renderGridPartials();
+        }
+
         if (! $this->usesFilterPanel()) {
             return;
         }
@@ -619,12 +623,10 @@ trait Filter
         }
 
         partials($this)
-            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'))
             ->partial("pg-filters-{$this->tableName}", theme_view($this->filterPanelView()));
     }
 
-    private function resolveFilters(): void
+    protected function resolveFilters(): void
     {
         $filters = collect($this->filters());
 
