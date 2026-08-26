@@ -10,22 +10,9 @@
     $__partial = $__partial ?? (isset($this) ? $this : null);
     $tableName = $tableName ?? $__partial->tableName;
 
-    $filtersFromColumns = collect($filtersFromColumns ?? [])
-        ->filter(fn($column) => filled(data_get($column, 'filters')));
-
-    if ($filtersFromColumns->isEmpty() && $__partial) {
-        $filtersFromColumns = collect($__partial->columns)
-            ->filter(fn($column) => filled(data_get($column, 'filters')));
-    }
-
-    $componentFilters = collect($__partial ? $__partial->filters() : []);
-    $filterOrderMap = $componentFilters->pluck('field')->flip();
-
-    // Sort filters based on the order they appear in filters() method
-    $sortedFilters = $filtersFromColumns->sortBy(function ($column) use ($filterOrderMap) {
-        $fieldName = data_get($column, 'filters.field');
-        return $filterOrderMap->get($fieldName, 999); // 999 for fields not found in filters()
-    });
+    $sortedFilters = $__partial
+        ? $__partial->sortedFilterPanelColumns($filtersFromColumns)
+        : collect($filtersFromColumns ?? [])->filter(fn ($column) => filled(data_get($column, 'filters')));
 @endphp
 
 <div class="{{ $gridClass }}">

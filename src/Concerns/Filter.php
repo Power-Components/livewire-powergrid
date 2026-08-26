@@ -393,6 +393,43 @@ trait Filter
     }
 
     /**
+     * Filter-bearing columns for dropdown/flyout panels.
+     * Uses Filter::order() when set, otherwise the filters() array index.
+     *
+     * @param  iterable<mixed>|null  $columns
+     * @return Collection<int, mixed>
+     */
+    public function sortedFilterPanelColumns(?iterable $columns = null): Collection
+    {
+        $source = collect($columns ?? [])
+            ->filter(fn ($column) => filled(data_get($column, 'filters')));
+
+        if ($source->isEmpty()) {
+            $source = collect($this->columns)
+                ->filter(fn ($column) => filled(data_get($column, 'filters')));
+        }
+
+        $declarationOrder = collect($this->filters())
+            ->values()
+            ->mapWithKeys(function ($filter, int $index): array {
+                $field = data_get($filter, 'field');
+                $key = is_string($field) || is_numeric($field) ? (string) $field : (string) $index;
+
+                return [$key => $index];
+            });
+
+        return $source
+            ->sortBy(function ($column) use ($declarationOrder): string {
+                $declared = $declarationOrder->get((string) data_get($column, 'filters.field'), PHP_INT_MAX);
+                $explicit = data_get($column, 'filters.order');
+                $order = is_numeric($explicit) ? (int) $explicit : $declared;
+
+                return sprintf('%010d-%010d', $order, $declared);
+            })
+            ->values();
+    }
+
+    /**
      * @return array{position: string, close_on_escape: bool, close_on_click_outside: bool}
      */
     public function filterFlyoutOptions(): array
