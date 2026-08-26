@@ -25,5 +25,16 @@ final readonly class ColumnViewModel
         public string $tdClass,
         public string $tdStyle,
         public ?string $spanClassStatic,
+        public ?string $align,
+        public string $alignClasses,
     ) {}
+
+    public static function alignmentClasses(mixed $align): string
+    {
+        return match ($align) {
+            'center' => 'justify-center text-center',
+            'right', 'end' => 'justify-end text-right',
+            default => 'justify-start text-left',
+        };
+    }
 }

@@ -438,6 +438,9 @@ class PowerGridComponent extends Component implements Context
                 $contentClassField = $this->columnString($column, 'contentClassField');
                 /** @var array<array-key, mixed>|string $contentClasses */
                 $contentClasses = data_get($column, 'contentClasses', []);
+                $alignRaw = data_get($column, 'align');
+                $align = is_string($alignRaw) && $alignRaw !== '' ? $alignRaw : null;
+                $alignClasses = ColumnViewModel::alignmentClasses($align);
                 $bodyClass = $this->columnString($column, 'bodyClass');
                 $bodyStyle = $this->columnString($column, 'bodyStyle');
                 $hidden = (bool) data_get($column, 'hidden');
@@ -456,11 +459,13 @@ class PowerGridComponent extends Component implements Context
                     hasCustomContent: is_string($customView) && $customView !== '',
                     customView: is_string($customView) ? $customView : null,
                     customParams: is_array($customParams) ? $customParams : [],
-                    tdClass: Arr::toCssClasses([$tdClass, $bodyClass]),
+                    tdClass: Arr::toCssClasses([$tdClass, $bodyClass, $alignClasses]),
                     tdStyle: Arr::toCssStyles(['display:none' => $hidden, $bodyStyle]),
                     spanClassStatic: is_array($contentClasses)
                         ? null
                         : Arr::toCssClasses([$contentClassField, $contentClasses]),
+                    align: $align,
+                    alignClasses: $alignClasses,
                 );
             })
             ->values()

@@ -24,7 +24,14 @@ final readonly class CellRenderer
             $html .= '<td class="'.$column->tdClass.'" style="'.$column->tdStyle.'"'
                 .' wire:key="row-'.$rowKey.'-'.e($column->dataField).'-'.e($childKey).'"'
                 .' data-column="'.e($column->isAction ? 'actions' : $column->dataField).'">'
-                .$this->renderCellBody($column, $row, $rowIndex, $parentId, $actionsWrapperClass, $hasActionsFromView)
+                .$this->renderCellBody(
+                    $column,
+                    $row,
+                    $rowIndex,
+                    $parentId,
+                    trim($actionsWrapperClass.' '.$column->alignClasses),
+                    $hasActionsFromView,
+                )
                 .'</td>';
         }
 

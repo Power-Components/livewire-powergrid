@@ -188,7 +188,7 @@ class Flux extends Theme
                 'table' => [
                     'body' => [
                         'td' => [
-                            'actions_wrapper' => 'flex items-center gap-1 justify-end',
+                            'actions_wrapper' => 'flex items-center gap-1',
                         ],
                     ],
                 ],

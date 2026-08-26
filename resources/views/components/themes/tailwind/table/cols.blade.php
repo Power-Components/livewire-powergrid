@@ -5,6 +5,7 @@
     'dataField' => null,
     '__partial' => null,
 ])
+@use('PowerComponents\LivewirePowerGrid\Support\ColumnViewModel')
 @php
     $__partial = $__partial ?? $this;
     $setUp = $__partial->setUp;
@@ -35,6 +36,8 @@
     $sortOrder = isset($setUp['responsive'])
         ? data_get($setUp, "responsive.sortOrder.{$field}", null)
         : null;
+
+    $alignClasses = ColumnViewModel::alignmentClasses(data_get($column, 'align'));
 @endphp
 <th wire:key="cols-{{ $field }}-{{ $__partial->tableName }}"
     x-data
@@ -54,7 +57,7 @@
         'width: max-content !important',
     ])
 >
-    <div class="{{ theme('cols.div') }}">
+    <div @class([theme('cols.div'), $alignClasses])>
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
