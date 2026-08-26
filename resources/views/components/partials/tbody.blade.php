@@ -47,6 +47,7 @@
 
                     <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
                         'wire:key' => 'row-' . $rowId,
+                        'data-pg-row-id' => $rowId,
                         'class' => $class,
                     ])) }}>
                         @if (RowRenderer::canRenderDirect($__partial))
@@ -110,6 +111,7 @@
 
                     <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
                         'wire:key' => 'row-' . $rowId,
+                        'data-pg-row-id' => $rowId,
                         'class' => $class,
                     ])) }}>
                         @if (RowRenderer::canRenderDirect($__partial))

@@ -6,6 +6,7 @@
     '__partial' => null,
 ])
 @use('PowerComponents\LivewirePowerGrid\Support\ColumnViewModel')
+@use('PowerComponents\Turbine\Components\SetUp\Responsive')
 @php
     $__partial = $__partial ?? $this;
     $setUp = $__partial->setUp;
@@ -17,30 +18,11 @@
 
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
-    $isFixedOnResponsive = false;
-
-    if (isset($setUp['responsive'])) {
-        if (in_array($field, data_get($setUp, 'responsive.fixedColumns'))) {
-            $isFixedOnResponsive = true;
-        }
-
-        if (
-            data_get($column, 'isAction') &&
-            in_array(
-                \PowerComponents\Turbine\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME,
-                data_get($setUp, 'responsive.fixedColumns'),
-            )
-        ) {
-            $isFixedOnResponsive = true;
-        }
-
-        if (data_get($column, 'fixedOnResponsive')) {
-            $isFixedOnResponsive = true;
-        }
-    }
+    $isFixedOnResponsive = isset($setUp['responsive'])
+        && Responsive::isColumnFixed($column, (array) data_get($setUp, 'responsive.fixedColumns', []));
 
     $sortOrder = isset($setUp['responsive'])
-        ? data_get($setUp, "responsive.sortOrder.{$field}", null)
+        ? Responsive::columnSortOrder($column, (array) data_get($setUp, 'responsive.sortOrder', []))
         : null;
 
     $alignClasses = ColumnViewModel::alignmentClasses(data_get($column, 'align'));

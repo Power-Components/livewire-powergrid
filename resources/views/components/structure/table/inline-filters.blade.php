@@ -25,6 +25,7 @@
         class="{{ $trClasses }}"
         wire:key="pg-inline-filters-{{ $tableName }}"
         wire:partial.ignore="pg-inline-filters-{{ $tableName }}"
+        data-pg-inline-filters
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
@@ -32,6 +33,11 @@
                 class="{{ $tdClasses }}"
             ></td>
         @endif
+        @isset($setUp['responsive'])
+            <td
+                class="{{ $tdClasses }}"
+            ></td>
+        @endisset
         @if ($checkbox)
             <td
                 class="{{ $tdClasses }}"

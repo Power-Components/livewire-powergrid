@@ -14,7 +14,7 @@
     $__partial = $__partial ?? $this;
     $checkbox = $checkbox ?? $__partial->checkbox;
     $columns = $columns ?? $__partial->columns;
-    $actions = $actions ?? []; // Actions are usually passed or handled differently
+    $actions = $actions ?? [];
     $tableName = $tableName ?? $__partial->tableName;
     $filters = $filters ?? $__partial->filters;
     $setUp = $setUp ?? $__partial->setUp;
@@ -27,6 +27,7 @@
         class="{{ $trClasses }}"
         wire:key="pg-inline-filters-{{ $tableName }}"
         wire:partial.ignore="pg-inline-filters-{{ $tableName }}"
+        data-pg-inline-filters
     >
 
         @if (data_get($setUp, 'detail.showCollapseIcon'))
@@ -34,6 +35,11 @@
                 class="{{ $tdClasses }}"
             ></td>
         @endif
+        @isset($setUp['responsive'])
+            <td
+                class="{{ $tdClasses }}"
+            ></td>
+        @endisset
         @if ($checkbox)
             <td
                 class="{{ $tdClasses }}"
