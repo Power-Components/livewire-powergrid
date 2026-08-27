@@ -3,6 +3,7 @@
     'tableName' => null,
     'filtersFromColumns' => null,
     '__partial' => null,
+    'openOnLoad' => false,
 ])
 
 @php
@@ -34,7 +35,15 @@
 --}}
 <div
     x-data="{
-        open: false,
+        open: {{ $openOnLoad ? 'true' : 'false' }},
+        async toggle() {
+            if (! this.$wire.filterPanelLoaded) {
+                await this.$wire.loadFilterPanel()
+                this.open = true
+                return
+            }
+            this.open = ! this.open
+        },
         closeOnOutside(event) {
             const target = event.target;
             if (! (target instanceof Element)) {
@@ -61,7 +70,7 @@
 >
     <button
         type="button"
-        x-on:click="open = ! open"
+        x-on:click="toggle()"
         data-cy="filter-dropdown-trigger"
         title="{{ $element['title'] }}"
         aria-label="{{ $element['title'] }}"

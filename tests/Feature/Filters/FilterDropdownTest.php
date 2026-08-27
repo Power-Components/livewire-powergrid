@@ -134,12 +134,29 @@ it('derives flatpickr start/end from the draft formatted string on apply', funct
         ->assertDontSee('Expensive Dish');
 });
 
-it('renders deferred draftFilters bindings and no live handler in dropdown mode', function () {
-    $html = Livewire::test(dropdownComponent('dropdown-html')::class)->html();
+it('does not mount filter fields until the panel is loaded', function () {
+    $html = Livewire::test(dropdownComponent('dropdown-lazy')::class)->html();
 
-    expect($html)->toContain('draftFilters.input_text.name')
-        ->and($html)->toContain('data-cy="filter-dropdown-apply"')
-        ->and($html)->not->toContain('wire:input.live.debounce.600ms="filterInputText');
+    expect($html)->toContain('data-cy="filter-dropdown-apply"')
+        ->and($html)->not->toContain('draftFilters.input_text.name');
+});
+
+it('renders deferred draftFilters bindings and no live handler in dropdown mode', function () {
+    $test = Livewire::test(dropdownComponent('dropdown-html')::class)
+        ->call('loadFilterPanel');
+
+    $fragments = \Livewire\store($test->instance())->get('partialFragments') ?? [];
+
+    $names = [];
+
+    foreach ($fragments as $renderUsing) {
+        $names = array_merge($names, array_keys($renderUsing()));
+    }
+
+    expect($names)->toContain('pg-filters-'.$test->instance()->tableName)
+        ->and($test->html())->toContain('draftFilters.input_text.name')
+        ->and($test->html())->toContain('data-cy="filter-dropdown-apply"')
+        ->and($test->html())->not->toContain('wire:input.live.debounce.600ms="filterInputText');
 });
 
 it('closes apply and clear through alpine before the livewire snapshot', function () {

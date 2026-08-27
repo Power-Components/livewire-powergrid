@@ -39,7 +39,7 @@ class FlatpickrPlugin extends PluginBase
             });
 
         $hasFilterInFilters = false;
-        $hasFilterInFilters = collect($this->component->filters())
+        $hasFilterInFilters = collect($this->component->declaredFilters())
             ->contains(function ($filter) {
                 $className = get_class($filter);
 

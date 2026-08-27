@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true, unsafe: ['attributes'])
+
 <svg
     {{ $attributes->merge(['class' => 'h-5 w-5']) }}
     fill="none"

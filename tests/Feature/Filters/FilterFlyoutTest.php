@@ -53,7 +53,8 @@ it('renders reset and apply but no clear all button in the flyout', function () 
 
     expect($html)->toContain('data-cy="filter-flyout-reset"')
         ->and($html)->toContain('data-cy="filter-flyout-apply"')
-        ->and($html)->not->toContain('data-cy="filter-flyout-clear-all"');
+        ->and($html)->not->toContain('data-cy="filter-flyout-clear-all"')
+        ->and($html)->not->toContain('draftFilters.input_text.name');
 });
 
 it('reset restores the draft to the applied filters and keeps results', function () {

@@ -49,7 +49,9 @@ function orderComponent(string $tableName): PowerGridComponent
 it('orders dropdown filters by Filter::order, falling back to the filters() index', function () {
     Config::set('livewire-powergrid.filter', 'dropdown');
 
-    $html = Livewire::test(orderComponent('order-dropdown')::class)->html();
+    $html = Livewire::test(orderComponent('order-dropdown')::class)
+        ->call('loadFilterPanel')
+        ->html();
 
     expect($html)->toContain('data-cy="filter-dropdown-panel"')
         ->toMatch('/draftFilters\.input_text\.name[\s\S]*draftFilters\.boolean\.in_stock[\s\S]*draftFilters\.number\.price/');
@@ -58,7 +60,9 @@ it('orders dropdown filters by Filter::order, falling back to the filters() inde
 it('orders flyout filters by Filter::order, falling back to the filters() index', function () {
     Config::set('livewire-powergrid.filter', 'flyout');
 
-    $html = Livewire::test(orderComponent('order-flyout')::class)->html();
+    $html = Livewire::test(orderComponent('order-flyout')::class)
+        ->call('loadFilterPanel')
+        ->html();
 
     expect($html)->toContain('data-cy="filter-flyout"')
         ->toMatch('/draftFilters\.input_text\.name[\s\S]*draftFilters\.boolean\.in_stock[\s\S]*draftFilters\.number\.price/');

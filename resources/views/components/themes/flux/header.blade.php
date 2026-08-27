@@ -23,10 +23,10 @@
             {!! $__partial->renderPluginZone('header') !!}
             <div class="flex flex-1 min-w-0 flex-row items-center gap-2">
                 {!! $__partial->renderPluginZone('header.filter') !!}
-                @if ($__partial->usesFilterFlyout() && count($__partial->filters()) > 0 && ! $__partial->filterBuilderHidesDefaultFilters())
+                @if ($__partial->usesFilterFlyout() && count($__partial->declaredFilters()) > 0 && ! $__partial->filterBuilderHidesDefaultFilters())
                     @includeIf(theme_view('header.filters'), ['__partial' => $__partial])
                 @endif
-                @if ($__partial->usesFilterDropdown() && count($__partial->filters()) > 0 && ! $__partial->filterBuilderHidesDefaultFilters())
+                @if ($__partial->usesFilterDropdown() && count($__partial->declaredFilters()) > 0 && ! $__partial->filterBuilderHidesDefaultFilters())
                     @include(theme_view($__partial->filterPanelView()), [
                         '__partial' => $__partial,
                         'tableName' => $tableName,

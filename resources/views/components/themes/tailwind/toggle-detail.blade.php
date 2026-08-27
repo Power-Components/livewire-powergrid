@@ -1,10 +1,7 @@
 <td
     x-data="pgToggleDetail"
-    data-single-expand="{{ data_get($setUp, 'detail.singleExpand', false) ? 'true' : 'false' }}"
     data-table-name="{{ $tableName }}"
     data-row-id="{{ $rowId }}"
-    x-on:pg-toggle-detail-{{ $tableName }}-hidden-all.window="resetCollapsed()"
-    x-on:pg-toggle-detail-{{ strtolower($tableName) }}-loaded.window="stopLoading()"
     class="{{ theme('table.layout.td') }}"
 >
     <div

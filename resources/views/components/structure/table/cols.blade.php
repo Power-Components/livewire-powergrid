@@ -1,5 +1,6 @@
 @props([
     'column' => null,
+    'columns' => null,
     'enabledFilters' => null,
     'actions' => null,
     'dataField' => null,
@@ -15,7 +16,12 @@
     $sortArray = $__partial->sortArray;
     $sortField = $__partial->sortField;
     $sortDirection = $__partial->sortDirection;
-
+    $headerColumns = $column !== null
+        ? [$column]
+        : ($columns ?? $__partial->columns);
+@endphp
+@foreach ($headerColumns as $column)
+@php
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
     $isFixedOnResponsive = isset($setUp['responsive'])
@@ -49,7 +55,15 @@
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
-            @include($__partial->showSortIcon($field), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
+            @php $sortIcon = $__partial->sortIconComponent($field); @endphp
+            @if ($sortIcon === 'chevron-up')
+                <x-livewire-powergrid::icons.chevron-up width="16" height="16" />
+            @elseif ($sortIcon === 'chevron-down')
+                <x-livewire-powergrid::icons.chevron-down width="16" height="16" />
+            @else
+                <x-livewire-powergrid::icons.chevron-up-down width="16" height="16" />
+            @endif
         @endif
     </div>
 </th>
+@endforeach

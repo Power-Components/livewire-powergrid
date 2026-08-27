@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true)
+
 <svg
     {{ $attributes->merge(['class' => 'pointer-events-none']) }}
     fill="none"

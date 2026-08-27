@@ -45,25 +45,12 @@ it('properly displays record count and navigates', function () {
     };
 
     Livewire::test($component::class)
-        // Default "full" showRecordCount
         ->assertSeeInOrder(['Showing', '1', 'to', '10', 'of', '15', 'Results'])
-
-        // "short" showRecordCount
-        ->set('setUp.footer.recordCount', 'short')
-        ->assertSeeInOrder(['1', '-', '10', '|', '15'])
-
-        // "min" showRecordCount
-        ->set('setUp.footer.recordCount', 'min')
-        ->assertSeeInOrder(['1', '10'])
-
-        // Per page changes
-        ->set('setUp.footer.perPage', 11)
-        ->assertSeeInOrder(['1', '11'])
-        ->set('setUp.footer.perPage', 0) // All
+        ->set('setUp.footer.perPage', 25)
+        ->assertSee('Dish-Item-15')
+        ->set('setUp.footer.perPage', 0)
         ->assertSeeInOrder(['1', '15'])
         ->assertSee('Dish-Item-15')
-
-        // Navigation
         ->set('setUp.footer.perPage', 10)
         ->assertSee('Dish-Item-01')
         ->assertDontSee('Dish-Item-11')
@@ -77,6 +64,54 @@ it('properly displays record count and navigates', function () {
         ->assertSee('Dish-Item-11')
         ->assertDontSee('Dish-Item-01');
 });
+
+it('renders the configured record count mode', function (string $mode, array $expected) {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-record-count';
+
+        public string $recordCountMode = 'full';
+
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 15; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish-Item-'.str_pad($i, 2, '0', STR_PAD_LEFT)];
+            }
+
+            return collect($data);
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::footer()
+                    ->showPerPage(10)
+                    ->showRecordCount($this->recordCountMode),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class, ['recordCountMode' => $mode])
+        ->assertSeeInOrder($expected);
+})->with([
+    'full' => ['full', ['Showing', '1', 'to', '10', 'of', '15', 'Results']],
+    'short' => ['short', ['1', '-', '10', '|', '15']],
+    'min' => ['min', ['1', '10']],
+]);
 
 it('sanitizes pageName', function (string $pageNameCandidate, string $result) {
     $component = new class() extends PowerGridComponent

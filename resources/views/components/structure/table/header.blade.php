@@ -57,19 +57,17 @@
             @include(theme_view('table.checkbox-all'), ['__partial' => $__partial])
         @endif
 
-        @foreach ($columns as $column)
-            @include(theme_view('table.cols'), [
-                'column'         => $column,
-                'enabledFilters' => $enabledFilters,
-                'setUp'          => $setUp,
-                'tableName'      => $tableName,
-                'multiSort'      => $__partial->multiSort,
-                'sortArray'      => $__partial->sortArray,
-                'sortField'      => $__partial->sortField,
-                'sortDirection'  => $__partial->sortDirection,
-                '__partial'      => $__partial,
-            ])
-        @endforeach
+        @include(theme_view('table.cols'), [
+            'columns' => $columns,
+            'enabledFilters' => $enabledFilters,
+            'setUp' => $setUp,
+            'tableName' => $tableName,
+            'multiSort' => $__partial->multiSort,
+            'sortArray' => $__partial->sortArray,
+            'sortField' => $__partial->sortField,
+            'sortDirection' => $__partial->sortDirection,
+            '__partial' => $__partial,
+        ])
 
         @if (isset($actions) && count($actions))
             @php

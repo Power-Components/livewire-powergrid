@@ -4,7 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Support\Synth;
 
 use Closure;
 use Livewire\Mechanisms\HandleComponents\Synthesizers\Synth;
-use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\Turbine\Column;
 use PowerComponents\Turbine\Contracts\Definition;
 use ReflectionClass;
 
@@ -95,8 +95,14 @@ class PowerGridWireableSynth extends Synth
     {
         $data = get_object_vars($target);
 
-        foreach (self::TRANSIENT[get_class($target)] ?? [] as $field) {
-            unset($data[$field]);
+        // Match by instanceof so subclasses (e.g. LivewirePowerGrid\Column
+        // extends Turbine\Column) inherit the transient field list.
+        foreach (self::TRANSIENT as $class => $fields) {
+            if ($target instanceof $class) {
+                foreach ($fields as $field) {
+                    unset($data[$field]);
+                }
+            }
         }
 
         return array_filter($data, static fn ($value): bool => ! $value instanceof Closure);

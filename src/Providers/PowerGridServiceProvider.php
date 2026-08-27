@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Blaze\Blaze;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, GenerateThemeMetaCommand, PublishCommand};
@@ -49,6 +50,7 @@ class PowerGridServiceProvider extends ServiceProvider
 
         $this->publishViews();
         $this->publishConfigs();
+        $this->optimizeIconComponents();
         $this->registerLiteComponents();
         $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', $this->packageName);
 
@@ -97,6 +99,20 @@ class PowerGridServiceProvider extends ServiceProvider
         Blade::anonymousComponentPath(
             __DIR__.'/../../resources/views/tests',
             'tests'
+        );
+    }
+
+    private function optimizeIconComponents(): void
+    {
+        if (! $this->app->bound('blaze')) {
+            return;
+        }
+
+        Blaze::optimize()->in(
+            __DIR__.'/../../resources/views/components/icons',
+            compile: true,
+            memo: true,
+            fold: true,
         );
     }
 

@@ -26,15 +26,7 @@ trait RespondsWithData
 
     protected function prepareForData(Request $request): void
     {
-        foreach ($this->setUp() as $setUp) {
-            $name = is_object($setUp) ? data_get($setUp, 'name') : null;
-
-            if (is_string($name)) {
-                $this->setUp[$name] = $setUp;
-            }
-        }
-
-        $this->columns = $this->columns();
+        $this->rebindServerOwnedState();
 
         $this->applyDefaultFilters();
 

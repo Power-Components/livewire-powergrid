@@ -31,6 +31,16 @@ trait Filter
 
     public bool $showFilters = false;
 
+    public bool $filterPanelLoaded = false;
+
+    /**
+     * Inline filter dataSource closures are resolved a single time. The inline
+     * filter row is rendered with `wire:partial.ignore`, so later interactions
+     * (sort, search, pagination) reuse the already-rendered <option> list
+     * instead of re-running the closure query on every request.
+     */
+    public bool $inlineFiltersResolved = false;
+
     public bool $emitClearFiltersEvent = true;
 
     public function emitClearFiltersEvent(bool $emit): void
@@ -49,7 +59,7 @@ trait Filter
     {
         $filterManager = new FilterManager();
         $applied = $filterManager->applyDefaults(
-            declaredFilters: $this->filters(),
+            declaredFilters: $this->declaredFilters(),
             columns: $this->columns,
             /** @phpstan-ignore assign.propertyType */
             filters: $this->filters,
@@ -66,7 +76,7 @@ trait Filter
      */
     public function clearFilter(string $field = ''): void
     {
-        collect($this->filters())
+        collect($this->declaredFilters())
             ->each(function ($filter) use ($field) {
                 $extraFieldsToClear = [];
 
@@ -261,7 +271,7 @@ trait Filter
             }
         }
 
-        foreach ($this->filters() as $filter) {
+        foreach ($this->declaredFilters() as $filter) {
             $key = data_get($filter, 'key');
             $key = is_string($key) ? $key : '';
             $field = data_get($filter, 'field');
@@ -339,12 +349,27 @@ trait Filter
     {
         $this->showFilters = ! $this->showFilters;
 
+        if ($this->showFilters) {
+            $this->filterPanelLoaded = true;
+        }
+
         $this->renderOutsideFiltersPartial();
     }
 
     public function updatedShowFilters(): void
     {
+        if ($this->showFilters) {
+            $this->filterPanelLoaded = true;
+        }
+
         $this->renderOutsideFiltersPartial();
+    }
+
+    public function loadFilterPanel(): void
+    {
+        $this->filterPanelLoaded = true;
+
+        $this->renderOutsideFiltersPartial(includeGrid: false, openFilterPanel: true);
     }
 
     public function filterPosition(): string
@@ -383,7 +408,7 @@ trait Filter
 
     public function filterPanelColumns(): int
     {
-        $count = count($this->filters());
+        $count = count($this->declaredFilters());
 
         return match (true) {
             $count > 6 => 3,
@@ -396,7 +421,7 @@ trait Filter
      * Filter-bearing columns for dropdown/flyout panels.
      * Uses Filter::order() when set, otherwise the filters() array index.
      *
-     * @param  iterable<mixed>|null  $columns
+     * @param  iterable<array-key, mixed>|null  $columns
      * @return Collection<int, mixed>
      */
     public function sortedFilterPanelColumns(?iterable $columns = null): Collection
@@ -409,7 +434,7 @@ trait Filter
                 ->filter(fn ($column) => filled(data_get($column, 'filters')));
         }
 
-        $declarationOrder = collect($this->filters())
+        $declarationOrder = collect($this->declaredFilters())
             ->values()
             ->mapWithKeys(function ($filter, int $index): array {
                 $field = data_get($filter, 'field');
@@ -420,7 +445,9 @@ trait Filter
 
         return $source
             ->sortBy(function ($column) use ($declarationOrder): string {
-                $declared = $declarationOrder->get((string) data_get($column, 'filters.field'), PHP_INT_MAX);
+                $field = data_get($column, 'filters.field');
+                $fieldKey = is_string($field) || is_numeric($field) ? (string) $field : '';
+                $declared = $declarationOrder->get($fieldKey, PHP_INT_MAX);
                 $explicit = data_get($column, 'filters.order');
                 $order = is_numeric($explicit) ? (int) $explicit : $declared;
 
@@ -627,22 +654,20 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
-    public function renderOutsideFiltersPartial(): void
+    public function renderOutsideFiltersPartial(bool $includeGrid = true, bool $openFilterPanel = false): void
     {
         if (! function_exists('partials')) {
             return;
         }
 
-        $enabledFilters = $this->enabledFilters;
-        $this->resolveFilters();
-        $this->enabledFilters = $enabledFilters;
+        $this->resolveFiltersForRender();
 
         partials($this)
             ->partial("pg-enabled-filters-{$this->tableName}", theme_view('header.enabled-filters'), [
                 'enabledFilters' => $this->enabledFilters,
             ]);
 
-        if (! isset($this->setUp['detail'])) {
+        if ($includeGrid) {
             $this->renderGridPartials();
         }
 
@@ -655,17 +680,22 @@ trait Filter
                 ->partial("pg-filter-trigger-{$this->tableName}", theme_view('header.filters'));
         }
 
-        if (isset($this->setUp['detail'])) {
-            return;
-        }
-
         partials($this)
-            ->partial("pg-filters-{$this->tableName}", theme_view($this->filterPanelView()));
+            ->partial("pg-filters-{$this->tableName}", theme_view($this->filterPanelView()), [
+                'openOnLoad' => $openFilterPanel,
+            ]);
+    }
+
+    protected function resolveFiltersForRender(): void
+    {
+        $enabledFilters = $this->enabledFilters;
+        $this->resolveFilters();
+        $this->enabledFilters = $enabledFilters;
     }
 
     protected function resolveFilters(): void
     {
-        $filters = collect($this->filters());
+        $filters = collect($this->declaredFilters());
 
         if ($filters->isEmpty()) {
             return;
@@ -678,36 +708,64 @@ trait Filter
                 /** @var Column $column */
                 if (data_get($column, 'field') === data_get($filter, 'column') ||
                     data_get($column, 'dataField') === data_get($filter, 'column')) {
+                    // dataSource closures are resolved on the shared (memoized)
+                    // filter instance, so repeated resolveFilters() calls within a
+                    // request reuse the resolved options instead of re-querying.
+                    // FilterHandler ignores dataSource, so mutating it here is safe.
                     if (data_get($filter, 'dataSource') instanceof Closure) {
-                        $depends = (array) data_get($filter, 'depends');
-                        $closure = data_get($filter, 'dataSource');
+                        if ($this->usesFilterPanel() && ! $this->filterPanelLoaded) {
+                            $pending = is_object($filter) ? clone $filter : $filter;
+                            data_forget($pending, 'dataSource');
+                            data_forget($pending, 'builder');
+                            data_forget($pending, 'collection');
+                            data_set($column, 'filters', (array) $pending);
+                            $columns[$index] = $column;
 
-                        if ($depends && $this->filters) {
-                            $depends = collect($depends)
-                                ->mapWithKeys(function ($field) {
-                                    /** @var string $field */
-                                    return [$field => data_get($this->filters, 'select.'.$field)];
-                                });
+                            continue;
                         }
 
-                        data_forget($filter, 'dataSource');
-                        data_set($filter, 'dataSource', $closure($depends));
+                        $depends = (array) data_get($filter, 'depends');
+
+                        // Inline filters render once (wire:partial.ignore); after the
+                        // first resolution reuse the rendered options instead of
+                        // re-running the closure on later interactions. Dependent
+                        // filters must still re-resolve when their parent changes.
+                        if ($this->usesFilterInline() && ! $depends && $this->inlineFiltersResolved) {
+                            data_set($filter, 'dataSource', []);
+                        } else {
+                            $closure = data_get($filter, 'dataSource');
+
+                            if ($depends && $this->filters) {
+                                $depends = collect($depends)
+                                    ->mapWithKeys(function ($field) {
+                                        /** @var string $field */
+                                        return [$field => data_get($this->filters, 'select.'.$field)];
+                                    });
+                            }
+
+                            data_set($filter, 'dataSource', $closure($depends));
+                        }
                     }
 
-                    data_forget($filter, 'builder');
-                    data_forget($filter, 'collection');
+                    // Build the column's filter payload from a copy: stripping the
+                    // builder/collection closures (not serializable, and needed only
+                    // for query building) must not mutate the shared filter instance
+                    // that FilterHandler still reads via declaredFilters().
+                    $columnFilter = is_object($filter) ? clone $filter : $filter;
+                    data_forget($columnFilter, 'builder');
+                    data_forget($columnFilter, 'collection');
 
-                    /** @var object|string $filter */
-                    if (! is_array($filter) && method_exists($filter, 'execute')) {
-                        $filter = $filter->execute();
+                    /** @var object|string $columnFilter */
+                    if (! is_array($columnFilter) && method_exists($columnFilter, 'execute')) {
+                        $columnFilter = $columnFilter->execute();
                     }
 
-                    data_set($column, 'filters', (array) $filter);
+                    data_set($column, 'filters', (array) $columnFilter);
 
                     /** @var string $filterField */
-                    $filterField = data_get($filter, 'field');
+                    $filterField = data_get($columnFilter, 'field');
                     /** @var string $filterKey */
-                    $filterKey = data_get($filter, 'key');
+                    $filterKey = data_get($columnFilter, 'key');
 
                     if (isset($this->filters[$filterField])
                         && in_array($filterField, array_keys($this->filters[$filterKey]))
@@ -720,9 +778,9 @@ trait Filter
                         ];
                     }
 
-                    if (data_get($filter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
-                        filled(data_get($filter, 'attributes'))) {
-                        $attributes = array_values((array) data_get($filter, 'attributes'));
+                    if (data_get($columnFilter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
+                        filled(data_get($columnFilter, 'attributes'))) {
+                        $attributes = array_values((array) data_get($columnFilter, 'attributes'));
 
                         foreach ($attributes as $value) {
                             if (is_string($value) && str_contains($value, 'filters.') && is_null(data_get($this->filters, str($value)->after('filters.')))) {
@@ -737,6 +795,10 @@ trait Filter
         });
 
         $this->columns = $columns;
+
+        if ($this->usesFilterInline()) {
+            $this->inlineFiltersResolved = true;
+        }
     }
 
     public function addEnabledFilters(string $field, ?string $label): void
@@ -807,7 +869,7 @@ trait Filter
 
         $columns = $this->listColumnForQueryString();
 
-        foreach (Arr::dot($this->filters()) as $filter) {
+        foreach (Arr::dot($this->declaredFilters()) as $filter) {
             /** @var FilterBase $filter */
             /** @var string $field */
             $field = $filter->field;

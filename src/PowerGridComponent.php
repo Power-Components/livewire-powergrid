@@ -39,6 +39,7 @@ class PowerGridComponent extends Component implements Context
 {
     use Concerns\Base;
     use Concerns\Checkbox;
+    use Concerns\Detail;
     use Concerns\Filter;
     use Concerns\FilterBuilder;
     use Concerns\HasActions;
@@ -279,10 +280,6 @@ class PowerGridComponent extends Component implements Context
 
     public function boot(): void
     {
-        if (empty($this->columns)) {
-            $this->columns = $this->declaredColumns();
-        }
-
         /** @var string $themeClass */
         $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
@@ -299,6 +296,21 @@ class PowerGridComponent extends Component implements Context
         app()->instance('powergrid.theme', $themeInstance);
     }
 
+    public function hydrate(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
+    public function updatedColumns(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
+    public function updatedSetUp(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
     /**
      * @throws TableNameCannotCalledDefault
      * @throws Exception|InvalidArgumentException
@@ -309,19 +321,10 @@ class PowerGridComponent extends Component implements Context
 
         $this->readyToLoad = ! $this->deferLoading;
 
-        foreach ($this->setUp() as $setUp) {
-            $name = is_object($setUp) ? data_get($setUp, 'name') : null;
-            if (is_string($name)) {
-                $this->setUp[$name] = $setUp;
-            }
-        }
+        $this->rebindServerOwnedState();
 
         $this->throwTableName();
         $this->throwColumnAction();
-
-        if (empty($this->columns)) {
-            $this->columns = $this->declaredColumns();
-        }
 
         $this->restoreState();
 
@@ -367,12 +370,14 @@ class PowerGridComponent extends Component implements Context
             return;
         }
 
-        $enabledFilters = $this->enabledFilters;
-        $this->resolveFilters();
-        $this->enabledFilters = $enabledFilters;
-        unset($this->hasColumnFilters);
+        if ($this->usesFilterInline()) {
+            $this->resolveFiltersForRender();
+            $this->resolvePlugins();
+        } else {
+            $this->withoutFilterInstantiation(fn () => $this->resolvePlugins());
+        }
 
-        $this->resolvePlugins();
+        unset($this->hasColumnFilters);
 
         $partials = partials($this);
 
@@ -630,11 +635,6 @@ class PowerGridComponent extends Component implements Context
                 return [$property => $this->{$property}];
             })
             ->all();
-    }
-
-    public function toggleDetail(string $rowId): void
-    {
-        $this->dispatch('pg-toggle-detail-'.$this->tableName.'-'.$rowId, collapsed: null);
     }
 
     #[Computed]

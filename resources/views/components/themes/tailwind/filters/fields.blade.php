@@ -10,13 +10,28 @@
     $__partial = $__partial ?? (isset($this) ? $this : null);
     $tableName = $tableName ?? $__partial->tableName;
 
+    if (blank($gridClass) && $__partial) {
+        $gridClass = $__partial->usesFilterFlyout()
+            ? 'grid grid-cols-1 gap-4'
+            : match ($__partial->filterPanelColumns()) {
+                3 => 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
+                2 => 'grid grid-cols-1 md:grid-cols-2 gap-4',
+                default => 'grid grid-cols-1 gap-4',
+            };
+    }
+
     $sortedFilters = $__partial
         ? $__partial->sortedFilterPanelColumns($filtersFromColumns)
         : collect($filtersFromColumns ?? [])->filter(fn ($column) => filled(data_get($column, 'filters')));
 @endphp
 
-<div class="{{ $gridClass }}">
-    @foreach ($sortedFilters as $column)
+<div
+    class="{{ $gridClass }}"
+    wire:partial="pg-filter-fields-{{ $tableName }}"
+    wire:key="pg-filter-fields-{{ $tableName }}"
+>
+    @if ($__partial && $__partial->filterPanelLoaded)
+        @foreach ($sortedFilters as $column)
         @php
             $filter = data_get($column, 'filters');
             $title = data_get($column, 'title');
@@ -75,5 +90,6 @@
                 />
             @endif
         </div>
-    @endforeach
+        @endforeach
+    @endif
 </div>

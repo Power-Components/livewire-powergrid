@@ -9,6 +9,9 @@
 @php
     $__partial = $__partial ?? $this;
     $tableName = $tableName ?? $__partial->tableName;
+    $rowRenderer = RowRenderer::canRenderDirect($__partial) ? new RowRenderer($__partial) : null;
+    $responsive = isset($__partial->setUp['responsive']);
+    $hasDetail = isset($__partial->setUp['detail']);
 @endphp
 <tbody
     wire:partial="pg-tbody-{{ $tableName }}"
@@ -33,103 +36,60 @@
                 'isHeader' => true,
             ])
 
-            @if (isset($__partial->setUp['detail']))
-                @foreach ($__partial->records as $row)
-                    @php
-                        $rowId = data_get($row, $__partial->realPrimaryKey);
-                        $class = theme('table.layout.tr');
-                        if ($loop->odd) {
-                            $class .= ' ' . theme('table.layout.tr_striped');
-                        } else {
-                            $class .= ' ' . theme('table.layout.tr_not_striped');
-                        }
-                    @endphp
+            @foreach ($__partial->records as $row)
+                @php
+                    $rowId = data_get($row, $__partial->realPrimaryKey);
+                    $class = theme('table.layout.tr');
+                    if ($loop->odd) {
+                        $class .= ' ' . theme('table.layout.tr_striped');
+                    } else {
+                        $class .= ' ' . theme('table.layout.tr_not_striped');
+                    }
+                @endphp
 
-                    <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
-                        'wire:key' => 'row-' . $rowId,
-                        'data-pg-row-id' => $rowId,
-                        'class' => $class,
-                    ])) }}>
-                        @if (RowRenderer::canRenderDirect($__partial))
-                            {!! (new RowRenderer($__partial))->render($row, $loop->index + 1, null, null, $rowId) !!}
-                        @else
-                            @include(theme_view('table.row'), [
-                                'rowIndex' => $loop->index + 1,
-                                '__partial' => $__partial,
-                            ])
-                        @endif
-                    </tr>
-
-                    @php
-                        $hasDetailView = (bool) data_get(
-                            collect($row->__turbine_rules)->where('apply', true)->last(),
-                            'detailView',
-                        );
-
-                        if ($hasDetailView) {
-                            $detailView = data_get($row->__turbine_rules, '0.detailView');
-                            $rulesValues = data_get($row->__turbine_rules, '0.options', []);
-                        } else {
-                            $detailView = data_get($__partial->setUp, 'detail.view');
-                            $rulesValues = data_get($__partial->setUp, 'detail.options', []);
-                        }
-                    @endphp
-
-                    @php
-                        if ($row instanceof stdClass) {
-                            $row = collect($row);
-                        }
-                    @endphp
-
-                    <livewire:powergrid-detail
-                        wire:key="powergrid-detail-{{ $rowId }}"
-                        :view="$detailView"
-                        :options="$rulesValues"
-                        :row-id="$rowId"
-                        tr-class="{{ $class }}"
-                        :row="(object) $row->toArray()"
-                        :single-expand="data_get($__partial->setUp, 'detail.singleExpand', false)"
-                        :table-name="$tableName"
-                    />
-
-                    @includeWhen(isset($__partial->setUp['responsive']),
-                        theme_view('table.responsive-container'), [
+                <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
+                    'wire:key' => 'row-' . $rowId,
+                    'data-pg-row-id' => $rowId,
+                    'class' => $class,
+                ])) }}>
+                    @if ($rowRenderer)
+                        {!! $rowRenderer->render($row, $loop->index + 1, null, null, $rowId) !!}
+                    @else
+                        @include(theme_view('table.row'), [
+                            'rowIndex' => $loop->index + 1,
                             '__partial' => $__partial,
                         ])
-                @endforeach
-            @else
-                @foreach ($__partial->records as $row)
+                    @endif
+                </tr>
+
+                @if ($hasDetail && $__partial->isDetailOpen($rowId))
                     @php
-                        $rowId = data_get($row, $__partial->realPrimaryKey);
-                        $class = theme('table.layout.tr');
-                        if ($loop->odd) {
-                            $class .= ' ' . theme('table.layout.tr_striped');
-                        } else {
-                            $class .= ' ' . theme('table.layout.tr_not_striped');
-                        }
+                        $detail = $__partial->detailForRow($row);
                     @endphp
+                    @if (filled($detail['view']))
+                        <tr
+                            wire:key="powergrid-detail-{{ $rowId }}"
+                            class="{{ $class }}"
+                        >
+                            <td colspan="999">
+                                @include($detail['view'], [
+                                    'id' => $rowId,
+                                    'options' => $detail['options'] ?? [],
+                                    'row' => $row,
+                                ])
+                            </td>
+                        </tr>
+                    @endif
+                @endif
 
-                    <tr {{ $__partial->rowAttributes($row, new \Illuminate\View\ComponentAttributeBag([
-                        'wire:key' => 'row-' . $rowId,
-                        'data-pg-row-id' => $rowId,
-                        'class' => $class,
-                    ])) }}>
-                        @if (RowRenderer::canRenderDirect($__partial))
-                            {!! (new RowRenderer($__partial))->render($row, $loop->index + 1, null, null, $rowId) !!}
-                        @else
-                            @include(theme_view('table.row'), [
-                                'rowIndex' => $loop->index + 1,
-                                '__partial' => $__partial,
-                            ])
-                        @endif
-                    </tr>
-
-                    @includeWhen(isset($__partial->setUp['responsive']),
-                        theme_view('expand-container'), [
-                            '__partial' => $__partial,
-                        ])
-                @endforeach
-            @endif
+                @if ($responsive)
+                    @if ($rowRenderer)
+                        {!! $rowRenderer->renderExpandRow($rowId) !!}
+                    @else
+                        @include(theme_view('table.responsive-container'), ['__partial' => $__partial])
+                    @endif
+                @endif
+            @endforeach
 
             @includeWhen($__partial->footerTotalColumn, theme_view('table.summarize'), [
                 '__partial' => $__partial,

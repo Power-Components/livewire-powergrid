@@ -17,10 +17,10 @@
             {!! $this->renderPluginZone('header') !!}
             <div class="relative flex flex-1 min-w-0 flex-row items-center gap-2">
                 {!! $this->renderPluginZone('header.filter') !!}
-                @if ($this->usesFilterFlyout() && count($this->filters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
+                @if ($this->usesFilterFlyout() && count($this->declaredFilters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
                     @includeIf(theme_view('header.filters'))
                 @endif
-                @if ($this->usesFilterDropdown() && count($this->filters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
+                @if ($this->usesFilterDropdown() && count($this->declaredFilters()) > 0 && ! $this->filterBuilderHidesDefaultFilters())
                     @include(theme_view($this->filterPanelView()), [
                         '__partial' => $this,
                         'tableName' => $tableName,
