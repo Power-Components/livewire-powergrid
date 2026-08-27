@@ -1,40 +1,32 @@
 @props([
     'column' => null,
+    'columns' => null,
     'enabledFilters' => null,
     'actions' => null,
     'dataField' => null,
     '__partial' => null,
 ])
+@use('PowerComponents\LivewirePowerGrid\Support\ColumnViewModel')
+@use('PowerComponents\Turbine\Components\SetUp\Responsive')
 @php
     $__partial = $__partial ?? $this;
     $setUp = $__partial->setUp;
+    $headerColumns = $column !== null
+        ? [$column]
+        : ($columns ?? $__partial->columns);
+@endphp
+@foreach ($headerColumns as $column)
+@php
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
-    $isFixedOnResponsive = false;
-
-    if (isset($setUp['responsive'])) {
-        if (in_array($field, data_get($setUp, 'responsive.fixedColumns'))) {
-            $isFixedOnResponsive = true;
-        }
-
-        if (
-            data_get($column, 'isAction') &&
-            in_array(
-                \PowerComponents\Turbine\Components\SetUp\Responsive::ACTIONS_COLUMN_NAME,
-                data_get($setUp, 'responsive.fixedColumns'),
-            )
-        ) {
-            $isFixedOnResponsive = true;
-        }
-
-        if (data_get($column, 'fixedOnResponsive')) {
-            $isFixedOnResponsive = true;
-        }
-    }
+    $isFixedOnResponsive = isset($setUp['responsive'])
+        && Responsive::isColumnFixed($column, (array) data_get($setUp, 'responsive.fixedColumns', []));
 
     $sortOrder = isset($setUp['responsive'])
-        ? data_get($setUp, "responsive.sortOrder.{$field}", null)
+        ? Responsive::columnSortOrder($column, (array) data_get($setUp, 'responsive.sortOrder', []))
         : null;
+
+    $alignClasses = ColumnViewModel::alignmentClasses(data_get($column, 'align'));
 @endphp
 <th wire:key="cols-{{ $field }}-{{ $__partial->tableName }}"
     x-data
@@ -54,11 +46,19 @@
         'width: max-content !important',
     ])
 >
-    <div class="{{ theme('cols.div') }}">
+    <div @class([theme('cols.div'), $alignClasses])>
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
-            @include($__partial->showSortIcon($field), ['attributes' => new \Illuminate\View\ComponentAttributeBag(['width' => 16, 'height' => 16])])
+            @php $sortIcon = $__partial->sortIconComponent($field); @endphp
+            @if ($sortIcon === 'chevron-up')
+                <x-livewire-powergrid::icons.chevron-up width="16" height="16" />
+            @elseif ($sortIcon === 'chevron-down')
+                <x-livewire-powergrid::icons.chevron-down width="16" height="16" />
+            @else
+                <x-livewire-powergrid::icons.chevron-up-down width="16" height="16" />
+            @endif
         @endif
     </div>
 </th>
+@endforeach

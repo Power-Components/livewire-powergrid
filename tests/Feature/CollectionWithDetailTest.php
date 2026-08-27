@@ -42,6 +42,7 @@ it('collection detail', function () {
 
     Livewire::test($component::class)
         ->assertSee('Name 1')
-        ->call('toggleDetail', 2)
-        ->assertDispatched('pg-toggle-detail-test-collection-detail-2');
+        ->assertDontSee('Id 2')
+        ->call('toggleDetail', '2')
+        ->assertSee('Id 2');
 });

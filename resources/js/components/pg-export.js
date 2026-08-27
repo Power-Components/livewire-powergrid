@@ -3,14 +3,13 @@ import pgDropdown from './pg-dropdown'
 export default () => ({
     ...pgDropdown(),
 
-    countChecked: [],
-
-    init() {
-        this.countChecked = this.$wire.entangle('checkboxValues')
+    count() {
+        const checked = this.$wire.get('checkboxValues')
+        return Array.isArray(checked) ? checked.length : 0
     },
 
     isEmpty() {
-        return this.countChecked.length === 0
+        return this.count() === 0
     },
 
     disabledClass() {
@@ -18,6 +17,6 @@ export default () => ({
     },
 
     countLabel() {
-        return '(' + this.countChecked.length + ')'
+        return '(' + this.count() + ')'
     },
 })

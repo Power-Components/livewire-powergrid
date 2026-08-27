@@ -22,8 +22,8 @@
     "livewire/livewire": "^4.0",
     "laravel/prompts": "^0.1|^0.2|^0.3",
     "livewire/blaze": "^1.0",
-    "power-components/partials": "^0.1.0",
-    "power-components/turbine": "^0.4.0"
+    "power-components/partials": "^0.2.0",
+    "power-components/turbine": "^0.8.0"
   },
   "conflict": {
     "laravel/framework": "<12.0",
@@ -36,7 +36,8 @@
     "larastan/larastan": "^3.10",
     "laradumps/laradumps": "^5.0",
     "laravel/scout": "^11.3",
-    "composer/composer": "^2.10"
+    "composer/composer": "^2.10",
+    "openspout/openspout": "^5.0"
   },
   "suggest": {
     "openspout/openspout": "Required to export XLS and CSV (supports v4 and v5)"

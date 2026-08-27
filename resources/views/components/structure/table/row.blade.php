@@ -5,6 +5,8 @@
     '__partial' => null,
 ])
 
+@use('PowerComponents\LivewirePowerGrid\Support\ColumnViewModel')
+
 @php
     $__partial = $__partial ?? $this;
 @endphp
@@ -64,11 +66,14 @@
                 ? data_get($column, 'contentClasses')[$content]
                 : '';
         }
+
+        $alignClasses = ColumnViewModel::alignmentClasses(data_get($column, 'align'));
     @endphp
     <td
         @class([
             data_get($column, 'isAction') ? theme('table.layout.td_actions') : theme('table.layout.td'),
             data_get($column, 'bodyClass'),
+            $alignClasses,
         ])
         @style([
             'display:none' => data_get($column, 'hidden'),
@@ -90,7 +95,7 @@
 
                     <div wire:replace.self>
                         @if (data_get($column, 'isAction'))
-                            <div class="{{ theme('table.layout.body.td.actions_wrapper') }}">
+                            <div class="{{ theme('table.layout.body.td.actions_wrapper') }} {{ $alignClasses }}">
                                 {!! $__partial->renderActions($row) !!}
                             </div>
                         @endif

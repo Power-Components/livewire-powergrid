@@ -7,8 +7,16 @@ use Illuminate\View\ComponentAttributeBag;
 class Boolean
 {
     /** @return array{selectAttributes: ComponentAttributeBag} */
-    public function __invoke(string $field, string $title): array
+    public function __invoke(string $field, string $title, bool $deferred = false): array
     {
+        if ($deferred) {
+            return [
+                'selectAttributes' => new ComponentAttributeBag([
+                    'wire:model' => 'draftFilters.boolean.'.$field,
+                ]),
+            ];
+        }
+
         return [
             'selectAttributes' => new ComponentAttributeBag([
                 'wire:model' => 'filters.boolean.'.$field,

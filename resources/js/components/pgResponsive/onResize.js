@@ -57,36 +57,65 @@ function getItemsToHide(element, tableWidth) {
 
 function hideItems(element, items) {
     for (const item of items) {
-        element.querySelectorAll(`tbody tr:not([expand]) td:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
+        element.querySelectorAll(`tbody tr[data-pg-row-id] td:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
         element.querySelectorAll(`thead tr th:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
+        element.querySelectorAll(`tbody tr[data-pg-inline-filters] td:nth-child(${item})`).forEach((el) => { el.classList.add('hidden') })
     }
 }
 
-function fillTableExpand(element, hideItems) {
-    if (!element.querySelectorAll('table tr[expand] td div').length) return
+function findExpandContainer(row) {
+    const rowId = row.getAttribute('data-pg-row-id')
+    const root = row.closest('table') || row.parentElement
 
-    for (const expands of element.querySelectorAll('table tr[expand] td div')) {
+    if (rowId !== null && root) {
+        const escaped = (typeof CSS !== 'undefined' && CSS.escape) ? CSS.escape(rowId) : rowId.replace(/"/g, '\\"')
+        const expand = root.querySelector(`tr[expand][data-expand-for="${escaped}"]`)
+
+        if (expand) {
+            return expand.querySelector('td div')
+        }
+    }
+
+    let sibling = row.nextElementSibling
+
+    while (sibling) {
+        if (sibling.hasAttribute('expand')) {
+            return sibling.querySelector('td div')
+        }
+
+        sibling = sibling.nextElementSibling
+    }
+
+    return null
+}
+
+function fillTableExpand(element, hideItems) {
+    const expandDivs = element.querySelectorAll('table tr[expand] td div')
+
+    if (!expandDivs.length) return
+
+    for (const expands of expandDivs) {
         expands.innerHTML = ""
     }
 
     if (!hideItems.length) return
 
+    const rows = element.querySelectorAll('table tbody tr[data-pg-row-id]')
+
     for (const hideItem of hideItems) {
-        const rows = element.querySelectorAll('table tbody tr:not([expand])')
+        let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`)?.textContent ?? ''
+
+        if (rowName.length) {
+            rowName += ':'
+        }
 
         for (const row of rows) {
-            const nextRow = row.nextElementSibling
-            const expandContainer = nextRow?.hasAttribute('expand') ? nextRow.querySelector('td div') : null
+            const expandContainer = findExpandContainer(row)
 
             if (!expandContainer) continue
 
-            let rowName = element.querySelector(`table thead tr th:nth-child(${hideItem}) span[data-value]`).textContent  ?? ''
-
             const sourceCell = row.querySelector(`td:nth-child(${hideItem})`)
 
-            if (rowName.length) {
-                rowName += ':'
-            }
             if (!expandContainer.querySelector(`div[data-expand-item-${hideItem}]`)) {
                 const item = document.createElement('div')
                 item.className = 'responsive-row-expand-item-container'

@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true)
+
 <svg
     {{ $attributes }}
     viewBox="0 0 20 20"

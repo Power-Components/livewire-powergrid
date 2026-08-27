@@ -6,6 +6,10 @@ return [
         'soft_deletes' => 'Deleted records',
         'export' => 'Export',
         'filter' => 'Filter',
+        'filters_title' => 'Filters',
+        'apply_filters' => 'Apply filters',
+        'apply_columns' => 'Apply columns',
+        'reset_filters' => 'Reset',
         'clear_all_filters' => 'Clear all',
         'close' => 'Close',
     ],
@@ -17,6 +21,7 @@ return [
         'all' => 'All',
         'selected' => 'Selected',
         'filtered' => 'Filtered',
+        'active_filters' => 'Active filters',
     ],
     'placeholders' => [
         'search' => 'Search...',

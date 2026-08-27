@@ -23,7 +23,14 @@
 
             @if($sortable)
                 <span class="ml-1 inline-flex">
-                    @include($sortIcon())
+                    @php $icon = (string) str($sortIcon())->afterLast('.'); @endphp
+                    @if ($icon === 'chevron-up')
+                        <x-livewire-powergrid::icons.chevron-up />
+                    @elseif ($icon === 'chevron-down')
+                        <x-livewire-powergrid::icons.chevron-down />
+                    @else
+                        <x-livewire-powergrid::icons.chevron-up-down />
+                    @endif
                 </span>
             @endif
         </div>

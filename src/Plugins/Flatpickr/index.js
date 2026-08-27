@@ -10,12 +10,16 @@ document.addEventListener('alpine:init', () => {
         type: null,
         element: null,
         selectedDates: null,
+        deferred: false,
+        filtersProperty: 'filters',
         async init() {
             const raw = this.$el.dataset.pgParams;
             const params = raw ? JSON.parse(raw) : {};
 
             this.dataField = params.dataField;
             this.tableName = params.tableName;
+            this.deferred = params.deferred ?? false;
+            this.filtersProperty = params.filtersProperty ?? 'filters';
             this.label = params.label ?? null;
             this.locale = params.locale ?? {
                 locale: 'default',
@@ -53,6 +57,28 @@ document.addEventListener('alpine:init', () => {
                 }
             })
 
+            window.addEventListener(`pg:restore_flatpickr::${this.tableName}`, async () => {
+                if (!this.$refs.rangeInput || !this.element) {
+                    return
+                }
+
+                const formatted = await this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
+
+                this.selectedDates = formatted
+
+                if (!formatted) {
+                    this.element.setDate([])
+
+                    return
+                }
+
+                const dates = String(formatted)
+                    .split(' to ')
+                    .map((date) => this.element.parseDate(date))
+
+                this.element.setDate(dates)
+            })
+
 
 
             const options = this.getOptions()
@@ -60,7 +86,7 @@ document.addEventListener('alpine:init', () => {
             if(this.$refs.rangeInput && typeof flatpickr != "undefined") {
                 this.element = flatpickr(this.$refs.rangeInput, options);
 
-                this.selectedDates = this.$wire.get(`filters.${this.type}.${this.dataField}.formatted`)
+                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
 
                 this.element.setDate(this.selectedDates)
             }
@@ -69,6 +95,10 @@ document.addEventListener('alpine:init', () => {
             const options = {
                 mode: 'range',
                 defaultHour: 0,
+                // Portaled to <body> so overflow-y-auto filter panels and
+                // table cells do not clip the calendar. click.outside on the
+                // dropdown ignores `.flatpickr-calendar` for the same reason.
+                static: false,
                 ...this.locale,
                 ...this.customConfig
             }
@@ -90,6 +120,11 @@ document.addEventListener('alpine:init', () => {
                 selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
 
                 if (selectedDates.length > 0 && (this.selectedDates !== dateStr)) {
+                    // Panel modes defer to Apply: the draftFilters wire:model captures
+                    // `formatted`; start/end are derived server-side on applyFilters().
+                    if (this.deferred) {
+                        return;
+                    }
                     Livewire.dispatch('pg:datePicker-' + this.tableName, {
                         field: this.dataField,
                         selectedDates: selectedDates,

@@ -27,13 +27,7 @@ final class RowRenderer
         $html = '';
 
         if (isset($this->component->setUp['responsive'])) {
-            /** @var view-string $responsiveView */
-            $responsiveView = theme_view('toggle-detail-responsive');
-
-            $html .= view($responsiveView, [
-                'rowId' => $rowId,
-                'view' => data_get($this->component->setUp, 'detail.viewIcon') ?? null,
-            ])->render();
+            $html .= $this->renderResponsiveToggle($rowId);
         }
 
         if (data_get($this->component->setUp, 'detail.showCollapseIcon')) {
@@ -66,6 +60,31 @@ final class RowRenderer
         }
 
         return $html.$this->component->renderCells($row, $rowIndex, $childIndex, $parentId, $rowId);
+    }
+
+    public function renderExpandRow(string|int $rowId): string
+    {
+        $id = e((string) $rowId);
+
+        return '<tr x-cloak expand data-expand-for="'.$id.'" wire:key="expand-'.$id.'"'
+            .' x-show="isExpanded(\''.$id.'\')" x-transition'
+            .' class="'.theme('table.body.tr.responsive').'">'
+            .'<td colspan="999"><div class="flex gap-x-6 gap-y-2 flex-wrap p-2 responsive-row-expand-container"></div></td>'
+            .'</tr>';
+    }
+
+    private function renderResponsiveToggle(string|int $rowId): string
+    {
+        $id = e((string) $rowId);
+        $iconClass = theme('table.body.tr.responsive_toggle_icon');
+
+        return '<td x-cloak x-show="hasHiddenElements" class="w-0 '.theme('table.layout.td').'">'
+            .'<button class="flex items-center" x-on:click="toggleExpanded(\''.$id.'\')">'
+            .'<svg class="'.e($iconClass).' w-5 h-5 transition-all duration-300" fill="none" viewBox="0 0 24 24"'
+            .' stroke="currentColor" stroke-width="2" x-bind:class="rotateClass(\''.$id.'\')">'
+            .'<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />'
+            .'</svg>'
+            .'</button></td>';
     }
 
     private function renderCheckboxCell(object $row): string

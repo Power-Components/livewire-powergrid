@@ -61,7 +61,7 @@ final class IconRenderer
     /** @param  array<string, mixed>  $attributes */
     private static function isStaticallyFoldable(string $icon, array $attributes): bool
     {
-        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/', $icon) !== 1) {
+        if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*(::[A-Za-z0-9][A-Za-z0-9._-]+)*$/', $icon) !== 1) {
             return false;
         }
 

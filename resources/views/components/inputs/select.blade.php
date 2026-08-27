@@ -12,6 +12,8 @@
 
 @php
     $__partial = $__partial ?? $this;
+    $deferred = $__partial->usesFilterPanel();
+    $filtersProperty = $deferred ? 'draftFilters' : 'filters';
     $framework = config('livewire-powergrid.plugins.select');
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
@@ -38,7 +40,8 @@ $params = [
     'optionLabel' => data_get($filter, 'optionLabel'),
     'options' => data_get($filter, 'params'),
     'initialValues' => $initialValues,
-    'appliedFilters' => data_get($__partial->filters, 'multi_select', []),
+    'appliedFilters' => data_get($__partial->{$filtersProperty}, 'multi_select', []),
+    'deferred' => $deferred,
     'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
 ];
 
@@ -63,7 +66,7 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
     @if (filled($filter))
         <div class="{{ theme('filter.select.base') }}">
             @if (!$inline)
-                <label class="block text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                <label class="{{ theme('filter.label', 'block text-sm font-semibold text-zinc-700 dark:text-zinc-300') }}">
                     {{ $title }}
                 </label>
             @endif
@@ -71,7 +74,7 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
             <select
                 @if ($multiple) multiple @endif
                 class="{{ theme('filter.multi_select.select') }}"
-                wire:model="filters.multi_select.{{ data_get($filter, 'field') }}.values"
+                wire:model="{{ $filtersProperty }}.multi_select.{{ data_get($filter, 'field') }}.values"
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
                 @if (!data_get($params, 'options.disableOptionAll', false))

@@ -2,10 +2,10 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Flatpickr;
 
-use Carbon\Exceptions\InvalidFormatException;
-use Illuminate\Support\{Carbon, Str};
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
+use PowerComponents\Turbine\Support\FilterDateRange;
 
 class FlatpickrPlugin extends PluginBase
 {
@@ -39,7 +39,7 @@ class FlatpickrPlugin extends PluginBase
             });
 
         $hasFilterInFilters = false;
-        $hasFilterInFilters = collect($this->component->filters())
+        $hasFilterInFilters = collect($this->component->declaredFilters())
             ->contains(function ($filter) {
                 $className = get_class($filter);
 
@@ -64,57 +64,30 @@ class FlatpickrPlugin extends PluginBase
 
         $this->component->resetPage();
 
-        /** @var string $dateStr */
-        /** @var string $firstDate */
-        $firstDate = $selectedDates[0];
-        /** @var string $secondDate */
-        $secondDate = $selectedDates[1];
-        [$startRaw, $endRaw] = Str::contains($dateStr, 'to')
-            ? explode(' to ', $dateStr)
-            : [strval($firstDate), strval($secondDate)];
-
-        /** @var string $appTimezone */
-        $appTimezone = config('app.timezone');
-        $isDatetime = $type === 'datetime';
-        /** @var string $dateFormat */
-        $hasTime = str_contains($dateFormat, 'H');
-
-        $makeDate = function ($dateStr) use ($hasTime, $appTimezone) {
-            try {
-                $date = Carbon::parse($dateStr, $appTimezone);
-            } catch (InvalidFormatException) {
-                return now($appTimezone);
-            }
-
-            if (! $hasTime) {
-                $date->setTime(0, 0, 0);
-            }
-
-            return $date->setTimezone($appTimezone);
-        };
-
-        $startDate = $makeDate($startRaw);
-        $endDate = $makeDate($endRaw);
-
-        if ($isDatetime && $endDate->isStartOfDay()) {
-            $endDate->endOfDay();
-        } elseif (! $isDatetime) {
-            $endDate->endOfDay();
-        }
+        $dateStr = is_string($dateStr) ? $dateStr : '';
+        $firstDate = is_scalar($selectedDates[0] ?? null) ? strval($selectedDates[0]) : '';
+        $secondDate = is_scalar($selectedDates[1] ?? null) ? strval($selectedDates[1]) : '';
+        $formatted = Str::contains($dateStr, 'to')
+            ? $dateStr
+            : $firstDate.' to '.$secondDate;
 
         /** @var string|null $label */
         $this->component->addEnabledFilters($field, $label);
 
         $filters = $this->component->filters;
-        $filters[$type][$field] = [
-            'start' => $startDate->toString(),
-            'end' => $endDate->toString(),
-            'formatted' => $dateStr,
-        ];
+        $filters[$type][$field] = self::computeRange($type, $formatted);
         $this->component->filters = $filters;
 
         $this->component->persistState('filters');
 
         $this->component->renderOutsideFiltersPartial();
+    }
+
+    /**
+     * @return array{start: string, end: string, formatted: string}
+     */
+    public static function computeRange(string $type, string $formatted): array
+    {
+        return FilterDateRange::compute($type, $formatted);
     }
 }

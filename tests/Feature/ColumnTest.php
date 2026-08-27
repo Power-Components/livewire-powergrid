@@ -94,3 +94,36 @@ it('add contentClasses on column using array', function () {
             '<div>Dish 2</div>',
         ]);
 });
+
+it('applies column align classes on header and body cells', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-column-align';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'in_stock' => 'Yes', 'price' => '10']]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('in_stock')->add('price');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('In stock', 'in_stock')->align('center'),
+                Column::make('Price', 'price')->align('end'),
+            ];
+        }
+    };
+
+    $html = Livewire::test($component::class)->html();
+
+    expect($html)
+        ->toMatch('/<td class="[^"]*justify-center text-center[^"]*"[^>]*data-column="in_stock"/')
+        ->toMatch('/<td class="[^"]*justify-end text-right[^"]*"[^>]*data-column="price"/')
+        ->toMatch('/<div class="[^"]*justify-center text-center[^"]*"[^>]*>\s*<span data-value>In stock<\/span>/');
+});

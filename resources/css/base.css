@@ -32,8 +32,95 @@ table {
 
 table thead {
     padding-left: 15px;
+    padding-right: 15px;
     font-size: .75rem;
     padding-top: 8px;
     padding-bottom: 8px
+}
+
+.pg-table > thead.pg-thead > tr:first-child > th:first-child {
+    border-top-left-radius: 0.5rem;
+}
+
+.pg-table > thead.pg-thead > tr:first-child > th:last-child {
+    border-top-right-radius: 0.5rem;
+}
+
+.flatpickr-calendar.static,
+.flatpickr-calendar.static.open {
+    width: 100%;
+}
+
+.flatpickr-calendar.static .flatpickr-innerContainer,
+.flatpickr-calendar.static .flatpickr-rContainer,
+.flatpickr-calendar.static .flatpickr-days {
+    width: 100%;
+}
+
+.flatpickr-calendar.static .dayContainer {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+}
+
+.flatpickr-calendar.static .flatpickr-day {
+    max-width: none;
+}
+
+input.flatpickr-input {
+    width: 100%;
+}
+
+.flatpickr-wrapper {
+    display: block;
+    width: 100%;
+}
+
+/*
+ * Tom Select ships a white control. Inherit the host theme so DaisyUI
+ * (data-theme / --color-base-*) and Tailwind `.dark` both read correctly.
+ */
+.pg-container .ts-wrapper .ts-control,
+.pg-container .ts-wrapper.single .ts-control,
+.pg-container .ts-wrapper.multi .ts-control {
+    background-color: var(--color-base-100, var(--color-white, #fff));
+    border-color: var(--color-base-300, var(--color-zinc-200, #e4e4e7));
+    color: var(--color-base-content, var(--color-zinc-800, #27272a));
+    box-shadow: none;
+}
+
+.pg-container .ts-dropdown {
+    background-color: var(--color-base-100, var(--color-white, #fff));
+    border-color: var(--color-base-300, var(--color-zinc-200, #e4e4e7));
+    color: var(--color-base-content, var(--color-zinc-800, #27272a));
+    z-index: 60;
+}
+
+.pg-container .ts-dropdown .active {
+    background-color: var(--color-base-200, var(--color-zinc-100, #f4f4f5));
+    color: var(--color-base-content, inherit);
+}
+
+.dark .pg-container .ts-wrapper .ts-control,
+.dark .pg-container .ts-wrapper.single .ts-control,
+.dark .pg-container .ts-wrapper.multi .ts-control,
+[data-theme="dark"] .pg-container .ts-wrapper .ts-control,
+[data-theme="dark"] .pg-container .ts-wrapper.single .ts-control,
+[data-theme="dark"] .pg-container .ts-wrapper.multi .ts-control {
+    background-color: var(--color-base-200, #27272a);
+    border-color: var(--color-base-300, #3f3f46);
+    color: var(--color-base-content, #fafafa);
+}
+
+.dark .pg-container .ts-dropdown,
+[data-theme="dark"] .pg-container .ts-dropdown {
+    background-color: var(--color-base-200, #27272a);
+    border-color: var(--color-base-300, #3f3f46);
+    color: var(--color-base-content, #fafafa);
+}
+
+.dark .pg-container .ts-dropdown .active,
+[data-theme="dark"] .pg-container .ts-dropdown .active {
+    background-color: var(--color-base-300, #3f3f46);
 }
 

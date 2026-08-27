@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true)
+
 <svg
     width="16"
     height="16"

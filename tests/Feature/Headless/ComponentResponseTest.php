@@ -51,17 +51,16 @@ function dishGridComponent(): PowerGridComponent
 it('builds the envelope from a PowerGridComponent and echoes request state', function () {
     $request = Request::create('/', 'GET', ['powergrid' => ['sortField' => 'id', 'sortDirection' => 'asc']]);
 
-    $envelope = dishGridComponent()->toDataArray($request);
+    $response = dishGridComponent()->toDataArray($request);
 
-    expect($envelope['data'])->not->toBeEmpty()
-        ->and($envelope['data'][0])->toHaveKeys(['id', 'name'])
-        // rows are clean — no Livewire display metadata leaks into the JSON
-        ->and($envelope['data'][0])->not->toHaveKey('__turbine_actions')
-        ->and($envelope['data'][0])->not->toHaveKey('__turbine_rules')
-        ->and($envelope['meta']['pagination']['per_page'])->toBe(5)
-        ->and($envelope['meta']['pagination']['total'])->toBe(Dish::query()->count())
-        ->and($envelope['columns'])->toHaveCount(2)
-        ->and($envelope['filters'][0]['key'])->toBe('input_text');
+    expect($response->data)->not->toBeEmpty()
+        ->and($response->data[0])->toHaveKeys(['id', 'name'])
+        ->and($response->data[0])->not->toHaveKey('__turbine_actions')
+        ->and($response->data[0])->not->toHaveKey('__turbine_rules')
+        ->and($response->meta->pagination->perPage)->toBe(5)
+        ->and($response->meta->pagination->total)->toBe(Dish::query()->count())
+        ->and($response->columns)->toHaveCount(2)
+        ->and($response->filters[0]->key)->toBe('input_text');
 });
 
 it('applies request search + sort through the component bridge', function () {
@@ -71,23 +70,22 @@ it('applies request search + sort through the component bridge', function () {
         'sortDirection' => 'desc',
     ]]);
 
-    $envelope = dishGridComponent()->toDataArray($request);
+    $response = dishGridComponent()->toDataArray($request);
 
-    expect($envelope['meta']['search'])->toBe('Pastel')
-        ->and($envelope['meta']['sort'])->toMatchArray(['field' => 'price', 'direction' => 'desc'])
-        ->and($envelope['meta']['pagination']['total'])->toBe(
+    expect($response->meta->search)->toBe('Pastel')
+        ->and($response->meta->sort->all())->toMatchArray(['field' => 'price', 'direction' => 'desc'])
+        ->and($response->meta->pagination->total)->toBe(
             Dish::query()->where('name', 'like', '%Pastel%')->count()
         );
 });
 
 it('resolves component actions into the envelope keyed by primary key', function () {
-    $envelope = dishGridComponent()->toDataResponse(Request::create('/'))->getData(true);
+    $response = dishGridComponent()->toDataResponse(Request::create('/'))->getData(true);
 
-    $firstId = (int) $envelope['data'][0]['id'];
+    $firstId = (int) $response['data'][0]['id'];
 
-    expect($envelope['actions'])->toHaveKey((string) $firstId)
-        ->and($envelope['actions'][(string) $firstId][0])->toMatchArray([
-            'id' => 'edit',
-            'event' => ['type' => 'dispatch', 'event' => 'edit', 'params' => ['id' => $firstId]],
-        ]);
+    expect($response['actions'])->toHaveKey((string) $firstId)
+        ->and($response['actions'][(string) $firstId][0]['id'])->toBe('edit')
+        ->and($response['actions'][(string) $firstId][0]['attributes']['event'])->toBe(['type' => 'dispatch', 'event' => 'edit', 'params' => ['id' => $firstId]])
+        ->and($response['actions'][(string) $firstId][0]['attributes'])->toHaveKey('wire:click');
 });

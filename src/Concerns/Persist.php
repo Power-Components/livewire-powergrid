@@ -11,8 +11,10 @@ use Psr\SimpleCache\InvalidArgumentException;
 /** @codeCoverageIgnore */
 trait Persist
 {
-    /** @var list<string> */
-    public array $persist = [];
+    /**
+     * @var list<string>
+     */
+    public array $persist = ['columns', 'filters', 'sorting'];
 
     public string $persistPrefix = '';
 
@@ -25,6 +27,18 @@ trait Persist
     {
         $this->persist = $tableItems;
         $this->persistPrefix = $prefix;
+
+        return $this;
+    }
+
+    /**
+     * @param  list<string>  $tableItems
+     */
+    public function withoutPersist(array $tableItems = []): PowerGridComponent
+    {
+        $this->persist = $tableItems === []
+            ? []
+            : array_values(array_diff($this->persist, $tableItems));
 
         return $this;
     }
@@ -55,7 +69,7 @@ trait Persist
             persistFilterBuilder: $persistFilterBuilder
         );
 
-        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $key = $this->getPersistKeyName();
         $persister->save($key, $jsonState, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
     }
 
@@ -71,7 +85,7 @@ trait Persist
         }
 
         $persister = new StatePersister();
-        $key = $persister->getPersistKeyName($this->tableName, $this->persistPrefix);
+        $key = $this->getPersistKeyName();
         $state = $persister->retrieve($key, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
 
         if (is_null($state)) {

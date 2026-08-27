@@ -45,17 +45,15 @@
             @include(theme_view('table.checkbox-all'))
         @endif
 
-        @foreach ($columns as $column)
-            @include(theme_view('table.cols'), [
-                'column'        => $column,
-                'enabledFilters' => $enabledFilters,
-                'multiSort'     => $this->multiSort,
-                'sortArray'     => $this->sortArray,
-                'sortField'     => $this->sortField,
-                'sortDirection' => $this->sortDirection,
-                'tableName'     => $tableName,
-            ])
-        @endforeach
+        @include(theme_view('table.cols'), [
+            'columns' => $columns,
+            'enabledFilters' => $enabledFilters,
+            'multiSort' => $this->multiSort,
+            'sortArray' => $this->sortArray,
+            'sortField' => $this->sortField,
+            'sortDirection' => $this->sortDirection,
+            'tableName' => $tableName,
+        ])
 
         @if (isset($actions) && count($actions))
             @php

@@ -19,12 +19,12 @@ class FilterBuilderPlugin extends PluginBase
     public function isEnabled(): bool
     {
         return filled(data_get($this->component->setUp, 'filterBuilder'))
-            && filled($this->component->filters());
+            && filled($this->component->declaredFilters());
     }
 
     public function handlesZone(string $zone): bool
     {
-        return $zone === 'header' && $this->isEnabled() && $this->resolveThemeView() !== '';
+        return $zone === 'header.filter' && $this->isEnabled() && $this->resolveThemeView() !== '';
     }
 
     public function renderZone(string $zone): ?string

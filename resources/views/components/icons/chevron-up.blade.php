@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true)
+
 <svg
     fill="none"
     viewBox="0 0 24 24"

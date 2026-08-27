@@ -76,11 +76,14 @@ return [
     | Filters
     |--------------------------------------------------------------------------
     |
-    | PowerGrid supports inline, outside and flyout filters.
+    | PowerGrid supports inline, dropdown and flyout filters.
     | 'inline': Filters data inside the table.
-    | 'outside': Filters data outside the table.
-    | 'flyout': Filters data in a drawer sliding in from the side.
+    | 'dropdown': Filters in a popover anchored to a Filter button, committed on Apply.
+    | 'flyout': Filters in a drawer sliding in from the side, committed on Apply.
     | 'null'
+    |
+    | Both 'dropdown' and 'flyout' hold edits in a draft and only commit when the
+    | user presses "Apply filters" (no live/debounce requests while typing).
     |
     */
 

@@ -7,8 +7,16 @@ use Illuminate\View\ComponentAttributeBag;
 class Select
 {
     /** @return array{selectAttributes: ComponentAttributeBag} */
-    public function __invoke(string $field, string $title): array
+    public function __invoke(string $field, string $title, bool $deferred = false): array
     {
+        if ($deferred) {
+            return [
+                'selectAttributes' => new ComponentAttributeBag([
+                    'wire:model' => 'draftFilters.select.'.$field,
+                ]),
+            ];
+        }
+
         return [
             'selectAttributes' => new ComponentAttributeBag([
                 'wire:model' => 'filters.select.'.$field,

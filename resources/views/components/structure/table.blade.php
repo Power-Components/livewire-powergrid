@@ -17,14 +17,14 @@
 
     <div
         id="power-grid-table-container-{{ $tableName }}"
-        class="pg-table-wrapper {{ theme('layout.wrapper') }}"
+        class="pg-table-wrapper {{ theme('layout.card', theme('layout.wrapper')) }}"
     >
         @include(theme_view('header'), [
             'enabledFilters' => $enabledFilters,
             '__partial' => $this,
         ])
 
-        @if ($this->usesFilterPanel() && ! $this->filterBuilderHidesDefaultFilters())
+        @if ($this->usesFilterFlyout() && ! $this->filterBuilderHidesDefaultFilters())
             @php
                 $filtersFromColumns = collect($columns)
                     ->filter(fn($column) => filled(data_get($column, 'filters')));
@@ -53,7 +53,7 @@
                         class="pg-table {{ theme('table.layout.table') }}"
                     >
                         @include(theme_view('table.thead'), [
-                            'loading' => !$readyToLoad,
+                            'loading' => false,
                             '__partial' => $this,
                         ])
 

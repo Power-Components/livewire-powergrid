@@ -18,6 +18,9 @@ export default () => ({
             ...frameworkCopy,
             events: {
                 afterChange: (value) => {
+                    if (params.deferred) {
+                        return;
+                    }
                     let newValue = value.map(item => item.value);
                     storeMultiSelect(params, newValue);
                 },
@@ -35,6 +38,12 @@ export default () => ({
 
         window.addEventListener('pg:clear_all_multi_select::' + params.tableName, () => {
             element.slim.setSelected([], false);
+        });
+
+        window.addEventListener('pg:restore_multi_select::' + params.tableName, () => {
+            this.$wire.get('filters.multi_select.' + params.dataField).then((values) => {
+                element.slim.setSelected(Array.isArray(values) ? values : [], false);
+            });
         });
     },
 

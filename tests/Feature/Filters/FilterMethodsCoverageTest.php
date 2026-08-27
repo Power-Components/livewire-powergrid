@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
@@ -184,4 +185,90 @@ it('applies default filter values on mount for every filter type', function () {
         ->and($fields)->toContain('price')
         ->and($fields)->toContain('in_stock')
         ->and($fields)->toContain('category_id');
+});
+
+it('calls filters() once per request', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'filters-once';
+
+        public int $filterCalls = 0;
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish']]);
+        }
+
+        public function filters(): array
+        {
+            $this->filterCalls++;
+
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    $test = Livewire::test($component::class);
+
+    expect($test->instance()->filterCalls)->toBe(1)
+        ->and($test->html())->toContain('Dish');
+});
+
+it('does not instantiate filters() when morphing dropdown grid partials', function () {
+    Config::set('livewire-powergrid.filter', 'dropdown');
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'filters-sort-once';
+
+        public static int $filterCalls = 0;
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Zebra'], ['id' => 2, 'name' => 'Apple']]);
+        }
+
+        public function filters(): array
+        {
+            self::$filterCalls++;
+
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')->sortable()];
+        }
+    };
+
+    $test = Livewire::test($component::class);
+    $instance = $test->instance();
+
+    $component::$filterCalls = 0;
+
+    Closure::bind(function (): void {
+        $this->plugins = [];
+    }, $instance, PowerGridComponent::class)();
+
+    Closure::bind(function (): void {
+        $this->declaredFiltersCache = null;
+    }, $instance, $instance)();
+
+    $instance->renderGridPartials(includeThead: true);
+
+    expect($component::$filterCalls)->toBe(0);
 });

@@ -1,7 +1,8 @@
 <tr
     x-cloak
     expand
-    wire:key="{{ 'expand-' . substr($rowId, 0, 6) }}"
+    data-expand-for="{{ $rowId }}"
+    wire:key="expand-{{ $rowId }}"
     x-show="isExpanded('{{ $rowId }}')"
     x-transition
     class="{{ theme('table.body.tr.responsive') }}"

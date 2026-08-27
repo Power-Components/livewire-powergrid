@@ -12,57 +12,58 @@ class Flux extends Theme
             ->baseView('livewire-powergrid::components.themes.flux')
             ->layout(fn (Components\Layout $layout) => $layout
                 ->wrapper('space-y-4')
+                ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 overflow-visible')
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
                 ->view('livewire-powergrid::components.themes.flux.header')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('mb-3 md:flex md:flex-row w-full justify-between items-center')
-                    ->subContainer('md:flex md:flex-row w-full gap-1.5')
+                    ->container('p-4 md:flex md:flex-row w-full justify-between items-center gap-3')
+                    ->subContainer('flex flex-row flex-wrap items-center gap-1.5')
                     ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
                     ->actions($this->button())
                 )
                 ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
                     ->view('livewire-powergrid::components.themes.flux.header.search')
-                    ->container('flex flex-row mt-2 md:mt-0 w-full justify-start sm:justify-center md:justify-end')
-                    ->relativeMain('w-full md:w-4/12 lg:w-1/2')
+                    ->container('flex flex-row w-full justify-start sm:justify-center md:justify-end')
+                    ->relativeMain('w-full')
                     ->icon('magnifying-glass')
                     ->iconClear('')
                 )
                 ->toggleColumns(fn (Components\HeaderButton $button) => $button
-                    ->button($this->iconButton())
-                    ->iconClass('w-6 h-6')
+                    ->button($this->triggerButton())
+                    ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                     ->menu('dark:bg-zinc-900')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
-                    ->button($this->iconButton())
-                    ->iconClass('w-6 h-6')
+                    ->button($this->triggerButton())
+                    ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                     ->menu('dark:bg-zinc-900')
                 )
                 ->filters(fn (Components\HeaderButton $button) => $button
                     ->wrapper('flex mt-2 sm:mt-0 gap-3')
-                    ->button($this->iconButton())
-                    ->iconClass('w-6 h-6')
+                    ->button($this->triggerButton())
+                    ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                 )
                 ->filterBuilder(fn (Components\HeaderButton $button) => $button
-                    ->button('relative')
-                    ->iconClass('h-5 w-5')
+                    ->button($this->triggerButton())
+                    ->iconClass('w-5 h-5 shrink-0')
                     ->label('')
-                    ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white')
+                    ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
                 )
                 ->export(fn (Components\HeaderButton $button) => $button
-                    ->button($this->iconButton())
-                    ->iconClass('w-6 h-6')
+                    ->button($this->triggerButton())
+                    ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                     ->menu('dark:bg-zinc-900')
                 )
             )
             ->table(fn (Components\Table $table) => $table
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('overflow-x-auto rounded-t-lg relative border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
+                    ->container('overflow-x-auto relative border-t border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
                     ->table('min-w-full')
                     ->thead('bg-white dark:bg-white/10')
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
@@ -84,7 +85,7 @@ class Flux extends Theme
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('livewire-powergrid::components.themes.flux.footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-lg border-x border-b border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
+                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-xl border-t border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
                 )
                 ->pagination('pagination')
             );
@@ -146,6 +147,21 @@ class Flux extends Theme
                     ->input($this->input().' w-full')
                 )
                 ->input($this->input().' w-full')
+                ->dropdown(fn (Components\Dropdown $dropdown) => $dropdown
+                    ->view('livewire-powergrid::components.themes.tailwind.filter')
+                    ->wrapper('relative inline-block text-left')
+                    ->trigger($this->triggerButton())
+                    ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
+                    ->panel('fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 lg:absolute lg:inset-x-auto lg:top-auto lg:left-auto lg:right-0 lg:mt-2')
+                    ->header('flex shrink-0 items-center justify-between px-4 pt-4 pb-2')
+                    ->title('text-base font-semibold text-zinc-800 dark:text-zinc-100')
+                    ->body('min-h-0 flex-1 overflow-y-auto px-4 py-3')
+                    ->grid('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4')
+                    ->footer('flex shrink-0 items-center justify-end gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-700')
+                    ->reset('text-sm font-medium text-red-500 transition hover:text-red-600')
+                    ->clear($this->button())
+                    ->apply('inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground shadow-xs transition hover:bg-accent/90 focus:outline-none')
+                )
                 ->flyout(fn (Components\Flyout $flyout) => $flyout
                     ->overlay('fixed inset-0 z-40 bg-zinc-900/40')
                     ->panel('fixed inset-y-0 z-50 flex w-full max-w-full flex-col bg-white shadow-xl dark:bg-zinc-900 sm:w-96 sm:max-w-[90vw]')
@@ -172,7 +188,7 @@ class Flux extends Theme
                 'table' => [
                     'body' => [
                         'td' => [
-                            'actions_wrapper' => 'flex items-center gap-1 justify-end',
+                            'actions_wrapper' => 'flex items-center gap-1',
                         ],
                     ],
                 ],
@@ -203,8 +219,12 @@ class Flux extends Theme
         return 'inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 border-b-zinc-300/80 dark:border-zinc-600 bg-white dark:bg-zinc-700 shadow-xs px-3 py-2 text-sm font-medium text-zinc-700 dark:text-white hover:bg-zinc-50 dark:hover:bg-zinc-600/75 focus:outline-none cursor-pointer transition-colors';
     }
 
-    private function iconButton(): string
+    /**
+     * Shared square icon-button used by every header control (toggle-columns,
+     * soft-deletes, export, filter) so they render identically to the filter trigger.
+     */
+    private function triggerButton(): string
     {
-        return '!w-12 !h-10 !flex !items-center !justify-center';
+        return 'relative inline-flex items-center justify-center font-medium whitespace-nowrap !w-12 !h-10 text-sm rounded-lg gap-2 bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20 text-zinc-800 dark:text-white transition';
     }
 }

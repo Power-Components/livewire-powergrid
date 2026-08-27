@@ -154,6 +154,7 @@ trait HasActions
 
         $actions = collect($this->header()) // @phpstan-ignore-line
             ->filter(fn ($button) => $button instanceof Button)
+            ->sortBy(fn (Button $button) => $button->order ?? PHP_INT_MAX)
             ->map(fn (Button $button) => $this->resolveButtonForBlade($button, $row, []))
             ->filter(fn (array $action) => ! $action['hidden'])
             ->values()

@@ -1,3 +1,5 @@
+@blaze(fold: true, memo: true)
+
 <svg
     {{ $attributes->merge() }}
     xmlns="http://www.w3.org/2000/svg"

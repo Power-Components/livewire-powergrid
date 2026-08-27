@@ -39,6 +39,7 @@ class PowerGridComponent extends Component implements Context
 {
     use Concerns\Base;
     use Concerns\Checkbox;
+    use Concerns\Detail;
     use Concerns\Filter;
     use Concerns\FilterBuilder;
     use Concerns\HasActions;
@@ -279,10 +280,6 @@ class PowerGridComponent extends Component implements Context
 
     public function boot(): void
     {
-        if (empty($this->columns)) {
-            $this->columns = $this->declaredColumns();
-        }
-
         /** @var string $themeClass */
         $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
@@ -299,6 +296,21 @@ class PowerGridComponent extends Component implements Context
         app()->instance('powergrid.theme', $themeInstance);
     }
 
+    public function hydrate(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
+    public function updatedColumns(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
+    public function updatedSetUp(): void
+    {
+        $this->rebindServerOwnedState();
+    }
+
     /**
      * @throws TableNameCannotCalledDefault
      * @throws Exception|InvalidArgumentException
@@ -309,23 +321,18 @@ class PowerGridComponent extends Component implements Context
 
         $this->readyToLoad = ! $this->deferLoading;
 
-        foreach ($this->setUp() as $setUp) {
-            $name = is_object($setUp) ? data_get($setUp, 'name') : null;
-            if (is_string($name)) {
-                $this->setUp[$name] = $setUp;
-            }
-        }
+        $this->rebindServerOwnedState();
 
         $this->throwTableName();
         $this->throwColumnAction();
 
-        if (empty($this->columns)) {
-            $this->columns = $this->declaredColumns();
-        }
-
         $this->restoreState();
 
         $this->applyDefaultFilters();
+
+        $this->draftFilters = $this->filters;
+
+        $this->draftColumns = $this->columnVisibilityState();
 
         $this->resolveSummarizeColumn();
     }
@@ -339,17 +346,13 @@ class PowerGridComponent extends Component implements Context
     {
         $this->checkboxAll = false;
 
-        partials($this)
-            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-            ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+        $this->renderGridPartials();
     }
 
     public function updated(string $name): void
     {
         if (str_contains($name, 'setUp.footer.perPage')) {
-            partials($this)
-                ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
-                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+            $this->renderGridPartials();
         }
     }
 
@@ -357,8 +360,33 @@ class PowerGridComponent extends Component implements Context
     {
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
-        partials($this)
-            ->partial("pg-tbody-{$this->tableName}", 'livewire-powergrid::components.partials.tbody')
+        $this->renderGridPartials();
+    }
+
+    /** Register tbody/pagination (and optionally thead) as Livewire partials. */
+    public function renderGridPartials(bool $includeThead = false): void
+    {
+        if (! function_exists('partials')) {
+            return;
+        }
+
+        if ($this->usesFilterInline()) {
+            $this->resolveFiltersForRender();
+            $this->resolvePlugins();
+        } else {
+            $this->withoutFilterInstantiation(fn () => $this->resolvePlugins());
+        }
+
+        unset($this->hasColumnFilters);
+
+        $partials = partials($this);
+
+        if ($includeThead) {
+            $partials->partial("pg-thead-{$this->tableName}", theme_view('table.thead'));
+        }
+
+        $partials
+            ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
             ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
     }
 
@@ -415,6 +443,9 @@ class PowerGridComponent extends Component implements Context
                 $contentClassField = $this->columnString($column, 'contentClassField');
                 /** @var array<array-key, mixed>|string $contentClasses */
                 $contentClasses = data_get($column, 'contentClasses', []);
+                $alignRaw = data_get($column, 'align');
+                $align = is_string($alignRaw) && $alignRaw !== '' ? $alignRaw : null;
+                $alignClasses = ColumnViewModel::alignmentClasses($align);
                 $bodyClass = $this->columnString($column, 'bodyClass');
                 $bodyStyle = $this->columnString($column, 'bodyStyle');
                 $hidden = (bool) data_get($column, 'hidden');
@@ -433,11 +464,13 @@ class PowerGridComponent extends Component implements Context
                     hasCustomContent: is_string($customView) && $customView !== '',
                     customView: is_string($customView) ? $customView : null,
                     customParams: is_array($customParams) ? $customParams : [],
-                    tdClass: Arr::toCssClasses([$tdClass, $bodyClass]),
+                    tdClass: Arr::toCssClasses([$tdClass, $bodyClass, $alignClasses]),
                     tdStyle: Arr::toCssStyles(['display:none' => $hidden, $bodyStyle]),
                     spanClassStatic: is_array($contentClasses)
                         ? null
                         : Arr::toCssClasses([$contentClassField, $contentClasses]),
+                    align: $align,
+                    alignClasses: $alignClasses,
                 );
             })
             ->values()
@@ -602,11 +635,6 @@ class PowerGridComponent extends Component implements Context
                 return [$property => $this->{$property}];
             })
             ->all();
-    }
-
-    public function toggleDetail(string $rowId): void
-    {
-        $this->dispatch('pg-toggle-detail-'.$this->tableName.'-'.$rowId, collapsed: null);
     }
 
     #[Computed]

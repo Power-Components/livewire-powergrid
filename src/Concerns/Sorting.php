@@ -39,16 +39,7 @@ trait Sorting
 
     public function afterSort(): void
     {
-        if (isset($this->setUp['detail'])) {
-            return;
-        }
-
-        if (function_exists('partials')) {
-            partials($this)
-                ->partial("pg-thead-{$this->tableName}", theme_view('table.thead'))
-                ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
-                ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
-        }
+        $this->renderGridPartials(includeThead: true);
     }
 
     public function reverseSort(): string
@@ -118,6 +109,18 @@ trait Sorting
                 return 'livewire-powergrid::components.icons.chevron-down';
             }
         }
+    }
+
+    public function sortIconComponent(string $field): string
+    {
+        $view = $this->showSortIcon($field);
+
+        return match (true) {
+            str_ends_with($view, 'chevron-up-down') => 'chevron-up-down',
+            str_ends_with($view, 'chevron-up') => 'chevron-up',
+            str_ends_with($view, 'chevron-down') => 'chevron-down',
+            default => 'chevron-up-down',
+        };
     }
 
     public function updatedSortDirection(): void

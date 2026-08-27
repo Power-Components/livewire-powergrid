@@ -8,7 +8,7 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\DataSource\Processors\Scout\Pipelines\{Filters, Search, Sorting};
 
 beforeEach(function () {
-    Config::set('livewire-powergrid.filter', 'outside');
+    Config::set('livewire-powergrid.filter', 'dropdown');
 });
 
 describe('Scout Search Pipeline', function () {
