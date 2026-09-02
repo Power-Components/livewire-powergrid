@@ -45,6 +45,7 @@ class PowerGridComponent extends Component implements Context
     use Concerns\HasActions;
     use Concerns\HasExport;
     use Concerns\HasHeaderElements;
+    use Concerns\HasTabs;
     use Concerns\Hooks;
     use Concerns\Listeners;
     use Concerns\ManageRow;
@@ -334,6 +335,8 @@ class PowerGridComponent extends Component implements Context
         $this->restoreState();
 
         $this->applyDefaultFilters();
+
+        $this->applyDefaultTab();
 
         $this->draftFilters = $this->filters;
 

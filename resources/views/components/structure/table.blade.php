@@ -15,6 +15,8 @@
         {!! $this->renderPluginAssets() !!}
     @endonce
 
+    {!! $this->renderPluginZone('top') !!}
+
     <div
         id="power-grid-table-container-{{ $tableName }}"
         class="pg-table-wrapper {{ theme('layout.card', theme('layout.wrapper')) }}"

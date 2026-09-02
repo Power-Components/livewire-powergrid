@@ -56,9 +56,21 @@ trait Hooks
 
     public function transformQuery(mixed $query): mixed
     {
+        $query = $this->applyActiveTabScope($query);
+
         $definition = $this->definition();
 
         return $definition !== null ? $definition->transformQuery($query) : $query;
+    }
+
+    public function tabQuery(string $tab, mixed $query): mixed
+    {
+        return $query;
+    }
+
+    public function tabBadge(string $tab): int|string|null
+    {
+        return null;
     }
 
     /**
