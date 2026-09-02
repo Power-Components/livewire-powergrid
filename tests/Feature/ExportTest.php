@@ -136,9 +136,10 @@ it('streams a database datasource to csv with correct content', function () {
 expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
     $downloadEffect = data_get($this->value->effects, 'download');
 
-    $filename = data_get($this->value->setUp, 'exportable.fileName').'.csv';
-    $separator = data_get($this->value->setUp, 'exportable.csvSeparator', ',');
-    $delimiter = data_get($this->value->setUp, 'exportable.csvDelimiter', '"');
+    $setUp = $this->value->instance()->resolvedSetUp();
+    $filename = data_get($setUp, 'exportable.fileName').'.csv';
+    $separator = data_get($setUp, 'exportable.csvSeparator', ',');
+    $delimiter = data_get($setUp, 'exportable.csvDelimiter', '"');
 
     test()->assertEquals(
         $filename,

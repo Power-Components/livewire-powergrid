@@ -47,6 +47,14 @@ $table = new class() extends PowerGridComponent
 
 $tableClass = $table::class;
 
+function headerElementResolved(string $class, string $key): array
+{
+    $instance = Livewire::test($class)->instance();
+    $instance->setUp = $instance->resolvedSetUp();
+
+    return $instance->headerElement($key);
+}
+
 beforeEach(function () use ($tableClass) {
     config()->set('livewire-powergrid.theme', Tailwind::class);
 
@@ -126,7 +134,7 @@ it('gives the user setUp precedence over the theme token', function () use ($tab
         ],
     ]);
 
-    $element = Livewire::test($tableClass)->instance()->headerElement('toggleColumns');
+    $element = headerElementResolved($tableClass, 'toggleColumns');
 
     expect($element['icon'])->toBe('livewire-powergrid::icons.copy')
         ->and($element['iconAttributes'])->toBe(['class' => 'user-icon-class']);
@@ -138,7 +146,7 @@ it('lets the user swap the element view', function () use ($tableClass) {
             ->view('livewire-powergrid::components.themes.daisyui.header.toggle-columns')),
     ];
 
-    expect(Livewire::test($tableClass)->instance()->headerElement('toggleColumns')['view'])
+    expect(headerElementResolved($tableClass, 'toggleColumns')['view'])
         ->toBe('livewire-powergrid::components.themes.daisyui.header.toggle-columns');
 });
 
@@ -149,7 +157,7 @@ it('configures the filter builder trigger through the fluent setUp api', functio
         PowerGrid::filterBuilder()->title('My Filters')->icon('funnel'),
     ];
 
-    $element = Livewire::test($tableClass)->instance()->headerElement('filterBuilder');
+    $element = headerElementResolved($tableClass, 'filterBuilder');
 
     expect($element['title'])->toBe('My Filters')
         ->and($element['icon'])->toBe('funnel')
@@ -162,7 +170,7 @@ it('configures the export trigger through the fluent setUp api', function () use
         PowerGrid::exportable('report')->title('Download')->icon('livewire-powergrid::icons.copy'),
     ];
 
-    $element = Livewire::test($tableClass)->instance()->headerElement('export');
+    $element = headerElementResolved($tableClass, 'export');
 
     expect($element['title'])->toBe('Download')
         ->and($element['icon'])->toBe('livewire-powergrid::icons.copy')

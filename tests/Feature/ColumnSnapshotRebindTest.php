@@ -50,8 +50,9 @@ it('drops a tampered column title on the next request', function () {
         ->set('columns.0.title', '<img src=x onerror=alert(1)>')
         ->call('$refresh');
 
-    expect(data_get($test->get('columns.0'), 'title'))->toBe('Name')
-        ->and($test->html())->not->toContain('<img src=x onerror=alert(1)>');
+    expect($test->html())->not->toContain('<img src=x onerror=alert(1)>')
+        ->and(data_get($test->get('columns.0'), 'title'))->toBeNull()
+        ->and(data_get(columnByField($test->instance()->declaredColumns(), 'name'), 'title'))->toBe('Name');
 });
 
 it('drops a customContent view injected through the snapshot', function () {
@@ -94,8 +95,12 @@ it('restores exportable.fileName from the server declaration', function () {
         ->set('setUp.exportable.jobClass', 'App\\Jobs\\EvilJob')
         ->call('$refresh');
 
-    expect(data_get($test->get('setUp'), 'exportable.fileName'))->toBe('dishes-export')
-        ->and(data_get($test->get('setUp'), 'exportable.jobClass'))->toBe('');
+    expect(data_get($test->get('setUp'), 'exportable'))->toBeNull();
+
+    $exportable = data_get($test->instance()->resolvedSetUp(), 'exportable');
+
+    expect(data_get($exportable, 'fileName'))->toBe('dishes-export')
+        ->and(data_get($exportable, 'jobClass'))->toBeIn([null, '']);
 });
 
 it('rejects a perPage value that is not in the footer allowlist', function () {

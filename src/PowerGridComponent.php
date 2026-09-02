@@ -301,6 +301,11 @@ class PowerGridComponent extends Component implements Context
         $this->rebindServerOwnedState();
     }
 
+    public function dehydrate(): void
+    {
+        $this->stripServerOwnedSnapshot();
+    }
+
     public function updatedColumns(): void
     {
         $this->rebindServerOwnedState();
