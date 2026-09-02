@@ -10,6 +10,8 @@ use PowerComponents\Turbine\Contracts\GridSchema;
 
 trait Base
 {
+    private const SNAPSHOT_COLUMN_KEYS = ['field', 'dataField', 'hidden', 'forceHidden', 'isAction'];
+
     public string $primaryKey = 'id';
 
     public ?string $primaryKeyAlias = null;
@@ -83,6 +85,43 @@ trait Base
         $this->overlayColumnHidden($incomingColumns);
 
         unset($this->visibleColumns, $this->columnViewModels, $this->hasColumnFilters);
+    }
+
+    public function stripServerOwnedSnapshot(): void
+    {
+        $this->columns = array_map(function ($column): array {
+            $skeleton = [];
+
+            foreach (self::SNAPSHOT_COLUMN_KEYS as $key) {
+                $skeleton[$key] = data_get($column, $key);
+            }
+
+            return $skeleton;
+        }, $this->columns);
+
+        $this->headers = [];
+
+        $perPage = data_get($this->setUp, 'footer.perPage');
+
+        $this->setUp = $perPage === null ? [] : ['footer' => ['perPage' => $perPage]];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function resolvedSetUp(): array
+    {
+        $resolved = [];
+
+        foreach ($this->setUp() as $config) {
+            $name = is_object($config) ? data_get($config, 'name') : null;
+
+            if (is_string($name)) {
+                $resolved[$name] = $config;
+            }
+        }
+
+        return $resolved;
     }
 
     /** @param  array<string, mixed>  $incomingSetUp */

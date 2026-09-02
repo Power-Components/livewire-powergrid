@@ -79,7 +79,10 @@ it('builds the summaries cache tag from a custom tag', function () {
 
     $test = Livewire::test($component::class)->assertOk();
 
-    expect($test->instance()->summariesCacheTag())->toBe('turbine_my-custom-tag');
+    $instance = $test->instance();
+    $instance->setUp = $instance->resolvedSetUp();
+
+    expect($instance->summariesCacheTag())->toBe('turbine_my-custom-tag');
 });
 
 it('builds the summaries cache tag from the datasource table when no custom tag is set', function () {
