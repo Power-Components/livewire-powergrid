@@ -25,9 +25,33 @@ final class Tabs implements Definition
 
     public ?string $default = null;
 
+    public string $align = 'center';
+
     public static function make(): self
     {
         return new self();
+    }
+
+    public function align(string $align): self
+    {
+        $this->align = in_array($align, ['left', 'center', 'right'], true) ? $align : 'center';
+
+        return $this;
+    }
+
+    public function left(): self
+    {
+        return $this->align('left');
+    }
+
+    public function center(): self
+    {
+        return $this->align('center');
+    }
+
+    public function right(): self
+    {
+        return $this->align('right');
     }
 
     /**
@@ -51,7 +75,6 @@ final class Tabs implements Definition
         return $this;
     }
 
-    /** Tab selected on first load. */
     public function default(string $key): self
     {
         $this->default = $key;

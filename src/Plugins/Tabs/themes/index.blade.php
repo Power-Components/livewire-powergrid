@@ -2,12 +2,18 @@
     'tableName' => null,
     'tabs' => [],
     'activeTab' => null,
+    'align' => 'left',
 ])
 
 <div
     wire:partial="pg-tabs-{{ $tableName }}"
     wire:key="pg-tabs-{{ $tableName }}"
-    class="pg-tabs flex justify-center mb-3"
+    @class([
+        'pg-tabs flex w-full',
+        'justify-start' => $align === 'left',
+        'justify-center' => $align === 'center',
+        'justify-end' => $align === 'right',
+    ])
 >
     @if (filled($tabs))
         <div class="inline-flex flex-wrap items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800">

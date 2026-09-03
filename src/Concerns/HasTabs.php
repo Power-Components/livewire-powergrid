@@ -82,7 +82,7 @@ trait HasTabs
         $config = $this->tabsConfig();
 
         if ($config === null) {
-            return ['tableName' => $this->tableName, 'tabs' => [], 'activeTab' => null];
+            return ['tableName' => $this->tableName, 'tabs' => [], 'activeTab' => null, 'align' => 'center'];
         }
 
         $counts = $this->computeTabCounts();
@@ -103,7 +103,15 @@ trait HasTabs
             'tableName' => $this->tableName,
             'tabs' => $tabs,
             'activeTab' => $this->activeTab,
+            'align' => $this->tabsAlign(),
         ];
+    }
+
+    public function tabsAlign(): string
+    {
+        $config = $this->tabsConfig();
+
+        return $config === null ? 'center' : $config->align;
     }
 
     /** @return view-string */

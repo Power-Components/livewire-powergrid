@@ -18,7 +18,7 @@ class TabsPlugin extends PluginBase
 
     public function handlesZone(string $zone): bool
     {
-        return $zone === 'top' && $this->isEnabled();
+        return $zone === 'header.tabs' && $this->isEnabled();
     }
 
     public function renderZone(string $zone): ?string
