@@ -19,6 +19,8 @@
 @php
     $field = data_get($column, 'dataField', data_get($column, 'field'));
 
+    $sortKey = data_get($column, 'field') ?: $field;
+
     $isFixedOnResponsive = isset($setUp['responsive'])
         && Responsive::isColumnFixed($column, (array) data_get($setUp, 'responsive.fixedColumns', []));
 
@@ -34,7 +36,7 @@
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $__partial->getId() }}"
-    wire:click="sortBy('{{ $field }}')" @endif
+    wire:click="sortBy('{{ $sortKey }}')" @endif
     @class([
         theme('table.layout.th') => true,
         data_get($column, 'headerClass') => true,
@@ -50,7 +52,7 @@
         <span data-value>{!! data_get($column, 'title') !!}</span>
 
         @if (data_get($column, 'enableSort'))
-            @php $sortIcon = $__partial->sortIconComponent($field); @endphp
+            @php $sortIcon = $__partial->sortIconComponent($sortKey); @endphp
             @if ($sortIcon === 'chevron-up')
                 <x-livewire-powergrid::icons.chevron-up width="16" height="16" />
             @elseif ($sortIcon === 'chevron-down')

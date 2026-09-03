@@ -1,7 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
-    window.Alpine.directive('multisort-shift-click', (el, {expression}) => {
-        el.addEventListener('click', (event) => {
-            window.Livewire.find(expression).set('multiSort', event.shiftKey)
-        })
+window.pgAlpine.directive('multisort-shift-click', (el, { expression }) => {
+    el.addEventListener('click', (event) => {
+        window.Livewire.find(expression).set('multiSort', event.shiftKey)
     })
 })
