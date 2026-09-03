@@ -128,7 +128,7 @@ public function actions($row): array
 PowerGrid uses `power-components/partials` fragments to isolate DOM updates via three Hot Zones:
 1. `pg-tbody` - Table body updates
 2. `pg-pagination` - Pagination updates
-3. `pg-filters` - Filter state updates
+3. `pg-enabled-filters` / `pg-filter-fields` - Filter pills and panel fields
 
 #### Per-Component Theme Override
 
