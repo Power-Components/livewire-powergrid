@@ -319,6 +319,15 @@ trait Base
         return [];
     }
 
+    public function headerControlsAlignClass(): string
+    {
+        return match (data_get($this->setUp, 'header.controlsAlign', 'right')) {
+            'left' => 'mr-auto',
+            'center' => 'mx-auto',
+            default => 'ml-auto',
+        };
+    }
+
     /** @return array<string, mixed> */
     public function setUp(): array
     {

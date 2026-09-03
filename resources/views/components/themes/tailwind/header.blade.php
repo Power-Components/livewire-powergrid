@@ -1,6 +1,11 @@
 <div>
     @includeIf(data_get($setUp, 'header.includeViewOnTop'))
 
+    @php($tabsZone = $this->renderPluginZone('header.tabs'))
+    @if (trim($tabsZone) !== '')
+        <div class="px-4 pt-4">{!! $tabsZone !!}</div>
+    @endif
+
     <div class="{{ theme('header.layout.container') }}">
         {{-- Left: user custom buttons / plugins --}}
         <div class="{{ theme('header.layout.actions_container') }}">
@@ -12,7 +17,7 @@
 
         {{-- Right: built-in controls grouped next to the search box.
              Order: columns / export & plugins / filter — filter sits glued to search. --}}
-        <div class="{{ theme('header.layout.sub_container') }} flex flex-row flex-wrap items-center gap-2 w-full mt-2 md:mt-0 md:flex-1 md:max-w-xl md:ml-auto md:justify-end">
+        <div class="{{ theme('header.layout.sub_container') }} flex flex-row flex-wrap items-center gap-2 w-full mt-2 md:mt-0 md:max-w-xl {{ $this->headerControlsAlignClass() }}">
             @includeIf(theme_view('header.toggle-columns'))
             {!! $this->renderPluginZone('header') !!}
             <div class="relative flex flex-1 min-w-0 flex-row items-center gap-2">
