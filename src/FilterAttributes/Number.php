@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\FilterAttributes;
 
 use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 
 class Number
 {
@@ -16,13 +17,11 @@ class Number
     public function __invoke(string $field, array $filter, bool $deferred = false): array
     {
         if ($deferred) {
+            $key = FilterKey::encode($field);
+
             return [
-                'inputStartAttributes' => new ComponentAttributeBag([
-                    'wire:model' => "draftFilters.number.{$field}.start",
-                ]),
-                'inputEndAttributes' => new ComponentAttributeBag([
-                    'wire:model' => "draftFilters.number.{$field}.end",
-                ]),
+                'inputStartAttributes' => new ComponentAttributeBag(FilterKey::draftModel("number.{$key}.start")),
+                'inputEndAttributes' => new ComponentAttributeBag(FilterKey::draftModel("number.{$key}.end")),
             ];
         }
 

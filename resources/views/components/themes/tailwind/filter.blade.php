@@ -11,7 +11,6 @@
     $tableName = $tableName ?? $__partial->tableName;
 
     $element = $__partial->headerElement('filters');
-    $count = $__partial->activeFilterCount();
 
     $columns = $__partial->filterPanelColumns();
     $gridClass = match ($columns) {
@@ -32,39 +31,12 @@
     $wire — otherwise the morph restores open=true and the panel stays up.
     Portaled widgets (flatpickr, tom-select, slim-select) render on <body>,
     so click.outside has to ignore them or the panel closes mid-interaction.
+    x-data is a named component so Alpine does not re-parse an inline object
+    (the evaluator treats `this` inside that string as syntax).
 --}}
 <div
-    x-data="{
-        open: {{ $openOnLoad ? 'true' : 'false' }},
-        async toggle() {
-            if (! this.$wire.filterPanelLoaded) {
-                await this.$wire.loadFilterPanel()
-                this.open = true
-                return
-            }
-            this.open = ! this.open
-        },
-        closeOnOutside(event) {
-            const target = event.target;
-            if (! (target instanceof Element)) {
-                this.open = false;
-                return;
-            }
-            if (target.closest('.flatpickr-calendar, .ts-dropdown, .ss-content')) {
-                return;
-            }
-            this.open = false;
-        },
-        apply() {
-            this.open = false;
-            this.$wire.applyFilters();
-        },
-        clearAll() {
-            this.open = false;
-            this.$wire.clearAllFilters();
-        },
-    }"
-    wire:partial="pg-filters-{{ $tableName }}"
+    x-data="pgFilterPanel"
+    data-open-on-load="{{ $openOnLoad ? 'true' : 'false' }}"
     wire:key="pg-filter-dropdown-{{ $tableName }}"
     class="{{ theme('filter.dropdown.wrapper') }}"
 >
@@ -77,12 +49,13 @@
         class="{{ theme('filter.dropdown.trigger', theme('header.filters.button')) }}"
     >
         {!! $element['iconHtml'] !!}
-        @if ($count)
-            <span
-                data-cy="filter-dropdown-badge"
-                class="{{ theme('filter.dropdown.badge') }}"
-            >{{ $count }}</span>
-        @endif
+        <span
+            x-cloak
+            x-show="badgeCount() > 0"
+            x-text="badgeCount()"
+            data-cy="filter-dropdown-badge"
+            class="{{ theme('filter.dropdown.badge') }}"
+        ></span>
     </button>
 
     <div

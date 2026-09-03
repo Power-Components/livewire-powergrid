@@ -20,7 +20,6 @@
 
 <div
     x-data
-    wire:partial="pg-filters-{{ $tableName }}"
     wire:key="filter-flyout-{{ $tableName }}"
     @if ($flyout['close_on_escape'])
         {{-- Guarded: the listener is global, so an unguarded assignment would

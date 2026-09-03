@@ -73,6 +73,16 @@ it('commits the draft filters on applyFilters', function () {
         ->assertDontSee('Cheap Dish');
 });
 
+it('commits a draft payload passed directly to applyFilters', function () {
+    $test = Livewire::test(dropdownComponent('dropdown-apply-arg')::class)
+        ->call('applyFilters', ['input_text' => ['name' => 'Expensive']]);
+
+    expect($test->get('filters'))->toBe(['input_text' => ['name' => 'Expensive']]);
+
+    $test->assertSee('Expensive Dish')
+        ->assertDontSee('Cheap Dish');
+});
+
 it('reset restores the draft to the applied filters and keeps results', function () {
     $test = Livewire::test(dropdownComponent('dropdown-reset')::class)
         ->set('draftFilters.input_text.name', 'Expensive')
@@ -153,8 +163,10 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
         $names = array_merge($names, array_keys($renderUsing()));
     }
 
-    expect($names)->toContain('pg-filters-'.$test->instance()->tableName)
+    expect($names)->toContain('pg-filter-fields-'.$test->instance()->tableName)
+        ->and($names)->not->toContain('pg-filters-'.$test->instance()->tableName)
         ->and($test->html())->toContain('draftFilters.input_text.name')
+        ->and($test->html())->toContain('data-pg-draft="input_text.name"')
         ->and($test->html())->toContain('data-cy="filter-dropdown-apply"')
         ->and($test->html())->not->toContain('wire:input.live.debounce.600ms="filterInputText');
 });
@@ -162,8 +174,8 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
 it('closes apply and clear through alpine before the livewire snapshot', function () {
     $html = Livewire::test(dropdownComponent('dropdown-alpine-apply')::class)->html();
 
-    expect($html)->toContain('$wire.applyFilters()')
-        ->and($html)->toContain('$wire.clearAllFilters()')
+    expect($html)->toContain('x-on:click="apply()"')
+        ->and($html)->toContain('x-on:click="clearAll()"')
         ->and($html)->not->toContain('wire:click.prevent="applyFilters"')
         ->and($html)->not->toContain('wire:click.prevent="clearAllFilters"');
 });
@@ -171,9 +183,7 @@ it('closes apply and clear through alpine before the livewire snapshot', functio
 it('ignores portaled date and select widgets on click outside', function () {
     $html = Livewire::test(dropdownComponent('dropdown-outside')::class)->html();
 
-    expect($html)->toContain('closeOnOutside($event)')
-        ->and($html)->toContain('.flatpickr-calendar')
-        ->and($html)->toContain('.ts-dropdown');
+    expect($html)->toContain('closeOnOutside($event)');
 });
 
 it('pins the panel to the viewport on small screens', function () {

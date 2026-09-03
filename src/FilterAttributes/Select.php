@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\FilterAttributes;
 
 use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 
 class Select
 {
@@ -11,9 +12,9 @@ class Select
     {
         if ($deferred) {
             return [
-                'selectAttributes' => new ComponentAttributeBag([
-                    'wire:model' => 'draftFilters.select.'.$field,
-                ]),
+                'selectAttributes' => new ComponentAttributeBag(
+                    FilterKey::draftModel('select.'.FilterKey::encode($field)),
+                ),
             ];
         }
 
