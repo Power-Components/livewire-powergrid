@@ -7,22 +7,13 @@
     'filter' => null,
 ])
 
-@once
-    @php
-        $pluginDir = dirname((new \ReflectionClass(\PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin::class))->getFileName());
-        $jsContent = file_get_contents($pluginDir . '/index.js');
-    @endphp
-    <script>
-        {!! $jsContent !!}
-    </script>
-@endonce
-
 @php
     $__partial = $__partial ?? $this;
     $deferred = $__partial->usesFilterPanel();
     $filtersProperty = $deferred ? 'draftFilters' : 'filters';
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');
+    $keyField = $deferred ? \PowerComponents\LivewirePowerGrid\Support\FilterKey::encode(strval($field)) : $field;
     $title = data_get($column, 'title');
 
     $customConfig = [];
@@ -35,6 +26,7 @@
     $params = [
         'type' => $type,
         'dataField' => $field,
+        'keyField' => $keyField,
         'tableName' => $tableName,
         'deferred' => $deferred,
         'filtersProperty' => $filtersProperty,
@@ -63,7 +55,8 @@
             <input
                 id="input_{{ $field }}"
                 x-ref="rangeInput"
-                wire:model="{{ $filtersProperty }}.{{ $type }}.{{ $field }}.formatted"
+                wire:model="{{ $filtersProperty }}.{{ $type }}.{{ $keyField }}.formatted"
+                @if ($deferred) data-pg-draft="{{ $type }}.{{ $keyField }}.formatted" @endif
                 autocomplete="off"
                 data-field="{{ $field }}"
                 class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"

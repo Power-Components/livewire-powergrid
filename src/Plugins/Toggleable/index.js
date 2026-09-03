@@ -33,11 +33,11 @@ if (!window.pgToggleableRegistered) {
             save() {
                 this.toggle = (this.toggle === 0 ?  1 :  0);
 
-                this.$wire.dispatch('pg:toggleable-' + this.tableName, {
-                    field: this.field,
-                    id: this.id,
-                    value: this.toggle
-                })
+                this.$wire.dispatch('pg:toggleable-' + this.tableName, [
+                    this.field,
+                    this.id,
+                    this.toggle
+                ])
             }
         }));
     };

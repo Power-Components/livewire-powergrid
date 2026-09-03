@@ -1,0 +1,6 @@
+import '../../src/Plugins/Editable/index.js'
+import '../../src/Plugins/Editable/index.css'
+import '../../src/Plugins/Toggleable/index.js'
+import '../../src/Plugins/Toggleable/index.css'
+import '../../src/Plugins/Flatpickr/index.js'
+import '../../src/Plugins/FilterBuilder/index.js'

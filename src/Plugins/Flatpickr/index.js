@@ -1,6 +1,10 @@
-document.addEventListener('alpine:init', () => {
-    Alpine.data('pgFlatpickr', () => ({
+if (!window.pgFlatpickrRegistered) {
+    window.pgFlatpickrRegistered = true
+
+    const register = () => {
+        window.Alpine.data('pgFlatpickr', () => ({
         dataField: null,
+        keyField: null,
         tableName: null,
         label: null,
         locale: null,
@@ -17,6 +21,7 @@ document.addEventListener('alpine:init', () => {
             const params = raw ? JSON.parse(raw) : {};
 
             this.dataField = params.dataField;
+            this.keyField = params.keyField ?? params.dataField;
             this.tableName = params.tableName;
             this.deferred = params.deferred ?? false;
             this.filtersProperty = params.filtersProperty ?? 'filters';
@@ -62,7 +67,7 @@ document.addEventListener('alpine:init', () => {
                     return
                 }
 
-                const formatted = await this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
+                const formatted = await this.$wire.get(`${this.filtersProperty}.${this.type}.${this.keyField}.formatted`)
 
                 this.selectedDates = formatted
 
@@ -86,7 +91,7 @@ document.addEventListener('alpine:init', () => {
             if(this.$refs.rangeInput && typeof flatpickr != "undefined") {
                 this.element = flatpickr(this.$refs.rangeInput, options);
 
-                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.type}.${this.dataField}.formatted`)
+                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.type}.${this.keyField}.formatted`)
 
                 this.element.setDate(this.selectedDates)
             }
@@ -139,5 +144,14 @@ document.addEventListener('alpine:init', () => {
 
             return options;
         }
-    }))
-})
+        }));
+    };
+
+    if (window.Alpine) {
+        register();
+    } else {
+        document.addEventListener('alpine:init', () => {
+            register();
+        });
+    }
+}
