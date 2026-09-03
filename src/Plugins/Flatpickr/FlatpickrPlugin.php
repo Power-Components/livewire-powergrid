@@ -49,6 +49,11 @@ class FlatpickrPlugin extends PluginBase
         return $hasFilterInColumns || $hasFilterInFilters;
     }
 
+    public function scripts(): array
+    {
+        return [__DIR__.'/index.js'];
+    }
+
     #[On('pg:datePicker-{tableName}')]
     public function datePickerChanged(mixed ...$params): void
     {

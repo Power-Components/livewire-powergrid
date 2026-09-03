@@ -9,7 +9,6 @@
 
 <div
     id="pg-header-export"
-    x-data="pgExport"
     wire:key="export-dropdown-{{ $tableName }}"
 >
     <flux:dropdown>
@@ -39,10 +38,10 @@
                 @if ($checkbox)
                     <flux:menu.item
                         wire:click.prevent="exportToXLS(true)"
-                        x-bind:disabled="isEmpty()"
+                        x-bind:disabled="!($wire.checkboxValues || []).length"
                     >
                         @lang('XLSX') - @lang('livewire-powergrid::datatable.labels.selected')
-                        <span x-text="countLabel()"></span>
+                        <span x-text="'(' + ($wire.checkboxValues || []).length + ')'"></span>
                     </flux:menu.item>
                 @endif
             @endif
@@ -60,10 +59,10 @@
                 @if ($checkbox)
                     <flux:menu.item
                         wire:click.prevent="exportToCsv(true)"
-                        x-bind:disabled="isEmpty()"
+                        x-bind:disabled="!($wire.checkboxValues || []).length"
                     >
                         @lang('CSV') - @lang('livewire-powergrid::datatable.labels.selected')
-                        <span x-text="countLabel()"></span>
+                        <span x-text="'(' + ($wire.checkboxValues || []).length + ')'"></span>
                     </flux:menu.item>
                 @endif
             @endif

@@ -6,6 +6,16 @@ class Flux extends Theme
 {
     protected ?string $parentTheme = Tailwind::class;
 
+    public function usesAlpineDropdown(): bool
+    {
+        return false;
+    }
+
+    public function usesAlpineExport(): bool
+    {
+        return false;
+    }
+
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())

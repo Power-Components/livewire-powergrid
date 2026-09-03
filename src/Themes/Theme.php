@@ -25,6 +25,24 @@ abstract class Theme
         return strval(str(static::class)->afterLast('\\')->kebab());
     }
 
+    /**
+     * Whether this theme uses PowerGrid's Alpine dropdown (`pgDropdown`).
+     * Flux uses Livewire Flux JS (`<flux:dropdown>`) instead.
+     */
+    public function usesAlpineDropdown(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Whether this theme uses PowerGrid's Alpine export menu (`pgExport`).
+     * Flux uses `<flux:dropdown>` / `<flux:menu>` and `$wire.checkboxValues`.
+     */
+    public function usesAlpineExport(): bool
+    {
+        return true;
+    }
+
     public function views(): array
     {
         return [];

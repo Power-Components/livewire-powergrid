@@ -70,21 +70,14 @@ class ToggleablePlugin extends PluginBase
         return ! empty(data_get($column, 'pluginData.toggleable'));
     }
 
-    protected static ?string $cachedJs = null;
-
-    protected static ?string $cachedCss = null;
-
-    /**
-     * Global assets (<script>/<style>) emitted once per table by the root layout.
-     * Rendered as a plain string — no Blade view, no per-row compile.
-     */
-    public function renderAssets(): string
+    public function scripts(): array
     {
-        static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
-        static::$cachedCss ??= file_get_contents(__DIR__.'/index.css') ?: '';
+        return [__DIR__.'/index.js'];
+    }
 
-        return '<script>'.static::$cachedJs.'</script>'
-            .'<style>'.static::$cachedCss.'</style>';
+    public function styles(): array
+    {
+        return [__DIR__.'/index.css'];
     }
 
     /**
