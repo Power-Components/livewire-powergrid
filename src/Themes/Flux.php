@@ -236,6 +236,6 @@ class Flux extends Theme
      */
     private function triggerButton(): string
     {
-        return 'relative inline-flex items-center justify-center font-medium whitespace-nowrap !w-12 !h-10 text-sm rounded-lg gap-2 bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20 text-zinc-800 dark:text-white transition';
+        return 'relative inline-flex items-center justify-center font-medium whitespace-nowrap !w-12 !h-10 text-sm rounded-lg gap-2 border border-zinc-200 border-b-zinc-300/80 dark:border-white/10 bg-white hover:bg-zinc-50 dark:bg-white/10 dark:hover:bg-white/20 shadow-xs text-zinc-800 dark:text-white transition';
     }
 }

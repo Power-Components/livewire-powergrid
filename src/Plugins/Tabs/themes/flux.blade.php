@@ -16,7 +16,7 @@
     ])
 >
     @if (filled($tabs))
-        <div class="inline-flex flex-wrap items-center gap-1 rounded-xl border border-zinc-200 bg-white p-1 shadow-sm dark:border-white/10 dark:bg-zinc-800">
+        <div class="inline-flex flex-wrap items-center gap-1 rounded-xl border border-zinc-200 p-1 dark:border-white/10">
             @foreach ($tabs as $tab)
                 <button
                     type="button"
