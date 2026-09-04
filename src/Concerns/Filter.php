@@ -8,6 +8,7 @@ use Illuminate\Support\{Arr, Collection};
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 use PowerComponents\Turbine\Components\Filters\{FilterBase, FilterManager};
 
 trait Filter
@@ -107,48 +108,61 @@ trait Filter
                     $this->dispatch('pg:clear_flatpickr::'.$this->tableName.':'.$field);
                 }
 
-                $unset = function ($filter, $field, $column) {
-                    /** @var string $key */
-                    $key = data_get($filter, 'key');
+                $declaredField = data_get($filter, 'field');
+                $declaredColumn = data_get($filter, 'column');
+                $declaredField = is_string($declaredField) ? $declaredField : '';
+                $declaredColumn = is_string($declaredColumn) ? $declaredColumn : '';
 
-                    if (str($field)->contains('.')) {
-                        $explodeField = explode('.', $field);
+                $matches = $field === $declaredField || $field === $declaredColumn;
 
-                        $currentArray = &$this->filters[$key];
-
-                        $this->removeNestedArrayKey($currentArray, $explodeField[0], $explodeField[1]);
-                    }
-
-                    unset($this->filters[$key][$field]);
-
-                    if (empty($this->filters[$key])) {
-                        unset($this->filters[$key]);
-                    }
-
-                    $this->enabledFilters = array_values(array_filter(
-                        $this->enabledFilters,
-                        fn ($filter) => $filter['field'] !== ($column ?? $field)
-                    ));
-                };
-
-                if ($field === data_get($filter, 'column')) {
-                    $unset($filter, data_get($filter, 'field'), $field);
+                if (! $matches) {
+                    return;
                 }
 
-                if ($field === data_get($filter, 'field')) {
-                    $unset($filter, $field, null);
+                $aliases = array_values(array_unique(array_filter(
+                    [$field, $declaredField, $declaredColumn, ...$extraFieldsToClear],
+                    fn ($alias) => is_string($alias) && $alias !== '',
+                )));
 
-                    foreach ($extraFieldsToClear as $fieldToClear) {
-                        $unset($filter, $fieldToClear, null);
+                /** @var string $key */
+                $key = data_get($filter, 'key');
+
+                foreach ($aliases as $alias) {
+                    foreach (array_filter([$key, 'input_text_options']) as $bag) {
+                        if (! isset($this->filters[$bag]) || ! is_array($this->filters[$bag])) {
+                            continue;
+                        }
+
+                        if (str_contains($alias, '.')) {
+                            $parts = explode('.', $alias, 2);
+                            $this->removeNestedArrayKey($this->filters[$bag], $parts[0], $parts[1]);
+                        }
+
+                        unset($this->filters[$bag][$alias]);
+
+                        if (empty($this->filters[$bag])) {
+                            unset($this->filters[$bag]);
+                        }
                     }
                 }
+
+                $this->enabledFilters = array_values(array_filter(
+                    $this->enabledFilters,
+                    fn ($enabled) => ! in_array($enabled['field'] ?? '', $aliases, true),
+                ));
             });
 
         if ($this->emitClearFiltersEvent) {
             $this->dispatch('pg:events', ['event' => 'clearFilters', 'field' => $field, 'tableName' => $this->tableName]);
         }
 
+        $this->draftFilters = FilterKey::encodeDraft($this->filters);
+
         $this->persistState('filters');
+
+        if ($this->filterPanelLoaded) {
+            $this->renderFilterFieldsPartial();
+        }
 
         $this->renderOutsideFiltersPartial();
     }
@@ -170,16 +184,30 @@ trait Filter
         $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
         $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
 
+        if ($this->filterPanelLoaded) {
+            $this->renderFilterFieldsPartial();
+        }
+
         $this->renderOutsideFiltersPartial();
     }
 
     /**
+     * @param  array<string, array<string, mixed>>|null  $draft  DOM snapshot from pgFilterPanel.
+     *                                                           When omitted, the Livewire `draftFilters`
+     *                                                           property is used (tests / programmatic).
+     *
      * @throws Exception
      */
-    public function applyFilters(): void
+    public function applyFilters(?array $draft = null): void
     {
+        if (is_array($draft)) {
+            $this->draftFilters = $draft;
+        }
+
+        // draftFilters carries dot-safe keys (deferred wire:model); decode back
+        // to the real column names before they become the query-facing filters.
         /** @var array<string, mixed> $draft */
-        $draft = $this->draftFilters;
+        $draft = FilterKey::decodeDraft($this->draftFilters);
 
         foreach (['date', 'datetime'] as $dateKey) {
             /** @var array<string, mixed> $entries */
@@ -217,7 +245,7 @@ trait Filter
         $filters = $this->pruneBlankFilters($draft);
 
         $this->filters = $filters;
-        $this->draftFilters = $filters;
+        $this->draftFilters = FilterKey::encodeDraft($filters);
 
         $this->rebuildEnabledFilters();
         $this->syncFilterBuilderPills();
@@ -229,10 +257,14 @@ trait Filter
 
     public function resetFilters(): void
     {
-        $this->draftFilters = $this->filters;
+        $this->draftFilters = FilterKey::encodeDraft($this->filters);
 
         $this->dispatch('pg:restore_flatpickr::'.$this->tableName);
         $this->dispatch('pg:restore_multi_select::'.$this->tableName);
+
+        if ($this->filterPanelLoaded) {
+            $this->renderFilterFieldsPartial();
+        }
 
         $this->renderOutsideFiltersPartial();
     }
@@ -281,18 +313,21 @@ trait Filter
 
             $title = $titles[$column] ?? $titles[$field] ?? $field;
 
+            $typeBag = (array) ($this->filters[$key] ?? []);
+            $pillField = $column !== '' ? $column : $field;
+
             if ($key === 'number') {
-                $range = data_get($this->filters, 'number.'.$field);
+                $range = $typeBag[$field] ?? $typeBag[$column] ?? null;
 
                 if (filled(data_get($range, 'start')) || filled(data_get($range, 'end'))) {
-                    $this->addEnabledFilters($field, $title);
+                    $this->addEnabledFilters($pillField, $title);
                 }
 
                 continue;
             }
 
-            if (filled(data_get($this->filters, $key.'.'.$field))) {
-                $this->addEnabledFilters($field, $title);
+            if (filled($typeBag[$field] ?? null) || filled($typeBag[$column] ?? null)) {
+                $this->addEnabledFilters($pillField, $title);
             }
         }
 
@@ -350,7 +385,7 @@ trait Filter
         $this->showFilters = ! $this->showFilters;
 
         if ($this->showFilters) {
-            $this->filterPanelLoaded = true;
+            $this->mountFilterPanel();
         }
 
         $this->renderOutsideFiltersPartial();
@@ -359,7 +394,7 @@ trait Filter
     public function updatedShowFilters(): void
     {
         if ($this->showFilters) {
-            $this->filterPanelLoaded = true;
+            $this->mountFilterPanel();
         }
 
         $this->renderOutsideFiltersPartial();
@@ -367,9 +402,36 @@ trait Filter
 
     public function loadFilterPanel(): void
     {
+        $this->mountFilterPanel();
+    }
+
+    private function mountFilterPanel(): void
+    {
+        if ($this->filterPanelLoaded) {
+            return;
+        }
+
         $this->filterPanelLoaded = true;
 
-        $this->renderOutsideFiltersPartial(includeGrid: false, openFilterPanel: true);
+        $this->renderFilterFieldsPartial();
+    }
+
+    private function renderFilterFieldsPartial(): void
+    {
+        if (! function_exists('partials') || ! $this->usesFilterPanel()) {
+            return;
+        }
+
+        $this->resolveFiltersForRender();
+
+        /** @var view-string $view */
+        $view = 'livewire-powergrid::components.themes.tailwind.filters.fields';
+
+        partials($this)
+            ->partial("pg-filter-fields-{$this->tableName}", $view, [
+                '__partial' => $this,
+                'tableName' => $this->tableName,
+            ]);
     }
 
     public function filterPosition(): string
@@ -654,7 +716,7 @@ trait Filter
         $this->renderOutsideFiltersPartial();
     }
 
-    public function renderOutsideFiltersPartial(bool $includeGrid = true, bool $openFilterPanel = false): void
+    public function renderOutsideFiltersPartial(bool $includeGrid = true): void
     {
         if (! function_exists('partials')) {
             return;
@@ -679,11 +741,6 @@ trait Filter
             partials($this)
                 ->partial("pg-filter-trigger-{$this->tableName}", theme_view('header.filters'));
         }
-
-        partials($this)
-            ->partial("pg-filters-{$this->tableName}", theme_view($this->filterPanelView()), [
-                'openOnLoad' => $openFilterPanel,
-            ]);
     }
 
     protected function resolveFiltersForRender(): void

@@ -23,6 +23,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Front-end assets
+    |--------------------------------------------------------------------------
+    |
+    | Import the PowerGrid JS through your bundler (Vite):
+    |
+    |   // resources/js/app.js  (Tailwind / DaisyUI)
+    |   import "../../vendor/power-components/livewire-powergrid/resources/js/powergrid.js";
+    |
+    |   // Flux — ships its own dropdown JS
+    |   import "../../vendor/power-components/livewire-powergrid/resources/js/powergrid-flux.js";
+    |
+    */
+
+    /*
+    |--------------------------------------------------------------------------
     | Max per page
     |--------------------------------------------------------------------------
     |

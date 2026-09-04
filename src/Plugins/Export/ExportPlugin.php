@@ -9,7 +9,7 @@ use Illuminate\Support;
 use Illuminate\Support\{Collection, LazyCollection, Str};
 use Illuminate\Support\Facades\Bus;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Theme};
 use PowerComponents\Turbine\Components\SetUp\Exportable;
 use PowerComponents\Turbine\DataSource\ProcessDataSource;
 use PowerComponents\Turbine\Export\ExportEngine;
@@ -34,6 +34,24 @@ class ExportPlugin extends PluginBase
     public function isEnabled(): bool
     {
         return ! empty(data_get($this->component->setUp, 'exportable'));
+    }
+
+    public function scripts(): array
+    {
+        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
+        $theme = $theme instanceof Theme ? $theme : null;
+        $js = dirname(__DIR__, 3).'/resources/js/components';
+        $files = [];
+
+        if (! $theme || $theme->usesAlpineDropdown()) {
+            $files[] = $js.'/pg-dropdown.js';
+        }
+
+        if (! $theme || $theme->usesAlpineExport()) {
+            $files[] = $js.'/pg-export.js';
+        }
+
+        return $files;
     }
 
     public function handlesZone(string $zone): bool

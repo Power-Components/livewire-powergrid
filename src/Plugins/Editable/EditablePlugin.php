@@ -77,17 +77,23 @@ class EditablePlugin extends PluginBase
         return ! empty(data_get($column, 'pluginData.editable'));
     }
 
-    protected static ?string $cachedJs = null;
+    public function scripts(): array
+    {
+        return [
+            dirname(__DIR__, 3).'/resources/js/stores/edit-on-click.js',
+            __DIR__.'/index.js',
+        ];
+    }
 
-    protected static ?string $cachedCss = null;
+    public function styles(): array
+    {
+        return [__DIR__.'/index.css'];
+    }
 
     /** @param  TurbineColumn|array<string, mixed>|stdClass  $column */
     public function render(TurbineColumn|array|stdClass $column, mixed $row): ?string
     {
         if ($this->shouldShowEditOnClick($column, $row)) {
-            static::$cachedJs ??= file_get_contents(__DIR__.'/index.js') ?: '';
-            static::$cachedCss ??= file_get_contents(__DIR__.'/index.css') ?: '';
-
             /** @var view-string $viewName */
             $viewName = 'powergrid-plugins::Editable.index';
 
@@ -99,8 +105,6 @@ class EditablePlugin extends PluginBase
                 'currentTable' => $this->component->currentTable,
                 'showErrorBag' => config('livewire-powergrid.show_error_bag'),
                 'editable' => data_get($column, 'pluginData.editable'),
-                'js' => static::$cachedJs,
-                'css' => static::$cachedCss,
             ])->render();
         }
 

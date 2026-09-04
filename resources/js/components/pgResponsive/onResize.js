@@ -4,48 +4,48 @@ function showAllItems(element) {
 }
 
 function getTableUtilWidth(element) {
-    let fixedSpace = 0;
+    let fixedSpace = 0
 
-    const fixedItems = element.querySelectorAll('table thead tr:nth-child(1) th[fixed]');
+    const fixedItems = element.querySelectorAll('table thead tr:nth-child(1) th[fixed]')
 
-    const elementWidth = getElementWidth(element);
+    const elementWidth = getElementWidth(element)
 
-    fixedItems.forEach((element) => {
-        fixedSpace += getElementWidth(element);
+    fixedItems.forEach((item) => {
+        fixedSpace += getElementWidth(item)
     })
 
-    return elementWidth - fixedSpace;
+    return elementWidth - fixedSpace
 }
 
 function getItemsToHide(element, tableWidth) {
     const items = [].slice.call(element.querySelectorAll('table thead tr:nth-child(1) th'))
 
     const visibleThs = Array.from(items).filter(th => {
-        return getComputedStyle(th).display !== 'none';
-    });
+        return getComputedStyle(th).display !== 'none'
+    })
 
-    const itemsSorted = [].slice.call(visibleThs).sort(function (a,b) {
-        const firstSortOrder = a.getAttribute('sort_order') ??  999
-        const secondSortOrder = b.getAttribute('sort_order') ??  999
+    const itemsSorted = [].slice.call(visibleThs).sort(function (a, b) {
+        const firstSortOrder = a.getAttribute('sort_order') ?? 999
+        const secondSortOrder = b.getAttribute('sort_order') ?? 999
 
         return firstSortOrder - secondSortOrder
-    });
+    })
 
-    let calc = 0;
+    let calc = 0
 
-    let fitsMoreItems = true;
+    let fitsMoreItems = true
 
     const itemsToHide = []
 
     itemsSorted.forEach((item) => {
-        const itemWidth = getElementWidth(item);
+        const itemWidth = getElementWidth(item)
 
         if (item.getAttribute('fixed') !== null) {
             return
         }
 
         if (fitsMoreItems && calc <= tableWidth && (calc + itemWidth <= tableWidth)) {
-            calc += itemWidth;
+            calc += itemWidth
         } else {
             itemsToHide.push(items.indexOf(item) + 1)
             fitsMoreItems = false
@@ -142,7 +142,7 @@ function getElementWidth(element) {
     return parseFloat(element.getBoundingClientRect().width.toFixed(2))
 }
 
-export default function (element) {
+window.pgOnResize = function (element) {
     showAllItems(element)
 
     const tableUtilWidth = getTableUtilWidth(element)
@@ -152,4 +152,4 @@ export default function (element) {
     fillTableExpand(element, itemsToHide)
 
     hideItems(element, itemsToHide)
-};
+}

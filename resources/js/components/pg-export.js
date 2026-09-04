@@ -1,7 +1,10 @@
-import pgDropdown from './pg-dropdown'
-
-export default () => ({
-    ...pgDropdown(),
+window.pgAlpine.data('pgExport', () => ({
+    ...(typeof window.pgDropdownFactory === 'function' ? window.pgDropdownFactory() : {
+        open: false,
+        toggle() { this.open = !this.open },
+        openMenu() { this.open = true },
+        close() { this.open = false },
+    }),
 
     count() {
         const checked = this.$wire.get('checkboxValues')
@@ -19,4 +22,4 @@ export default () => ({
     countLabel() {
         return '(' + this.count() + ')'
     },
-})
+}))

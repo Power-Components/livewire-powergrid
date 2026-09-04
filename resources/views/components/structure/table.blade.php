@@ -11,9 +11,7 @@
     class="pg-container {{ theme('layout.container') }}"
     @if ($deferLoading) wire:init="fetchDatasource" @endif
 >
-    @once
-        {!! $this->renderPluginAssets() !!}
-    @endonce
+    {!! $this->renderPluginAssets() !!}
 
     {!! $this->renderPluginZone('top') !!}
 

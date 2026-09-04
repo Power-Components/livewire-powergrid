@@ -1,15 +1,16 @@
+@php
+    $__partial = $__partial ?? $this;
+    $enabledFilters = $enabledFilters ?? $__partial->enabledFilters;
+@endphp
+
 <div
     wire:partial="pg-enabled-filters-{{ $__partial->tableName }}"
     @class(['pg-enabled-filters-base flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-zinc-200 dark:border-zinc-700' => count($enabledFilters)])
     @if (count($enabledFilters)) data-cy="enabled-filters" @endif
 >
     @if (count($enabledFilters))
-        @php
-            $element = $__partial->headerElement('clearFilters');
-        @endphp
-
         <div class="flex flex-wrap items-center gap-2">
-            <span class="{{ theme('header.enabled_filters.label') }}">
+            <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                 {{ trans('livewire-powergrid::datatable.labels.active_filters') }}
             </span>
 
@@ -17,34 +18,32 @@
                 @isset($filter['label'])
                     @php
                         $isBuilderPill = ($filter['source'] ?? null) === 'filterBuilder';
+                        $pillKey = $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'];
                         $pillClick = $isBuilderPill
-                            ? "clearFilterBuilderRow(".intval($filter['index'] ?? 0).")"
+                            ? 'clearFilterBuilderRow('.intval($filter['index'] ?? 0).')'
                             : "clearFilter('".$filter['field']."')";
                     @endphp
-                    <span
-                        role="button"
-                        data-cy="enabled-filters-clear-{{ $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'] }}"
-                        wire:key="enabled-filters-{{ $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'] }}"
-                        wire:click.prevent="{{ $pillClick }}"
-                        class="{{ theme('header.enabled_filters.pill') }}"
+                    <flux:badge
+                        wire:key="enabled-filters-{{ $pillKey }}"
+                        data-cy="enabled-filters-clear-{{ $pillKey }}"
+                        size="sm"
+                        variant="outline"
                     >
                         {{ $filter['label'] }}
-                        {!! $element['iconHtml'] !!}
-                    </span>
+                        <flux:badge.close wire:click.prevent="{{ $pillClick }}" />
+                    </flux:badge>
                 @endisset
             @endforeach
         </div>
 
         <button
             type="button"
-            role="button"
             data-cy="enabled-filters-clear-all"
             wire:click.prevent="clearAllFilters"
-            title="{{ $element['title'] }}"
-            aria-label="{{ $element['title'] }}"
-            class="{{ theme('header.enabled_filters.pill_clear_all') }}"
+            aria-label="{{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}"
+            class="cursor-pointer text-zinc-400 transition hover:text-zinc-600 dark:hover:text-zinc-200"
         >
-            {!! $element['iconHtml'] !!}
+            <x-livewire-powergrid::icons.x class="w-4 h-4" />
         </button>
     @endif
 </div>

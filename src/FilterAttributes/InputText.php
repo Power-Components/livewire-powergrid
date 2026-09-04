@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\FilterAttributes;
 
 use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 
 class InputText
 {
@@ -10,13 +11,11 @@ class InputText
     public function __invoke(string $field, string $title, bool $deferred = false): array
     {
         if ($deferred) {
+            $key = FilterKey::encode($field);
+
             return [
-                'inputAttributes' => new ComponentAttributeBag([
-                    'wire:model' => 'draftFilters.input_text.'.$field,
-                ]),
-                'selectAttributes' => new ComponentAttributeBag([
-                    'wire:model' => 'draftFilters.input_text_options.'.$field,
-                ]),
+                'inputAttributes' => new ComponentAttributeBag(FilterKey::draftModel('input_text.'.$key)),
+                'selectAttributes' => new ComponentAttributeBag(FilterKey::draftModel('input_text_options.'.$key)),
             ];
         }
 

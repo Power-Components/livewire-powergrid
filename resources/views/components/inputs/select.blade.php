@@ -10,10 +10,12 @@
     '__partial' => null,
 ])
 
+@use('PowerComponents\LivewirePowerGrid\Support\FilterKey')
 @php
     $__partial = $__partial ?? $this;
     $deferred = $__partial->usesFilterPanel();
     $filtersProperty = $deferred ? 'draftFilters' : 'filters';
+    $filterPathField = $deferred ? FilterKey::encode(strval(data_get($filter, 'field'))) : data_get($filter, 'field');
     $framework = config('livewire-powergrid.plugins.select');
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
@@ -40,7 +42,7 @@ $params = [
     'optionLabel' => data_get($filter, 'optionLabel'),
     'options' => data_get($filter, 'params'),
     'initialValues' => $initialValues,
-    'appliedFilters' => data_get($__partial->{$filtersProperty}, 'multi_select', []),
+    'appliedFilters' => FilterKey::decodeType((array) data_get($__partial->{$filtersProperty}, 'multi_select', [])),
     'deferred' => $deferred,
     'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
 ];
@@ -74,7 +76,8 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
             <select
                 @if ($multiple) multiple @endif
                 class="{{ theme('filter.multi_select.select') }}"
-                wire:model="{{ $filtersProperty }}.multi_select.{{ data_get($filter, 'field') }}.values"
+                wire:model="{{ $filtersProperty }}.multi_select.{{ $filterPathField }}.values"
+                @if ($deferred) data-pg-draft="multi_select.{{ $filterPathField }}.values" @endif
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
                 @if (!data_get($params, 'options.disableOptionAll', false))

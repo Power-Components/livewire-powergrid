@@ -6,6 +6,16 @@ class Flux extends Theme
 {
     protected ?string $parentTheme = Tailwind::class;
 
+    public function usesAlpineDropdown(): bool
+    {
+        return false;
+    }
+
+    public function usesAlpineExport(): bool
+    {
+        return false;
+    }
+
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
@@ -16,7 +26,6 @@ class Flux extends Theme
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
-                ->view('livewire-powergrid::components.themes.flux.header')
                 ->layout(fn (Components\Layout $layout) => $layout
                     ->container('p-4 md:flex md:flex-row w-full justify-between items-center gap-3')
                     ->subContainer('flex flex-row flex-wrap items-center gap-1.5')
@@ -35,6 +44,7 @@ class Flux extends Theme
                     ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                     ->menu('dark:bg-zinc-900')
+                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-56 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button($this->triggerButton())
@@ -67,25 +77,29 @@ class Flux extends Theme
                     ->table('min-w-full')
                     ->thead('bg-white dark:bg-white/10')
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
-                    ->th('font-semibold px-3 py-3 text-left text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
+                    ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
+                    ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
+                    ->th('py-3 px-3 first:ps-0 last:pe-0 text-start text-sm font-medium text-zinc-800 dark:text-white border-b border-zinc-800/10 dark:border-white/20 whitespace-nowrap')
                     ->thActions('font-semibold px-3 py-3 text-end text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
                     ->tbody('text-sm text-zinc-800 dark:text-zinc-200')
-                    ->td('px-3 py-2 whitespace-nowrap')
-                    ->tdActions('px-3 py-2 whitespace-nowrap text-end')
+                    ->td('px-3 py-2 first:ps-0 last:pe-0 whitespace-nowrap')
+                    ->tdActions('px-3 py-2 first:ps-0 last:pe-0 whitespace-nowrap text-end')
                 )
                 ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
-                    ->th('px-6 py-3 text-left text-xs font-medium text-zinc-500 tracking-wider')
-                    ->input('rounded border-zinc-200 dark:border-white/10 bg-white dark:bg-white/10 h-4 w-4 text-zinc-800 focus:ring-zinc-500')
+                    ->th('py-2 ps-4! pe-3 text-start align-middle')
+                    ->base('flex items-center')
+                    ->label('flex items-center')
+                    ->input('rounded border-zinc-200 dark:border-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
                 )
                 ->radio(fn (Components\Radio $radio) => $radio
                     ->th('px-6 py-3 text-left text-xs font-medium text-zinc-500 tracking-wider')
-                    ->input('rounded-full border-zinc-200 dark:border-white/10 text-zinc-800 focus:ring-zinc-500')
+                    ->input('rounded-full border-zinc-200 dark:border-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
                 )
             )
             ->footer(fn (Components\Footer $footer) => $footer
                 ->view('livewire-powergrid::components.themes.flux.footer')
                 ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-xl border-t border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900 px-4 py-3')
+                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-xl dark:bg-zinc-900 px-4 py-3')
                 )
                 ->pagination('pagination')
             );
@@ -152,7 +166,7 @@ class Flux extends Theme
                     ->wrapper('relative inline-block text-left')
                     ->trigger($this->triggerButton())
                     ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
-                    ->panel('fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900 lg:absolute lg:inset-x-auto lg:top-auto lg:left-auto lg:right-0 lg:mt-2')
+                    ->panel('fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
                     ->header('flex shrink-0 items-center justify-between px-4 pt-4 pb-2')
                     ->title('text-base font-semibold text-zinc-800 dark:text-zinc-100')
                     ->body('min-h-0 flex-1 overflow-y-auto px-4 py-3')
@@ -225,6 +239,6 @@ class Flux extends Theme
      */
     private function triggerButton(): string
     {
-        return 'relative inline-flex items-center justify-center font-medium whitespace-nowrap !w-12 !h-10 text-sm rounded-lg gap-2 bg-zinc-800/5 hover:bg-zinc-800/10 dark:bg-white/10 dark:hover:bg-white/20 text-zinc-800 dark:text-white transition';
+        return 'relative inline-flex items-center justify-center font-medium whitespace-nowrap !w-12 !h-10 text-sm rounded-lg gap-2 border border-zinc-200 border-b-zinc-300/80 dark:border-white/10 bg-white hover:bg-zinc-50 dark:bg-white/10 dark:hover:bg-white/20 shadow-xs text-zinc-800 dark:text-white transition';
     }
 }

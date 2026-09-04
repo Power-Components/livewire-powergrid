@@ -9,11 +9,14 @@ use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
 
 class FilterBuilderPlugin extends PluginBase
 {
-    protected static ?string $cachedJs = null;
-
     public function name(): string
     {
         return 'filterBuilder';
+    }
+
+    public function scripts(): array
+    {
+        return [__DIR__.'/index.js'];
     }
 
     public function isEnabled(): bool
@@ -52,7 +55,6 @@ class FilterBuilderPlugin extends PluginBase
             'applied' => $applied,
             'matchDefault' => $matchDefault,
             'appliedCount' => count($applied['rows'] ?? []),
-            'js' => $this->js(),
         ])->render();
     }
 
@@ -100,14 +102,5 @@ class FilterBuilderPlugin extends PluginBase
         $labels['less_equal'] = strval(trans('livewire-powergrid::datatable.filter_builder.number.less_equal'));
 
         return $labels;
-    }
-
-    private function js(): string
-    {
-        if (self::$cachedJs === null) {
-            self::$cachedJs = strval(file_get_contents(__DIR__.'/index.js'));
-        }
-
-        return self::$cachedJs;
     }
 }

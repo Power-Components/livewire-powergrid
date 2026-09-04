@@ -14,7 +14,7 @@
     $actions = $__partial->actions ?? [];
 @endphp
 <tr
-    class="{{ theme('table.layout.tr') }}"
+    class="{{ theme('table.layout.tr') }} {{ theme('table.layout.thead_tr') }}"
 >
     @if ($loading)
         <td

@@ -99,9 +99,63 @@ abstract class PluginBase
         return null;
     }
 
+    /** @var array<string, string> */
+    protected static array $assetCache = [];
+
+    /**
+     * Inline the plugin's scripts()/styles() once per component render.
+     * Files are read from the local filesystem and cached across renders.
+     */
     public function renderAssets(): string
     {
-        return '';
+        $html = '';
+
+        foreach ($this->scripts() as $file) {
+            $source = self::readAsset($file);
+
+            if ($source !== '') {
+                $html .= '<script>'.$source.'</script>';
+            }
+        }
+
+        foreach ($this->styles() as $file) {
+            $source = self::readAsset($file);
+
+            if ($source !== '') {
+                $html .= '<style>'.$source.'</style>';
+            }
+        }
+
+        return $html;
+    }
+
+    private static function readAsset(string $file): string
+    {
+        return self::$assetCache[$file] ??= is_file($file)
+            ? (string) (file_get_contents($file) ?: '')
+            : '';
+    }
+
+    /**
+     * JavaScript files inlined once per page when this plugin is enabled.
+     * Relative paths resolve from the plugin class directory.
+     *
+     * @return list<string>
+     */
+    public function scripts(): array
+    {
+        return [];
+    }
+
+    /**
+     * Stylesheets inlined once per page when this plugin is enabled.
+     * Relative paths resolve from the plugin class directory.
+     *
+     * @return list<string>
+     */
+    public function styles(): array
+    {
+        return [];
     }
 
     /**

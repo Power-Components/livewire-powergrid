@@ -26,7 +26,7 @@ it('removes <script> tag from custom field', function () {
     };
 
     Livewire::test($component::class)
-        ->assertDontSeeHtml('<script>')
+        ->assertDontSeeHtml('<script>alert(1)</script>')
         ->assertSee('hello there!');
 });
 

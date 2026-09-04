@@ -8,7 +8,6 @@
     'applied' => ['match' => 'and', 'rows' => []],
     'matchDefault' => 'and',
     'appliedCount' => 0,
-    'js' => null,
 ])
 
 @php
@@ -22,12 +21,6 @@
         'applied' => $applied,
     ];
 @endphp
-
-@once
-    <script>
-        {!! $js !!}
-    </script>
-@endonce
 
 <div wire:key="pg-filter-builder-{{ $tableName }}">
     <flux:modal.trigger name="pg-filter-builder-{{ $tableName }}">

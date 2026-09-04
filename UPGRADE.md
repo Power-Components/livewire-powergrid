@@ -1197,9 +1197,11 @@ filters via `draftFilters` + `applyFilters()`
 string (see Section 17).
 
 #### "ReferenceError: pgFlatpickr / pgExport / pgTomSelect is not defined" in console
-**Solution:** The pre-built `dist/powergrid` bundle is gone. Import the package's
-JS source through your bundler (`resources/js/components/index`) so the Alpine
-components get registered, and rebuild assets (see Section 18).
+**Solution:** Import the package entry in `resources/js/app.js` and rebuild Vite
+(`resources/js/powergrid.js`, see Section 18). If you opted into
+`livewire-powergrid.assets.auto_inject` instead, PowerGrid inlines only the
+Alpine components the current table uses. Third-party libs (flatpickr,
+tom-select, slim-select) still need to be installed and exposed on `window`.
 
 #### PowerGrid styles missing or partially applied after upgrading
 **Solution:** Import `resources/css/tailwind4.css` from the package and make sure
@@ -1384,9 +1386,8 @@ upgrade (large production app) surfaced this checklist:
 
 ### JavaScript
 
-Import the component registry (registers all Alpine components such as
-`pgFlatpickr`, `pgTomSelect`, `pgSlimSelect`, `pgExport`, etc.) instead of the old
-dist bundle:
+The pre-built `dist/powergrid` bundle is gone. Import the package entry in
+your Vite bundle — `vite build` minifies it into `public/build/assets/app-*.js`.
 
 ```js
 // resources/js/app.js
@@ -1394,12 +1395,25 @@ dist bundle:
 // ❌ v6
 import "../../vendor/power-components/livewire-powergrid/dist/powergrid";
 
-// ✅ v7
-import "../../vendor/power-components/livewire-powergrid/resources/js/components/index";
+// ✅ v7 — Tailwind / DaisyUI
+import "../../vendor/power-components/livewire-powergrid/resources/js/powergrid.js";
+
+// ✅ v7 — Flux (dropdowns/menus come from Flux JS, not pgDropdown/pgExport)
+import "../../vendor/power-components/livewire-powergrid/resources/js/powergrid-flux.js";
 ```
 
-Without this import the Alpine data components are never registered and the console
-fills with `pgFlatpickr is not defined` style errors.
+```php
+// config/livewire-powergrid.php
+'assets' => [
+    'auto_inject' => false, // true = PHP inlines files the table uses (no Vite)
+    'minify' => true,       // only applies to auto_inject
+],
+```
+
+Third-party libraries used by filters (flatpickr, tom-select, slim-select) are
+still optional and must be installed and exposed on `window` when you use those
+filters. Plugin JS (export, editable, toggleable, flatpickr, filter builder) is
+injected only when that plugin is enabled on the table.
 
 ### CSS & Tailwind 4
 

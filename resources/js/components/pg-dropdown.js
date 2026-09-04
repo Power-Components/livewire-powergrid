@@ -1,4 +1,4 @@
-export default () => ({
+window.pgDropdownFactory = () => ({
     open: false,
 
     toggle() {
@@ -26,3 +26,5 @@ export default () => ({
         this.close()
     },
 })
+
+window.pgAlpine.data('pgDropdown', window.pgDropdownFactory)

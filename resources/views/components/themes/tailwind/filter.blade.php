@@ -11,18 +11,12 @@
     $tableName = $tableName ?? $__partial->tableName;
 
     $element = $__partial->headerElement('filters');
-    $count = $__partial->activeFilterCount();
 
     $columns = $__partial->filterPanelColumns();
     $gridClass = match ($columns) {
-        3 => 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
-        2 => 'grid grid-cols-1 md:grid-cols-2 gap-4',
+        3 => 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4',
+        2 => 'grid grid-cols-1 sm:grid-cols-2 gap-4',
         default => 'grid grid-cols-1 gap-4',
-    };
-    $panelWidth = match ($columns) {
-        3 => 'lg:w-[48rem]',
-        2 => 'lg:w-[36rem]',
-        default => 'lg:w-96',
     };
 @endphp
 
@@ -32,39 +26,12 @@
     $wire — otherwise the morph restores open=true and the panel stays up.
     Portaled widgets (flatpickr, tom-select, slim-select) render on <body>,
     so click.outside has to ignore them or the panel closes mid-interaction.
+    x-data is a named component so Alpine does not re-parse an inline object
+    (the evaluator treats `this` inside that string as syntax).
 --}}
 <div
-    x-data="{
-        open: {{ $openOnLoad ? 'true' : 'false' }},
-        async toggle() {
-            if (! this.$wire.filterPanelLoaded) {
-                await this.$wire.loadFilterPanel()
-                this.open = true
-                return
-            }
-            this.open = ! this.open
-        },
-        closeOnOutside(event) {
-            const target = event.target;
-            if (! (target instanceof Element)) {
-                this.open = false;
-                return;
-            }
-            if (target.closest('.flatpickr-calendar, .ts-dropdown, .ss-content')) {
-                return;
-            }
-            this.open = false;
-        },
-        apply() {
-            this.open = false;
-            this.$wire.applyFilters();
-        },
-        clearAll() {
-            this.open = false;
-            this.$wire.clearAllFilters();
-        },
-    }"
-    wire:partial="pg-filters-{{ $tableName }}"
+    x-data="pgFilterPanel"
+    data-open-on-load="{{ $openOnLoad ? 'true' : 'false' }}"
     wire:key="pg-filter-dropdown-{{ $tableName }}"
     class="{{ theme('filter.dropdown.wrapper') }}"
 >
@@ -77,12 +44,13 @@
         class="{{ theme('filter.dropdown.trigger', theme('header.filters.button')) }}"
     >
         {!! $element['iconHtml'] !!}
-        @if ($count)
-            <span
-                data-cy="filter-dropdown-badge"
-                class="{{ theme('filter.dropdown.badge') }}"
-            >{{ $count }}</span>
-        @endif
+        <span
+            x-cloak
+            x-show="badgeCount() > 0"
+            x-text="badgeCount()"
+            data-cy="filter-dropdown-badge"
+            class="{{ theme('filter.dropdown.badge') }}"
+        ></span>
     </button>
 
     <div
@@ -100,21 +68,12 @@
         role="dialog"
         aria-modal="true"
         data-cy="filter-dropdown-panel"
-        class="{{ theme('filter.dropdown.panel') }} {{ $panelWidth }}"
+        class="{{ theme('filter.dropdown.panel') }}"
     >
         <div class="{{ theme('filter.dropdown.header') }}">
             <span class="{{ theme('filter.dropdown.title') }}">
                 {{ trans('livewire-powergrid::datatable.buttons.filters_title') }}
             </span>
-
-            <button
-                type="button"
-                data-cy="filter-dropdown-reset"
-                wire:click.prevent="resetFilters"
-                class="{{ theme('filter.dropdown.reset') }}"
-            >
-                {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
-            </button>
         </div>
 
         <div class="{{ theme('filter.dropdown.body') }}">
@@ -130,11 +89,11 @@
         <div class="{{ theme('filter.dropdown.footer') }}">
             <button
                 type="button"
-                data-cy="filter-dropdown-clear"
+                data-cy="filter-dropdown-reset"
                 x-on:click="clearAll()"
-                class="{{ theme('filter.dropdown.clear') }}"
+                class="{{ theme('filter.dropdown.reset') }} me-auto"
             >
-                {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
+                {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
             </button>
 
             <button

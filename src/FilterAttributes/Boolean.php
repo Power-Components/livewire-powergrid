@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\FilterAttributes;
 
 use Illuminate\View\ComponentAttributeBag;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 
 class Boolean
 {
@@ -11,9 +12,9 @@ class Boolean
     {
         if ($deferred) {
             return [
-                'selectAttributes' => new ComponentAttributeBag([
-                    'wire:model' => 'draftFilters.boolean.'.$field,
-                ]),
+                'selectAttributes' => new ComponentAttributeBag(
+                    FilterKey::draftModel('boolean.'.FilterKey::encode($field)),
+                ),
             ];
         }
 

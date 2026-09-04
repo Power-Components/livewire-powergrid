@@ -11,7 +11,7 @@
     class="{{ theme('table.layout.tr') }}"
 >
     <th
-        class="{{ theme('table.layout.body.td.empty_state') }}"
+        class="{{ theme('table.layout.empty_state') }}"
         colspan="999"
     >
         {!! $__partial->processEmptyState !!}

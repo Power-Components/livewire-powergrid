@@ -6,8 +6,6 @@
     'tableName' => null,
     'showErrorBag' => null,
     'editable' => null,
-    'js' => null,
-    'css' => null,
 ])
 
 @php
@@ -51,15 +49,6 @@
         'saveOnMouseOut' => (bool) data_get($editable, 'saveOnMouseOut'),
     ];
 @endphp
-
-@once
-<script>
-    {!! $js !!}
-</script>
-<style>
-    {!! $css !!}
-</style>
-@endonce
 
 <div
     wire:key="editable-{{ uniqid() }}"

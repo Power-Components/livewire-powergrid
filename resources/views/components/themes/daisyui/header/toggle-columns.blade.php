@@ -46,19 +46,10 @@
             x-on:keydown.escape.window="open = false"
             role="dialog"
             data-cy="toggle-columns-panel"
-            class="{{ theme('filter.dropdown.panel') }} sm:w-72"
+            class="{{ theme('header.toggle_columns.panel', theme('filter.dropdown.panel')) }}"
         >
             <div class="{{ theme('filter.dropdown.header') }}">
                 <span class="{{ theme('filter.dropdown.title') }}">{{ $element['title'] }}</span>
-
-                <button
-                    type="button"
-                    data-cy="toggle-columns-reset"
-                    wire:click.prevent="resetColumns"
-                    class="{{ theme('filter.dropdown.reset') }}"
-                >
-                    {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
-                </button>
             </div>
 
             <div class="{{ theme('filter.dropdown.body') }} space-y-3">
@@ -82,6 +73,15 @@
             </div>
 
             <div class="{{ theme('filter.dropdown.footer') }}">
+                <button
+                    type="button"
+                    data-cy="toggle-columns-reset"
+                    wire:click.prevent="resetColumns"
+                    class="{{ theme('filter.dropdown.reset') }} me-auto"
+                >
+                    {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
+                </button>
+
                 <button
                     type="button"
                     data-cy="toggle-columns-apply"

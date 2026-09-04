@@ -2,8 +2,8 @@
     @php($element = ($__partial ?? $this)->headerElement('softDeletes'))
     <div wire:key="soft-deletes-dropdown-{{ $tableName }}" class="{{ theme('header.soft_deletes.wrapper') }}">
         <flux:dropdown>
-            <flux:button
-                variant="filled"
+            <button
+                type="button"
                 class="{{ theme('header.soft_deletes.button', theme('header.layout.actions')) }}"
                 title="{{ $element['title'] }}"
                 aria-label="{{ $element['title'] }}"
@@ -12,7 +12,7 @@
                 @if ($element['showLabel'])
                     <span class="{{ theme('header.soft_deletes.label') }}">{{ $element['title'] }}</span>
                 @endif
-            </flux:button>
+            </button>
 
             <flux:menu class="{{ theme('header.soft_deletes.menu') }}">
                 <flux:menu.item

@@ -15,6 +15,8 @@ abstract class PluginBase implements Wireable
     abstract public function isEnabled(): bool;
     public function handles(Column|array|\stdClass $column): bool { return false; }
     public function render(Column|array|\stdClass $column, mixed $row): ?string { return null; }
+    public function scripts(): array { return []; } // JS files, relative to the plugin dir
+    public function styles(): array { return []; } // CSS files, relative to the plugin dir
     public static function themeTokens(): array { return []; }
 }
 ```
@@ -79,6 +81,11 @@ class {PluginName}Plugin extends PluginBase
         return ! empty(data_get($column, 'pluginData.{pluginKey}'));
     }
 
+    public function scripts(): array
+    {
+        return ['index.js'];
+    }
+
     public function render(Column|array|\stdClass $column, mixed $row): ?string
     {
         return view('powergrid-plugins::{PluginName}.index', [
@@ -87,7 +94,6 @@ class {PluginName}Plugin extends PluginBase
             'row' => $row,
             'column' => $column,
             'config' => data_get($column, 'pluginData.{pluginKey}'),
-            'js' => file_get_contents(__DIR__.'/index.js'),
         ])->render();
     }
 
@@ -118,7 +124,6 @@ class {PluginName}Plugin extends PluginBase
     'column' => null,
     'tableName' => null,
     'config' => null,
-    'js' => null,
 ])
 
 @php
@@ -131,12 +136,6 @@ class {PluginName}Plugin extends PluginBase
         'field' => $fieldName,
     ];
 @endphp
-
-@once
-<script>
-    {!! $js !!}
-</script>
-@endonce
 
 <div
     wire:key="pg-{pluginKey}-{{ data_get($row, $primaryKey) }}-{{ $fieldName }}"
@@ -267,5 +266,6 @@ public function onUpdated{PluginName}(string|int $id, string $field, string $val
 | Initial value not shown | Using `x-model` + `x-for` | Render options server-side with `@foreach` + `@selected()` |
 | Update silently ignored | Field not fillable | Add field to Model's `$fillable` or `#[Fillable([...])]` |
 | Need proxy in package | Old approach | Not needed - `pgPluginListener` handles external plugins generically |
+| JS loaded on every table | Inlined in the Blade view | Return files from `scripts()` / `styles()` so PowerGrid injects them only when the plugin is enabled (and minifies them in production) |
 
 ---

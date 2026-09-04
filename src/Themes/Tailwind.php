@@ -42,6 +42,7 @@ class Tailwind extends Theme
                     ->label('ml-2')
                     ->menu('toggle-columns-base group absolute z-10 mt-2 w-56 rounded-md dark:bg-zinc-700 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none')
                     ->menuItem('cursor-pointer text-sm flex gap-2 justify-between block px-4 py-2 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800')
+                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-96 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
@@ -83,6 +84,8 @@ class Tailwind extends Theme
                     ->table('min-w-full dark:!bg-zinc-800')
                     ->thead('shadow-sm rounded-t-lg bg-zinc-100 dark:bg-zinc-900')
                     ->tr('border-b border-zinc-100 dark:border-zinc-600 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700')
+                    ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
+                    ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
                     ->th('font-extrabold px-3 py-3 text-left text-xs text-zinc-700 tracking-wider whitespace-nowrap dark:text-zinc-300')
                     ->thActions('font-extrabold px-3 py-3 text-end text-xs text-zinc-700 tracking-wider whitespace-nowrap dark:text-zinc-300')
                     ->tbody('text-zinc-800')
@@ -193,7 +196,7 @@ class Tailwind extends Theme
                     'wrapper' => 'relative inline-block text-left',
                     'trigger' => $this->headerButtonClass().' relative justify-center',
                     'badge' => 'absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-semibold text-white',
-                    'panel' => 'fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 lg:absolute lg:inset-x-auto lg:top-auto lg:left-auto lg:right-0 lg:mt-2',
+                    'panel' => 'fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800',
                     'header' => 'flex shrink-0 items-center justify-between px-4 pt-4 pb-2',
                     'title' => 'text-base font-semibold text-zinc-800 dark:text-zinc-100',
                     'body' => 'min-h-0 flex-1 overflow-y-auto px-4 py-3',

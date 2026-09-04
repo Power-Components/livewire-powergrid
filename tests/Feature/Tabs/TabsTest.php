@@ -71,7 +71,6 @@ it('scopes the rows to the active tab', function () {
     seedTabsDishes();
 
     Livewire::test(makeTabsComponent()::class)
-        // default cat1 => 3 rows
         ->assertSee('Category 1')
         ->call('selectTab', 'cat2')
         ->assertSet('activeTab', 'cat2')
@@ -98,12 +97,13 @@ it('computes badge counts in a single batched query', function () {
 
     Livewire::test(makeTabsComponent()::class)
         ->tap(function ($test) {
-            $data = collect($test->instance()->tabsData()['tabs'])->keyBy('key');
+            $component = $test->instance();
+            $component->setUp = $component->resolvedSetUp();
 
-            // all => count(*) = 4, cat1 => 3
+            $data = collect($component->tabsData()['tabs'])->keyBy('key');
+
             expect($data['all']['badge'])->toBe(4)
                 ->and($data['cat1']['badge'])->toBe(3)
-                // cat2 declared badge:false => hidden
                 ->and($data['cat2']['badge'])->toBeNull();
         });
 
@@ -134,7 +134,6 @@ it('ignores a tab scope on an undeclared column', function () {
             return [
                 PowerGrid::tabs()
                     ->add('all', label: 'All')
-                    // "secret" is NOT a declared column => scope must be ignored
                     ->add('evil', label: 'Evil', scope: ['secret', 'x'])
                     ->default('evil'),
             ];

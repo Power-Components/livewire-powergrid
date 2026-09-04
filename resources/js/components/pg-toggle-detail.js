@@ -1,4 +1,4 @@
-export default () => ({
+window.pgAlpine.data('pgToggleDetail', () => ({
     loading: false,
     tableName: '',
     rowId: '',
@@ -25,7 +25,7 @@ export default () => ({
     iconClass() {
         return {
             'rotate-90': this.isOpen(),
-            '-rotate-0': !this.isOpen(),
+            'rotate-0': !this.isOpen(),
         }
     },
-})
+}))

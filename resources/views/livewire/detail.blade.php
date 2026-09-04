@@ -1,13 +1,10 @@
 <tr
-    x-data="pgDetailRow"
     data-table-name="{{ $tableName }}"
     data-row-id="{{ $rowId }}"
     class="{{ $trClass }}"
+    @unless ($show) hidden @endunless
 >
-    <td
-        x-show="visible()"
-        colspan="999"
-    >
+    <td colspan="999">
         @includeWhen($show, $view, [
             'id' => $rowId,
             'options' => $options,
