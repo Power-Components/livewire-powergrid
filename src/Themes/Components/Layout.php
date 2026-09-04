@@ -85,6 +85,20 @@ class Layout
         return $this;
     }
 
+    public function theadTr(string $theadTr): self
+    {
+        $this->properties['theadTr'] = $theadTr;
+
+        return $this;
+    }
+
+    public function emptyState(string $emptyState): self
+    {
+        $this->properties['emptyState'] = $emptyState;
+
+        return $this;
+    }
+
     public function trStriped(string $trStriped): self
     {
         $this->properties['trStriped'] = $trStriped;

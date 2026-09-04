@@ -6,7 +6,7 @@
 >
     @if ($loading)
         <td
-            class="{{ theme('table.body.empty_state') }}"
+            class="{{ theme('table.layout.empty_state') }}"
             colspan="999"
         >
             @if ($loadingComponent)

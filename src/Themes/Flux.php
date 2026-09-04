@@ -77,6 +77,8 @@ class Flux extends Theme
                     ->table('min-w-full')
                     ->thead('bg-white dark:bg-white/10')
                     ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
+                    ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
+                    ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
                     ->th('py-3 px-3 first:ps-0 last:pe-0 text-start text-sm font-medium text-zinc-800 dark:text-white border-b border-zinc-800/10 dark:border-white/20 whitespace-nowrap')
                     ->thActions('font-semibold px-3 py-3 text-end text-xs text-zinc-500 tracking-wider whitespace-nowrap dark:text-zinc-400')
                     ->tbody('text-sm text-zinc-800 dark:text-zinc-200')

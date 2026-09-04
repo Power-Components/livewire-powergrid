@@ -84,6 +84,8 @@ class Tailwind extends Theme
                     ->table('min-w-full dark:!bg-zinc-800')
                     ->thead('shadow-sm rounded-t-lg bg-zinc-100 dark:bg-zinc-900')
                     ->tr('border-b border-zinc-100 dark:border-zinc-600 hover:bg-zinc-50 dark:bg-zinc-800 dark:hover:bg-zinc-700')
+                    ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
+                    ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
                     ->th('font-extrabold px-3 py-3 text-left text-xs text-zinc-700 tracking-wider whitespace-nowrap dark:text-zinc-300')
                     ->thActions('font-extrabold px-3 py-3 text-end text-xs text-zinc-700 tracking-wider whitespace-nowrap dark:text-zinc-300')
                     ->tbody('text-zinc-800')
