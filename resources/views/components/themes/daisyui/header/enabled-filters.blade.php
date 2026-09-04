@@ -1,6 +1,6 @@
 <div
     wire:partial="pg-enabled-filters-{{ $__partial->tableName }}"
-    @class(['pg-enabled-filters-base flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-y border-base-300' => count($enabledFilters)])
+    @class(['pg-enabled-filters-base flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-base-300' => count($enabledFilters)])
     @if (count($enabledFilters)) data-cy="enabled-filters" @endif
 >
     @if (count($enabledFilters))
