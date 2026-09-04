@@ -179,7 +179,7 @@ class DaisyUI extends Theme
                     ->wrapper('relative inline-block text-left')
                     ->trigger('btn btn-ghost btn-sm border-base-300 relative gap-2 justify-center')
                     ->badge('absolute -top-1.5 -right-1.5 badge badge-primary badge-sm')
-                    ->panel('fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-box border border-base-300 bg-base-100 shadow-lg lg:absolute lg:inset-x-auto lg:top-auto lg:left-auto lg:right-0 lg:mt-2')
+                    ->panel('fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-box border border-base-300 bg-base-100 shadow-lg')
                     ->header('flex shrink-0 items-center justify-between px-4 pt-4 pb-2')
                     ->title('text-base font-semibold text-base-content')
                     ->body('min-h-0 flex-1 overflow-y-auto px-4 py-3')

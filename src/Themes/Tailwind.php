@@ -193,7 +193,7 @@ class Tailwind extends Theme
                     'wrapper' => 'relative inline-block text-left',
                     'trigger' => $this->headerButtonClass().' relative justify-center',
                     'badge' => 'absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-semibold text-white',
-                    'panel' => 'fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 lg:absolute lg:inset-x-auto lg:top-auto lg:left-auto lg:right-0 lg:mt-2',
+                    'panel' => 'fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800',
                     'header' => 'flex shrink-0 items-center justify-between px-4 pt-4 pb-2',
                     'title' => 'text-base font-semibold text-zinc-800 dark:text-zinc-100',
                     'body' => 'min-h-0 flex-1 overflow-y-auto px-4 py-3',

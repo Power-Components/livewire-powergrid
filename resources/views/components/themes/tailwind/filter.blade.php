@@ -14,14 +14,9 @@
 
     $columns = $__partial->filterPanelColumns();
     $gridClass = match ($columns) {
-        3 => 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4',
-        2 => 'grid grid-cols-1 md:grid-cols-2 gap-4',
+        3 => 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4',
+        2 => 'grid grid-cols-1 sm:grid-cols-2 gap-4',
         default => 'grid grid-cols-1 gap-4',
-    };
-    $panelWidth = match ($columns) {
-        3 => 'lg:w-[48rem]',
-        2 => 'lg:w-[36rem]',
-        default => 'lg:w-96',
     };
 @endphp
 
@@ -73,7 +68,7 @@
         role="dialog"
         aria-modal="true"
         data-cy="filter-dropdown-panel"
-        class="{{ theme('filter.dropdown.panel') }} {{ $panelWidth }}"
+        class="{{ theme('filter.dropdown.panel') }}"
     >
         <div class="{{ theme('filter.dropdown.header') }}">
             <span class="{{ theme('filter.dropdown.title') }}">

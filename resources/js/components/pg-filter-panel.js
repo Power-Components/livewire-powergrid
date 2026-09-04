@@ -7,6 +7,71 @@ window.pgAlpine.data('pgFilterPanel', () => ({
         if (this.$el.dataset.openOnLoad === 'true') {
             this.open = true
         }
+
+        // Smart positioning: keep the panel anchored to the trigger but always
+        // inside the viewport (clamp + flip), so it never gets clipped off-screen.
+        this.$watch('open', (open) => {
+            if (open) {
+                this.$nextTick(() => this.positionPanel())
+            }
+        })
+
+        this.reposition = () => {
+            if (this.open) {
+                this.positionPanel()
+            }
+        }
+
+        window.addEventListener('resize', this.reposition)
+        window.addEventListener('scroll', this.reposition, true)
+    },
+
+    destroy() {
+        window.removeEventListener('resize', this.reposition)
+        window.removeEventListener('scroll', this.reposition, true)
+    },
+
+    positionPanel() {
+        const trigger = this.$el.querySelector('[data-cy="filter-dropdown-trigger"]')
+        const panel = this.$el.querySelector('[data-cy="filter-dropdown-panel"]')
+
+        if (!trigger || !panel) {
+            return
+        }
+
+        // Below the breakpoint the panel is a full-width sheet handled by CSS.
+        if (window.innerWidth < 768) {
+            panel.style.position = panel.style.top = panel.style.left = ''
+            panel.style.right = panel.style.width = panel.style.maxHeight = ''
+
+            return
+        }
+
+        const margin = 8
+        const gap = 8
+        const t = trigger.getBoundingClientRect()
+        const width = Math.min(672, window.innerWidth - margin * 2) // 672px = 42rem
+
+        // Right-align to the trigger, then clamp inside the viewport.
+        let left = t.right - width
+        left = Math.max(margin, Math.min(left, window.innerWidth - width - margin))
+
+        // Prefer below the trigger; flip above when there is not enough room.
+        const panelHeight = panel.offsetHeight || 0
+        const below = window.innerHeight - t.bottom - gap - margin
+        const above = t.top - gap - margin
+        const flip = below < panelHeight && above > below
+
+        const top = flip ? Math.max(margin, t.top - gap - panelHeight) : t.bottom + gap
+        const maxHeight = flip ? above : below
+
+        panel.style.position = 'fixed'
+        panel.style.width = `${width}px`
+        panel.style.left = `${left}px`
+        panel.style.right = 'auto'
+        panel.style.top = `${top}px`
+        panel.style.bottom = 'auto'
+        panel.style.maxHeight = `${Math.max(160, maxHeight)}px`
     },
 
     ensureDraftObject() {
