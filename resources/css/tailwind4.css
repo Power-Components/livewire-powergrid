@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@source '../src/Themes/Tailwind.php';
+@source '../src/Themes/**/*.php';
 @source '../resources/views/**/*.php';
 @source '../resources/js/**/*.js';
 

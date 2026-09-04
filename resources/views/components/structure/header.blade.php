@@ -14,10 +14,6 @@
     wire:key="header-{{ $tableName }}"
 >
     @includeIf(data_get($setUp, 'header.includeViewOnTop'), ['__partial' => $__partial])
-    @php($tabsZone = $__partial->renderPluginZone('header.tabs'))
-    @if (trim($tabsZone) !== '')
-        <div class="pg-tabs-row px-4 pt-4">{!! $tabsZone !!}</div>
-    @endif
     <header class="pg-header {{ theme('header.layout.container') }}">
         <div class="pg-header-sub {{ theme('header.layout.sub_container') }}">
             <div class="pg-actions {{ theme('header.layout.actions_container') }}">
