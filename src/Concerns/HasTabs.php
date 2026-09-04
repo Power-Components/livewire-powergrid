@@ -8,7 +8,6 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pipeline\Pipeline;
 use Livewire\Attributes\Locked;
 use PowerComponents\LivewirePowerGrid\Components\SetUp\{Tab, Tabs};
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines\Filters;
 
 trait HasTabs
@@ -117,18 +116,19 @@ trait HasTabs
     /** @return view-string */
     public function tabsView(): string
     {
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
+        $view = function_exists('theme_view') ? theme_view('tabs') : '';
 
-        $variant = match (true) {
-            $theme instanceof Flux => 'flux',
-            $theme instanceof DaisyUI => 'index',
-            default => 'index',
-        };
+        if ($view === '' || ! view()->exists($view)) {
+            $view = $this->defaultTabsView();
+        }
 
         /** @var view-string $view */
-        $view = "powergrid-plugins::Tabs.themes.{$variant}";
-
         return $view;
+    }
+
+    protected function defaultTabsView(): string
+    {
+        return 'powergrid-plugins::Tabs.themes.index';
     }
 
     public function renderTabsPartial(): void
