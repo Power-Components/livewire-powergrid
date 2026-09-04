@@ -16,94 +16,147 @@ class Flux extends Theme
         return false;
     }
 
+    protected function baseView(): string
+    {
+        return 'livewire-powergrid::components.themes.flux';
+    }
+
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.themes.flux')
+            ->baseView($this->baseView());
+    }
+
+    /** @return array<string, mixed> */
+    public function layout(): array
+    {
+        return $this->section('layout', fn (Components\Layout $layout) => $layout
+            ->container('space-y-4')
+            ->wrapper('space-y-4')
+            ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 overflow-visible')
+            ->outsideFilters('')
+        );
+    }
+
+    /** @return array<string, mixed> */
+    public function header(): array
+    {
+        return $this->section('header', fn (Components\Header $header) => $header
             ->layout(fn (Components\Layout $layout) => $layout
-                ->container('space-y-4')
-                ->wrapper('space-y-4')
-                ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 overflow-visible')
-                ->outsideFilters('')
+                ->container('p-4 md:flex md:flex-row w-full justify-between items-center gap-3')
+                ->subContainer('flex flex-row flex-wrap items-center gap-1.5')
+                ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
+                ->actions($this->button())
             )
-            ->header(fn (Components\Header $header) => $header
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('p-4 md:flex md:flex-row w-full justify-between items-center gap-3')
-                    ->subContainer('flex flex-row flex-wrap items-center gap-1.5')
-                    ->actionsContainer('flex flex-row items-center text-sm flex-wrap gap-2')
-                    ->actions($this->button())
-                )
-                ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
-                    ->view('livewire-powergrid::components.themes.flux.header.search')
-                    ->container('flex flex-row w-full justify-start sm:justify-center md:justify-end')
-                    ->relativeMain('w-full')
-                    ->icon('magnifying-glass')
-                    ->iconClear('')
-                )
-                ->toggleColumns(fn (Components\HeaderButton $button) => $button
-                    ->button($this->triggerButton())
-                    ->iconClass('w-5 h-5 shrink-0')
-                    ->label('ml-2')
-                    ->menu('dark:bg-zinc-900')
-                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-56 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
-                )
-                ->softDeletes(fn (Components\HeaderButton $button) => $button
-                    ->button($this->triggerButton())
-                    ->iconClass('w-5 h-5 shrink-0')
-                    ->label('ml-2')
-                    ->menu('dark:bg-zinc-900')
-                )
-                ->filters(fn (Components\HeaderButton $button) => $button
-                    ->wrapper('flex mt-2 sm:mt-0 gap-3')
-                    ->button($this->triggerButton())
-                    ->iconClass('w-5 h-5 shrink-0')
-                    ->label('ml-2')
-                )
-                ->filterBuilder(fn (Components\HeaderButton $button) => $button
-                    ->button($this->triggerButton())
-                    ->iconClass('w-5 h-5 shrink-0')
-                    ->label('')
-                    ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
-                )
-                ->export(fn (Components\HeaderButton $button) => $button
-                    ->button($this->triggerButton())
-                    ->iconClass('w-5 h-5 shrink-0')
-                    ->label('ml-2')
-                    ->menu('dark:bg-zinc-900')
-                )
+            ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
+                ->view('livewire-powergrid::components.themes.flux.header.search')
+                ->container('flex flex-row w-full justify-start sm:justify-center md:justify-end')
+                ->relativeMain('w-full')
+                ->icon('magnifying-glass')
+                ->iconClear('')
             )
-            ->table(fn (Components\Table $table) => $table
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('overflow-x-auto relative border-t border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
-                    ->table('min-w-full')
-                    ->thead('bg-white dark:bg-white/10')
-                    ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
-                    ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
-                    ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
-                    ->th('font-medium px-3 py-3 first:ps-4 last:pe-4 text-start text-sm text-zinc-800 whitespace-nowrap dark:text-white')
-                    ->thActions('font-medium px-3 py-3 first:ps-4 last:pe-4 text-end text-sm text-zinc-800 whitespace-nowrap dark:text-white')
-                    ->tbody('text-sm text-zinc-800 dark:text-zinc-200')
-                    ->td('px-3 py-3 first:ps-4 last:pe-4 whitespace-nowrap')
-                    ->tdActions('px-3 py-3 first:ps-4 last:pe-4 whitespace-nowrap text-end')
-                )
-                ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
-                    ->th('px-3 py-3 ps-4 text-left text-xs font-medium text-zinc-500 tracking-wider')
-                    ->base('flex items-center')
-                    ->label('flex items-center')
-                    ->input('rounded border-zinc-200 dark:border-white/10 bg-white dark:bg-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
-                )
-                ->radio(fn (Components\Radio $radio) => $radio
-                    ->th('px-3 py-3 first:ps-4 last:pe-4 text-left text-xs font-medium text-zinc-500 tracking-wider')
-                    ->input('rounded-full border-zinc-200 dark:border-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
-                )
+            ->toggleColumns(fn (Components\HeaderButton $button) => $button
+                ->button($this->triggerButton())
+                ->iconClass('w-5 h-5 shrink-0')
+                ->label('ml-2')
+                ->menu('dark:bg-zinc-900')
+                ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-56 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
             )
-            ->footer(fn (Components\Footer $footer) => $footer
-                ->view('livewire-powergrid::components.themes.flux.footer')
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-xl dark:bg-zinc-900 px-4 py-3')
-                )
-                ->pagination('pagination')
-            );
+            ->softDeletes(fn (Components\HeaderButton $button) => $button
+                ->button($this->triggerButton())
+                ->iconClass('w-5 h-5 shrink-0')
+                ->label('ml-2')
+                ->menu('dark:bg-zinc-900')
+            )
+            ->filters(fn (Components\HeaderButton $button) => $button
+                ->wrapper('flex mt-2 sm:mt-0 gap-3')
+                ->button($this->triggerButton())
+                ->iconClass('w-5 h-5 shrink-0')
+                ->label('ml-2')
+            )
+            ->filterBuilder(fn (Components\HeaderButton $button) => $button
+                ->button($this->triggerButton())
+                ->iconClass('w-5 h-5 shrink-0')
+                ->label('')
+                ->badge('absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground')
+            )
+            ->export(fn (Components\HeaderButton $button) => $button
+                ->button($this->triggerButton())
+                ->iconClass('w-5 h-5 shrink-0')
+                ->label('ml-2')
+                ->menu('dark:bg-zinc-900')
+            )
+        );
+    }
+
+    /** @return array<string, mixed> */
+    public function table(): array
+    {
+        $table = $this->section('table', fn (Components\Table $table) => $table
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('overflow-x-auto relative border-t border-zinc-200 dark:border-zinc-700 dark:bg-zinc-900')
+                ->table('min-w-full')
+                ->thead('bg-white dark:bg-white/10')
+                ->tr('border-b border-zinc-100 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/60')
+                ->theadTr('hover:bg-transparent! dark:hover:bg-transparent!')
+                ->emptyState('px-6 py-12 text-center text-sm text-zinc-500 dark:text-zinc-400')
+                ->th('font-medium px-3 py-3 first:ps-4 last:pe-4 text-start text-sm text-zinc-800 whitespace-nowrap dark:text-white')
+                ->thActions('font-medium px-3 py-3 first:ps-4 last:pe-4 text-end text-sm text-zinc-800 whitespace-nowrap dark:text-white')
+                ->tbody('text-sm text-zinc-800 dark:text-zinc-200')
+                ->td('px-3 py-3 first:ps-4 last:pe-4 whitespace-nowrap')
+                ->tdActions('px-3 py-3 first:ps-4 last:pe-4 whitespace-nowrap text-end')
+            )
+            ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
+                ->th('px-3 py-3 ps-4 text-left text-xs font-medium text-zinc-500 tracking-wider')
+                ->base('flex items-center')
+                ->label('flex items-center')
+                ->input('rounded border-zinc-200 dark:border-white/10 bg-white dark:bg-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
+            )
+            ->radio(fn (Components\Radio $radio) => $radio
+                ->th('px-3 py-3 first:ps-4 last:pe-4 text-left text-xs font-medium text-zinc-500 tracking-wider')
+                ->input('rounded-full border-zinc-200 dark:border-white/10 h-4 w-4 accent-[var(--color-accent)] focus:ring-accent focus:ring-offset-0')
+            )
+        );
+
+        return array_replace_recursive($table, [
+            'table' => ['body' => ['td' => ['actions_wrapper' => 'flex items-center gap-1']]],
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    public function footer(): array
+    {
+        $footer = $this->section('footer', fn (Components\Footer $footer) => $footer
+            ->view('livewire-powergrid::components.themes.flux.footer')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('flex flex-wrap items-center gap-2 overflow-hidden rounded-b-xl dark:bg-zinc-900 px-4 py-3')
+            )
+            ->pagination('pagination')
+        );
+
+        return array_replace_recursive($footer, [
+            'pagination' => [
+                'wrapper' => 'flex items-center justify-between w-full',
+                'count_wrapper' => 'flex items-center justify-between w-full gap-4',
+                'count_text' => 'text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap',
+                'count_value' => 'font-semibold text-zinc-700 dark:text-zinc-200',
+            ],
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    public function tabs(): array
+    {
+        return $this->section('tabs', fn (Components\Tabs $tabs) => $tabs
+            ->view('powergrid-plugins::Tabs.themes.flux')
+            ->list('inline-flex flex-wrap items-center gap-1 rounded-xl border border-zinc-200 p-1 dark:border-white/10')
+            ->tab('inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition')
+            ->tabActive('bg-zinc-100 text-zinc-900 shadow-sm dark:bg-white/10 dark:text-white')
+            ->tabInactive('text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-100')
+            ->badge('inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-semibold')
+            ->badgeActive('bg-accent text-accent-foreground')
+            ->badgeInactive('bg-zinc-100 text-zinc-600 dark:bg-white/10 dark:text-zinc-300')
+        );
     }
 
     /** @return array<string, mixed> */
@@ -191,32 +244,6 @@ class Flux extends Theme
                 )
                 ->toArray(),
         ];
-    }
-
-    /** @return array<string, mixed> */
-    public function resolveTokens(): array
-    {
-        if (empty($this->tokens)) {
-            $tokens = parent::resolveTokens();
-
-            $this->tokens = array_replace_recursive($tokens, [
-                'table' => [
-                    'body' => [
-                        'td' => [
-                            'actions_wrapper' => 'flex items-center gap-1',
-                        ],
-                    ],
-                ],
-                'pagination' => [
-                    'wrapper' => 'flex items-center justify-between w-full',
-                    'count_wrapper' => 'flex items-center justify-between w-full gap-4',
-                    'count_text' => 'text-xs font-medium text-zinc-500 dark:text-zinc-400 whitespace-nowrap',
-                    'count_value' => 'font-semibold text-zinc-700 dark:text-zinc-200',
-                ],
-            ]);
-        }
-
-        return $this->tokens;
     }
 
     private function input(): string

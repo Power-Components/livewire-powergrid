@@ -11,6 +11,7 @@ use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Tabs\TabsPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Truncate\TruncatePlugin;
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Tailwind, Theme};
 use PowerComponents\Turbine\Components\SetUp\{Cache, Detail, FilterBuilder, Footer, Header, Responsive};
 
 class PowerGridManager
@@ -33,6 +34,39 @@ class PowerGridManager
 
     /** @var list<class-string<PluginBase>> */
     public static array $plugins = self::DEFAULT_PLUGINS;
+
+    /**
+     * Built-in themes, selectable by name in config (`'theme' => 'daisyui'`).
+     *
+     * @var array<string, class-string<Theme>>
+     */
+    public const array DEFAULT_THEMES = [
+        'tailwind' => Tailwind::class,
+        'daisyui' => DaisyUI::class,
+        'flux' => Flux::class,
+    ];
+
+    /** @var array<string, class-string<Theme>> */
+    public static array $themes = self::DEFAULT_THEMES;
+
+    /**
+     * Register a theme under a name so apps (and satellite packages) can select
+     * it via `config('livewire-powergrid.theme')` without referencing the FQCN.
+     *
+     * @param  class-string<Theme>  $class
+     */
+    public static function registerTheme(string $name, string $class): void
+    {
+        static::$themes[$name] = $class;
+    }
+
+    /**
+     * Resolve a configured theme (registered name or FQCN) to its class-string.
+     */
+    public static function resolveThemeClass(string $nameOrClass): string
+    {
+        return static::$themes[$nameOrClass] ?? $nameOrClass;
+    }
 
     /**
      * Register additional plugins. The built-in plugins are always kept;
