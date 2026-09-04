@@ -26,7 +26,6 @@ class Flux extends Theme
                 ->outsideFilters('')
             )
             ->header(fn (Components\Header $header) => $header
-                ->view('livewire-powergrid::components.themes.flux.header')
                 ->layout(fn (Components\Layout $layout) => $layout
                     ->container('p-4 md:flex md:flex-row w-full justify-between items-center gap-3')
                     ->subContainer('flex flex-row flex-wrap items-center gap-1.5')
