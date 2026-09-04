@@ -14,7 +14,7 @@
     $actions = $__partial->actions ?? [];
 @endphp
 <tr
-    class="{{ theme('table.layout.tr') }}"
+    class="{{ theme('table.layout.tr') }} hover:bg-transparent! dark:hover:bg-transparent!"
 >
     @if ($loading)
         <td
