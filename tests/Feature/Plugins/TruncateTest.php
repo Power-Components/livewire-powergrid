@@ -33,9 +33,7 @@ it('truncates the column value with an ellipsis', function () {
         ->assertDontSee('A very long dish name');
 });
 
-it('does not render a tooltip outside the flux theme', function () {
-    // The tooltip is opt-in per theme (only Flux ships the view). Under the
-    // default theme, ->tooltip() must not leak the full value into the markup.
+it('renders the shared tooltip with the full value under the default theme', function () {
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-truncate-tooltip-default';
@@ -61,7 +59,7 @@ it('does not render a tooltip outside the flux theme', function () {
 
     Livewire::test($component::class)
         ->assertSee('A very...')
-        ->assertDontSee('A very long dish name');
+        ->assertSee('A very long dish name');
 });
 
 it('does not truncate nor tooltip when the value is shorter than the limit', function () {
