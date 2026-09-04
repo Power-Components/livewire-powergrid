@@ -74,15 +74,6 @@
             <span class="{{ theme('filter.dropdown.title') }}">
                 {{ trans('livewire-powergrid::datatable.buttons.filters_title') }}
             </span>
-
-            <button
-                type="button"
-                data-cy="filter-dropdown-reset"
-                wire:click.prevent="resetFilters"
-                class="{{ theme('filter.dropdown.reset') }}"
-            >
-                {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
-            </button>
         </div>
 
         <div class="{{ theme('filter.dropdown.body') }}">
@@ -98,11 +89,11 @@
         <div class="{{ theme('filter.dropdown.footer') }}">
             <button
                 type="button"
-                data-cy="filter-dropdown-clear"
+                data-cy="filter-dropdown-reset"
                 x-on:click="clearAll()"
-                class="{{ theme('filter.dropdown.clear') }}"
+                class="{{ theme('filter.dropdown.reset') }} me-auto"
             >
-                {{ trans('livewire-powergrid::datatable.buttons.clear_all_filters') }}
+                {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
             </button>
 
             <button

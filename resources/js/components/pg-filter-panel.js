@@ -141,7 +141,7 @@ window.pgAlpine.data('pgFilterPanel', () => ({
     },
 
     clearAll() {
-        this.open = false
+        // Reset clears in place and keeps the panel open (mirrors the flyout).
         this.$wire.clearAllFilters()
     },
 
