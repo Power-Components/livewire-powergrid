@@ -17,22 +17,6 @@
       "role": "Developer"
     }
   ],
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../turbine",
-      "options": {
-        "symlink": true
-      }
-    },
-    {
-      "type": "path",
-      "url": "../partials",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "require": {
     "php": "^8.3",
     "livewire/livewire": "^4.0",
