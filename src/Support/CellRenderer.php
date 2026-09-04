@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\Contracts\Support\{Htmlable, Renderable};
-use Illuminate\Support\Arr;
+use Illuminate\Support\{Arr, Str};
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 
 final readonly class CellRenderer
@@ -97,7 +97,7 @@ final readonly class CellRenderer
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
         }
 
-        $truncate    = data_get($column->column, 'pluginData.truncate');
+        $truncate = data_get($column->column, 'pluginData.truncate');
         $tooltipFull = null;
 
         if ($rawContent instanceof Htmlable) {
@@ -105,14 +105,17 @@ final readonly class CellRenderer
         } elseif (is_scalar($rawContent) || $rawContent instanceof \Stringable) {
             $stringValue = (string) $rawContent;
 
-            if (is_array($truncate) && filled($stringValue) && ! $column->index && ($limit = data_get($truncate, 'limit'))) {
-                $truncated = \Illuminate\Support\Str::limit($stringValue, (int) $limit, data_get($truncate, 'end', '...'));
+            if (is_array($truncate) && filled($stringValue) && ! $column->index) {
+                $limit = $truncate['limit'] ?? null;
+                $end = $truncate['end'] ?? '...';
 
-                // Only keep the full value for a tooltip when the text was actually
-                // shortened — a value below the limit already shows in full.
-                if ($truncated !== $stringValue) {
-                    $tooltipFull = $stringValue;
-                    $stringValue = $truncated;
+                if (is_int($limit)) {
+                    $truncated = Str::limit($stringValue, $limit, is_string($end) ? $end : '...');
+
+                    if ($truncated !== $stringValue) {
+                        $tooltipFull = $stringValue;
+                        $stringValue = $truncated;
+                    }
                 }
             }
 
@@ -126,12 +129,13 @@ final readonly class CellRenderer
             $this->contentClassFor($column, $content),
         ]);
 
-        // Tooltip is opt-in per theme: only themes that ship a
-        // `table.column-tooltip` view render it (Flux). Other themes fall
-        // through to plain (truncated) text.
         $tooltipView = ($tooltipFull !== null && (bool) data_get($truncate, 'tooltip'))
             ? theme_view('table.column-tooltip')
             : '';
+
+        /** @var view-string $tooltipView */
+        $position = data_get($truncate, 'position', 'top');
+        $position = is_string($position) ? $position : 'top';
 
         $inner = match (true) {
             filled($templateContent) => '<div x-data="pgRenderRowTemplate" data-pg-params="'
@@ -141,7 +145,7 @@ final readonly class CellRenderer
                 $tooltipView,
                 $content,
                 (string) $tooltipFull,
-                (string) data_get($truncate, 'position', 'top'),
+                $position,
             ),
             default => '<div>'.($column->index ? $rowIndex : $content).'</div>',
         };

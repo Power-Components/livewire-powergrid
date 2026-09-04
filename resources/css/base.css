@@ -2,50 +2,6 @@
     display: none;
 }
 
-table {
-    width: 100%;
-}
-
-.loader {
-    border-top-color: #222;
-    -webkit-animation: spinner 1.5s linear infinite;
-    animation: spinner 1.5s linear infinite
-}
-
-@-webkit-keyframes spinner {
-    0% {
-        -webkit-transform: rotate(0)
-    }
-    100% {
-        -webkit-transform: rotate(360deg)
-    }
-}
-
-@keyframes spinner {
-    0% {
-        transform: rotate(0)
-    }
-    100% {
-        transform: rotate(360deg)
-    }
-}
-
-table thead {
-    padding-left: 15px;
-    padding-right: 15px;
-    font-size: .75rem;
-    padding-top: 8px;
-    padding-bottom: 8px
-}
-
-.pg-table > thead.pg-thead > tr:first-child > th:first-child {
-    border-top-left-radius: 0.5rem;
-}
-
-.pg-table > thead.pg-thead > tr:first-child > th:last-child {
-    border-top-right-radius: 0.5rem;
-}
-
 .flatpickr-calendar.static,
 .flatpickr-calendar.static.open {
     width: 100%;
@@ -123,4 +79,3 @@ input.flatpickr-input {
 [data-theme="dark"] .pg-container .ts-dropdown .active {
     background-color: var(--color-base-300, #3f3f46);
 }
-

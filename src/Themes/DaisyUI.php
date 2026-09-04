@@ -103,14 +103,14 @@ class DaisyUI extends Theme
     {
         return $this->section('table', fn (Components\Table $table) => $table
             ->layout(fn (Components\Layout $layout) => $layout
-                ->container('overflow-x-auto relative border-t border-base-300')
+                ->container('overflow-x-auto')
                 ->table('table table-zebra')
                 ->thead('')
-                ->tr('')
-                ->theadTr('')
+                ->tr('hover:bg-base-300')
+                ->theadTr('hover:bg-transparent')
                 ->emptyState('px-6 py-12 text-center text-sm text-base-content/60')
-                ->trStriped('bg-base-200')
-                ->trNotStriped('bg-base-100')
+                ->trStriped('')
+                ->trNotStriped('')
                 ->th('')
                 ->thActions('text-end')
                 ->tbody('')
@@ -125,11 +125,15 @@ class DaisyUI extends Theme
             )
             ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
                 ->th('')
-                ->input('checkbox checkbox-sm')
+                ->base('')
+                ->label('')
+                ->input('checkbox')
             )
             ->radio(fn (Components\Radio $radio) => $radio
                 ->th('')
-                ->input('radio radio-sm')
+                ->base('')
+                ->label('')
+                ->input('radio')
             )
         );
     }
@@ -167,7 +171,7 @@ class DaisyUI extends Theme
     public function tabs(): array
     {
         return $this->section('tabs', fn (Components\Tabs $tabs) => $tabs
-            ->list('tabs tabs-boxed bg-base-200 p-1 gap-1')
+            ->list('tabs tabs-box')
             ->tab('tab gap-2')
             ->tabActive('tab-active')
             ->tabInactive('')

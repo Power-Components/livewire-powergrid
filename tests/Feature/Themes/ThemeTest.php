@@ -163,7 +163,9 @@ it('daisyui provides correct tokens using ThemeBuilder', function () {
     $theme = new DaisyUI();
 
     expect($theme->get('table.layout.table'))->toBe('table table-zebra')
-        ->and($theme->get('table.layout.container'))->toBe('overflow-x-auto relative border-t border-base-300');
+        ->and($theme->get('table.layout.container'))->toBe('overflow-x-auto')
+        ->and($theme->get('table.layout.th'))->toBe('')
+        ->and($theme->get('table.checkbox.input'))->toBe('checkbox');
 });
 
 it('flux provides correct tokens using ThemeBuilder', function () {
@@ -240,6 +242,8 @@ it('resolves tabs as a theme-aware token group across the three themes', functio
         ->and($flux->resolveView('tabs'))->toBe('powergrid-plugins::Tabs.themes.flux')
         // each theme styles tabs through its own tokens
         ->and($tailwind->get('tabs.tab_active'))->toBe('bg-gray-100 text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white')
+        ->and($daisyui->get('tabs.list'))->toBe('tabs tabs-box')
+        ->and($daisyui->get('tabs.tab'))->toBe('tab gap-2')
         ->and($daisyui->get('tabs.tab_active'))->toBe('tab-active')
         ->and($flux->get('tabs.badge_active'))->toBe('bg-accent text-accent-foreground');
 });
@@ -256,7 +260,12 @@ it('daisyui ships zero blades and inherits base views while keeping its own clas
         // ...but the daisyUI look comes from tokens consumed by that shared base blade
         ->and($daisyui->get('pagination.item'))->toBe('btn btn-sm join-item')
         ->and($daisyui->get('pagination.item_active'))->toBe('btn btn-sm join-item btn-primary')
-        ->and($daisyui->get('header.toggle_columns.item_label'))->toBe('text-sm text-base-content');
+        ->and($daisyui->get('header.toggle_columns.item_label'))->toBe('text-sm text-base-content')
+        ->and($daisyui->get('table.layout.table'))->toBe('table table-zebra')
+        ->and($daisyui->get('table.layout.container'))->toBe('overflow-x-auto')
+        ->and($daisyui->get('table.layout.th'))->toBe('')
+        ->and($daisyui->get('table.layout.thead'))->toBe('')
+        ->and($daisyui->get('table.checkbox.input'))->toBe('checkbox');
 
     expect(is_dir(__DIR__.'/../../../resources/views/components/themes/daisyui'))->toBeFalse();
 });

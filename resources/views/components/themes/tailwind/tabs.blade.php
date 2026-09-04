@@ -16,10 +16,14 @@
     ])
 >
     @if (filled($tabs))
-        <div class="{{ theme('tabs.list', 'inline-flex flex-wrap items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800') }}">
+        <div
+            role="tablist"
+            class="{{ theme('tabs.list', 'inline-flex flex-wrap items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-800') }}"
+        >
             @foreach ($tabs as $tab)
                 <button
                     type="button"
+                    role="tab"
                     wire:click="selectTab('{{ $tab['key'] }}')"
                     wire:key="pg-tab-{{ $tableName }}-{{ $tab['key'] }}"
                     @class([
@@ -27,6 +31,7 @@
                         theme('tabs.tab_active', 'bg-gray-100 text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white') => $tab['active'],
                         theme('tabs.tab_inactive', 'text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100') => ! $tab['active'],
                     ])
+                    aria-selected="{{ $tab['active'] ? 'true' : 'false' }}"
                     @if ($tab['active']) aria-current="page" @endif
                 >
                     @if (filled($tab['icon']))

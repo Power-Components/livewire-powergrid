@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Truncate;
 
+use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 
@@ -24,16 +25,16 @@ class TruncatePlugin extends PluginBase
     {
         Column::macro('limit', function (int $characters, string $end = '...'): Column {
             /** @var Column $this */
-            $this->pluginData['truncate']['limit'] = $characters;
-            $this->pluginData['truncate']['end'] = $end;
+            Arr::set($this->pluginData, 'truncate.limit', $characters);
+            Arr::set($this->pluginData, 'truncate.end', $end);
 
             return $this;
         });
 
         Column::macro('tooltip', function (bool $enabled = true, string $position = 'top'): Column {
             /** @var Column $this */
-            $this->pluginData['truncate']['tooltip'] = $enabled;
-            $this->pluginData['truncate']['position'] = $position;
+            Arr::set($this->pluginData, 'truncate.tooltip', $enabled);
+            Arr::set($this->pluginData, 'truncate.position', $position);
 
             return $this;
         });
