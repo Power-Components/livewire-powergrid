@@ -41,6 +41,7 @@ class DaisyUI extends Theme
                     ->label('ml-2')
                     ->menu('menu p-2 shadow bg-base-100 rounded-box w-52 mt-2 text-sm absolute z-10')
                     ->menuItem('text-sm text-base-content')
+                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-56 flex-col overflow-hidden rounded-box border border-base-300 bg-base-100 shadow-lg')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button('btn btn-ghost btn-sm border-base-300')

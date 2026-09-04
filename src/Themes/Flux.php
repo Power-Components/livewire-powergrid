@@ -44,6 +44,7 @@ class Flux extends Theme
                     ->iconClass('w-5 h-5 shrink-0')
                     ->label('ml-2')
                     ->menu('dark:bg-zinc-900')
+                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-56 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button($this->triggerButton())

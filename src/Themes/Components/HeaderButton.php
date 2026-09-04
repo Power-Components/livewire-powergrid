@@ -58,6 +58,13 @@ class HeaderButton
         return $this;
     }
 
+    public function panel(string $panel): self
+    {
+        $this->properties['panel'] = $panel;
+
+        return $this;
+    }
+
     public function menuItem(string $menuItem): self
     {
         $this->properties['menuItem'] = $menuItem;

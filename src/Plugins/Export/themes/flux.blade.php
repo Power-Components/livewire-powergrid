@@ -12,8 +12,8 @@
     wire:key="export-dropdown-{{ $tableName }}"
 >
     <flux:dropdown>
-        <flux:button
-            variant="filled"
+        <button
+            type="button"
             class="{{ theme('header.export.button', theme('header.layout.actions')) }}"
             title="{{ data_get($element, 'title') }}"
             aria-label="{{ data_get($element, 'title') }}"
@@ -22,7 +22,7 @@
             @if (data_get($element, 'showLabel'))
                 <span class="{{ theme('header.export.label') }}">{{ data_get($element, 'title') }}</span>
             @endif
-        </flux:button>
+        </button>
 
         <flux:menu class="{{ theme('header.export.menu') }}">
             @if (in_array('xlsx', $types))

@@ -36,9 +36,11 @@
                     <span>{{ $tab['label'] }}</span>
 
                     @if (! is_null($tab['badge']))
-                        <flux:badge size="sm" :color="$tab['active'] ? 'blue' : 'zinc'">
-                            {{ $tab['badge'] }}
-                        </flux:badge>
+                        <span @class([
+                            'inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-xs font-semibold',
+                            'bg-accent text-accent-foreground' => $tab['active'],
+                            'bg-zinc-100 text-zinc-600 dark:bg-white/10 dark:text-zinc-300' => ! $tab['active'],
+                        ])>{{ $tab['badge'] }}</span>
                     @endif
                 </button>
             @endforeach

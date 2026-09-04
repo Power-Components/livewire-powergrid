@@ -42,6 +42,7 @@ class Tailwind extends Theme
                     ->label('ml-2')
                     ->menu('toggle-columns-base group absolute z-10 mt-2 w-56 rounded-md dark:bg-zinc-700 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none')
                     ->menuItem('cursor-pointer text-sm flex gap-2 justify-between block px-4 py-2 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800')
+                    ->panel('absolute left-0 top-full z-50 mt-2 flex max-h-[calc(100dvh-8rem)] w-96 flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800')
                 )
                 ->softDeletes(fn (Components\HeaderButton $button) => $button
                     ->button($this->headerButtonClass())
