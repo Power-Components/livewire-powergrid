@@ -10,6 +10,7 @@ use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Tabs\TabsPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\Truncate\TruncatePlugin;
 use PowerComponents\Turbine\Components\SetUp\{Cache, Detail, FilterBuilder, Footer, Header, Responsive};
 
 class PowerGridManager
@@ -27,6 +28,7 @@ class PowerGridManager
         FlatpickrPlugin::class,
         TabsPlugin::class,
         ToggleablePlugin::class,
+        TruncatePlugin::class,
     ];
 
     /** @var list<class-string<PluginBase>> */

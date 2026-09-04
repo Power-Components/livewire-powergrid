@@ -97,24 +97,66 @@ final readonly class CellRenderer
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
         }
 
-        $content = match (true) {
-            $rawContent instanceof Htmlable => $rawContent->toHtml(),
-            is_scalar($rawContent) || $rawContent instanceof \Stringable => e((string) $rawContent),
-            default => '',
-        };
+        $truncate    = data_get($column->column, 'pluginData.truncate');
+        $tooltipFull = null;
+
+        if ($rawContent instanceof Htmlable) {
+            $content = $rawContent->toHtml();
+        } elseif (is_scalar($rawContent) || $rawContent instanceof \Stringable) {
+            $stringValue = (string) $rawContent;
+
+            if (is_array($truncate) && filled($stringValue) && ! $column->index && ($limit = data_get($truncate, 'limit'))) {
+                $truncated = \Illuminate\Support\Str::limit($stringValue, (int) $limit, data_get($truncate, 'end', '...'));
+
+                // Only keep the full value for a tooltip when the text was actually
+                // shortened — a value below the limit already shows in full.
+                if ($truncated !== $stringValue) {
+                    $tooltipFull = $stringValue;
+                    $stringValue = $truncated;
+                }
+            }
+
+            $content = e($stringValue);
+        } else {
+            $content = '';
+        }
 
         $spanClass = $column->spanClassStatic ?? Arr::toCssClasses([
             $column->contentClassField,
             $this->contentClassFor($column, $content),
         ]);
 
-        $inner = filled($templateContent)
-            ? '<div x-data="pgRenderRowTemplate" data-pg-params="'
+        // Tooltip is opt-in per theme: only themes that ship a
+        // `table.column-tooltip` view render it (Flux). Other themes fall
+        // through to plain (truncated) text.
+        $tooltipView = ($tooltipFull !== null && (bool) data_get($truncate, 'tooltip'))
+            ? theme_view('table.column-tooltip')
+            : '';
+
+        $inner = match (true) {
+            filled($templateContent) => '<div x-data="pgRenderRowTemplate" data-pg-params="'
                 .e((string) json_encode(['parentId' => $parentId, 'templateContent' => $templateContent]))
-                .'" x-html="rendered"></div>'
-            : '<div>'.($column->index ? $rowIndex : $content).'</div>';
+                .'" x-html="rendered"></div>',
+            $tooltipView !== '' => $this->renderTooltip(
+                $tooltipView,
+                $content,
+                (string) $tooltipFull,
+                (string) data_get($truncate, 'position', 'top'),
+            ),
+            default => '<div>'.($column->index ? $rowIndex : $content).'</div>',
+        };
 
         return '<span class="'.$spanClass.'">'.$inner.'</span>';
+    }
+
+    /** @param  view-string  $view */
+    private function renderTooltip(string $view, string $display, string $full, string $position): string
+    {
+        return view($view, [
+            'display' => $display,
+            'full' => $full,
+            'position' => $position,
+        ])->render();
     }
 
     private function toHtmlString(mixed $value): string
