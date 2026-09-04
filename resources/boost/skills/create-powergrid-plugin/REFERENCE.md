@@ -28,6 +28,7 @@ abstract class PluginBase implements Wireable
 3. During render, `renderColumnContent($column, $row)` iterates plugins: `handles()` then `render()`
 4. `getListeners()` scans `#[On]` attributes via reflection
 5. Events routed to `pgPluginListener` (generic) or explicit proxy methods
+6. `Theme::resolveTokens()` merges every registered plugin's `themeTokens()` after the theme's section methods and before `config('livewire-powergrid.theme_overrides')`
 
 ### Livewire Event Flow
 
@@ -35,6 +36,69 @@ abstract class PluginBase implements Wireable
 2. Plugin: `#[On('pg:{eventName}-{tableName}')]` attribute on listener method
 3. `getListeners()` maps event to `pgPluginListener` (no proxy needed for external plugins)
 4. Plugin method calls user hook: `$this->component->onUpdated{PluginName}($id, $field, $value)`
+
+---
+
+## Theme-aware plugins
+
+A plugin that ships UI should contribute **tokens** (classes) and **views** (markup) without `instanceof` theme branching. `Theme::resolveTokens()` already walks `PowerGridManager::$plugins` and merges each `PluginBase::themeTokens()`.
+
+### `PluginBase::themeTokens()`
+
+Override the static method to return a nested token slice. This array is merged as-is (it is **not** run through `HasProperties::toArray()`), so keys must already be the snake_cased paths Blade reads via `theme()`:
+
+```php
+public static function themeTokens(): array
+{
+    return [
+        'my_plugin' => [
+            'wrapper' => 'flex items-center gap-2',
+            'button'  => 'rounded-md px-2 py-1 text-sm',
+        ],
+    ];
+}
+```
+
+The `tabs` group is the first real example of this surface. Tokens live under `tabs.*` (`list`, `tab`, `tab_active`, `tab_inactive`, `badge`, `badge_active`, `badge_inactive`, optional `view`) and are read by the shared base blade `resources/views/components/themes/tailwind/tabs.blade.php`. Themes that need different **classes** override `tabs()`; themes that need different **HTML** set `tabs.view` (Flux → `powergrid-plugins::Tabs.themes.flux`). A plugin that owns a similar widget can inject the same kind of slice from `themeTokens()` so every theme picks it up.
+
+Merged **after** the theme's own section methods and **before** `config('livewire-powergrid.theme_overrides')`, so a no-code override still wins.
+
+### `theme_view()` + `powergrid-plugins::` fallback
+
+Mirror `src/Plugins/FilterBuilder/FilterBuilderPlugin.php::resolveThemeView()` (Export uses the same shape; `HasTabs::tabsView()` is the tabs equivalent):
+
+1. Try `theme_view($alias)` — respects the active theme's tokens, `baseView`, and `parentTheme` fallback in `Theme::doResolveView()`.
+2. If that view is empty or missing, fall back to a packaged view under the `powergrid-plugins::` namespace.
+
+```php
+private function resolveThemeView(): string
+{
+    $tokenView = theme_view('header.my_plugin');
+
+    if ($tokenView !== '' && view()->exists($tokenView)) {
+        return $tokenView;
+    }
+
+    $fallback = 'powergrid-plugins::{PluginName}.themes.index';
+
+    return view()->exists($fallback) ? $fallback : '';
+}
+```
+
+Do **not** add `instanceof DaisyUI` / `instanceof Flux` branches in new plugins. If a theme needs different markup, point a `*.view` token at the packaged blade (Flux does this for tabs) instead of switching on the theme class.
+
+Layout for packaged views:
+
+```
+app/PowerGrid/Plugins/{PluginName}/
+  {PluginName}Plugin.php
+  index.blade.php              # column-cell view (existing)
+  themes/
+    index.blade.php            # token-driven default (Tailwind / DaisyUI)
+    flux.blade.php             # only when HTML genuinely differs
+```
+
+Register the view namespace with `loadViewsFrom(..., 'powergrid-plugins')` as in the ServiceProvider template below. The cell view stays `powergrid-plugins::{PluginName}.index`; the chrome/trigger view is what `resolveThemeView()` selects.
 
 ---
 
@@ -84,6 +148,18 @@ class {PluginName}Plugin extends PluginBase
     public function scripts(): array
     {
         return ['index.js'];
+    }
+
+    /**
+     * Optional. Nested token slice merged into every theme
+     * (Theme::resolveTokens()). Leave the default [] when the plugin
+     * has no chrome of its own.
+     */
+    public static function themeTokens(): array
+    {
+        return [
+            // 'my_plugin' => ['wrapper' => '...', 'button' => '...'],
+        ];
     }
 
     public function render(Column|array|\stdClass $column, mixed $row): ?string
@@ -267,5 +343,6 @@ public function onUpdated{PluginName}(string|int $id, string $field, string $val
 | Update silently ignored | Field not fillable | Add field to Model's `$fillable` or `#[Fillable([...])]` |
 | Need proxy in package | Old approach | Not needed - `pgPluginListener` handles external plugins generically |
 | JS loaded on every table | Inlined in the Blade view | Return files from `scripts()` / `styles()` so PowerGrid injects them only when the plugin is enabled (and minifies them in production) |
+| `theme('my_plugin.tab_active')` empty | camelCase keys in `themeTokens()` | `themeTokens()` is not snake_cased; use `tab_active`, not `tabActive` |
 
 ---
