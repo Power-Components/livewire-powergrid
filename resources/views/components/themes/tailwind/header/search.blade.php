@@ -2,7 +2,7 @@
     @php($element = ($__partial ?? $this)->headerElement('search'))
     @php($clearElement = ($__partial ?? $this)->headerElement('searchClear'))
     <div class="{{ theme('header.search_box.container') }}">
-        <div class="{{ theme('header.search_box.relative_main') }}">
+        <label class="{{ theme('header.search_box.relative_main') }}">
             <span class="{{ theme('header.search_box.icon_search_wrapper') }}">
                 {!! $element['iconHtml'] !!}
             </span>
@@ -20,6 +20,6 @@
                     </a>
                 </span>
             @endif
-        </div>
+        </label>
     </div>
 @endif

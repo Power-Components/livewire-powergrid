@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
+use Closure;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\Components\ThemeBuilder;
 
@@ -87,10 +88,39 @@ abstract class Theme
                 }
             }
 
+            /** @var array<string, mixed> $overrides */
+            $overrides = config('livewire-powergrid.theme_overrides', []);
+            if (is_array($overrides) && ! empty($overrides)) {
+                $tokens = array_replace_recursive($tokens, $overrides);
+            }
+
             $this->tokens = $tokens;
         }
 
         return $this->tokens;
+    }
+
+    protected function baseView(): ?string
+    {
+        return null;
+    }
+
+    /** @return array<string, mixed> */
+    protected function section(string $group, Closure $callback): array
+    {
+        $builder = ThemeBuilder::make($this->name());
+
+        $base = $this->baseView();
+        if (filled($base)) {
+            $builder->baseView($base);
+        }
+
+        $builder->{$group}($callback);
+
+        /** @var array<string, mixed> $slice */
+        $slice = $builder->toArray()[$group] ?? [];
+
+        return [$group => $slice];
     }
 
     public function resolveView(string $alias): string
@@ -157,6 +187,10 @@ abstract class Theme
                 }
             }
 
+            if (! view()->exists($tokenView) && $this->parentTheme && $this->parentTheme !== static::class) {
+                return (new $this->parentTheme())->resolveView($alias);
+            }
+
             return $tokenView;
         }
 
@@ -210,7 +244,7 @@ abstract class Theme
      */
     protected function themeTokenMethods(): array
     {
-        return ['filter', 'editable', 'toggleable'];
+        return ['layout', 'header', 'table', 'footer', 'cols', 'tabs', 'filter', 'editable', 'toggleable'];
     }
 
     public function editable(): array

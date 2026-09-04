@@ -58,24 +58,39 @@ class UserTable extends PowerGridComponent
 
 #### Theming System
 
-PowerGrid 7.x uses a unified `struct()` method with a fluent builder pattern for theme tokens. CSS classes are resolved via dot-notation:
+PowerGrid 7.x is section-based. `struct()` only sets `baseView`; each token group is a public method (`layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, plus `filter()` / `editable()` / `toggleable()`). CSS classes live in tokens read by `theme()` / `theme_view()`:
 
 @verbatim
 <code-snippet name="Theme Token Access" lang="php">
 // In Blade views
 {{ theme('table.layout.td') }}
 {{ theme('header.layout.container') }}
+{{ theme('tabs.tab_active') }}
 {{ theme_view('pagination') }}
+{{ theme_view('tabs') }}
 </code-snippet>
 @endverbatim
 
-Available themes: `Tailwind` (default), `DaisyUI`, `Flux`.
+Three ways to restyle, cheapest first:
 
-Theme configuration in `config/livewire-powergrid.php`:
+1. **No-code:** `config('livewire-powergrid.theme_overrides')` — a nested token array merged last (highest precedence). No Theme class needed.
+2. **Section methods** on a Theme class — plain nested arrays (6.x-familiar) or the fluent `$this->section()` helper. A child overrides only the sections it changes; the rest inherit via `parentTheme`.
+3. **`ArrayTheme`** — data-first theme from a plain array (`fromArray()` / `fromFile()`, or a subclass whose `struct()` returns an array).
+
+Available themes: `Tailwind` (root, `parentTheme = null`), `DaisyUI` and `Flux` (both `parentTheme = Tailwind::class`). DaisyUI ships **zero** blades (fully token-driven, inherits Tailwind's markup). Flux keeps `<flux:*>` blades only where the HTML differs. Prefer tokens over new blades.
+
+`tabs` is a theme-aware token group (`list`, `tab`, `tab_active`, `tab_inactive`, `badge`, `badge_active`, `badge_inactive`, optional `view`). The view resolves via `theme_view('tabs')`.
+
+Theme configuration in `config/livewire-powergrid.php` accepts a registered **name** or an FQCN. Register a custom theme with `PowerGridManager::registerTheme('bootstrap', BootstrapTheme::class)`.
 
 @verbatim
 <code-snippet name="Theme Configuration" lang="php">
-'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class,
+'theme' => 'tailwind', // 'daisyui' | 'flux' | FQCN also work
+
+'theme_overrides' => [
+    'table' => ['layout' => ['th' => 'font-bold px-4 py-3']],
+    'tabs'  => ['tab_active' => 'bg-emerald-100 text-emerald-800'],
+],
 </code-snippet>
 @endverbatim
 
@@ -125,10 +140,11 @@ public function actions($row): array
 
 #### Performance & Partials
 
-PowerGrid uses `power-components/partials` fragments to isolate DOM updates via three Hot Zones:
+PowerGrid uses `power-components/partials` fragments to isolate DOM updates via four Hot Zones:
 1. `pg-tbody` - Table body updates
 2. `pg-pagination` - Pagination updates
-3. `pg-enabled-filters` / `pg-filter-fields` - Filter pills and panel fields
+3. `pg-filter-fields` / `pg-enabled-filters` - Filter pills and panel fields
+4. `pg-tabs` - Status tabs
 
 #### Per-Component Theme Override
 
@@ -157,6 +173,7 @@ public function template(): ?Theme
 ### Views Architecture
 
 - **No Theme Conditionals:** Never use `@if($theme == 'bootstrap')` in Blade files.
+- **Token-driven views:** A theme ships a Blade file only when the HTML genuinely differs. DaisyUI ships zero blades and inherits Tailwind's markup via `parentTheme`.
 - **Micro-files Strategy:** Table views are divided into single-purpose micro-files (`index.blade.php`, `tbody.blade.php`, `td.blade.php`).
 - **Directives:** Use `@theme()` directives exclusively.
 
@@ -215,6 +232,7 @@ Column::make('Status', 'status')->selectable(['active', 'inactive', 'pending']);
 
 Key configuration options in `config/livewire-powergrid.php`:
 
-- `theme` - Default theme class
+- `theme` - Registered name (`tailwind` / `daisyui` / `flux`) or FQCN
+- `theme_overrides` - Nested token overrides (highest precedence, no Theme class)
 - `plugins` - Registered plugin classes
 - `pagination` - Default pagination type and per-page options

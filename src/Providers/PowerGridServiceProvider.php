@@ -41,10 +41,10 @@ class PowerGridServiceProvider extends ServiceProvider
 
         if (! $this->app->bound('powergrid.theme')) {
             $this->app->singleton('powergrid.theme', function ($app) {
-                /** @var string $themeClass */
-                $themeClass = config('livewire-powergrid.theme', Tailwind::class);
+                /** @var string $configured */
+                $configured = config('livewire-powergrid.theme', Tailwind::class);
 
-                return $app->make($themeClass);
+                return $app->make(PowerGridManager::resolveThemeClass($configured));
             });
         }
 

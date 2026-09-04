@@ -2,6 +2,7 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins\Truncate;
 
+use Illuminate\Support\Arr;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 
@@ -10,8 +11,8 @@ use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
  *
  * `->limit(24)` truncates the displayed value to 24 characters using an
  * ellipsis. `->tooltip()` renders the full, untruncated value in a
- * theme-aware tooltip (Flux uses <flux:tooltip>; other themes fall back to a
- * native `title` attribute).
+ * theme-aware tooltip (Flux uses <flux:tooltip>; other themes use a shared
+ * Alpine tooltip with a native `title` fallback).
  *
  * This plugin only registers the macros — the actual truncation/tooltip
  * rendering is applied in the shared table row view so it composes with the
@@ -24,16 +25,16 @@ class TruncatePlugin extends PluginBase
     {
         Column::macro('limit', function (int $characters, string $end = '...'): Column {
             /** @var Column $this */
-            $this->pluginData['truncate']['limit'] = $characters;
-            $this->pluginData['truncate']['end']   = $end;
+            Arr::set($this->pluginData, 'truncate.limit', $characters);
+            Arr::set($this->pluginData, 'truncate.end', $end);
 
             return $this;
         });
 
         Column::macro('tooltip', function (bool $enabled = true, string $position = 'top'): Column {
             /** @var Column $this */
-            $this->pluginData['truncate']['tooltip']  = $enabled;
-            $this->pluginData['truncate']['position'] = $position;
+            Arr::set($this->pluginData, 'truncate.tooltip', $enabled);
+            Arr::set($this->pluginData, 'truncate.position', $position);
 
             return $this;
         });

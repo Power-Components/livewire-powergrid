@@ -1,15 +1,15 @@
 <div
-    class="items-center justify-between sm:flex gap-2"
+    class="{{ theme('pagination.wrapper', 'items-center justify-between sm:flex gap-2') }}"
     wire:loading.class="blur-[2px]"
     wire:target="loadMore"
 >
     @if($paginator->count() > 0)
-        <div class="items-center justify-between w-full sm:flex-1 sm:flex">
+        <div class="{{ theme('pagination.count_wrapper', 'items-center justify-between w-full sm:flex-1 sm:flex') }}">
             @if ($recordCount === 'full')
                 <div @class(['mr-3' => $paginator->hasPages()])>
                     <div @class([
                         'mr-2' => $paginator->hasPages(),
-                        'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right',
+                        theme('pagination.records_text', 'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right'),
                     ])>
                         {{ trans('livewire-powergrid::datatable.pagination.showing') }}
                         <span class="font-semibold firstItem">{{ $paginator->firstItem() }}</span>
@@ -24,7 +24,7 @@
                 <div @class(['mr-3' => $paginator->hasPages()])>
                     <p @class([
                         'mr-2' => $paginator->hasPages(),
-                        'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right',
+                        theme('pagination.records_text', 'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right'),
                     ])>
                         <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                         -
@@ -37,7 +37,7 @@
                 <div @class(['mr-3' => $paginator->hasPages()])>
                     <p @class([
                         'mr-2' => $paginator->hasPages(),
-                        'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right',
+                        theme('pagination.records_text', 'leading-5 text-center text-zinc-700 text-md dark:text-zinc-300 sm:text-right'),
                     ])>
                         <span class="font-semibold firstItem"> {{ $paginator->firstItem() }}</span>
                         -
@@ -52,11 +52,11 @@
                     aria-label="Pagination Navigation"
                     class="items-center justify-between sm:flex"
                 >
-                    <div class="flex justify-center mt-2 md:flex-none md:justify-end sm:mt-0">
+                    <div class="{{ theme('pagination.nav_wrapper', 'flex justify-center mt-2 md:flex-none md:justify-end sm:mt-0') }}">
 
                         @if (!$paginator->onFirstPage())
                             <a
-                                class="cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent rounded-l-md leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150"
+                                class="{{ theme('pagination.item_first', 'cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent rounded-l-md leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150') }}"
                                 wire:click="gotoPage(1, '{{ $paginator->getPageName() }}')"
                             >
                                 <svg
@@ -75,7 +75,7 @@
                             </a>
 
                             <a
-                                class="cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150"
+                                class="{{ theme('pagination.item_prev', 'cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150') }}"
                                 wire:click="previousPage('{{ $paginator->getPageName() }}')"
                                 rel="next"
                             >
@@ -101,7 +101,7 @@
                                 @foreach ($element as $page => $url)
                                     @if ($page == $paginator->currentPage())
                                         <span
-                                            class="select-none relative z-10 inline-flex items-center px-3 py-2 -ml-px text-sm font-bold text-accent-700 dark:text-zinc-300 bg-accent-100 dark:bg-zinc-700 border border-accent-300 dark:border-transparent cursor-default select-none"
+                                            class="{{ theme('pagination.item_active', 'select-none relative z-10 inline-flex items-center px-3 py-2 -ml-px text-sm font-bold text-accent-700 dark:text-zinc-300 bg-accent-100 dark:bg-zinc-700 border border-accent-300 dark:border-transparent cursor-default select-none') }}"
                                         >{{ $page }}</span>
                                     @elseif (
                                         $page === $paginator->currentPage() + 1 ||
@@ -109,7 +109,7 @@
                                             $page === $paginator->currentPage() - 1 ||
                                             $page === $paginator->currentPage() - 2)
                                         <a
-                                            class="select-none cursor-pointer relative inline-flex items-center px-3 py-2 -ml-px text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-500 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-700 transition ease-in-out duration-150"
+                                            class="{{ theme('pagination.item', 'select-none cursor-pointer relative inline-flex items-center px-3 py-2 -ml-px text-sm font-medium text-zinc-600 dark:text-zinc-400 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-500 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-700 transition ease-in-out duration-150') }}"
                                             wire:click="gotoPage({{ $page }}, '{{ $paginator->getPageName() }}')"
                                         >{{ $page }}</a>
                                     @endif
@@ -122,7 +122,7 @@
                                 @class([
                                     'block' => $paginator->lastPage() - $paginator->currentPage() >= 2,
                                     'hidden' => $paginator->lastPage() - $paginator->currentPage() < 2,
-                                    'select-none cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150'
+                                    theme('pagination.item_next', 'select-none cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150'),
                                 ])
                                 wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                 rel="next"
@@ -142,7 +142,7 @@
                                 </svg>
                             </a>
                             <a
-                                class="select-none cursor-pointer cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent rounded-r-md leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150"
+                                class="{{ theme('pagination.item_last', 'select-none cursor-pointer cursor-pointer relative inline-flex items-center px-2 py-2 text-sm font-medium text-zinc-500 dark:text-zinc-300 bg-white dark:bg-zinc-600 border border-zinc-300 dark:border-transparent rounded-r-md leading-5 hover:text-zinc-400 focus:z-10 focus:outline-none focus:shadow-outline-blue active:bg-zinc-100 active:text-zinc-500 transition ease-in-out duration-150') }}"
                                 wire:click="gotoPage({{ $paginator->lastPage() }}, '{{ $paginator->getPageName() }}')"
                             >
                                 <svg
@@ -171,13 +171,13 @@
                         aria-label="Pagination Navigation"
                         class="items-center justify-between sm:flex"
                     >
-                        <div class="flex justify-center gap-2 md:flex-none md:justify-end sm:mt-0">
+                        <div class="{{ theme('pagination.min_nav_wrapper', 'flex justify-center gap-2 md:flex-none md:justify-end sm:mt-0') }}">
                             <span>
                                 {{-- Previous Page Link Disabled --}}
                                 @if ($paginator->onFirstPage())
                                     <button
                                         disabled
-                                        class="focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md"
+                                        class="{{ theme('pagination.button_disabled', 'focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md') }}"
                                     >
                                         @lang('Previous')
                                     </button>
@@ -186,7 +186,7 @@
                                         <button
                                             wire:click="setPage('{{ $paginator->previousCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="select-none p-2 m-1 text-center text-white bg-zinc-600 border-zinc-400 rounded cursor-pointer border-1 hover:bg-zinc-600 hover:border-zinc-800 dark:text-zinc-300"
+                                            class="{{ theme('pagination.button_cursor', 'select-none p-2 m-1 text-center text-white bg-zinc-600 border-zinc-400 rounded cursor-pointer border-1 hover:bg-zinc-600 hover:border-zinc-800 dark:text-zinc-300') }}"
                                         >
                                             <svg
                                                 fill="none"
@@ -207,7 +207,7 @@
                                         <button
                                             wire:click="previousPage('{{ $paginator->getPageName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="select-none focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md"
+                                            class="{{ theme('pagination.button', 'select-none focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md') }}"
                                         >
                                             @lang('Previous')
                                         </button>
@@ -222,7 +222,7 @@
                                         <button
                                             wire:click="setPage('{{ $paginator->nextCursor()->encode() }}','{{ $paginator->getCursorName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="select-none p-2 m-1 text-center text-white bg-zinc-600 border-zinc-400 rounded cursor-pointer border-1 hover:bg-zinc-600 hover:border-zinc-800 dark:text-zinc-300"
+                                            class="{{ theme('pagination.button_cursor', 'select-none p-2 m-1 text-center text-white bg-zinc-600 border-zinc-400 rounded cursor-pointer border-1 hover:bg-zinc-600 hover:border-zinc-800 dark:text-zinc-300') }}"
                                         >
                                             <svg
                                                 fill="none"
@@ -243,7 +243,7 @@
                                         <button
                                             wire:click="nextPage('{{ $paginator->getPageName() }}')"
                                             wire:loading.attr="disabled"
-                                            class="select-none focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md"
+                                            class="{{ theme('pagination.button', 'select-none focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md') }}"
                                         >
                                             @lang('Next')
                                         </button>
@@ -251,7 +251,7 @@
                                 @else
                                     <button
                                         disabled
-                                        class="focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md"
+                                        class="{{ theme('pagination.button_disabled', 'focus:ring-offset-white focus:shadow-outline group inline-flex items-center justify-center gap-x-2 border outline-none transition-all duration-200 ease-in-out hover:shadow-sm focus:border-transparent focus:ring-2 disabled:cursor-not-allowed disabled:opacity-80 text-md font-semibold px-4 py-2 text-zinc-500 bg-zinc-50 ring-0 ring-inset ring-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 dark:ring-zinc-600 dark:border-zinc-600 dark:hover:bg-zinc-900 dark:text-zinc-300 focus-visible:outline-offset-0 rounded-md') }}"
                                     >
                                         @lang('Next')
                                     </button>

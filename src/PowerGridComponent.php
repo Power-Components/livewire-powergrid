@@ -285,7 +285,7 @@ class PowerGridComponent extends Component implements Context
         $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
 
         /** @var Theme $themeInstance */
-        $themeInstance = app($themeClass);
+        $themeInstance = app(PowerGridManager::resolveThemeClass($themeClass));
 
         $customTheme = $this->template();
 

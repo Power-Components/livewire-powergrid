@@ -66,7 +66,7 @@
                                 wire:model="draftColumns.{{ $field }}"
                                 class="{{ theme('header.toggle_columns.checkbox', theme('table.checkbox.input')) }}"
                             >
-                            <span class="text-sm text-zinc-700 dark:text-zinc-200">{!! data_get($column, 'title') !!}</span>
+                            <span class="{{ theme('header.toggle_columns.item_label', 'text-sm text-zinc-700 dark:text-zinc-200') }}">{!! data_get($column, 'title') !!}</span>
                         </label>
                     @endif
                 @endforeach

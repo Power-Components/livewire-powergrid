@@ -2,7 +2,6 @@
 
 use PowerComponents\LivewirePowerGrid\FilterAttributes\{Boolean, InputText, Number, Select};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Tailwind};
 
 return [
 
@@ -11,13 +10,31 @@ return [
     | Theme
     |--------------------------------------------------------------------------
     |
-    | PowerGrid supports Tailwind.
-    | Configure here the theme of your choice.
+    | PowerGrid ships Tailwind, DaisyUI and Flux. Configure the theme of your
+    | choice by registered name ('tailwind', 'daisyui', 'flux') or by FQCN.
     */
 
-    'theme' => Tailwind::class,
-    // 'theme' => DaisyUI::class,
-    // 'theme' => Flux::class,
+    'theme' => 'tailwind',
+    // 'theme' => 'daisyui',
+    // 'theme' => 'flux',
+    // 'theme' => \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class, // FQCN also works
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme overrides (no-code)
+    |--------------------------------------------------------------------------
+    |
+    | Restyle any theme token without writing a Theme class. These values are
+    | merged on top of the active theme with the highest precedence, using the
+    | same nested token keys the theme defines. Example:
+    |
+    |   'theme_overrides' => [
+    |       'table' => ['layout' => ['th' => 'font-bold px-4 py-3']],
+    |   ],
+    |
+    */
+
+    'theme_overrides' => [],
 
     'cache_ttl' => null,
 

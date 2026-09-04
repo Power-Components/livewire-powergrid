@@ -115,4 +115,24 @@ class ThemeBuilder
 
         return $this;
     }
+
+    /** @param  Closure|array<string, mixed>  $callback */
+    public function tabs(Closure|array $callback): self
+    {
+        $component = new Tabs();
+
+        if ($this->baseView) {
+            $component->setBaseView($this->baseView);
+        }
+
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
+        $this->properties['tabs'] = $component->toArray();
+
+        return $this;
+    }
 }
