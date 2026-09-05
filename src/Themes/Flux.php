@@ -164,7 +164,6 @@ class Flux extends Theme
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.editable')
                 ->input($this->input().' w-full')
                 ->error('text-sm text-red-500 p-1 transition-all duration-200')
                 ->toArray(),

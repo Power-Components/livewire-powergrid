@@ -37,11 +37,6 @@ final class IconRenderer
         return self::$cache[$cacheKey];
     }
 
-    public static function flush(): void
-    {
-        self::$cache = [];
-    }
-
     /** @param  array<string, mixed>  $attributes */
     private static function compile(string $icon, array $attributes): string
     {

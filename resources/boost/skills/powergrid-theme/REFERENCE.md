@@ -22,10 +22,9 @@ hand-written list here if the source has changed.
 | `src/Themes/Components/Header.php` | `view()`, `layout()`, `searchBox()`, plus the header-control buttons `toggleColumns()`, `softDeletes()`, `filters()`, `filterBuilder()`, `export()`, `enabledFilters()` (each takes a `HeaderButton` closure). |
 | `src/Themes/Components/HeaderButton.php` | Header-control styling: `button`, `icon`, `iconClass`, `label`, `menu`, `menuItem`, `panel`, `badge`, `wrapper`, `pill`, `pillClearAll`, `view`. |
 | `src/Themes/Components/SearchBox.php` | `view`, `container`, `relativeMain`, `input`, `iconSearchWrapper`, `iconCloseWrapper`, `iconClose`, `iconSearch`, `icon`, `iconClear`. |
-| `src/Themes/Components/Table.php` | `layout()`, `body()`, `checkbox()`, `radio()`, plus optional `view*()` alias setters. |
-| `src/Themes/Components/Body.php` | `tr(Closure\|string)`, `td(Closure\|string)`. |
+| `src/Themes/Components/Table.php` | `view()`, `layout()`, `body()`, `checkbox()`, `radio()`. |
+| `src/Themes/Components/Body.php` | `tr(Closure\|string)`. |
 | `src/Themes/Components/Tr.php` | `base`, `responsive`, `responsiveToggleIcon`. |
-| `src/Themes/Components/Td.php` | `base`, `actionsWrapper`. |
 | `src/Themes/Components/Checkbox.php` | `th`, `base`, `label`, `input`. |
 | `src/Themes/Components/Radio.php` | `th`, `base`, `label`, `input`. |
 | `src/Themes/Components/Cols.php` | `div`. |
@@ -146,13 +145,9 @@ reads these tokens and renders tab icons via `IconRenderer`. Set `->view(...)`
 only when the markup differs (Flux → `powergrid-plugins::Tabs.themes.flux`);
 Tailwind and DaisyUI share the base blade.
 
-### Optional `Table` view-alias setters
-
-`Table` also exposes setters that override the auto-resolved view for a specific
-table part. Declare them only when your theme ships its own Blade file for that
-part; otherwise the `baseView + alias` fallback (then the parent chain) resolves
-it: `view`, `viewLayout`, `viewHeader`, `viewRow`, `viewCols`, `viewThEmpty`,
-`viewInlineFilters`, `viewCheckboxAll`, `viewCheckboxRow`, `viewRadioRow`.
+`Table::view()` overrides the auto-resolved table layout. Feature views
+(header, row, cols, filters, etc.) resolve by `baseView + alias`, then the
+parent chain, then `components.structure.*`.
 
 ---
 
@@ -168,7 +163,7 @@ Filter types and their leaves (verify classes against `Tailwind.php`):
 - `label` → `filter.label`
 - `boolean`: `view`, `base`, `select`
 - `date_picker`: `view` (base points at `powergrid-plugins::Flatpickr.index`), `base`, `input`
-- `multi_select`: `view`, `base`, `select`
+- `multi_select`: `base`, `select` (markup is `<x-livewire-powergrid::inputs.select>`)
 - `number`: `view`, `base`, `input`
 - `select`: `view`, `base`, `select`
 - `input_text`: `view`, `base`, `select`, `input`
@@ -215,15 +210,14 @@ different classes or views.
 
 ## `editable()` — token map
 
-Returns `['editable' => [...]]`. Uses the generic `Components\Component`, with a
-real `editable` Blade view (Tailwind ships one; subclasses reuse it):
+Returns `['editable' => [...]]`. Uses the generic `Components\Component` for
+classes only — the plugin blade is `powergrid-plugins::Editable.index`.
 
 ```php
 public function editable(): array
 {
     return [
         'editable' => (new Components\Component())
-            ->view('livewire-powergrid::components.themes.tailwind.editable')
             ->clickable('py-2')                           // wrapper shown before entering edit mode
             ->input('...input classes...')                // the edit <input>
             ->error('text-sm text-red-800 p-1 transition-all duration-200')

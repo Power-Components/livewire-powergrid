@@ -186,7 +186,6 @@ class DaisyUI extends Theme
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.editable')
                 ->input('input input-bordered input-sm w-full')
                 ->error('text-sm text-error p-1 transition-all duration-200')
                 ->toArray(),
@@ -224,7 +223,6 @@ class DaisyUI extends Theme
                     ->input('flatpickr flatpickr-input input input-sm input-bordered w-full')
                 )
                 ->multiSelect(fn (Components\Component $multiSelect) => $multiSelect
-                    ->view('livewire-powergrid::components.themes.tailwind.filters.multi-select')
                     ->select('select select-sm select-bordered w-full mt-1')
                 )
                 ->number(fn (Components\Component $number) => $number

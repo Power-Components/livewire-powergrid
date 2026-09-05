@@ -6,10 +6,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Blaze\Blaze;
 use Livewire\Features\SupportTesting\Testable;
-use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, GenerateThemeMetaCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
-use PowerComponents\LivewirePowerGrid\Livewire\Detail;
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Support\CompatAliases;
 use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
@@ -75,8 +73,6 @@ class PowerGridServiceProvider extends ServiceProvider
         $this->app->alias(PowerGridManager::class, 'powergrid');
         $this->app->alias(RuleManager::class, 'rule');
         $this->app->alias(FilterManager::class, 'filter');
-
-        Livewire::component('powergrid-detail', Detail::class);
 
         Macros::columns();
         Macros::actions();

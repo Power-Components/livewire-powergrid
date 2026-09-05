@@ -31,13 +31,6 @@ if (! function_exists('powergrid_stubs_path')) {
     }
 }
 
-if (! function_exists('once')) {
-    function once(callable $callback): mixed
-    {
-        return $callback();
-    }
-}
-
 if (! function_exists('theme')) {
     function theme(string $key, string $default = ''): string
     {

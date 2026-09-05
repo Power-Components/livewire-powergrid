@@ -173,7 +173,6 @@ class Tailwind extends Theme
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.tailwind.editable')
                 ->clickable('py-2')
                 ->input('focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-full')
                 ->error('text-sm text-red-800 p-1 transition-all duration-200')
@@ -214,7 +213,6 @@ class Tailwind extends Theme
                     'input' => 'flatpickr flatpickr-input focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 w-full rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6 w-auto',
                 ],
                 'multi_select' => [
-                    'view' => 'livewire-powergrid::components.themes.tailwind.filters.multi-select',
                     'base' => 'inline-block relative w-full',
                     'select' => 'mt-1',
                 ],

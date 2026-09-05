@@ -141,13 +141,6 @@ class Layout
         return $this;
     }
 
-    public function tfoot(string $tfoot): self
-    {
-        $this->properties['tfoot'] = $tfoot;
-
-        return $this;
-    }
-
     // Footer
     public function select(string $select): self
     {

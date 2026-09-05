@@ -7,11 +7,6 @@
 <div>
     @includeIf(data_get($setUp, 'header.includeViewOnTop'), ['__partial' => $__partial])
 
-    @php($tabsZone = $__partial->renderPluginZone('header.tabs'))
-    @if (trim($tabsZone) !== '')
-        <div class="px-4 pt-4">{!! $tabsZone !!}</div>
-    @endif
-
     <div class="{{ theme('header.layout.container') }}">
         {{-- Left: user custom buttons / plugins --}}
         <div class="{{ theme('header.layout.actions_container') }}">

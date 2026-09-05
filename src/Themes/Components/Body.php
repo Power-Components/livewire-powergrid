@@ -24,21 +24,4 @@ class Body
 
         return $this;
     }
-
-    public function td(Closure|string $callback): self
-    {
-        if (is_string($callback)) {
-            $this->properties['td'] = $callback;
-
-            return $this;
-        }
-
-        $component = new Td();
-
-        $callback($component);
-
-        $this->properties['td'] = $component->toArray();
-
-        return $this;
-    }
 }

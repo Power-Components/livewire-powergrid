@@ -13,11 +13,6 @@ class Pagination
         }
     }
 
-    public static function make(string $view = ''): self
-    {
-        return new self($view);
-    }
-
     public function view(string $view): self
     {
         $this->properties['view'] = $view;
