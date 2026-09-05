@@ -143,15 +143,6 @@ class PowerGridComponent extends Component implements Context
         return $this->plugins;
     }
 
-    /** @param  array<int, mixed>  $arguments */
-    public function handlePlugin(string $plugin, string $action, array $arguments = []): void
-    {
-        $this->resolvePlugins();
-        if (isset($this->plugins[$plugin]) && method_exists($this->plugins[$plugin], $action)) {
-            $this->plugins[$plugin]->{$action}(...$arguments);
-        }
-    }
-
     /**
      * @param  string  $method
      * @param  array<int, mixed>  $parameters
@@ -601,7 +592,6 @@ class PowerGridComponent extends Component implements Context
                 [
                     'emptyState' => trans('livewire-powergrid::datatable.labels.no_data'),
                     'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'), // @deprecated since 7.x, use $emptyState
-                    'table' => 'livewire-powergrid::components.table',
                     'data' => [],
                 ]
             )->render();

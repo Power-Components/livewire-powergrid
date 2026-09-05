@@ -106,8 +106,6 @@ PHP;
             'table.checkbox-all',
             'table.checkbox-row',
             'table.radio-row',
-            'table.footer-summarize',
-            'table.header-summarize',
             'table.responsive-container',
             'toggle-detail',
             'toggle-detail-responsive',

@@ -44,9 +44,9 @@ Merged in from the remaining section methods:
 
 | Method | Leaf tokens |
 |:-------|:------------|
-| `editable()` | `editable.view`, `editable.clickable`, `editable.input`, `editable.error` |
+| `editable()` | `editable.clickable`, `editable.input`, `editable.error` |
 | `toggleable()` | `toggleable.color_on`, `toggleable.color_off`, `toggleable.color_on_dark`, `toggleable.color_off_dark`, `toggleable.knob_on` |
-| `filter()` | `filter.label`; `filter.boolean.{view,base,select}`; `filter.date_picker.{view,base,input}`; `filter.multi_select.{view,base,select}`; `filter.number.{view,base,input}`; `filter.select.{view,base,select}`; `filter.input_text.{view,base,select,input}`; `filter.input`; `filter.dropdown.*`; `filter.flyout.*` |
+| `filter()` | `filter.label`; `filter.boolean.{view,base,select}`; `filter.date_picker.{view,base,input}`; `filter.multi_select.{base,select}`; `filter.number.{view,base,input}`; `filter.select.{view,base,select}`; `filter.input_text.{view,base,select,input}`; `filter.input`; `filter.dropdown.*`; `filter.flyout.*` |
 
 `filter.dropdown.*` = `view, wrapper, trigger, badge, panel, header, title, body, grid, footer, reset, clear, apply` (the popover for `config('...filter')` = `dropdown`).
 `filter.flyout.*` = `view, overlay, panel, panel_left, panel_right, header, title, close, body, footer, clear_all` (the drawer for `config('...filter')` = `flyout`).
@@ -58,25 +58,24 @@ When building the section methods you use these typed builders (all in `src/Them
 | Class | Methods (each returns `self`) |
 |:------|:------------------------------|
 | `ThemeBuilder` | `make(string $name)`, `baseView()`, `layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()` |
-| `Layout` | `wrapper()`, `card()`, `outsideFilters()`, `container()`, `subContainer()`, `actionsContainer()`, `actions()`, `table()`, `thead()`, `tbody()`, `tr()`, `theadTr()`, `emptyState()`, `trStriped()`, `trNotStriped()`, `th()`, `thActions()`, `td()`, `tdActions()`, `tfoot()`, `select()` |
+| `Layout` | `wrapper()`, `card()`, `outsideFilters()`, `container()`, `subContainer()`, `actionsContainer()`, `actions()`, `table()`, `thead()`, `tbody()`, `tr()`, `theadTr()`, `emptyState()`, `trStriped()`, `trNotStriped()`, `th()`, `thActions()`, `td()`, `tdActions()`, `select()` |
 | `Header` | `view()`, `layout(Closure\|array)`, `searchBox(Closure\|array)`, `toggleColumns(Closure)`, `softDeletes(Closure)`, `filters(Closure)`, `filterBuilder(Closure)`, `export(Closure)`, `enabledFilters(Closure)` |
 | `HeaderButton` | `button()`, `icon()`, `iconClass()`, `label()`, `menu()`, `menuItem()`, `panel()`, `badge()`, `wrapper()`, `pill()`, `pillClearAll()`, `view()` |
 | `SearchBox` | `view()`, `container()`, `relativeMain()`, `input()`, `iconSearchWrapper()`, `iconCloseWrapper()`, `iconClose()`, `iconSearch()`, `icon()`, `iconClear()` |
-| `Table` | `layout()`, `body()`, `checkbox()`, `radio()`, plus view aliases (`view()`, `viewLayout()`, `viewHeader()`, `viewRow()`, `viewCols()`, `viewThEmpty()`, `viewInlineFilters()`, `viewCheckboxAll()`, `viewCheckboxRow()`, `viewRadioRow()`) |
-| `Body` | `tr(Closure\|string)`, `td(Closure\|string)` |
+| `Table` | `view()`, `layout()`, `body()`, `checkbox()`, `radio()` |
+| `Body` | `tr(Closure\|string)` |
 | `Tr` | `base()`, `responsive()`, `responsiveToggleIcon()` |
-| `Td` | `base()`, `actionsWrapper()` |
 | `Checkbox` / `Radio` | `th()`, `base()`, `label()`, `input()` |
 | `Cols` | `div()` |
 | `Tabs` | `view()`, `list()`, `tab()`, `tabActive()`, `tabInactive()`, `badge()`, `badgeActive()`, `badgeInactive()` |
 | `Footer` | `view()`, `layout(Closure\|array)`, `pagination(Closure\|array\|string)` |
-| `Pagination` | `__construct(string $view = '')`, `make()`, `view()` — a bare string like `->pagination('pagination')` sets `footer.pagination.view` |
+| `Pagination` | `__construct(string $view = '')`, `view()` — a bare string like `->pagination('pagination')` sets `footer.pagination.view` |
 | `Filter` | `label()`, `input()`, `boolean(Closure)`, `datePicker(Closure)`, `multiSelect(Closure)`, `number(Closure)`, `select(Closure)`, `inputText(Closure)`, `dropdown(Closure)`, `flyout(Closure)` |
 | `Dropdown` | `view()`, `wrapper()`, `trigger()`, `badge()`, `panel()`, `header()`, `title()`, `body()`, `grid()`, `footer()`, `reset()`, `clear()`, `apply()` |
 | `Flyout` | `view()`, `overlay()`, `panel()`, `panelLeft()`, `panelRight()`, `header()`, `title()`, `close()`, `body()`, `footer()`, `clearAll()` |
-| `Component` | `view()`, `base()`, `input()`, `select()`, `th()`, `label()`, `clickable()`, `error()`, `container()`, ... plus `fill(array)` — used for `editable`, `toggleable`, and array-form filter types |
+| `Component` | `view()`, `base()`, `input()`, `select()`, `th()`, `label()`, `clickable()`, `error()`, plus `fill(array)` — used for `editable`, `toggleable`, and array-form filter types |
 
-`Layout::trStriped()`, `trNotStriped()`, and `tfoot()` are optional (not in the Tailwind base; DaisyUI uses `trStriped`/`trNotStriped`). The `tabs` group and the header-control buttons (`toggleColumns`/`softDeletes`/`filters`/`filterBuilder`/`export`/`enabledFilters`) are **new in v7** — they have no v6 equivalent, so inherit them from Tailwind unless your framework needs different classes.
+`Layout::trStriped()` and `trNotStriped()` are optional (not in the Tailwind base; DaisyUI uses them). The `tabs` group and the header-control buttons (`toggleColumns`/`softDeletes`/`filters`/`filterBuilder`/`export`/`enabledFilters`) are **new in v7** — they have no v6 equivalent, so inherit them from Tailwind unless your framework needs different classes.
 
 ## Complete v6 -> v7 mapping table
 
@@ -164,7 +163,7 @@ The header-control buttons (`toggleColumns`, `softDeletes`, `filters`, `filterBu
 
 | V6 source | Builder chain | V7 token path | Notes |
 |:----------|:--------------|:--------------|:------|
-| `editable()['view']` | `Component->view()` | `editable.view` | |
+| `editable()['view']` | — | — | Discard. Plugin blade is `powergrid-plugins::Editable.index` |
 | N/A | `Component->clickable()` | `editable.clickable` | NEW in v7 |
 | `editable()['input']` | `Component->input()` | `editable.input` | |
 | N/A | `Component->error()` | `editable.error` | NEW in v7 |
@@ -192,7 +191,7 @@ Build with the `Components\Filter` builder. Each filter type is a `Component` cl
 | N/A | `->label()` | `filter.label` | NEW in v7 |
 | `filterBoolean()['view'\|'base'\|'select']` | `->boolean(fn ($c) => ...)` | `filter.boolean.{view,base,select}` | |
 | `filterDatePicker()['view'\|'base'\|'input']` | `->datePicker(fn ($c) => ...)` | `filter.date_picker.{view,base,input}` | Base points at `powergrid-plugins::Flatpickr.index` |
-| `filterMultiSelect()['view'\|'base'\|'select']` | `->multiSelect(fn ($c) => ...)` | `filter.multi_select.{view,base,select}` | |
+| `filterMultiSelect()['view'\|'base'\|'select']` | `->multiSelect(fn ($c) => ...)` | `filter.multi_select.{base,select}` | Markup is `<x-livewire-powergrid::inputs.select>` |
 | `filterNumber()['view'\|'input']` | `->number(fn ($c) => ...)` | `filter.number.{view,base,input}` | `base` present in v7 |
 | `filterSelect()['view'\|'base'\|'select']` | `->select(fn ($c) => ...)` | `filter.select.{view,base,select}` | |
 | `filterInputText()['view'\|'base'\|'select'\|'input']` | `->inputText(fn ($c) => ...)` | `filter.input_text.{view,base,select,input}` | |

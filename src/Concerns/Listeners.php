@@ -17,8 +17,6 @@ trait Listeners
     /** @var array<string, array{plugin: string, method: string}> */
     private array $pluginListenerMap = [];
 
-    private ?string $lastDispatchedEvent = null;
-
     /** @var array<class-string, list<array{event: string, method: string}>> */
     private static array $reflectionCache = [];
 
