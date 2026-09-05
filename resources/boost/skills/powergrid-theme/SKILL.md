@@ -302,6 +302,8 @@ public function template(): ?Theme
 - **The filter drawer is styled, not rebuilt.** `filter.flyout.*` (set with `->flyout(fn (Components\Flyout $f) => ...)`) drives the drawer used when `config('livewire-powergrid.filter')` is `flyout`. Its blade is shared by every theme through `parentTheme`, so override the classes and leave `view` alone. `panel` must carry the positioning (`fixed inset-y-0`) and stay above `overlay`; `panel_left`/`panel_right` add only the edge anchoring. The `dropdown` variant (`config('...filter')` = `dropdown`) works the same way.
 - **`tabs` is a theme-aware token group.** The `tabs()` section sets `list`/`tab`/`tabActive`/`tabInactive`/`badge`/`badgeActive`/`badgeInactive` and (optionally) `view`. The shared base blade `resources/views/components/themes/tailwind/tabs.blade.php` reads these tokens and renders tab icons via `IconRenderer`. Point `tabs.view` at your own blade only when the markup differs (Flux points it at `powergrid-plugins::Tabs.themes.flux`).
 - **`toggleable()` fills color tokens, not a view.** It sets `colorOn`/`colorOff`/`colorOnDark`/`colorOffDark`/`knobOn`; the shipped Toggleable blade reads them via `theme('toggleable.color_on')` etc. Do not give it a `->view()`.
+- **`editable()` is classes only.** Do not set `editable.view`. The plugin blade is `powergrid-plugins::Editable.index`; keep `clickable` / `input` / `error`.
+- **`filter.multi_select` has no view token.** Markup is `<x-livewire-powergrid::inputs.select>`; keep `base` / `select` classes.
 - **Feature views are auto-resolved.** export, toggle-columns, soft-deletes, etc. resolve via `baseView + alias` (then the `parentTheme` chain, then `components.structure.*`). Do not declare them.
 - **View aliases**: a value without `::` is prefixed with `baseView + '.'`. Use a fully-qualified `livewire-powergrid::...` path only to point at another theme's view.
 
@@ -315,6 +317,7 @@ public function template(): ?Theme
 - [ ] Only the sections that differ from Tailwind are overridden, each as its own method (`layout`/`header`/`table`/`footer`/`cols`/`tabs`/`filter`/`editable`/`toggleable`)
 - [ ] Sub-builder closures use the correct classes (`SearchBox`/`Checkbox`/`Radio`/`Body`/`Tr`/`Cols`/`Tabs`), never `Components\Component`
 - [ ] `->pagination('pagination')` (string form)
+- [ ] `editable()` has no `->view()`; `toggleable()` is color `fill()` only; `filter.multi_select` has no view token
 - [ ] A Blade file is added only where the HTML genuinely differs; otherwise the parent's view is inherited
 - [ ] Theme registered/selected in config by name or FQCN (new default only)
 - [ ] `composer test` passes

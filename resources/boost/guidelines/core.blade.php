@@ -174,7 +174,7 @@ public function template(): ?Theme
 
 - **No Theme Conditionals:** Never use `@if($theme == 'bootstrap')` in Blade files.
 - **Token-driven views:** A theme ships a Blade file only when the HTML genuinely differs. DaisyUI ships zero blades and inherits Tailwind's markup via `parentTheme`.
-- **Micro-files Strategy:** Table views are divided into single-purpose micro-files (`index.blade.php`, `tbody.blade.php`, `td.blade.php`).
+- **Micro-files Strategy:** Layout lives under `components/structure/` (`table.blade.php`, `table/header.blade.php`, `table/row.blade.php`). A theme ships a blade under `components/themes/[theme]/` only when the HTML genuinely differs. DaisyUI ships zero blades. There is no Tailwind `table/tr.blade.php` — `theme_view('table.header')` resolves to `structure/table/header.blade.php`.
 - **Directives:** Use `@theme()` directives exclusively.
 
 ### Testing Best Practices

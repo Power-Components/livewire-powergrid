@@ -14,15 +14,18 @@ The 7.x version prioritizes **simplicity, an adaptable native skeleton, and inde
 
 ## 2. Architecture & Theming
 
-* **Root `/themes` Directory:** This folder is strictly for PHP classes (Tailwind, DaisyUI, Flux).
-* **Strict Key Mapping:** All CSS/theme logic is managed through a new unified `struct()` method.
-* **Absolute Separation:** HTML structure is completely separated from visual styles.
+* **Theme classes (`src/Themes`):** Tailwind (root), DaisyUI and Flux extend it via `parentTheme`.
+* **Section-based authoring:** A theme exposes per-section methods (`layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, plus `filter()`/`editable()`/`toggleable()`), each returning a token slice; they are auto-merged by `themeTokenMethods()`. `struct()` only sets `baseView()`. Write a slice as a plain nested array (6.x style) or with the fluent builder via the `section()` helper. `ArrayTheme` builds a whole theme from an array.
+* **Selection & registry:** `config('livewire-powergrid.theme')` accepts a registered name (`'tailwind'`|`'daisyui'`|`'flux'`) or an FQCN, resolved through `PowerGridManager::$themes` / `registerTheme()`.
+* **No-code overrides:** `config('livewire-powergrid.theme_overrides')` merges token overrides at the highest precedence — restyle any token without a Theme class.
+* **Absolute Separation:** HTML structure is separated from visual styles; classes live in tokens read by the `theme()` helper.
 
 ## 3. Views
 
 * **No Theme Conditionals:** Do not use logic like `@if($theme == 'bootstrap')` in Blade files.
-* **Micro-files Strategy:** Table views are divided into single-purpose micro-files (e.g., `index.blade.php`, `tbody.blade.php`, `td.blade.php`).
-* **Directives:** Rely strictly on `@theme()` directives.
+* **Micro-files Strategy:** Table views are single-purpose micro-files under `resources/views/components/structure/` (e.g. `table.blade.php`, `partials/tbody.blade.php`, `table/row.blade.php`).
+* **Token-driven, minimal overrides:** A theme ships a blade only when the HTML structure genuinely differs; class-only differences live in tokens. DaisyUI ships **zero** blades (fully token-driven, inheriting Tailwind's views); Flux keeps blades that use `<flux:*>` components.
+* **Helpers:** Read tokens with `theme('key')` (or `@theme('key')`) and resolve views with `theme_view('alias')`.
 
 ## 4. Server-Side Actions
 

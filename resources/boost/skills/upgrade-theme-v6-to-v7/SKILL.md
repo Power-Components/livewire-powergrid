@@ -48,9 +48,9 @@ set of **per-section methods that return arrays**. The migration is mostly
    - `footer` gains a nested `layout`; the old `footer_with_pagination` becomes `pagination`.
    - `table.header.*` / `table.body.*` flatten to `table.layout.*`; `thAction` → `th_actions`, `tdActionsContainer` → `td_actions`.
 4. **Inheritance replaces boilerplate.** Set `protected ?string $parentTheme = Tailwind::class;` and declare **only the sections that differ** from Tailwind. `editable()`, `toggleable()`, and `filter()` were also reworked:
-   - `editable()` adds `clickable` and `error`.
+   - `editable()` keeps `clickable` / `input` / `error` **classes only**. Discard `view` — the plugin blade is `powergrid-plugins::Editable.index`.
    - `toggleable()` is now **five CSS color tokens** (`colorOn`, `colorOff`, `colorOnDark`, `colorOffDark`, `knobOn`) set via `->fill([...])`. The old `view/base/label/input/role` keys are gone.
-   - `filter()` adds a `label`, a global `input`, and `dropdown`/`flyout` groups.
+   - `filter()` adds a `label`, a global `input`, and `dropdown`/`flyout` groups. Discard `filter.multi_select.view` — markup is `<x-livewire-powergrid::inputs.select>`.
 
 > Token keys are snake_cased when built, so the fluent method `->thActions()` (or array key) is stored as the token `table.layout.th_actions`. You write camelCase in the fluent form; the resolved token path is snake_case. v7 also adds a `tabs` group (status tabs) with no v6 equivalent.
 
@@ -156,9 +156,9 @@ class Bootstrap5 extends Theme
     /** @return array<string, mixed> */
     public function editable(): array
     {
+        // Classes only. Plugin blade is powergrid-plugins::Editable.index — no ->view().
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.bootstrap5.editable')
                 ->clickable('py-2')                              // NEW in v7
                 ->input('form-control')
                 ->error('invalid-feedback d-block')              // NEW in v7
@@ -258,7 +258,7 @@ composer test               # runs ./vendor/bin/pest --compact (see composer.jso
 - [ ] `protected ?string $parentTheme = Tailwind::class;` is declared, so only differing sections are overridden.
 - [ ] Each token group is its own method (`layout`/`header`/`table`/`footer`/`cols`/`tabs`/`filter`/`editable`/`toggleable`), returning `['<group>' => [...]]` (array or via `section()`).
 - [ ] `checkbox` / `radio` nested under `table`; `searchBox` nested under `header`; `footer` uses a nested `layout` + `pagination()`; `table.header.*`/`table.body.*` flattened to `table.layout.*`.
-- [ ] Separate `editable()` (with `clickable` + `error`), `toggleable()` (five color tokens), and `filter()` (with `label` + global `input`) methods.
+- [ ] Separate `editable()` (clickable/input/error — **no** `->view()`), `toggleable()` (five color tokens — **no** view), and `filter()` (label + global input; **no** `multi_select.view`).
 - [ ] A Blade file is added only for genuinely different markup; otherwise Tailwind's view is inherited.
 - [ ] `baseView()` points at `livewire-powergrid::components.themes.<name>`.
 - [ ] No `public string $name` property -- `Theme::name()` derives the name from the class name.

@@ -48,14 +48,20 @@ The following legacy features and themes have been completely removed. You must 
     - `theme_style()` - Use `theme()` helper instead
     - `isBootstrap5()` - No direct replacement (check theme class instead)
     - `isTailwind()` - No direct replacement (check theme class instead)
+    - PowerGrid no longer ships a global `once()` polyfill. Use Laravel's `once()`.
 6.  **Theme Class Methods:**
-    - `apply()` method - Use `struct()` instead
-    - `layout()` method - Repurposed in fluent builder
+    - `apply()` method - Use `struct()` (baseView only) plus section methods (`layout()`, `header()`, `table()`, …)
     - `root()` method - Removed
     - `$base` property - Removed
+    - `public string $name` - Removed; `Theme::name()` is derived from the class basename
+    - `Themes\Base` (Bootstrap leftover) - Removed. Extend `Theme` and set `parentTheme = Tailwind::class`
+    - Table view-alias setters (`viewHeader()`, `viewRow()`, `viewCols()`, …) - Removed. Views resolve via `baseView` + alias, then `components.structure.*`
+    - `Layout::tfoot()`, `Body::td()`, `Components\Td` - Removed. Row/cell classes live on `table.layout.*`; action-cell wrapper is the token `table.body.td.actions_wrapper`
 7.  **View Namespace Changed:**
     - Old: `components.frameworks.[theme]`
     - New: `components.themes.[theme]`
+8.  **Detail rows:** The nested Livewire component `powergrid-detail` (`Livewire\Detail`) is gone. Detail markup is inlined in `components/partials/tbody.blade.php`. Remove any `<livewire:powergrid-detail>` / published `livewire/detail.blade.php`.
+9.  **Editable / multi-select views:** First-party themes no longer set `editable.view` or `filter.multi_select.view`. Editable renders `powergrid-plugins::Editable.index`. Multi-select renders `<x-livewire-powergrid::inputs.select>`.
 
 ---
 
@@ -130,15 +136,16 @@ In version 7.x, the theme architecture has been **completely rewritten**. This i
 - No type hints or IDE support
 
 **v7 Architecture (Current):**
-- Uses a single `struct()` method returning a fluent `ThemeBuilder`
-- Method chaining with typed closure parameters
+- `struct()` only sets `baseView` (returns `ThemeBuilder` or a plain array)
+- Token groups are **section methods**: `layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, plus `filter()`, `editable()`, `toggleable()`
+- Each section returns `['<group>' => [...]]` — a plain nested array (6.x-familiar) or `$this->section('group', fn (...) => ...)`
 - Nested structure with `checkbox`/`radio` under `table`, `searchBox` under `header`
-- Separate methods remain for: `editable()`, `toggleable()`, `filter()`
-- New sections: `layout`, `header`, expanded `searchBox`
+- Child themes set `parentTheme = Tailwind::class` and override only the sections that change
+- `ArrayTheme` authors the same tokens as a plain array (`fromArray()` / `fromFile()`)
 
 ### Step 1: Update Class Inheritance & Struct Signature
 
-All custom themes must extend `PowerComponents\LivewirePowerGrid\Themes\Theme` and implement the `struct()` method that returns `Components\ThemeBuilder`:
+All custom themes must extend `PowerComponents\LivewirePowerGrid\Themes\Theme`. `struct()` only sets the base view; put tokens in section methods:
 
 ```php
 use PowerComponents\LivewirePowerGrid\Themes\Theme;
@@ -146,12 +153,26 @@ use PowerComponents\LivewirePowerGrid\Themes\Components;
 
 class CustomTheme extends Theme
 {
+    protected ?string $parentTheme = \PowerComponents\LivewirePowerGrid\Themes\Tailwind::class;
+
+    protected function baseView(): string
+    {
+        return 'livewire-powergrid::components.themes.custom';
+    }
+
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.themes.custom')
-            // ... fluent builder chain
-            ;
+            ->baseView($this->baseView());
+    }
+
+    public function table(): array
+    {
+        return $this->section('table', fn (Components\Table $table) => $table
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->table('...')
+            )
+        );
     }
 }
 ```
@@ -163,9 +184,9 @@ class CustomTheme extends Theme
 #### Shortcut used in real-world upgrades: inherit from the base Tailwind theme
 
 If your v6 theme was a *branded Tailwind variant* (same structure, different classes),
-you do **not** need to re-declare all 41 struct tokens. Point `parentTheme` at
-`Tailwind::class`, override only the tokens that differ in `struct()`, and merge the
-rest through `filter()` / `editable()`. Everything you skip is inherited:
+you do **not** need to re-declare every token. Point `parentTheme` at
+`Tailwind::class` and override only the **section methods** that differ.
+Everything you skip is inherited:
 
 ```php
 <?php
@@ -176,25 +197,24 @@ use PowerComponents\LivewirePowerGrid\Themes\{Components, Tailwind, Theme};
 
 class PowerGridTheme extends Theme
 {
-    // Every token not overridden here is inherited from the base Tailwind theme.
+    // Every section not overridden here is inherited from Tailwind.
     protected ?string $parentTheme = Tailwind::class;
 
     public function struct(): Components\ThemeBuilder
     {
-        // checkbox(), radio(), cols(), footer(), searchBox()... omitted = inherited
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.themes.tailwind')
+            ->baseView('livewire-powergrid::components.themes.tailwind');
+    }
+
+    public function table(): array
+    {
+        return $this->section('table', fn (Components\Table $table) => $table
             ->layout(fn (Components\Layout $layout) => $layout
-                ->container('p-3 align-middle sm:px-6 lg:px-8')
+                ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-gray-200')
+                ->th('font-semibold px-3 py-3 text-left text-xs text-white whitespace-nowrap')
+                ->td('px-3 py-2 whitespace-nowrap')
             )
-            ->table(fn (Components\Table $table) => $table
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('overflow-x-auto rounded-t-lg relative border-x border-t border-gray-200')
-                    ->th('font-semibold px-3 py-3 text-left text-xs text-white whitespace-nowrap')
-                    ->td('px-3 py-2 whitespace-nowrap')
-                    // ...
-                )
-            );
+        );
     }
 
     public function filter(): array
@@ -253,19 +273,21 @@ from Tailwind.
 
 ### Step 2: Understand the Component Classes
 
-The fluent builder uses these typed component classes:
+The fluent builder uses these typed component classes (used from section methods, not dumped into `struct()`):
 
-- `Components\ThemeBuilder` - Main builder (entry point)
-- `Components\Layout` - For layout configurations (reused in multiple places)
-- `Components\Header` - For header structure (NEW in v7)
-- `Components\SearchBox` - For search box structure (expanded in v7)
-- `Components\Table` - For table structure
-- `Components\Body` - For body structure
-- `Components\Tr` - For table row structure
-- `Components\Checkbox` - For checkbox structure (now nested under table)
-- `Components\Radio` - For radio structure (now nested under table)
-- `Components\Cols` - For column structure
-- `Components\Footer` - For footer structure
+- `Components\ThemeBuilder` - `struct()` entry point (`make()`, `baseView()`)
+- `Components\Layout` - CSS-class group reused inside header/table/footer
+- `Components\Header` - Header structure (NEW in v7)
+- `Components\SearchBox` - Search box (expanded in v7, nested under header)
+- `Components\Table` - `view()`, `layout()`, `body()`, `checkbox()`, `radio()`
+- `Components\Body` - `tr(Closure|string)` (responsive row tokens)
+- `Components\Tr` - `base()`, `responsive()`, `responsiveToggleIcon()`
+- `Components\Checkbox` / `Components\Radio` - nested under table
+- `Components\Cols` / `Components\Footer` / `Components\Tabs`
+- `Components\Filter` / `Components\Dropdown` / `Components\Flyout` - `filter()` section
+- `Components\Component` - generic bag for `editable()` / `toggleable()` / filter types
+
+There is no `Components\Td`. Action-cell wrapper classes go in the token `table.body.td.actions_wrapper` (plain array merge — see the `resolveTokens()` shortcut above).
 
 ### Step 3: Translate Keys using Complete Mapping
 
@@ -346,24 +368,25 @@ The fluent builder uses these typed component classes:
 | `footer()['select']` | `->footer()->layout()->select('...')` | Now nested under layout |
 | `footer()['footer_with_pagination']` | `->footer()->pagination('pagination')` | Renamed to pagination |
 
-#### Editable (SEPARATE METHOD - not in struct())
+#### Editable (SEPARATE METHOD - `editable()`)
 | Legacy 6.x | New 7.x (Separate Method) | Notes |
 | :--- | :--- | :--- |
-| `editable()['view']` | `editable()->view('...')` | Still in separate method |
-| N/A | `editable()->clickable('...')` | NEW in v7 |
-| `editable()['input']` | `editable()->input('...')` | Still in separate method |
+| `editable()['view']` | ❌ REMOVED | Plugin blade is `powergrid-plugins::Editable.index` |
+| N/A | `editable()->clickable('...')` | NEW in v7 — wrapper before edit mode |
+| `editable()['input']` | `editable()->input('...')` | Classes only |
 | N/A | `editable()->error('...')` | NEW in v7 |
 
-#### Toggleable (SEPARATE METHOD - simplified in v7)
+#### Toggleable (SEPARATE METHOD - color tokens, no view)
 | Legacy 6.x | New 7.x (Separate Method) | Notes |
 | :--- | :--- | :--- |
-| `toggleable()['view']` | `toggleable()->view('...')` | Only view remains |
-| `toggleable()['base']` | ❌ REMOVED | No longer configurable |
-| `toggleable()['label']` | ❌ REMOVED | No longer configurable |
-| `toggleable()['input']` | ❌ REMOVED | No longer configurable |
-| `toggleable()['role']` | ❌ REMOVED | No longer configurable |
+| `toggleable()['view']` | ❌ REMOVED | Plugin blade is `powergrid-plugins::Toggleable.index` |
+| `toggleable()['base']` | ❌ REMOVED | |
+| `toggleable()['label']` | ❌ REMOVED | |
+| `toggleable()['input']` | ❌ REMOVED | |
+| `toggleable()['role']` | ❌ REMOVED | |
+| N/A | `->fill(['colorOn' => '...', 'colorOff' => '...', 'colorOnDark' => '...', 'colorOffDark' => '...', 'knobOn' => '...'])` | NEW — CSS variables for the switch |
 
-#### Filters (SEPARATE METHOD - not in struct())
+#### Filters (SECTION METHOD - `filter()`)
 | Legacy 6.x | New 7.x (Separate Method) | Notes |
 | :--- | :--- | :--- |
 | N/A | `filter()->label('...')` | NEW in v7 |
@@ -373,9 +396,9 @@ The fluent builder uses these typed component classes:
 | `filterDatePicker()['view']` | `filter.date_picker.view` | Still in separate method |
 | `filterDatePicker()['base']` | `filter.date_picker.base` | Still in separate method |
 | `filterDatePicker()['input']` | `filter.date_picker.input` | Still in separate method |
-| `filterMultiSelect()['view']` | `filter.multi_select.view` | Still in separate method |
-| `filterMultiSelect()['base']` | `filter.multi_select.base` | Still in separate method |
-| `filterMultiSelect()['select']` | `filter.multi_select.select` | Still in separate method |
+| `filterMultiSelect()['view']` | ❌ REMOVED | Markup is `<x-livewire-powergrid::inputs.select>` |
+| `filterMultiSelect()['base']` | `filter.multi_select.base` | Classes only |
+| `filterMultiSelect()['select']` | `filter.multi_select.select` | Classes only |
 | `filterNumber()['view']` | `filter.number.view` | Still in separate method |
 | N/A | `filter.number.base` | NEW - was missing in v6 |
 | `filterNumber()['input']` | `filter.number.input` | Still in separate method |
@@ -398,6 +421,9 @@ These v6 keys have no v7 equivalent and should be discarded:
 - ❌ `table()['body']['trSummarize']` - Removed
 - ❌ `table()['body']['tdFilters']` - Removed
 - ❌ `table()['body']['trFilters']` - Removed
+- ❌ `editable()['view']` - Plugin owns the blade
+- ❌ `toggleable()['view'/'base'/'label'/'input'/'role']` - Replaced by color `fill()` tokens
+- ❌ `filterMultiSelect()['view']` - Shared `<x-livewire-powergrid::inputs.select>`
 
 ### Step 4: Complete Migration Example
 
@@ -472,108 +498,114 @@ class Bootstrap5 extends Theme
 namespace PowerComponents\LivewirePowerGrid\Themes;
 
 use PowerComponents\LivewirePowerGrid\Themes\Components;
+use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 
 class Bootstrap5 extends Theme
 {
-    public string $name = 'bootstrap5';
+    protected ?string $parentTheme = Tailwind::class;
+
+    protected function baseView(): string
+    {
+        return 'livewire-powergrid::components.themes.bootstrap5';
+    }
 
     public function struct(): Components\ThemeBuilder
     {
         return Components\ThemeBuilder::make($this->name())
-            ->baseView('livewire-powergrid::components.themes.bootstrap5')
-
-            // NEW: Top-level layout (add empty or adapt)
-            ->layout(fn (Components\Layout $layout) => $layout
-                ->wrapper('')
-                ->outsideFilters('')
-            )
-
-            // NEW: Header structure
-            ->header(fn (Components\Header $header) => $header
-                ->view('header')
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('d-flex justify-content-between')
-                    ->subContainer('')
-                    ->actionsContainer('')
-                    ->actions('btn-group')  // MOVED from v6 table.layout.actions
-                )
-
-                // SearchBox now nested under header
-                ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
-                    ->view('header.search')
-                    ->container('')
-                    ->relativeMain('')
-                    ->input('form-control')              // from v6 searchBox()
-                    ->iconSearchWrapper('')
-                    ->iconCloseWrapper('')
-                    ->iconClose('bi bi-x')               // from v6 searchBox()
-                    ->iconSearch('bi bi-search')         // from v6 searchBox()
-                )
-            )
-
-            // Table structure with nested checkbox/radio
-            ->table(fn (Components\Table $table) => $table
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('my-0')                  // from v6 table.layout.container
-                    ->table('table-hover table-striped') // from v6 table.layout.table
-                    ->thead('')                          // from v6 table.header.thead
-                    ->tr('')                             // from v6 table.header.tr
-                    ->th('fw-bold text-secondary')       // from v6 table.header.th
-                    ->thActions('text-center')           // from v6 table.header.thAction
-                    ->tbody('')                          // from v6 table.body.tbody
-                    ->td('align-middle text-nowrap')     // from v6 table.body.td
-                    ->tdActions('text-center')           // from v6 table.body.tdActionsContainer
-                )
-
-                // NEW: Body responsive structure
-                ->body(fn (Components\Body $body) => $body
-                    ->tr(fn (Components\Tr $tr) => $tr
-                        ->responsive('')
-                        ->responsiveToggleIcon('')
-                    )
-                )
-
-                // Checkbox now nested under table
-                ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
-                    ->th('fs-6 text-center')             // from v6 checkbox()
-                    ->base('form-check')                 // from v6 checkbox()
-                    ->label('form-check-label')          // from v6 checkbox()
-                    ->input('form-check-input')          // from v6 checkbox()
-                )
-
-                // Radio now nested under table (adapt from checkbox if not in v6)
-                ->radio(fn (Components\Radio $radio) => $radio
-                    ->th('fs-6 text-center')
-                    ->base('form-check')
-                    ->label('form-check-label')
-                    ->input('form-check-input')
-                )
-            )
-
-            ->cols(fn (Components\Cols $cols) => $cols
-                ->div('')                                // from v6 cols.div
-            )
-
-            // Footer with nested layout
-            ->footer(fn (Components\Footer $footer) => $footer
-                ->view('footer')                         // from v6 footer.view
-                ->layout(fn (Components\Layout $layout) => $layout
-                    ->container('d-flex justify-content-between')  // from v6 footer.footer
-                    ->select('form-select')                        // from v6 footer.select
-                )
-                ->pagination('pagination')               // from v6 footer.footer_with_pagination
-            );
+            ->baseView($this->baseView());
     }
 
-    // These remain as separate methods
+    public function layout(): array
+    {
+        return $this->section('layout', fn (Components\Layout $layout) => $layout
+            ->wrapper('')
+            ->card('card')
+            ->outsideFilters('')
+        );
+    }
+
+    public function header(): array
+    {
+        return $this->section('header', fn (Components\Header $header) => $header
+            ->view('header')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('d-flex justify-content-between')
+                ->subContainer('')
+                ->actionsContainer('')
+                ->actions('btn-group')  // MOVED from v6 table.layout.actions
+            )
+            ->searchBox(fn (Components\SearchBox $searchBox) => $searchBox
+                ->view('header.search')
+                ->container('')
+                ->relativeMain('')
+                ->input('form-control')
+                ->iconSearchWrapper('')
+                ->iconCloseWrapper('')
+                ->iconClose('bi bi-x')
+                ->iconSearch('bi bi-search')
+            )
+        );
+    }
+
+    public function table(): array
+    {
+        return $this->section('table', fn (Components\Table $table) => $table
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('my-0')
+                ->table('table-hover table-striped')
+                ->thead('')
+                ->tr('')
+                ->th('fw-bold text-secondary')
+                ->thActions('text-center')
+                ->tbody('')
+                ->td('align-middle text-nowrap')
+                ->tdActions('text-center')
+            )
+            ->body(fn (Components\Body $body) => $body
+                ->tr(fn (Components\Tr $tr) => $tr
+                    ->responsive('')
+                    ->responsiveToggleIcon('')
+                )
+            )
+            ->checkbox(fn (Components\Checkbox $checkbox) => $checkbox
+                ->th('fs-6 text-center')
+                ->base('form-check')
+                ->label('form-check-label')
+                ->input('form-check-input')
+            )
+            ->radio(fn (Components\Radio $radio) => $radio
+                ->th('fs-6 text-center')
+                ->base('form-check')
+                ->label('form-check-label')
+                ->input('form-check-input')
+            )
+        );
+    }
+
+    public function cols(): array
+    {
+        return ['cols' => ['div' => '']];
+    }
+
+    public function footer(): array
+    {
+        return $this->section('footer', fn (Components\Footer $footer) => $footer
+            ->view('footer')
+            ->layout(fn (Components\Layout $layout) => $layout
+                ->container('d-flex justify-content-between')
+                ->select('form-select')
+            )
+            ->pagination('pagination')
+        );
+    }
+
     public function editable(): array
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.bootstrap5.editable')
-                ->clickable('cursor-pointer')            // NEW in v7
+                ->clickable('cursor-pointer')
                 ->input('form-control')
-                ->error('is-invalid')                    // NEW in v7
+                ->error('is-invalid')
                 ->toArray(),
         ];
     }
@@ -582,25 +614,34 @@ class Bootstrap5 extends Theme
     {
         return [
             'toggleable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.bootstrap5.toggleable')
+                ->fill([
+                    'colorOn' => 'var(--bs-success, #198754)',
+                    'colorOff' => 'var(--bs-gray-300, #dee2e6)',
+                    'colorOnDark' => 'var(--bs-success, #198754)',
+                    'colorOffDark' => 'var(--bs-gray-600, #6c757d)',
+                    'knobOn' => 'var(--bs-white, #ffffff)',
+                ])
                 ->toArray(),
         ];
-        // Note: base, label, input, role removed in v7
     }
 
     public function filter(): array
     {
         return [
             'filter' => [
-                'label' => 'form-label',                 // NEW in v7
+                'label' => 'form-label',
                 'boolean' => [
                     'view' => 'livewire-powergrid::components.themes.bootstrap5.filters.boolean',
                     'base' => 'form-select',
                     'select' => '',
                 ],
+                'multi_select' => [
+                    'base' => 'form-select',
+                    'select' => '',
+                ],
                 'number' => [
                     'view' => 'livewire-powergrid::components.themes.bootstrap5.filters.number',
-                    'base' => '',                        // NEW - was missing in v6
+                    'base' => '',
                     'input' => 'form-control',
                 ],
                 'select' => [
@@ -614,23 +655,25 @@ class Bootstrap5 extends Theme
                     'select' => '',
                     'input' => 'form-control',
                 ],
-                'input' => 'form-control',               // NEW - global input
+                'input' => 'form-control',
             ],
         ];
     }
 }
 ```
 
+Need `use PowerComponents\LivewirePowerGrid\Themes\Tailwind;` at the top of that example. Let me check the use statements in the example.
+
 ### Key Observations in the Migration:
 
-1. **Fluent Builder Pattern**: Method chaining with closures replaces array returns
-2. **Checkbox/Radio Nesting**: Now defined inside `->table()->checkbox()` and `->table()->radio()`
-3. **SearchBox Nesting**: Now defined inside `->header()->searchBox()`
-4. **Actions Moved**: `table.layout.actions` moved to `header.layout.actions`
-5. **Footer Layout**: Uses nested `->footer()->layout()` sub-builder
-6. **New Sections**: `layout()`, `header()`, `body()` are completely new
-7. **Separate Methods**: `editable()`, `toggleable()`, `filter()` remain outside `struct()`
-8. **Removed Keys**: Old keys like `table.layout.base`, `table.layout.div` are gone
+1. **`struct()` is tiny**: it only sets `baseView`. Token groups are section methods (`layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, `filter()`, `editable()`, `toggleable()`).
+2. **Inherit Tailwind**: set `parentTheme = Tailwind::class` and override only what differs. DaisyUI ships zero blades this way.
+3. **No `$name` property**: `Theme::name()` is the kebab-cased class basename.
+4. **Checkbox/Radio Nesting**: inside `table()` → `checkbox()` / `radio()`
+5. **SearchBox Nesting**: inside `header()` → `searchBox()`
+6. **Actions Moved**: `table.layout.actions` → `header.layout.actions`
+7. **Editable / toggleable / multi-select**: classes only. Plugin blades own the HTML (`powergrid-plugins::Editable.index`, `Toggleable.index`, `<x-livewire-powergrid::inputs.select>`).
+8. **Removed Keys**: `table.layout.base`, `table.layout.div`, `editable.view`, `toggleable.view`, `filter.multi_select.view`
 
 ### Step 4: Update Blade Views Styling Helpers
 In your custom Blade files, replace the legacy `theme_style` helper with the new dot-notation `theme` helper:
@@ -644,21 +687,23 @@ In your custom Blade files, replace the legacy `theme_style` helper with the new
 
 ### Step 5: Per-Component Theme Override
 
-The method for overriding the theme on a per-component basis has been renamed:
+Both still work. `customThemeClass()` returns a class-string (v6). Prefer `template()` which returns a `Theme` instance:
 
 ```php
-// v6 — removed
+// still accepted
 public function customThemeClass(): ?string
 {
     return \App\PowerGridThemes\MyTheme::class;
 }
 
-// v7 — returns a Theme instance
+// preferred in v7
 public function template(): ?Theme
 {
     return new \App\PowerGridThemes\MyTheme();
 }
 ```
+
+If both are set, `template()` wins.
 
 ---
 
@@ -780,7 +825,7 @@ If you maintain custom copies of PowerGrid blade views in `resources/views/vendo
 
 3.  **Remove `$theme` array usage:** The `$theme` variable is no longer passed to views.
 
-4.  **Adapt to Micro-files:** The layout has been broken down into single-purpose components (e.g. `tr.blade.php`, `row.blade.php`, `tbody.blade.php`).
+4.  **Adapt to Micro-files:** Layout lives under `components/structure/` (e.g. `table.blade.php`, `table/header.blade.php`, `table/row.blade.php`). A theme ships a blade under `components/themes/[theme]/` only when the HTML actually differs. DaisyUI ships **zero** blades. There is no Tailwind `table/tr.blade.php` — `theme_view('table.header')` resolves to `structure/table/header.blade.php`. Partials `thead` / `tbody` are shared.
 
 ### Copying Latest Views
 
@@ -1064,20 +1109,28 @@ cat config/livewire-powergrid.php
 grep -r "extends Theme" app/
 grep -r "public function table()" app/
 grep -r "public function apply()" app/
+grep -r "public string \$name" app/
+grep -r "Themes\\\\Base" app/
 
-# 8. Legacy dist assets (see Section 18)
+# 8. Removed Livewire detail component / missing theme views
+grep -r "powergrid-detail" app/ resources/
+grep -r "themes.tailwind.editable" app/ resources/
+grep -r "filters.multi-select" app/ resources/
+
+# 9. Legacy dist assets (see Section 18)
 grep -rn "livewire-powergrid/dist" resources/ vite.config.js
 
-# 9. Old export class references (see Section 5)
+# 10. Old export class references (see Section 5)
 grep -rn "Components\\\\Exports\\\\OpenSpout" config/ app/
 ```
 
 ### Components to Review
 
-- [ ] Custom theme classes
-- [ ] Custom Blade view overrides
+- [ ] Custom theme classes (`struct()` + section methods, no `$name`, no `Themes\Base`)
+- [ ] Custom Blade view overrides (no `table/tr.blade.php`, no `livewire/detail.blade.php`)
 - [ ] Components using lazy loading
 - [ ] Components with custom actions
+- [ ] Published `<livewire:powergrid-detail>` / `editable.view` / `filter.multi_select.view`
 - [ ] JavaScript code interacting with PowerGrid
 - [ ] Tests using PowerGrid components
 - [ ] Fields closures returning HTML strings (see Section 17)
@@ -1177,7 +1230,16 @@ filters via `draftFilters` + `applyFilters()`
 ### Common Issues
 
 #### "Class 'PowerComponents\LivewirePowerGrid\Themes\Bootstrap5' not found"
-**Solution:** Bootstrap5 theme was removed. Update your config to use Tailwind, DaisyUI, or Flux.
+**Solution:** Bootstrap5 theme was removed. Update your config to use Tailwind, DaisyUI, or Flux. Extend `Theme` with `parentTheme = Tailwind::class` if you still need Bootstrap-looking tokens — do not extend `Themes\Base` (also removed).
+
+#### "Unable to locate a class or view for component [powergrid-detail]"
+**Solution:** The nested Livewire detail component was removed. Detail rows are inlined in `components/partials/tbody.blade.php`. Drop `<livewire:powergrid-detail>` and any published `livewire/detail.blade.php`.
+
+#### "View [livewire-powergrid::components.themes.tailwind.editable] not found"
+**Solution:** First-party themes no longer set `editable.view`. The plugin blade is `powergrid-plugins::Editable.index`. Remove `->view('...editable')` from your theme's `editable()` method; keep `clickable` / `input` / `error` classes.
+
+#### "View [...filters.multi-select] not found"
+**Solution:** There is no theme multi-select blade. Multi-select uses `<x-livewire-powergrid::inputs.select>`. Drop `filter.multi_select.view`; keep `base` / `select` classes.
 
 #### "Call to undefined function theme_style()"
 **Solution:** Replace with `theme()` helper (see Section 3).

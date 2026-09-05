@@ -213,6 +213,9 @@ These v6 keys have no v7 equivalent. Discard them:
 | `table()['body']['trSummarize']` | Removed - simplified |
 | `table()['body']['tdFilters']` | Removed - simplified |
 | `table()['body']['trFilters']` | Removed - simplified |
+| `editable()['view']` | Plugin blade is `powergrid-plugins::Editable.index` |
+| `toggleable()['view'/'base'/'label'/'input'/'role']` | Replaced by color `fill()` tokens |
+| `filterMultiSelect()['view']` | Markup is `<x-livewire-powergrid::inputs.select>` |
 
 ## Full worked example
 
@@ -390,7 +393,6 @@ class Bootstrap5 extends Theme
     {
         return [
             'editable' => (new Components\Component())
-                ->view('livewire-powergrid::components.themes.bootstrap5.editable')
                 ->clickable('py-2')
                 ->input('form-control')
                 ->error('invalid-feedback d-block')
@@ -429,7 +431,6 @@ class Bootstrap5 extends Theme
                     ->input('form-control')
                 )
                 ->multiSelect(fn (Components\Component $c) => $c
-                    ->view('livewire-powergrid::components.themes.bootstrap5.filters.multi-select')
                     ->select('form-select')
                 )
                 ->number(fn (Components\Component $c) => $c
