@@ -85,6 +85,12 @@ final readonly class CellRenderer
     {
         $rawContent = $row->{$column->field} ?? '';
 
+        $renderedTemplate = is_array($rawContent) ? $this->component->renderRowTemplate($rawContent) : null;
+
+        if ($renderedTemplate !== null || is_array($rawContent)) {
+            $rawContent = '';
+        }
+
         if ($rawContent instanceof \UnitEnum) {
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
         }
@@ -129,14 +135,16 @@ final readonly class CellRenderer
         $position = data_get($truncate, 'position', 'top');
         $position = is_string($position) ? $position : 'top';
 
-        $inner = $tooltipView !== ''
-            ? $this->renderTooltip(
+        $inner = match (true) {
+            $renderedTemplate !== null => $renderedTemplate,
+            $tooltipView !== '' => $this->renderTooltip(
                 $tooltipView,
                 $content,
                 (string) $tooltipFull,
                 $position,
-            )
-            : '<div>'.($column->index ? $rowIndex : $content).'</div>';
+            ),
+            default => '<div>'.($column->index ? $rowIndex : $content).'</div>',
+        };
 
         return '<span class="'.$spanClass.'">'.$inner.'</span>';
     }

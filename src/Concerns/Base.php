@@ -370,4 +370,55 @@ trait Base
     {
         return [];
     }
+
+    /**
+     * Named HTML snippets interpolated server-side for columns marked `template()`.
+     *
+     * @return array<string, string>
+     */
+    public function rowTemplates(): array
+    {
+        return [];
+    }
+
+    /**
+     * Replace `{{ key }}` in a named row template. Values are escaped; markup in the template is kept.
+     *
+     * @param  array<string, mixed>|mixed  $payload  `['name' => ['key' => 'value']]`
+     */
+    public function renderRowTemplate(mixed $payload): ?string
+    {
+        if (! is_array($payload) || $payload === []) {
+            return null;
+        }
+
+        $name = array_key_first($payload);
+        $vars = $payload[$name] ?? null;
+
+        if (! is_string($name) || $name === '' || ! is_array($vars)) {
+            return null;
+        }
+
+        $template = $this->rowTemplates()[$name] ?? null;
+
+        if (! is_string($template) || $template === '') {
+            return null;
+        }
+
+        foreach ($vars as $key => $value) {
+            if (! is_string($key) && ! is_int($key)) {
+                continue;
+            }
+
+            $safe = e(is_scalar($value) || $value instanceof \Stringable ? (string) $value : '');
+            $placeholder = (string) $key;
+            $template = str_replace(
+                ['{{ '.$placeholder.' }}', '{{'.$placeholder.'}}'],
+                $safe,
+                $template,
+            );
+        }
+
+        return $template;
+    }
 }

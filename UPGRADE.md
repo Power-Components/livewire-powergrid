@@ -62,7 +62,7 @@ The following legacy features and themes have been completely removed. You must 
     - New: `components.themes.[theme]`
 8.  **Detail rows:** The nested Livewire component `powergrid-detail` (`Livewire\Detail`) is gone. Detail markup is inlined in `components/partials/tbody.blade.php`. Remove any `<livewire:powergrid-detail>` / published `livewire/detail.blade.php`.
 9.  **Editable / multi-select views:** First-party themes no longer set `editable.view` or `filter.multi_select.view`. Editable renders `powergrid-plugins::Editable.index`. Multi-select renders `<x-livewire-powergrid::inputs.select>`.
-10. **Row templates:** `rowTemplates()`, `Column::template()`, and `pg-render-row-template.js` are gone. Render HTML from `fields()` with `Illuminate\Support\HtmlString`.
+10. **Row templates:** `rowTemplates()` and `Column::template()` stay. Interpolation is server-side (values are escaped). `pg-render-row-template.js`, the `pgRowTemplates` event, and `window.pgRowTemplates_*` are gone.
 11. **Summaries:** `withSum()` / `withCount()` / `withAvg()` / `withMin()` / `withMax()` are gone. Use `summarize('sum'|'count'|'avg'|'min'|'max', $label, $header, $footer)` for built-in aggregates, and `withSummary($key, $label, Closure, …)` for custom closures.
 12. **Empty state:** `processNoDataLabel()` is gone. Override `renderEmptyState()`. `noDataLabel()` still forwards to the default view so existing overrides keep working.
 13. **OpenSpout v4:** The `openspout_v4` export driver is gone. Use OpenSpout 5 (`openspout_v5`).

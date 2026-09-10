@@ -13,6 +13,7 @@ it('sets every fluent column attribute', function () {
         ->hidden(true, false)
         ->contentClassField('name_class')
         ->contentClasses(['a' => 'x'])
+        ->template()
         ->visibleInExport(false);
 
     expect($column->fixedOnResponsive)->toBeTrue()
@@ -25,6 +26,7 @@ it('sets every fluent column attribute', function () {
         ->and($column->forceHidden)->toBeFalse()
         ->and($column->contentClassField)->toBe('name_class')
         ->and($column->contentClasses)->toBe(['a' => 'x'])
+        ->and($column->template)->toBeTrue()
         ->and($column->visibleInExport)->toBeFalse();
 });
 

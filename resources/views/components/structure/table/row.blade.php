@@ -39,6 +39,11 @@
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
+        $renderedTemplate = is_array($content) ? $__partial->renderRowTemplate($content) : null;
+
+        if ($renderedTemplate !== null || is_array($content)) {
+            $content = '';
+        }
 
         $contentClassField = data_get($column, 'contentClassField');
 
@@ -104,7 +109,11 @@
                 {!! $pluginContent !!}
             @else
                 <span @class([$contentClassField, $contentClass])>
-                    <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                    @if ($renderedTemplate !== null)
+                        {!! $renderedTemplate !!}
+                    @else
+                        <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
+                    @endif
                 </span>
             @endif
         @endif
