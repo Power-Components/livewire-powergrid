@@ -39,13 +39,6 @@
     @php
         $field = data_get($column, 'field');
         $content = $row->{$field} ?? '';
-        $templateContent = null;
-
-        if (is_array($content)) {
-            $template = data_get($column, 'template');
-            $templateContent = $content;
-            $content = '';
-        }
 
         $contentClassField = data_get($column, 'contentClassField');
 
@@ -111,16 +104,7 @@
                 {!! $pluginContent !!}
             @else
                 <span @class([$contentClassField, $contentClass])>
-                    @if (filled($templateContent))
-                        <div
-                            x-data="pgRenderRowTemplate"
-                            data-pg-params="{{ json_encode(['parentId' => $parentId, 'templateContent' => $templateContent]) }}"
-                            x-html="rendered"
-                        >
-                        </div>
-                    @else
-                        <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
-                    @endif
+                    <div>{!! data_get($column, 'index') ? $rowIndex : $content !!}</div>
                 </span>
             @endif
         @endif

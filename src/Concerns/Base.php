@@ -241,6 +241,9 @@ trait Base
 
     private bool $deferFilterInstantiation = false;
 
+    /**
+     * @deprecated since 7.x, override template() and return a Theme instance instead
+     */
     public function customThemeClass(): ?string
     {
         return null;
@@ -364,12 +367,6 @@ trait Base
 
     /** @return array<string, mixed> */
     public function summarizeFormat(): array
-    {
-        return [];
-    }
-
-    /** @return array<string, mixed> */
-    public function rowTemplates(): array
     {
         return [];
     }

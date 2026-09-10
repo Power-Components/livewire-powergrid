@@ -130,7 +130,7 @@ class EditablePlugin extends PluginBase
         $component = $this->component;
         data_set($component, "$field.{$id}", $value);
 
-        $this->component->onUpdatedEditable($id, $field, $value);
+        $this->component->onPluginUpdated('editable', 'updated', compact('id', 'field', 'value'));
 
         $this->component->dispatch('pg:editable-close-'.$id);
     }

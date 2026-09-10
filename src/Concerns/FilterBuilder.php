@@ -33,7 +33,7 @@ trait FilterBuilder
         $this->resetPage();
         $this->syncFilterBuilderPills();
         $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->renderFilterPanelPartial();
     }
 
     /**
@@ -46,7 +46,7 @@ trait FilterBuilder
         $this->resetPage();
         $this->syncFilterBuilderPills();
         $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->renderFilterPanelPartial();
     }
 
     /**
@@ -63,7 +63,7 @@ trait FilterBuilder
         $this->resetPage();
         $this->syncFilterBuilderPills();
         $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->renderFilterPanelPartial();
     }
 
     public function filterBuilderHidesDefaultFilters(): bool

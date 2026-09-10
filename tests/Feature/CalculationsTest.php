@@ -38,13 +38,13 @@ it('calculates properly from database', function () {
         public function columns(): array
         {
             return [
-                Column::make('Id', 'id')->withCount('Count Id', true, true),
+                Column::make('Id', 'id')->summarize('count', 'Count Id', true, true),
                 Column::make('Name', 'name')->searchable(),
                 Column::make('Price', 'price')
-                    ->withSum('Sum Price', true, true)
-                    ->withAvg('Avg Price', true, true)
-                    ->withMin('Min Price', true, true)
-                    ->withMax('Max Price', true, true),
+                    ->summarize('sum', 'Sum Price', true, true)
+                    ->summarize('avg', 'Avg Price', true, true)
+                    ->summarize('min', 'Min Price', true, true)
+                    ->summarize('max', 'Max Price', true, true),
             ];
         }
     };

@@ -7,18 +7,17 @@ use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\Components\SetUp\Exportable;
 
-it('keeps both openspout v4 and v5 export drivers available', function () {
+it('keeps the openspout v5 export drivers available', function () {
     $drivers = config('livewire-powergrid.exportable');
 
-    expect($drivers)->toHaveKeys(['openspout_v4', 'openspout_v5']);
+    expect($drivers)->toHaveKey('openspout_v5')
+        ->and($drivers)->not->toHaveKey('openspout_v4');
 
-    foreach (['openspout_v4', 'openspout_v5'] as $driver) {
-        foreach (['xlsx', 'csv'] as $type) {
-            $class = data_get($drivers, "$driver.$type");
+    foreach (['xlsx', 'csv'] as $type) {
+        $class = data_get($drivers, "openspout_v5.$type");
 
-            expect(class_exists($class))->toBeTrue("$class should exist")
-                ->and(is_subclass_of($class, ExportInterface::class))->toBeTrue("$class should implement ExportInterface");
-        }
+        expect(class_exists($class))->toBeTrue("$class should exist")
+            ->and(is_subclass_of($class, ExportInterface::class))->toBeTrue("$class should implement ExportInterface");
     }
 });
 

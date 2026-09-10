@@ -80,7 +80,7 @@ class DishesCalculationsTable extends PowerGridComponent
             Column::add()
                 ->title(__('ID'))
                 ->field('id')
-                ->withCount('Count ID', true, false)
+                ->summarize('count', 'Count ID', true, false)
                 ->sortable(),
 
             Column::add()
@@ -89,17 +89,17 @@ class DishesCalculationsTable extends PowerGridComponent
                 ->field('name'),
 
             Column::make('Calories', 'calories', 'calories')
-                ->withAvg('Average', header: true, footer: false)
+                ->summarize('avg', 'Average', header: true, footer: false)
                 ->sortable(),
 
             Column::add()
                 ->title(__('Price'))
                 ->field('price')
-                ->withSum('Sum Price', true, false)
-                ->withCount('Count Price', true, false)
-                ->withAvg('Avg Price', true, false)
-                ->withMin('Min Price', true, false)
-                ->withMax('Max Price', true, false),
+                ->summarize('sum', 'Sum Price', true, false)
+                ->summarize('count', 'Count Price', true, false)
+                ->summarize('avg', 'Avg Price', true, false)
+                ->summarize('min', 'Min Price', true, false)
+                ->summarize('max', 'Max Price', true, false),
 
             Column::action('Action'),
         ];

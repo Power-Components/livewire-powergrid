@@ -4,9 +4,8 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Export;
 
 use Exception;
 use Illuminate\Bus\Batch;
-use Illuminate\Database\Eloquent;
 use Illuminate\Support;
-use Illuminate\Support\{Collection, LazyCollection, Str};
+use Illuminate\Support\{Collection, Str};
 use Illuminate\Support\Facades\Bus;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Theme};
@@ -345,23 +344,6 @@ class ExportPlugin extends PluginBase
         ]);
 
         return $queues;
-    }
-
-    /**
-     * @return Eloquent\Collection<int, mixed>|Collection<int, mixed>|LazyCollection<int, mixed>
-     *
-     * @throws Exception
-     */
-    public function prepareToExport(bool $selected = false): Eloquent\Collection|Collection|LazyCollection
-    {
-        $exportEngine = new ExportEngine();
-        /** @var array<string, mixed> $exportOptions */
-        $exportOptions = (array) data_get($this->component->setUp, 'exportable', []);
-        if ($selected) {
-            $exportOptions['selectedKeys'] = $this->component->checkboxValues;
-        }
-
-        return $exportEngine->prepareDataset($this->component, $exportOptions, $selected);
     }
 
     private function getExportableClassFromConfig(string $exportType): string

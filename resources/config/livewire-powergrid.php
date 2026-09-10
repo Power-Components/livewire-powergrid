@@ -188,10 +188,6 @@ return [
             'xlsx' => ExportToXLS::class,
             'csv' => ExportToCsv::class,
         ],
-        'openspout_v4' => [
-            'xlsx' => PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4\ExportToXLS::class,
-            'csv' => PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v4\ExportToCsv::class,
-        ],
     ],
 
     /*

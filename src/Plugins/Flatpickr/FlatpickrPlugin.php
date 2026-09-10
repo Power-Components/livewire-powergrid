@@ -85,7 +85,7 @@ class FlatpickrPlugin extends PluginBase
 
         $this->component->persistState('filters');
 
-        $this->component->renderOutsideFiltersPartial();
+        $this->component->renderFilterPanelPartial();
     }
 
     /**

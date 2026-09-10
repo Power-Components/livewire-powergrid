@@ -10,7 +10,7 @@ final readonly class CellRenderer
 {
     public function __construct(private PowerGridComponent $component) {}
 
-    public function render(object $row, int $rowIndex, ?int $childIndex, mixed $parentId, string|int $rowId): string
+    public function render(object $row, int $rowIndex, ?int $childIndex, string|int $rowId): string
     {
         $actionsWrapperClass = theme('table.body.td.actions_wrapper');
         $hasActionsFromView = method_exists($this->component, 'actionsFromView');
@@ -28,7 +28,6 @@ final readonly class CellRenderer
                     $column,
                     $row,
                     $rowIndex,
-                    $parentId,
                     trim($actionsWrapperClass.' '.$column->alignClasses),
                     $hasActionsFromView,
                 )
@@ -42,7 +41,6 @@ final readonly class CellRenderer
         ColumnViewModel $column,
         object $row,
         int $rowIndex,
-        mixed $parentId,
         string $actionsWrapperClass,
         bool $hasActionsFromView,
     ): string {
@@ -63,7 +61,7 @@ final readonly class CellRenderer
             return $pluginContent;
         }
 
-        return $this->renderContentCell($column, $row, $rowIndex, $parentId);
+        return $this->renderContentCell($column, $row, $rowIndex);
     }
 
     private function renderActionCell(object $row, string $actionsWrapperClass, bool $hasActionsFromView): string
@@ -83,15 +81,9 @@ final readonly class CellRenderer
             .$this->component->renderActions($row).'</div></div></div>';
     }
 
-    private function renderContentCell(ColumnViewModel $column, object $row, int $rowIndex, mixed $parentId): string
+    private function renderContentCell(ColumnViewModel $column, object $row, int $rowIndex): string
     {
         $rawContent = $row->{$column->field} ?? '';
-        $templateContent = null;
-
-        if (is_array($rawContent)) {
-            $templateContent = $rawContent;
-            $rawContent = '';
-        }
 
         if ($rawContent instanceof \UnitEnum) {
             $rawContent = $rawContent instanceof \BackedEnum ? $rawContent->value : $rawContent->name;
@@ -137,18 +129,14 @@ final readonly class CellRenderer
         $position = data_get($truncate, 'position', 'top');
         $position = is_string($position) ? $position : 'top';
 
-        $inner = match (true) {
-            filled($templateContent) => '<div x-data="pgRenderRowTemplate" data-pg-params="'
-                .e((string) json_encode(['parentId' => $parentId, 'templateContent' => $templateContent]))
-                .'" x-html="rendered"></div>',
-            $tooltipView !== '' => $this->renderTooltip(
+        $inner = $tooltipView !== ''
+            ? $this->renderTooltip(
                 $tooltipView,
                 $content,
                 (string) $tooltipFull,
                 $position,
-            ),
-            default => '<div>'.($column->index ? $rowIndex : $content).'</div>',
-        };
+            )
+            : '<div>'.($column->index ? $rowIndex : $content).'</div>';
 
         return '<span class="'.$spanClass.'">'.$inner.'</span>';
     }

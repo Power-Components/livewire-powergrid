@@ -103,7 +103,7 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
             Column::make('Index', 'id')->index(),
 
             Column::make('ID', 'id')
-                ->withCount('Count ID', true, false),
+                ->summarize('count', 'Count ID', true, false),
 
             Column::add()
                 ->title('Name')
@@ -114,11 +114,11 @@ class DishesCalculationsCollectionTable extends PowerGridComponent
             Column::add()
                 ->title('Balance')
                 ->field('balance')
-                ->withSum('Sum Balance', true, false)
-                ->withAvg('Avg Balance', true, false)
-                ->withCount('Count Balance', true, false)
-                ->withMin('Min Balance', true, false)
-                ->withMax('Max Balance', true, false)
+                ->summarize('sum', 'Sum Balance', true, false)
+                ->summarize('avg', 'Avg Balance', true, false)
+                ->summarize('count', 'Count Balance', true, false)
+                ->summarize('min', 'Min Balance', true, false)
+                ->summarize('max', 'Max Balance', true, false)
                 ->sortable(),
 
             Column::add()

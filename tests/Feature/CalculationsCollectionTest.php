@@ -30,13 +30,13 @@ it('calculates properly from collection', function () {
         public function columns(): array
         {
             return [
-                Column::make('Id', 'id')->withCount('Count Id', true, true),
+                Column::make('Id', 'id')->summarize('count', 'Count Id', true, true),
                 Column::make('Name', 'name')->searchable(),
                 Column::make('Balance', 'balance')
-                    ->withSum('Sum Balance', true, true)
-                    ->withAvg('Avg Balance', true, true)
-                    ->withMin('Min Balance', true, true)
-                    ->withMax('Max Balance', true, true),
+                    ->summarize('sum', 'Sum Balance', true, true)
+                    ->summarize('avg', 'Avg Balance', true, true)
+                    ->summarize('min', 'Min Balance', true, true)
+                    ->summarize('max', 'Max Balance', true, true),
             ];
         }
     };

@@ -40,6 +40,10 @@ final class CompatAliases
         'Components\\SetUp\\Cache',
         'Components\\SetUp\\Responsive',
         'Components\\SetUp\\FilterBuilder',
+        'Components\\SetUp\\Header',
+        'Components\\SetUp\\Footer',
+        'Components\\SetUp\\Detail',
+        'Components\\SetUp\\HeaderElement',
     ];
 
     /**

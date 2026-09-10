@@ -62,6 +62,12 @@ The following legacy features and themes have been completely removed. You must 
     - New: `components.themes.[theme]`
 8.  **Detail rows:** The nested Livewire component `powergrid-detail` (`Livewire\Detail`) is gone. Detail markup is inlined in `components/partials/tbody.blade.php`. Remove any `<livewire:powergrid-detail>` / published `livewire/detail.blade.php`.
 9.  **Editable / multi-select views:** First-party themes no longer set `editable.view` or `filter.multi_select.view`. Editable renders `powergrid-plugins::Editable.index`. Multi-select renders `<x-livewire-powergrid::inputs.select>`.
+10. **Row templates:** `rowTemplates()`, `Column::template()`, and `pg-render-row-template.js` are gone. Render HTML from `fields()` with `Illuminate\Support\HtmlString`.
+11. **Summaries:** `withSum()` / `withCount()` / `withAvg()` / `withMin()` / `withMax()` are gone. Use `summarize('sum'|'count'|'avg'|'min'|'max', $label, $header, $footer)` for built-in aggregates, and `withSummary($key, $label, Closure, …)` for custom closures.
+12. **Empty state:** `processNoDataLabel()` is gone. Override `renderEmptyState()`. `noDataLabel()` still forwards to the default view so existing overrides keep working.
+13. **OpenSpout v4:** The `openspout_v4` export driver is gone. Use OpenSpout 5 (`openspout_v5`).
+14. **Plugin update hooks:** Editable and Toggleable call `onPluginUpdated($plugin, $event, $params)` only. `onUpdatedEditable()` / `onUpdatedToggleable()` are not invoked by the package; migrate overrides to `onPluginUpdated()`.
+15. **Per-component theme:** Override `template(): ?Theme`. `customThemeClass()` is deprecated and used only when `template()` returns `null`.
 
 ---
 
@@ -687,23 +693,14 @@ In your custom Blade files, replace the legacy `theme_style` helper with the new
 
 ### Step 5: Per-Component Theme Override
 
-Both still work. `customThemeClass()` returns a class-string (v6). Prefer `template()` which returns a `Theme` instance:
+Override `template()` and return a `Theme` instance. `customThemeClass()` is deprecated; it is only read when `template()` returns `null`.
 
 ```php
-// still accepted
-public function customThemeClass(): ?string
-{
-    return \App\PowerGridThemes\MyTheme::class;
-}
-
-// preferred in v7
 public function template(): ?Theme
 {
     return new \App\PowerGridThemes\MyTheme();
 }
 ```
-
-If both are set, `template()` wins.
 
 ---
 
@@ -721,6 +718,11 @@ Remove these entries if present in your published config:
 
 // Remove — Pulse integration removed
 'record_enabled' => env('POWERGRID_RECORD_ENABLED', false),
+
+// Remove — OpenSpout v4 driver is gone
+'exportable' => [
+    'openspout_v4' => [...],
+],
 ```
 
 Also remove `POWERGRID_RECORD_ENABLED` from your `.env` file.

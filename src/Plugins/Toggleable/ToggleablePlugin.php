@@ -172,7 +172,11 @@ class ToggleablePlugin extends PluginBase
             return;
         }
 
-        $this->component->onUpdatedToggleable((string) $id, $field, (string) $value);
+        $this->component->onPluginUpdated('toggleable', 'updated', [
+            'id' => (string) $id,
+            'field' => $field,
+            'value' => (string) $value,
+        ]);
     }
 
     /** @param  stdClass|TurbineColumn|array<string, mixed>  $column */
