@@ -67,8 +67,6 @@ class FlatpickrPlugin extends PluginBase
             return;
         }
 
-        $this->component->resetPage();
-
         $dateStr = is_string($dateStr) ? $dateStr : '';
         $firstDate = is_scalar($selectedDates[0] ?? null) ? strval($selectedDates[0]) : '';
         $secondDate = is_scalar($selectedDates[1] ?? null) ? strval($selectedDates[1]) : '';
@@ -76,16 +74,15 @@ class FlatpickrPlugin extends PluginBase
             ? $dateStr
             : $firstDate.' to '.$secondDate;
 
+        $this->component->putFilterRecord(
+            $field,
+            $type,
+            self::computeRange($type, $formatted),
+        );
+
         /** @var string|null $label */
         $this->component->addEnabledFilters($field, $label);
-
-        $filters = $this->component->filters;
-        $filters[$type][$field] = self::computeRange($type, $formatted);
-        $this->component->filters = $filters;
-
-        $this->component->persistState('filters');
-
-        $this->component->renderFilterPanelPartial();
+        $this->component->commitFilters();
     }
 
     /**

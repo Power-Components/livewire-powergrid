@@ -66,10 +66,10 @@ it('"depends" works properly in select', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1)
+        ->set('filters.category_id.value', 1)
         ->assertSeeHtml('Chef for Cat 1')
         ->assertDontSeeHtml('Chef for Cat 2')
-        ->set('filters.select.category_id', 2)
+        ->set('filters.category_id.value', 2)
         ->assertDontSeeHtml('Chef for Cat 1')
         ->assertSeeHtml('Chef for Cat 2');
 });

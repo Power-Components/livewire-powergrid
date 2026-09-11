@@ -14,8 +14,8 @@ final class FilterWireAttributes
 
     /**
      * @param  string|array<string, mixed>  $arg
-     * @param  bool  $deferred  When true, bind to `draftFilters.*` with a deferred
-     *                          `wire:model` and emit no live handler (panel modes).
+     * @param  bool  $deferred  When true, bind to `draftFilters.*` (panel Apply).
+     *                          When false, bind `filters.*` with `wire:model.live`.
      * @return array<string, mixed>
      */
     public static function get(string $key, string $field, string|array $arg, bool $deferred = false): array

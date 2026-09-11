@@ -406,7 +406,7 @@ trait Base
         }
 
         foreach ($vars as $key => $value) {
-            if (! is_string($key) && ! is_int($key)) {
+            if (! is_string($key) || $key === '') {
                 continue;
             }
 

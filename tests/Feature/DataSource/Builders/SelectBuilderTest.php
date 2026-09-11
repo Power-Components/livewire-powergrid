@@ -50,7 +50,7 @@ it('filters database records with select filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 6) // Sobremesas
+        ->set('filters.category_id.value', 6) // Sobremesas
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -93,7 +93,7 @@ it('filters database records with select filter using different category', funct
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1) // Carnes
+        ->set('filters.category_id.value', 1) // Carnes
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Carne Louca')
         ->assertDontSee('Pastel de Nata');
@@ -137,7 +137,7 @@ it('shows all records when select filter is empty', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', '')
+        ->set('filters.category_id.value', '')
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 });
@@ -185,7 +185,7 @@ it('filters database records with custom builder logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1)
+        ->set('filters.category_id.value', 1)
         ->assertSee('Peixada da chef Nábia') // price 20.50
         ->assertSee('Carne Louca') // price 30.00
         ->assertDontSee('Pastel de Nata'); // price 10.00
@@ -236,7 +236,7 @@ it('filters collection records with select filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1)
+        ->set('filters.category_id.value', 1)
         ->assertSee('Item 1')
         ->assertSee('Item 3')
         ->assertDontSee('Item 2');
@@ -290,7 +290,7 @@ it('filters collection with custom collection logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1)
+        ->set('filters.category_id.value', 1)
         ->assertDontSee('Item 1')
         ->assertSee('Item 2')
         ->assertSee('Item 3');
@@ -340,7 +340,7 @@ it('returns all collection records when select value is empty', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', '')
+        ->set('filters.category_id.value', '')
         ->assertSee('Item 1')
         ->assertSee('Item 2');
 });

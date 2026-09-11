@@ -9,6 +9,7 @@
         $fieldClassName = data_get($filter, 'className');
 
         $field = strval(data_get($filter, 'field'));
+        $bagKey = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), $field);
         $title = strval(data_get($column, 'title'));
         $operators = (array) data_get($filter, 'operators', []);
         $placeholder = strval(data_get($filter, 'placeholder'));
@@ -24,7 +25,7 @@
         unset($filter['placeholder']);
 
         $deferred = ($__partial ?? $this)->usesFilterPanel();
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $field, $title, $deferred);
+        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $bagKey, $title, $deferred);
 
         $selectClasses = theme('filter.input_text.select');
         $inputClasses = theme('filter.input_text.input');

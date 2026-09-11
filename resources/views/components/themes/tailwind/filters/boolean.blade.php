@@ -6,13 +6,14 @@
 ])
 @php
     $field = data_get($filter, 'field');
+    $bagKey = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? $field : null);
     $title = data_get($column, 'title');
 
     $trueLabel = data_get($filter, 'trueLabel');
     $falseLabel = data_get($filter, 'falseLabel');
 
     $deferred = ($__partial ?? $this)->usesFilterPanel();
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $field, $title, $deferred);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $bagKey, $title, $deferred);
 
     $selectClasses = Arr::toCssClasses([
         theme('filter.boolean.select'),

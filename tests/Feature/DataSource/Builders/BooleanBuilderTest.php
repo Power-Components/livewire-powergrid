@@ -45,7 +45,7 @@ it('filters database records by boolean field with true value', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'true')
+        ->set('filters.in_stock.value', 'true')
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Barco-Sushi da Sueli');
@@ -84,7 +84,7 @@ it('filters database records by boolean field with false value', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'false')
+        ->set('filters.in_stock.value', 'false')
         ->assertSee('Francesinha')
         ->assertSee('Barco-Sushi da Sueli')
         ->assertDontSee('Pastel de Nata');
@@ -123,7 +123,7 @@ it('filters database records by boolean field with all value', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'all')
+        ->set('filters.in_stock.value', 'all')
         ->assertSee('Pastel de Nata')
         ->assertSee('Francesinha');
 });
@@ -161,7 +161,7 @@ it('filters database records by boolean field with numeric value 1', function ()
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', '1')
+        ->set('filters.in_stock.value', '1')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Barco-Sushi da Sueli');
 });
@@ -199,7 +199,7 @@ it('filters database records by boolean field with null value defaults to all', 
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', null)
+        ->set('filters.in_stock.value', null)
         ->assertSee('Pastel de Nata')
         ->assertSee('Francesinha');
 });
@@ -242,7 +242,7 @@ it('filters database records using custom builder logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'true')
+        ->set('filters.in_stock.value', 'true')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Pastel de Nata')
         ->assertDontSee('Carne Louca');

@@ -54,7 +54,7 @@ beforeEach(fn () => Config::set('livewire-powergrid.filter', 'dropdown'));
 
 it('does not filter until Apply is pressed', function () {
     Livewire::test(dropdownComponent('dropdown-defer')::class)
-        ->set('draftFilters.input_text.name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->assertSet('filters', [])
         ->assertSee('Cheap Dish')
         ->assertSee('Mid Dish')
@@ -63,10 +63,10 @@ it('does not filter until Apply is pressed', function () {
 
 it('commits the draft filters on applyFilters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-apply')::class)
-        ->set('draftFilters.input_text.name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters');
 
-    expect($test->get('filters'))->toBe(['input_text' => ['name' => 'Expensive']])
+    expect($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']])
         ->and($test->get('enabledFilters'))->toHaveCount(1);
 
     $test->assertSee('Expensive Dish')
@@ -77,7 +77,7 @@ it('commits a draft payload passed directly to applyFilters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-apply-arg')::class)
         ->call('applyFilters', ['input_text' => ['name' => 'Expensive']]);
 
-    expect($test->get('filters'))->toBe(['input_text' => ['name' => 'Expensive']]);
+    expect($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 
     $test->assertSee('Expensive Dish')
         ->assertDontSee('Cheap Dish');
@@ -85,13 +85,13 @@ it('commits a draft payload passed directly to applyFilters', function () {
 
 it('reset restores the draft to the applied filters and keeps results', function () {
     $test = Livewire::test(dropdownComponent('dropdown-reset')::class)
-        ->set('draftFilters.input_text.name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters')
-        ->set('draftFilters.input_text.name', 'Cheap')
+        ->set('draftFilters.name.value', 'Cheap')
         ->call('resetFilters');
 
-    expect($test->get('draftFilters'))->toBe(['input_text' => ['name' => 'Expensive']])
-        ->and($test->get('filters'))->toBe(['input_text' => ['name' => 'Expensive']]);
+    expect($test->get('draftFilters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']])
+        ->and($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 
     $test->assertSee('Expensive Dish')
         ->assertDontSee('Cheap Dish');
@@ -99,7 +99,7 @@ it('reset restores the draft to the applied filters and keeps results', function
 
 it('clearAllFilters wipes applied filters, the draft and enabled filters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-clear')::class)
-        ->set('draftFilters.input_text.name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters')
         ->call('clearAllFilters');
 
@@ -112,10 +112,10 @@ it('clearAllFilters wipes applied filters, the draft and enabled filters', funct
 
 it('counts distinct applied filters, collapsing a number range to one', function () {
     $test = Livewire::test(dropdownComponent('dropdown-count')::class)
-        ->set('draftFilters.input_text.name', 'Dish')
-        ->set('draftFilters.number.price.start', '1')
-        ->set('draftFilters.number.price.end', '100')
-        ->set('draftFilters.boolean.in_stock', 'true')
+        ->set('draftFilters.name.value', 'Dish')
+        ->set('draftFilters.price.value.start', '1')
+        ->set('draftFilters.price.value.end', '100')
+        ->set('draftFilters.in_stock.value', 'true')
         ->call('applyFilters');
 
     expect($test->instance()->activeFilterCount())->toBe(3);
@@ -123,7 +123,7 @@ it('counts distinct applied filters, collapsing a number range to one', function
 
 it('does not count blank draft values as applied filters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-blank')::class)
-        ->set('draftFilters.input_text.name', '')
+        ->set('draftFilters.name.value', '')
         ->call('applyFilters');
 
     expect($test->get('filters'))->toBeEmpty()
@@ -132,10 +132,10 @@ it('does not count blank draft values as applied filters', function () {
 
 it('derives flatpickr start/end from the draft formatted string on apply', function () {
     $test = Livewire::test(dropdownComponent('dropdown-date')::class)
-        ->set('draftFilters.datetime.created_at.formatted', '2026-01-01 to 2026-01-31')
+        ->set('draftFilters.created_at.value.formatted', '2026-01-01 to 2026-01-31')
         ->call('applyFilters');
 
-    $range = $test->get('filters.datetime.created_at');
+    $range = $test->get('filters.created_at.value');
 
     expect($range)->toHaveKeys(['start', 'end', 'formatted'])
         ->and($range['formatted'])->toBe('2026-01-01 to 2026-01-31');
@@ -148,7 +148,7 @@ it('does not mount filter fields until the panel is loaded', function () {
     $html = Livewire::test(dropdownComponent('dropdown-lazy')::class)->html();
 
     expect($html)->toContain('data-cy="filter-dropdown-apply"')
-        ->and($html)->not->toContain('draftFilters.input_text.name');
+        ->and($html)->not->toContain('draftFilters.name.value');
 });
 
 it('renders deferred draftFilters bindings and no live handler in dropdown mode', function () {
@@ -165,8 +165,8 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
 
     expect($names)->toContain('pg-filter-fields-'.$test->instance()->tableName)
         ->and($names)->not->toContain('pg-filters-'.$test->instance()->tableName)
-        ->and($test->html())->toContain('draftFilters.input_text.name')
-        ->and($test->html())->toContain('data-pg-draft="input_text.name"')
+        ->and($test->html())->toContain('draftFilters.name.value')
+        ->and($test->html())->toContain('data-pg-draft="name.value"')
         ->and($test->html())->toContain('data-cy="filter-dropdown-apply"')
         ->and($test->html())->not->toContain('wire:input.live.debounce.600ms="filterInputText');
 });
@@ -206,9 +206,9 @@ it('keeps the inline flow live and bound to filters', function () {
 
     $html = Livewire::test(dropdownComponent('dropdown-inline')::class)->html();
 
-    expect($html)->toContain('filters.input_text.name')
-        ->and($html)->toContain('wire:input.live.debounce.600ms="filterInputText')
-        ->and($html)->not->toContain('draftFilters.input_text.name');
+    expect($html)->toContain('wire:model.live.debounce.600ms="filters.name.value"')
+        ->and($html)->not->toContain('wire:input.live.debounce.600ms="filterInputText')
+        ->and($html)->not->toContain('draftFilters.name.value');
 });
 
 it('registers tbody and pagination partials when applying an inline filter', function () {

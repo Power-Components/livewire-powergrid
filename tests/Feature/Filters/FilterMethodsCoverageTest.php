@@ -57,9 +57,20 @@ function filterMethodsComponent(string $tableName): PowerGridComponent
     };
 }
 
+it('commits an inline filter when Livewire updates the filters bag', function () {
+    $test = Livewire::test(filterMethodsComponent('m-updated')::class)
+        ->set('filters.name.value', 'Mid');
+
+    expect(collect($test->get('enabledFilters'))->pluck('field'))->toContain('name');
+
+    $test->assertSee('Mid')
+        ->assertDontSee('Cheap')
+        ->assertDontSee('Expensive');
+});
+
 it('applies a select filter through the filterSelect method', function () {
     $test = Livewire::test(filterMethodsComponent('m-select')::class)
-        ->set('filters.select.category_id', '2')
+        ->set('filters.category_id.value', '2')
         ->call('filterSelect', 'category_id', 'Category');
 
     expect(collect($test->get('enabledFilters'))->pluck('field'))->toContain('category_id');
@@ -70,7 +81,7 @@ it('applies a select filter through the filterSelect method', function () {
 
 it('clears a select filter through filterSelect when the value is blank', function () {
     $test = Livewire::test(filterMethodsComponent('m-select-blank')::class)
-        ->set('filters.select.category_id', '')
+        ->set('filters.category_id.value', '')
         ->call('filterSelect', 'category_id', 'Category');
 
     expect($test->get('enabledFilters'))->toBeEmpty();
@@ -78,9 +89,9 @@ it('clears a select filter through filterSelect when the value is blank', functi
 
 it('applies a number range through filterNumberStart and filterNumberEnd', function () {
     $test = Livewire::test(filterMethodsComponent('m-number')::class)
-        ->set('filters.number.price.start', '15')
+        ->set('filters.price.value.start', '15')
         ->call('filterNumberStart', 'price', ['title' => 'Price'], '15')
-        ->set('filters.number.price.end', '100')
+        ->set('filters.price.value.end', '100')
         ->call('filterNumberEnd', 'price', ['title' => 'Price'], '100');
 
     expect(collect($test->get('enabledFilters'))->pluck('field'))->toContain('price');
@@ -99,25 +110,23 @@ it('clears the number filter through filterNumberStart when the value is blank',
 
 it('sets the operator and disables the input for nullability operators via filterInputTextOptions', function () {
     $test = Livewire::test(filterMethodsComponent('m-options')::class)
-        ->set('filters.input_text.name', 'ignored')
+        ->set('filters.name.value', 'ignored')
         ->call('filterInputTextOptions', 'name', 'is_empty', 'Name');
 
     // input value is wiped for a nullability operator, and the enabled filter is disabled
-    expect(data_get($test->get('filters'), 'input_text.name'))->toBeNull()
-        ->and(data_get($test->get('filters'), 'input_text_options.name'))->toBe('is_empty');
+    expect(data_get($test->get('filters'), 'name.value'))->toBeNull()
+        ->and(data_get($test->get('filters'), 'name.op'))->toBe('is_empty');
 
     $enabled = collect($test->get('enabledFilters'))->firstWhere('field', 'name');
     expect($enabled['disabled'])->toBeTrue();
 });
 
-it('keeps the input enabled for a regular operator via filterInputTextOptions', function () {
+it('stores a regular operator without enabling a pill until the value is filled', function () {
     $test = Livewire::test(filterMethodsComponent('m-options-regular')::class)
         ->call('filterInputTextOptions', 'name', 'contains', 'Name');
 
-    expect(data_get($test->get('filters'), 'input_text_options.name'))->toBe('contains');
-
-    $enabled = collect($test->get('enabledFilters'))->firstWhere('field', 'name');
-    expect($enabled['disabled'])->toBeFalse();
+    expect(data_get($test->get('filters'), 'name.op'))->toBe('contains')
+        ->and(collect($test->get('enabledFilters'))->firstWhere('field', 'name'))->toBeNull();
 });
 
 it('applies a multi select filter through multiSelectChanged', function () {
@@ -125,7 +134,7 @@ it('applies a multi select filter through multiSelectChanged', function () {
         ->call('multiSelectChanged', 'category_id', 'Category', ['1']);
 
     expect(collect($test->get('enabledFilters'))->pluck('field'))->toContain('category_id')
-        ->and(data_get($test->get('filters'), 'multi_select.category_id'))->toBe(['1']);
+        ->and(data_get($test->get('filters'), 'category_id.value'))->toBe(['1']);
 });
 
 it('clears the multi select filter through multiSelectChanged with an empty selection', function () {

@@ -9,9 +9,7 @@ trait ResolvesFilters
 {
     protected function resolveFiltersForRender(): void
     {
-        $enabledFilters = $this->enabledFilters;
         $this->resolveFilters();
-        $this->enabledFilters = $enabledFilters;
     }
 
     protected function resolveFilters(): void
@@ -52,7 +50,9 @@ trait ResolvesFilters
                                 $depends = collect($depends)
                                     ->mapWithKeys(function ($field) {
                                         /** @var string $field */
-                                        return [$field => data_get($this->filters, 'select.'.$field)];
+                                        $record = $this->filters[$field] ?? null;
+
+                                        return [$field => is_array($record) ? ($record['value'] ?? null) : null];
                                     });
                             }
 
@@ -70,22 +70,6 @@ trait ResolvesFilters
                     }
 
                     data_set($column, 'filters', (array) $columnFilter);
-
-                    /** @var string $filterField */
-                    $filterField = data_get($columnFilter, 'field');
-                    /** @var string $filterKey */
-                    $filterKey = data_get($columnFilter, 'key');
-
-                    if (isset($this->filters[$filterField])
-                        && in_array($filterField, array_keys($this->filters[$filterKey]))
-                        && array_values($this->filters[$filterKey])) {
-                        /** @var string $labelValue */
-                        $labelValue = data_get($column, 'title');
-                        $this->enabledFilters[] = [
-                            'field' => $filterField,
-                            'label' => strval($labelValue),
-                        ];
-                    }
 
                     if (data_get($columnFilter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
                         filled(data_get($columnFilter, 'attributes'))) {

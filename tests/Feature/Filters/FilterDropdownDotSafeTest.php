@@ -44,33 +44,51 @@ function dotSafeDropdownComponent(string $tableName): PowerGridComponent
 
 beforeEach(fn () => Config::set('livewire-powergrid.filter', 'dropdown'));
 
-it('renders a dot-safe deferred wire:model for a qualified column', function () {
+it('keeps the inline value on the column key after a live update', function () {
+    Config::set('livewire-powergrid.filter', 'inline');
+
+    $test = Livewire::test(dotSafeDropdownComponent('inline-dot-persist')::class)
+        ->set('filters.name.value', 'Expensive');
+
+    expect($test->get('filters.name.value'))->toBe('Expensive')
+        ->and($test->get('filters'))->not->toHaveKey('dishes.name')
+        ->and($test->get('filters'))->not->toHaveKey('dishes__pgdot__name');
+
+    $test->assertSee('Expensive Dish')
+        ->assertDontSee('Cheap Dish');
+});
+
+it('binds deferred filters to the column key, not the qualified dataField', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-html')::class)
         ->call('loadFilterPanel');
 
-    expect($test->html())->toContain('draftFilters.input_text.dishes__pgdot__name')
-        ->and($test->html())->not->toContain('draftFilters.input_text.dishes.name');
+    expect($test->html())->toContain('draftFilters.name.value')
+        ->and($test->html())->not->toContain('draftFilters.dishes.name')
+        ->and($test->html())->not->toContain('draftFilters.dishes__pgdot__name');
 });
 
-it('decodes the dot-safe draft key back to the real column on apply', function () {
+it('applies a qualified dataField using the column as the bag key', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-apply')::class)
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters');
 
-    expect($test->get('filters'))->toBe(['input_text' => ['dishes.name' => 'Expensive']]);
+    expect($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
+
+    $test->assertSee('Expensive Dish')
+        ->assertDontSee('Cheap Dish');
 });
 
 it('re-encodes the applied filters back into the draft on apply', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-reencode')::class)
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters');
 
-    expect($test->get('draftFilters'))->toBe(['input_text' => ['dishes__pgdot__name' => 'Expensive']]);
+    expect($test->get('draftFilters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 });
 
 it('clears filters data and enabledFilters for a qualified dataField', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-clear')::class)
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters');
 
     expect($test->get('enabledFilters'))->not->toBeEmpty();
@@ -86,7 +104,7 @@ it('clears filters data and enabledFilters for a qualified dataField', function 
 
 it('clears filters data when the pill uses the friendly column name', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-clear-column')::class)
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters')
         ->call('clearFilter', 'name');
 
@@ -96,10 +114,10 @@ it('clears filters data when the pill uses the friendly column name', function (
 
 it('re-encodes the applied filters into the draft on reset', function () {
     $test = Livewire::test(dotSafeDropdownComponent('dropdown-dot-reset')::class)
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters')
-        ->set('draftFilters.input_text.dishes__pgdot__name', 'Cheap')
+        ->set('draftFilters.name.value', 'Cheap')
         ->call('resetFilters');
 
-    expect($test->get('draftFilters'))->toBe(['input_text' => ['dishes__pgdot__name' => 'Expensive']]);
+    expect($test->get('draftFilters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 });

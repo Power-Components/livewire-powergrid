@@ -79,6 +79,7 @@ class FilterBuilderPlugin extends PluginBase
             return '';
         }
 
+        /** @var view-string $view */
         $view = 'powergrid-plugins::FilterBuilder.themes.flux';
 
         return view()->exists($view) ? $view : '';

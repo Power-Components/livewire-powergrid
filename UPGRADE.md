@@ -68,6 +68,11 @@ The following legacy features and themes have been completely removed. You must 
 13. **OpenSpout v4:** The `openspout_v4` export driver is gone. Use OpenSpout 5 (`openspout_v5`).
 14. **Plugin update hooks:** Editable and Toggleable call `onPluginUpdated($plugin, $event, $params)` only. `onUpdatedEditable()` / `onUpdatedToggleable()` are not invoked by the package; migrate overrides to `onPluginUpdated()`.
 15. **Per-component theme:** Override `template(): ?Theme`. `customThemeClass()` is deprecated and used only when `template()` returns `null`.
+16. **Filter pills:** `$enabledFilters` is derived from `$filters` (and Filter Builder rows). Persist stores `$filters` only (optional `label` on the record). Old cookies that include `enabledFilters` still stamp those labels onto records on restore.
+17. **Inline filter bindings:** first-party filter inputs use `wire:model.live` on `$filters` only. `updated()` commits the bag. Dropdown/flyout still bind `draftFilters` until Apply.
+18. **Filter state shape:** `$filters` is field-keyed. Each field is `['type' => 'input_text'|'number'|…, 'value' => mixed, 'op' => ?string, 'label' => ?string]`. Bindings are `filters.{field}.value` / `.op` / `.value.start`. Persist cookies from 6.x/early 7.x (type-keyed `filters.input_text.name`) are migrated on restore. `powerGridQueryString()` aliases follow the new paths (`name`, `name_operator`, `price_start`).
+19. **Filter hooks:** override `afterFilterChanged(string $field, array $record)`. `afterChangedInputTextFilter()` / `afterChangedBooleanFilter()` / … are deprecated and still invoked.
+20. **Programmatic filters:** write the bag (`putFilterRecord()` / `$this->filters[$field]`) and `commitFilters()`. `filterInputText()` / `filterSelect()` / `filterBoolean()` / `filterNumberStart()` / `filterNumberEnd()` / `filterInputTextOptions()` are deprecated wrappers. `multiSelectChanged()` remains the Tom/Slim Select event.
 
 ---
 

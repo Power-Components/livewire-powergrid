@@ -322,8 +322,6 @@ class PowerGridComponent extends Component implements Context
 
         $this->applyDefaultTab();
 
-        $this->draftFilters = $this->filters;
-
         $this->draftColumns = $this->columnVisibilityState();
 
         $this->resolveSummarizeColumn();
@@ -343,6 +341,12 @@ class PowerGridComponent extends Component implements Context
 
     public function updated(string $name): void
     {
+        if ($name === 'filters' || str_starts_with($name, 'filters.')) {
+            $this->filtersUpdated($name);
+
+            return;
+        }
+
         if (str_contains($name, 'setUp.footer.perPage')) {
             $this->renderGridPartials();
         }

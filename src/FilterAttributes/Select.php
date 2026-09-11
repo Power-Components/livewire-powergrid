@@ -10,19 +10,18 @@ class Select
     /** @return array{selectAttributes: ComponentAttributeBag} */
     public function __invoke(string $field, string $title, bool $deferred = false): array
     {
+        $key = FilterKey::modelKey($field);
+
         if ($deferred) {
             return [
-                'selectAttributes' => new ComponentAttributeBag(
-                    FilterKey::draftModel('select.'.FilterKey::encode($field)),
-                ),
+                'selectAttributes' => new ComponentAttributeBag(FilterKey::draftModel($key.'.value')),
             ];
         }
 
         return [
-            'selectAttributes' => new ComponentAttributeBag([
-                'wire:model' => 'filters.select.'.$field,
-                'wire:input.live.debounce.600ms' => 'filterSelect(\''.$field.'\', \''.addslashes($title).'\')',
-            ]),
+            'selectAttributes' => new ComponentAttributeBag(
+                FilterKey::liveModel($key.'.value', debounce: false),
+            ),
         ];
     }
 }

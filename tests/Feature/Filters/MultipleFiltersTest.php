@@ -49,7 +49,7 @@ it('properly filters by multiple filters and clear all', function () {
         ->assertDontSee('Peixada')
 
         // Add text filter
-        ->set('filters.input_text.name', 'Peixada')
+        ->set('filters.name.value', 'Peixada')
         ->assertDontSee('Francesinha')
         ->assertDontSee('Peixada') // Because in_stock is true and Peixada is false
 

@@ -13,10 +13,10 @@ trait Filter
     use Filters\ManagesFilterState;
     use Filters\ResolvesFilters;
 
-    /** @var array<string, array<string, mixed>> */
+    /** @var array<string, mixed> */
     public array $filters = [];
 
-    /** @var array<string, array<string, mixed>> */
+    /** @var array<string, mixed> */
     public array $draftFilters = [];
 
     /** @var list<int|string> */
@@ -32,12 +32,6 @@ trait Filter
 
     public bool $filterPanelLoaded = false;
 
-    /**
-     * Inline filter dataSource closures are resolved a single time. The inline
-     * filter row is rendered with `wire:partial.ignore`, so later interactions
-     * (sort, search, pagination) reuse the already-rendered <option> list
-     * instead of re-running the closure query on every request.
-     */
     public bool $inlineFiltersResolved = false;
 
     public bool $emitClearFiltersEvent = true;

@@ -140,7 +140,7 @@ it('filters collection with select filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 1)
+        ->set('filters.category_id.value', 1)
         ->assertSee('Dish 1')
         ->assertDontSee('Dish 2')
         ->assertSee('Dish 3');
@@ -180,7 +180,7 @@ it('filters collection with boolean filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.is_active', 'true')
+        ->set('filters.is_active.value', 'true')
         ->assertSee('Active Item')
         ->assertDontSee('Inactive Item')
         ->assertSee('Another Active');
@@ -229,7 +229,7 @@ it('filters collection with multi_select filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.multi_select.category_id', [1, 2])
+        ->set('filters.category_id.value', [1, 2])
         ->assertSee('Dish 1')
         ->assertSee('Dish 2')
         ->assertDontSee('Dish 3');
@@ -270,7 +270,7 @@ it('filters collection with number filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 15, 'end' => 35])
+        ->set('filters.price.value', ['start' => 15, 'end' => 35])
         ->assertDontSee('Item 1')
         ->assertSee('Item 2')
         ->assertSee('Item 3')
@@ -308,7 +308,7 @@ it('filters collection with input_text filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'Pastel')
+        ->set('filters.name.value', 'Pastel')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada')
         ->assertDontSee('Carne Louca');
@@ -348,7 +348,7 @@ it('filters collection with date filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.date.date', ['start' => '2024-02-01', 'end' => '2024-03-01'])
+        ->set('filters.date.value', ['start' => '2024-02-01', 'end' => '2024-03-01'])
         ->assertDontSee('Event 1')
         ->assertSee('Event 2')
         ->assertDontSee('Event 3');
@@ -388,7 +388,7 @@ it('filters collection with datetime filter', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.datetime.created_at', ['start' => '2024-02-01 00:00:00', 'end' => '2024-03-01 23:59:59'])
+        ->set('filters.created_at.value', ['start' => '2024-02-01 00:00:00', 'end' => '2024-03-01 23:59:59'])
         ->assertDontSee('Event 1')
         ->assertSee('Event 2')
         ->assertDontSee('Event 3');

@@ -54,7 +54,7 @@ it('orders dropdown filters by Filter::order, falling back to the filters() inde
         ->html();
 
     expect($html)->toContain('data-cy="filter-dropdown-panel"')
-        ->toMatch('/draftFilters\.input_text\.name[\s\S]*draftFilters\.boolean\.in_stock[\s\S]*draftFilters\.number\.price/');
+        ->toMatch('/draftFilters\.name\.value[\s\S]*draftFilters\.in_stock\.value[\s\S]*draftFilters\.price\.value/');
 });
 
 it('orders flyout filters by Filter::order, falling back to the filters() index', function () {
@@ -65,7 +65,7 @@ it('orders flyout filters by Filter::order, falling back to the filters() index'
         ->html();
 
     expect($html)->toContain('data-cy="filter-flyout"')
-        ->toMatch('/draftFilters\.input_text\.name[\s\S]*draftFilters\.boolean\.in_stock[\s\S]*draftFilters\.number\.price/');
+        ->toMatch('/draftFilters\.name\.value[\s\S]*draftFilters\.in_stock\.value[\s\S]*draftFilters\.price\.value/');
 });
 
 it('does not reorder inline filters when Filter::order is set', function () {

@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns\Filters;
 
 use Illuminate\Support\{Arr, Collection};
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 use PowerComponents\Turbine\Components\Filters\FilterBase;
 
 trait BindsFilterQueryString
@@ -34,31 +35,26 @@ trait BindsFilterQueryString
     {
         $queryString = [];
 
-        $columns = $this->listColumnForQueryString();
-
         foreach (Arr::dot($this->declaredFilters()) as $filter) {
             /** @var FilterBase $filter */
             /** @var string $field */
             $field = $filter->field;
+            $encoded = FilterKey::encode($field);
             $as = str($field)
                 ->when(filled($prefix), fn ($c) => $c->prepend($prefix.'_'))
                 ->replace('.', '_')
                 ->replaceMatches('/\_+/', '_');
 
-            if (filled(request()->get($as))) {
-                $this->addEnabledFilters($field, strval($columns->get($field, $field)));
-            }
-
             /** @var string $key */
             $key = data_get($filter, 'key');
 
             if ($key === 'input_text') {
-                $queryString['filters.input_text.'.$field] = [
+                $queryString['filters.'.$encoded.'.value'] = [
                     'as' => $as->toString(),
                     'except' => '',
                 ];
 
-                $queryString['filters.input_text_options.'.$field] = [
+                $queryString['filters.'.$encoded.'.op'] = [
                     'as' => $as->append('_operator')->toString(),
                     'except' => '',
                 ];
@@ -67,29 +63,15 @@ trait BindsFilterQueryString
             }
 
             if ($key === 'number') {
-                $_start = $as->append('_start')->toString();
-                $_end = $as->append('_end')->toString();
-                $fieldProcessed = false;
-
-                $queryString['filters.number.'.$field.'.start'] = [
-                    'as' => $_start,
+                $queryString['filters.'.$encoded.'.value.start'] = [
+                    'as' => $as->append('_start')->toString(),
                     'except' => '',
                 ];
 
-                if (filled(request()->get($_start))) {
-                    $this->addEnabledFilters($field.'_start', strval($columns->get($field, $field)));
-
-                    $fieldProcessed = true;
-                }
-
-                $queryString['filters.number.'.$field.'.end'] = [
-                    'as' => $_end,
+                $queryString['filters.'.$encoded.'.value.end'] = [
+                    'as' => $as->append('_end')->toString(),
                     'except' => '',
                 ];
-
-                if ($fieldProcessed === false && filled(request()->get($_end))) {
-                    $this->addEnabledFilters($field.'_end', strval($columns->get($field, $field)));
-                }
 
                 continue;
             }
@@ -112,7 +94,7 @@ trait BindsFilterQueryString
                 continue;
             }
 
-            $queryString['filters.'.$key.'.'.$field] = [
+            $queryString['filters.'.$encoded.'.value'] = [
                 'as' => $as->toString(),
                 'except' => '',
             ];

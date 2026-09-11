@@ -6,13 +6,14 @@
 @php
 
     $field = data_get($filter, 'field');
+    $bagKey = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? $field : null);
 
     $componentAttributes = (array) data_get($filter, 'attributes');
 
     $deferred = ($__partial ?? $this)->usesFilterPanel();
     $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get(
         'number',
-        $field,
+        $bagKey,
         array_merge($filter, ['title' => data_get($column, 'title'), 'placeholder' => data_get($column, 'placeholder')]),
         $deferred
     );

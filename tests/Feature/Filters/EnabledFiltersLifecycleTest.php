@@ -91,8 +91,8 @@ it('does not add duplicate enabled filters for the same field', function () {
 
 it('clearFilter strips the _start/_end suffix and clears the whole number range', function () {
     $test = Livewire::test(lifecycleComponent('clear-number-range')::class)
-        ->set('filters.number.price.start', '15')
-        ->set('filters.number.price.end', '100')
+        ->set('filters.price.value.start', '15')
+        ->set('filters.price.value.end', '100')
         ->assertSee('Mid Dish')
         ->assertDontSee('Cheap Dish')
         ->assertDontSee('Expensive Dish')

@@ -10,24 +10,18 @@ class InputText
     /** @return array{inputAttributes: ComponentAttributeBag, selectAttributes: ComponentAttributeBag} */
     public function __invoke(string $field, string $title, bool $deferred = false): array
     {
-        if ($deferred) {
-            $key = FilterKey::encode($field);
+        $key = FilterKey::modelKey($field);
 
+        if ($deferred) {
             return [
-                'inputAttributes' => new ComponentAttributeBag(FilterKey::draftModel('input_text.'.$key)),
-                'selectAttributes' => new ComponentAttributeBag(FilterKey::draftModel('input_text_options.'.$key)),
+                'inputAttributes' => new ComponentAttributeBag(FilterKey::draftModel($key.'.value')),
+                'selectAttributes' => new ComponentAttributeBag(FilterKey::draftModel($key.'.op')),
             ];
         }
 
         return [
-            'inputAttributes' => new ComponentAttributeBag([
-                'wire:model' => 'filters.input_text.'.$field,
-                'wire:input.live.debounce.600ms' => "filterInputText('{$field}', \$event.target.value, '{$title}')",
-            ]),
-            'selectAttributes' => new ComponentAttributeBag([
-                'wire:model' => 'filters.input_text_options.'.$field,
-                'wire:input.live.debounce.600ms' => "filterInputTextOptions('{$field}', \$event.target.value, '{$title}')",
-            ]),
+            'inputAttributes' => new ComponentAttributeBag(FilterKey::liveModel($key.'.value')),
+            'selectAttributes' => new ComponentAttributeBag(FilterKey::liveModel($key.'.op')),
         ];
     }
 }

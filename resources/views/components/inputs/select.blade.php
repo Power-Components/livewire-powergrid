@@ -15,7 +15,11 @@
     $__partial = $__partial ?? $this;
     $deferred = $__partial->usesFilterPanel();
     $filtersProperty = $deferred ? 'draftFilters' : 'filters';
-    $filterPathField = $deferred ? FilterKey::encode(strval(data_get($filter, 'field'))) : data_get($filter, 'field');
+    $filterField = strval(data_get($filter, 'field'));
+    $filterPathField = FilterKey::modelKey(strval(data_get($filter, 'column') ?: $filterField), $filterField);
+    $filterBag = (array) $__partial->{$filtersProperty};
+    $filterRecord = $filterBag[$filterPathField] ?? $filterBag[$filterField] ?? [];
+    $filterValues = is_array($filterRecord) ? ($filterRecord['value'] ?? []) : [];
     $framework = config('livewire-powergrid.plugins.select');
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
@@ -41,8 +45,8 @@ $params = [
     'optionValue' => data_get($filter, 'optionValue'),
     'optionLabel' => data_get($filter, 'optionLabel'),
     'options' => data_get($filter, 'params'),
-    'initialValues' => $initialValues,
-    'appliedFilters' => FilterKey::decodeType((array) data_get($__partial->{$filtersProperty}, 'multi_select', [])),
+    'initialValues' => $initialValues !== [] ? $initialValues : (is_array($filterValues) ? $filterValues : []),
+    'appliedFilters' => is_array($filterValues) ? $filterValues : [],
     'deferred' => $deferred,
     'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
 ];

@@ -32,17 +32,43 @@ trait Hooks
         $this->onPluginUpdated('toggleable', 'updated', compact('id', 'field', 'value'));
     }
 
-    /** @param  list<string>  $values */
+    /**
+     * Called after a filter value changes (inline `wire:model.live`, programmatic write, or Apply).
+     *
+     * @param  array<string, mixed>  $record
+     */
+    public function afterFilterChanged(string $field, array $record): void {}
+
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     *
+     * @param  list<string>  $values
+     */
     public function afterChangedMultiSelectFilter(string $field, array $values): void {}
 
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     */
     public function afterChangedSelectFilter(string $field, string $label, mixed $value): void {}
 
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     */
     public function afterChangedInputTextFilter(string $field, string $label, string $value): void {}
 
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     */
     public function afterChangedBooleanFilter(string $field, string $label, string $value): void {}
 
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     */
     public function afterChangedNumberStartFilter(string $field, string $label, string|false $value): void {}
 
+    /**
+     * @deprecated Override afterFilterChanged() instead.
+     */
     public function afterChangedNumberEndFilter(string $field, string $label, string|false $value): void {}
 
     /**

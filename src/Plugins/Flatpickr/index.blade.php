@@ -13,7 +13,7 @@
     $filtersProperty = $deferred ? 'draftFilters' : 'filters';
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');
-    $keyField = $deferred ? \PowerComponents\LivewirePowerGrid\Support\FilterKey::encode(strval($field)) : $field;
+    $keyField = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? strval($field) : null);
     $title = data_get($column, 'title');
 
     $customConfig = [];
@@ -55,8 +55,8 @@
             <input
                 id="input_{{ $field }}"
                 x-ref="rangeInput"
-                wire:model="{{ $filtersProperty }}.{{ $type }}.{{ $keyField }}.formatted"
-                @if ($deferred) data-pg-draft="{{ $type }}.{{ $keyField }}.formatted" @endif
+                wire:model="{{ $filtersProperty }}.{{ $keyField }}.value.formatted"
+                @if ($deferred) data-pg-draft="{{ $keyField }}.value.formatted" @endif
                 autocomplete="off"
                 data-field="{{ $field }}"
                 class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"

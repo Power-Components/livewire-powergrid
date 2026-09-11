@@ -7,10 +7,11 @@
 ])
 @php
     $field = data_get($filter, 'field');
+    $bagKey = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? $field : null);
     $title = data_get($column, 'title');
 
     $deferred = ($__partial ?? $this)->usesFilterPanel();
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('select', $field, $title, $deferred);
+    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('select', $bagKey, $title, $deferred);
 
     $filterClasses = \Illuminate\Support\Arr::toCssClasses([
        theme('filter.select.select'),

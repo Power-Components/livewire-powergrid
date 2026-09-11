@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Support;
 
+use PowerComponents\Turbine\Support\FilterBag;
+
 final class FilterKey
 {
     private const DOT = '__pgdot__';
@@ -11,15 +13,31 @@ final class FilterKey
         return str_replace('.', self::DOT, $field);
     }
 
+    public static function modelKey(string $column, ?string $field = null): string
+    {
+        $key = FilterBag::bagKey($column, $field);
+
+        return str_contains($key, '.') ? self::encode($key) : $key;
+    }
+
     public static function decode(string $key): string
     {
         return str_replace(self::DOT, '.', $key);
     }
 
     /**
-     * Deferred panel binding: wire:model plus a stable data attribute so
-     * Apply can read values even when Livewire drops nested keys on a JS [].
-     *
+     * @return array<string, string>
+     */
+    public static function liveModel(string $path, bool $debounce = true): array
+    {
+        $attribute = $debounce
+            ? 'wire:model.live.debounce.600ms'
+            : 'wire:model.live';
+
+        return [$attribute => 'filters.'.$path];
+    }
+
+    /**
      * @return array{'wire:model': string, 'data-pg-draft': string}
      */
     public static function draftModel(string $path): array
@@ -31,32 +49,44 @@ final class FilterKey
     }
 
     /**
-     * Encode the field-level keys of a full draftFilters structure
-     * (type => [field => value]).
+     * Encode top-level field keys of a field-keyed filter bag.
      *
      * @param  array<string, mixed>  $draft
-     * @return array<string, array<string, mixed>>
+     * @return array<string, mixed>
      */
     public static function encodeDraft(array $draft): array
     {
-        return self::mapFieldKeys($draft, [self::class, 'encode']);
+        $out = [];
+
+        foreach ($draft as $field => $record) {
+            $out[self::encode((string) $field)] = $record;
+        }
+
+        return $out;
     }
 
     /**
-     * Decode the field-level keys of a full draftFilters structure.
+     * Decode top-level field keys. Legacy type-keyed bags decode nested field keys.
      *
      * @param  array<string, mixed>  $draft
-     * @return array<string, array<string, mixed>>
+     * @return array<string, mixed>
      */
     public static function decodeDraft(array $draft): array
     {
-        return self::mapFieldKeys($draft, [self::class, 'decode']);
+        if (FilterBag::isLegacy($draft)) {
+            return self::mapFieldKeys($draft, [self::class, 'decode']);
+        }
+
+        $out = [];
+
+        foreach ($draft as $field => $record) {
+            $out[self::decode((string) $field)] = $record;
+        }
+
+        return $out;
     }
 
     /**
-     * Rename the field-level keys of a single filter type array
-     * (e.g. the "multi_select" sub-array).
-     *
      * @param  array<string, mixed>  $type
      * @return array<string, mixed>
      */

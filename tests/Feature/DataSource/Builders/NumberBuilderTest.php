@@ -42,7 +42,7 @@ it('filters database records with number filter start and end', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 15, 'end' => 35])
+        ->set('filters.price.value', ['start' => 15, 'end' => 35])
         ->assertSee('Peixada da chef Nábia') // 20.50
         ->assertSee('Carne Louca') // 30.00
         ->assertDontSee('Pastel de Nata') // 10.00
@@ -79,7 +79,7 @@ it('filters database records with number filter only start', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 40])
+        ->set('filters.price.value', ['start' => 40])
         ->assertSee('Bife à Rolê') // 40.50
         ->assertSee('Francesinha') // 60.50
         ->assertDontSee('Pastel de Nata') // 10.00
@@ -116,7 +116,7 @@ it('filters database records with number filter only end', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['end' => 25])
+        ->set('filters.price.value', ['end' => 25])
         ->assertSee('Pastel de Nata') // 10.00
         ->assertSee('Peixada da chef Nábia') // 20.50
         ->assertDontSee('Carne Louca') // 30.00
@@ -158,7 +158,7 @@ it('filters database records with number filter and custom builder', function ()
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 10, 'end' => 50])
+        ->set('filters.price.value', ['start' => 10, 'end' => 50])
         ->assertSee('Pastel de Nata') // in_stock=true, price=10
         ->assertSee('Peixada da chef Nábia') // in_stock=true, price=20.50
         ->assertSee('Carne Louca') // in_stock=true, price=30
@@ -200,7 +200,7 @@ it('filters collection records with number filter start and end', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 15, 'end' => 35])
+        ->set('filters.price.value', ['start' => 15, 'end' => 35])
         ->assertSee('Item 2')
         ->assertSee('Item 3')
         ->assertDontSee('Item 1')
@@ -241,7 +241,7 @@ it('filters collection records with number filter only start', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 20])
+        ->set('filters.price.value', ['start' => 20])
         ->assertSee('Item 2')
         ->assertSee('Item 3')
         ->assertDontSee('Item 1');
@@ -281,7 +281,7 @@ it('filters collection records with number filter only end', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['end' => 20])
+        ->set('filters.price.value', ['end' => 20])
         ->assertSee('Item 1')
         ->assertSee('Item 2')
         ->assertDontSee('Item 3');
@@ -326,7 +326,7 @@ it('filters collection with custom collection logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 10, 'end' => 30])
+        ->set('filters.price.value', ['start' => 10, 'end' => 30])
         ->assertDontSee('Item 1')
         ->assertSee('Item 2')
         ->assertSee('Item 3');
@@ -365,7 +365,7 @@ it('handles number filter with thousands separator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => '1,000', 'end' => '10,000'])
+        ->set('filters.price.value', ['start' => '1,000', 'end' => '10,000'])
         ->assertSee('Barco-Sushi da Sueli'); // 5000.00
 });
 
@@ -402,7 +402,7 @@ it('handles number filter with decimal separator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => '20,50', 'end' => '30,00'])
+        ->set('filters.price.value', ['start' => '20,50', 'end' => '30,00'])
         ->assertSee('Peixada da chef Nábia') // 20.50
         ->assertSee('Carne Louca') // 30.00
         ->assertDontSee('Pastel de Nata'); // 10.00

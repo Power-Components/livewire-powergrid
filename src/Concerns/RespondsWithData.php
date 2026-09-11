@@ -7,6 +7,7 @@ use PowerComponents\LivewirePowerGrid\Support\Actions\ActionsResolver;
 use PowerComponents\Turbine\DataSource\Support\Sql;
 use PowerComponents\Turbine\Response;
 use PowerComponents\Turbine\Response\GridResponse;
+use PowerComponents\Turbine\Support\FilterBag;
 
 trait RespondsWithData
 {
@@ -54,23 +55,8 @@ trait RespondsWithData
         $rawFilters = $payload['filters'] ?? null;
 
         if (is_array($rawFilters)) {
-            $filters = [];
-
-            /** @var mixed $columns */
-            foreach ($rawFilters as $type => $columns) {
-                $bucket = [];
-
-                if (is_array($columns)) {
-                    /** @var mixed $value */
-                    foreach ($columns as $field => $value) {
-                        $bucket[(string) $field] = $value;
-                    }
-                }
-
-                $filters[(string) $type] = $bucket;
-            }
-
-            $this->filters = $filters;
+            /** @var array<string, mixed> $rawFilters */
+            $this->filters = FilterBag::hydrate($rawFilters);
         }
 
         $this->readyToLoad = true;

@@ -10,19 +10,18 @@ class Boolean
     /** @return array{selectAttributes: ComponentAttributeBag} */
     public function __invoke(string $field, string $title, bool $deferred = false): array
     {
+        $key = FilterKey::modelKey($field);
+
         if ($deferred) {
             return [
-                'selectAttributes' => new ComponentAttributeBag(
-                    FilterKey::draftModel('boolean.'.FilterKey::encode($field)),
-                ),
+                'selectAttributes' => new ComponentAttributeBag(FilterKey::draftModel($key.'.value')),
             ];
         }
 
         return [
-            'selectAttributes' => new ComponentAttributeBag([
-                'wire:model' => 'filters.boolean.'.$field,
-                'wire:input.live.debounce.600ms' => "filterBoolean('{$field}', \$event.target.value, '{$title}')",
-            ]),
+            'selectAttributes' => new ComponentAttributeBag(
+                FilterKey::liveModel($key.'.value', debounce: false),
+            ),
         ];
     }
 }
