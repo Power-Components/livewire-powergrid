@@ -308,7 +308,7 @@ There is no `Components\Td`. Action-cell wrapper classes go in the token `table.
 | Legacy 6.x | New 7.x Fluent Builder | Notes |
 | :--- | :--- | :--- |
 | N/A | `->layout(fn (Components\Layout $layout) => $layout->wrapper('...')` | NEW - Set to empty or adapt |
-| N/A | `->layout(fn (Components\Layout $layout) => $layout->outsideFilters('...')` | NEW - Set to empty or adapt |
+| N/A | `->layout(fn (Components\Layout $layout) => $layout->card('...')` | NEW - Table card/panel wrapper |
 
 #### Header Structure (NEW IN V7)
 | Legacy 6.x | New 7.x Fluent Builder | Notes |
@@ -531,7 +531,6 @@ class Bootstrap5 extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('')
             ->card('card')
-            ->outsideFilters('')
         );
     }
 

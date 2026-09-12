@@ -23,7 +23,6 @@ class DaisyUI extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('space-y-4 text-sm')
             ->card('rounded-lg border border-base-300 bg-base-100 overflow-visible text-sm')
-            ->outsideFilters('')
         );
     }
 

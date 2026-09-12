@@ -12,26 +12,20 @@
     $flyout = $__partial->filterFlyoutOptions();
     $isLeft = $flyout['position'] === 'left';
 
-    // Alpine needs the off-screen class up front, so the side decides both the
-    // anchoring classes and the direction the panel slides in from.
     $panelSide = $isLeft ? theme('filter.flyout.panel_left') : theme('filter.flyout.panel_right');
     $panelOffscreen = $isLeft ? '-translate-x-full' : 'translate-x-full';
 @endphp
 
 <div
-    x-data
+    x-data="pgFilterFlyout"
     wire:key="filter-flyout-{{ $tableName }}"
     @if ($flyout['close_on_escape'])
-        {{-- Guarded: the listener is global, so an unguarded assignment would
-             commit to the server on every Escape press anywhere on the page. --}}
         x-on:keydown.escape.window="$wire.showFilters && ($wire.showFilters = false)"
     @endif
 >
     <div
         x-show="$wire.showFilters"
         x-cloak
-        {{-- Inline display keeps the backdrop from flashing over the page when the
-             host app has no [x-cloak] rule; x-show clears it once Alpine boots. --}}
         style="display: none"
         x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0"
@@ -106,8 +100,8 @@
                     <button
                         type="button"
                         data-cy="filter-flyout-apply"
-                        wire:click.prevent="applyFilters"
-                        x-on:click="$wire.showFilters = false"
+                        x-on:pointerdown.prevent="apply()"
+                        x-on:click="if ($event.detail === 0) apply()"
                         class="{{ theme('filter.dropdown.apply') }}"
                     >
                         {{ trans('livewire-powergrid::datatable.buttons.apply_filters') }}

@@ -4,6 +4,7 @@ namespace PowerComponents\LivewirePowerGrid\Concerns\Filters;
 
 use Closure;
 use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes;
 
 trait ResolvesFilters
 {
@@ -33,7 +34,7 @@ trait ResolvesFilters
                             data_forget($pending, 'dataSource');
                             data_forget($pending, 'builder');
                             data_forget($pending, 'collection');
-                            data_set($column, 'filters', (array) $pending);
+                            data_set($column, 'filters', $this->filterForView($pending, $column));
                             $columns[$index] = $column;
 
                             continue;
@@ -69,7 +70,7 @@ trait ResolvesFilters
                         $columnFilter = $columnFilter->execute();
                     }
 
-                    data_set($column, 'filters', (array) $columnFilter);
+                    data_set($column, 'filters', $this->filterForView($columnFilter, $column));
 
                     if (data_get($columnFilter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
                         filled(data_get($columnFilter, 'attributes'))) {
@@ -92,5 +93,22 @@ trait ResolvesFilters
         if ($this->usesFilterInline()) {
             $this->inlineFiltersResolved = true;
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function filterForView(mixed $filter, mixed $column): array
+    {
+        $title = data_get($column, 'title');
+
+        /** @var array<string, mixed> $definition */
+        $definition = (array) $filter;
+
+        return FilterWireAttributes::forView(
+            $definition,
+            $this->usesFilterPanel(),
+            is_string($title) ? $title : '',
+        );
     }
 }

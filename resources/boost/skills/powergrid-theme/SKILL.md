@@ -179,7 +179,6 @@ class MyTheme extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('space-y-4')
             ->card('rounded-xl border')
-            ->outsideFilters('')
         );
     }
 

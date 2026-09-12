@@ -8,12 +8,11 @@
 ])
 
 @php
-    $__partial = $__partial ?? $this;
-    $deferred = $__partial->usesFilterPanel();
-    $filtersProperty = $deferred ? 'draftFilters' : 'filters';
+    $deferred = (bool) data_get($filter, 'deferred');
+    $filtersProperty = data_get($filter, 'filtersProperty');
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');
-    $keyField = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? strval($field) : null);
+    $keyField = data_get($filter, 'modelKey');
     $title = data_get($column, 'title');
 
     $customConfig = [];

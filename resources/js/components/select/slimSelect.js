@@ -44,9 +44,9 @@ window.pgAlpine.data('pgSlimSelect', () => ({
         })
 
         window.addEventListener('pg:restore_multi_select::' + params.tableName, () => {
-            this.$wire.get('filters.' + params.dataField + '.value').then((values) => {
-                element.slim.setSelected(Array.isArray(values) ? values : [], false)
-            })
+            const values = this.$wire.get('filters.' + params.dataField + '.value')
+
+            element.slim.setSelected(Array.isArray(values) ? values : [], false)
         })
     },
 

@@ -50,6 +50,53 @@ function dropdownComponent(string $tableName): PowerGridComponent
     };
 }
 
+function dropdownMultiSelectComponent(string $tableName): PowerGridComponent
+{
+    return new class($tableName) extends PowerGridComponent
+    {
+        public function __construct(public string $tableName = 'filter-dropdown-multi') {}
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Cheap Dish', 'price' => 10, 'category_id' => 1],
+                ['id' => 2, 'name' => 'Mid Dish', 'price' => 50, 'category_id' => 2],
+                ['id' => 3, 'name' => 'Expensive Dish', 'price' => 500, 'category_id' => 3],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::inputText('name'),
+                Filter::number('price'),
+                Filter::multiSelect('category_id')
+                    ->dataSource(collect([
+                        ['id' => 1, 'name' => 'Cat 1'],
+                        ['id' => 2, 'name' => 'Cat 2'],
+                        ['id' => 3, 'name' => 'Cat 3'],
+                    ]))
+                    ->optionValue('id')
+                    ->optionLabel('name'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('price')->add('category_id');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Name', 'name'),
+                Column::make('Price', 'price'),
+                Column::make('Category', 'category_id'),
+            ];
+        }
+    };
+}
+
 beforeEach(fn () => Config::set('livewire-powergrid.filter', 'dropdown'));
 
 it('does not filter until Apply is pressed', function () {
@@ -81,6 +128,61 @@ it('commits a draft payload passed directly to applyFilters', function () {
 
     $test->assertSee('Expensive Dish')
         ->assertDontSee('Cheap Dish');
+});
+
+it('commits a field-keyed DOM snapshot without a prior draftFilters write', function () {
+    $test = Livewire::test(dropdownComponent('dropdown-apply-dom')::class)
+        ->call('applyFilters', [
+            'name' => ['value' => 'Expensive', 'op' => 'contains'],
+            'price' => ['value' => ['start' => '', 'end' => '']],
+            'in_stock' => ['value' => 'all'],
+        ]);
+
+    expect($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive', 'op' => 'contains']])
+        ->and($test->get('draftFilters.name.value'))->toBe('Expensive');
+
+    $test->assertSee('Expensive Dish')
+        ->assertDontSee('Cheap Dish');
+});
+
+it('commits a number max from a DOM snapshot without a prior draftFilters write', function () {
+    $test = Livewire::test(dropdownComponent('dropdown-apply-number-end')::class)
+        ->call('applyFilters', [
+            'price' => ['value' => ['start' => '', 'end' => '50']],
+        ]);
+
+    expect($test->get('filters.price.value.end'))->toBe('50')
+        ->and($test->get('filters.price.value'))->not->toHaveKey('start');
+
+    $test->assertSee('Cheap Dish')
+        ->assertSee('Mid Dish')
+        ->assertDontSee('Expensive Dish');
+});
+
+it('binds multi_select to the unified field-keyed draft path', function () {
+    $html = Livewire::test(dropdownMultiSelectComponent('dropdown-multi-html')::class)
+        ->call('loadFilterPanel')
+        ->html();
+
+    expect($html)->toContain('wire:model="draftFilters.category_id.value"')
+        ->and($html)->toContain('data-pg-draft="category_id.value"')
+        ->and($html)->not->toContain('draftFilters.multi_select.')
+        ->and($html)->not->toContain('data-pg-draft="multi_select.');
+});
+
+it('keeps sibling filters when the DOM snapshot carries a multi_select field', function () {
+    $test = Livewire::test(dropdownMultiSelectComponent('dropdown-multi-apply')::class)
+        ->call('applyFilters', [
+            'name' => ['value' => '', 'op' => 'contains'],
+            'price' => ['value' => ['start' => '', 'end' => '50']],
+            'category_id' => ['value' => []],
+        ]);
+
+    expect($test->get('filters.price.value.end'))->toBe('50');
+
+    $test->assertSee('Cheap Dish')
+        ->assertSee('Mid Dish')
+        ->assertDontSee('Expensive Dish');
 });
 
 it('reset restores the draft to the applied filters and keeps results', function () {
@@ -167,6 +269,9 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
         ->and($names)->not->toContain('pg-filters-'.$test->instance()->tableName)
         ->and($test->html())->toContain('draftFilters.name.value')
         ->and($test->html())->toContain('data-pg-draft="name.value"')
+        ->and($test->html())->toContain('data-pg-draft="price.value.start"')
+        ->and($test->html())->toContain('data-pg-draft="price.value.end"')
+        ->and($test->html())->toContain('data-pg-draft="in_stock.value"')
         ->and($test->html())->toContain('data-cy="filter-dropdown-apply"')
         ->and($test->html())->not->toContain('wire:input.live.debounce.600ms="filterInputText');
 });
@@ -174,7 +279,8 @@ it('renders deferred draftFilters bindings and no live handler in dropdown mode'
 it('closes apply and clear through alpine before the livewire snapshot', function () {
     $html = Livewire::test(dropdownComponent('dropdown-alpine-apply')::class)->html();
 
-    expect($html)->toContain('x-on:click="apply()"')
+    expect($html)->toContain('x-on:pointerdown.prevent="apply()"')
+        ->and($html)->toContain('x-on:click="if ($event.detail === 0) apply()"')
         ->and($html)->toContain('x-on:click="clearAll()"')
         ->and($html)->not->toContain('wire:click.prevent="applyFilters"')
         ->and($html)->not->toContain('wire:click.prevent="clearAllFilters"');

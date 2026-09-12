@@ -62,12 +62,12 @@ if (!window.pgFlatpickrRegistered) {
                 }
             })
 
-            window.addEventListener(`pg:restore_flatpickr::${this.tableName}`, async () => {
+            window.addEventListener(`pg:restore_flatpickr::${this.tableName}`, () => {
                 if (!this.$refs.rangeInput || !this.element) {
                     return
                 }
 
-                const formatted = await this.$wire.get(`${this.filtersProperty}.${this.type}.${this.keyField}.formatted`)
+                const formatted = this.$wire.get(`${this.filtersProperty}.${this.keyField}.value.formatted`)
 
                 this.selectedDates = formatted
 
@@ -91,7 +91,7 @@ if (!window.pgFlatpickrRegistered) {
             if(this.$refs.rangeInput && typeof flatpickr != "undefined") {
                 this.element = flatpickr(this.$refs.rangeInput, options);
 
-                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.type}.${this.keyField}.formatted`)
+                this.selectedDates = this.$wire.get(`${this.filtersProperty}.${this.keyField}.value.formatted`)
 
                 this.element.setDate(this.selectedDates)
             }

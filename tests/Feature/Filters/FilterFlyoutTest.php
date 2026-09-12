@@ -53,6 +53,9 @@ it('renders reset and apply but no clear all button in the flyout', function () 
 
     expect($html)->toContain('data-cy="filter-flyout-reset"')
         ->and($html)->toContain('data-cy="filter-flyout-apply"')
+        ->and($html)->toContain('x-data="pgFilterFlyout"')
+        ->and($html)->toContain('x-on:pointerdown.prevent="apply()"')
+        ->and($html)->not->toContain('wire:click.prevent="applyFilters"')
         ->and($html)->not->toContain('data-cy="filter-flyout-clear-all"')
         ->and($html)->not->toContain('draftFilters.name.value');
 });

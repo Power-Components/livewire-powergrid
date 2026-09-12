@@ -5,22 +5,14 @@
     'filter' => null,
 ])
 @php
-    $field = data_get($filter, 'field');
-    $bagKey = \PowerComponents\LivewirePowerGrid\Support\FilterKey::modelKey(strval(data_get($filter, 'column') ?: $field), is_string($field) ? $field : null);
     $title = data_get($column, 'title');
-
     $trueLabel = data_get($filter, 'trueLabel');
     $falseLabel = data_get($filter, 'falseLabel');
-
-    $deferred = ($__partial ?? $this)->usesFilterPanel();
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('boolean', $bagKey, $title, $deferred);
-
     $selectClasses = Arr::toCssClasses([
         theme('filter.boolean.select'),
         $class,
     ]);
-
-    $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
+    $params = array_merge((array) data_get($filter, 'attributes', []), $filter);
 @endphp
 
 @if ($params['component'])
@@ -43,7 +35,7 @@
             <select
                 class="{{ $selectClasses }}"
                 style="{{ data_get($column, 'headerStyle') }}"
-                {{ $defaultAttributes['selectAttributes'] }}
+                {{ data_get($filter, 'selectAttributes') }}
             >
                 <option value="all">{{ trans('livewire-powergrid::datatable.boolean_filter.all') }}</option>
                 <option value="true">{{ $trueLabel }}</option>

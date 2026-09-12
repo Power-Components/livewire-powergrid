@@ -43,9 +43,9 @@ window.pgAlpine.data('pgTomSelect', () => ({
                         return
                     }
 
-                    this.$wire.get('filters.' + params.dataField + '.value').then((values) => {
-                        element.tomselect.setValue(Array.isArray(values) ? values : [])
-                    })
+                    const values = this.$wire.get('filters.' + params.dataField + '.value')
+
+                    element.tomselect.setValue(Array.isArray(values) ? values : [])
                 })
             },
         }

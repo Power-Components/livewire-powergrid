@@ -20,6 +20,35 @@ final class FilterKey
         return str_contains($key, '.') ? self::encode($key) : $key;
     }
 
+    public static function fromFilter(mixed $filter): string
+    {
+        $stamped = data_get($filter, 'modelKey');
+
+        if (is_string($stamped) && $stamped !== '') {
+            return $stamped;
+        }
+
+        $field = data_get($filter, 'field');
+        $column = data_get($filter, 'column');
+
+        if (! is_string($column) || $column === '') {
+            $column = is_string($field) ? $field : '';
+        }
+
+        return self::modelKey($column, is_string($field) ? $field : null);
+    }
+
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return array<string, mixed>
+     */
+    public static function withModelKey(array $filter): array
+    {
+        $filter['modelKey'] = self::fromFilter($filter);
+
+        return $filter;
+    }
+
     public static function decode(string $key): string
     {
         return str_replace(self::DOT, '.', $key);

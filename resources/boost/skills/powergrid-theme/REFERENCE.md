@@ -94,7 +94,7 @@ Read `Tailwind.php` for the exact class strings; this maps the **method → toke
 shape. Every leaf is snake_cased by `HasProperties::toArray()`.
 
 ### `layout()`
-`wrapper`, `card`, `outsideFilters` → `layout.wrapper`, `layout.card`, `layout.outside_filters`
+`wrapper`, `card`, `container` → `layout.wrapper`, `layout.card`, `layout.container`
 
 ### `header()`
 - `view` → `header.view`

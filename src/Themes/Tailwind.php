@@ -24,7 +24,6 @@ class Tailwind extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('space-y-4')
             ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800 overflow-visible')
-            ->outsideFilters('')
         );
     }
 
