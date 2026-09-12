@@ -20,7 +20,6 @@ trait Filter
     public array $draftFilters = [];
 
     /**
-     *
      * @var array<string, string>
      */
     public array $filterOperators = [];
