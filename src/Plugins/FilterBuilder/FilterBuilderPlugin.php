@@ -3,7 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder;
 
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
+use PowerComponents\LivewirePowerGrid\Themes\Flux;
 use PowerComponents\Turbine\Components\Filters\FilterInputText;
 use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
 
@@ -75,13 +75,12 @@ class FilterBuilderPlugin extends PluginBase
 
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 
-        $variant = match (true) {
-            $theme instanceof Flux => 'flux',
-            $theme instanceof DaisyUI => 'daisyui',
-            default => 'index',
-        };
+        if (! $theme instanceof Flux) {
+            return '';
+        }
 
-        $view = "powergrid-plugins::FilterBuilder.themes.{$variant}";
+        /** @var view-string $view */
+        $view = 'powergrid-plugins::FilterBuilder.themes.flux';
 
         return view()->exists($view) ? $view : '';
     }

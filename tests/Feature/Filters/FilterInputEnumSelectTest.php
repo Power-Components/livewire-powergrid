@@ -44,13 +44,13 @@ it('properly filters by enum-like select', function () {
 
     Livewire::test($component::class)
         ->set('filters', [
-            'select' => ['diet' => 1],
+            'diet' => ['type' => 'select', 'value' => 1],
         ])
         ->assertSee('Dish 1')
         ->assertDontSee('Dish 2')
         ->assertSee('Dish 3')
         ->set('filters', [
-            'select' => ['diet' => 2],
+            'diet' => ['type' => 'select', 'value' => 2],
         ])
         ->assertDontSee('Dish 1')
         ->assertSee('Dish 2')

@@ -48,7 +48,6 @@ class PowerGridComponent extends Component implements Context
     use Concerns\HasTabs;
     use Concerns\Hooks;
     use Concerns\Listeners;
-    use Concerns\ManageRow;
     use Concerns\Persist;
     use Concerns\Radio;
     use Concerns\RespondsWithData;
@@ -181,7 +180,7 @@ class PowerGridComponent extends Component implements Context
 
     public function renderCells(object $row, int $rowIndex, ?int $childIndex, mixed $parentId, string|int $rowId): string
     {
-        return (new CellRenderer($this))->render($row, $rowIndex, $childIndex, $parentId, $rowId);
+        return (new CellRenderer($this))->render($row, $rowIndex, $childIndex, $rowId);
     }
 
     /**
@@ -272,20 +271,16 @@ class PowerGridComponent extends Component implements Context
 
     public function boot(): void
     {
-        /** @var string $themeClass */
-        $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
-
-        /** @var Theme $themeInstance */
-        $themeInstance = app(PowerGridManager::resolveThemeClass($themeClass));
-
         $customTheme = $this->template();
 
-        if ($customTheme instanceof Theme) {
-            $themeInstance = $customTheme;
+        if (! $customTheme instanceof Theme) {
+            /** @var string $themeClass */
+            $themeClass = $this->customThemeClass() ?? config('livewire-powergrid.theme');
+            $customTheme = app(PowerGridManager::resolveThemeClass($themeClass));
         }
 
         ThemeManager::clearCache();
-        app()->instance('powergrid.theme', $themeInstance);
+        app()->instance('powergrid.theme', $customTheme);
     }
 
     public function hydrate(): void
@@ -314,8 +309,6 @@ class PowerGridComponent extends Component implements Context
      */
     public function mount(): void
     {
-        $this->prepareRowTemplates();
-
         $this->readyToLoad = ! $this->deferLoading;
 
         $this->rebindServerOwnedState();
@@ -328,8 +321,6 @@ class PowerGridComponent extends Component implements Context
         $this->applyDefaultFilters();
 
         $this->applyDefaultTab();
-
-        $this->draftFilters = $this->filters;
 
         $this->draftColumns = $this->columnVisibilityState();
 
@@ -350,6 +341,12 @@ class PowerGridComponent extends Component implements Context
 
     public function updated(string $name): void
     {
+        if ($name === 'filters' || str_starts_with($name, 'filters.')) {
+            $this->filtersUpdated($name);
+
+            return;
+        }
+
         if (str_contains($name, 'setUp.footer.perPage')) {
             $this->renderGridPartials();
         }
@@ -360,6 +357,7 @@ class PowerGridComponent extends Component implements Context
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
         $this->renderGridPartials();
+        $this->refreshTabsPartial();
     }
 
     /** Register tbody/pagination (and optionally thead) as Livewire partials. */
@@ -370,7 +368,7 @@ class PowerGridComponent extends Component implements Context
         }
 
         if ($this->usesFilterInline()) {
-            $this->resolveFiltersForRender();
+            $this->resolveFilters();
             $this->resolvePlugins();
         } else {
             $this->withoutFilterInstantiation(fn () => $this->resolvePlugins());
@@ -591,20 +589,12 @@ class PowerGridComponent extends Component implements Context
             return $emptyState->with(
                 [
                     'emptyState' => trans('livewire-powergrid::datatable.labels.no_data'),
-                    'noDataLabel' => trans('livewire-powergrid::datatable.labels.no_data'), // @deprecated since 7.x, use $emptyState
                     'data' => [],
                 ]
             )->render();
         }
 
         return "<span>{$emptyState}</span>";
-    }
-
-    /** @deprecated since 7.x, use processEmptyState() instead */
-    #[Computed]
-    public function processNoDataLabel(): string
-    {
-        return $this->processEmptyState();
     }
 
     public function renderEmptyState(): string|View

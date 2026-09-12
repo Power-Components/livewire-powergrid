@@ -20,15 +20,6 @@
     };
 @endphp
 
-{{--
-    Alpine `open` is local UI state. Livewire snapshots Alpine *before* a
-    wire:click handler runs, so Apply/Clear must close first and then call
-    $wire — otherwise the morph restores open=true and the panel stays up.
-    Portaled widgets (flatpickr, tom-select, slim-select) render on <body>,
-    so click.outside has to ignore them or the panel closes mid-interaction.
-    x-data is a named component so Alpine does not re-parse an inline object
-    (the evaluator treats `this` inside that string as syntax).
---}}
 <div
     x-data="pgFilterPanel"
     data-open-on-load="{{ $openOnLoad ? 'true' : 'false' }}"
@@ -99,7 +90,8 @@
             <button
                 type="button"
                 data-cy="filter-dropdown-apply"
-                x-on:click="apply()"
+                x-on:pointerdown.prevent="apply()"
+                x-on:click="if ($event.detail === 0) apply()"
                 class="{{ theme('filter.dropdown.apply') }}"
             >
                 {{ trans('livewire-powergrid::datatable.buttons.apply_filters') }}

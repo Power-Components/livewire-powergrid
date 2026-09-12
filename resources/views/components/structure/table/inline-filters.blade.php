@@ -64,7 +64,7 @@
                             :table-name="$tableName"
                             :title="data_get($column, 'title')"
                             :filter="(array) data_get($column, 'filters')"
-                            :initial-values="data_get($filters, 'multi_select.' . data_get($column, 'filters.field'))"
+                            :initial-values="data_get($filters, data_get($column, 'filters.field') . '.value')"
                             :__partial="$__partial"
                         />
                     @elseif ($filterClass->contains(['FilterSelect', 'FilterEnumSelect']))

@@ -10,12 +10,15 @@
     '__partial' => null,
 ])
 
-@use('PowerComponents\LivewirePowerGrid\Support\FilterKey')
 @php
     $__partial = $__partial ?? $this;
-    $deferred = $__partial->usesFilterPanel();
-    $filtersProperty = $deferred ? 'draftFilters' : 'filters';
-    $filterPathField = $deferred ? FilterKey::encode(strval(data_get($filter, 'field'))) : data_get($filter, 'field');
+    $deferred = (bool) data_get($filter, 'deferred');
+    $filtersProperty = data_get($filter, 'filtersProperty');
+    $filterField = strval(data_get($filter, 'field'));
+    $filterPathField = data_get($filter, 'modelKey');
+    $filterBag = (array) $__partial->{$filtersProperty};
+    $filterRecord = $filterBag[$filterPathField] ?? $filterBag[$filterField] ?? [];
+    $filterValues = is_array($filterRecord) ? ($filterRecord['value'] ?? []) : [];
     $framework = config('livewire-powergrid.plugins.select');
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
@@ -41,8 +44,8 @@ $params = [
     'optionValue' => data_get($filter, 'optionValue'),
     'optionLabel' => data_get($filter, 'optionLabel'),
     'options' => data_get($filter, 'params'),
-    'initialValues' => $initialValues,
-    'appliedFilters' => FilterKey::decodeType((array) data_get($__partial->{$filtersProperty}, 'multi_select', [])),
+    'initialValues' => $initialValues !== [] ? $initialValues : (is_array($filterValues) ? $filterValues : []),
+    'appliedFilters' => is_array($filterValues) ? $filterValues : [],
     'deferred' => $deferred,
     'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
 ];
@@ -76,8 +79,7 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
             <select
                 @if ($multiple) multiple @endif
                 class="{{ theme('filter.multi_select.select') }}"
-                wire:model="{{ $filtersProperty }}.multi_select.{{ $filterPathField }}.values"
-                @if ($deferred) data-pg-draft="multi_select.{{ $filterPathField }}.values" @endif
+                {{ data_get($filter, 'wire.value') }}
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
                 @if (!data_get($params, 'options.disableOptionAll', false))

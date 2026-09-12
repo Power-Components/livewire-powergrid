@@ -67,8 +67,6 @@ class FlatpickrPlugin extends PluginBase
             return;
         }
 
-        $this->component->resetPage();
-
         $dateStr = is_string($dateStr) ? $dateStr : '';
         $firstDate = is_scalar($selectedDates[0] ?? null) ? strval($selectedDates[0]) : '';
         $secondDate = is_scalar($selectedDates[1] ?? null) ? strval($selectedDates[1]) : '';
@@ -76,16 +74,58 @@ class FlatpickrPlugin extends PluginBase
             ? $dateStr
             : $firstDate.' to '.$secondDate;
 
+        $this->component->putFilterRecord(
+            $field,
+            $type,
+            self::computeRange($type, $formatted),
+        );
+
         /** @var string|null $label */
         $this->component->addEnabledFilters($field, $label);
+        $this->component->commitFilters();
+    }
 
-        $filters = $this->component->filters;
-        $filters[$type][$field] = self::computeRange($type, $formatted);
-        $this->component->filters = $filters;
+    /**
+     * A date draft carries what flatpickr wrote (`value.formatted`); the applied
+     * record carries the range that flows into the query.
+     *
+     * @param  array<string, mixed>  $record
+     * @return array<string, mixed>|null
+     */
+    public function normalizeFilterRecord(string $field, array $record): ?array
+    {
+        $type = $record['type'] ?? '';
 
-        $this->component->persistState('filters');
+        if (! in_array($type, ['date', 'datetime'], true)) {
+            return $record;
+        }
 
-        $this->component->renderOutsideFiltersPartial();
+        $formatted = data_get($record, 'value.formatted');
+
+        if (blank($formatted)) {
+            return null;
+        }
+
+        $record['value'] = self::computeRange((string) $type, is_scalar($formatted) ? (string) $formatted : '');
+
+        return $record;
+    }
+
+    public function onFilterCleared(string $field, string $type): void
+    {
+        if (in_array($type, ['date', 'datetime'], true)) {
+            $this->component->dispatch('pg:clear_flatpickr::'.$this->component->tableName.':'.$field);
+        }
+    }
+
+    public function onFiltersCleared(): void
+    {
+        $this->component->dispatch('pg:clear_all_flatpickr::'.$this->component->tableName);
+    }
+
+    public function onFiltersRestored(): void
+    {
+        $this->component->dispatch('pg:restore_flatpickr::'.$this->component->tableName);
     }
 
     /**

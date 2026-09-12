@@ -31,7 +31,7 @@ it('applies default boolean filter value "true" on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.boolean.in_stock', 'true');
+        ->assertSet('filters.in_stock.value', 'true');
 });
 
 it('applies default select filter value on mount', function () {
@@ -63,7 +63,7 @@ it('applies default select filter value on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.select.category_id', 1);
+        ->assertSet('filters.category_id.value', 1);
 });
 
 it('applies default multi_select filter value on mount', function () {
@@ -95,7 +95,7 @@ it('applies default multi_select filter value on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.multi_select.category_id', [1]);
+        ->assertSet('filters.category_id.value', [1]);
 });
 
 it('applies default input_text filter value on mount', function () {
@@ -125,7 +125,7 @@ it('applies default input_text filter value on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.input_text.name', 'Pastel');
+        ->assertSet('filters.name.value', 'Pastel');
 });
 
 it('applies default number filter value on mount', function () {
@@ -155,8 +155,8 @@ it('applies default number filter value on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.number.price.start', 10)
-        ->assertSet('filters.number.price.end', 20);
+        ->assertSet('filters.price.value.start', 10)
+        ->assertSet('filters.price.value.end', 20);
 });
 
 it('applies default date filter value on mount', function () {
@@ -192,6 +192,6 @@ it('applies default date filter value on mount', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSet('filters.date.date.start', '2021-01-01')
-        ->assertSet('filters.date.date.end', '2021-01-02');
+        ->assertSet('filters.date.value.start', '2021-01-01')
+        ->assertSet('filters.date.value.end', '2021-01-02');
 });

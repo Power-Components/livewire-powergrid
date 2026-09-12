@@ -42,12 +42,12 @@ it('collapses every aggregate into a single batched query', function () {
         public function columns(): array
         {
             return [
-                Column::make('Id', 'id')->withCount('Count', true, true),
+                Column::make('Id', 'id')->summarize('count', 'Count', true, true),
                 Column::make('Price', 'price')
-                    ->withSum('Sum', true, true)
-                    ->withAvg('Avg', true, true)
-                    ->withMin('Min', true, true)
-                    ->withMax('Max', true, true),
+                    ->summarize('sum', 'Sum', true, true)
+                    ->summarize('avg', 'Avg', true, true)
+                    ->summarize('min', 'Min', true, true)
+                    ->summarize('max', 'Max', true, true),
             ];
         }
     };
@@ -98,7 +98,7 @@ it('keeps showing totals when the dataset is served from cache', function () {
         public function columns(): array
         {
             return [
-                Column::make('Price', 'price')->withSum('Sum', true, true),
+                Column::make('Price', 'price')->summarize('sum', 'Sum', true, true),
             ];
         }
     };
@@ -142,7 +142,7 @@ it('defaults summaries to the footer when flags are omitted', function () {
         public function columns(): array
         {
             return [
-                Column::make('Price', 'price')->withSum('Sum'),
+                Column::make('Price', 'price')->summarize('sum', 'Sum'),
             ];
         }
     };
@@ -185,7 +185,7 @@ it('keeps the data rows when summarizing an Eloquent model without global scopes
         public function columns(): array
         {
             return [
-                Column::make('Id', 'id')->withSum('Id'),
+                Column::make('Id', 'id')->summarize('sum', 'Id'),
                 Column::make('Name', 'name'),
             ];
         }

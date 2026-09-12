@@ -35,7 +35,7 @@ it('formats a summary value through summarizeFormat', function () {
         {
             return [
                 Column::make('Name', 'name'),
-                Column::make('Price', 'price')->withSum('Sum', true, true),
+                Column::make('Price', 'price')->summarize('sum', 'Sum', true, true),
             ];
         }
     };
@@ -72,7 +72,7 @@ it('builds the summaries cache tag from a custom tag', function () {
         public function columns(): array
         {
             return [
-                Column::make('Price', 'price')->withSum('Sum', true, true),
+                Column::make('Price', 'price')->summarize('sum', 'Sum', true, true),
             ];
         }
     };
@@ -102,7 +102,7 @@ it('builds the summaries cache tag from the datasource table when no custom tag 
 
         public function columns(): array
         {
-            return [Column::make('Price', 'price')->withSum('Sum', true, true)];
+            return [Column::make('Price', 'price')->summarize('sum', 'Sum', true, true)];
         }
     };
 

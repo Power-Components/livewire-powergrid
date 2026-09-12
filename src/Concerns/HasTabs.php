@@ -133,13 +133,25 @@ trait HasTabs
 
     public function renderTabsPartial(): void
     {
+        $this->registerTabsPartial();
+
+        $this->renderGridPartials();
+    }
+
+    public function refreshTabsPartial(): void
+    {
+        $this->tabCountsCache = null;
+
+        $this->registerTabsPartial();
+    }
+
+    protected function registerTabsPartial(): void
+    {
         if (! function_exists('partials') || ! $this->hasTabs()) {
             return;
         }
 
         partials($this)->partial("pg-tabs-{$this->tableName}", $this->tabsView(), $this->tabsData());
-
-        $this->renderGridPartials();
     }
 
     protected function tabsConfig(): ?Tabs

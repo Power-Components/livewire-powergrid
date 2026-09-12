@@ -108,13 +108,30 @@ trait Persist
             })->all());
         }
 
-        if (in_array('filters', $this->persist) && isset($state['filters'], $state['enabledFilters']) && is_array($state['filters']) && is_array($state['enabledFilters'])) {
-            /** @var array<string, array<string, mixed>> $filters */
-            $filters = $state['filters'];
-            /** @var list<array<string, mixed>> $enabledFilters */
-            $enabledFilters = array_values($state['enabledFilters']);
-            $this->filters = $filters;
-            $this->enabledFilters = $enabledFilters;
+        if (in_array('filters', $this->persist) && isset($state['filters']) && is_array($state['filters'])) {
+            /** @var array<string, mixed> $persisted */
+            $persisted = $state['filters'];
+            $this->filters = $persisted;
+            $this->canonicalizeFilters(prune: false);
+
+            if (isset($state['enabledFilters']) && is_array($state['enabledFilters'])) {
+                foreach ($state['enabledFilters'] as $pill) {
+                    if (! is_array($pill)) {
+                        continue;
+                    }
+
+                    $field = $pill['field'] ?? null;
+                    $label = $pill['label'] ?? null;
+
+                    if (! is_string($field) || $field === '' || ! is_string($label) || $label === '') {
+                        continue;
+                    }
+
+                    if (isset($this->filters[$field]) && is_array($this->filters[$field])) {
+                        $this->filters[$field]['label'] ??= $label;
+                    }
+                }
+            }
         }
 
         if (($persistFilterBuilder || in_array('filters', $this->persist))
@@ -123,10 +140,6 @@ trait Persist
             /** @var array<string, mixed> $restoredFilterBuilder */
             $restoredFilterBuilder = $state['filterBuilder'];
             $this->filterBuilder = $restoredFilterBuilder;
-
-            if ($persistFilterBuilder && ! in_array('filters', $this->persist)) {
-                $this->syncFilterBuilderPills();
-            }
         }
 
         if (in_array('sorting', $this->persist) && array_key_exists('sortField', $state)) {

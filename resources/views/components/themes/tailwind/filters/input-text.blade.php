@@ -23,9 +23,6 @@
 
         unset($filter['placeholder']);
 
-        $deferred = ($__partial ?? $this)->usesFilterPanel();
-        $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('input_text', $field, $title, $deferred);
-
         $selectClasses = theme('filter.input_text.select');
         $inputClasses = theme('filter.input_text.input');
 
@@ -33,8 +30,7 @@
             [
                 'showSelectOptions' => $showSelectOptions,
                 'placeholder' => ($placeholder = $componentAttributes['placeholder'] ?? $overridePlaceholder),
-                ...data_get($filter, 'attributes'),
-                ...$defaultAttributes,
+                ...data_get($filter, 'attributes', []),
             ],
             $filter,
         );
@@ -69,7 +65,7 @@
                                 class="{{ $selectClasses }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
                                 data-cy="input_text_options_{{ $tableName }}_{{ $field }}"
-                                {{ $defaultAttributes['selectAttributes'] }}
+                                {{ data_get($filter, 'wire.operator') }}
                             >
                                 @foreach ($inputTextOptions as $key => $value)
                                     <option
@@ -90,7 +86,7 @@
                         data-id="{{ $field }}"
                         @if (isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled
                             @else
-                                {{ $defaultAttributes['inputAttributes'] }} @endif
+                                {{ data_get($filter, 'wire.value') }} @endif
                         type="text"
                         class="{{ $inputClasses }}"
                         placeholder="{{ $placeholder }}"

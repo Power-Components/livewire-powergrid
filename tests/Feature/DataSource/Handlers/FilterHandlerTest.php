@@ -83,7 +83,7 @@ it('applies select filter through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.select.category_id', 6) // Sobremesas
+        ->set('filters.category_id.value', 6) // Sobremesas
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -120,7 +120,7 @@ it('applies boolean filter through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'false')
+        ->set('filters.in_stock.value', 'false')
         ->assertSee('Francesinha')
         ->assertDontSee('Pastel de Nata');
 });
@@ -155,7 +155,7 @@ it('applies number filter with start and end through FilterHandler', function ()
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price', ['start' => 10, 'end' => 30])
+        ->set('filters.price.value', ['start' => 10, 'end' => 30])
         ->assertSee('Pastel de Nata')  // 10.00
         ->assertSee('Peixada da chef Nábia')  // 20.50
         ->assertSee('Carne Louca')  // 30.00
@@ -192,7 +192,7 @@ it('applies date filter with start and end through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.date.produced_at', [
+        ->set('filters.produced_at.value', [
             'start' => '2021-01-01',
             'end' => '2021-02-28',
         ])
@@ -231,7 +231,7 @@ it('applies datetime filter through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.datetime.produced_at', [
+        ->set('filters.produced_at.value', [
             'start' => '2021-01-01 00:00:00',
             'end' => '2021-02-28 23:59:59',
         ])
@@ -267,7 +267,7 @@ it('applies input_text filter through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'Pastel')
+        ->set('filters.name.value', 'Pastel')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -302,7 +302,7 @@ it('applies multi_select filter through FilterHandler', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.multi_select.category_id', [1, 6]) // Carnes (1), Sobremesas (6)
+        ->set('filters.category_id.value', [1, 6]) // Carnes (1), Sobremesas (6)
         ->assertSee('Pastel de Nata')  // category_id = 6
         ->assertSee('Peixada da chef Nábia')  // category_id = 1
         ->assertSee('Carne Louca'); // category_id = 1
@@ -346,8 +346,8 @@ it('applies multiple filters simultaneously through FilterHandler', function () 
     };
 
     Livewire::test($component::class)
-        ->set('filters.boolean.in_stock', 'true')
-        ->set('filters.number.price', ['start' => 10, 'end' => 25])
+        ->set('filters.in_stock.value', 'true')
+        ->set('filters.price.value', ['start' => 10, 'end' => 25])
         ->assertSee('Pastel de Nata')  // in_stock=true, price=10.00
         ->assertSee('Peixada da chef Nábia')  // in_stock=true, price=20.50
         ->assertDontSee('Carne Louca')  // price=30.00 (out of range)
@@ -384,8 +384,8 @@ it('handles dotted column names in filters', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.number.price.start', 20)
-        ->set('filters.number.price.end', 35)
+        ->set('filters.price.value.start', 20)
+        ->set('filters.price.value.end', 35)
         ->assertSee('Peixada da chef Nábia')  // 20.50
         ->assertSee('Carne Louca')  // 30.00
         ->assertDontSee('Pastel de Nata')  // 10.00
@@ -422,7 +422,7 @@ it('handles numeric indexed arrays in filters', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.multi_select.category_id', [0 => 1, 1 => 6])
+        ->set('filters.category_id.value', [0 => 1, 1 => 6])
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 });

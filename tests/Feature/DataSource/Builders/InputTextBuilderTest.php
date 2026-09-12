@@ -39,7 +39,7 @@ it('filters database with input_text using contains operator (default)', functio
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'Pastel')
+        ->set('filters.name.value', 'Pastel')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -71,8 +71,8 @@ it('filters database with input_text using is operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'is')
-        ->set('filters.input_text.name', 'Pastel de Nata')
+        ->set('filters.name.op', 'is')
+        ->set('filters.name.value', 'Pastel de Nata')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -104,8 +104,8 @@ it('filters database with input_text using is_not operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'is_not')
-        ->set('filters.input_text.name', 'Pastel de Nata')
+        ->set('filters.name.op', 'is_not')
+        ->set('filters.name.value', 'Pastel de Nata')
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 });
@@ -137,8 +137,8 @@ it('filters database with input_text using starts_with operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'starts_with')
-        ->set('filters.input_text.name', 'Pastel')
+        ->set('filters.name.op', 'starts_with')
+        ->set('filters.name.value', 'Pastel')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -170,8 +170,8 @@ it('filters database with input_text using ends_with operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'ends_with')
-        ->set('filters.input_text.name', 'Nata')
+        ->set('filters.name.op', 'ends_with')
+        ->set('filters.name.value', 'Nata')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -203,8 +203,8 @@ it('filters database with input_text using contains_not operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'contains_not')
-        ->set('filters.input_text.name', 'Pastel')
+        ->set('filters.name.op', 'contains_not')
+        ->set('filters.name.value', 'Pastel')
         ->assertDontSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia');
 });
@@ -236,8 +236,8 @@ it('filters database with input_text using is_empty operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_empty')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_empty')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -269,8 +269,8 @@ it('filters database with input_text using is_not_empty operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_not_empty')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_not_empty')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Pastel de Nata');
 });
@@ -302,8 +302,8 @@ it('filters database with input_text using is_null operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_null')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_null')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -335,8 +335,8 @@ it('filters database with input_text using is_not_null operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_not_null')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_not_null')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Pastel de Nata');
 });
@@ -368,8 +368,8 @@ it('filters database with input_text using is_blank operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_blank')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_blank')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Carne Louca')
         ->assertDontSee('Peixada da chef Nábia');
 });
@@ -401,8 +401,8 @@ it('filters database with input_text using is_not_blank operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.chef_name.0', 'is_not_blank')
-        ->set('filters.input_text.chef_name', '')
+        ->set('filters.chef_name.op', 'is_not_blank')
+        ->set('filters.chef_name.value', '')
         ->assertSee('Peixada da chef Nábia')
         ->assertSee('Pastel de Nata')
         ->assertDontSee('Carne Louca');
@@ -440,7 +440,7 @@ it('filters database with custom builder logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'a')
+        ->set('filters.name.value', 'a')
         ->assertSee('Pastel de Nata')
         ->assertSee('Peixada da chef Nábia')
         ->assertDontSee('Barco-Sushi da Sueli'); // in_stock=false
@@ -477,7 +477,7 @@ it('filters collection with input_text using contains operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'One')
+        ->set('filters.name.value', 'One')
         ->assertSee('Item One')
         ->assertDontSee('Item Two');
 });
@@ -512,8 +512,8 @@ it('filters collection with input_text using is operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'is')
-        ->set('filters.input_text.name', 'Item One')
+        ->set('filters.name.op', 'is')
+        ->set('filters.name.value', 'Item One')
         ->assertSee('Item One')
         ->assertDontSee('Item Two');
 });
@@ -548,8 +548,8 @@ it('filters collection with input_text using starts_with operator', function () 
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'starts_with')
-        ->set('filters.input_text.name', 'Apple')
+        ->set('filters.name.op', 'starts_with')
+        ->set('filters.name.value', 'Apple')
         ->assertSee('Apple Pie')
         ->assertDontSee('Banana Bread');
 });
@@ -584,8 +584,8 @@ it('filters collection with input_text using ends_with operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'ends_with')
-        ->set('filters.input_text.name', 'Pie')
+        ->set('filters.name.op', 'ends_with')
+        ->set('filters.name.value', 'Pie')
         ->assertSee('Apple Pie')
         ->assertDontSee('Banana Bread');
 });
@@ -620,8 +620,8 @@ it('filters collection with input_text using contains_not operator', function ()
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.name.0', 'contains_not')
-        ->set('filters.input_text.name', 'Apple')
+        ->set('filters.name.op', 'contains_not')
+        ->set('filters.name.value', 'Apple')
         ->assertDontSee('Apple Pie')
         ->assertSee('Banana Bread');
 });
@@ -657,8 +657,8 @@ it('filters collection with input_text using is_empty operator', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.description.0', 'is_empty')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_empty')
+        ->set('filters.description.value', '')
         ->assertSee('Item 1')
         ->assertSee('Item 3')
         ->assertDontSee('Item 2');
@@ -694,8 +694,8 @@ it('filters collection with input_text using is_not_empty operator', function ()
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text_options.description.0', 'is_not_empty')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_not_empty')
+        ->set('filters.description.value', '')
         ->assertSee('Item 2')
         ->assertDontSee('Item 1');
 });
@@ -736,7 +736,7 @@ it('filters collection with custom collection logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters.input_text.name', 'Item')
+        ->set('filters.name.value', 'Item')
         ->assertDontSee('Item 1')
         ->assertSee('Item 2')
         ->assertSee('Item 3');
@@ -776,8 +776,8 @@ function collectionNullabilityComponent(string $tableName): PowerGridComponent
 
 it('filters collection with input_text using is_null operator', function () {
     Livewire::test(collectionNullabilityComponent('collection-is-null')::class)
-        ->set('filters.input_text_options.description.0', 'is_null')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_null')
+        ->set('filters.description.value', '')
         ->assertSee('Item Null')
         ->assertDontSee('Item Empty')
         ->assertDontSee('Item Text');
@@ -786,8 +786,8 @@ it('filters collection with input_text using is_null operator', function () {
 it('filters collection with input_text using is_not_null operator', function () {
     // is_not_null on a collection means: not null AND not empty string
     Livewire::test(collectionNullabilityComponent('collection-is-not-null')::class)
-        ->set('filters.input_text_options.description.0', 'is_not_null')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_not_null')
+        ->set('filters.description.value', '')
         ->assertSee('Item Text')
         ->assertDontSee('Item Empty')
         ->assertDontSee('Item Null');
@@ -796,8 +796,8 @@ it('filters collection with input_text using is_not_null operator', function () 
 it('filters collection with input_text using is_blank operator', function () {
     // is_blank on a collection means: not null AND empty string
     Livewire::test(collectionNullabilityComponent('collection-is-blank')::class)
-        ->set('filters.input_text_options.description.0', 'is_blank')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_blank')
+        ->set('filters.description.value', '')
         ->assertSee('Item Empty')
         ->assertDontSee('Item Text')
         ->assertDontSee('Item Null');
@@ -806,8 +806,8 @@ it('filters collection with input_text using is_blank operator', function () {
 it('filters collection with input_text using is_not_blank operator', function () {
     // is_not_blank on a collection means: not empty string OR null
     Livewire::test(collectionNullabilityComponent('collection-is-not-blank')::class)
-        ->set('filters.input_text_options.description.0', 'is_not_blank')
-        ->set('filters.input_text.description', '')
+        ->set('filters.description.op', 'is_not_blank')
+        ->set('filters.description.value', '')
         ->assertSee('Item Text')
         ->assertSee('Item Null')
         ->assertDontSee('Item Empty');

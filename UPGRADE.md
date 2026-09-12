@@ -62,6 +62,48 @@ The following legacy features and themes have been completely removed. You must 
     - New: `components.themes.[theme]`
 8.  **Detail rows:** The nested Livewire component `powergrid-detail` (`Livewire\Detail`) is gone. Detail markup is inlined in `components/partials/tbody.blade.php`. Remove any `<livewire:powergrid-detail>` / published `livewire/detail.blade.php`.
 9.  **Editable / multi-select views:** First-party themes no longer set `editable.view` or `filter.multi_select.view`. Editable renders `powergrid-plugins::Editable.index`. Multi-select renders `<x-livewire-powergrid::inputs.select>`.
+10. **Row templates:** `rowTemplates()` and `Column::template()` stay. Interpolation is server-side (values are escaped). `pg-render-row-template.js`, the `pgRowTemplates` event, and `window.pgRowTemplates_*` are gone.
+11. **Summaries:** `withSum()` / `withCount()` / `withAvg()` / `withMin()` / `withMax()` are gone. Use `summarize('sum'|'count'|'avg'|'min'|'max', $label, $header, $footer)` for built-in aggregates, and `withSummary($key, $label, Closure, …)` for custom closures.
+12. **Empty state:** `processNoDataLabel()` is gone. Override `renderEmptyState()`. `noDataLabel()` still forwards to the default view so existing overrides keep working.
+13. **OpenSpout v4:** The `openspout_v4` export driver is gone. Use OpenSpout 5 (`openspout_v5`).
+14. **Plugin update hooks:** Editable and Toggleable call `onPluginUpdated($plugin, $event, $params)` only. `onUpdatedEditable()` / `onUpdatedToggleable()` are not invoked by the package; migrate overrides to `onPluginUpdated()`.
+15. **Per-component theme:** Override `template(): ?Theme`. `customThemeClass()` is deprecated and used only when `template()` returns `null`.
+16. **Filter pills:** `$enabledFilters` is derived from `$filters` (and Filter Builder rows). Persist stores `$filters` only (optional `label` on the record). Old cookies that include `enabledFilters` still stamp those labels onto records on restore.
+17. **Inline filter bindings:** first-party filter inputs use `wire:model.live` on `$filters` only. `updated()` commits the bag. Dropdown/flyout still bind `draftFilters` until Apply.
+18. **Filter state shape:** `$filters` is field-keyed. Each field is `['type' => 'input_text'|'number'|…, 'value' => mixed, 'op' => ?string, 'label' => ?string]`, keyed by the filter's bag key (the column, or the field when it has no dot). Bindings are `filters.{field}.value` / `.op` / `.value.start`. The type-keyed 6.x shape (`filters.input_text.name`) is **no longer read** — old persist cookies/sessions are ignored, not migrated; clear them or re-apply the filter. `powerGridQueryString()` aliases follow the new paths (`name`, `name_operator`, `price_start`).
+19. **Filter hooks:** override `afterFilterChanged(string $field, array $record)`. `afterChangedInputTextFilter()` / `afterChangedBooleanFilter()` / `afterChangedSelectFilter()` / `afterChangedMultiSelectFilter()` / `afterChangedNumberStartFilter()` / `afterChangedNumberEndFilter()` are **removed**.
+20. **Programmatic filters:** write the bag (`putFilterRecord()` / `$this->filters[$field]`) and `commitFilters()`. `filterInputText()` / `filterSelect()` / `filterBoolean()` / `filterNumberStart()` / `filterNumberEnd()` / `filterInputTextOptions()` are **removed**. `multiSelectChanged()` remains the Tom/Slim Select event.
+21. **Filter operators:** the chosen operator lives in `$filterOperators[$field]`, not in the value bag — `$filters` only holds filters that actually filter. The operator is stamped back onto the record before the query runs, so `$filters[$field]['op']` still reads correctly while a value is set.
+22. **Filter wire bindings:** the whole `FilterAttributes` namespace (`InputText` / `Select` / `Number` / `Boolean` / `FilterWireAttributes`) and the `filter_attributes` config key are gone. One table in `Support\FilterWire` now binds every filter type — including multi-select and the date pickers, which used to hand-write `wire:model` in their blades. A filter definition carries its bindings under `wire`, keyed by what the control binds to:
+
+    | v6 / early 7.x | now |
+    |---|---|
+    | `$filter['inputAttributes']` | `$filter['wire']['value']` |
+    | `$filter['selectAttributes']` (input_text) | `$filter['wire']['operator']` |
+    | `$filter['selectAttributes']` (select, boolean) | `$filter['wire']['value']` |
+    | `$filter['inputStartAttributes']` / `inputEndAttributes` | `$filter['wire']['start']` / `['end']` |
+    | hand-written `wire:model="{{ $filtersProperty }}.{{ $key }}.value"` | `$filter['wire']['value']` |
+    | hand-written `…value.formatted` (date pickers) | `$filter['wire']['formatted']` |
+
+    In Blade: `{{ data_get($filter, 'wire.value') }}`. `FilterWireAttributes::get($type, $filter, $title, $deferred)` became `FilterWire::bags($type, $filter, $deferred)` — the unused `$title` argument is gone, as is the one on `FilterWire::forView()`.
+
+    A slot's binding is the Livewire modifier chain itself (`live.debounce.600ms`, `live`, `blur`, `lazy`, or `''` for a plain `wire:model`), and it is overridable without a class — globally in config, or per grid:
+
+    ```php
+    // config/livewire-powergrid.php
+    'filter_wire' => [
+        'input_text' => ['value' => 'live.debounce.800ms'],
+    ],
+
+    // …or on one grid, which wins over the config
+    public function filterWire(): array
+    {
+        return ['input_text' => ['value' => 'live.debounce.800ms']];
+    }
+    ```
+
+    Deferred (dropdown/flyout) bindings ignore the modifiers: the panel's Apply collects the draft from them, so they stay `wire:model` + `data-pg-draft`.
+23. **Widget events:** `pg:clear_flatpickr::*`, `pg:clear_all_flatpickr::*`, `pg:restore_flatpickr::*` and their `multi_select` counterparts are dispatched by `FlatpickrPlugin` / `MultiSelectPlugin`, and only when that widget is actually declared. Plugins hook the filter lifecycle with `normalizeFilterRecord()`, `onFilterCleared()`, `onFiltersCleared()` and `onFiltersRestored()`.
 
 ---
 
@@ -297,7 +339,7 @@ There is no `Components\Td`. Action-cell wrapper classes go in the token `table.
 | Legacy 6.x | New 7.x Fluent Builder | Notes |
 | :--- | :--- | :--- |
 | N/A | `->layout(fn (Components\Layout $layout) => $layout->wrapper('...')` | NEW - Set to empty or adapt |
-| N/A | `->layout(fn (Components\Layout $layout) => $layout->outsideFilters('...')` | NEW - Set to empty or adapt |
+| N/A | `->layout(fn (Components\Layout $layout) => $layout->card('...')` | NEW - Table card/panel wrapper |
 
 #### Header Structure (NEW IN V7)
 | Legacy 6.x | New 7.x Fluent Builder | Notes |
@@ -520,7 +562,6 @@ class Bootstrap5 extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('')
             ->card('card')
-            ->outsideFilters('')
         );
     }
 
@@ -687,23 +728,14 @@ In your custom Blade files, replace the legacy `theme_style` helper with the new
 
 ### Step 5: Per-Component Theme Override
 
-Both still work. `customThemeClass()` returns a class-string (v6). Prefer `template()` which returns a `Theme` instance:
+Override `template()` and return a `Theme` instance. `customThemeClass()` is deprecated; it is only read when `template()` returns `null`.
 
 ```php
-// still accepted
-public function customThemeClass(): ?string
-{
-    return \App\PowerGridThemes\MyTheme::class;
-}
-
-// preferred in v7
 public function template(): ?Theme
 {
     return new \App\PowerGridThemes\MyTheme();
 }
 ```
-
-If both are set, `template()` wins.
 
 ---
 
@@ -721,6 +753,11 @@ Remove these entries if present in your published config:
 
 // Remove — Pulse integration removed
 'record_enabled' => env('POWERGRID_RECORD_ENABLED', false),
+
+// Remove — OpenSpout v4 driver is gone
+'exportable' => [
+    'openspout_v4' => [...],
+],
 ```
 
 Also remove `POWERGRID_RECORD_ENABLED` from your `.env` file.

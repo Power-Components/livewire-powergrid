@@ -44,26 +44,15 @@ window.pgAlpine.data('pgSlimSelect', () => ({
         })
 
         window.addEventListener('pg:restore_multi_select::' + params.tableName, () => {
-            this.$wire.get('filters.multi_select.' + params.dataField).then((values) => {
-                element.slim.setSelected(Array.isArray(values) ? values : [], false)
-            })
+            const values = this.$wire.get('filters.' + params.dataField + '.value')
+
+            element.slim.setSelected(Array.isArray(values) ? values : [], false)
         })
     },
 
     applyFilterForDataField(appliedFilters, dataField, element) {
-        const pathParts = dataField.split('.')
-        let current = appliedFilters
-
-        for (const part of pathParts) {
-            if (current && typeof current === 'object' && Object.prototype.hasOwnProperty.call(current, part)) {
-                current = current[part]
-            } else {
-                return
-            }
-        }
-
-        if (Array.isArray(current) && current.length > 0) {
-            element.slim.setSelected(current, false)
+        if (Array.isArray(appliedFilters) && appliedFilters.length > 0) {
+            element.slim.setSelected(appliedFilters, false)
         }
     },
 

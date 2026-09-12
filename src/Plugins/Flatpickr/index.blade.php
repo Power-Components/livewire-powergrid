@@ -8,12 +8,11 @@
 ])
 
 @php
-    $__partial = $__partial ?? $this;
-    $deferred = $__partial->usesFilterPanel();
-    $filtersProperty = $deferred ? 'draftFilters' : 'filters';
+    $deferred = (bool) data_get($filter, 'deferred');
+    $filtersProperty = data_get($filter, 'filtersProperty');
     $params = data_get($filter, 'params');
     $field = data_get($filter, 'field');
-    $keyField = $deferred ? \PowerComponents\LivewirePowerGrid\Support\FilterKey::encode(strval($field)) : $field;
+    $keyField = data_get($filter, 'modelKey');
     $title = data_get($column, 'title');
 
     $customConfig = [];
@@ -55,8 +54,7 @@
             <input
                 id="input_{{ $field }}"
                 x-ref="rangeInput"
-                wire:model="{{ $filtersProperty }}.{{ $type }}.{{ $keyField }}.formatted"
-                @if ($deferred) data-pg-draft="{{ $type }}.{{ $keyField }}.formatted" @endif
+                {{ data_get($filter, 'wire.formatted') }}
                 autocomplete="off"
                 data-field="{{ $field }}"
                 class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"

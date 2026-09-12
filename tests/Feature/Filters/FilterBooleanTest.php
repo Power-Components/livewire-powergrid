@@ -41,7 +41,7 @@ it('properly filters by boolean', function (string $value, array $see, array $do
     };
 
     $lw = Livewire::test($component::class)
-        ->set('filters', ['boolean' => ['in_stock' => $value]]);
+        ->set('filters', ['in_stock' => ['type' => 'boolean', 'value' => $value]]);
 
     foreach ($see as $item) {
         $lw->assertSee($item);
@@ -96,7 +96,7 @@ it('properly filters by boolean using custom collection logic', function () {
     };
 
     Livewire::test($component::class)
-        ->set('filters', ['boolean' => ['in_stock' => 'true']])
+        ->set('filters', ['in_stock' => ['type' => 'boolean', 'value' => 'true']])
         ->assertSee('Dish 1')
         ->assertDontSee('Dish 2');
 });

@@ -6,18 +6,12 @@
     'options' => [],
 ])
 @php
-    $field = data_get($filter, 'field');
     $title = data_get($column, 'title');
-
-    $deferred = ($__partial ?? $this)->usesFilterPanel();
-    $defaultAttributes = \PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes::get('select', $field, $title, $deferred);
-
     $filterClasses = \Illuminate\Support\Arr::toCssClasses([
        theme('filter.select.select'),
         $class,
     ]);
-
-    $params = array_merge([...data_get($filter, 'attributes'), ...$defaultAttributes], $filter);
+    $params = array_merge((array) data_get($filter, 'attributes', []), $filter);
 @endphp
 
 @if ($params['component'])
@@ -40,7 +34,7 @@
             <select
                 class="{{ $filterClasses }}"
                 style="{{ data_get($column, 'headerStyle') }}"
-                {{ $defaultAttributes['selectAttributes'] }}
+                {{ data_get($filter, 'wire.value') }}
             >
                 @if(!data_get($params, 'params.disableOptionAll', false))
                     <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>

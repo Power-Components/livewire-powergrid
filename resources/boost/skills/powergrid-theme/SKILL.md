@@ -12,7 +12,7 @@ name: powergrid-theme
 - Create a new theme class extending `Theme` with per-section token methods (`layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, plus `filter()`, `editable()`, `toggleable()`)
 - Author a data-first theme as a plain array with `ArrayTheme` (`fromArray()` / `fromFile()` or a subclass)
 - Update an existing theme by adding or overriding tokens in the relevant section method
-- Wire per-component overrides via `customThemeClass()` (swap the class) or `template()` + `merge()` (patch tokens)
+- Wire per-component overrides via `template()` + `merge()` (patch tokens)
 - Register a theme by name (`PowerGridManager::registerTheme()`) and select it by name in config
 - Run the theme test suite after changes
 
@@ -134,7 +134,7 @@ Full token maps, the builder API, and the resolution order are in **`REFERENCE.m
    - *New theme* → create `src/Themes/MyTheme.php` from the template below (tiny `struct()` + section methods).
    - *Token change* → edit the relevant section method (`layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()`, `filter()`, `editable()`, `toggleable()`).
    - *Data-first theme* → use `ArrayTheme` (`fromArray()` / `fromFile()` or a subclass).
-   - *Per-component* → use `customThemeClass()` or `template()` + `merge()` (see below).
+   - *Per-component* → use `template()` + `merge()` (see below).
 4. **Register it** (new default theme only) in `resources/config/livewire-powergrid.php`, by name or FQCN:
    ```php
    'theme' => 'my-theme', // registered via PowerGridManager::registerTheme('my-theme', MyTheme::class)
@@ -179,7 +179,6 @@ class MyTheme extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('space-y-4')
             ->card('rounded-xl border')
-            ->outsideFilters('')
         );
     }
 
@@ -263,12 +262,12 @@ class MyArrayTheme extends ArrayTheme
 
 Both hooks live on your Livewire PowerGrid component (see `src/Concerns/Base.php` and `src/PowerGridComponent.php`), and are applied in `boot()` — never bind `powergrid.theme` yourself.
 
-**Swap the whole theme class for one component:**
+**Swap the whole theme class for one component** by returning it from `template()`. `customThemeClass()` is deprecated.
 
 ```php
-public function customThemeClass(): ?string
+public function template(): ?Theme
 {
-    return MyTheme::class;
+    return new MyTheme();
 }
 ```
 

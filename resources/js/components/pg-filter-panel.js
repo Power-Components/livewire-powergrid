@@ -12,6 +12,7 @@ window.pgAlpine.data('pgFilterPanel', () => ({
         // inside the viewport (clamp + flip), so it never gets clipped off-screen.
         this.$watch('open', (open) => {
             if (open) {
+                this.ensureDraftObject()
                 this.$nextTick(() => this.positionPanel())
             }
         })
@@ -75,11 +76,7 @@ window.pgAlpine.data('pgFilterPanel', () => ({
     },
 
     ensureDraftObject() {
-        const raw = this.$wire.draftFilters
-
-        if (raw === null || raw === undefined || Array.isArray(raw)) {
-            this.$wire.draftFilters = {}
-        }
+        ensureDraftObject(this.$wire)
     },
 
     async toggle() {
@@ -131,47 +128,55 @@ window.pgAlpine.data('pgFilterPanel', () => ({
     },
 
     apply() {
+        const draft = collectDraftFrom(this.$root)
         this.open = false
-        this.ensureDraftObject()
-
-        const draft = this.draftFromDom()
-
-        this.$wire.draftFilters = draft
         this.$wire.applyFilters(draft)
     },
 
     clearAll() {
-        // Reset clears in place and keeps the panel open (mirrors the flyout).
         this.$wire.clearAllFilters()
     },
+}))
 
-    draftFromDom() {
-        let draft = {}
+window.pgAlpine.data('pgFilterFlyout', () => ({
+    init() {
+        ensureDraftObject(this.$wire)
+    },
 
-        try {
-            const raw = this.$wire.draftFilters
-
-            // draftFilters seeds as a PHP array (serialized to a JS []); string
-            // keys set on an array are dropped by JSON.stringify, so coerce to a
-            // plain object before nesting field values into it.
-            draft = raw && !Array.isArray(raw) ? JSON.parse(JSON.stringify(raw)) : {}
-        } catch (e) {
-            draft = {}
-        }
-
-        this.$el.querySelectorAll('input, select, textarea').forEach((el) => {
-            const path = draftPath(el)
-
-            if (!path) {
-                return
-            }
-
-            setNested(draft, path, inputValue(el))
-        })
-
-        return draft
+    apply() {
+        const draft = collectDraftFrom(this.$root)
+        this.$wire.showFilters = false
+        this.$wire.applyFilters(draft)
     },
 }))
+
+function ensureDraftObject(wire) {
+    const raw = wire.draftFilters
+
+    if (raw === null || raw === undefined || Array.isArray(raw)) {
+        wire.draftFilters = {}
+    }
+}
+
+function collectDraftFrom(root) {
+    const draft = {}
+
+    root.querySelectorAll('input, select, textarea').forEach((el) => {
+        if (['button', 'submit', 'reset', 'file', 'image'].includes(el.type)) {
+            return
+        }
+
+        const path = draftPath(el)
+
+        if (!path) {
+            return
+        }
+
+        setNested(draft, path, inputValue(el))
+    })
+
+    return draft
+}
 
 function draftPath(el) {
     const marked = el.getAttribute('data-pg-draft')
@@ -193,12 +198,25 @@ function draftPath(el) {
 
 function wireModelProperty(el) {
     for (const attr of el.attributes) {
-        if (attr.name === 'wire:model' || attr.name.startsWith('wire:model.')) {
-            return attr.value
+        if (!isModelAttribute(attr.name)) {
+            continue
+        }
+
+        const value = attr.value
+
+        if (value && value.indexOf('draftFilters') === 0) {
+            return value
         }
     }
 
     return null
+}
+
+function isModelAttribute(name) {
+    return name === 'wire:model'
+        || name.startsWith('wire:model.')
+        || name === 'x-model'
+        || name.startsWith('x-model.')
 }
 
 function setNested(obj, path, value) {

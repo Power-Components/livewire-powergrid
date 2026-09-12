@@ -46,13 +46,13 @@ it('properly filters by select', function () {
 
     Livewire::test($component::class)
         ->set('filters', [
-            'select' => ['category_id' => 1],
+            'category_id' => ['type' => 'select', 'value' => 1],
         ])
         ->assertSee('Dish 1')
         ->assertDontSee('Dish 2')
         ->assertDontSee('Dish 3')
         ->set('filters', [
-            'select' => ['category_id' => 2],
+            'category_id' => ['type' => 'select', 'value' => 2],
         ])
         ->assertDontSee('Dish 1')
         ->assertSee('Dish 2')
@@ -100,6 +100,6 @@ it('properly filters by select using computed datasource', function () {
 
     Livewire::test($component::class)
         ->assertSee('Dish 1')
-        ->set('filters', ['select' => ['category_id' => 1]])
+        ->set('filters', ['category_id' => ['type' => 'select', 'value' => 1]])
         ->assertSee('Dish 1');
 });

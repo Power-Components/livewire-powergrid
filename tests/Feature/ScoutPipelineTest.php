@@ -74,10 +74,8 @@ describe('Scout Filters Pipeline', function () {
         $component = new class() extends PowerGridComponent
         {
             public array $filters = [
-                'select' => [
-                    'category_id' => '1',
-                    'status' => 'active',
-                ],
+                'category_id' => ['type' => 'select', 'value' => '1'],
+                'status' => ['type' => 'select', 'value' => 'active'],
             ];
 
             public function filters(): array
@@ -117,9 +115,9 @@ describe('Scout Filters Pipeline', function () {
         $component = new class() extends PowerGridComponent
         {
             public array $filters = [
-                'select' => ['category_id' => '1'],
-                'input_text' => ['name' => 'Pizza'],
-                'number' => ['price' => '10'],
+                'category_id' => ['type' => 'select', 'value' => '1'],
+                'name' => ['type' => 'input_text', 'value' => 'Pizza'],
+                'price' => ['type' => 'number', 'value' => '10'],
             ];
 
             public function filters(): array
@@ -147,12 +145,8 @@ describe('Scout Filters Pipeline', function () {
         $component = new class() extends PowerGridComponent
         {
             public array $filters = [
-                'select' => [
-                    'field1' => 'value1',
-                ],
-                'input_text' => [
-                    'field2' => 'value2',
-                ],
+                'field1' => ['type' => 'select', 'value' => 'value1'],
+                'field2' => ['type' => 'input_text', 'value' => 'value2'],
             ];
 
             public function filters(): array
@@ -340,7 +334,7 @@ describe('Scout Pipeline Integration', function () {
             public string $search = 'pizza';
 
             public array $filters = [
-                'select' => ['category_id' => '1'],
+                'category_id' => ['type' => 'select', 'value' => '1'],
             ];
 
             public string $sortField = 'name';
@@ -390,10 +384,8 @@ describe('Scout Pipeline field/direction validation', function () {
         $component = new class() extends PowerGridComponent
         {
             public array $filters = [
-                'select' => [
-                    'category_id' => '1',
-                    'undeclared_column' => 'x',
-                ],
+                'category_id' => ['type' => 'select', 'value' => '1'],
+                'undeclared_column' => ['type' => 'select', 'value' => 'x'],
             ];
 
             public function filters(): array
@@ -417,7 +409,7 @@ describe('Scout Pipeline field/direction validation', function () {
         $component = new class() extends PowerGridComponent
         {
             public array $filters = [
-                'select' => ['category_id' => '1'],
+                'category_id' => ['type' => 'select', 'value' => '1'],
             ];
         };
 

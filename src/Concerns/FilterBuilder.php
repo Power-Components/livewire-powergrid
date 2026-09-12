@@ -30,10 +30,7 @@ trait FilterBuilder
 
         $this->filterBuilder = $conditions;
 
-        $this->resetPage();
-        $this->syncFilterBuilderPills();
-        $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->commitFilters();
     }
 
     /**
@@ -43,10 +40,7 @@ trait FilterBuilder
     {
         $this->filterBuilder = ['match' => 'and', 'rows' => []];
 
-        $this->resetPage();
-        $this->syncFilterBuilderPills();
-        $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->commitFilters();
     }
 
     /**
@@ -60,10 +54,7 @@ trait FilterBuilder
 
         $this->filterBuilder['rows'] = array_values($rows);
 
-        $this->resetPage();
-        $this->syncFilterBuilderPills();
-        $this->persistState('filters');
-        $this->renderOutsideFiltersPartial();
+        $this->commitFilters();
     }
 
     public function filterBuilderHidesDefaultFilters(): bool
@@ -93,7 +84,7 @@ trait FilterBuilder
             ->all();
     }
 
-    private function syncFilterBuilderPills(): void
+    protected function syncFilterBuilderPills(): void
     {
         $meta = FilterBuilderValidator::columnsMeta($this);
 

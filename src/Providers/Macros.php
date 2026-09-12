@@ -17,61 +17,18 @@ class Macros
 {
     public static function columns(): void
     {
-        // @deprecated since 7.x — withSum/withCount/withAvg/withMin/withMax are deprecated; use withSummary() with a closure instead.
-        Column::macro('withSum', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
+        Column::macro('summarize', function (string $operation, string $label, bool $header = false, bool $footer = true): TurbineColumn {
             /** @var Column $this */
+            $operation = strtolower($operation);
+
+            if (! in_array($operation, ['sum', 'count', 'avg', 'min', 'max'], true)) {
+                throw new \InvalidArgumentException("Unknown summarize operation [{$operation}]. Use sum, count, avg, min, or max.");
+            }
+
             $props = $this->properties;
-            data_set($props, 'summarize.sum.label', $label);
-            data_set($props, 'summarize.sum.header', $header);
-            data_set($props, 'summarize.sum.footer', $footer);
-            /** @var array<string, mixed> $props */
-            $this->properties = $props;
-
-            return $this;
-        });
-
-        Column::macro('withCount', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
-            /** @var Column $this */
-            $props = $this->properties;
-            data_set($props, 'summarize.count.label', $label);
-            data_set($props, 'summarize.count.header', $header);
-            data_set($props, 'summarize.count.footer', $footer);
-            /** @var array<string, mixed> $props */
-            $this->properties = $props;
-
-            return $this;
-        });
-
-        Column::macro('withAvg', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
-            /** @var Column $this */
-            $props = $this->properties;
-            data_set($props, 'summarize.avg.label', $label);
-            data_set($props, 'summarize.avg.header', $header);
-            data_set($props, 'summarize.avg.footer', $footer);
-            /** @var array<string, mixed> $props */
-            $this->properties = $props;
-
-            return $this;
-        });
-
-        Column::macro('withMin', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
-            /** @var Column $this */
-            $props = $this->properties;
-            data_set($props, 'summarize.min.label', $label);
-            data_set($props, 'summarize.min.header', $header);
-            data_set($props, 'summarize.min.footer', $footer);
-            /** @var array<string, mixed> $props */
-            $this->properties = $props;
-
-            return $this;
-        });
-
-        Column::macro('withMax', function (string $label, bool $header = false, bool $footer = true): TurbineColumn {
-            /** @var Column $this */
-            $props = $this->properties;
-            data_set($props, 'summarize.max.label', $label);
-            data_set($props, 'summarize.max.header', $header);
-            data_set($props, 'summarize.max.footer', $footer);
+            data_set($props, "summarize.{$operation}.label", $label);
+            data_set($props, "summarize.{$operation}.header", $header);
+            data_set($props, "summarize.{$operation}.footer", $footer);
             /** @var array<string, mixed> $props */
             $this->properties = $props;
 

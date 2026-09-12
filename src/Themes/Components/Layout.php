@@ -13,13 +13,6 @@ class Layout
         return $this;
     }
 
-    public function outsideFilters(string $outsideFilters): self
-    {
-        $this->properties['outsideFilters'] = $outsideFilters;
-
-        return $this;
-    }
-
     public function card(string $card): self
     {
         $this->properties['card'] = $card;

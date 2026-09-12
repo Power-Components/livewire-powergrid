@@ -34,7 +34,6 @@ class Flux extends Theme
             ->container('space-y-4')
             ->wrapper('space-y-4')
             ->card('rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 overflow-visible')
-            ->outsideFilters('')
         );
     }
 

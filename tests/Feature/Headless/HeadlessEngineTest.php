@@ -81,7 +81,7 @@ it('orders results headlessly', function () {
 
 it('applies a column filter headlessly', function () {
     $context = headlessContext(
-        statePayload: ['filters' => ['input_text' => ['name' => 'Pastel']]],
+        statePayload: ['filters' => ['name' => ['type' => 'input_text', 'value' => 'Pastel']]],
         filters: [Filter::inputText('name')],
     );
 
@@ -111,7 +111,7 @@ it('runs search and sort over a collection datasource headlessly', function () {
 
 it('ignores an undeclared filter field (mass-assignment guard) headlessly', function () {
     $context = headlessContext(
-        statePayload: ['filters' => ['input_text' => ['price' => '10']]],
+        statePayload: ['filters' => ['price' => ['type' => 'input_text', 'value' => '10']]],
         filters: [Filter::inputText('name')],
     );
 

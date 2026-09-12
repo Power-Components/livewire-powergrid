@@ -41,8 +41,7 @@ it('properly filters by inputText', function (string $op, string $value, array $
 
     $lw = Livewire::test($component::class)
         ->set('filters', [
-            'input_text' => ['name' => $value],
-            'input_text_options' => ['name' => $op],
+            'name' => ['type' => 'input_text', 'value' => $value, 'op' => $op],
         ]);
 
     foreach ($see as $item) {

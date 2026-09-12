@@ -20,7 +20,7 @@ This is the canonical, complete reference for the `upgrade-theme-v6-to-v7` skill
 | Section method | Leaf tokens (snake_case) |
 |:---------------|:-------------------------|
 | (root, from `struct()`) | `name`, `base_view` |
-| `layout()` | `wrapper`, `card`, `outside_filters` |
+| `layout()` | `wrapper`, `card`, `container` |
 | `header()` | `view` |
 | `header()` → `layout` | `container`, `sub_container`, `actions_container`, `actions` |
 | `header()` → `search_box` | `view`, `container`, `relative_main`, `input`, `icon_search_wrapper`, `icon_close_wrapper`, `icon_close`, `icon_search`, `icon`, `icon_clear` |
@@ -58,7 +58,7 @@ When building the section methods you use these typed builders (all in `src/Them
 | Class | Methods (each returns `self`) |
 |:------|:------------------------------|
 | `ThemeBuilder` | `make(string $name)`, `baseView()`, `layout()`, `header()`, `table()`, `footer()`, `cols()`, `tabs()` |
-| `Layout` | `wrapper()`, `card()`, `outsideFilters()`, `container()`, `subContainer()`, `actionsContainer()`, `actions()`, `table()`, `thead()`, `tbody()`, `tr()`, `theadTr()`, `emptyState()`, `trStriped()`, `trNotStriped()`, `th()`, `thActions()`, `td()`, `tdActions()`, `select()` |
+| `Layout` | `wrapper()`, `card()`, `container()`, `subContainer()`, `actionsContainer()`, `actions()`, `table()`, `thead()`, `tbody()`, `tr()`, `theadTr()`, `emptyState()`, `trStriped()`, `trNotStriped()`, `th()`, `thActions()`, `td()`, `tdActions()`, `select()` |
 | `Header` | `view()`, `layout(Closure\|array)`, `searchBox(Closure\|array)`, `toggleColumns(Closure)`, `softDeletes(Closure)`, `filters(Closure)`, `filterBuilder(Closure)`, `export(Closure)`, `enabledFilters(Closure)` |
 | `HeaderButton` | `button()`, `icon()`, `iconClass()`, `label()`, `menu()`, `menuItem()`, `panel()`, `badge()`, `wrapper()`, `pill()`, `pillClearAll()`, `view()` |
 | `SearchBox` | `view()`, `container()`, `relativeMain()`, `input()`, `iconSearchWrapper()`, `iconCloseWrapper()`, `iconClose()`, `iconSearch()`, `icon()`, `iconClear()` |
@@ -87,7 +87,7 @@ The **section / builder chain** column is what you write; the **v7 token path** 
 |:----------|:--------------|:--------------|:------|
 | N/A | `layout()` → `wrapper()` | `layout.wrapper` | Outer wrapper around the whole grid |
 | N/A | `layout()` → `card()` | `layout.card` | Card/border wrapper (NEW) |
-| N/A | `layout()` → `outsideFilters()` | `layout.outside_filters` | Container for filters rendered outside the table |
+| N/A | `layout()` → `container()` | `layout.container` | Outermost container around the grid (NEW) |
 
 ### Header (NEW in v7)
 
@@ -311,7 +311,6 @@ class Bootstrap5 extends Theme
         return $this->section('layout', fn (Components\Layout $layout) => $layout
             ->wrapper('')
             ->card('card')
-            ->outsideFilters('')
         );
     }
 

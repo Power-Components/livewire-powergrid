@@ -53,9 +53,10 @@ it('should be able to set persist_driver for session', function (string $compone
         ->toMatchArray([]);
 
     /** @var Testable $component */
-    $component->call('filterInputText', $field, 'ba', 'test');
+    $component->call('putFilterRecord', $field, 'input_text', 'ba', null, 'test')
+        ->call('commitFilters');
 
-    expect(session('pg:testing-dish-table'))->toBe('{"filters":[],"enabledFilters":[{"field":"'.$field.'","label":"test"}]}');
+    expect(session('pg:testing-dish-table'))->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
 })->group('filters')
     ->with($params);
 
@@ -70,9 +71,10 @@ it('should be able to set persist_driver for cookies', function (string $compone
         ->toMatchArray([]);
 
     /** @var Testable $component */
-    $component->call('filterInputText', $field, 'ba', 'test');
+    $component->call('putFilterRecord', $field, 'input_text', 'ba', null, 'test')
+        ->call('commitFilters');
 
-    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":[],"enabledFilters":[{"field":"'.$field.'","label":"test"}]}');
+    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
 })
     ->with($params);
 

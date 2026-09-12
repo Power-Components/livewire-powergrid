@@ -53,31 +53,70 @@ it('renders reset and apply but no clear all button in the flyout', function () 
 
     expect($html)->toContain('data-cy="filter-flyout-reset"')
         ->and($html)->toContain('data-cy="filter-flyout-apply"')
+        ->and($html)->toContain('x-data="pgFilterFlyout"')
+        ->and($html)->toContain('x-on:pointerdown.prevent="apply()"')
+        ->and($html)->not->toContain('wire:click.prevent="applyFilters"')
         ->and($html)->not->toContain('data-cy="filter-flyout-clear-all"')
-        ->and($html)->not->toContain('draftFilters.input_text.name');
+        ->and($html)->not->toContain('draftFilters.name.value');
 });
 
 it('reset restores the draft to the applied filters and keeps results', function () {
     $test = Livewire::test(flyoutComponent('flyout-reset')::class)
-        ->set('draftFilters.input_text.name', 'Expensive')
+        ->set('draftFilters.name.value', 'Expensive')
         ->call('applyFilters')
-        ->set('draftFilters.input_text.name', 'Cheap')
+        ->set('draftFilters.name.value', 'Cheap')
         ->call('resetFilters');
 
-    expect($test->get('draftFilters'))->toBe(['input_text' => ['name' => 'Expensive']])
-        ->and($test->get('filters'))->toBe(['input_text' => ['name' => 'Expensive']]);
+    expect($test->get('draftFilters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']])
+        ->and($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 
     $test->assertSee('Expensive Dish')
         ->assertDontSee('Cheap Dish');
 });
 
 it('reset asks the widgets to restore from state instead of wiping them', function () {
-    Livewire::test(flyoutComponent('flyout-restore')::class)
-        ->set('draftFilters.input_text.name', 'Dish')
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'flyout-restore';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Cheap Dish', 'created_at' => '2024-01-01']]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::inputText('name'),
+                Filter::datepicker('created_at'),
+                Filter::multiSelect('name'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('created_at');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name'), Column::make('Created', 'created_at')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->set('draftFilters.name.value', 'Dish')
         ->call('applyFilters')
         ->call('resetFilters')
-        ->assertDispatched('pg:restore_flatpickr::filter-flyout')
-        ->assertDispatched('pg:restore_multi_select::filter-flyout')
-        ->assertNotDispatched('pg:clear_all_flatpickr::filter-flyout')
-        ->assertNotDispatched('pg:clear_all_multi_select::filter-flyout');
+        ->assertDispatched('pg:restore_flatpickr::flyout-restore')
+        ->assertDispatched('pg:restore_multi_select::flyout-restore')
+        ->assertNotDispatched('pg:clear_all_flatpickr::flyout-restore')
+        ->assertNotDispatched('pg:clear_all_multi_select::flyout-restore');
+});
+
+it('does not wake widgets a grid never declared', function () {
+    Livewire::test(flyoutComponent('flyout-no-widgets')::class)
+        ->call('resetFilters')
+        ->assertNotDispatched('pg:restore_flatpickr::flyout-no-widgets')
+        ->assertNotDispatched('pg:restore_multi_select::flyout-no-widgets');
 });

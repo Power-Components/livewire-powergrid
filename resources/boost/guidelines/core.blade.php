@@ -150,13 +150,6 @@ PowerGrid uses `power-components/partials` fragments to isolate DOM updates via 
 
 @verbatim
 <code-snippet name="Custom Theme Per Component" lang="php">
-// Swap entire theme class
-public function customThemeClass(): ?string
-{
-    return \PowerComponents\LivewirePowerGrid\Themes\DaisyUI::class;
-}
-
-// Or merge specific tokens
 public function template(): ?Theme
 {
     return Tailwind::make()->merge([

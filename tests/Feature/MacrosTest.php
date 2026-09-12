@@ -8,9 +8,9 @@ use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\{Button, Column};
 use PowerComponents\Turbine\Components\Rules\RuleActions;
 
-it('tests Column withSum macro', function () {
+it('tests Column summarize sum', function () {
     $column = Column::make('Price', 'price')
-        ->withSum('Total Price', true, true);
+        ->summarize('sum', 'Total Price', true, true);
 
     expect($column->properties['summarize']['sum'])
         ->toBeArray()
@@ -19,9 +19,9 @@ it('tests Column withSum macro', function () {
         ->footer->toBeTrue();
 });
 
-it('tests Column withCount macro', function () {
+it('tests Column summarize count', function () {
     $column = Column::make('Id', 'id')
-        ->withCount('Count Items', true, false);
+        ->summarize('count', 'Count Items', true, false);
 
     expect($column->properties['summarize']['count'])
         ->toBeArray()
@@ -30,9 +30,9 @@ it('tests Column withCount macro', function () {
         ->footer->toBeFalse();
 });
 
-it('tests Column withAvg macro', function () {
+it('tests Column summarize avg', function () {
     $column = Column::make('Price', 'price')
-        ->withAvg('Average Price', false, true);
+        ->summarize('avg', 'Average Price', false, true);
 
     expect($column->properties['summarize']['avg'])
         ->toBeArray()
@@ -41,9 +41,9 @@ it('tests Column withAvg macro', function () {
         ->footer->toBeTrue();
 });
 
-it('tests Column withMin macro', function () {
+it('tests Column summarize min', function () {
     $column = Column::make('Price', 'price')
-        ->withMin('Minimum Price', true, true);
+        ->summarize('min', 'Minimum Price', true, true);
 
     expect($column->properties['summarize']['min'])
         ->toBeArray()
@@ -52,9 +52,9 @@ it('tests Column withMin macro', function () {
         ->footer->toBeTrue();
 });
 
-it('tests Column withMax macro', function () {
+it('tests Column summarize max', function () {
     $column = Column::make('Price', 'price')
-        ->withMax('Maximum Price', false, false);
+        ->summarize('max', 'Maximum Price', false, false);
 
     expect($column->properties['summarize']['max'])
         ->toBeArray()
@@ -62,6 +62,10 @@ it('tests Column withMax macro', function () {
         ->header->toBeFalse()
         ->footer->toBeFalse();
 });
+
+it('rejects unknown summarize operations', function () {
+    Column::make('Price', 'price')->summarize('median', 'Median');
+})->throws(InvalidArgumentException::class, 'Unknown summarize operation [median]');
 
 it('tests Column searchableRaw macro', function () {
     $driver = env('DB_DRIVER', config('database.default'));
@@ -513,12 +517,12 @@ it('tests multiple Button macros chained together', function () {
         ->and($button->attributes['disabled'])->toBe('disabled');
 });
 
-it('tests Column with multiple summarize macros', function () {
+it('tests Column with multiple summarize operations', function () {
     $column = Column::make('Price', 'price')
-        ->withSum('Total', true, true)
-        ->withAvg('Average', true, false)
-        ->withMin('Min', false, true)
-        ->withMax('Max', false, false);
+        ->summarize('sum', 'Total', true, true)
+        ->summarize('avg', 'Average', true, false)
+        ->summarize('min', 'Min', false, true)
+        ->summarize('max', 'Max', false, false);
 
     expect($column->properties['summarize'])
         ->toHaveKeys(['sum', 'avg', 'min', 'max'])

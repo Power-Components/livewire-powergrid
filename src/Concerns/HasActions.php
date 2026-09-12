@@ -46,8 +46,7 @@ trait HasActions
             return true;
         }
 
-        return (new \ReflectionMethod($this, 'transformActions'))
-            ->getDeclaringClass()->getName() !== PowerGridComponent::class;
+        return $this->hasTransformActions();
     }
 
     /** @return array<mixed> */

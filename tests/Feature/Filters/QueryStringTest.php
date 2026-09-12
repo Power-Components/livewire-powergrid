@@ -61,42 +61,38 @@ it('builds query string bindings for every filter type', function () {
     $qs = queryStringComponent()->buildQueryString();
 
     // input_text → value + operator bindings
-    expect($qs)->toHaveKey('filters.input_text.name')
-        ->and($qs)->toHaveKey('filters.input_text_options.name')
+    expect($qs)->toHaveKey('filters.name.value')
+        ->and($qs)->toHaveKey('filters.name.op')
         // number → start + end bindings
-        ->and($qs)->toHaveKey('filters.number.price.start')
-        ->and($qs)->toHaveKey('filters.number.price.end')
+        ->and($qs)->toHaveKey('filters.price.value.start')
+        ->and($qs)->toHaveKey('filters.price.value.end')
         // select / boolean → the "default" branch key shape
-        ->and($qs)->toHaveKey('filters.select.category_id')
-        ->and($qs)->toHaveKey('filters.boolean.in_stock')
+        ->and($qs)->toHaveKey('filters.category_id.value')
+        ->and($qs)->toHaveKey('filters.in_stock.value')
         // dynamic → binds the wire:model target
         ->and($qs)->toHaveKey('filters.dynamic.slug');
 
-    expect($qs['filters.input_text.name']['as'])->toBe('name');
+    expect($qs['filters.name.value']['as'])->toBe('name');
 });
 
 it('prefixes the query string aliases when a prefix is given', function () {
     $qs = queryStringComponent()->buildQueryString('grid');
 
-    expect($qs['filters.input_text.name']['as'])->toBe('grid_name')
-        ->and($qs['filters.number.price.start']['as'])->toBe('grid_price_start');
+    expect($qs['filters.name.value']['as'])->toBe('grid_name')
+        ->and($qs['filters.price.value.start']['as'])->toBe('grid_price_start');
 });
 
-it('marks a filter as enabled when its value is present in the request', function () {
+it('does not mutate enabled filters when building the query string', function () {
     request()->merge([
-        'name' => 'Pastel',   // input_text present
-        'price_start' => '5',        // number start present
-        'calories_end' => '900',      // number end present (start absent)
+        'name' => 'Pastel',
+        'price_start' => '5',
+        'calories_end' => '900',
     ]);
 
     $component = queryStringComponent();
     $component->buildQueryString();
 
-    $fields = collect($component->enabledFilters)->pluck('field');
-
-    expect($fields)->toContain('name')
-        ->and($fields)->toContain('price_start')
-        ->and($fields)->toContain('calories_end');
+    expect($component->enabledFilters)->toBeEmpty();
 
     request()->replace([]);
 });

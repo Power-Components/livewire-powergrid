@@ -178,6 +178,27 @@ abstract class PluginBase
     }
 
     /**
+     * Reshape a filter record owned by this plugin before it is applied.
+     * Return the record unchanged to pass, or null to drop the filter.
+     *
+     * @param  array<string, mixed>  $record
+     * @return array<string, mixed>|null
+     */
+    public function normalizeFilterRecord(string $field, array $record): ?array
+    {
+        return $record;
+    }
+
+    /** One filter was cleared: reset the widget this plugin owns for that field. */
+    public function onFilterCleared(string $field, string $type): void {}
+
+    /** Every filter was cleared at once. */
+    public function onFiltersCleared(): void {}
+
+    /** The draft was discarded: restore widgets to the applied filter values. */
+    public function onFiltersRestored(): void {}
+
+    /**
      * Return theme token overrides for this plugin.
      * Merged into the theme's resolved tokens.
      *

@@ -38,7 +38,7 @@ hand-written list here if the source has changed.
 | `src/Themes/Components/HasProperties.php` | Shared trait. `toArray()` snake_cases keys and prefixes `view*` values with `baseView`. `setBaseView()`, `fill()`. |
 | `src/functions.php` | Global helpers `theme($key, $default)` and `theme_view($alias)`. |
 | `src/PowerGridComponent.php` | `template()` per-component override; `boot()` resolves and binds `powergrid.theme`. |
-| `src/Concerns/Base.php` | `customThemeClass()` per-component override. |
+| `src/PowerGridComponent.php` | `template()` per-component override. `customThemeClass()` is deprecated. |
 | `resources/config/livewire-powergrid.php` | `'theme' => 'tailwind'` (name or FQCN) and `'theme_overrides' => []` (no-code token overrides). |
 
 All builder classes are in namespace `PowerComponents\LivewirePowerGrid\Themes\Components`. Inside a `Themes\` class, reference them as `Components\ClassName`.
@@ -94,7 +94,7 @@ Read `Tailwind.php` for the exact class strings; this maps the **method → toke
 shape. Every leaf is snake_cased by `HasProperties::toArray()`.
 
 ### `layout()`
-`wrapper`, `card`, `outsideFilters` → `layout.wrapper`, `layout.card`, `layout.outside_filters`
+`wrapper`, `card`, `container` → `layout.wrapper`, `layout.card`, `layout.container`
 
 ### `header()`
 - `view` → `header.view`

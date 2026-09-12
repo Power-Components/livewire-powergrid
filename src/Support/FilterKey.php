@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Support;
 
+use PowerComponents\Turbine\Support\FilterBag;
+
 final class FilterKey
 {
     private const DOT = '__pgdot__';
@@ -11,15 +13,61 @@ final class FilterKey
         return str_replace('.', self::DOT, $field);
     }
 
+    public static function modelKey(string $column, ?string $field = null): string
+    {
+        $key = FilterBag::bagKey($column, $field);
+
+        return str_contains($key, '.') ? self::encode($key) : $key;
+    }
+
+    public static function fromFilter(mixed $filter): string
+    {
+        $stamped = data_get($filter, 'modelKey');
+
+        if (is_string($stamped) && $stamped !== '') {
+            return $stamped;
+        }
+
+        $field = data_get($filter, 'field');
+        $column = data_get($filter, 'column');
+
+        if (! is_string($column) || $column === '') {
+            $column = is_string($field) ? $field : '';
+        }
+
+        return self::modelKey($column, is_string($field) ? $field : null);
+    }
+
+    /**
+     * @param  array<string, mixed>  $filter
+     * @return array<string, mixed>
+     */
+    public static function withModelKey(array $filter): array
+    {
+        $filter['modelKey'] = self::fromFilter($filter);
+
+        return $filter;
+    }
+
     public static function decode(string $key): string
     {
         return str_replace(self::DOT, '.', $key);
     }
 
     /**
-     * Deferred panel binding: wire:model plus a stable data attribute so
-     * Apply can read values even when Livewire drops nested keys on a JS [].
+     * Bind the live bag with the given Livewire modifiers ('live.debounce.600ms',
+     * 'live', 'blur', … or '' for a plain `wire:model`).
      *
+     * @return array<string, string>
+     */
+    public static function liveModel(string $path, string $modifiers = 'live'): array
+    {
+        $attribute = 'wire:model'.($modifiers === '' ? '' : '.'.trim($modifiers, '.'));
+
+        return [$attribute => 'filters.'.$path];
+    }
+
+    /**
      * @return array{'wire:model': string, 'data-pg-draft': string}
      */
     public static function draftModel(string $path): array
@@ -31,63 +79,36 @@ final class FilterKey
     }
 
     /**
-     * Encode the field-level keys of a full draftFilters structure
-     * (type => [field => value]).
+     * Encode the top-level field keys of a field-keyed filter bag.
      *
      * @param  array<string, mixed>  $draft
-     * @return array<string, array<string, mixed>>
+     * @return array<string, mixed>
      */
     public static function encodeDraft(array $draft): array
     {
-        return self::mapFieldKeys($draft, [self::class, 'encode']);
+        return self::mapKeys($draft, self::encode(...));
     }
 
     /**
-     * Decode the field-level keys of a full draftFilters structure.
-     *
      * @param  array<string, mixed>  $draft
-     * @return array<string, array<string, mixed>>
+     * @return array<string, mixed>
      */
     public static function decodeDraft(array $draft): array
     {
-        return self::mapFieldKeys($draft, [self::class, 'decode']);
+        return self::mapKeys($draft, self::decode(...));
     }
 
     /**
-     * Rename the field-level keys of a single filter type array
-     * (e.g. the "multi_select" sub-array).
-     *
-     * @param  array<string, mixed>  $type
+     * @param  array<string, mixed>  $bag
+     * @param  callable(string): string  $fn
      * @return array<string, mixed>
      */
-    public static function decodeType(array $type): array
+    private static function mapKeys(array $bag, callable $fn): array
     {
         $out = [];
 
-        foreach ($type as $field => $value) {
-            $out[(string) (is_string($field) ? self::decode($field) : $field)] = $value;
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param  array<string, mixed>  $draft
-     * @param  callable(string): string  $fn
-     * @return array<string, array<string, mixed>>
-     */
-    private static function mapFieldKeys(array $draft, callable $fn): array
-    {
-        $out = [];
-
-        foreach ($draft as $type => $fields) {
-            $renamed = [];
-
-            foreach ((array) $fields as $field => $value) {
-                $renamed[(string) (is_string($field) ? $fn($field) : $field)] = $value;
-            }
-
-            $out[$type] = $renamed;
+        foreach ($bag as $field => $record) {
+            $out[$fn((string) $field)] = $record;
         }
 
         return $out;
