@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 
 function seedTabsDishes(): void
@@ -154,4 +154,91 @@ it('ignores a tab scope on an undeclared column', function () {
         ->tap(function ($test) {
             expect($test->instance()->records->total())->toBe(4);
         });
+})->requiresSQLite();
+
+function makeFilterableTabsComponent(): PowerGridComponent
+{
+    return new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-tabs-filtered';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::tabs()
+                    ->add('all', label: 'All')
+                    ->add('cat1', label: 'Category 1', scope: ['category_id', 1])
+                    ->default('all'),
+            ];
+        }
+
+        public function filters(): array
+        {
+            return [Filter::number('calories')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('category_id')->add('calories');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name'),
+                Column::make('Category', 'category_id'),
+                Column::make('Calories', 'calories'),
+            ];
+        }
+    };
+}
+
+it('derives badge counts from the filtered datasource', function () {
+    seedTabsDishes();
+
+    $badges = function ($test) {
+        $component = $test->instance();
+        $component->setUp = $component->resolvedSetUp();
+
+        return collect($component->tabsData()['tabs'])->keyBy('key');
+    };
+
+    $test = Livewire::test(makeFilterableTabsComponent()::class);
+
+    expect($badges($test)['all']['badge'])->toBe(4);
+
+    $test->set('filters.calories.value.end', '250');
+
+    expect($badges($test)['all']['badge'])->toBe(2)
+        ->and($badges($test)['cat1']['badge'])->toBe(2);
+})->requiresSQLite();
+
+it('re-registers the tabs partial when filters or the search change', function () {
+    seedTabsDishes();
+
+    $partialNames = function ($test) {
+        $names = [];
+
+        foreach (\Livewire\store($test->instance())->get('partialFragments') ?? [] as $renderUsing) {
+            $names = array_merge($names, array_keys($renderUsing()));
+        }
+
+        return $names;
+    };
+
+    $filtered = Livewire::test(makeFilterableTabsComponent()::class)
+        ->set('filters.calories.value.end', '250');
+
+    expect($partialNames($filtered))->toContain('pg-tabs-test-tabs-filtered');
+
+    $searched = Livewire::test(makeFilterableTabsComponent()::class)
+        ->set('search', 'A');
+
+    expect($partialNames($searched))->toContain('pg-tabs-test-tabs-filtered');
 })->requiresSQLite();

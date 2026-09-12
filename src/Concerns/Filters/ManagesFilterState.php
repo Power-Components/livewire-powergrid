@@ -75,6 +75,7 @@ trait ManagesFilterState
         }
 
         $this->renderFilterPanelPartial();
+        $this->refreshTabsPartial();
     }
 
     protected function applyDefaultFilters(): void

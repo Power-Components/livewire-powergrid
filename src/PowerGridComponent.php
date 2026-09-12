@@ -357,6 +357,7 @@ class PowerGridComponent extends Component implements Context
         $this->gotoPage(1, data_get($this->setUp, 'footer.pageName'));
 
         $this->renderGridPartials();
+        $this->refreshTabsPartial();
     }
 
     /** Register tbody/pagination (and optionally thead) as Livewire partials. */
