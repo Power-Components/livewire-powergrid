@@ -27,6 +27,12 @@ trait BindsFilterQueryString
         return $columns;
     }
 
+    /** Query-string paths per filter type: bag path => alias suffix. */
+    private const array QUERY_STRING_PATHS = [
+        'input_text' => ['.value' => '', '.op' => '_operator'],
+        'number' => ['.value.start' => '_start', '.value.end' => '_end'],
+    ];
+
     /**
      * @param  string  $prefix  Prefix each field in URL
      * @return array<string, array{as: string, except: string}>
@@ -39,67 +45,44 @@ trait BindsFilterQueryString
             /** @var FilterBase $filter */
             /** @var string $field */
             $field = $filter->field;
-            $encoded = FilterKey::encode($field);
-            $as = str($field)
+            $as = (string) str($field)
                 ->when(filled($prefix), fn ($c) => $c->prepend($prefix.'_'))
                 ->replace('.', '_')
                 ->replaceMatches('/\_+/', '_');
 
-            /** @var string $key */
-            $key = data_get($filter, 'key');
+            $type = data_get($filter, 'key');
+            $type = is_string($type) ? $type : '';
 
-            if ($key === 'input_text') {
-                $queryString['filters.'.$encoded.'.value'] = [
-                    'as' => $as->toString(),
-                    'except' => '',
-                ];
+            if ($type === 'dynamic') {
+                $model = $this->dynamicFilterWireModel($filter);
 
-                $queryString['filters.'.$encoded.'.op'] = [
-                    'as' => $as->append('_operator')->toString(),
-                    'except' => '',
-                ];
-
-                continue;
-            }
-
-            if ($key === 'number') {
-                $queryString['filters.'.$encoded.'.value.start'] = [
-                    'as' => $as->append('_start')->toString(),
-                    'except' => '',
-                ];
-
-                $queryString['filters.'.$encoded.'.value.end'] = [
-                    'as' => $as->append('_end')->toString(),
-                    'except' => '',
-                ];
-
-                continue;
-            }
-
-            if ($key === 'dynamic') {
-                $wireModel = array_values(
-                    Arr::where(
-                        (array) data_get($filter, 'attributes'),
-                        fn ($value, $key) => str($key)->contains('wire:model')
-                    )
-                );
-
-                if (count($wireModel) && is_string($wireModel[0])) {
-                    $queryString[$wireModel[0]] = [
-                        'as' => $as->toString(),
-                        'except' => '',
-                    ];
+                if ($model !== null) {
+                    $queryString[$model] = ['as' => $as, 'except' => ''];
                 }
 
                 continue;
             }
 
-            $queryString['filters.'.$encoded.'.value'] = [
-                'as' => $as->toString(),
-                'except' => '',
-            ];
+            $encoded = FilterKey::encode($field);
+
+            foreach (self::QUERY_STRING_PATHS[$type] ?? ['.value' => ''] as $path => $suffix) {
+                $queryString['filters.'.$encoded.$path] = ['as' => $as.$suffix, 'except' => ''];
+            }
         }
 
         return $queryString;
+    }
+
+    /** The `wire:model` a FilterDynamic binds to, if it declares one. */
+    private function dynamicFilterWireModel(mixed $filter): ?string
+    {
+        $wireModel = array_values(
+            Arr::where(
+                (array) data_get($filter, 'attributes'),
+                fn ($value, $key) => str($key)->contains('wire:model')
+            )
+        );
+
+        return is_string($wireModel[0] ?? null) ? $wireModel[0] : null;
     }
 }

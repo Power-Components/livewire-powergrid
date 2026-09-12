@@ -368,7 +368,7 @@ class PowerGridComponent extends Component implements Context
         }
 
         if ($this->usesFilterInline()) {
-            $this->resolveFiltersForRender();
+            $this->resolveFilters();
             $this->resolvePlugins();
         } else {
             $this->withoutFilterInstantiation(fn () => $this->resolvePlugins());

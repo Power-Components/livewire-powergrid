@@ -34,7 +34,7 @@
             <select
                 class="{{ $filterClasses }}"
                 style="{{ data_get($column, 'headerStyle') }}"
-                {{ data_get($filter, 'selectAttributes') }}
+                {{ data_get($filter, 'wire.value') }}
             >
                 @if(!data_get($params, 'params.disableOptionAll', false))
                     <option value="">{{ trans('livewire-powergrid::datatable.select.all') }}</option>

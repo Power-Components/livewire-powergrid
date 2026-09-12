@@ -48,13 +48,10 @@ trait ManagesFilterPanel
             return;
         }
 
-        $this->resolveFiltersForRender();
-
-        /** @var view-string $view */
-        $view = 'livewire-powergrid::components.themes.tailwind.filters.fields';
+        $this->resolveFilters();
 
         partials($this)
-            ->partial("pg-filter-fields-{$this->tableName}", $view, [
+            ->partial("pg-filter-fields-{$this->tableName}", theme_view('filters.fields'), [
                 '__partial' => $this,
                 'tableName' => $this->tableName,
             ]);
@@ -114,34 +111,32 @@ trait ManagesFilterPanel
      */
     public function sortedFilterPanelColumns(?iterable $columns = null): Collection
     {
-        $source = collect($columns ?? [])
-            ->filter(fn ($column) => filled(data_get($column, 'filters')));
+        $hasFilter = fn ($column) => filled(data_get($column, 'filters'));
+        $source = collect($columns ?? [])->filter($hasFilter);
 
         if ($source->isEmpty()) {
-            $source = collect($this->columns)
-                ->filter(fn ($column) => filled(data_get($column, 'filters')));
+            $source = collect($this->columns)->filter($hasFilter);
         }
 
         $declarationOrder = collect($this->declaredFilters())
             ->values()
-            ->mapWithKeys(function ($filter, int $index): array {
-                $field = data_get($filter, 'field');
-                $key = is_string($field) || is_numeric($field) ? (string) $field : (string) $index;
-
-                return [$key => $index];
-            });
+            ->mapWithKeys(fn ($filter, int $index) => [self::panelOrderKey($filter, 'field') ?: (string) $index => $index]);
 
         return $source
             ->sortBy(function ($column) use ($declarationOrder): string {
-                $field = data_get($column, 'filters.field');
-                $fieldKey = is_string($field) || is_numeric($field) ? (string) $field : '';
-                $declared = $declarationOrder->get($fieldKey, PHP_INT_MAX);
+                $declared = $declarationOrder->get(self::panelOrderKey($column, 'filters.field'), PHP_INT_MAX);
                 $explicit = data_get($column, 'filters.order');
-                $order = is_numeric($explicit) ? (int) $explicit : $declared;
 
-                return sprintf('%010d-%010d', $order, $declared);
+                return sprintf('%010d-%010d', is_numeric($explicit) ? (int) $explicit : $declared, $declared);
             })
             ->values();
+    }
+
+    private static function panelOrderKey(mixed $subject, string $path): string
+    {
+        $field = data_get($subject, $path);
+
+        return is_string($field) || is_numeric($field) ? (string) $field : '';
     }
 
     /**
@@ -164,7 +159,7 @@ trait ManagesFilterPanel
             return;
         }
 
-        $this->resolveFiltersForRender();
+        $this->resolveFilters();
 
         partials($this)
             ->partial("pg-enabled-filters-{$this->tableName}", theme_view('header.enabled-filters'), [

@@ -55,13 +55,14 @@ final class FilterKey
     }
 
     /**
+     * Bind the live bag with the given Livewire modifiers ('live.debounce.600ms',
+     * 'live', 'blur', … or '' for a plain `wire:model`).
+     *
      * @return array<string, string>
      */
-    public static function liveModel(string $path, bool $debounce = true): array
+    public static function liveModel(string $path, string $modifiers = 'live'): array
     {
-        $attribute = $debounce
-            ? 'wire:model.live.debounce.600ms'
-            : 'wire:model.live';
+        $attribute = 'wire:model'.($modifiers === '' ? '' : '.'.trim($modifiers, '.'));
 
         return [$attribute => 'filters.'.$path];
     }
@@ -78,75 +79,36 @@ final class FilterKey
     }
 
     /**
-     * Encode top-level field keys of a field-keyed filter bag.
+     * Encode the top-level field keys of a field-keyed filter bag.
      *
      * @param  array<string, mixed>  $draft
      * @return array<string, mixed>
      */
     public static function encodeDraft(array $draft): array
     {
-        $out = [];
-
-        foreach ($draft as $field => $record) {
-            $out[self::encode((string) $field)] = $record;
-        }
-
-        return $out;
+        return self::mapKeys($draft, self::encode(...));
     }
 
     /**
-     * Decode top-level field keys. Legacy type-keyed bags decode nested field keys.
-     *
      * @param  array<string, mixed>  $draft
      * @return array<string, mixed>
      */
     public static function decodeDraft(array $draft): array
     {
-        if (FilterBag::isLegacy($draft)) {
-            return self::mapFieldKeys($draft, [self::class, 'decode']);
-        }
-
-        $out = [];
-
-        foreach ($draft as $field => $record) {
-            $out[self::decode((string) $field)] = $record;
-        }
-
-        return $out;
+        return self::mapKeys($draft, self::decode(...));
     }
 
     /**
-     * @param  array<string, mixed>  $type
+     * @param  array<string, mixed>  $bag
+     * @param  callable(string): string  $fn
      * @return array<string, mixed>
      */
-    public static function decodeType(array $type): array
+    private static function mapKeys(array $bag, callable $fn): array
     {
         $out = [];
 
-        foreach ($type as $field => $value) {
-            $out[(string) (is_string($field) ? self::decode($field) : $field)] = $value;
-        }
-
-        return $out;
-    }
-
-    /**
-     * @param  array<string, mixed>  $draft
-     * @param  callable(string): string  $fn
-     * @return array<string, array<string, mixed>>
-     */
-    private static function mapFieldKeys(array $draft, callable $fn): array
-    {
-        $out = [];
-
-        foreach ($draft as $type => $fields) {
-            $renamed = [];
-
-            foreach ((array) $fields as $field => $value) {
-                $renamed[(string) (is_string($field) ? $fn($field) : $field)] = $value;
-            }
-
-            $out[$type] = $renamed;
+        foreach ($bag as $field => $record) {
+            $out[$fn((string) $field)] = $record;
         }
 
         return $out;

@@ -19,6 +19,12 @@ trait Filter
     /** @var array<string, mixed> */
     public array $draftFilters = [];
 
+    /**
+     *
+     * @var array<string, string>
+     */
+    public array $filterOperators = [];
+
     /** @var list<int|string> */
     public array $filtered = [];
 
@@ -35,4 +41,17 @@ trait Filter
     public bool $inlineFiltersResolved = false;
 
     public bool $emitClearFiltersEvent = true;
+
+    /**
+     * Override the wire binding of a filter slot for this grid, e.g.
+     * `['input_text' => ['value' => 'live.debounce.800ms']]`. Merged over
+     * `config('livewire-powergrid.filter_wire')`, which is merged over the
+     * defaults in Support\FilterWire.
+     *
+     * @return array<string, array<string, string>>
+     */
+    public function filterWire(): array
+    {
+        return [];
+    }
 }

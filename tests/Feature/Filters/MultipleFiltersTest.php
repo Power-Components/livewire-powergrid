@@ -41,8 +41,8 @@ it('properly filters by multiple filters and clear all', function () {
     Livewire::test($component::class)
         // Filter by price and in_stock
         ->set('filters', [
-            'number' => ['price' => ['start' => 15]],
-            'boolean' => ['in_stock' => 'true'],
+            'price' => ['type' => 'number', 'value' => ['start' => 15]],
+            'in_stock' => ['type' => 'boolean', 'value' => 'true'],
         ])
         ->assertDontSee('Pastel')
         ->assertSee('Francesinha')

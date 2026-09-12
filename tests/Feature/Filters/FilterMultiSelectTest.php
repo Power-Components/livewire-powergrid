@@ -45,17 +45,53 @@ it('properly filters by multi_select', function () {
 
     Livewire::test($component::class)
         ->set('filters', [
-            'multi_select' => ['category_id' => [1, 2]],
+            'category_id' => ['type' => 'multi_select', 'value' => [1, 2]],
         ])
         ->assertSee('Dish 1')
         ->assertSee('Dish 2')
         ->assertDontSee('Dish 3')
         ->set('filters', [
-            'multi_select' => ['category_id' => [3]],
+            'category_id' => ['type' => 'multi_select', 'value' => [3]],
         ])
         ->assertDontSee('Dish 1')
         ->assertDontSee('Dish 2')
         ->assertSee('Dish 3');
+});
+
+it('binds the multi select control to the live bag without .live', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'multi-select-binding';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'category_id' => 1]]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::multiSelect('category_id')
+                    ->dataSource(collect([['category_id' => 1, 'name' => 'Cat 1']]))
+                    ->optionValue('category_id')
+                    ->optionLabel('name'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Category', 'category_id')];
+        }
+    };
+
+    expect(Livewire::test($component::class)->html())
+        ->toContain('wire:model="filters.category_id.value"')
+        ->not->toContain('data-pg-draft');
 });
 
 it('accepts a Closure dataSource and resolves it when filters render', function () {
@@ -257,7 +293,7 @@ it('ignores empty values instead of dropping the multi_select filter', function 
 
     Livewire::test($component::class)
         ->set('filters', [
-            'multi_select' => ['category_id' => ['', 1]],
+            'category_id' => ['type' => 'multi_select', 'value' => ['', 1]],
         ])
         ->assertSee('Dish 1')
         ->assertDontSee('Dish 2');

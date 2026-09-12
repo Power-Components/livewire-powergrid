@@ -86,6 +86,49 @@ class FlatpickrPlugin extends PluginBase
     }
 
     /**
+     * A date draft carries what flatpickr wrote (`value.formatted`); the applied
+     * record carries the range that flows into the query.
+     *
+     * @param  array<string, mixed>  $record
+     * @return array<string, mixed>|null
+     */
+    public function normalizeFilterRecord(string $field, array $record): ?array
+    {
+        $type = $record['type'] ?? '';
+
+        if (! in_array($type, ['date', 'datetime'], true)) {
+            return $record;
+        }
+
+        $formatted = data_get($record, 'value.formatted');
+
+        if (blank($formatted)) {
+            return null;
+        }
+
+        $record['value'] = self::computeRange((string) $type, is_scalar($formatted) ? (string) $formatted : '');
+
+        return $record;
+    }
+
+    public function onFilterCleared(string $field, string $type): void
+    {
+        if (in_array($type, ['date', 'datetime'], true)) {
+            $this->component->dispatch('pg:clear_flatpickr::'.$this->component->tableName.':'.$field);
+        }
+    }
+
+    public function onFiltersCleared(): void
+    {
+        $this->component->dispatch('pg:clear_all_flatpickr::'.$this->component->tableName);
+    }
+
+    public function onFiltersRestored(): void
+    {
+        $this->component->dispatch('pg:restore_flatpickr::'.$this->component->tableName);
+    }
+
+    /**
      * @return array{start: string, end: string, formatted: string}
      */
     public static function computeRange(string $type, string $formatted): array

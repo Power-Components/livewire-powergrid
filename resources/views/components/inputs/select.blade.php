@@ -79,8 +79,7 @@ $alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
             <select
                 @if ($multiple) multiple @endif
                 class="{{ theme('filter.multi_select.select') }}"
-                wire:model="{{ $filtersProperty }}.{{ $filterPathField }}.value"
-                @if ($deferred) data-pg-draft="{{ $filterPathField }}.value" @endif
+                {{ data_get($filter, 'wire.value') }}
                 x-ref="select_picker_{{ data_get($filter, 'field') }}_{{ $tableName }}"
             >
                 @if (!data_get($params, 'options.disableOptionAll', false))

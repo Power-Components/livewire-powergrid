@@ -5,7 +5,6 @@ namespace PowerComponents\LivewirePowerGrid\Concerns;
 use Exception;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\Turbine\DataSource\Support\Sql;
-use PowerComponents\Turbine\Support\FilterBag;
 use PowerComponents\Turbine\Support\State\StatePersister;
 use Psr\SimpleCache\InvalidArgumentException;
 
@@ -112,7 +111,8 @@ trait Persist
         if (in_array('filters', $this->persist) && isset($state['filters']) && is_array($state['filters'])) {
             /** @var array<string, mixed> $persisted */
             $persisted = $state['filters'];
-            $this->filters = FilterBag::hydrate($persisted);
+            $this->filters = $persisted;
+            $this->canonicalizeFilters(prune: false);
 
             if (isset($state['enabledFilters']) && is_array($state['enabledFilters'])) {
                 foreach ($state['enabledFilters'] as $pill) {

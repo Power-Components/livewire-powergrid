@@ -54,8 +54,7 @@
             <input
                 id="input_{{ $field }}"
                 x-ref="rangeInput"
-                wire:model="{{ $filtersProperty }}.{{ $keyField }}.value.formatted"
-                @if ($deferred) data-pg-draft="{{ $keyField }}.value.formatted" @endif
+                {{ data_get($filter, 'wire.formatted') }}
                 autocomplete="off"
                 data-field="{{ $field }}"
                 class="{{ theme('filter.date_picker.input') }} {{ data_get($column, 'headerClass') }}"

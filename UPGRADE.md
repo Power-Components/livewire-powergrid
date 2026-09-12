@@ -70,9 +70,40 @@ The following legacy features and themes have been completely removed. You must 
 15. **Per-component theme:** Override `template(): ?Theme`. `customThemeClass()` is deprecated and used only when `template()` returns `null`.
 16. **Filter pills:** `$enabledFilters` is derived from `$filters` (and Filter Builder rows). Persist stores `$filters` only (optional `label` on the record). Old cookies that include `enabledFilters` still stamp those labels onto records on restore.
 17. **Inline filter bindings:** first-party filter inputs use `wire:model.live` on `$filters` only. `updated()` commits the bag. Dropdown/flyout still bind `draftFilters` until Apply.
-18. **Filter state shape:** `$filters` is field-keyed. Each field is `['type' => 'input_text'|'number'|…, 'value' => mixed, 'op' => ?string, 'label' => ?string]`. Bindings are `filters.{field}.value` / `.op` / `.value.start`. Persist cookies from 6.x/early 7.x (type-keyed `filters.input_text.name`) are migrated on restore. `powerGridQueryString()` aliases follow the new paths (`name`, `name_operator`, `price_start`).
-19. **Filter hooks:** override `afterFilterChanged(string $field, array $record)`. `afterChangedInputTextFilter()` / `afterChangedBooleanFilter()` / … are deprecated and still invoked.
-20. **Programmatic filters:** write the bag (`putFilterRecord()` / `$this->filters[$field]`) and `commitFilters()`. `filterInputText()` / `filterSelect()` / `filterBoolean()` / `filterNumberStart()` / `filterNumberEnd()` / `filterInputTextOptions()` are deprecated wrappers. `multiSelectChanged()` remains the Tom/Slim Select event.
+18. **Filter state shape:** `$filters` is field-keyed. Each field is `['type' => 'input_text'|'number'|…, 'value' => mixed, 'op' => ?string, 'label' => ?string]`, keyed by the filter's bag key (the column, or the field when it has no dot). Bindings are `filters.{field}.value` / `.op` / `.value.start`. The type-keyed 6.x shape (`filters.input_text.name`) is **no longer read** — old persist cookies/sessions are ignored, not migrated; clear them or re-apply the filter. `powerGridQueryString()` aliases follow the new paths (`name`, `name_operator`, `price_start`).
+19. **Filter hooks:** override `afterFilterChanged(string $field, array $record)`. `afterChangedInputTextFilter()` / `afterChangedBooleanFilter()` / `afterChangedSelectFilter()` / `afterChangedMultiSelectFilter()` / `afterChangedNumberStartFilter()` / `afterChangedNumberEndFilter()` are **removed**.
+20. **Programmatic filters:** write the bag (`putFilterRecord()` / `$this->filters[$field]`) and `commitFilters()`. `filterInputText()` / `filterSelect()` / `filterBoolean()` / `filterNumberStart()` / `filterNumberEnd()` / `filterInputTextOptions()` are **removed**. `multiSelectChanged()` remains the Tom/Slim Select event.
+21. **Filter operators:** the chosen operator lives in `$filterOperators[$field]`, not in the value bag — `$filters` only holds filters that actually filter. The operator is stamped back onto the record before the query runs, so `$filters[$field]['op']` still reads correctly while a value is set.
+22. **Filter wire bindings:** the whole `FilterAttributes` namespace (`InputText` / `Select` / `Number` / `Boolean` / `FilterWireAttributes`) and the `filter_attributes` config key are gone. One table in `Support\FilterWire` now binds every filter type — including multi-select and the date pickers, which used to hand-write `wire:model` in their blades. A filter definition carries its bindings under `wire`, keyed by what the control binds to:
+
+    | v6 / early 7.x | now |
+    |---|---|
+    | `$filter['inputAttributes']` | `$filter['wire']['value']` |
+    | `$filter['selectAttributes']` (input_text) | `$filter['wire']['operator']` |
+    | `$filter['selectAttributes']` (select, boolean) | `$filter['wire']['value']` |
+    | `$filter['inputStartAttributes']` / `inputEndAttributes` | `$filter['wire']['start']` / `['end']` |
+    | hand-written `wire:model="{{ $filtersProperty }}.{{ $key }}.value"` | `$filter['wire']['value']` |
+    | hand-written `…value.formatted` (date pickers) | `$filter['wire']['formatted']` |
+
+    In Blade: `{{ data_get($filter, 'wire.value') }}`. `FilterWireAttributes::get($type, $filter, $title, $deferred)` became `FilterWire::bags($type, $filter, $deferred)` — the unused `$title` argument is gone, as is the one on `FilterWire::forView()`.
+
+    A slot's binding is the Livewire modifier chain itself (`live.debounce.600ms`, `live`, `blur`, `lazy`, or `''` for a plain `wire:model`), and it is overridable without a class — globally in config, or per grid:
+
+    ```php
+    // config/livewire-powergrid.php
+    'filter_wire' => [
+        'input_text' => ['value' => 'live.debounce.800ms'],
+    ],
+
+    // …or on one grid, which wins over the config
+    public function filterWire(): array
+    {
+        return ['input_text' => ['value' => 'live.debounce.800ms']];
+    }
+    ```
+
+    Deferred (dropdown/flyout) bindings ignore the modifiers: the panel's Apply collects the draft from them, so they stay `wire:model` + `data-pg-draft`.
+23. **Widget events:** `pg:clear_flatpickr::*`, `pg:clear_all_flatpickr::*`, `pg:restore_flatpickr::*` and their `multi_select` counterparts are dispatched by `FlatpickrPlugin` / `MultiSelectPlugin`, and only when that widget is actually declared. Plugins hook the filter lifecycle with `normalizeFilterRecord()`, `onFilterCleared()`, `onFiltersCleared()` and `onFiltersRestored()`.
 
 ---
 

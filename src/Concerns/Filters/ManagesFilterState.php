@@ -3,13 +3,27 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns\Filters;
 
 use Exception;
-use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Support\FilterKey;
 use PowerComponents\Turbine\Components\Filters\FilterManager;
 use PowerComponents\Turbine\Support\FilterBag;
 
+/**
+ * Canonical filter bag state.
+ *
+ * Invariant: `$filters` is keyed by the declared filter's bag key
+ * (FilterBag::bagKey). Every other spelling a key can arrive in — the SQL
+ * field, a `__pgdot__`-encoded field, a legacy `_start`/`_end` bound — is
+ * canonicalized once, at the boundary (canonicalizeFilters), so reads
+ * downstream are plain array lookups.
+ */
 trait ManagesFilterState
 {
+    use DerivesFilterPills;
+
+    /** @var array{aliases: array<string, string>, types: array<string, string>}|null */
+    protected ?array $filterSchemaCache = null;
+
     /** @param array<string, mixed> $target */
     protected function setInFilters(array &$target, string $key, mixed $value): void
     {
@@ -23,7 +37,8 @@ trait ManagesFilterState
      */
     public function putFilterRecord(string $field, string $type, mixed $value, mixed $op = null, ?string $label = null): void
     {
-        $record = is_array($this->filters[$field] ?? null) ? $this->filters[$field] : [];
+        $key = $this->filterBagKey($field) ?: $field;
+        $record = is_array($this->filters[$key] ?? null) ? $this->filters[$key] : [];
         $record['type'] = FilterBag::normalizeType($type);
         $record['value'] = $value;
 
@@ -35,22 +50,7 @@ trait ManagesFilterState
             $record['label'] = $label;
         }
 
-        $this->filters[$field] = $record;
-    }
-
-    protected function putNumberFilterValue(string $field, string $bound, mixed $value, ?string $label = null): void
-    {
-        $record = is_array($this->filters[$field] ?? null) ? $this->filters[$field] : [];
-        $range = is_array($record['value'] ?? null) ? $record['value'] : [];
-        $range[$bound] = $value;
-        $record['type'] = 'number';
-        $record['value'] = $range;
-
-        if (filled($label)) {
-            $record['label'] = $label;
-        }
-
-        $this->filters[$field] = $record;
+        $this->filters[$key] = $record;
     }
 
     /**
@@ -61,7 +61,7 @@ trait ManagesFilterState
     public function commitFilters(bool $resetPage = true): void
     {
         $this->canonicalizeFilters();
-        $this->draftFilters = FilterKey::encodeDraft($this->filters);
+        $this->draftFilters = FilterKey::encodeDraft($this->bagWithOperators());
         $this->syncFilterPills();
 
         if ($resetPage) {
@@ -80,7 +80,7 @@ trait ManagesFilterState
 
     protected function applyDefaultFilters(): void
     {
-        $this->filters = FilterBag::hydrate(FilterKey::decodeDraft($this->filters));
+        $this->canonicalizeFilters(prune: false);
 
         $filterManager = new FilterManager();
         $applied = $filterManager->applyDefaults(
@@ -91,7 +91,7 @@ trait ManagesFilterState
 
         $this->canonicalizeFilters(prune: false);
         $this->syncFilterPills();
-        $this->draftFilters = FilterKey::encodeDraft($this->filters);
+        $this->draftFilters = FilterKey::encodeDraft($this->bagWithOperators());
 
         if ($applied) {
             $this->persistState('filters');
@@ -120,10 +120,10 @@ trait ManagesFilterState
         $this->enabledFilters = [];
         $this->filters = [];
         $this->draftFilters = [];
+        $this->filterOperators = [];
         $this->filterBuilder = ['match' => 'and', 'rows' => []];
 
-        $this->dispatch('pg:clear_all_flatpickr::'.$this->tableName);
-        $this->dispatch('pg:clear_all_multi_select::'.$this->tableName);
+        $this->notifyFilterWidgets(fn ($plugin) => $plugin->onFiltersCleared());
 
         $this->commitFilters();
     }
@@ -141,45 +141,18 @@ trait ManagesFilterState
             $this->draftFilters = $draft;
         }
 
-        /** @var array<string, mixed> $draft */
-        $this->filters = FilterBag::hydrate(FilterKey::decodeDraft($this->draftFilters));
-        $this->stampFilterTypes();
-
-        foreach ($this->filters as $field => $record) {
-            if (! FilterBag::isRecord($record)) {
-                continue;
-            }
-
-            $type = $record['type'];
-
-            if (! in_array($type, ['date', 'datetime'], true)) {
-                continue;
-            }
-
-            $formatted = data_get($record, 'value.formatted');
-
-            if (blank($formatted)) {
-                unset($this->filters[$field]);
-
-                continue;
-            }
-
-            $record['value'] = FlatpickrPlugin::computeRange(
-                $type,
-                is_scalar($formatted) ? (string) $formatted : ''
-            );
-            $this->filters[$field] = $record;
-        }
+        $this->filters = $this->draftFilters;
+        $this->canonicalizeFilters(prune: false);
+        $this->normalizeFilterRecordsWithPlugins();
 
         $this->commitFilters();
     }
 
     public function resetFilters(): void
     {
-        $this->draftFilters = FilterKey::encodeDraft($this->filters);
+        $this->draftFilters = FilterKey::encodeDraft($this->bagWithOperators());
 
-        $this->dispatch('pg:restore_flatpickr::'.$this->tableName);
-        $this->dispatch('pg:restore_multi_select::'.$this->tableName);
+        $this->notifyFilterWidgets(fn ($plugin) => $plugin->onFiltersRestored());
 
         if ($this->filterPanelLoaded) {
             $this->renderFilterFieldsPartial();
@@ -188,149 +161,24 @@ trait ManagesFilterState
         $this->renderFilterPanelPartial();
     }
 
-    public function activeFilterCount(): int
+    /** The SQL field a declared filter targets. */
+    protected function declaredFilterField(mixed $filter): string
     {
-        return collect($this->enabledFilters)
-            ->reject(fn ($filter) => ($filter['source'] ?? null) === 'filterBuilder')
-            ->map(function ($filter) {
-                $field = data_get($filter, 'field');
-                $field = is_string($field) ? $field : '';
+        $field = data_get($filter, 'field');
 
-                return (string) str($field)->beforeLast('_start')->beforeLast('_end');
-            })
-            ->filter(fn ($field) => $field !== '')
-            ->unique()
-            ->count();
+        return is_string($field) ? $field : '';
     }
 
     /**
-     * Derive `$enabledFilters` from `$filters` + Filter Builder rows.
-     * Remembers custom labels from the previous pill list (handlers, plugins).
+     * Canonical bag key for any spelling of a declared filter field
+     * (column, SQL field, encoded field, `_start`/`_end` bound).
+     * Returns '' for fields no filter declares — the mass-assignment guard.
      */
-    protected function syncFilterPills(): void
+    protected function filterBagKey(string $field): string
     {
-        $labels = $this->filterPillLabels();
+        $aliases = $this->filterSchema()['aliases'];
 
-        $this->enabledFilters = [];
-        $this->rebuildEnabledFilters($labels);
-        $this->syncFilterBuilderPills();
-    }
-
-    /**
-     * @param  array<string, string>  $labels
-     */
-    protected function rebuildEnabledFilters(array $labels = []): void
-    {
-        foreach ($this->declaredFilters() as $filter) {
-            $field = data_get($filter, 'field');
-            $field = is_string($field) ? $field : '';
-            $column = data_get($filter, 'column');
-            $column = is_string($column) ? $column : '';
-
-            $record = $this->filterRecord($field) ?? $this->filterRecord($column);
-
-            if ($record === null || ! FilterBag::isActive($record)) {
-                continue;
-            }
-
-            $pillField = $column !== '' ? $column : $field;
-            $recordLabel = $record['label'] ?? null;
-            $title = (is_string($recordLabel) && $recordLabel !== '')
-                ? $recordLabel
-                : ($labels[$pillField] ?? $labels[$field] ?? $labels[$column] ?? $pillField);
-            $disabled = FilterBag::isValuelessOperator($record['op'] ?? null);
-
-            $pill = [
-                'field' => $pillField,
-                'label' => $title,
-            ];
-
-            if ($disabled) {
-                $pill['disabled'] = true;
-            }
-
-            $exists = collect($this->enabledFilters)->contains(
-                fn ($enabled) => ($enabled['field'] ?? '') === $pillField
-            );
-
-            if (! $exists) {
-                $this->enabledFilters[] = $pill;
-            }
-        }
-    }
-
-    /**
-     * Stamp a pill label onto the field record. Presence is derived on the next sync.
-     */
-    public function addEnabledFilters(string $field, ?string $label, bool $disabled = false): void
-    {
-        if (! filled($label) || ! $this->isDeclaredFilterField($field)) {
-            return;
-        }
-
-        $keys = [$field, FilterKey::encode($field), FilterKey::decode($field), ...$this->declaredAliasesFor($field)];
-
-        foreach (array_unique($keys) as $alias) {
-            if (! isset($this->filters[$alias]) || ! is_array($this->filters[$alias])) {
-                continue;
-            }
-
-            $this->filters[$alias]['label'] = $label;
-
-            return;
-        }
-    }
-
-    /** @return list<string> */
-    protected function declaredAliasesFor(string $field): array
-    {
-        $aliases = [];
-
-        foreach ($this->declaredFilters() as $filter) {
-            $declaredField = data_get($filter, 'field');
-            $declaredColumn = data_get($filter, 'column');
-            $declaredField = is_string($declaredField) ? $declaredField : '';
-            $declaredColumn = is_string($declaredColumn) ? $declaredColumn : '';
-
-            if ($field === $declaredField || $field === $declaredColumn) {
-                foreach ([$declaredField, $declaredColumn] as $alias) {
-                    if ($alias !== '' && $alias !== $field) {
-                        $aliases[] = $alias;
-                    }
-                }
-            }
-        }
-
-        return array_values(array_unique($aliases));
-    }
-
-    protected function isDeclaredFilterField(string $field): bool
-    {
-        $declared = collect($this->declaredFilters())
-            ->flatMap(function ($filter) {
-                $fields = [
-                    data_get($filter, 'field'),
-                    data_get($filter, 'column'),
-                ];
-
-                /** @var string|null $filterField */
-                $filterField = data_get($filter, 'field');
-
-                if (is_string($filterField) && data_get($filter, 'key') === 'number') {
-                    $fields[] = $filterField.'_start';
-                    $fields[] = $filterField.'_end';
-                }
-
-                return $fields;
-            })
-            ->filter(fn ($value) => is_string($value) && $value !== '');
-
-        return $declared->contains($field);
-    }
-
-    protected function isValuelessTextOperator(mixed $operator): bool
-    {
-        return FilterBag::isValuelessOperator($operator);
+        return $field === '' ? '' : ($aliases[$field] ?? $aliases[FilterKey::decode($field)] ?? '');
     }
 
     /**
@@ -338,270 +186,234 @@ trait ManagesFilterState
      */
     protected function filterRecord(string $field): ?array
     {
-        if ($field === '') {
-            return null;
-        }
+        $record = $this->filters[$this->filterBagKey($field) ?: $field] ?? null;
 
-        foreach (array_unique([$field, FilterKey::encode($field), FilterKey::decode($field)]) as $key) {
-            if (! isset($this->filters[$key]) || ! is_array($this->filters[$key])) {
-                continue;
-            }
-
-            /** @var array<string, mixed> $record */
-            $record = $this->filters[$key];
-
-            if (FilterBag::isRecord($record)) {
-                return $record;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    protected function filterPillLabels(): array
-    {
-        $labels = [];
-
-        foreach ($this->columns as $column) {
-            $titleValue = data_get($column, 'title');
-            $title = is_scalar($titleValue) ? (string) $titleValue : '';
-
-            if ($title === '') {
-                continue;
-            }
-
-            if (($field = data_get($column, 'field')) && is_string($field)) {
-                $labels[$field] = $title;
-            }
-
-            if (($dataField = data_get($column, 'dataField')) && is_string($dataField)) {
-                $labels[$dataField] = $title;
-            }
-        }
-
-        foreach ($this->filters as $field => $record) {
-            if (! is_string($field) || ! is_array($record)) {
-                continue;
-            }
-
-            $label = $record['label'] ?? null;
-
-            if (is_string($label) && $label !== '') {
-                $labels[$field] = $label;
-            }
-        }
-
-        foreach ($this->enabledFilters as $pill) {
-            if (($pill['source'] ?? null) === 'filterBuilder') {
-                continue;
-            }
-
-            $field = $pill['field'] ?? null;
-            $label = $pill['label'] ?? null;
-
-            if (is_string($field) && $field !== '' && is_string($label) && $label !== '') {
-                $labels[$field] = $label;
-            }
-        }
-
-        return $labels;
+        /** @var array<string, mixed>|null $record */
+        return FilterBag::isRecord($record) ? $record : null;
     }
 
     protected function forgetFilter(string $field): void
     {
-        $lookup = (string) str($field)->beforeLast('_start')->beforeLast('_end');
+        $key = $this->filterBagKey($field);
 
-        foreach ($this->declaredFilters() as $filter) {
-            $declaredField = data_get($filter, 'field');
-            $declaredColumn = data_get($filter, 'column');
-            $declaredField = is_string($declaredField) ? $declaredField : '';
-            $declaredColumn = is_string($declaredColumn) ? $declaredColumn : '';
-
-            $matches = in_array($field, [$declaredField, $declaredColumn], true)
-                || in_array($lookup, [$declaredField, $declaredColumn], true);
-
-            if (! $matches) {
-                continue;
-            }
-
-            $keys = [];
-
-            foreach ([$declaredField, $declaredColumn, $field, $lookup] as $alias) {
-                if ($alias === '') {
-                    continue;
-                }
-
-                $keys[] = $alias;
-                $keys[] = FilterKey::encode($alias);
-                $keys[] = FilterKey::decode($alias);
-            }
-
-            foreach (array_unique($keys) as $key) {
-                $record = $this->filterRecord($key);
-
-                if ($record === null) {
-                    unset($this->filters[$key]);
-
-                    continue;
-                }
-
-                $type = $record['type'] ?? '';
-
-                if ($type === 'multi_select') {
-                    $this->dispatch('pg:clear_multi_select::'.$this->tableName.':'.$key);
-                }
-
-                if (in_array($type, ['date', 'datetime'], true)) {
-                    $this->dispatch('pg:clear_flatpickr::'.$this->tableName.':'.$key);
-                }
-
-                unset($this->filters[$key]);
-            }
+        if ($key === '' || ! isset($this->filters[$key])) {
+            return;
         }
+
+        $record = $this->filters[$key];
+        $type = is_array($record) ? ($record['type'] ?? '') : '';
+
+        if (is_string($type) && $type !== '') {
+            $this->notifyFilterWidgets(fn ($plugin) => $plugin->onFilterCleared($key, $type));
+        }
+
+        unset($this->filters[$key]);
     }
 
     protected function canonicalizeFilters(bool $prune = true): void
     {
-        $this->filters = FilterKey::decodeDraft($this->filters);
-        $this->filters = FilterBag::hydrate($this->filters);
-        $this->remapToColumnKeys();
-        $this->stampFilterTypes();
-        $this->normalizeValuelessTextFilters();
-
-        if ($prune) {
-            $this->filters = $this->pruneBlankFilters($this->filters);
-        }
+        $this->filters = $this->remapToBagKeys($this->filters);
+        $this->normalizeFilterRecords($prune);
     }
 
     /**
-     * Key the live bag by filter column (`name`), not the SQL dataField
-     * (`dishes.name`), so wire:model never needs __pgdot__ on the hot path.
+     * Every spelling a declared filter can be keyed by, plus the type each bag
+     * key carries. Memoized per request.
+     *
+     * @return array{aliases: array<string, string>, types: array<string, string>}
      */
-    protected function remapToColumnKeys(): void
+    protected function filterSchema(): array
     {
-        foreach ($this->declaredFilters() as $filter) {
-            $column = data_get($filter, 'column');
-            $field = data_get($filter, 'field');
-            $column = is_string($column) && $column !== '' ? $column : '';
-            $field = is_string($field) && $field !== '' ? $field : $column;
-            $column = FilterBag::bagKey($column, $field);
+        if ($this->filterSchemaCache !== null) {
+            return $this->filterSchemaCache;
+        }
 
-            if ($column === '') {
+        $declared = $this->declaredFilters();
+
+        if ($declared === []) {
+            return ['aliases' => [], 'types' => []];
+        }
+
+        $aliases = $bounds = $types = [];
+
+        foreach ($declared as $filter) {
+            $field = $this->declaredFilterField($filter);
+            $column = data_get($filter, 'column');
+            $column = is_string($column) && $column !== '' ? $column : $field;
+            $bagKey = FilterBag::bagKey($column, $field !== '' ? $field : null);
+
+            if ($bagKey === '') {
                 continue;
             }
 
-            $fromKeys = array_unique(array_filter([
-                $field !== $column ? $field : null,
-                str_contains((string) $field, '.') ? FilterKey::encode((string) $field) : null,
-            ]));
-
-            foreach ($fromKeys as $from) {
-                if (! isset($this->filters[$from])) {
-                    continue;
+            foreach ([$bagKey, $field, $column, FilterKey::encode($field), FilterKey::encode($column)] as $alias) {
+                if ($alias !== '') {
+                    $aliases[$alias] ??= $bagKey;
                 }
-
-                if (! isset($this->filters[$column])) {
-                    $this->filters[$column] = $this->filters[$from];
-                }
-
-                unset($this->filters[$from]);
             }
-        }
-    }
 
-    protected function stampFilterTypes(): void
-    {
-        foreach ($this->declaredFilters() as $filter) {
             $type = data_get($filter, 'key');
-            $type = is_string($type) ? FilterBag::normalizeType($type) : '';
-            $field = data_get($filter, 'field');
-            $field = is_string($field) ? $field : '';
-            $column = data_get($filter, 'column');
-            $column = is_string($column) ? $column : '';
 
-            if ($type === '') {
+            if (! is_string($type) || $type === '') {
                 continue;
             }
 
-            foreach (array_filter([$field, $column]) as $key) {
-                if (! isset($this->filters[$key]) || ! is_array($this->filters[$key])) {
-                    continue;
-                }
+            $types[$bagKey] ??= FilterBag::normalizeType($type);
 
-                if (! isset($this->filters[$key]['type'])) {
-                    $this->filters[$key]['type'] = $type;
-                }
+            if ($type === 'number' && $field !== '') {
+                $bounds[$field.'_start'] = $bagKey;
+                $bounds[$field.'_end'] = $bagKey;
             }
         }
+
+        // Bounds are aliases of last resort: a real filter field always wins.
+        return $this->filterSchemaCache = ['aliases' => $aliases + $bounds, 'types' => $types];
     }
 
-    protected function normalizeValuelessTextFilters(): void
+    /**
+     * Fold every alias key onto its bag key. Keys no filter declares (e.g.
+     * FilterDynamic paths) are kept, decoded, exactly as they arrived.
+     *
+     * @param  array<string, mixed>  $bag
+     * @return array<string, mixed>
+     */
+    protected function remapToBagKeys(array $bag): array
     {
+        $out = $aliases = [];
+
+        foreach ($bag as $key => $record) {
+            $key = (string) $key;
+            $canonical = $this->filterBagKey($key) ?: FilterKey::decode($key);
+
+            if ($canonical === $key) {
+                $out[$key] = $record;
+
+                continue;
+            }
+
+            $aliases[$canonical] ??= $record;
+        }
+
+        // A key already canonical wins over an alias folded onto it.
+        return $out + $aliases;
+    }
+
+    /**
+     * One pass over the bag: stamp the declared type, settle the operator
+     * (remembered in `$filterOperators`, not in the value bag), blank the value
+     * of an operator that takes none, and — when pruning — drop everything that
+     * would not filter anything.
+     */
+    protected function normalizeFilterRecords(bool $prune): void
+    {
+        $types = $this->filterSchema()['types'];
+
         foreach ($this->filters as $field => $record) {
             if (! is_string($field) || ! is_array($record)) {
                 continue;
             }
 
-            /** @var array<string, mixed> $record */
-            $op = $record['op'] ?? null;
+            if (! isset($record['type']) && isset($types[$field])) {
+                $record['type'] = $types[$field];
+            }
 
-            if (is_array($op)) {
-                $op = collect($op)->values()->first();
+            $op = $record['op'] ?? null;
+            $op = is_array($op) ? collect($op)->values()->first() : $op;
+
+            if (is_string($op) && $op !== '') {
+                $this->filterOperators[$field] = $op;
+            } else {
+                $op = $this->filterOperators[$field] ?? null;
+            }
+
+            if (is_string($op) && $op !== '') {
                 $record['op'] = $op;
             }
 
-            if (! FilterBag::isValuelessOperator($op)) {
-                $this->filters[$field] = $record;
+            if (FilterBag::isValuelessOperator($op)) {
+                $record['type'] ??= 'input_text';
+                $record['value'] = null;
+            }
 
+            if (($record['type'] ?? null) === 'number' && is_array($record['value'] ?? null)) {
+                $record['value'] = array_filter($record['value'], fn ($bound) => filled($bound));
+            }
+
+            $this->filters[$field] = $record;
+
+            // `dynamic` is a free-form bag of FilterDynamic paths, not a record.
+            if (! $prune || $field === 'dynamic') {
                 continue;
             }
 
-            $record['type'] = $record['type'] ?? 'input_text';
-            $record['value'] = null;
-            $this->filters[$field] = $record;
+            if (! FilterBag::isRecord($record) || ! FilterBag::isActive($record)) {
+                unset($this->filters[$field]);
+            }
         }
     }
 
     /**
-     * @param  array<string, mixed>  $filters
+     * The value bag plus the remembered operators — what the filter inputs bind
+     * to, so a chosen operator survives a cleared value.
+     *
      * @return array<string, mixed>
      */
-    protected function pruneBlankFilters(array $filters): array
+    protected function bagWithOperators(): array
     {
-        foreach ($filters as $field => $record) {
-            if ($field === 'dynamic' && is_array($record) && ! FilterBag::isRecord($record)) {
-                continue;
-            }
+        $bag = $this->filters;
 
-            if (! FilterBag::isRecord($record)) {
-                unset($filters[$field]);
+        foreach ($this->filterOperators as $field => $op) {
+            if (isset($bag[$field]) && is_array($bag[$field])) {
+                $bag[$field]['op'] ??= $op;
 
                 continue;
             }
 
-            if ($record['type'] === 'number' && is_array($record['value'] ?? null)) {
-                $range = $record['value'];
-
-                if (blank($range['start'] ?? null)) {
-                    unset($range['start']);
-                }
-
-                if (blank($range['end'] ?? null)) {
-                    unset($range['end']);
-                }
-
-                $record['value'] = $range;
-                $filters[$field] = $record;
-            }
-
-            if (! FilterBag::shouldKeep($record)) {
-                unset($filters[$field]);
-            }
+            $bag[$field] = ['op' => $op];
         }
 
-        return $filters;
+        return $bag;
+    }
+
+    /**
+     * Let the plugin that owns a filter type reshape its draft record before
+     * it is applied (e.g. Flatpickr turning a formatted range into start/end).
+     * A plugin returning null drops the filter.
+     */
+    protected function normalizeFilterRecordsWithPlugins(): void
+    {
+        foreach ($this->filters as $field => $record) {
+            if (! is_string($field) || ! FilterBag::isRecord($record)) {
+                continue;
+            }
+
+            $normalized = $record;
+
+            $this->notifyFilterWidgets(function ($plugin) use ($field, &$normalized) {
+                if (is_array($normalized)) {
+                    $normalized = $plugin->normalizeFilterRecord($field, $normalized);
+                }
+            });
+
+            if ($normalized === null) {
+                unset($this->filters[$field]);
+
+                continue;
+            }
+
+            $this->filters[$field] = $normalized;
+        }
+    }
+
+    /**
+     * @param  callable(PluginBase): void  $callback
+     */
+    protected function notifyFilterWidgets(callable $callback): void
+    {
+        $this->resolvePlugins();
+
+        foreach ($this->getPlugins() as $plugin) {
+            $callback($plugin);
+        }
     }
 }

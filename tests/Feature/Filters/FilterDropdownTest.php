@@ -122,7 +122,7 @@ it('commits the draft filters on applyFilters', function () {
 
 it('commits a draft payload passed directly to applyFilters', function () {
     $test = Livewire::test(dropdownComponent('dropdown-apply-arg')::class)
-        ->call('applyFilters', ['input_text' => ['name' => 'Expensive']]);
+        ->call('applyFilters', ['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 
     expect($test->get('filters'))->toMatchArray(['name' => ['type' => 'input_text', 'value' => 'Expensive']]);
 
@@ -321,7 +321,7 @@ it('registers tbody and pagination partials when applying an inline filter', fun
     Config::set('livewire-powergrid.filter', 'inline');
 
     $test = Livewire::test(dropdownComponent('inline-partials')::class)
-        ->call('filterInputText', 'name', 'Expensive', 'Name');
+        ->set('filters.name.value', 'Expensive');
 
     $fragments = \Livewire\store($test->instance())->get('partialFragments') ?? [];
 

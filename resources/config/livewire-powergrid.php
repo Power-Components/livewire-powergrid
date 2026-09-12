@@ -1,6 +1,5 @@
 <?php
 
-use PowerComponents\LivewirePowerGrid\FilterAttributes\{Boolean, InputText, Number, Select};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\OpenSpout\v5\{ExportToCsv, ExportToXLS};
 
 return [
@@ -143,21 +142,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Filters Attributes
+    | Filter Wire Bindings
     |--------------------------------------------------------------------------
-
-    | You can add custom attributes to the filters.
-    | The key is the filter type and the value is a callback function.
-    | like: input_text, select, datetime, etc.
-    | The callback function receives the field and title as parameters.
-    | The callback function must return an array with the attributes.
+    |
+    | How each filter control binds to the filter bag. The value is the Livewire
+    | modifier chain applied to wire:model — 'live.debounce.600ms', 'live',
+    | 'blur', 'lazy', or '' for a plain wire:model (a JS widget pushes its own
+    | event). Slots: value, operator, start, end, formatted.
+    |
+    | Only the entries you set are overridden. A single grid can override these
+    | by implementing filterWire() on the component.
+    |
     */
 
-    'filter_attributes' => [
-        'input_text' => InputText::class,
-        'boolean' => Boolean::class,
-        'number' => Number::class,
-        'select' => Select::class,
+    'filter_wire' => [
+        // 'input_text' => ['value' => 'live.debounce.800ms'],
     ],
 
     /*

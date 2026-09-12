@@ -44,8 +44,10 @@ function lifecycleComponent(string $tableName): PowerGridComponent
 
 it('accumulates enabled filters with their labels and renders them as badges', function () {
     $test = Livewire::test(lifecycleComponent('enabled-accumulate')::class)
-        ->call('filterInputText', 'name', 'Dish', 'Dish Name')
-        ->call('filterBoolean', 'in_stock', 'true', 'In Stock');
+        ->call('putFilterRecord', 'name', 'input_text', 'Dish', null, 'Dish Name')
+        ->call('commitFilters')
+        ->call('putFilterRecord', 'in_stock', 'boolean', 'true', null, 'In Stock')
+        ->call('commitFilters');
 
     $labels = collect($test->get('enabledFilters'))->pluck('label')->all();
 
@@ -60,8 +62,10 @@ it('accumulates enabled filters with their labels and renders them as badges', f
 
 it('removes a single enabled filter with clearFilter and keeps the others', function () {
     $test = Livewire::test(lifecycleComponent('enabled-clear-one')::class)
-        ->call('filterInputText', 'name', 'Dish', 'Dish Name')
-        ->call('filterBoolean', 'in_stock', 'true', 'In Stock')
+        ->call('putFilterRecord', 'name', 'input_text', 'Dish', null, 'Dish Name')
+        ->call('commitFilters')
+        ->call('putFilterRecord', 'in_stock', 'boolean', 'true', null, 'In Stock')
+        ->call('commitFilters')
         ->call('clearFilter', 'name');
 
     $labels = collect($test->get('enabledFilters'))->pluck('label')->all();
@@ -73,8 +77,10 @@ it('removes a single enabled filter with clearFilter and keeps the others', func
 
 it('removes every enabled filter with clearAllFilters', function () {
     $test = Livewire::test(lifecycleComponent('enabled-clear-all')::class)
-        ->call('filterInputText', 'name', 'Dish', 'Dish Name')
-        ->call('filterBoolean', 'in_stock', 'true', 'In Stock')
+        ->call('putFilterRecord', 'name', 'input_text', 'Dish', null, 'Dish Name')
+        ->call('commitFilters')
+        ->call('putFilterRecord', 'in_stock', 'boolean', 'true', null, 'In Stock')
+        ->call('commitFilters')
         ->call('clearAllFilters');
 
     expect($test->get('enabledFilters'))->toBeEmpty()
@@ -83,8 +89,10 @@ it('removes every enabled filter with clearAllFilters', function () {
 
 it('does not add duplicate enabled filters for the same field', function () {
     $test = Livewire::test(lifecycleComponent('enabled-dedup')::class)
-        ->call('filterInputText', 'name', 'Cheap', 'Dish Name')
-        ->call('filterInputText', 'name', 'Mid', 'Dish Name');
+        ->call('putFilterRecord', 'name', 'input_text', 'Cheap', null, 'Dish Name')
+        ->call('commitFilters')
+        ->call('putFilterRecord', 'name', 'input_text', 'Mid', null, 'Dish Name')
+        ->call('commitFilters');
 
     expect($test->get('enabledFilters'))->toHaveCount(1);
 });

@@ -33,7 +33,7 @@
         ])>
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline])>
                 <input
-                    {{ data_get($filter, 'inputStartAttributes') }}
+                    {{ data_get($filter, 'wire.start') }}
                     style="{{ data_get($column, 'headerStyle') }}"
                     type="text"
                     class="{{ $filterClasses }}"
@@ -42,7 +42,7 @@
             </div>
             <div @class(['pl-0 w-full sm:w-1/2' => !$inline, 'mt-1' => $inline])>
                 <input
-                    {{ data_get($filter, 'inputEndAttributes') }}
+                    {{ data_get($filter, 'wire.end') }}
                     @if ($inline) style="{{ data_get($column, 'headerStyle') }}" @endif
                     type="text"
                     class="{{ $filterClasses }}"

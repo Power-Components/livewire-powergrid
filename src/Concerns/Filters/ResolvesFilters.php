@@ -3,92 +3,44 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns\Filters;
 
 use Closure;
-use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\FilterAttributes\FilterWireAttributes;
+use PowerComponents\LivewirePowerGrid\Support\FilterWire;
 
 trait ResolvesFilters
 {
-    protected function resolveFiltersForRender(): void
-    {
-        $this->resolveFilters();
-    }
-
     protected function resolveFilters(): void
     {
-        $filters = collect($this->declaredFilters());
+        $declared = $this->declaredFilters();
 
-        if ($filters->isEmpty()) {
+        if ($declared === []) {
             return;
         }
 
         $columns = $this->columns;
+        $columnsByField = $this->indexColumnsByField($columns);
+        $panelPending = $this->usesFilterPanel() && ! $this->filterPanelLoaded;
 
-        $filters->each(function ($filter) use (&$columns) {
-            foreach ($columns as $index => $column) {
-                /** @var Column $column */
-                if (data_get($column, 'field') === data_get($filter, 'column') ||
-                    data_get($column, 'dataField') === data_get($filter, 'column')) {
-                    if (data_get($filter, 'dataSource') instanceof Closure) {
-                        if ($this->usesFilterPanel() && ! $this->filterPanelLoaded) {
-                            $pending = is_object($filter) ? clone $filter : $filter;
-                            data_forget($pending, 'dataSource');
-                            data_forget($pending, 'builder');
-                            data_forget($pending, 'collection');
-                            data_set($column, 'filters', $this->filterForView($pending, $column));
-                            $columns[$index] = $column;
+        foreach ($declared as $filter) {
+            $columnKey = data_get($filter, 'column');
+            $targets = is_string($columnKey) ? ($columnsByField[$columnKey] ?? []) : [];
 
-                            continue;
-                        }
-
-                        $depends = (array) data_get($filter, 'depends');
-
-                        if ($this->usesFilterInline() && ! $depends && $this->inlineFiltersResolved) {
-                            data_set($filter, 'dataSource', []);
-                        } else {
-                            $closure = data_get($filter, 'dataSource');
-
-                            if ($depends && $this->filters) {
-                                $depends = collect($depends)
-                                    ->mapWithKeys(function ($field) {
-                                        /** @var string $field */
-                                        $record = $this->filters[$field] ?? null;
-
-                                        return [$field => is_array($record) ? ($record['value'] ?? null) : null];
-                                    });
-                            }
-
-                            data_set($filter, 'dataSource', $closure($depends));
-                        }
-                    }
-
-                    $columnFilter = is_object($filter) ? clone $filter : $filter;
-                    data_forget($columnFilter, 'builder');
-                    data_forget($columnFilter, 'collection');
-
-                    /** @var object|string $columnFilter */
-                    if (! is_array($columnFilter) && method_exists($columnFilter, 'execute')) {
-                        $columnFilter = $columnFilter->execute();
-                    }
-
-                    data_set($column, 'filters', $this->filterForView($columnFilter, $column));
-
-                    if (data_get($columnFilter, 'className') === 'PowerComponents\Turbine\Components\Filters\FilterDynamic' &&
-                        filled(data_get($columnFilter, 'attributes'))) {
-                        $attributes = array_values((array) data_get($columnFilter, 'attributes'));
-
-                        foreach ($attributes as $value) {
-                            if (is_string($value) && str_contains($value, 'filters.') && is_null(data_get($this->filters, str($value)->after('filters.')))) {
-                                $this->setInFilters($this->filters, (string) str($value)->replace('filters.', ''), null);
-                            }
-                        }
-                    }
-
-                    $columns[$index] = $column;
-                }
+            if ($targets === []) {
+                continue;
             }
-        });
 
-        $this->columns = $columns;
+            $definition = $panelPending && data_get($filter, 'dataSource') instanceof Closure
+                ? $this->withoutServerOnlyKeys($filter, ['dataSource', 'builder', 'collection'])
+                : $this->resolveFilterDefinition($filter);
+
+            $this->registerDynamicFilterPaths($definition);
+
+            foreach ($targets as $index) {
+                $column = $columns[$index];
+                data_set($column, 'filters', $this->filterForView($definition));
+                $columns[$index] = $column;
+            }
+        }
+
+        $this->columns = array_values($columns);
 
         if ($this->usesFilterInline()) {
             $this->inlineFiltersResolved = true;
@@ -96,19 +48,124 @@ trait ResolvesFilters
     }
 
     /**
+     * @param  list<mixed>  $columns
+     * @return array<string, list<int>>
+     */
+    protected function indexColumnsByField(array $columns): array
+    {
+        $index = [];
+
+        foreach ($columns as $position => $column) {
+            foreach ([data_get($column, 'field'), data_get($column, 'dataField')] as $key) {
+                if (is_string($key) && $key !== '' && ! in_array($position, $index[$key] ?? [], true)) {
+                    $index[$key][] = $position;
+                }
+            }
+        }
+
+        return $index;
+    }
+
+    /**
+     * Resolve the filter's dataSource closure (once — the result is memoized on
+     * the declared filter) and hand back a view-safe copy.
+     */
+    protected function resolveFilterDefinition(mixed $filter): mixed
+    {
+        if (data_get($filter, 'dataSource') instanceof Closure) {
+            $depends = (array) data_get($filter, 'depends');
+
+            if ($this->usesFilterInline() && ! $depends && $this->inlineFiltersResolved) {
+                data_set($filter, 'dataSource', []);
+            } else {
+                /** @var Closure $closure */
+                $closure = data_get($filter, 'dataSource');
+
+                data_set($filter, 'dataSource', $closure($this->filterDependsValues($depends)));
+            }
+        }
+
+        $definition = $this->withoutServerOnlyKeys($filter, ['builder', 'collection']);
+
+        return is_object($definition) && method_exists($definition, 'execute')
+            ? $definition->execute()
+            : $definition;
+    }
+
+    /**
+     * Current values of the filters this one depends on, keyed by field.
+     *
+     * @param  array<array-key, mixed>  $depends
+     * @return array<array-key, mixed>
+     */
+    protected function filterDependsValues(array $depends): array
+    {
+        if (! $depends || ! $this->filters) {
+            return $depends;
+        }
+
+        $values = [];
+
+        foreach ($depends as $field) {
+            if (! is_string($field)) {
+                continue;
+            }
+
+            $record = $this->filters[$field] ?? null;
+            $values[$field] = is_array($record) ? ($record['value'] ?? null) : null;
+        }
+
+        return $values;
+    }
+
+    /**
+     * A view-safe copy: the server-only keys (closures, query objects) removed.
+     *
+     * @param  list<string>  $keys
+     */
+    protected function withoutServerOnlyKeys(mixed $filter, array $keys): mixed
+    {
+        $copy = is_object($filter) ? clone $filter : $filter;
+
+        foreach ($keys as $key) {
+            data_forget($copy, $key);
+        }
+
+        return $copy;
+    }
+
+    /**
+     * FilterDynamic binds arbitrary `filters.*` paths; make sure each one exists
+     * in the bag so Livewire can bind to it.
+     */
+    protected function registerDynamicFilterPaths(mixed $definition): void
+    {
+        if (data_get($definition, 'className') !== 'PowerComponents\Turbine\Components\Filters\FilterDynamic'
+            || blank(data_get($definition, 'attributes'))) {
+            return;
+        }
+
+        foreach ((array) data_get($definition, 'attributes') as $value) {
+            if (! is_string($value) || ! str_contains($value, 'filters.')) {
+                continue;
+            }
+
+            $path = (string) str($value)->after('filters.');
+
+            if (is_null(data_get($this->filters, $path))) {
+                $this->setInFilters($this->filters, $path, null);
+            }
+        }
+    }
+
+    /**
      * @return array<string, mixed>
      */
-    protected function filterForView(mixed $filter, mixed $column): array
+    protected function filterForView(mixed $filter): array
     {
-        $title = data_get($column, 'title');
-
         /** @var array<string, mixed> $definition */
         $definition = (array) $filter;
 
-        return FilterWireAttributes::forView(
-            $definition,
-            $this->usesFilterPanel(),
-            is_string($title) ? $title : '',
-        );
+        return FilterWire::forView($definition, $this->usesFilterPanel(), $this->filterWire());
     }
 }

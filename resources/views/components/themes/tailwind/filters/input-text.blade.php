@@ -65,7 +65,7 @@
                                 class="{{ $selectClasses }}"
                                 style="{{ data_get($column, 'headerStyle') }}"
                                 data-cy="input_text_options_{{ $tableName }}_{{ $field }}"
-                                {{ data_get($filter, 'selectAttributes') }}
+                                {{ data_get($filter, 'wire.operator') }}
                             >
                                 @foreach ($inputTextOptions as $key => $value)
                                     <option
@@ -86,7 +86,7 @@
                         data-id="{{ $field }}"
                         @if (isset($enabledFilters[$field]['disabled']) && boolval($enabledFilters[$field]['disabled']) === true) disabled
                             @else
-                                {{ data_get($filter, 'inputAttributes') }} @endif
+                                {{ data_get($filter, 'wire.value') }} @endif
                         type="text"
                         class="{{ $inputClasses }}"
                         placeholder="{{ $placeholder }}"

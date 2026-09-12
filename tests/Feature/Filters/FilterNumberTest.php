@@ -38,13 +38,13 @@ it('properly filters by number', function () {
 
     Livewire::test($component::class)
         ->set('filters', [
-            'number' => ['price' => ['start' => 150, 'end' => 250]],
+            'price' => ['type' => 'number', 'value' => ['start' => 150, 'end' => 250]],
         ])
         ->assertDontSee('Dish 1')
         ->assertSee('Dish 2')
         ->assertDontSee('Dish 3')
         ->set('filters', [
-            'number' => ['price' => ['start' => 250]],
+            'price' => ['type' => 'number', 'value' => ['start' => 250]],
         ])
         ->assertDontSee('Dish 1')
         ->assertDontSee('Dish 2')

@@ -7,6 +7,7 @@ use PowerComponents\LivewirePowerGrid\Plugins\Editable\EditablePlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\ExportPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder\FilterBuilderPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Flatpickr\FlatpickrPlugin;
+use PowerComponents\LivewirePowerGrid\Plugins\MultiSelect\MultiSelectPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Plugins\Tabs\TabsPlugin;
 use PowerComponents\LivewirePowerGrid\Plugins\Toggleable\ToggleablePlugin;
@@ -27,6 +28,7 @@ class PowerGridManager
         ExportPlugin::class,
         FilterBuilderPlugin::class,
         FlatpickrPlugin::class,
+        MultiSelectPlugin::class,
         TabsPlugin::class,
         ToggleablePlugin::class,
         TruncatePlugin::class,
