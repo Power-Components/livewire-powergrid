@@ -1,7 +1,17 @@
 export default (params) => ({
     rowId: params?.rowId ?? null,
     parentId: params?.parentId ?? null,
+    renderTick: 0,
+    init() {
+        this._pgRerender = () => { this.renderTick++; };
+        window.addEventListener('pg:actions-updated', this._pgRerender);
+    },
+    destroy() {
+        window.removeEventListener('pg:actions-updated', this._pgRerender);
+    },
     toHtml() {
+        void this.renderTick;
+
         let actions = null;
         const wireId = this.parentId ?? this.$wire.id;
 
