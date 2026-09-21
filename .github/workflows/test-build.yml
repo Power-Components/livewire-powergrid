@@ -38,6 +38,9 @@ jobs:
           yarn config set network-timeout 300000
           yarn install --frozen-lockfile --immutable
 
+      - name: Test JS
+        run: yarn test:js
+
       - name: Build
         run: yarn build
 
