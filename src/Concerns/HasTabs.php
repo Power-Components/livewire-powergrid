@@ -81,7 +81,7 @@ trait HasTabs
         $config = $this->tabsConfig();
 
         if ($config === null) {
-            return ['tableName' => $this->tableName, 'tabs' => [], 'activeTab' => null, 'align' => 'center'];
+            return ['tableName' => $this->tableName, 'tabs' => [], 'activeTab' => null, 'align' => 'center', 'classes' => []];
         }
 
         $counts = $this->computeTabCounts();
@@ -95,6 +95,7 @@ trait HasTabs
                 'icon' => $tab->icon,
                 'active' => $this->activeTab === $key,
                 'badge' => $this->resolveTabBadge($key, $tab, $counts),
+                'classes' => $tab->classes,
             ];
         }
 
@@ -103,6 +104,7 @@ trait HasTabs
             'tabs' => $tabs,
             'activeTab' => $this->activeTab,
             'align' => $this->tabsAlign(),
+            'classes' => $config->classes,
         ];
     }
 
