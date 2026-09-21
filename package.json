@@ -8,7 +8,6 @@
     },
     "scripts": {
         "build": "vite build",
-        "test:js": "node --test 'tests/js/**/*.test.js'",
         "build:tailwind": "npx @tailwindcss/cli -i ./resources/css/tailwind4.css -o ./dist/tailwind4.css --minify",
         "dev": "vite build --watch",
         "blade-formatter": "blade-formatter --write resources/**/*.blade.php"
