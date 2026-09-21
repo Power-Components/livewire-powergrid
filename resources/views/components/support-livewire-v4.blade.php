@@ -11,9 +11,11 @@
             })
             this.$js('pgActions', (actions) => {
                 window['pgActions_' + $wire.id] = JSON.parse(actions);
+                window.dispatchEvent(new CustomEvent('pg:actions-updated', { detail: { id: $wire.id } }));
             })
             this.$js('pgActionsHeader', (actions) => {
                 window['pgActionsHeader_' + $wire.id] = JSON.parse(actions);
+                window.dispatchEvent(new CustomEvent('pg:actions-updated', { detail: { id: $wire.id } }));
             })
         </script>
     @endscript

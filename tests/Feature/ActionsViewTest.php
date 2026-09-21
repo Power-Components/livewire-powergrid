@@ -1,7 +1,8 @@
 <?php
 
 use PowerComponents\LivewirePowerGrid\Column;
-use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\DishesTable;
+use PowerComponents\LivewirePowerGrid\Providers\SupportLivewireVersions;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\{DishesActionTable, DishesTable};
 use PowerComponents\LivewirePowerGrid\Themes\{Bootstrap5, DaisyUI, Tailwind};
 
 use function PowerComponents\LivewirePowerGrid\Tests\Plugins\livewire;
@@ -50,3 +51,31 @@ it('can render actionsFromView property', function (string $component, object $p
     'bootstrap' => [$component::class, (object) ['theme' => Bootstrap5::class, 'field' => 'name']],
     'daisyui' => [$component::class, (object) ['theme' => DaisyUI::class, 'field' => 'name']],
 ]);
+
+it('scopes the actions-updated event to the grid instance', function () {
+    if (! SupportLivewireVersions::isV4()) {
+        $this->markTestSkipped('Instance-scoped actions event only applies to Livewire v4.');
+    }
+
+    $html = html_entity_decode(livewire(DishesActionTable::class)->html());
+
+    expect($html)
+        ->toContain("new CustomEvent('pg:actions-updated', { detail: { id: \$wire.id } })")
+        ->not->toContain("new CustomEvent('pg:actions-updated')");
+});
+
+it('keeps the actions event scoped per instance with multiple grids on the page', function () {
+    if (! SupportLivewireVersions::isV4()) {
+        $this->markTestSkipped('Instance-scoped actions event only applies to Livewire v4.');
+    }
+
+    $first  = livewire(DishesActionTable::class);
+    $second = livewire(DishesActionTable::class);
+
+    expect($first->id())->not->toBe($second->id());
+
+    foreach ([$first, $second] as $grid) {
+        expect(html_entity_decode($grid->html()))
+            ->toContain("new CustomEvent('pg:actions-updated', { detail: { id: \$wire.id } })");
+    }
+});
