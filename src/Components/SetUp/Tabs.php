@@ -27,9 +27,31 @@ final class Tabs implements Definition
 
     public string $align = 'center';
 
+    /** @var array<string, string> */
+    public array $classes = [];
+
     public static function make(): self
     {
         return new self();
+    }
+
+    /**
+     * Extra CSS classes appended to each tabs slot, keyed by slot name.
+     *
+     * Slots: container, list, tab, tab_active, tab_inactive, badge, badge_active, badge_inactive.
+     *
+     *   PowerGrid::tabs()->classes([
+     *       'list' => 'bg-slate-900 border-slate-700',
+     *       'tab_active' => 'bg-emerald-500 text-white',
+     *   ])
+     *
+     * @param  array<string, string>  $classes
+     */
+    public function classes(array $classes): self
+    {
+        $this->classes = array_merge($this->classes, $classes);
+
+        return $this;
     }
 
     public function align(string $align): self
@@ -63,12 +85,14 @@ final class Tabs implements Definition
         ?array $scope = null,
         bool|int $badge = true,
         string $icon = '',
+        string $classes = '',
     ): self {
         $tab = new Tab($key);
         $tab->label = $label !== '' ? $label : Str::headline($key);
         $tab->scope = $scope;
         $tab->badge = $badge;
         $tab->icon = $icon;
+        $tab->classes = $classes;
 
         $this->tabs[$key] = $tab;
 

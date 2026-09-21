@@ -16,6 +16,9 @@ final class Tab implements Definition
     /** true = auto count, false = hidden, int = fixed value */
     public bool|int $badge = true;
 
+    /** Extra CSS classes appended to this tab's button. */
+    public string $classes = '';
+
     public function __construct(public string $key) {}
 
     public function label(string $label): self
@@ -43,6 +46,13 @@ final class Tab implements Definition
     public function badge(bool|int $badge): self
     {
         $this->badge = $badge;
+
+        return $this;
+    }
+
+    public function classes(string $classes): self
+    {
+        $this->classes = $classes;
 
         return $this;
     }
