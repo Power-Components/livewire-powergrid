@@ -65,6 +65,147 @@ it('selectCheckboxAll works properly', function () {
         ->toBe([]);
 });
 
+it('resetToFirstPage does not navigate when already on the first page', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-reset-first-page';
+
+        /** @var array<int, mixed> */
+        public array $gotoPageCalls = [];
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1'],
+                ['id' => 2, 'name' => 'Dish 2'],
+            ]);
+        }
+
+        public function gotoPage($page, $pageName = 'page'): void
+        {
+            $this->gotoPageCalls[] = $page;
+
+            parent::gotoPage($page, $pageName);
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::footer()->showPerPage(10),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $lw = Livewire::test($component::class);
+
+    $lw->call('resetToFirstPage');
+    expect($lw->get('gotoPageCalls'))->toBe([]);
+
+    $lw->call('gotoPage', 3)
+        ->call('resetToFirstPage');
+    expect($lw->get('gotoPageCalls'))->toContain(1);
+});
+
+it('preserves the row selection when the per-page size changes', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-checkbox-perpage-change';
+
+        public function datasource()
+        {
+            $data = [];
+            for ($i = 1; $i <= 30; $i++) {
+                $data[] = ['id' => $i, 'name' => 'Dish '.$i];
+            }
+
+            return collect($data);
+        }
+
+        public function setUp(): array
+        {
+            $this->showCheckBox();
+
+            return [
+                PowerGrid::footer()->showPerPage(10, [10, 30]),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $lw = Livewire::test($component::class)
+        ->set('checkboxAll', true)
+        ->call('selectCheckboxAll');
+
+    expect($lw->checkboxValues)->toMatchArray(range(1, 10));
+
+    $lw->set('setUp.footer.perPage', 30);
+
+    expect($lw->checkboxValues)->toMatchArray(range(1, 10));
+});
+
+it('selectCheckboxAll honours the explicit checked intent argument', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-checkbox-intent';
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1'],
+                ['id' => 2, 'name' => 'Dish 2'],
+                ['id' => 3, 'name' => 'Dish 3'],
+            ]);
+        }
+
+        public function setUp(): array
+        {
+            $this->showCheckBox();
+
+            return [PowerGrid::footer()->showPerPage(10)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $lw = Livewire::test($component::class)
+        ->call('selectCheckboxAll', true);
+
+    expect($lw->get('checkboxAll'))->toBeTrue()
+        ->and($lw->checkboxValues)->toMatchArray(['1', '2', '3']);
+
+    $lw->call('selectCheckboxAll', false);
+
+    expect($lw->get('checkboxAll'))->toBeFalse()
+        ->and($lw->checkboxValues)->toBe([]);
+});
+
 it('selectCheckboxAll works properly with actionRules disable', function () {
     $component = new class() extends PowerGridComponent
     {
