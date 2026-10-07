@@ -112,6 +112,10 @@ class PowerGridComponent extends Component implements Context
 
     public function resetToFirstPage(string $pageName = 'page'): void
     {
+        if ((int) $this->getPage($pageName) === 1) {
+            return;
+        }
+
         $this->gotoPage(1, $pageName);
     }
 

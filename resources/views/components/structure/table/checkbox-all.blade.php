@@ -25,10 +25,10 @@
     <div class="{{ theme('checkbox.base') }}">
         <label class="{{ theme('checkbox.label') }}">
             <input
+                x-data="pgSelectAll"
                 class="{{ theme('checkbox.input') }}"
                 type="checkbox"
-                wire:click="selectCheckboxAll"
-                wire:model="checkboxAll"
+                x-on:change="$wire.selectCheckboxAll($event.target.checked)"
             >
         </label>
     </div>

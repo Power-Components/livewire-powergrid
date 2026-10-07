@@ -26,8 +26,12 @@ trait Checkbox
     /**
      * @throws Exception|Throwable
      */
-    public function selectCheckboxAll(): void
+    public function selectCheckboxAll(?bool $checked = null): void
     {
+        if ($checked !== null) {
+            $this->checkboxAll = $checked;
+        }
+
         if (! $this->checkboxAll) {
             $this->checkboxValues = [];
 
