@@ -43,14 +43,6 @@ Generated table components include usage examples. Just uncomment some code, ent
 
 <br/>
 
-## 🚀 Online Interactive Demo
-
-Take a look at our Online Interactive Demo showcasing the latest PowerGrid features. Explore the source code, and get your Data Table up and running in no time.
-
-`🌎` <a href="https://demo.livewire-powergrid.com" target="_blank">PowerGrid Online Demo</a>
-
-<br/>
-
 ## 🔥 Features
 
 PowerGrid offers a range of features that are readily available:
