@@ -162,3 +162,46 @@ it('sanitizes pageName', function (string $pageNameCandidate, string $result) {
     'only invalid characters' => ['Ντόναλντ', 'page'],
     'empty page name' => ['', 'page'],
 ]);
+
+it('applies livewire-powergrid.max_per_page to the rows fetched', function (int $max, int $perPage, int $expectedLastRow) {
+    config(['livewire-powergrid.max_per_page' => $max, 'turbine.max_per_page' => 777]);
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-max-per-page';
+
+        public static int $perPage = 10;
+
+        public function datasource()
+        {
+            return collect(range(1, 1500))->map(fn ($i) => ['id' => $i, 'name' => 'row-'.$i.'-end']);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::footer()->showPerPage(self::$perPage, [self::$perPage])];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    $component::$perPage = $perPage;
+
+    Livewire::test($component::class)
+        ->assertSee('row-'.$expectedLastRow.'-end')
+        ->assertDontSee('row-'.($expectedLastRow + 1).'-end');
+
+    expect(config('turbine.max_per_page'))->toBe(777);
+})->with([
+    'caps below per page' => [50, 100, 50],
+    'raised above 1000' => [5000, 1200, 1200],
+    'zero disables the limit' => [0, 1200, 1200],
+]);

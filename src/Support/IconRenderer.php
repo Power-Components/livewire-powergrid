@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Support;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\View\Compilers\ComponentTagCompiler;
 
 /**
  * Compiles an icon reference into HTML.
@@ -40,6 +41,12 @@ final class IconRenderer
     /** @param  array<string, mixed>  $attributes */
     private static function compile(string $icon, array $attributes): string
     {
+        // Blade::render() flushes the whole view factory when it throws, which breaks
+        // an outer render (e.g. a layout component). Never render an unknown component.
+        if (! self::componentExists($icon)) {
+            return '';
+        }
+
         if (self::isStaticallyFoldable($icon, $attributes)) {
             try {
                 return Blade::render(self::buildStaticTag($icon, $attributes));
@@ -51,6 +58,18 @@ final class IconRenderer
             '<x-dynamic-component :component="$component" :attributes="new \Illuminate\View\ComponentAttributeBag($attrs)" />',
             ['component' => $icon, 'attrs' => $attributes],
         );
+    }
+
+    private static function componentExists(string $icon): bool
+    {
+        try {
+            (new ComponentTagCompiler(Blade::getClassComponentAliases(), Blade::getClassComponentNamespaces(), app('blade.compiler')))
+                ->componentClass($icon);
+
+            return true;
+        } catch (\InvalidArgumentException) {
+            return false;
+        }
     }
 
     /** @param  array<string, mixed>  $attributes */

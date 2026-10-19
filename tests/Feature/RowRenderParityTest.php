@@ -136,3 +136,37 @@ it('renders the checkbox column', function () {
         ->assertOk()
         ->assertSeeHtml('wire:key="checkbox-row-1"');
 });
+
+it('applies the row value of contentClassField as the cell class', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'parity-content-class-field';
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'status_class' => 'text-green-600'],
+                ['id' => 2, 'name' => 'Dish 2', 'status_class' => '"><b>x</b>'],
+            ]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('status_class');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Name', 'name')
+                    ->contentClassField('status_class')
+                    ->contentClasses('font-bold'),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSeeHtml('<span class="text-green-600 font-bold">')
+        ->assertSeeHtml('<span class="&quot;&gt;&lt;b&gt;x&lt;/b&gt; font-bold">')
+        ->assertDontSeeHtml('class="status_class');
+});

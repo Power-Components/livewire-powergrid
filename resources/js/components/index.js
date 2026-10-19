@@ -1,5 +1,5 @@
 import '../pg-alpine'
-import '../../../vendor/power-components/partials/resources/js/index.js'
+import '../../../../partials/resources/js/index.js'
 import '../stores/edit-on-click'
 import '../stores/bulk-actions'
 import './pgResponsive/onResize'

@@ -467,9 +467,10 @@ class PowerGridComponent extends Component implements Context
                     customParams: is_array($customParams) ? $customParams : [],
                     tdClass: Arr::toCssClasses([$tdClass, $bodyClass, $alignClasses]),
                     tdStyle: Arr::toCssStyles(['display:none' => $hidden, $bodyStyle]),
-                    spanClassStatic: is_array($contentClasses)
+                    // contentClassField and array contentClasses depend on the row, so they resolve per cell
+                    spanClassStatic: is_array($contentClasses) || $contentClassField !== ''
                         ? null
-                        : Arr::toCssClasses([$contentClassField, $contentClasses]),
+                        : Arr::toCssClasses([$contentClasses]),
                     align: $align,
                     alignClasses: $alignClasses,
                 );
@@ -492,7 +493,7 @@ class PowerGridComponent extends Component implements Context
             return collect();
         }
 
-        if (filled(data_get($this->setUp, 'cache.enabled'))) {
+        if ((bool) data_get($this->setUp, 'cache.enabled')) {
             return $this->getRecordsFromCache();
         }
 
@@ -507,7 +508,7 @@ class PowerGridComponent extends Component implements Context
         $tag = $this->summariesCacheTag();
         $cacheKey = implode('-', $this->getCacheKeys());
 
-        $getCacheClosure = fn () => ProcessDataSource::make($this)->get();
+        $getCacheClosure = fn () => $this->withPowerGridMaxPerPage(fn () => ProcessDataSource::make($this)->get());
 
         /** @var array{results: mixed, transformTime: float} $results */
         $results = Cache::supportsTags()
@@ -522,9 +523,32 @@ class PowerGridComponent extends Component implements Context
      */
     private function getRecordsDataSource(): AbstractPaginator|MorphToMany|BaseCollection
     {
-        $processResult = ProcessDataSource::make($this)->get();
+        $processResult = $this->withPowerGridMaxPerPage(fn () => ProcessDataSource::make($this)->get());
 
         return $this->applyAfterQuery($processResult['results']);
+    }
+
+    /**
+     * Turbine caps pages with `turbine.max_per_page`. Apply PowerGrid's own limit only while
+     * this grid fetches, so other Turbine grids keep the app's turbine config.
+     * shortcut: swaps global config for the call, upgrade when Turbine reads the limit from grid state.
+     *
+     * @template T
+     *
+     * @param  \Closure(): T  $fetch
+     * @return T
+     */
+    private function withPowerGridMaxPerPage(\Closure $fetch): mixed
+    {
+        $turbineMax = config('turbine.max_per_page');
+
+        config(['turbine.max_per_page' => config('livewire-powergrid.max_per_page', $turbineMax)]);
+
+        try {
+            return $fetch();
+        } finally {
+            config(['turbine.max_per_page' => $turbineMax]);
+        }
     }
 
     /** @return AbstractPaginator<int, mixed>|MorphToMany<Model, Model>|BaseCollection<int, mixed> */

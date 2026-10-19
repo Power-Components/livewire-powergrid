@@ -58,14 +58,7 @@ class Macros
                 'method' => 'orWhereRaw',
                 'sql' => $sql,
                 'bindings' => [function (PowerGridComponent $component) use ($field): string {
-                    $search = $component->search;
-                    $fieldMethod = 'beforeSearch'.str($field)->camel()->ucfirst();
-
-                    if (method_exists($component, $fieldMethod)) {
-                        $search = $component->{$fieldMethod}($field, $search);
-                    } elseif (method_exists($component, 'beforeSearch')) {
-                        $search = $component->beforeSearch($field, $search);
-                    }
+                    $search = $component->applyBeforeSearch($field, $component->search);
 
                     return "%$search%";
                 }],

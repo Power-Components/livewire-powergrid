@@ -59,7 +59,7 @@ it('add contentClasses on column', function () {
     };
 
     Livewire::test($component::class)
-        ->assertSeeHtml('<span class=" bg-custom-500">');
+        ->assertSeeHtml('<span class="bg-custom-500">');
 });
 
 it('add contentClasses on column using array', function () {

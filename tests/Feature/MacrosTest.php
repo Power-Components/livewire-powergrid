@@ -179,7 +179,7 @@ it('tests Column searchableRaw macro with field-specific beforeSearch method', f
             ];
         }
 
-        public function beforeSearchName(string $field, string $search): string
+        public function beforeSearchName(string $search): string
         {
             return str_replace('test', 'replaced', $search);
         }
@@ -191,6 +191,33 @@ it('tests Column searchableRaw macro with field-specific beforeSearch method', f
         ->set('search', 'test');
 
     expect($livewire->get('search'))->toBe('test');
+});
+
+it('resolves searchableRaw bindings through the same beforeSearch hooks as normal search', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function beforeSearchProducedAt(string $search): string
+        {
+            return "field:{$search}";
+        }
+
+        public function beforeSearch(string $field, string $search): string
+        {
+            return "global:{$field}:{$search}";
+        }
+    };
+
+    $component->search = 'abc';
+
+    $binding = fn (string $field) => Column::make('Label', $field)->searchableRaw('x like ?')->rawQueries[0]['bindings'][0];
+
+    expect($binding('produced_at')($component))->toBe('%field:abc%')
+        ->and($binding('name')($component))->toBe('%global:name:abc%');
 });
 
 it('tests Column searchableJson macro', function () {

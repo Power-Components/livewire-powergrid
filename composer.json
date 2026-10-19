@@ -40,7 +40,7 @@
     "openspout/openspout": "^5.0"
   },
   "suggest": {
-    "openspout/openspout": "Required to export XLS and CSV (supports v4 and v5)"
+    "openspout/openspout": "Required to export XLS and CSV (v5)"
   },
   "autoload": {
     "psr-4": {

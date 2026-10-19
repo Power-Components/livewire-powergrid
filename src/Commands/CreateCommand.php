@@ -110,7 +110,7 @@ class CreateCommand extends Command
 
             // There is nothing else to read the fields from in this run:
             // re-run the command to generate them from the other source.
-            warning('🚫 Fields discarded. Only the Action column will be generated.');
+            warning('🚫 Fields discarded. The default template (id, name, created_at and Action columns) will be generated.');
         }
 
         return $this;

@@ -122,10 +122,12 @@ final readonly class CellRenderer
             $content = '';
         }
 
-        $spanClass = $column->spanClassStatic ?? Arr::toCssClasses([
-            $column->contentClassField,
+        $fieldClass = $column->contentClassField !== '' ? ($row->{$column->contentClassField} ?? '') : '';
+
+        $spanClass = $column->spanClassStatic ?? e(Arr::toCssClasses([
+            is_scalar($fieldClass) || $fieldClass instanceof \Stringable ? (string) $fieldClass : '',
             $this->contentClassFor($column, $content),
-        ]);
+        ]));
 
         $tooltipView = ($tooltipFull !== null && (bool) data_get($truncate, 'tooltip'))
             ? theme_view('table.column-tooltip')
@@ -171,7 +173,11 @@ final readonly class CellRenderer
 
     private function contentClassFor(ColumnViewModel $column, string $content): string
     {
-        if (! is_array($column->contentClasses) || ! array_key_exists($content, $column->contentClasses)) {
+        if (is_string($column->contentClasses)) {
+            return $column->contentClasses;
+        }
+
+        if (! array_key_exists($content, $column->contentClasses)) {
             return '';
         }
 

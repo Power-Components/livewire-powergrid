@@ -45,7 +45,9 @@
             $content = '';
         }
 
-        $contentClassField = data_get($column, 'contentClassField');
+        $contentClassField = filled(data_get($column, 'contentClassField'))
+            ? ($row->{data_get($column, 'contentClassField')} ?? '')
+            : '';
 
         if ($content instanceof \UnitEnum) {
             $content = $content instanceof \BackedEnum
@@ -93,7 +95,7 @@
 
                     <div wire:replace.self>
                         @if (data_get($column, 'isAction'))
-                            <div class="{{ theme('table.layout.body.td.actions_wrapper') }} {{ $alignClasses }}">
+                            <div class="{{ theme('table.body.td.actions_wrapper') }} {{ $alignClasses }}">
                                 {!! $__partial->renderActions($row) !!}
                             </div>
                         @endif

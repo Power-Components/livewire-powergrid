@@ -64,7 +64,7 @@ trait Summarize
 
         $raw = $this->summaryValues;
 
-        if ($raw === [] && filled(data_get($this->setUp, 'cache.enabled'))) {
+        if ($raw === [] && (bool) data_get($this->setUp, 'cache.enabled')) {
             $tag = $this->summariesCacheTag();
             $key = $this->summariesCacheKey();
 

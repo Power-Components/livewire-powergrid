@@ -3,9 +3,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@source '../src/Themes/**/*.php';
-@source '../resources/views/**/*.php';
-@source '../resources/js/**/*.js';
+@source '../../src/**/*.php';
+@source '../views/**/*.php';
+@source '../js/**/*.js';
 
 @theme {
     /* Semantic Accent Scale - Defaults to Green */
