@@ -13,7 +13,7 @@ PowerGrid 7.x prioritizes **simplicity, an adaptable native skeleton, and indepe
 
 ### Artisan Commands
 
-- Create a PowerGrid component: `php artisan powergrid:create MyTable`
+- Create a PowerGrid component: `php artisan powergrid:create` (interactive: asks for the component name, datasource and fields)
 
 ### Key Concepts
 

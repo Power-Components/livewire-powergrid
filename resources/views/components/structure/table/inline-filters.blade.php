@@ -17,8 +17,8 @@
     $tableName = $tableName ?? $__partial->tableName;
     $filters = $filters ?? $__partial->filters;
     $setUp = $setUp ?? $__partial->setUp;
-    $trClasses = Arr::toCssClasses([theme('table.layout.tr'), theme('table.layout.body.tr.filters')]);
-    $tdClasses = Arr::toCssClasses([theme('table.layout.td'), theme('table.layout.body.td.filters')]);
+    $trClasses = Arr::toCssClasses([theme('table.layout.tr'), theme('table.body.tr.filters')]);
+    $tdClasses = Arr::toCssClasses([theme('table.layout.td'), theme('table.body.td.filters')]);
 @endphp
 @if ($__partial->usesFilterInline())
     <tr
@@ -51,7 +51,7 @@
             <td
                 @class([
                     theme('table.layout.td'),
-                    theme('table.layout.body.td.filters'),
+                    theme('table.body.td.filters'),
                 ])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
                 @style([
