@@ -54,6 +54,7 @@ it('orders dropdown filters by Filter::order, falling back to the filters() inde
         ->html();
 
     expect($html)->toContain('data-cy="filter-dropdown-panel"')
+        ->toContain('data-columns="1"')
         ->toMatch('/draftFilters\.name\.value[\s\S]*draftFilters\.in_stock\.value[\s\S]*draftFilters\.price\.value/');
 });
 

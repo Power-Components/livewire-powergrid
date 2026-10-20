@@ -59,6 +59,7 @@
         role="dialog"
         aria-modal="true"
         data-cy="filter-dropdown-panel"
+        data-columns="{{ $columns }}"
         class="{{ theme('filter.dropdown.panel') }}"
     >
         <div class="{{ theme('filter.dropdown.header') }}">
