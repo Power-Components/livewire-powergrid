@@ -11,7 +11,6 @@ use PowerComponents\Turbine\Fields;
 class PowerGridFields extends Fields
 {
     /**
-     *
      * @var array<string, true>
      */
     public array $rawFields = [];
