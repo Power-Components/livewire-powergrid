@@ -51,7 +51,9 @@ window.pgAlpine.data('pgFilterPanel', () => ({
         const margin = 8
         const gap = 8
         const t = trigger.getBoundingClientRect()
-        const width = Math.min(672, window.innerWidth - margin * 2) // 672px = 42rem
+        // Size to the field grid: 1, 2 or 3 columns (20rem, 32rem, 42rem).
+        const widths = { 1: 320, 2: 512, 3: 672 }
+        const width = Math.min(widths[panel.dataset.columns] ?? 672, window.innerWidth - margin * 2)
 
         // Right-align to the trigger, then clamp inside the viewport.
         let left = t.right - width
