@@ -39,6 +39,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Escape closure fields
+    |--------------------------------------------------------------------------
+    |
+    | Strings returned by closures in fields() are escaped. Return an
+    | HtmlString to render HTML. Set to false to render closure strings as raw
+    | HTML (v6 behavior); escape user data yourself with e() in that mode.
+    |
+    */
+
+    'escape_closure_fields' => true,
+
+    /*
+    |--------------------------------------------------------------------------
     | Front-end assets
     |--------------------------------------------------------------------------
     |

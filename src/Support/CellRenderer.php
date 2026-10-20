@@ -100,6 +100,8 @@ final readonly class CellRenderer
 
         if ($rawContent instanceof Htmlable) {
             $content = $rawContent->toHtml();
+        } elseif ($column->rawHtml && is_string($rawContent)) {
+            $content = $rawContent;
         } elseif (is_scalar($rawContent) || $rawContent instanceof \Stringable) {
             $stringValue = (string) $rawContent;
 

@@ -220,8 +220,9 @@ trait Base
 
         $fields = PowerGrid::fields();
 
+        // assigned directly: schema fields keep v7 escaping, only PowerGridFields::add() closures render raw
         foreach ($definition->fields()->fields as $name => $closure) {
-            $fields->add($name, $closure);
+            $fields->fields[$name] = $closure;
         }
 
         return $fields;

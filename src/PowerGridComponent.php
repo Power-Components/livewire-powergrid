@@ -436,9 +436,10 @@ class PowerGridComponent extends Component implements Context
     public function columnViewModels(): array
     {
         $tdClass = theme('table.layout.td');
+        $rawFields = config('livewire-powergrid.escape_closure_fields', true) ? [] : $this->fields()->rawFields;
 
         return $this->visibleColumns
-            ->map(function ($column) use ($tdClass) {
+            ->map(function ($column) use ($tdClass, $rawFields) {
                 $field = $this->columnString($column, 'field');
                 $dataField = $this->columnString($column, 'dataField');
                 $contentClassField = $this->columnString($column, 'contentClassField');
@@ -473,6 +474,7 @@ class PowerGridComponent extends Component implements Context
                         : Arr::toCssClasses([$contentClasses]),
                     align: $align,
                     alignClasses: $alignClasses,
+                    rawHtml: isset($rawFields[$field]),
                 );
             })
             ->values()

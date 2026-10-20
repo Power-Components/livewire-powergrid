@@ -27,6 +27,7 @@ final readonly class ColumnViewModel
         public ?string $spanClassStatic,
         public ?string $align,
         public string $alignClasses,
+        public bool $rawHtml = false,
     ) {}
 
     public static function alignmentClasses(mixed $align): string
