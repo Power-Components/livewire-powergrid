@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\HtmlString;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
@@ -56,34 +57,42 @@ it('runs e() helper in standard PG fields', function () {
         ->assertSeeHtml('&lt;img');
 });
 
-it('escapes closure-based PG fields by default', function () {
-    $component = new class() extends PowerGridComponent
+function closureLinkTable(): string
+{
+    return (new class() extends PowerGridComponent
     {
-        public string $tableName = 'test-fields-no-escape';
+        public string $tableName = 'test-fields-closure';
 
         public function datasource()
         {
-            return collect([['id' => 1, 'link' => 'https://google.com']]);
+            return collect([['id' => 1, 'link' => 'https://google.com', 'badge' => 'new']]);
         }
 
         public function fields(): PowerGridFields
         {
             return PowerGrid::fields()
                 ->add('id')
-                ->add('link', function ($row) {
-                    return '<a href="'.data_get($row, 'link').'">Link</a>';
-                });
+                ->add('link', fn ($row) => '<a href="'.data_get($row, 'link').'">Link</a>')
+                ->add('badge', fn ($row) => new HtmlString('<b>'.data_get($row, 'badge').'</b>'));
         }
 
         public function columns(): array
         {
-            return [Column::make('Link', 'link')];
+            return [Column::make('Link', 'link'), Column::make('Badge', 'badge')];
         }
-    };
+    })::class;
+}
 
-    // Escaping happens at the render sink: closure-returned HTML is escaped
-    // unless the developer opts into raw rendering via a custom cell view.
-    Livewire::test($component::class)
-        ->assertDontSeeHtml('<a href="https://google.com">Link</a>')
-        ->assertSeeHtml('&lt;a href=&quot;https://google.com&quot;&gt;Link&lt;/a&gt;');
+it('escapes closure-based PG fields by default', function () {
+    Livewire::test(closureLinkTable())
+        ->assertSeeHtml('&lt;a href=&quot;https://google.com&quot;&gt;Link&lt;/a&gt;')
+        ->assertSeeHtml('<b>new</b>');
+});
+
+it('renders closure-based PG fields as raw HTML when escape_closure_fields is disabled', function () {
+    config(['livewire-powergrid.escape_closure_fields' => false]);
+
+    Livewire::test(closureLinkTable())
+        ->assertSeeHtml('<a href="https://google.com">Link</a>')
+        ->assertSeeHtml('<b>new</b>');
 });
