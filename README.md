@@ -26,7 +26,7 @@ Livewire PowerGrid creates modern, powerful and easy-to-customize data tables ba
 With PowerGrid, you can effortlessly create advanced data tables in a matter of minutes.
 
 <p>
-    <a href="https://demo.livewire-powergrid.com/examples/demo-dish" target="_blank"><img src="https://livewire-powergrid.com/screenshot.png" alt="PowerGrid Screenshot" width="805"></a>
+    <a href="https://livewire-powergrid.com" target="_blank"><img src="art/screenshot_merged.png" alt="PowerGrid Screenshot" width="805"></a>
 </p>
 
 `🚀` **Ready out of the box**
