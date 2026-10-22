@@ -218,7 +218,7 @@ class Tailwind extends Theme
                 'number' => [
                     'view' => 'livewire-powergrid::components.themes.tailwind.filters.number',
                     'base' => '',
-                    'input' => 'w-full min-w-[5rem] block focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-1.5 pl-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6',
+                    'input' => 'w-full min-w-[5rem] block focus:ring-accent focus-within:focus:ring-accent focus-within:ring-accent dark:focus-within:ring-accent flex rounded-md ring-1 transition focus-within:ring-2 dark:ring-zinc-600 dark:text-zinc-300 text-zinc-600 ring-zinc-300 dark:bg-zinc-800 bg-white dark:placeholder-zinc-400 rounded-md border-0 bg-transparent py-1.5 px-2 ring-0 placeholder:text-zinc-400 focus:outline-none sm:text-sm sm:leading-6',
                 ],
                 'select' => [
                     'view' => 'livewire-powergrid::components.themes.tailwind.filters.select',
