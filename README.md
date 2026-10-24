@@ -10,7 +10,6 @@
       <a href="https://packagist.org/packages/power-components/livewire-powergrid"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/power-components/livewire-powergrid"></a>
    </p>
    <a href="https://livewire-powergrid.com" target="_blank">📚 Documentation</a> |
-   <a href="#-online-interactive-demo" target="_blank"> 🚀 Online Demo</a> |
    <a href="#-features">🔥 Features</a> |
    <a href="#get-started">⌨️ Get started</a>
 </div>
