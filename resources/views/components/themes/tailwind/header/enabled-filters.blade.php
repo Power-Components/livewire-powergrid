@@ -18,8 +18,8 @@
                     @php
                         $isBuilderPill = ($filter['source'] ?? null) === 'filterBuilder';
                         $pillClick = $isBuilderPill
-                            ? "clearFilterBuilderRow(".intval($filter['index'] ?? 0).")"
-                            : "clearFilter('".$filter['field']."')";
+                            ? 'clearFilterBuilderRow('.intval($filter['index'] ?? 0).')'
+                            : 'clearFilter('.\Illuminate\Support\Js::from((string) ($filter['field'] ?? '')).')';
                     @endphp
                     <span
                         role="button"

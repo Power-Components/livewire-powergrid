@@ -94,3 +94,39 @@ it('shows warning messages when enabled', function () {
         ->dispatch('pg:softDeletes-test-soft-deletes-msg', softDeletes: 'onlyTrashed')
         ->assertSee(trans('livewire-powergrid::datatable.soft_deletes.message_only_trashed'));
 })->requiresSQLite();
+
+it('ignores softDeletes unless the header enables it', function () {
+    Dish::query()->forceDelete();
+    Dish::create(['name' => 'Visible dish', 'category_id' => 1, 'chef_id' => 1, 'diet' => 1, 'price' => 10, 'calories' => 100, 'stored_at' => 'keep', 'produced_at' => now()]);
+    $hidden = Dish::create(['name' => 'Trashed secret', 'category_id' => 1, 'chef_id' => 1, 'diet' => 1, 'price' => 20, 'calories' => 200, 'stored_at' => 'secret-bin', 'produced_at' => now()]);
+    $hidden->delete();
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'soft-deletes-without-header';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->assertSee('Visible dish')
+        ->assertDontSee('Trashed secret')
+        ->call('softDeletes', 'withTrashed')
+        ->assertDontSee('Trashed secret')
+        ->call('softDeletes', 'onlyTrashed')
+        ->assertSee('Visible dish')
+        ->assertDontSee('Trashed secret');
+});

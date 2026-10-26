@@ -2,7 +2,7 @@
 
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
-use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
+use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\Components\SetUp\Exportable;
@@ -121,6 +121,45 @@ it('streams a database datasource to csv with correct content', function () {
 
     $downloadedFile = Livewire::test($component::class)
         ->call('exportToCsv', false);
+
+    expect($downloadedFile)->toBeCsvDownload(['ID', 'Name'], [['1', 'Pastel de Nata']]);
+})->requiresOpenSpout();
+
+it('keeps the declared filter column when filters and export arrive in one request', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-export-csv-filter-shape';
+
+        public function datasource()
+        {
+            return Dish::query()->where('id', 1);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('export')->type(Exportable::TYPE_CSV)];
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('ID', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    $downloadedFile = Livewire::test($component::class)->update(
+        calls: [['method' => 'exportToCsv', 'params' => [false], 'metadata' => []]],
+        updates: ['filters' => ['name' => ['type' => 'select', 'value' => ['stored_at' => 'Pastel']]]],
+    );
 
     expect($downloadedFile)->toBeCsvDownload(['ID', 'Name'], [['1', 'Pastel de Nata']]);
 })->requiresOpenSpout();

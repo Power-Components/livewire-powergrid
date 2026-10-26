@@ -2,7 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
-use Livewire\Attributes\Computed;
+use Livewire\Attributes\{Computed, Locked};
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\PowerGridFields;
 use PowerComponents\Turbine\Components\Filters\FilterBase;
@@ -12,12 +13,15 @@ trait Base
 {
     private const SNAPSHOT_COLUMN_KEYS = ['field', 'dataField', 'hidden', 'forceHidden', 'isAction'];
 
+    #[Locked]
     public string $primaryKey = 'id';
 
+    #[Locked]
     public ?string $primaryKeyAlias = null;
 
     public bool $ignoreTablePrefix = true;
 
+    #[Locked]
     public string $tableName = '';
 
     /** @var array<string, mixed> */
@@ -31,6 +35,7 @@ trait Base
 
     public bool $readyToLoad = false;
 
+    #[Locked]
     public string $loadingComponent = '';
 
     /** @var list<mixed> */
@@ -85,6 +90,27 @@ trait Base
         $this->overlayColumnHidden($incomingColumns);
 
         unset($this->visibleColumns, $this->columnViewModels, $this->hasColumnFilters);
+    }
+
+    // #[Locked] is lost when a subclass redeclares the property; reject client writes the same way.
+    public function updatingPrimaryKey(): void
+    {
+        throw new CannotUpdateLockedPropertyException('primaryKey');
+    }
+
+    public function updatingPrimaryKeyAlias(): void
+    {
+        throw new CannotUpdateLockedPropertyException('primaryKeyAlias');
+    }
+
+    public function updatingTableName(): void
+    {
+        throw new CannotUpdateLockedPropertyException('tableName');
+    }
+
+    public function updatingLoadingComponent(): void
+    {
+        throw new CannotUpdateLockedPropertyException('loadingComponent');
     }
 
     public function stripServerOwnedSnapshot(): void

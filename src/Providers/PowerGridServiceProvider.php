@@ -5,10 +5,11 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Blaze\Blaze;
+use Livewire\Exceptions\MethodNotFoundException;
 use Livewire\Features\SupportTesting\Testable;
 use PowerComponents\LivewirePowerGrid\Commands\{CreateCommand, GenerateThemeMetaCommand, PublishCommand};
 use PowerComponents\LivewirePowerGrid\Lite\Components as LiteComponents;
-use PowerComponents\LivewirePowerGrid\PowerGridManager;
+use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridManager};
 use PowerComponents\LivewirePowerGrid\Support\CompatAliases;
 use PowerComponents\LivewirePowerGrid\Support\Synth\PowerGridWireableSynth;
 use PowerComponents\LivewirePowerGrid\Testing\TestActions;
@@ -21,10 +22,31 @@ class PowerGridServiceProvider extends ServiceProvider
 {
     private string $packageName = 'livewire-powergrid';
 
+    private const array SERVER_ONLY_METHODS = [
+        'onPluginUpdated',
+        'onUpdatedEditable',
+        'onUpdatedToggleable',
+        'afterFilterChanged',
+        'transformRows',
+        'transformQuery',
+        'tabQuery',
+        'beforeFilterBuilderApply',
+        'validateFilterBuilder',
+        'transformActions',
+        'toDataArray',
+        'toDataResponse',
+    ];
+
     public function boot(): void
     {
         if ($this->app->bound('livewire')) {
             app('livewire')->propertySynthesizer(PowerGridWireableSynth::class);
+
+            \Livewire\on('call', function (mixed $component, string $method) {
+                if ($component instanceof PowerGridComponent && in_array($method, self::SERVER_ONLY_METHODS, true)) {
+                    throw new MethodNotFoundException($method);
+                }
+            });
         }
 
         if ($this->app->runningInConsole()) {

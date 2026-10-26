@@ -114,3 +114,18 @@ it('clearFilter strips the _start/_end suffix and clears the whole number range'
         ->assertSee('Mid Dish')
         ->assertSee('Expensive Dish');
 });
+
+it('does not let a pill field break out of wire:click', function () {
+    $payload = "x');alert(document.domain);//";
+
+    $html = Livewire::test(lifecycleComponent('enabled-pill-js')::class)
+        ->set('enabledFilters', [[
+            'field' => $payload,
+            'label' => 'Pwn',
+        ]])
+        ->html();
+
+    $decoded = html_entity_decode($html, ENT_QUOTES | ENT_HTML5);
+
+    expect($decoded)->not->toContain("clearFilter('".$payload."')");
+});

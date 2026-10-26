@@ -216,6 +216,56 @@ trait ManagesFilterState
         $this->normalizeFilterRecords($prune);
     }
 
+    public function scrubClientFilters(): void
+    {
+        $types = $this->filterSchema()['types'];
+
+        foreach ($this->filters as $field => $record) {
+            if (! is_string($field) || ! is_array($record)) {
+                continue;
+            }
+
+            if (isset($types[$field])) {
+                $record['type'] = $types[$field];
+            }
+
+            $type = $record['type'] ?? '';
+            $value = $record['value'] ?? null;
+
+            if (is_array($value) && ! in_array($type, ['number', 'date', 'datetime'], true)) {
+                $list = array_is_list($value);
+
+                if ($type !== 'multi_select' && ($type !== 'select' || ! $list) && ($type !== 'boolean' || ! $list)) {
+                    $record['value'] = null;
+                }
+            }
+
+            $this->filters[$field] = $record;
+        }
+
+        $rows = $this->filterBuilder['rows'] ?? null;
+
+        if (! is_array($rows)) {
+            return;
+        }
+
+        foreach ($rows as $index => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            foreach (['value', 'value2'] as $key) {
+                if (is_array($row[$key] ?? null)) {
+                    $row[$key] = null;
+                }
+            }
+
+            $rows[$index] = $row;
+        }
+
+        $this->filterBuilder['rows'] = array_values($rows);
+    }
+
     /**
      * Every spelling a declared filter can be keyed by, plus the type each bag
      * key carries. Memoized per request.

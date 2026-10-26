@@ -16,17 +16,17 @@
 
             <flux:menu class="{{ theme('header.soft_deletes.menu') }}">
                 <flux:menu.item
-                    wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', { softDeletes: ''})"
+                    wire:click="$dispatch('pg:softDeletes-{{ js_embed($tableName) }}', { softDeletes: ''})"
                 >
                     @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
                 </flux:menu.item>
                 <flux:menu.item
-                    wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', { softDeletes: 'withTrashed'})"
+                    wire:click="$dispatch('pg:softDeletes-{{ js_embed($tableName) }}', { softDeletes: 'withTrashed'})"
                 >
                     @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
                 </flux:menu.item>
                 <flux:menu.item
-                    wire:click="$dispatch('pg:softDeletes-{{ $tableName }}', { softDeletes: 'onlyTrashed'})"
+                    wire:click="$dispatch('pg:softDeletes-{{ js_embed($tableName) }}', { softDeletes: 'onlyTrashed'})"
                 >
                     @lang('livewire-powergrid::datatable.soft_deletes.only_trashed')
                 </flux:menu.item>

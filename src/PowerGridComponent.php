@@ -62,6 +62,8 @@ class PowerGridComponent extends Component implements Context
 
     public function state(): State
     {
+        $this->scrubClientFilters();
+
         if (empty($this->columns)) {
             $this->columns = $this->declaredColumns();
         }
@@ -491,6 +493,8 @@ class PowerGridComponent extends Component implements Context
     #[Computed]
     protected function records(): mixed
     {
+        $this->scrubClientFilters();
+
         if (! $this->readyToLoad) {
             return collect();
         }
@@ -583,6 +587,7 @@ class PowerGridComponent extends Component implements Context
             json_encode(['sortArray' => $this->sortArray]),
             json_encode(['filterBuilder' => $this->filterBuilder]),
             json_encode(['softDeletes' => $this->softDeletes]),
+            json_encode(['activeTab' => $this->activeTab]),
         ];
     }
 
@@ -678,6 +683,8 @@ class PowerGridComponent extends Component implements Context
 
     public function render(): Application|Factory|View
     {
+        $this->scrubClientFilters();
+        $this->syncFilterPills();
         $this->resolveFilters();
         $this->resolvePlugins();
 

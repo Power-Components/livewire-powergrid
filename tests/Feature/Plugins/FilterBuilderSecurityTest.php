@@ -207,3 +207,61 @@ it('drops conditions on unsupported filter types', function () {
     expect($meta->keys()->all())->toBe(['name'])
         ->and($meta->has('category'))->toBeFalse();
 });
+
+it('does not append a client value key onto the sql column', function () {
+    TestDatabase::up();
+    Dish::query()->forceDelete();
+    Dish::create([
+        'name' => 'Alpha',
+        'category_id' => 1,
+        'chef_id' => 1,
+        'diet' => 1,
+        'price' => 10,
+        'calories' => 100,
+        'stored_at' => 'needle-value',
+        'produced_at' => now(),
+    ]);
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'fb-nested-value';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::filterBuilder()];
+        }
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function filters(): array
+        {
+            return [Filter::inputText('name')];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->set('filterBuilder', [
+            'match' => 'and',
+            'rows' => [[
+                'column' => 'name',
+                'operator' => 'is',
+                'value' => ['stored_at' => 'needle-value'],
+                'value2' => null,
+                'boolean' => 'and',
+            ]],
+        ])
+        ->assertSee('Alpha');
+})->group('database');

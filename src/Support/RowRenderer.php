@@ -65,9 +65,10 @@ final class RowRenderer
     public function renderExpandRow(string|int $rowId): string
     {
         $id = e((string) $rowId);
+        $jsId = js_literal($rowId);
 
         return '<tr x-cloak expand data-expand-for="'.$id.'" wire:key="expand-'.$id.'"'
-            .' x-show="isExpanded(\''.$id.'\')" x-transition'
+            .' x-show="isExpanded('.$jsId.')" x-transition'
             .' class="'.theme('table.body.tr.responsive').'">'
             .'<td colspan="999"><div class="flex gap-x-6 gap-y-2 flex-wrap p-2 responsive-row-expand-container"></div></td>'
             .'</tr>';
@@ -76,12 +77,13 @@ final class RowRenderer
     private function renderResponsiveToggle(string|int $rowId): string
     {
         $id = e((string) $rowId);
+        $jsId = js_literal($rowId);
         $iconClass = theme('table.body.tr.responsive_toggle_icon');
 
         return '<td x-cloak x-show="hasHiddenElements" class="w-0 '.theme('table.layout.td').'">'
-            .'<button class="flex items-center" x-on:click="toggleExpanded(\''.$id.'\')">'
+            .'<button class="flex items-center" x-on:click="toggleExpanded('.$jsId.')">'
             .'<svg class="'.e($iconClass).' w-5 h-5 transition-all duration-300" fill="none" viewBox="0 0 24 24"'
-            .' stroke="currentColor" stroke-width="2" x-bind:class="rotateClass(\''.$id.'\')">'
+            .' stroke="currentColor" stroke-width="2" x-bind:class="rotateClass('.$jsId.')">'
             .'<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />'
             .'</svg>'
             .'</button></td>';
@@ -135,7 +137,7 @@ final class RowRenderer
             .' x-data'
             .' type="checkbox"'
             .' '.$inputAttributes
-            .' x-on:click="$store.pgBulkActions.add($event.target.value, \''.e($this->component->tableName).'\')"'
+            .' x-on:click="$store.pgBulkActions.add($event.target.value, \''.e(js_embed($this->component->tableName)).'\')"'
             .' wire:model="checkboxValues"'
             .' value="'.e($checkboxAttribute).'"'
             .'>'

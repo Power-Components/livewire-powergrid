@@ -223,6 +223,8 @@ class ExportPlugin extends PluginBase
      */
     private function export(string $exportType, bool $selected): BinaryFileResponse|bool
     {
+        $this->component->scrubClientFilters();
+
         if ($this->getQueuesCount() > 0 && ! $selected) {
             $exportableClass = $this->getExportableClassFromConfig($exportType);
 

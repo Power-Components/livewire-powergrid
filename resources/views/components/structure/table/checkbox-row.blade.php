@@ -53,7 +53,7 @@
                     x-data
                     type="checkbox"
                     {{ $inputAttributes }}
-                    x-on:click="$store.pgBulkActions.add($event.target.value, '{{ $tableName }}')"
+                    x-on:click="$store.pgBulkActions.add($event.target.value, '{{ js_embed($tableName) }}')"
                     wire:model="checkboxValues"
                     value="{{ $attribute }}"
                 >

@@ -260,7 +260,7 @@ class Macros
 
         Button::macro('toggleDetail', function (int|string $rowId): TurbineButton {
             $this->attributes([
-                'wire:click' => "toggleDetail('$rowId')",
+                'wire:click' => 'toggleDetail('.Js::from((string) $rowId).')',
             ]);
 
             $this->eventMeta = ['type' => 'toggleDetail', 'rowId' => $rowId];
