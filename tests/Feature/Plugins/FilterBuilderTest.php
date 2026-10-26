@@ -243,8 +243,8 @@ it('coexists with the global search (AND across features)', function () {
             fbRow('name', 'is', 'Pastel'),
             fbRow('name', 'is', 'Carne', null, 'or'),
         ]])
-        ->assertSee('Carne')
-        ->assertDontSee('Pastel')  // filtered out by the search even though the OR group allows it
+        ->assertSeeHtml('<div>Carne</div>')
+        ->assertDontSeeHtml('<div>Pastel</div>')  // filtered out by the search even though the OR group allows it; the pill still names it
         ->assertDontSee('Sushi');
 });
 
