@@ -103,8 +103,8 @@ it('persists columns by default so a refresh keeps the applied visibility', func
         ->set('draftColumns.price', false)
         ->call('applyColumns');
 
-    expect(session('pg:toggle-columns'))->not->toBeNull()
-        ->and(session('pg:toggle-columns'))->toContain('columns');
+    expect(session('pg7:toggle-columns'))->not->toBeNull()
+        ->and(session('pg7:toggle-columns'))->toContain('columns');
 });
 
 it('withoutPersist disables column persistence', function () {
@@ -144,5 +144,5 @@ it('withoutPersist disables column persistence', function () {
         ->set('draftColumns.price', false)
         ->call('applyColumns');
 
-    expect(session('pg:tc-no-persist'))->toBeNull();
+    expect(session('pg7:tc-no-persist'))->toBeNull();
 });

@@ -56,7 +56,7 @@ it('should be able to set persist_driver for session', function (string $compone
     $component->call('putFilterRecord', $field, 'input_text', 'ba', null, 'test')
         ->call('commitFilters');
 
-    expect(session('pg:testing-dish-table'))->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
+    expect(session('pg7:testing-dish-table'))->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
 })->group('filters')
     ->with($params);
 
@@ -74,7 +74,7 @@ it('should be able to set persist_driver for cookies', function (string $compone
     $component->call('putFilterRecord', $field, 'input_text', 'ba', null, 'test')
         ->call('commitFilters');
 
-    expect(Cookie::queued('pg:testing-dish-table')->getValue())->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
+    expect(Cookie::queued('pg7:testing-dish-table')->getValue())->toBe('{"filters":{"'.$field.'":{"type":"input_text","value":"ba","label":"test"}}}');
 })
     ->with($params);
 
@@ -85,7 +85,7 @@ it('should persist sorting state when multiSort is enabled', function () use ($m
         ->call('sortBy', 'name')
         ->call('sortBy', 'id');
 
-    expect(session('pg:testing-dish-table'))
+    expect(session('pg7:testing-dish-table'))
         ->toBe('{"sortField":"id","sortDirection":"asc","sortArray":{"name":"asc","id":"asc"},"multiSort":true}');
 })->group('sorting');
 
@@ -103,6 +103,18 @@ it('should restore the persisted sortArray when multiSort is enabled', function 
         ->toMatchArray(['name' => 'asc'])
         ->and($component->multiSort)
         ->toBeTrue();
+})->group('sorting');
+
+it('ignores state stored under the 6.x persist key', function () use ($multiSortComponent) {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    session()->put('pg:testing-dish-table', '{"filters":{"select":{"name":"x"}},"enabledFilters":[],"sortField":"name","sortDirection":"desc","sortArray":{"name":"desc"},"multiSort":true}');
+
+    $component = livewire($multiSortComponent::class);
+
+    /** @var PowerGridComponent $component */
+    expect($component->sortArray)->toBe([])
+        ->and(session('pg:testing-dish-table'))->not->toBeNull();
 })->group('sorting');
 
 it('should not be able to set invalid persist driver', function (string $componentString, string $theme) {

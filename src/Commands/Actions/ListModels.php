@@ -13,7 +13,7 @@ final class ListModels
     /**
      * List files in Models
      *
-     * @return array<string, string>
+     * @return array<int, string>
      */
     public static function handle(): array
     {
