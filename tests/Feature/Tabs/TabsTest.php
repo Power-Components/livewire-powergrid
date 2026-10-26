@@ -242,3 +242,42 @@ it('re-registers the tabs partial when filters or the search change', function (
 
     expect($partialNames($searched))->toContain('pg-tabs-test-tabs-filtered');
 })->requiresSQLite();
+
+it('keeps cached rows apart per active tab', function () {
+    seedTabsDishes();
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-tabs-cached';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::cache(),
+                PowerGrid::tabs()
+                    ->add('cat1', label: 'Category 1', scope: ['category_id', 1])
+                    ->add('cat2', label: 'Category 2', scope: ['category_id', 2])
+                    ->default('cat1'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('category_id');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), Column::make('Name', 'name'), Column::make('Category', 'category_id')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->call('selectTab', 'cat2')
+        ->tap(fn ($test) => expect($test->instance()->records->total())->toBe(1));
+})->requiresSQLite();

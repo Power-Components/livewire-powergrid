@@ -27,6 +27,7 @@ trait RespondsWithData
     protected function prepareForData(Request $request): void
     {
         $this->rebindServerOwnedState();
+        $this->scrubClientFilters();
 
         $this->applyDefaultFilters();
 

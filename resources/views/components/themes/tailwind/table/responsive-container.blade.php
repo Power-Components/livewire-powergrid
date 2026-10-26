@@ -3,7 +3,7 @@
     expand
     data-expand-for="{{ $rowId }}"
     wire:key="expand-{{ $rowId }}"
-    x-show="isExpanded('{{ $rowId }}')"
+    x-show="isExpanded({!! js_literal($rowId) !!})"
     x-transition
     class="{{ theme('table.body.tr.responsive') }}"
 >

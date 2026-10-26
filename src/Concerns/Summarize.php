@@ -189,6 +189,7 @@ trait Summarize
             'filters' => $this->filters,
             'softDeletes' => $this->softDeletes,
             'filterBuilder' => $this->filterBuilder,
+            'activeTab' => $this->activeTab,
         ]));
     }
 }

@@ -462,6 +462,12 @@ it('tests Button toggleDetail macro with string id', function () {
         ->and($button->attributes['wire:click'])->toBe("toggleDetail('abc-123')");
 });
 
+it('escapes a quote in toggleDetail row id as a javascript string', function () {
+    $button = Button::add('test')->toggleDetail("x');alert(1)//");
+
+    expect($button->attributes['wire:click'])->toBe("toggleDetail('x\\u0027);alert(1)\\/\\/')");
+});
+
 it('tests RuleActions dispatch macro', function () {
     $rule = new RuleActions('test-button');
     $rule->dispatch('testEvent', ['id' => 123]);

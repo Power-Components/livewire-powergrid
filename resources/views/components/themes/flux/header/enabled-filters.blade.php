@@ -21,7 +21,7 @@
                         $pillKey = $isBuilderPill ? 'fb-'.($filter['index'] ?? 0) : $filter['field'];
                         $pillClick = $isBuilderPill
                             ? 'clearFilterBuilderRow('.intval($filter['index'] ?? 0).')'
-                            : "clearFilter('".$filter['field']."')";
+                            : 'clearFilter('.\Illuminate\Support\Js::from((string) ($filter['field'] ?? '')).')';
                     @endphp
                     <flux:badge
                         wire:key="enabled-filters-{{ $pillKey }}"

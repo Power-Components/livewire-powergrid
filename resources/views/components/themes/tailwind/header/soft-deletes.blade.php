@@ -32,19 +32,19 @@
         >
 
             <div
-                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', '')"
+                x-on:click="dispatchClose('pg:softDeletes-{{ js_embed($tableName) }}', 'softDeletes', '')"
                 class="{{ theme('header.soft_deletes.menu_item') }}"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.without_trashed')
             </div>
             <div
-                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', 'withTrashed')"
+                x-on:click="dispatchClose('pg:softDeletes-{{ js_embed($tableName) }}', 'softDeletes', 'withTrashed')"
                 class="{{ theme('header.soft_deletes.menu_item') }}"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.with_trashed')
             </div>
             <div
-                x-on:click="dispatchClose('pg:softDeletes-{{ $tableName }}', 'softDeletes', 'onlyTrashed')"
+                x-on:click="dispatchClose('pg:softDeletes-{{ js_embed($tableName) }}', 'softDeletes', 'onlyTrashed')"
                 class="{{ theme('header.soft_deletes.menu_item') }}"
             >
                 @lang('livewire-powergrid::datatable.soft_deletes.only_trashed')

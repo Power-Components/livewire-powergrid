@@ -68,7 +68,7 @@ it('renders the responsive toggle', function () {
 
     Livewire::test($component::class)
         ->assertOk()
-        ->assertSeeHtml("toggleExpanded('1')");
+        ->assertSeeHtml('toggleExpanded('.js_literal(1).')');
 });
 
 it('renders the radio column', function () {

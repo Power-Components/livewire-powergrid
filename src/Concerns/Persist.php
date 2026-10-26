@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
 use Exception;
+use Livewire\Attributes\Locked;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\Turbine\DataSource\Support\Sql;
 use PowerComponents\Turbine\Support\State\StatePersister;
@@ -14,8 +15,10 @@ trait Persist
     /**
      * @var list<string>
      */
+    #[Locked]
     public array $persist = ['columns', 'filters', 'sorting'];
 
+    #[Locked]
     public string $persistPrefix = '';
 
     /**
