@@ -462,7 +462,7 @@ it('persists the builder via FilterBuilder::persist() without persist([...])', f
     Livewire::test(filterBuilderPersistComponent()::class)
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
 
-    expect(session('pg:fb-persist'))->toContain('filterBuilder');
+    expect(session('pg7:fb-persist'))->toContain('filterBuilder');
 
     Livewire::test(filterBuilderPersistComponent()::class)
         ->assertSet('filterBuilder.rows.0.column', 'name')
@@ -513,7 +513,7 @@ it('does not persist the builder when withoutPersist() opts out', function () {
     Livewire::test($component::class)
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
 
-    expect(session('pg:fb-no-persist'))->toBeNull();
+    expect(session('pg7:fb-no-persist'))->toBeNull();
 })->group('filters');
 
 it('persists table state by default without any opt-in', function () {
@@ -522,7 +522,7 @@ it('persists table state by default without any opt-in', function () {
     Livewire::test(filterBuilderCollectionComponent()::class)
         ->call('applyFilterBuilder', ['match' => 'and', 'rows' => [fbRow('name', 'contains', 'a')]]);
 
-    expect(session('pg:fb-collection'))->not->toBeNull();
+    expect(session('pg7:fb-collection'))->not->toBeNull();
 })->group('filters');
 
 it('invokes beforeFilterBuilderApply with the validated conditions and lets it modify the query', function () {

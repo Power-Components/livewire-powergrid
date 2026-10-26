@@ -187,12 +187,13 @@ trait Persist
         return is_string($store) && $store !== '' ? $store : null;
     }
 
+    // Versioned so 6.x and 7.x never read each other's payload (filters shape differs).
     private function getPersistKeyName(): string
     {
         if (! empty($this->persistPrefix)) {
-            return 'pg:'.$this->persistPrefix.'-'.$this->tableName;
+            return 'pg7:'.$this->persistPrefix.'-'.$this->tableName;
         }
 
-        return 'pg:'.$this->tableName;
+        return 'pg7:'.$this->tableName;
     }
 }
