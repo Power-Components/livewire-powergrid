@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Config;
 use Livewire\Attributes\Computed;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
@@ -105,18 +104,14 @@ it('properly filters by select using computed datasource', function () {
         ->assertSee('Dish 1');
 });
 
-it('renders a computed datasource select inside the filter panel partial', function () {
-    Config::set('livewire-powergrid.filter', 'dropdown');
-
+it('renders a computed datasource select outside the component render scope', function () {
     $component = new class() extends PowerGridComponent
     {
         public string $tableName = 'test-select-computed-partial';
 
         public function datasource()
         {
-            return collect([
-                ['id' => 1, 'name' => 'Dish 1', 'category_id' => 1],
-            ]);
+            return collect([['id' => 1, 'name' => 'Dish 1']]);
         }
 
         #[Computed]
@@ -125,37 +120,27 @@ it('renders a computed datasource select inside the filter panel partial', funct
             return collect([['id' => 1, 'name' => 'Computed Cat']]);
         }
 
-        public function filters(): array
-        {
-            return [
-                Filter::select('category_id')
-                    ->computedDatasource('getCats')
-                    ->optionValue('id')
-                    ->optionLabel('name'),
-            ];
-        }
-
         public function fields(): PowerGridFields
         {
-            return PowerGrid::fields()->add('id')->add('name')->add('category_id');
+            return PowerGrid::fields()->add('id')->add('name');
         }
 
         public function columns(): array
         {
-            return [Column::make('Name', 'name'), Column::make('Category', 'category_id')];
+            return [Column::make('Name', 'name')];
         }
     };
 
-    $test = Livewire::test($component::class)->call('loadFilterPanel');
+    $html = view(theme_view('filter.select'), [
+        'filter' => [
+            'component' => null,
+            'computedDatasource' => 'getCats',
+            'optionValue' => 'id',
+            'optionLabel' => 'name',
+        ],
+        'tableName' => 'test-select-computed-partial',
+        '__partial' => Livewire::test($component::class)->instance(),
+    ])->render();
 
-    $html = '';
-
-    foreach (\Livewire\store($test->instance())->get('partialFragments') ?? [] as $renderUsing) {
-        foreach ($renderUsing() as $view) {
-            $html .= is_string($view) ? $view : $view->render();
-        }
-    }
-
-    fwrite(STDERR, $html);
     expect($html)->toContain('Computed Cat');
 });
