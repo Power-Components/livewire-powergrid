@@ -5,7 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Plugins\Flatpickr;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\Turbine\Support\FilterDateRange;
+use PowerComponents\Turbine\Support\{FilterBag, FilterDateRange};
 
 class FlatpickrPlugin extends PluginBase
 {
@@ -139,7 +139,7 @@ class FlatpickrPlugin extends PluginBase
     private function filterTimezone(string $field): ?string
     {
         $filter = collect($this->component->declaredFilters())
-            ->first(fn ($filter) => data_get($filter, 'field') === $field && filled(data_get($filter, 'params.timezone')));
+            ->first(fn ($filter) => FilterBag::matchesDefinition($filter, $field) && filled(data_get($filter, 'params.timezone')));
 
         $timezone = data_get($filter, 'params.timezone');
 
