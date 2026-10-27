@@ -4,7 +4,7 @@
         <span class="flex gap-2 select-none">
             @foreach ($sortArray as $field => $sort)
                 @php
-                    $label = $this->getLabelFromColumn($field);
+                    $label = ($__partial ?? $this)->getLabelFromColumn($field);
                 @endphp
                 <span
                     wire:key="{{ $tableName }}-multi-sort-{{ $field }}"

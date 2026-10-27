@@ -43,7 +43,7 @@
                 @php
                     $computedDatasource = data_get($filter, 'computedDatasource');
                     $dataSource = filled($computedDatasource)
-                        ? $this->{$computedDatasource}
+                        ? ($__partial ?? $this)->{$computedDatasource}
                         : data_get($filter, 'dataSource');
                 @endphp
 

@@ -103,3 +103,44 @@ it('properly filters by select using computed datasource', function () {
         ->set('filters', ['category_id' => ['type' => 'select', 'value' => 1]])
         ->assertSee('Dish 1');
 });
+
+it('renders a computed datasource select outside the component render scope', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-select-computed-partial';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1']]);
+        }
+
+        #[Computed]
+        public function getCats()
+        {
+            return collect([['id' => 1, 'name' => 'Computed Cat']]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    $html = view(theme_view('filter.select'), [
+        'filter' => [
+            'component' => null,
+            'computedDatasource' => 'getCats',
+            'optionValue' => 'id',
+            'optionLabel' => 'name',
+        ],
+        'tableName' => 'test-select-computed-partial',
+        '__partial' => Livewire::test($component::class)->instance(),
+    ])->render();
+
+    expect($html)->toContain('Computed Cat');
+});
