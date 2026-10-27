@@ -4,8 +4,10 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\{Filter, PowerGrid};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Export;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\Components\SetUp\Exportable;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 it('keeps the openspout v5 export drivers available', function () {
     $drivers = config('livewire-powergrid.exportable');
@@ -209,4 +211,55 @@ expect()->extend('toBeCsvDownload', function (array $headings, array $rows) {
         $expected,
         $actual
     );
+});
+
+it('uses the exporter mapped in config for synchronous exports', function () {
+    $exporter = new class() extends Export implements ExportInterface
+    {
+        public static array $exportedNames = [];
+
+        public function download(array $exportOptions): BinaryFileResponse
+        {
+            self::$exportedNames = collect($this->data)->pluck('name')->all();
+
+            file_put_contents($path = storage_path($this->fileName.'.csv'), 'custom');
+
+            return response()->download($path)->deleteFileAfterSend();
+        }
+
+        public function store(array $exportOptions): void {}
+
+        public function build(Exportable|array $exportOptions): void {}
+    };
+
+    config(['livewire-powergrid.exportable.openspout_v5.csv' => $exporter::class]);
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-export-custom-exporter';
+
+        public function datasource()
+        {
+            return Dish::query()->where('id', 1);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('export')->type(Exportable::TYPE_CSV)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('ID', 'id'), Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)->call('exportToCsv', false);
+
+    expect($exporter::$exportedNames)->toBe(['Pastel de Nata']);
 });

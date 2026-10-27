@@ -2,8 +2,9 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
@@ -39,7 +40,7 @@ final class {{ componentName }} extends PowerGridComponent
             ->add('id')
             ->add('name')
             ->add('created_at')
-            ->add('created_at_formatted', fn ($row) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
+            ->add('created_at_formatted', fn ($row) => Carbon::parse($row->created_at)->format('d/m/Y H:i:s'));
     }
 
     public function columns(): array

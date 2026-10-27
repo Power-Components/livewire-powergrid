@@ -40,7 +40,7 @@ final class {{ componentName }} extends PowerGridComponent
         return PowerGrid::fields()
             ->add('id')
             ->add('name')
-            ->add('name_lower', fn ({{ model }} $model) => strtolower(e($model->name)))
+            ->add('name_lower', fn ({{ model }} $model) => strtolower($model->name))
             ->add('created_at')
             ->add('created_at_formatted', fn ({{ model }} $model) => Carbon::parse($model->created_at)->format('d/m/Y H:i:s'));
     }

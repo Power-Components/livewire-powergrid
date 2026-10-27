@@ -75,7 +75,7 @@ class Tailwind extends Theme
                 ->button($this->headerButtonClass())
                 ->iconClass('h-5 w-5 shrink-0 text-zinc-500 dark:text-zinc-300')
                 ->label('ml-2')
-                ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-medium text-white')
+                ->badge('inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-medium text-accent-foreground')
             )
             ->export(fn (Components\HeaderButton $button) => $button
                 ->button($this->headerButtonClass())
@@ -162,7 +162,7 @@ class Tailwind extends Theme
             ->tabActive('bg-gray-100 text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white')
             ->tabInactive('text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100')
             ->badge('inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold')
-            ->badgeActive('bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300')
+            ->badgeActive('bg-accent-100 text-accent-700 dark:bg-accent-500/20 dark:text-accent-300')
             ->badgeInactive('bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300')
         );
     }
@@ -236,7 +236,7 @@ class Tailwind extends Theme
                     'view' => 'livewire-powergrid::components.themes.tailwind.filter',
                     'wrapper' => 'relative inline-block text-left',
                     'trigger' => $this->headerButtonClass().' relative justify-center',
-                    'badge' => 'absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-semibold text-white',
+                    'badge' => 'absolute -top-1.5 -right-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-xs font-semibold text-accent-foreground',
                     'panel' => 'fixed inset-x-4 top-4 z-50 flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] flex-col overflow-hidden origin-top rounded-xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800',
                     'header' => 'flex shrink-0 items-center justify-between px-4 pt-4 pb-2',
                     'title' => 'text-base font-semibold text-zinc-800 dark:text-zinc-100',
@@ -245,7 +245,7 @@ class Tailwind extends Theme
                     'footer' => 'flex shrink-0 items-center justify-end gap-2 border-t border-zinc-200 px-4 py-3 dark:border-zinc-700',
                     'reset' => 'text-sm font-medium text-red-500 transition hover:text-red-600',
                     'clear' => 'rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600',
-                    'apply' => 'rounded-lg bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50',
+                    'apply' => 'rounded-lg bg-accent px-4 py-1.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-700 focus:outline-none focus:ring-2 focus:ring-accent/50',
                 ],
                 'flyout' => [
                     'view' => 'livewire-powergrid::components.themes.tailwind.filter-flyout',

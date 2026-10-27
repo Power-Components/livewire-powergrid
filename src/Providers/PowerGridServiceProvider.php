@@ -74,6 +74,12 @@ class PowerGridServiceProvider extends ServiceProvider
         if ($this->app->bound('livewire')) {
             app('livewire')->propertySynthesizer(PowerGridWireableSynth::class);
 
+            \Livewire\before('call', function (mixed $component, string $method, mixed $params = []) {
+                if ($component instanceof PowerGridComponent && $method === '__dispatch') {
+                    \Livewire\invade($component)->dispatchingEvent = data_get($params, '0');
+                }
+            });
+
             \Livewire\on('call', function (mixed $component, string $method) {
                 if ($component instanceof PowerGridComponent && self::isServerOnly($method)) {
                     throw new MethodNotFoundException($method);

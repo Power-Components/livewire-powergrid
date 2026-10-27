@@ -19,7 +19,8 @@
     $filterBag = (array) $__partial->{$filtersProperty};
     $filterRecord = $filterBag[$filterPathField] ?? $filterBag[$filterField] ?? [];
     $filterValues = is_array($filterRecord) ? ($filterRecord['value'] ?? []) : [];
-    $framework = config('livewire-powergrid.plugins.select');
+    $selectConfig = (array) config('livewire-powergrid.plugins.select', []);
+    $selectLibrary = $selectConfig['default'] ?? 'slim';
     $rawCollection = collect(data_get($filter, 'dataSource') ?? data_get($filter, 'computedDatasource'));
 
     // Determine if the collection is grouped (optgroup)
@@ -47,7 +48,7 @@ $params = [
     'initialValues' => $initialValues !== [] ? $initialValues : (is_array($filterValues) ? $filterValues : []),
     'appliedFilters' => is_array($filterValues) ? $filterValues : [],
     'deferred' => $deferred,
-    'framework' => $framework[config('livewire-powergrid.plugins.select.default')],
+    'framework' => (array) ($selectConfig[$selectLibrary] ?? []),
 ];
 
 if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
@@ -59,7 +60,7 @@ if (\Illuminate\Support\Arr::has($filter, ['url', 'method'])) {
     ];
 }
 
-$alpineData = $framework['default'] == 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
+$alpineData = $selectLibrary === 'tom' ? 'pgTomSelect' : 'pgSlimSelect';
 @endphp
 
 <div

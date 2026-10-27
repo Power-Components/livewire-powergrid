@@ -52,7 +52,7 @@
                     @if (! is_null($tab['badge']))
                         <span @class([
                             theme('tabs.badge', 'inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-semibold'),
-                            theme('tabs.badge_active', 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300') => $tab['active'],
+                            theme('tabs.badge_active', 'bg-accent-100 text-accent-700 dark:bg-accent-500/20 dark:text-accent-300') => $tab['active'],
                             theme('tabs.badge_inactive', 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300') => ! $tab['active'],
                             $classes['badge'] ?? '',
                             ($classes['badge_active'] ?? '') => $tab['active'],

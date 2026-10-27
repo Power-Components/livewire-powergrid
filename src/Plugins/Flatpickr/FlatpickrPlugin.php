@@ -77,7 +77,7 @@ class FlatpickrPlugin extends PluginBase
         $this->component->putFilterRecord(
             $field,
             $type,
-            self::computeRange($type, $formatted),
+            self::computeRange($type, $formatted, $this->filterTimezone($field)),
         );
 
         /** @var string|null $label */
@@ -106,7 +106,7 @@ class FlatpickrPlugin extends PluginBase
             return null;
         }
 
-        $record['value'] = self::computeRange((string) $type, is_scalar($formatted) ? (string) $formatted : '');
+        $record['value'] = self::computeRange((string) $type, is_scalar($formatted) ? (string) $formatted : '', $this->filterTimezone($field));
 
         return $record;
     }
@@ -131,8 +131,18 @@ class FlatpickrPlugin extends PluginBase
     /**
      * @return array{start: string, end: string, formatted: string}
      */
-    public static function computeRange(string $type, string $formatted): array
+    public static function computeRange(string $type, string $formatted, ?string $timezone = null): array
     {
-        return FilterDateRange::compute($type, $formatted);
+        return FilterDateRange::compute($type, $formatted, $timezone);
+    }
+
+    private function filterTimezone(string $field): ?string
+    {
+        $filter = collect($this->component->declaredFilters())
+            ->first(fn ($filter) => data_get($filter, 'field') === $field && filled(data_get($filter, 'params.timezone')));
+
+        $timezone = data_get($filter, 'params.timezone');
+
+        return is_string($timezone) ? $timezone : null;
     }
 }

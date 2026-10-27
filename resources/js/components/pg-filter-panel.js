@@ -1,5 +1,9 @@
+const PANEL_OVERLAYS = '.flatpickr-calendar, .ts-dropdown, .ss-content'
+const OPEN_OVERLAYS = '.flatpickr-calendar.open, .ts-wrapper.dropdown-active, .ss-content.ss-open-below, .ss-content.ss-open-above'
+
 window.pgAlpine.data('pgFilterPanel', () => ({
     open: false,
+    pressedInside: false,
 
     init() {
         this.ensureDraftObject()
@@ -14,8 +18,19 @@ window.pgAlpine.data('pgFilterPanel', () => ({
             if (open) {
                 this.ensureDraftObject()
                 this.$nextTick(() => this.positionPanel())
+
+                return
             }
+
+            this.$el.querySelectorAll('.flatpickr-input').forEach((input) => input._flatpickr?.close())
+            this.releaseRoom()
         })
+
+        // flatpickr positions its calendar right after onOpen, so measure on the next frame.
+        this.$el.addEventListener('pg-overlay-open', (event) => {
+            requestAnimationFrame(() => this.makeRoomFor(event.detail.overlay))
+        })
+        this.$el.addEventListener('pg-overlay-close', () => this.releaseRoom())
 
         this.reposition = () => {
             if (this.open) {
@@ -23,13 +38,22 @@ window.pgAlpine.data('pgFilterPanel', () => ({
             }
         }
 
+        // Decide "outside" on press, not on click: flatpickr opens on mousedown and its
+        // portaled calendar can land under the cursor, retargeting the click to <body>.
+        this.trackPress = (event) => {
+            this.pressedInside = event.target instanceof Element
+                && (this.$el.contains(event.target) || event.target.closest(PANEL_OVERLAYS) !== null)
+        }
+
         window.addEventListener('resize', this.reposition)
         window.addEventListener('scroll', this.reposition, true)
+        window.addEventListener('pointerdown', this.trackPress, true)
     },
 
     destroy() {
         window.removeEventListener('resize', this.reposition)
         window.removeEventListener('scroll', this.reposition, true)
+        window.removeEventListener('pointerdown', this.trackPress, true)
     },
 
     positionPanel() {
@@ -80,6 +104,35 @@ window.pgAlpine.data('pgFilterPanel', () => ({
         ensureDraftObject(this.$wire)
     },
 
+    // Pad the body so the footer (Apply) sits below a portaled overlay instead of under it.
+    makeRoomFor(overlay) {
+        const body = this.$el.querySelector('[data-cy="filter-dropdown-body"]')
+        const footer = this.$el.querySelector('[data-cy="filter-dropdown-footer"]')
+
+        if (!this.open || !body || !footer || !overlay) {
+            return
+        }
+
+        this.releaseRoom()
+
+        // Discount the open animation's translateY (flatpickr's fpFadeInDown) to get the resting position.
+        const transform = getComputedStyle(overlay).transform
+        const shift = transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42
+        const overlap = overlay.getBoundingClientRect().bottom - shift - footer.getBoundingClientRect().top + 8
+
+        if (overlap > 0) {
+            body.style.paddingBottom = `${parseFloat(getComputedStyle(body).paddingBottom) + overlap}px`
+        }
+    },
+
+    releaseRoom() {
+        const body = this.$el.querySelector('[data-cy="filter-dropdown-body"]')
+
+        if (body) {
+            body.style.paddingBottom = ''
+        }
+    },
+
     async toggle() {
         if (!this.$wire.filterPanelLoaded) {
             await this.$wire.loadFilterPanel()
@@ -112,6 +165,15 @@ window.pgAlpine.data('pgFilterPanel', () => ({
         return unique.size
     },
 
+    // Esc closes an open calendar/select first; runs in capture so it sees the overlay before the library closes it.
+    closeOnEscape() {
+        if (document.querySelector(OPEN_OVERLAYS)) {
+            return
+        }
+
+        this.open = false
+    },
+
     closeOnOutside(event) {
         const target = event.target
 
@@ -121,7 +183,7 @@ window.pgAlpine.data('pgFilterPanel', () => ({
             return
         }
 
-        if (target.closest('.flatpickr-calendar, .ts-dropdown, .ss-content')) {
+        if (this.pressedInside || target.closest(PANEL_OVERLAYS)) {
             return
         }
 

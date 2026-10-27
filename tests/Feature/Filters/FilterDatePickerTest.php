@@ -55,3 +55,50 @@ it('properly filters by datepicker', function () {
         ->call('clearFilter', 'produced_at')
         ->assertSee('Dish 3');
 });
+
+it('reads the picked range in the filter timezone param', function () {
+    config()->set('app.timezone', 'UTC');
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-datepicker-timezone';
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Dish 1', 'produced_at' => '2021-01-01 02:00:00'],
+                ['id' => 2, 'name' => 'Dish 2', 'produced_at' => '2021-01-01 05:00:00'],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::datetimepicker('produced_at')->params(['timezone' => 'America/Sao_Paulo']),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->dispatch('pg:datePicker-test-datepicker-timezone',
+            field: 'produced_at',
+            selectedDates: ['2021-01-01 00:00', '2021-01-01 06:00'],
+            dateStr: '2021-01-01 00:00 to 2021-01-01 06:00',
+            label: 'Produced At',
+            type: 'datetime',
+            timezone: 'America/Sao_Paulo',
+            dateFormat: 'Y-m-d H:i'
+        )
+        ->assertDontSee('Dish 1')
+        ->assertSee('Dish 2');
+});

@@ -55,7 +55,7 @@
         x-transition:leave-start="opacity-100 translate-y-0"
         x-transition:leave-end="opacity-0 -translate-y-1"
         x-on:click.outside="closeOnOutside($event)"
-        x-on:keydown.escape.window="open = false"
+        x-on:keydown.escape.window.capture="closeOnEscape()"
         role="dialog"
         aria-modal="true"
         data-cy="filter-dropdown-panel"
@@ -68,7 +68,10 @@
             </span>
         </div>
 
-        <div class="{{ theme('filter.dropdown.body') }}">
+        <div
+            data-cy="filter-dropdown-body"
+            class="{{ theme('filter.dropdown.body') }}"
+        >
             @include('livewire-powergrid::components.themes.tailwind.filters.fields', [
                 'theme' => $theme,
                 'tableName' => $tableName,
@@ -78,7 +81,10 @@
             ])
         </div>
 
-        <div class="{{ theme('filter.dropdown.footer') }}">
+        <div
+            data-cy="filter-dropdown-footer"
+            class="{{ theme('filter.dropdown.footer') }}"
+        >
             <button
                 type="button"
                 data-cy="filter-dropdown-reset"
