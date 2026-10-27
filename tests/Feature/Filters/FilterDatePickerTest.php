@@ -102,3 +102,41 @@ it('reads the picked range in the filter timezone param', function () {
         ->assertDontSee('Dish 1')
         ->assertSee('Dish 2');
 });
+
+it('reads the timezone param when the filter field is table-qualified', function () {
+    config()->set('app.timezone', 'UTC');
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-datepicker-timezone-qualified';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'produced_at' => '2021-01-01 05:00:00']]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::datetimepicker('produced_at_formatted', 'dishes.produced_at')->params(['timezone' => 'America/Sao_Paulo']),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    $range = Livewire::test($component::class)
+        ->set('draftFilters.produced_at_formatted.value.formatted', '2021-01-01 00:00 to 2021-01-01 06:00')
+        ->call('applyFilters')
+        ->get('filters.produced_at_formatted.value');
+
+    expect($range['start'])->toBe('Fri Jan 01 2021 03:00:00 GMT+0000');
+});
