@@ -16,6 +16,7 @@ use PowerComponents\LivewirePowerGrid\Testing\TestActions;
 use PowerComponents\LivewirePowerGrid\Themes\Tailwind;
 use PowerComponents\Turbine\Components\Filters\FilterManager;
 use PowerComponents\Turbine\Components\Rules\RuleManager;
+use PowerComponents\Turbine\Contracts\Context;
 
 /** @codeCoverageIgnore */
 class PowerGridServiceProvider extends ServiceProvider
@@ -35,7 +36,38 @@ class PowerGridServiceProvider extends ServiceProvider
         'transformActions',
         'toDataArray',
         'toDataResponse',
+        'datasource',
+        'columns',
+        'setUp',
+        'header',
+        'filters',
+        'actions',
+        'actionRules',
+        'rowTemplates',
+        'template',
+        'resolvedSetUp',
+        'delegateToPlugin',
+        'pgPluginListener',
+        'resolvePlugins',
+        'getPlugins',
+        'persist',
+        'persistState',
+        'showCheckBox',
+        'showRadioButton',
+        'scrubClientFilters',
+        'stripServerOwnedSnapshot',
+        'hydrateSummaries',
+        'getPublicPropertiesDefinedInComponent',
     ];
+
+    // `__call` would forward to any method, and Context methods are engine hooks, never client actions.
+    private static function isServerOnly(string $method): bool
+    {
+        return (str_starts_with($method, '__') && $method !== '__dispatch')
+            || str_starts_with($method, 'render')
+            || in_array($method, self::SERVER_ONLY_METHODS, true)
+            || method_exists(Context::class, $method);
+    }
 
     public function boot(): void
     {
@@ -43,7 +75,7 @@ class PowerGridServiceProvider extends ServiceProvider
             app('livewire')->propertySynthesizer(PowerGridWireableSynth::class);
 
             \Livewire\on('call', function (mixed $component, string $method) {
-                if ($component instanceof PowerGridComponent && in_array($method, self::SERVER_ONLY_METHODS, true)) {
+                if ($component instanceof PowerGridComponent && self::isServerOnly($method)) {
                     throw new MethodNotFoundException($method);
                 }
             });

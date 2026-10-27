@@ -8,7 +8,7 @@
                 @endphp
                 <span
                     wire:key="{{ $tableName }}-multi-sort-{{ $field }}"
-                    wire:click.prevent="sortBy('{{ $field }}')"
+                    wire:click.prevent="sortBy({!! js_literal($field) !!})"
                     title="{{ __(':label :sort', ['label' => $label, 'sort' => $sort]) }}"
                     class="group cursor-pointer select-none rounded-md outline-none inline-flex items-center border px-2 py-0.5 font-bold text-xs border-zinc-300 bg-white dark:border-2 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:text-zinc-400 text-zinc-600 hover:text-zinc-500"
                 >

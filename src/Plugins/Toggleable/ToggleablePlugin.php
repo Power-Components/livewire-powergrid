@@ -163,17 +163,20 @@ class ToggleablePlugin extends PluginBase
         $id = $params[1] ?? null;
         $value = $params[2] ?? null;
 
-        if (! is_string($field) || ! is_scalar($id) || ! is_scalar($value) || ! $this->isHandledField($field)) {
+        if (! is_string($field) || ! is_scalar($id) || ! is_scalar($value) || ! in_array((string) $value, ['0', '1'], true) || ! $this->isHandledField($field)) {
             return;
         }
 
         $column = $this->handledColumn($field);
-        if ($column === null || ! boolval(data_get($column, 'pluginData.toggleable.enabled'))) {
+        $id = (string) $id;
+        $row = $column !== null ? $this->scopedRow($id) : null;
+
+        if ($column === null || $row === null || ! $this->shouldShowToggleable($column, $row)) {
             return;
         }
 
         $this->component->onPluginUpdated('toggleable', 'updated', [
-            'id' => (string) $id,
+            'id' => $id,
             'field' => $field,
             'value' => (string) $value,
         ]);
@@ -199,12 +202,9 @@ class ToggleablePlugin extends PluginBase
             return true;
         }
 
-        $fieldHideToggleable = (bool) data_get(
-            collect((array) data_get($row, '__turbine_rules'))
-                ->where('apply', true)
-                ->last(),
-            'fieldHideToggleable'
-        );
+        $fieldHideToggleable = collect((array) data_get($row, '__turbine_rules'))
+            ->where('apply', true)
+            ->contains(fn ($rule) => (bool) data_get($rule, 'fieldHideToggleable'));
 
         $field = data_get($column, 'field');
         if ($fieldHideToggleable || (is_string($field) && str_contains($field, '.'))) {

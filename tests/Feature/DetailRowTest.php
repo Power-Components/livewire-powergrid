@@ -116,7 +116,7 @@ it('registers tbody partials after sort when detail is enabled', function () {
 
         public function columns(): array
         {
-            return [Column::make('Name', 'name')];
+            return [Column::make('Name', 'name')->sortable()];
         }
     };
 

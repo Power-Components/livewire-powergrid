@@ -165,9 +165,8 @@ if (!window.pgEditableRegistered) {
             },
 
             htmlSpecialChars(string) {
-                const el = document.createElement('div');
-                el.innerHTML = string;
-                return el.textContent;
+                // DOMParser documents are inert, so stored markup like <img onerror> never runs while decoding.
+                return new DOMParser().parseFromString(String(string ?? ''), 'text/html').documentElement.textContent;
             },
 
             observe(elementFinder, action) {

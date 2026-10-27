@@ -24,6 +24,15 @@ trait Sorting
      */
     public function sortBy(string $field, string $direction = 'asc'): void
     {
+        $sortable = collect($this->declaredColumns())->contains(
+            fn ($column) => (bool) data_get($column, 'sortable')
+                && in_array($field, [data_get($column, 'field'), data_get($column, 'dataField')], true)
+        );
+
+        if (! $sortable) {
+            return;
+        }
+
         if ($this->multiSort) {
             $this->sortByArray($field);
         } else {

@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Auth\GenericUser;
+use Illuminate\Support\Facades\{Cache, Cookie};
 use Livewire\Features\SupportTesting\Testable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
@@ -127,3 +128,21 @@ it('should not be able to set invalid persist driver', function (string $compone
     })->toThrow(Exception::class);
 })
     ->with($params);
+
+it('scopes the cache persist key per user', function (string $componentString, string $theme, string $field) {
+    config()->set('livewire-powergrid.persist_driver', 'cache');
+
+    $this->actingAs(new GenericUser(['id' => 1]));
+
+    livewire($componentString)
+        ->call('setTestThemeClass', $theme)
+        ->call('putFilterRecord', $field, 'input_text', 'ba', null, 'test')
+        ->call('commitFilters');
+
+    expect(Cache::get('pg7:testing-dish-table-u1'))->toContain('"value":"ba"')
+        ->and(Cache::get('pg7:testing-dish-table'))->toBeNull();
+
+    $this->actingAs(new GenericUser(['id' => 2]));
+
+    expect(livewire($componentString)->call('setTestThemeClass', $theme)->get('filters'))->toBe([]);
+})->with($params);

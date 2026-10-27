@@ -7,6 +7,7 @@ use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent, PowerGridFields};
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\Tests\Concerns\Components\BatchExportTable;
+use PowerComponents\LivewirePowerGrid\Tests\Concerns\Models\Dish;
 use PowerComponents\Turbine\Components\SetUp\Exportable;
 
 use function Livewire\invade;
@@ -266,3 +267,77 @@ it('renders no progress panel when no progressView is set', function () {
     expect($html)->toContain('pg-header-export')          // dropdown present
         ->and($html)->not->toContain('my-custom-export-progress');
 });
+
+function scopedBatchExportComponent(): string
+{
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-batch-scope';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function transformQuery(mixed $query): mixed
+        {
+            return $query->where('name', 'like', 'Pizza%');
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('scoped')->type(Exportable::TYPE_CSV)->queues(1)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('ID', 'id'), Column::make('Name', 'name')->searchable()];
+        }
+    };
+
+    return $component::class;
+}
+
+it('applies transformQuery and grid state inside the queued export job', function () {
+    Bus::fake();
+    Storage::fake('local');
+    Dish::query()->forceDelete();
+
+    foreach (['Pizza Margherita', 'Pizza Calabresa', 'Sushi'] as $name) {
+        Dish::create(['name' => $name, 'price' => 10, 'category_id' => 1, 'chef_id' => 1, 'diet' => 1, 'calories' => 100, 'stored_at' => '1', 'produced_at' => now()]);
+    }
+
+    Livewire::test(scopedBatchExportComponent())
+        ->set('search', 'Calabresa')
+        ->call('exportToCsv', false);
+
+    $job = null;
+    Bus::assertBatched(function (PendingBatch $batch) use (&$job) {
+        $job = $batch->jobs[0];
+
+        return true;
+    });
+
+    $job->handle();
+
+    $csv = Storage::disk('local')->get(invade($job)->fileName);
+
+    expect($csv)->toContain('Pizza Calabresa')
+        ->not->toContain('Pizza Margherita')
+        ->not->toContain('Sushi');
+})->requiresOpenSpout();
+
+it('does not start a second queued export while one is running', function () {
+    Bus::fake();
+
+    Livewire::test(scopedBatchExportComponent())
+        ->call('exportToCsv', false)
+        ->call('exportToCsv', false);
+
+    Bus::assertBatchCount(1);
+})->requiresOpenSpout();

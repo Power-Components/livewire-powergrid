@@ -182,7 +182,9 @@ class ExportPlugin extends PluginBase
             return null;
         }
 
-        return response()->download($realPath);
+        return response()
+            ->download($realPath)
+            ->deleteFileAfterSend(boolval(data_get($this->component->setUp, 'exportable.deleteFileAfterSend', true)));
     }
 
     public function exportBatch(): ?Batch
@@ -226,6 +228,10 @@ class ExportPlugin extends PluginBase
         $this->component->scrubClientFilters();
 
         if ($this->getQueuesCount() > 0 && ! $selected) {
+            if ((bool) data_get($this->component->exportState, 'exporting')) {
+                return false;
+            }
+
             $exportableClass = $this->getExportableClassFromConfig($exportType);
 
             return $this->runOnQueue($exportableClass, $exportType);
@@ -255,8 +261,10 @@ class ExportPlugin extends PluginBase
 
         $deleteFileAfterSend = boolval(data_get($exportOptions, 'deleteFileAfterSend', true));
 
+        $downloadName = (string) preg_replace('/-[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}(?=\.\w+$)/i', '', basename($filePath));
+
         return response()
-            ->download($filePath)
+            ->download($filePath, $downloadName)
             ->deleteFileAfterSend($deleteFileAfterSend);
     }
 
@@ -271,14 +279,16 @@ class ExportPlugin extends PluginBase
         ]);
 
         $queues = $this->putQueuesToBus($exportFileType, $exportType);
+        $componentClass = $this->component::class;
 
         $batch = Bus::batch($queues->toArray())
             ->name($this->getBatchName())
             ->onQueue($this->getOnQueue())
             ->onConnection($this->getQueuesConnection())
-            ->then(fn (Batch $batch) => $this->component->onPluginUpdated('export', 'batchThen', ['batch' => $batch]))
-            ->catch(fn (Batch $batch, Throwable $e) => $this->component->onPluginUpdated('export', 'batchCatch', ['batch' => $batch, 'exception' => $e]))
-            ->finally(fn (Batch $batch) => $this->component->onPluginUpdated('export', 'batchFinally', ['batch' => $batch]))
+            // Callbacks get a fresh component: serializing this one would carry client-set state into the worker.
+            ->then(fn (Batch $batch) => (new $componentClass())->onPluginUpdated('export', 'batchThen', ['batch' => $batch]))
+            ->catch(fn (Batch $batch, Throwable $e) => (new $componentClass())->onPluginUpdated('export', 'batchCatch', ['batch' => $batch, 'exception' => $e]))
+            ->finally(fn (Batch $batch) => (new $componentClass())->onPluginUpdated('export', 'batchFinally', ['batch' => $batch]))
             ->dispatch();
 
         $this->component->exportState = array_merge($this->component->exportState, [
@@ -327,12 +337,22 @@ class ExportPlugin extends PluginBase
                 'limit' => $perPage,
                 'filters' => Support\Facades\Crypt::encrypt($filters),
                 'exportable' => (array) $component->setUp['exportable'],
-                'parameters' => Support\Facades\Crypt::encrypt($component->getPublicPropertiesDefinedInComponent()),
+                'parameters' => Support\Facades\Crypt::encrypt($component->getPublicPropertiesDefinedInComponent() + [
+                    'search' => $component->search,
+                    'sortField' => $component->sortField,
+                    'sortDirection' => $component->sortDirection,
+                    'sortArray' => $component->sortArray,
+                    'softDeletes' => $component->softDeletes,
+                    'activeTab' => $component->activeTab,
+                    'filterBuilder' => $component->filterBuilder,
+                ]),
+                'authGuard' => auth()->getDefaultDriver(),
+                'authId' => auth()->id(),
             ];
 
             $queues->push(new $jobClass(
                 get_class($component),
-                $component->columns(),
+                $component->columns,
                 $params,
             ));
 

@@ -239,8 +239,49 @@ it('does not expose component extension points as actions', function (string $me
     'plugin hook' => ['onPluginUpdated', ['editable', 'updated', ['id' => 1, 'field' => 'price', 'value' => '0']]],
     'editable hook' => ['onUpdatedEditable', [1, 'price', '0']],
     'data array' => ['toDataArray', []],
+    'magic call forwarding' => ['__call', ['onUpdatedEditable', [1, 'price', '0']]],
+    'raw datasource' => ['datasource', []],
+    'engine state' => ['state', []],
+    'summary values' => ['setSummaryValues', [['price.sum' => 0]]],
+    'plugin delegation' => ['delegateToPlugin', ['inputTextChanged', ['price', 1, '0']]],
+    'plugin listener' => ['pgPluginListener', []],
+    'persist write' => ['persist', [['filters'], 'victim']],
+    'checkbox attribute' => ['showCheckBox', ['calories']],
+    'radio attribute' => ['showRadioButton', ['calories']],
+    'cell rendering' => ['renderCells', [[]]],
 ])->throws(MethodNotFoundException::class);
 
 it('rejects a client update of the persist prefix', function () {
     Livewire::test(filteredDishGrid())->set('persistPrefix', 'other');
 })->throws(CannotUpdateLockedPropertyException::class);
+
+it('rejects client writes to server-owned flags', function (string $property, mixed $value) {
+    expect(fn () => Livewire::test(filteredDishGrid())->set($property, $value))
+        ->toThrow(CannotUpdateLockedPropertyException::class);
+})->with([
+    ['ignoreTablePrefix', false],
+    ['currentTable', 'users'],
+    ['supportModel', false],
+    ['paginateRaw', true],
+    ['isExporting', true],
+    ['pruneHiddenColumns', false],
+]);
+
+it('ignores sortBy on a column that is not sortable', function () {
+    Livewire::test(filteredDishGrid())
+        ->call('sortBy', 'name')
+        ->assertSet('sortField', fn ($value) => $value !== 'name');
+});
+
+it('ignores multiSelectChanged for an undeclared filter', function () {
+    Livewire::test(filteredDishGrid())
+        ->call('multiSelectChanged', 'secret_column', 'Secret', ['1'])
+        ->assertSet('filters', fn ($filters) => ! array_key_exists('secret_column', $filters));
+});
+
+it('decodes editable values without parsing them as live HTML', function () {
+    $script = file_get_contents(dirname(__DIR__, 2).'/src/Plugins/Editable/index.js');
+
+    expect($script)->toContain('new DOMParser()')
+        ->not->toMatch('/\.innerHTML\s*=\s*string/');
+});

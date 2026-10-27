@@ -3,10 +3,12 @@
 namespace PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns;
 
 use Illuminate\Database\Eloquent;
+use Illuminate\Database\Eloquent\{Builder, Model};
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\{Collection, LazyCollection, Str, Stringable};
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\Turbine\DataSource\{DataTransformer, ProcessDataSource};
-use PowerComponents\Turbine\DataSource\Processors\Database\Handlers\{FilterHandler, SearchHandlerContract};
+use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines;
 use PowerComponents\Turbine\DataSource\Support\Sql;
 
 /** @codeCoverageIgnore */
@@ -58,12 +60,26 @@ trait ExportableJob
 
         $processDataSource = ProcessDataSource::make($this->componentTable, $properties);
         $datasource = $processDataSource->resolveDatasource();
+        $dataTransformer = new DataTransformer($processDataSource->component);
+        $filtered = $this->componentTable->filtered;
 
-        if ($datasource instanceof Collection) {
-            $processDataSource->get();
+        if ($datasource instanceof Collection || is_array($datasource)) {
+            /** @var mixed $results */
+            $results = data_get($processDataSource->get(isExport: true), 'results');
+
+            if (is_object($results) && method_exists($results, 'getCollection')) {
+                $results = $results->getCollection();
+            }
+
+            /** @var Collection<int, mixed> $collection */
+            $collection = collect(is_iterable($results) ? $results : [])
+                ->when($filtered, fn ($collection, $filtered) => $collection->whereIn($this->componentTable->primaryKey, $filtered))
+                ->slice($this->offset, $this->limit)
+                ->values();
+
+            return $dataTransformer->transform($collection)->collection;
         }
 
-        $filtered = $this->componentTable->filtered;
         $currentTable = $this->componentTable->currentTable;
 
         /** @var array{sortField?: string, sortDirection?: string} $queryOptions */
@@ -85,15 +101,20 @@ trait ExportableJob
         $sortField = $queryOptions['sortField']
             ?? $this->componentTable->sortField;
         $sortDirection = Sql::sanitizeSortDirection($queryOptions['sortDirection']
-            ?? $this->componentTable->sortDirection);
+            ?? $this->componentTable->sortDirection) === 'desc' ? 'desc' : 'asc';
 
-        $results = $processDataSource->datasource
-            ->where(function ($query) {
-                app()->makeWith(SearchHandlerContract::class, [
-                    'component' => $this->componentTable,
-                ])->apply($query);
-                (new FilterHandler($this->componentTable))->apply($query);
-            })
+        // Same scoping as the grid and the sync export, so a chunk never holds rows the user cannot see.
+        /** @var Builder<Model> $query */
+        $query = app(Pipeline::class)
+            ->send($processDataSource->datasource)
+            ->through([
+                new Pipelines\Filters($this->componentTable),
+                new Pipelines\SoftDeletes($this->componentTable),
+                new Pipelines\ColumnRawQueries($this->componentTable),
+            ])
+            ->thenReturn();
+
+        $query = $query
             ->when($filtered, function ($query, $filtered) use ($property) {
                 return $query->whereIn($property('primaryKey'), $filtered);
             })
@@ -103,11 +124,16 @@ trait ExportableJob
                     $sortDirection
                 );
             })
+            // Chunks are cut with offset/limit, so they need a total order to not repeat or skip rows.
+            ->orderBy($property('primaryKey'));
+
+        /** @var Builder<Model> $scoped */
+        $scoped = $this->componentTable->transformQuery($query);
+
+        $results = $scoped
             ->offset($this->offset)
             ->limit($this->limit)
             ->cursor();
-
-        $dataTransformer = new DataTransformer($processDataSource->component);
 
         return $dataTransformer->transformForExport($results);
     }

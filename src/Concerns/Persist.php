@@ -193,10 +193,15 @@ trait Persist
     // Versioned so 6.x and 7.x never read each other's payload (filters shape differs).
     private function getPersistKeyName(): string
     {
-        if (! empty($this->persistPrefix)) {
-            return 'pg7:'.$this->persistPrefix.'-'.$this->tableName;
+        $key = ! empty($this->persistPrefix)
+            ? 'pg7:'.$this->persistPrefix.'-'.$this->tableName
+            : 'pg7:'.$this->tableName;
+
+        // Cookies and session are already per browser; the cache store is shared by every user.
+        if ($this->getPersistDriverConfig() === 'cache') {
+            $key .= '-u'.(auth()->id() ?? session()->getId());
         }
 
-        return 'pg7:'.$this->tableName;
+        return $key;
     }
 }

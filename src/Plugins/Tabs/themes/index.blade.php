@@ -29,7 +29,7 @@
                 <button
                     type="button"
                     role="tab"
-                    wire:click="selectTab('{{ $tab['key'] }}')"
+                    wire:click="selectTab({!! js_literal($tab['key']) !!})"
                     wire:key="pg-tab-{{ $tableName }}-{{ $tab['key'] }}"
                     @class([
                         theme('tabs.tab', 'inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition'),
