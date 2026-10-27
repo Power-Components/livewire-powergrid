@@ -39,6 +39,10 @@ trait HandlesFilterInputs
         string $label,
         array $values,
     ): void {
+        if ($this->filterBagKey($field) === '') {
+            return;
+        }
+
         $this->putFilterRecord($field, 'multi_select', $values, label: $label);
         $this->notifyFilterChanged($field);
 

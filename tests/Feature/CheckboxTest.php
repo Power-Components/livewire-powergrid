@@ -108,11 +108,11 @@ it('resetToFirstPage does not navigate when already on the first page', function
 
     $lw = Livewire::test($component::class);
 
-    $lw->call('resetToFirstPage');
+    $lw->instance()->resetToFirstPage();
     expect($lw->get('gotoPageCalls'))->toBe([]);
 
-    $lw->call('gotoPage', 3)
-        ->call('resetToFirstPage');
+    $lw->call('gotoPage', 3);
+    $lw->instance()->resetToFirstPage();
     expect($lw->get('gotoPageCalls'))->toContain(1);
 });
 

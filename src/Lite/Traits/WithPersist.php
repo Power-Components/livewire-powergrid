@@ -101,6 +101,10 @@ trait WithPersist
     {
         $prefix = $this->getPersistPrefixValue() ?: class_basename(static::class);
 
+        if ($this->resolvePersistDriver() === 'cache') {
+            return "pg_lite:{$prefix}-u".(auth()->id() ?? session()->getId());
+        }
+
         return "pg_lite:{$prefix}";
     }
 
@@ -115,8 +119,10 @@ trait WithPersist
         return $driver;
     }
 
-    private function resolvePersistStore(): string
+    private function resolvePersistStore(): ?string
     {
-        return strval(config('livewire-powergrid.persist_driver_store', ''));
+        $store = config('livewire-powergrid.persist_driver_store');
+
+        return is_string($store) && $store !== '' ? $store : null;
     }
 }

@@ -40,7 +40,7 @@ function friendlySortComponent(): PowerGridComponent
 }
 
 it('renders the header sort trigger with the friendly field, not the dotted dataField', function () {
-    $html = Livewire::test(friendlySortComponent()::class)->html();
+    $html = html_entity_decode(Livewire::test(friendlySortComponent()::class)->html(), ENT_QUOTES);
 
     expect($html)->toContain("sortBy('name')")
         ->and($html)->not->toContain("sortBy('dishes.name')");

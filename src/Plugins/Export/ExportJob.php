@@ -6,6 +6,7 @@ use Illuminate\Bus\{Batchable, Queueable};
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\{InteractsWithQueue, SerializesModels};
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Crypt;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Concerns\ExportableJob;
@@ -23,6 +24,13 @@ class ExportJob implements ShouldQueue
 
     /** @var array<mixed, mixed> */
     private array $properties;
+
+    // Grid state that lives on PowerGrid's traits, not on the user's subclass.
+    private const array GRID_STATE = ['search', 'sortField', 'sortDirection', 'sortArray', 'softDeletes', 'activeTab', 'filterBuilder'];
+
+    private ?string $authGuard;
+
+    private int|string|null $authId;
 
     /**
      * @param  array<int, Column>  $columns
@@ -56,6 +64,12 @@ class ExportJob implements ShouldQueue
         /** @var string $parameters */
         $parameters = $params['parameters'] ?? '';
         $this->properties = (array) Crypt::decrypt($parameters);
+        /** @var string|null $authGuard */
+        $authGuard = $params['authGuard'] ?? null;
+        $this->authGuard = $authGuard;
+        /** @var int|string|null $authId */
+        $authId = $params['authId'] ?? null;
+        $this->authId = $authId;
 
         /** @var PowerGridComponent $tableInstance */
         $tableInstance = new $componentTable();
@@ -66,9 +80,22 @@ class ExportJob implements ShouldQueue
 
     public function handle(): void
     {
+        // datasource() and transformQuery() usually scope by auth(), which the worker does not have.
+        if ($this->authId !== null) {
+            $guard = auth()->guard($this->authGuard);
+
+            if (method_exists($guard, 'onceUsingId')) {
+                $guard->onceUsingId($this->authId);
+            }
+
+            auth()->shouldUse((string) $this->authGuard);
+        }
+
         collect($this->componentTable->getPublicPropertiesDefinedInComponent())
             ->intersectByKeys($this->properties)
             ->each(fn ($value, $key) => $this->componentTable->{$key} = data_get($this->properties, $key));
+
+        $this->componentTable->fill(Arr::only($this->properties, self::GRID_STATE));
 
         $currentHiddenStates = collect($this->columns)
             ->mapWithKeys(function ($column) {

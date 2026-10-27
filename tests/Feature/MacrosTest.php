@@ -604,3 +604,20 @@ it('tests Button with empty params arrays', function () {
         ->and($button2->attributes['wire:click'])->toContain('myEvent')
         ->and($button3->attributes['wire:click'])->toContain('selfEvent');
 });
+
+it('escapes names spliced into button wire:click expressions', function () {
+    $payload = "x'),alert(1),('";
+
+    $clicks = [
+        Button::add('a')->call($payload, [])->attributes['wire:click'],
+        Button::add('b')->dispatch($payload, [])->attributes['wire:click'],
+        Button::add('c')->dispatchTo($payload, $payload, [])->attributes['wire:click'],
+        Button::add('d')->dispatchSelf($payload, [])->attributes['wire:click'],
+    ];
+
+    foreach ($clicks as $click) {
+        expect($click)->not->toContain("'),alert(1)");
+    }
+
+    expect(fn () => Button::add('e')->parent('save();alert', []))->toThrow(InvalidArgumentException::class);
+});

@@ -2,8 +2,14 @@
 
 namespace PowerComponents\LivewirePowerGrid\Plugins;
 
+use Illuminate\Database\Eloquent\{Builder as EloquentBuilder, Model};
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use PowerComponents\LivewirePowerGrid\{Column, PowerGridComponent};
 use PowerComponents\Turbine\Column as TurbineColumn;
+use PowerComponents\Turbine\DataSource\ProcessDataSource;
+use PowerComponents\Turbine\DataSource\Processors\Database\Pipelines\SoftDeletes;
 use stdClass;
 
 /**
@@ -77,6 +83,36 @@ abstract class PluginBase
     public function isDeclaredField(string $field): bool
     {
         return $this->handledColumn($field) !== null;
+    }
+
+    protected function scopedRow(string $id): ?object
+    {
+        if ($id === '' || str_contains($id, '.') || str_contains($id, '*')) {
+            return null;
+        }
+
+        $datasource = ProcessDataSource::make($this->component)->resolveDatasource();
+        $query = $this->component->transformQuery(is_array($datasource) ? collect($datasource) : $datasource);
+
+        if ($query instanceof Collection) {
+            $row = $query->first(function ($row) use ($id) {
+                $key = data_get($row, $this->component->realPrimaryKey());
+
+                return is_scalar($key) && (string) $key === $id;
+            });
+        } elseif ($query instanceof EloquentBuilder || $query instanceof QueryBuilder) {
+            /** @var EloquentBuilder<Model>|QueryBuilder $query */
+            $query = app(Pipeline::class)->send($query)->through([new SoftDeletes($this->component)])->thenReturn();
+            $row = $query->where($this->component->primaryKey, $id)->first();
+        } else {
+            return (object) [];
+        }
+
+        if (! is_object($row) && ! is_array($row)) {
+            return null;
+        }
+
+        return (object) ['__turbine_rules' => $this->component->prepareActionRulesForRows($row)];
     }
 
     /** @return Column|array<mixed, mixed>|stdClass|null */

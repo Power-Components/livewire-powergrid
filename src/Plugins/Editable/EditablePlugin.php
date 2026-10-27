@@ -114,18 +114,18 @@ class EditablePlugin extends PluginBase
     #[On('pg:editable-{tableName}')]
     public function inputTextChanged(mixed ...$params): void
     {
-        [$field, $id, $value] = $params;
-        /** @var string $value */
-        if (! is_string($field) || ! is_scalar($id) || ! $this->isHandledField($field)) {
+        [$field, $id, $value] = array_pad($params, 3, null);
+        if (! is_string($field) || ! is_scalar($id) || ! (is_scalar($value) || $value === null) || ! $this->isHandledField($field)) {
             return;
         }
 
         $column = $this->handledColumn($field);
-        if ($column === null || ! boolval(data_get($column, 'pluginData.editable.hasPermission'))) {
+        $id = (string) $id;
+        $row = $column !== null ? $this->scopedRow($id) : null;
+
+        if ($column === null || $row === null || ! $this->shouldShowEditOnClick($column, $row)) {
             return;
         }
-
-        $id = (string) $id;
 
         $component = $this->component;
         data_set($component, "$field.{$id}", $value);
@@ -140,12 +140,14 @@ class EditablePlugin extends PluginBase
     {
         $hasPermission = boolval(data_get($column, 'pluginData.editable.hasPermission', false));
 
-        $editOnClickVisibility = data_get(
-            collect((array) data_get($row, '__turbine_rules'))
-                ->where('apply', true)
-                ->last(),
-            'editOnClickVisibility'
-        );
+        $appliedRules = collect((array) data_get($row, '__turbine_rules'))->where('apply', true);
+
+        // Every rule carries every plugin's modifiers, so a later unrelated rule must not undo this flag.
+        if ($appliedRules->contains(fn ($rule) => (bool) data_get($rule, 'fieldHideEditOnClick'))) {
+            return false;
+        }
+
+        $editOnClickVisibility = data_get($appliedRules->last(), 'editOnClickVisibility');
 
         if ($editOnClickVisibility === 'hide') {
             return false;

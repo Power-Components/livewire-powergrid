@@ -5,6 +5,7 @@ namespace PowerComponents\LivewirePowerGrid\Providers;
 use Illuminate\Container\Container;
 use Illuminate\Pagination\{LengthAwarePaginator, Paginator};
 use Illuminate\Support\Js;
+use InvalidArgumentException;
 use Laravel\Scout\{Builder, Builder as ScoutBuilder};
 use Laravel\Scout\Contracts\PaginatesEloquentModels;
 use PowerComponents\LivewirePowerGrid\{Button, Column};
@@ -22,7 +23,7 @@ class Macros
             $operation = strtolower($operation);
 
             if (! in_array($operation, ['sum', 'count', 'avg', 'min', 'max'], true)) {
-                throw new \InvalidArgumentException("Unknown summarize operation [{$operation}]. Use sum, count, avg, min, or max.");
+                throw new InvalidArgumentException("Unknown summarize operation [{$operation}]. Use sum, count, avg, min, or max.");
             }
 
             $props = $this->properties;
@@ -129,7 +130,7 @@ class Macros
 
         Button::macro('call', function (string $method, array $params): TurbineButton {
             $this->attributes([
-                'wire:click' => "\$call('{$method}', ".Js::from($params).')',
+                'wire:click' => '$call('.Js::from($method).', '.Js::from($params).')',
             ]);
 
             $this->eventMeta = ['type' => 'call', 'method' => $method, 'params' => $params];
@@ -139,7 +140,7 @@ class Macros
 
         Button::macro('dispatch', function (string $event, array $params): TurbineButton {
             $this->attributes([
-                'wire:click' => "\$dispatch('{$event}', ".Js::from($params).')',
+                'wire:click' => '$dispatch('.Js::from($event).', '.Js::from($params).')',
             ]);
 
             $this->eventMeta = ['type' => 'dispatch', 'event' => $event, 'params' => $params];
@@ -149,7 +150,7 @@ class Macros
 
         Button::macro('dispatchTo', function (string $component, string $event, array $params): TurbineButton {
             $this->attributes([
-                'wire:click' => "\$dispatchTo('{$component}', '{$event}', ".Js::from($params).')',
+                'wire:click' => '$dispatchTo('.Js::from($component).', '.Js::from($event).', '.Js::from($params).')',
             ]);
 
             $this->eventMeta = ['type' => 'dispatchTo', 'to' => $component, 'event' => $event, 'params' => $params];
@@ -159,7 +160,7 @@ class Macros
 
         Button::macro('dispatchSelf', function (string $event, array $params): TurbineButton {
             $this->attributes([
-                'wire:click' => "\$dispatchSelf('{$event}', ".Js::from($params).')',
+                'wire:click' => '$dispatchSelf('.Js::from($event).', '.Js::from($params).')',
             ]);
 
             $this->eventMeta = ['type' => 'dispatchSelf', 'event' => $event, 'params' => $params];
@@ -168,6 +169,11 @@ class Macros
         });
 
         Button::macro('parent', function (string $method, array $params): TurbineButton {
+            // The name is spliced into the expression as code, so it must be a plain identifier.
+            if (preg_match('/^[A-Za-z_$][\w$]*$/', $method) !== 1) {
+                throw new InvalidArgumentException("Invalid parent method name [{$method}].");
+            }
+
             $this->attributes([
                 'wire:click' => "\$parent.{$method}(".Js::from($params).')',
             ]);
@@ -271,7 +277,7 @@ class Macros
         RuleActions::macro('dispatch', function (string $event, array $params) {
             $params = Js::from($params);
 
-            $value = "\$dispatch('{$event}', {$params})";
+            $value = '$dispatch('.Js::from($event).", {$params})";
 
             $this->setAttribute('wire:click', $value);
 

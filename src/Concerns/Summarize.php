@@ -2,8 +2,9 @@
 
 namespace PowerComponents\LivewirePowerGrid\Concerns;
 
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\{Collection, Str};
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 use PowerComponents\Turbine\Concerns\State\ResolvesSummaries;
 
 trait Summarize
@@ -190,6 +191,28 @@ trait Summarize
             'softDeletes' => $this->softDeletes,
             'filterBuilder' => $this->filterBuilder,
             'activeTab' => $this->activeTab,
+            'scope' => $this->cacheScopeKey(),
         ]));
+    }
+
+    protected function cacheScopeKey(): string
+    {
+        $principal = auth()->id() ?? session()->getId();
+        $scope = '';
+
+        $datasource = $this->datasource();
+        $query = $this->transformQuery(is_array($datasource) ? collect($datasource) : $datasource);
+
+        if (is_object($query) && method_exists($query, 'toBase')) {
+            $query = $query->toBase();
+        }
+
+        if ($query instanceof QueryBuilder) {
+            $scope = $query->toSql().'|'.serialize($query->getBindings());
+        } elseif ($query instanceof Collection) {
+            $scope = (string) json_encode($query->pluck($this->state()->realPrimaryKey())->all());
+        }
+
+        return hash('sha256', $principal.'|'.$scope);
     }
 }

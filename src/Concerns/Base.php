@@ -113,6 +113,36 @@ trait Base
         throw new CannotUpdateLockedPropertyException('loadingComponent');
     }
 
+    public function updatingIgnoreTablePrefix(): void
+    {
+        throw new CannotUpdateLockedPropertyException('ignoreTablePrefix');
+    }
+
+    public function updatingCurrentTable(): void
+    {
+        throw new CannotUpdateLockedPropertyException('currentTable');
+    }
+
+    public function updatingSupportModel(): void
+    {
+        throw new CannotUpdateLockedPropertyException('supportModel');
+    }
+
+    public function updatingPaginateRaw(): void
+    {
+        throw new CannotUpdateLockedPropertyException('paginateRaw');
+    }
+
+    public function updatingIsExporting(): void
+    {
+        throw new CannotUpdateLockedPropertyException('isExporting');
+    }
+
+    public function updatingPruneHiddenColumns(): void
+    {
+        throw new CannotUpdateLockedPropertyException('pruneHiddenColumns');
+    }
+
     public function stripServerOwnedSnapshot(): void
     {
         $this->columns = array_map(function ($column): array {

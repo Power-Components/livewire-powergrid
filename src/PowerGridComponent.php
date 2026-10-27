@@ -512,7 +512,7 @@ class PowerGridComponent extends Component implements Context
         $ttl = data_get($this->setUp, 'cache.ttl');
 
         $tag = $this->summariesCacheTag();
-        $cacheKey = implode('-', $this->getCacheKeys());
+        $cacheKey = implode('-', $this->getCacheKeys()).'-'.$this->cacheScopeKey();
 
         $getCacheClosure = fn () => $this->withPowerGridMaxPerPage(fn () => ProcessDataSource::make($this)->get());
 

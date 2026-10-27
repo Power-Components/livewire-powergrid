@@ -36,7 +36,7 @@
     @if ($sortOrder) sort_order="{{ $sortOrder }}" @endif
     @if ($isFixedOnResponsive) fixed @endif
     @if (data_get($column, 'enableSort')) x-multisort-shift-click="{{ $__partial->getId() }}"
-    wire:click="sortBy('{{ $sortKey }}')" @endif
+    wire:click="sortBy({!! js_literal($sortKey) !!})" @endif
     @class([
         theme('table.layout.th') => true,
         data_get($column, 'headerClass') => true,

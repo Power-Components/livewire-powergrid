@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Lite\Traits;
 
+use PowerComponents\Turbine\DataSource\Support\Sql;
+
 /** @phpstan-ignore trait.unused */
 trait WithSorting
 {
@@ -17,6 +19,14 @@ trait WithSorting
 
     public function sortBy(string $field, string $direction = 'asc'): void
     {
+        $allowed = property_exists($this, 'sortableFields') ? (array) $this->sortableFields : null;
+
+        if (preg_match('/^[A-Za-z_][\w.]*$/', $field) !== 1 || ($allowed !== null && ! in_array($field, $allowed, true))) {
+            return;
+        }
+
+        $direction = Sql::sanitizeSortDirection($direction);
+
         if ($this->multiSort) {
             $this->sortByMultiple($field);
             $this->afterSortBy();

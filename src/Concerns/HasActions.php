@@ -118,13 +118,13 @@ trait HasActions
                 ->toArray();
         };
 
-        /** @var string $value */
         $value = data_get($row, $this->realPrimaryKey());
-        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-{$value}";
+        // Rules depend on row content, so an edited row (or one without a key) must not reuse a stale entry.
+        $cacheKey = "pg-prepare-action-rules-for-rows-{$this->getId()}-".(is_scalar($value) ? $value : '').'-'.hash('xxh128', (string) json_encode($row));
 
         /** @var int $cacheTtl */
         $cacheTtl = config('livewire-powergrid.cache_ttl');
-        if ($cacheTtl > 0) {
+        if ($cacheTtl > 0 && filled($value)) {
             /** @var array<int, array<string, mixed>> $formattedRules */
             $formattedRules = Cache::remember($cacheKey, $cacheTtl, function () use ($closure, $row, $loop) {
                 $value = $closure($row, $loop);

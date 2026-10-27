@@ -222,6 +222,16 @@ trait HasTabs
             return $this->tabCountsCache = [];
         }
 
+        // Badges must count only rows the grid can show, but across every tab, so drop the active tab scope here.
+        $activeTab = $this->activeTab;
+        $this->activeTab = null;
+
+        try {
+            $datasource = $this->transformQuery($datasource);
+        } finally {
+            $this->activeTab = $activeTab;
+        }
+
         /** @var EloquentBuilder<Model>|QueryBuilder|Relation<Model, Model, mixed> $filtered */
         $filtered = app(Pipeline::class)
             ->send($datasource)

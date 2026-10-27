@@ -281,3 +281,53 @@ it('keeps cached rows apart per active tab', function () {
         ->call('selectTab', 'cat2')
         ->tap(fn ($test) => expect($test->instance()->records->total())->toBe(1));
 })->requiresSQLite();
+
+it('counts tab badges only over rows the transformQuery scope allows', function () {
+    seedTabsDishes();
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-tabs-scoped-badges';
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function transformQuery(mixed $query): mixed
+        {
+            return parent::transformQuery($query)->where('price', '<', 300);
+        }
+
+        public function setUp(): array
+        {
+            return [
+                PowerGrid::tabs()
+                    ->add('all', label: 'All')
+                    ->add('cat1', label: 'Category 1', scope: ['category_id', 1])
+                    ->default('cat1'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Name', 'name')];
+        }
+    };
+
+    Livewire::test($component::class)
+        ->tap(function ($test) {
+            $component = $test->instance();
+            $component->setUp = $component->resolvedSetUp();
+
+            $data = collect($component->tabsData()['tabs'])->keyBy('key');
+
+            expect($data['all']['badge'])->toBe(2)
+                ->and($data['cat1']['badge'])->toBe(2);
+        });
+})->requiresSQLite();
