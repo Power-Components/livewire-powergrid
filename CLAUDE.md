@@ -35,11 +35,12 @@ The 7.x version prioritizes **simplicity, an adaptable native skeleton, and inde
 ## 5. Performance & Partials
 
 * **Livewire DOM Isolation:** Use the `power-components/partials` fragments to isolate DOM updates and boost performance.
-* **Hot Zones:** Demarcated partial zones for isolated updates:
-  1. `pg-tbody`
-  2. `pg-pagination`
-  3. `pg-filter-fields` / `pg-enabled-filters`
-  4. `pg-tabs`
+* **Hot Zones:** Demarcated partial zones for isolated updates (each suffixed with `-{tableName}`):
+  1. `pg-thead`
+  2. `pg-tbody`
+  3. `pg-pagination`
+  4. `pg-filter-fields` / `pg-enabled-filters` / `pg-filter-trigger`
+  5. `pg-tabs`
 
 ## 6. Testing Strategy
 

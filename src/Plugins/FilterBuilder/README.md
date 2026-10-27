@@ -48,7 +48,7 @@ All methods are chainable on `PowerGrid::filterBuilder()`:
 |--------|-------------|---------|
 | `match(string $match)` | Default connector when the modal opens (`'and'` or `'or'`). | `'and'` |
 | `maxConditions(int $max)` | Hard cap on how many conditions may be applied (anti-abuse). | `30` |
-| `hideDefaultFilters(bool $hide = true)` | Hide the inline/outside filters so the builder is the only filtering UI. The enabled-filter pills stay visible. | `false` |
+| `hideDefaultFilters(bool $hide = true)` | Hide the inline/dropdown/flyout filters so the builder is the only filtering UI. The enabled-filter pills stay visible. | `false` |
 | `only(array $fields)` | Restrict which `filters()` columns appear in the builder (empty = all). | `[]` |
 | `except(array $fields)` | Hide specific `filters()` columns from the builder. | `[]` |
 | `persist(bool $persist = true)` | Persist applied conditions across requests. See [Persistence](#persistence). | `false` |

@@ -41,11 +41,13 @@ if (!window.pgFlatpickrRegistered) {
                 console.error('%c%s',
                     'font-size: 1em; line-height: 1.5',
                     `
-    Failed to mount filter: Filter::datetime('${this.dataField}') on table ['${this.tableName}']
+    [PowerGrid] Failed to mount date filter '${this.dataField}' on table ['${this.tableName}']: flatpickr is not available.
 
     • Install flatpickr: npm install flatpickr
 
-    • Add 'import flatpickr from "flatpickr"' in resources/js/app.js file
+    • Expose it globally in resources/js/app.js:
+        import flatpickr from "flatpickr"
+        window.flatpickr = flatpickr
       `
                 );
             }
@@ -120,7 +122,16 @@ if (!window.pgFlatpickrRegistered) {
                 ];
             }
 
+            // Lets a containing filter panel keep its footer clear of the calendar.
+            options.onOpen = [].concat(options.onOpen ?? [], (selectedDates, dateStr, instance) => {
+                this.$el.dispatchEvent(new CustomEvent('pg-overlay-open', {
+                    bubbles: true,
+                    detail: { overlay: instance.calendarContainer },
+                }))
+            })
+
             options.onClose = (selectedDates, dateStr, instance) => {
+                this.$el.dispatchEvent(new CustomEvent('pg-overlay-close', { bubbles: true }))
 
                 selectedDates = selectedDates.map((date) => this.element.formatDate(date, 'Y-m-d'));
 
@@ -136,7 +147,7 @@ if (!window.pgFlatpickrRegistered) {
                         dateStr: dateStr,
                         label: this.label,
                         type: this.type,
-                        timezone: this.customConfig.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
+                        timezone: this.customConfig?.timezone ?? new Date().toString().match(/([-\+][0-9]+)\s/)[1],
                         dateFormat: this.locale.dateFormat ?? 'Y-m-d H:i'
                     });
                 }

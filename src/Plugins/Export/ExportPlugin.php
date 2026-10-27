@@ -7,6 +7,9 @@ use Illuminate\Bus\Batch;
 use Illuminate\Support;
 use Illuminate\Support\{Collection, Str};
 use Illuminate\Support\Facades\Bus;
+use OpenSpout\Writer\XLSX\Writer;
+use PowerComponents\LivewirePowerGrid\Column;
+use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
 use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Theme};
 use PowerComponents\Turbine\Components\SetUp\Exportable;
@@ -84,11 +87,27 @@ class ExportPlugin extends PluginBase
         return view($viewName, [
             'element' => $this->component->headerElement('export'),
             'tableName' => $this->component->tableName,
-            'types' => (array) data_get($exportable, 'type', []),
+            'types' => $this->availableTypes((array) data_get($exportable, 'type', [])),
             'total' => $this->component->total(),
             'enabledFiltersCount' => count($this->component->enabledFilters),
             'checkbox' => $this->component->checkbox,
         ])->render();
+    }
+
+    /**
+     * XLSX needs openspout/openspout (only suggested) unless a custom exporter handles it;
+     * CSV always works through the native writer.
+     *
+     * @param  array<array-key, mixed>  $types
+     * @return array<array-key, mixed>
+     */
+    private function availableTypes(array $types): array
+    {
+        if (class_exists(Writer::class) || $this->getCustomExportableClass(Exportable::TYPE_XLS)) {
+            return $types;
+        }
+
+        return array_values(array_filter($types, fn (mixed $type): bool => $type !== Exportable::TYPE_XLS));
     }
 
     /**
@@ -251,6 +270,22 @@ class ExportPlugin extends PluginBase
         }
 
         $exportEngine = new ExportEngine();
+
+        if ($customExportableClass = $this->getCustomExportableClass($exportType)) {
+            /** @var Export&ExportInterface $exporter */
+            $exporter = new $customExportableClass();
+
+            /** @var array<int, Column> $columns */
+            $columns = $exportEngine->prepareColumns($this->component);
+
+            $exporter->fileName($fileName)->setData(
+                $columns,
+                $exportEngine->prepareDataset($this->component, $exportOptions, $selected)
+            );
+
+            return $exporter->download($exportOptions);
+        }
+
         $filePath = $exportEngine->build(
             context: $this->component,
             exportType: $exportType,
@@ -366,6 +401,23 @@ class ExportPlugin extends PluginBase
         ]);
 
         return $queues;
+    }
+
+    /**
+     * The exporter mapped in config when it is not a built-in OpenSpout one; built-in
+     * exports run through the Turbine ExportEngine.
+     */
+    private function getCustomExportableClass(string $exportType): ?string
+    {
+        $exportableClass = data_get(config('livewire-powergrid.exportable'), config()->string('livewire-powergrid.exportable.default').'.'.$exportType);
+
+        if (! is_string($exportableClass)
+            || ! class_exists($exportableClass)
+            || str_starts_with($exportableClass, 'PowerComponents\\LivewirePowerGrid\\Plugins\\Export\\OpenSpout\\')) {
+            return null;
+        }
+
+        return $exportableClass;
     }
 
     private function getExportableClassFromConfig(string $exportType): string

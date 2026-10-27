@@ -114,7 +114,7 @@ final class BuildStubVars
         $this->filters .= '            Filter::inputText(\''.$field.'\')->operators([\'contains\']),'."\n";
 
         if (! $this->hasEscapeExample) {
-            $this->fields .= "\n\n           /** Example of custom column using a closure **/\n".'            ->add(\''.$field.'_lower\', fn ('.$closure.') => strtolower(e($model->'.$field.')))'."\n";
+            $this->fields .= "\n\n           /** Example of custom column using a closure **/\n".'            ->add(\''.$field.'_lower\', fn ('.$closure.') => strtolower($model->'.$field.'))'."\n";
             $this->hasEscapeExample = true;
         }
     }

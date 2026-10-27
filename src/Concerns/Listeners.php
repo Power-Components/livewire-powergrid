@@ -17,6 +17,8 @@ trait Listeners
     /** @var array<string, array{plugin: string, method: string}> */
     private array $pluginListenerMap = [];
 
+    protected mixed $dispatchingEvent = null;
+
     /** @var array<class-string, list<array{event: string, method: string}>> */
     private static array $reflectionCache = [];
 
@@ -72,19 +74,10 @@ trait Listeners
     {
         $this->resolvePlugins();
 
-        foreach ($this->pluginListenerMap as $event => $info) {
-            $pluginName = $info['plugin'];
-            $method = $info['method'];
+        $info = is_string($this->dispatchingEvent) ? ($this->pluginListenerMap[$this->dispatchingEvent] ?? null) : null;
 
-            if (method_exists($this, $method)) {
-                continue;
-            }
-
-            if (isset($this->plugins[$pluginName]) && method_exists($this->plugins[$pluginName], $method)) {
-                $this->plugins[$pluginName]->{$method}(...$params);
-
-                return;
-            }
+        if ($info !== null && isset($this->plugins[$info['plugin']]) && method_exists($this->plugins[$info['plugin']], $info['method'])) {
+            $this->plugins[$info['plugin']]->{$info['method']}(...$params);
         }
     }
 

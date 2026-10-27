@@ -96,6 +96,10 @@ composer require power-components/livewire-powergrid
 
 Then, follow the steps indicated in the [Documentation - Install page](https://livewire-powergrid.com/get-started/install.html).
 
+### Upgrading from v6
+
+Read [UPGRADE.md](UPGRADE.md) and the full [Upgrade Guide](https://livewire-powergrid.com/release-notes-and-upgrade/upgrade-guide.html).
+
 <br/>
 
 ### AI-assisted development (Laravel Boost)

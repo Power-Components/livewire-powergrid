@@ -83,7 +83,10 @@ return [
     | Plugins
     |--------------------------------------------------------------------------
     |
-    | Plugins used: flatpickr.js to datepicker.
+    | Plugins used: flatpickr.js to datepicker, slim-select or tom-select to
+    | multi-select. Both libraries must be exposed globally by your bundle
+    | (window.flatpickr, window.SlimSelect / window.TomSelect). The 'slim' and
+    | 'tom' arrays are passed as options to the library constructor.
     |
     */
 
@@ -104,14 +107,8 @@ return [
 
         'select' => [
             'default' => 'slim',
-            'slim' => [
-                'cdn' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.min.js',
-                'css' => 'https://unpkg.com/slim-select@2.9.1/dist/slimselect.css',
-            ],
-            'tom' => [
-                'cdn' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/js/tom-select.complete.min.js',
-                'css' => 'https://cdn.jsdelivr.net/npm/tom-select@2.4.1/dist/css/tom-select.css',
-            ],
+            'slim' => [],
+            'tom' => [],
         ],
     ],
 
