@@ -333,16 +333,10 @@ trait HasActions
             'action' => $button->action,
             'tag' => $button->tag ?? 'button',
             'slot' => $slot,
-            'iconHtml' => ! empty($button->icon) ? $this->renderIcon($button->icon, $button->iconAttributes) : '',
+            'iconHtml' => ! empty($button->icon) ? IconRenderer::render($button->icon, $button->iconAttributes) : '',
             'attributes' => $attributes,
             'replaceHtml' => $replaceHtml,
         ];
-    }
-
-    /** @param  array<string, mixed>  $iconAttributes */
-    private function renderIcon(string $icon, array $iconAttributes): string
-    {
-        return IconRenderer::render($icon, $iconAttributes);
     }
 
     /** @return list<array<string, mixed>> */
