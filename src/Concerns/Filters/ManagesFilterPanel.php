@@ -10,11 +10,7 @@ trait ManagesFilterPanel
     {
         $this->showFilters = ! $this->showFilters;
 
-        if ($this->showFilters) {
-            $this->mountFilterPanel();
-        }
-
-        $this->renderFilterPanelPartial();
+        $this->updatedShowFilters();
     }
 
     public function updatedShowFilters(): void
