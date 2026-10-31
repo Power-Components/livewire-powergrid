@@ -90,15 +90,6 @@ final class FilterKey
     }
 
     /**
-     * @param  array<string, mixed>  $draft
-     * @return array<string, mixed>
-     */
-    public static function decodeDraft(array $draft): array
-    {
-        return self::mapKeys($draft, self::decode(...));
-    }
-
-    /**
      * @param  array<string, mixed>  $bag
      * @param  callable(string): string  $fn
      * @return array<string, mixed>

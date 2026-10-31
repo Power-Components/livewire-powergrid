@@ -49,29 +49,6 @@ final class PowerGridStub
         return $this->content;
     }
 
-    /**
-     * @return Collection<int, string>
-     */
-    public function listStubVars(): Collection
-    {
-        return str($this->content)->matchAll("/\{\{ ([^W]+?) \}\}/");
-    }
-
-    /**
-     * @return Collection<string, string>
-     */
-    public function listVars(): Collection
-    {
-        return $this->variables;
-    }
-
-    public function unsetVar(string $var): self
-    {
-        $this->variables->forget($var);
-
-        return $this;
-    }
-
     public function setVar(string $var, string $value): self
     {
         $this->variables->put($var, $value);
