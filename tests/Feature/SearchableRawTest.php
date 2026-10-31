@@ -46,3 +46,38 @@ it('searches data using whereRaw on sqlite', function () {
         ->assertDontSee('Dish 1')
         ->assertSee('Dish 2');
 })->requiresSQLite();
+
+it('keeps datasource constraints when searching raw columns', function (Closure $column) {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-searchable-raw-datasource';
+
+        public static Closure $column;
+
+        public function datasource()
+        {
+            return Dish::query()->where('dishes.category_id', 1);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), (self::$column)()];
+        }
+    };
+
+    $component::$column = $column;
+
+    Livewire::test($component::class)
+        ->set('search', 'Carne')
+        ->assertSee('Carne Louca')
+        ->set('search', 'Pastel')
+        ->assertDontSee('Pastel de Nata');
+})->with([
+    'searchableRaw' => [fn () => Column::make('Name', 'name')->searchableRaw('dishes.name LIKE ?')],
+    'searchableJson' => [fn () => Column::make('Name', 'name')->searchableJson('dishes')],
+]);
