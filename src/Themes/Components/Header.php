@@ -18,15 +18,7 @@ class Header
     /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
-        $component = new Layout();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['layout'] = $component->toArray();
+        $this->properties['layout'] = $this->buildSection(new Layout(), $callback);
 
         return $this;
     }
@@ -34,19 +26,7 @@ class Header
     /** @param  Closure|array<string, mixed>  $callback */
     public function searchBox(Closure|array $callback): self
     {
-        $component = new SearchBox();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['searchBox'] = $component->toArray();
+        $this->properties['searchBox'] = $this->buildSection(new SearchBox(), $callback, true);
 
         return $this;
     }
@@ -105,18 +85,6 @@ class Header
      */
     private function headerButton(Closure|array $callback): array
     {
-        $component = new HeaderButton();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        return $component->toArray();
+        return $this->buildSection(new HeaderButton(), $callback, true);
     }
 }

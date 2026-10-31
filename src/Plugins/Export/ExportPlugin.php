@@ -11,7 +11,8 @@ use OpenSpout\Writer\XLSX\Writer;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Plugins\Export\Contracts\ExportInterface;
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
-use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux, Theme};
+use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
+use PowerComponents\LivewirePowerGrid\Themes\{DaisyUI, Flux};
 use PowerComponents\Turbine\Components\SetUp\Exportable;
 use PowerComponents\Turbine\DataSource\ProcessDataSource;
 use PowerComponents\Turbine\Export\ExportEngine;
@@ -40,8 +41,7 @@ class ExportPlugin extends PluginBase
 
     public function scripts(): array
     {
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
-        $theme = $theme instanceof Theme ? $theme : null;
+        $theme = ThemeManager::current();
         $js = dirname(__DIR__, 3).'/resources/js/components';
         $files = [];
 
@@ -149,7 +149,7 @@ class ExportPlugin extends PluginBase
             return $tokenView;
         }
 
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
+        $theme = ThemeManager::current();
 
         $variant = match (true) {
             $theme instanceof DaisyUI => 'daisyui',

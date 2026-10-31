@@ -47,11 +47,12 @@ trait Checkbox
             return;
         }
 
+        $actionsResolver = new ActionsResolver($this);
+
         /** @phpstan-ignore-next-line  */
-        collect($records->items())->each(function (array|Model|stdClass $model) {
+        collect($records->items())->each(function (array|Model|stdClass $model) use ($actionsResolver) {
             $value = data_get($model, $this->checkboxAttribute);
 
-            $actionsResolver = new ActionsResolver($this);
             if (! $actionsResolver->isRowSelectable($model, RuleManager::TYPE_CHECKBOX)) {
                 return;
             }

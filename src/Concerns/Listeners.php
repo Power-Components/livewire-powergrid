@@ -214,12 +214,6 @@ trait Listeners
     #[On('pg:eventRefresh-{tableName}')]
     public function refresh(): void
     {
-        if (($this->total() > 0) && ($this->totalCurrentPage - 1) === 0) {
-            $this->previousPage();
-
-            return;
-        }
-
         $this->dispatch('$commit')->self();
     }
 }

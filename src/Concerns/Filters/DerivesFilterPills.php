@@ -16,7 +16,7 @@ trait DerivesFilterPills
             ->count();
     }
 
-    public function addEnabledFilters(string $field, ?string $label, bool $disabled = false): void
+    public function addEnabledFilters(string $field, ?string $label): void
     {
         $key = $this->filterBagKey($field);
 

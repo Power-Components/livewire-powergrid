@@ -3,6 +3,7 @@
 namespace PowerComponents\LivewirePowerGrid\Plugins\FilterBuilder;
 
 use PowerComponents\LivewirePowerGrid\Plugins\PluginBase;
+use PowerComponents\LivewirePowerGrid\Support\ThemeManager;
 use PowerComponents\LivewirePowerGrid\Themes\Flux;
 use PowerComponents\Turbine\Components\Filters\FilterInputText;
 use PowerComponents\Turbine\Plugins\FilterBuilder\FilterBuilderValidator;
@@ -73,7 +74,7 @@ class FilterBuilderPlugin extends PluginBase
             return $tokenView;
         }
 
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
+        $theme = ThemeManager::current();
 
         if (! $theme instanceof Flux) {
             return '';

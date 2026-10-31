@@ -9,7 +9,7 @@
 @php
     $__partial = $__partial ?? $this;
     $tableName = $tableName ?? $__partial->tableName;
-    $rowRenderer = RowRenderer::canRenderDirect($__partial) ? new RowRenderer($__partial) : null;
+    $rowRenderer = RowRenderer::canRenderDirect() ? new RowRenderer($__partial) : null;
     $responsive = isset($__partial->setUp['responsive']);
     $hasDetail = isset($__partial->setUp['detail']);
 @endphp

@@ -27,10 +27,6 @@ trait Base
     /** @var array<string, mixed> */
     public array $setUp = [];
 
-    public bool $showErrorBag = false;
-
-    public bool $rowIndex = true;
-
     public bool $deferLoading = false;
 
     public bool $readyToLoad = false;
@@ -41,14 +37,9 @@ trait Base
     /** @var list<mixed> */
     public array $columns = [];
 
-    /** @var list<mixed> */
-    public array $headers = [];
-
     public string $search = '';
 
     public string $currentTable = '';
-
-    public int $totalCurrentPage = 0;
 
     public bool $supportModel = true;
 
@@ -70,15 +61,7 @@ trait Base
         $incomingColumns = $incomingColumns !== [] ? $incomingColumns : $this->columns;
         $incomingSetUp = $incomingSetUp !== [] ? $incomingSetUp : $this->setUp;
 
-        $this->setUp = [];
-
-        foreach ($this->setUp() as $setUp) {
-            $name = is_object($setUp) ? data_get($setUp, 'name') : null;
-
-            if (is_string($name)) {
-                $this->setUp[$name] = $setUp;
-            }
-        }
+        $this->setUp = $this->resolvedSetUp();
 
         $this->overlayFooterPerPage($incomingSetUp);
 
@@ -155,8 +138,6 @@ trait Base
             return $skeleton;
         }, $this->columns);
 
-        $this->headers = [];
-
         $perPage = data_get($this->setUp, 'footer.perPage');
 
         $this->setUp = $perPage === null ? [] : ['footer' => ['perPage' => $perPage]];
@@ -167,17 +148,26 @@ trait Base
      */
     public function resolvedSetUp(): array
     {
-        $resolved = [];
+        return $this->keyComponentsByName($this->setUp());
+    }
 
-        foreach ($this->setUp() as $config) {
-            $name = is_object($config) ? data_get($config, 'name') : null;
+    /**
+     * @param  iterable<mixed>  $components
+     * @return array<string, mixed>
+     */
+    private function keyComponentsByName(iterable $components): array
+    {
+        $keyed = [];
+
+        foreach ($components as $component) {
+            $name = is_object($component) ? data_get($component, 'name') : null;
 
             if (is_string($name)) {
-                $resolved[$name] = $config;
+                $keyed[$name] = $component;
             }
         }
 
-        return $resolved;
+        return $keyed;
     }
 
     /** @param  array<string, mixed>  $incomingSetUp */
@@ -391,23 +381,7 @@ trait Base
     /** @return array<string, mixed> */
     public function setUp(): array
     {
-        $definition = $this->definition();
-
-        if ($definition === null) {
-            return [];
-        }
-
-        $out = [];
-
-        foreach ($definition->setUp() as $component) {
-            $name = data_get($component, 'name');
-
-            if (is_string($name)) {
-                $out[$name] = $component;
-            }
-        }
-
-        return $out;
+        return $this->keyComponentsByName($this->definition()?->setUp() ?? []);
     }
 
     /** @return list<mixed> */

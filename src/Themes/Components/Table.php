@@ -18,15 +18,7 @@ class Table
     /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
-        $component = new Layout();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['layout'] = $component->toArray();
+        $this->properties['layout'] = $this->buildSection(new Layout(), $callback);
 
         return $this;
     }
@@ -34,15 +26,7 @@ class Table
     /** @param  Closure|array<string, mixed>  $callback */
     public function body(Closure|array $callback): self
     {
-        $component = new Body();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['body'] = $component->toArray();
+        $this->properties['body'] = $this->buildSection(new Body(), $callback);
 
         return $this;
     }
@@ -50,15 +34,7 @@ class Table
     /** @param  Closure|array<string, mixed>  $callback */
     public function checkbox(Closure|array $callback): self
     {
-        $component = new Checkbox();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['checkbox'] = $component->toArray();
+        $this->properties['checkbox'] = $this->buildSection(new Checkbox(), $callback);
 
         return $this;
     }
@@ -66,15 +42,7 @@ class Table
     /** @param  Closure|array<string, mixed>  $callback */
     public function radio(Closure|array $callback): self
     {
-        $component = new Radio();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['radio'] = $component->toArray();
+        $this->properties['radio'] = $this->buildSection(new Radio(), $callback);
 
         return $this;
     }

@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\{Blade, Cache};
 use Illuminate\View\ComponentAttributeBag;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
-use PowerComponents\LivewirePowerGrid\Support\IconRenderer;
+use PowerComponents\LivewirePowerGrid\Support\Actions\ButtonRenderer;
 use PowerComponents\Turbine\Button;
 
 trait HasActions
@@ -154,7 +154,7 @@ trait HasActions
         $actions = collect($this->header()) // @phpstan-ignore-line
             ->filter(fn ($button) => $button instanceof Button)
             ->sortBy(fn (Button $button) => $button->order ?? PHP_INT_MAX)
-            ->map(fn (Button $button) => $this->resolveButtonForBlade($button, $row, []))
+            ->map(fn (Button $button) => ButtonRenderer::resolve($button, $row, []))
             ->filter(fn (array $action) => ! $action['hidden'])
             ->values()
             ->all();
@@ -163,7 +163,7 @@ trait HasActions
             return '';
         }
 
-        return $this->buildActionsHtml($actions);
+        return ButtonRenderer::html($actions);
     }
 
     public function renderActions(object $row): string
@@ -177,7 +177,7 @@ trait HasActions
         $actions = collect($this->actions($row)) // @phpstan-ignore-line
             ->map(function ($button) use ($row, $rules) {
                 /** @var Button $button */
-                return $this->resolveButtonForBlade($button, $row, $rules);
+                return ButtonRenderer::resolve($button, $row, $rules);
             })
             ->filter(fn (array $action) => ! $action['hidden'])
             ->values()
@@ -191,7 +191,7 @@ trait HasActions
             return '';
         }
 
-        return $this->buildActionsHtml($actions);
+        return ButtonRenderer::html($actions);
     }
 
     private function hasTransformActions(): bool
@@ -215,134 +215,6 @@ trait HasActions
         $transformed = $this->transformActions([$rowId => array_values($actions)], $rows);
 
         return array_values($transformed[$rowId] ?? $actions);
-    }
-
-    /**
-     * @param  array<int, array<string, mixed>>  $actions
-     */
-    private function buildActionsHtml(array $actions): string
-    {
-        $html = '';
-
-        foreach ($actions as $action) {
-            $replaceHtml = $action['replaceHtml'] ?? '';
-
-            if (is_string($replaceHtml) && $replaceHtml !== '') {
-                $html .= $replaceHtml;
-
-                continue;
-            }
-
-            $tag = $action['tag'] ?? 'button';
-            $tag = is_string($tag) ? $tag : 'button';
-
-            $attributePairs = [];
-            $attributes = $action['attributes'] ?? [];
-            if (is_array($attributes)) {
-                foreach ($attributes as $key => $value) {
-                    $attributePairs[] = $key.'="'.e(is_scalar($value) ? (string) $value : '').'"';
-                }
-            }
-
-            $iconHtml = $action['iconHtml'] ?? '';
-            $slot = $action['slot'] ?? '';
-
-            $html .= '<'.$tag.' '.implode(' ', $attributePairs).'>'
-                .(is_string($iconHtml) ? $iconHtml : '')
-                .(is_string($slot) ? $slot : '')
-                .'</'.$tag.'>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param  array<int, array<string, mixed>>  $rules
-     * @return array<string, mixed>
-     *
-     * @throws \Throwable
-     */
-    private function resolveButtonForBlade(Button $button, object $row, array $rules): array
-    {
-        $can = $button->can instanceof \Closure
-            ? ($button->can)($row)
-            : $button->can;
-
-        if (! $can) {
-            return ['hidden' => true, 'replaceHtml' => ''];
-        }
-
-        if (! empty($button->view)) {
-            return [
-                'hidden' => false,
-                'replaceHtml' => view($button->view, ['action' => $button, 'row' => $row])->render(),
-            ];
-        }
-
-        $attributes = $button->attributes;
-        $slot = $button->slot;
-        $replaceHtml = '';
-        $hidden = false;
-
-        foreach ($rules as $rule) {
-            $forAction = $rule['action'] ?? null;
-
-            $matches = is_array($forAction)
-                ? in_array($button->action, $forAction, strict: true)
-                : $forAction === $button->action;
-
-            if (! ($rule['apply'] ?? false) || ! $matches) {
-                continue;
-            }
-
-            if (data_get($rule, 'rule.hide')) {
-                $hidden = true;
-                break;
-            }
-
-            if (! empty($rule['replaceHtml'])) {
-                $replaceHtml = $rule['replaceHtml'];
-            }
-
-            $setAttr = data_get($rule, 'rule.setAttribute');
-
-            if (is_array($setAttr) && ! empty($setAttr)) {
-                /** @var array<string, mixed>|array<int, array<string, mixed>> $setAttr */
-                $entries = isset($setAttr['attribute']) ? [$setAttr] : $setAttr;
-
-                foreach ($entries as $entry) {
-                    if (is_array($entry) && isset($entry['attribute'], $entry['value'])) {
-                        /** @var string $attributeKey */
-                        $attributeKey = $entry['attribute'];
-                        $attributes[$attributeKey] = $entry['value'];
-                    }
-                }
-            }
-
-            if ($slotOverride = data_get($rule, 'rule.slot')) {
-                $slot = $slotOverride;
-            }
-        }
-
-        if ($hidden) {
-            return ['hidden' => true, 'replaceHtml' => ''];
-        }
-
-        return [
-            'hidden' => false,
-            'action' => $button->action,
-            'tag' => $button->tag ?? 'button',
-            'slot' => $slot,
-            'iconHtml' => ! empty($button->icon) ? $this->renderIcon($button->icon, $button->iconAttributes) : '',
-            'attributes' => $attributes,
-            'replaceHtml' => $replaceHtml,
-        ];
-    }
-
-    /** @param  array<string, mixed>  $iconAttributes */
-    private function renderIcon(string $icon, array $iconAttributes): string
-    {
-        return IconRenderer::render($icon, $iconAttributes);
     }
 
     /** @return list<array<string, mixed>> */
