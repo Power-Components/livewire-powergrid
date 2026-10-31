@@ -9,12 +9,18 @@ class ThemeManager
     /** @var array<string, string> */
     protected static array $tokenCache = [];
 
-    public static function theme(string $key, string $default = ''): string
+    public static function current(): ?Theme
     {
-        /** @var Theme|null $theme */
         $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
 
-        if (! $theme instanceof Theme) {
+        return $theme instanceof Theme ? $theme : null;
+    }
+
+    public static function theme(string $key, string $default = ''): string
+    {
+        $theme = static::current();
+
+        if ($theme === null) {
             return $default;
         }
 
@@ -42,14 +48,7 @@ class ThemeManager
             return 'livewire-powergrid::components.partials.tbody';
         }
 
-        /** @var Theme|null $theme */
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme') : null;
-
-        if (! $theme instanceof Theme) {
-            return (new Tailwind())->resolveView($alias);
-        }
-
-        return $theme->resolveView($alias);
+        return (static::current() ?? new Tailwind())->resolveView($alias);
     }
 
     public static function clearCache(): void

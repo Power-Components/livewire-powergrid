@@ -17,7 +17,8 @@ final class RowRenderer
 
     public static function canRenderDirect(): bool
     {
-        $theme = app()->bound('powergrid.theme') ? app('powergrid.theme')::class : 'default';
+        $current = ThemeManager::current();
+        $theme = $current === null ? 'default' : $current::class;
 
         return self::$directCache[$theme] ??= theme_view('table.row') === self::DEFAULT_ROW_VIEW;
     }
