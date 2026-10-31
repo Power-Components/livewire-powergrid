@@ -124,7 +124,9 @@ trait Listeners
     {
         foreach ($this->columns as &$column) {
             if (data_get($column, 'field') === $field) {
-                data_set($column, 'hidden', ! data_get($column, 'hidden'));
+                if (! data_get($column, 'forceHidden')) {
+                    data_set($column, 'hidden', ! data_get($column, 'hidden'));
+                }
 
                 break;
             }
