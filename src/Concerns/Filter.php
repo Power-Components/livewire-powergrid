@@ -30,9 +30,6 @@ trait Filter
     /** @var list<array<string, mixed>> */
     public array $enabledFilters = [];
 
-    /** @var array<string, mixed> */
-    public array $select = [];
-
     public bool $showFilters = false;
 
     public bool $filterPanelLoaded = false;

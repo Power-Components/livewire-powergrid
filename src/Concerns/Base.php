@@ -27,10 +27,6 @@ trait Base
     /** @var array<string, mixed> */
     public array $setUp = [];
 
-    public bool $showErrorBag = false;
-
-    public bool $rowIndex = true;
-
     public bool $deferLoading = false;
 
     public bool $readyToLoad = false;
@@ -41,14 +37,9 @@ trait Base
     /** @var list<mixed> */
     public array $columns = [];
 
-    /** @var list<mixed> */
-    public array $headers = [];
-
     public string $search = '';
 
     public string $currentTable = '';
-
-    public int $totalCurrentPage = 0;
 
     public bool $supportModel = true;
 
@@ -154,8 +145,6 @@ trait Base
 
             return $skeleton;
         }, $this->columns);
-
-        $this->headers = [];
 
         $perPage = data_get($this->setUp, 'footer.perPage');
 
