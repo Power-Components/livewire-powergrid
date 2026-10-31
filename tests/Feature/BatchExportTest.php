@@ -198,6 +198,57 @@ it('dispatches the export chunks as parallel batch jobs (not a chain)', function
     });
 })->requiresOpenSpout();
 
+it('keeps hidden columns out of queued exports after toggling columns', function () {
+    Bus::fake();
+    Storage::fake('local');
+
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-batch-hidden-column';
+
+        public function datasource()
+        {
+            return collect([['id' => 1, 'name' => 'Dish 1', 'calories' => 9876]]);
+        }
+
+        public function setUp(): array
+        {
+            return [PowerGrid::exportable('export')->type(Exportable::TYPE_CSV)->queues(1)];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name')->add('calories');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('ID', 'id'),
+                Column::make('Name', 'name'),
+                Column::make('Calories', 'calories')->hidden(),
+            ];
+        }
+    };
+
+    Livewire::test($component::class)->update(calls: [
+        ['method' => 'toggleColumn', 'params' => ['calories'], 'path' => ''],
+        ['method' => 'exportToCsv', 'params' => [false], 'path' => ''],
+    ]);
+
+    Bus::assertBatched(function (PendingBatch $batch) {
+        $batch->jobs[0]->handle();
+
+        return true;
+    });
+
+    $content = collect(Storage::disk('local')->allFiles())
+        ->map(fn (string $file) => Storage::disk('local')->get($file))
+        ->implode('');
+
+    expect($content)->toContain('Dish 1')->not->toContain('9876');
+})->requiresOpenSpout();
+
 it('renders the user-supplied progressView below the header', function () {
     view()->addNamespace('pg-test-views', __DIR__.'/../Concerns/views');
 

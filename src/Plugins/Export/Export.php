@@ -127,6 +127,10 @@ class Export
 
     private function columnIsExportable(mixed $column): bool
     {
+        if ((bool) data_get($column, 'forceHidden') && data_get($column, 'visibleInExport') !== true) {
+            return false;
+        }
+
         return (bool) data_get($column, 'visibleInExport')
             || (! data_get($column, 'hidden') && is_null(data_get($column, 'visibleInExport')));
     }
