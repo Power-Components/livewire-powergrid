@@ -2,6 +2,7 @@
 
 use PowerComponents\LivewirePowerGrid\PowerGridManager;
 use PowerComponents\LivewirePowerGrid\Themes\{ArrayTheme, DaisyUI, Flux, Tailwind, Theme};
+use PowerComponents\LivewirePowerGrid\Themes\Components\ThemeBuilder;
 
 it('resolves tokens properly', function () {
     $theme = new class() extends Theme
@@ -293,4 +294,23 @@ it('auto-merges section methods and overrides only the given section', function 
     expect($theme->get('footer.pagination'))->toBe('my-pagination')
         // header (not overridden) is inherited from Tailwind
         ->and($theme->get('header.search_box.icon'))->toBe($tailwind->get('header.search_box.icon'));
+});
+
+it('builds nested sections, prefixing views only where the base view is inherited', function () {
+    $tokens = ThemeBuilder::make('custom')
+        ->baseView('livewire-powergrid::themes.custom')
+        ->header(fn ($header) => $header
+            ->layout(fn ($layout) => $layout->fill(['view' => 'plain']))
+            ->searchBox(fn ($box) => $box->view('search')->input('box-input'))
+            ->export(fn ($button) => $button->view('export')))
+        ->table(fn ($table) => $table->layout(['wrapper' => 'w']))
+        ->footer(fn ($footer) => $footer->pagination('pager'))
+        ->toArray();
+
+    expect(data_get($tokens, 'header.layout.view'))->toBe('plain')
+        ->and(data_get($tokens, 'header.search_box.view'))->toBe('livewire-powergrid::themes.custom.search')
+        ->and(data_get($tokens, 'header.search_box.input'))->toBe('box-input')
+        ->and(data_get($tokens, 'header.export.view'))->toBe('livewire-powergrid::themes.custom.export')
+        ->and(data_get($tokens, 'table.layout.wrapper'))->toBe('w')
+        ->and(data_get($tokens, 'footer.pagination.view'))->toBe('livewire-powergrid::themes.custom.pager');
 });

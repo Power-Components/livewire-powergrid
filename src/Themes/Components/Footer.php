@@ -18,15 +18,7 @@ class Footer
     /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
-        $component = new Layout();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['layout'] = $component->toArray();
+        $this->properties['layout'] = $this->buildSection(new Layout(), $callback);
 
         return $this;
     }
@@ -34,21 +26,9 @@ class Footer
     /** @param  Closure|array<string, mixed>|string  $callback */
     public function pagination(Closure|array|string $callback): self
     {
-        $component = is_string($callback)
-            ? new Pagination($callback)
-            : new Pagination();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } elseif ($callback instanceof Closure) {
-            $callback($component);
-        }
-
-        $this->properties['pagination'] = $component->toArray();
+        $this->properties['pagination'] = is_string($callback)
+            ? $this->buildSection(new Pagination($callback), [], true)
+            : $this->buildSection(new Pagination(), $callback, true);
 
         return $this;
     }

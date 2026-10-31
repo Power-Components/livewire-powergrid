@@ -2,6 +2,8 @@
 
 namespace PowerComponents\LivewirePowerGrid\Themes\Components;
 
+use Closure;
+
 trait HasProperties
 {
     /** @var array<string, mixed> */
@@ -28,6 +30,26 @@ trait HasProperties
         }
 
         return $this;
+    }
+
+    /**
+     * @param  Body|Checkbox|Cols|Footer|Header|HeaderButton|Layout|Pagination|Radio|SearchBox|Table|Tabs  $component
+     * @param  Closure|array<string, mixed>  $callback
+     * @return array<string, mixed>
+     */
+    protected function buildSection(object $component, Closure|array $callback, bool $inheritBaseView = false): array
+    {
+        if ($inheritBaseView && $this->baseView) {
+            $component->setBaseView($this->baseView);
+        }
+
+        if (is_array($callback)) {
+            $component->fill($callback);
+        } else {
+            $callback($component);
+        }
+
+        return $component->toArray();
     }
 
     /** @return array<string, mixed> */

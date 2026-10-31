@@ -27,15 +27,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function layout(Closure|array $callback): self
     {
-        $component = new Layout();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['layout'] = $component->toArray();
+        $this->properties['layout'] = $this->buildSection(new Layout(), $callback);
 
         return $this;
     }
@@ -43,19 +35,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function header(Closure|array $callback): self
     {
-        $component = new Header();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['header'] = $component->toArray();
+        $this->properties['header'] = $this->buildSection(new Header(), $callback, true);
 
         return $this;
     }
@@ -63,19 +43,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function table(Closure|array $callback): self
     {
-        $component = new Table();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['table'] = $component->toArray();
+        $this->properties['table'] = $this->buildSection(new Table(), $callback, true);
 
         return $this;
     }
@@ -83,19 +51,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function footer(Closure|array $callback): self
     {
-        $component = new Footer();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['footer'] = $component->toArray();
+        $this->properties['footer'] = $this->buildSection(new Footer(), $callback, true);
 
         return $this;
     }
@@ -103,15 +59,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function cols(Closure|array $callback): self
     {
-        $component = new Cols();
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['cols'] = $component->toArray();
+        $this->properties['cols'] = $this->buildSection(new Cols(), $callback);
 
         return $this;
     }
@@ -119,19 +67,7 @@ class ThemeBuilder
     /** @param  Closure|array<string, mixed>  $callback */
     public function tabs(Closure|array $callback): self
     {
-        $component = new Tabs();
-
-        if ($this->baseView) {
-            $component->setBaseView($this->baseView);
-        }
-
-        if (is_array($callback)) {
-            $component->fill($callback);
-        } else {
-            $callback($component);
-        }
-
-        $this->properties['tabs'] = $component->toArray();
+        $this->properties['tabs'] = $this->buildSection(new Tabs(), $callback, true);
 
         return $this;
     }
