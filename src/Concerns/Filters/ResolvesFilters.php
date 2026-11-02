@@ -76,6 +76,8 @@ trait ResolvesFilters
             $depends = (array) data_get($filter, 'depends');
 
             if ($this->usesFilterInline() && ! $depends && $this->inlineFiltersResolved) {
+                // Blank only the view copy: the declared closure must stay intact for pill labels.
+                $filter = is_object($filter) ? clone $filter : $filter;
                 data_set($filter, 'dataSource', []);
             } else {
                 /** @var Closure $closure */
