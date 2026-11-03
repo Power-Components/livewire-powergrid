@@ -2,7 +2,14 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Sloupce',
+        'soft_deletes' => 'Smazané záznamy',
+        'export' => 'Exportovat',
         'filter' => 'Filtrovat',
+        'filters_title' => 'Filtry',
+        'apply_filters' => 'Použít',
+        'apply_columns' => 'Použít',
+        'reset_filters' => 'Resetovat',
         'clear_all_filters' => 'Vymazat vše',
         'close' => 'Zavřít',
     ],
@@ -13,7 +20,8 @@ return [
         'no_data' => 'Nebyly nalezeny žádné záznamy',
         'all' => 'Všechny',
         'selected' => 'Vybrané',
-        'filtered' => 'Filtrovaný',
+        'filtered' => 'Filtrované',
+        'active_filters' => 'Aktivní filtry',
     ],
     'placeholders' => [
         'search' => 'Hledat...',
@@ -36,6 +44,33 @@ return [
     ],
     'boolean_filter' => [
         'all' => 'Všechny',
+    ],
+    'filter_builder' => [
+        'title' => 'Tvůrce filtrů',
+        'trigger' => 'Filtrovat',
+        'match_all' => 'Všechny (A)',
+        'match_any' => 'Kterákoli (NEBO)',
+        'match_prefix' => 'Musí platit:',
+        'match_suffix' => 'z následujících podmínek',
+        'and' => 'A',
+        'or' => 'NEBO',
+        'connector' => 'Logická spojka',
+        'add_condition' => 'Přidat',
+        'apply' => 'Použít',
+        'reset' => 'Resetovat',
+        'remove' => 'Odebrat podmínku',
+        'column_placeholder' => 'Sloupec',
+        'operator_placeholder' => 'Operátor',
+        'value_placeholder' => 'Hodnota',
+        'value_from' => 'Od',
+        'value_to' => 'Do',
+        'no_value' => 'Hodnota není potřeba',
+        'no_conditions' => 'Zatím žádné podmínky',
+        'number' => [
+            'between' => 'Mezi',
+            'greater_equal' => 'Větší nebo rovno',
+            'less_equal' => 'Menší nebo rovno',
+        ],
     ],
     'input_text_options' => [
         'is' => 'Je',
@@ -64,14 +99,14 @@ return [
         'only_trashed' => 'Pouze smazané',
     ],
     'multi_sort' => [
-        'message' => 'Multiple sort is active',
+        'message' => 'Je zapnuté řazení podle více sloupců',
     ],
     'buttons_macros' => [
         'confirm' => [
-            'message' => 'Are you sure you want to perform this action?',
+            'message' => 'Opravdu chcete provést tuto akci?',
         ],
         'confirm_prompt' => [
-            'message' => "Are you sure you want to perform this action? \n\n Enter :confirmValue to confirm.",
+            'message' => "Opravdu chcete provést tuto akci? \n\n Pro potvrzení zadejte :confirmValue.",
         ],
     ],
 ];
