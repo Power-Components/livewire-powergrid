@@ -138,7 +138,7 @@ return [
     | When true, each active filter pill shows the selected value next to the
     | filter name (e.g. "Category: Desserts") instead of the name alone.
     |
-    | Override this per table by calling config() in the table's boot() method.
+    | Override this per table with a showFilterPillValue(): bool method.
     |
     */
 

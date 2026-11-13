@@ -50,4 +50,13 @@ trait Filter
     {
         return [];
     }
+
+    /**
+     * Show the selected value in each active filter pill ("Category: Desserts").
+     * Override per grid; defaults to `config('livewire-powergrid.filter_pill_value')`.
+     */
+    public function showFilterPillValue(): bool
+    {
+        return config('livewire-powergrid.filter_pill_value') === true;
+    }
 }

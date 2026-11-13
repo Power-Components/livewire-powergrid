@@ -31,18 +31,21 @@ trait DerivesFilterPills
     protected function syncFilterPills(): void
     {
         $labels = $this->filterPillLabels();
+        $previous = collect($this->enabledFilters)->keyBy('field')->all();
 
         $this->enabledFilters = [];
-        $this->rebuildEnabledFilters($labels);
+        $this->rebuildEnabledFilters($labels, $previous);
         $this->syncFilterBuilderPills();
     }
 
     /**
      * @param  array<string, string>  $labels
+     * @param  array<array-key, mixed>  $previous  Pills from the last sync, keyed by field.
      */
-    protected function rebuildEnabledFilters(array $labels = []): void
+    protected function rebuildEnabledFilters(array $labels = [], array $previous = []): void
     {
         $seen = [];
+        $showValue = $this->showFilterPillValue();
 
         foreach ($this->declaredFilters() as $filter) {
             $key = $this->filterBagKey($this->declaredFilterField($filter));
@@ -64,9 +67,19 @@ trait DerivesFilterPills
                 $pill['disabled'] = true;
             }
 
-            if (config('livewire-powergrid.filter_pill_value') === true
-                && ($value = $this->filterPillValue($filter, $record)) !== '') {
-                $pill['value'] = $value;
+            if ($showValue) {
+                // Resolve only when the record changed: select labels may run a dataSource query.
+                $valueKey = md5((string) json_encode([$record['type'] ?? null, $record['value'] ?? null, $record['op'] ?? null]));
+                $cached = $previous[$key] ?? null;
+                $value = is_array($cached) && ($cached['valueKey'] ?? null) === $valueKey
+                    ? $this->pillText($cached['value'] ?? '')
+                    : $this->filterPillValue($filter, $record);
+
+                $pill['valueKey'] = $valueKey;
+
+                if ($value !== '') {
+                    $pill['value'] = $value;
+                }
             }
 
             $this->enabledFilters[] = $pill;

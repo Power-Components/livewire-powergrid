@@ -129,3 +129,95 @@ it('keeps resolving select option labels after the inline filters were resolved'
     expect($test->get('inlineFiltersResolved'))->toBeTrue()
         ->and(pillValues($test))->toBe(['category_id' => 'Desserts']);
 });
+
+function countingPillComponent(bool $showValue = true): PowerGridComponent
+{
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'filter-pill-value-counting';
+
+        public static int $dataSourceCalls = 0;
+
+        public static bool $showValue = true;
+
+        public function showFilterPillValue(): bool
+        {
+            return self::$showValue;
+        }
+
+        public function datasource()
+        {
+            return collect([
+                ['id' => 1, 'name' => 'Cheap Dish', 'category_id' => 1],
+                ['id' => 2, 'name' => 'Pricey Dish', 'category_id' => 2],
+            ]);
+        }
+
+        public function filters(): array
+        {
+            return [
+                Filter::select('category_id')
+                    ->dataSource(function () {
+                        static::$dataSourceCalls++;
+
+                        return [['id' => 1, 'title' => 'Soups'], ['id' => 2, 'title' => 'Desserts']];
+                    })
+                    ->optionValue('id')
+                    ->optionLabel('title'),
+            ];
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Name', 'name')->sortable()->searchable(),
+                Column::make('Category', 'category_id'),
+            ];
+        }
+    };
+
+    $component::$dataSourceCalls = 0;
+    $component::$showValue = $showValue;
+
+    return $component;
+}
+
+it('resolves the select label only when the filter value changes, not on every render', function () {
+    $component = countingPillComponent();
+
+    $test = Livewire::test($component::class)
+        ->set('filters', ['category_id' => ['type' => 'select', 'value' => '2']]);
+
+    $callsAfterFilter = $component::$dataSourceCalls;
+
+    $test->set('search', 'Dish')
+        ->call('sortBy', 'name')
+        ->call('$refresh');
+
+    expect($component::$dataSourceCalls)->toBe($callsAfterFilter)
+        ->and(pillValues($test))->toBe(['category_id' => 'Desserts']);
+
+    $test->set('filters', ['category_id' => ['type' => 'select', 'value' => '1']]);
+
+    expect(pillValues($test))->toBe(['category_id' => 'Soups']);
+});
+
+it('enables the pill value per table without touching the global config', function () {
+    $component = countingPillComponent();
+
+    $test = Livewire::test($component::class)
+        ->set('filters', ['category_id' => ['type' => 'select', 'value' => '2']]);
+
+    expect(pillValues($test))->toBe(['category_id' => 'Desserts'])
+        ->and(config('livewire-powergrid.filter_pill_value'))->toBeFalse();
+
+    $plain = Livewire::test(pillValueComponent()::class)
+        ->set('filters', ['category_id' => ['type' => 'select', 'value' => '2']]);
+
+    expect(pillValues($plain))->toBe(['category_id' => null]);
+});
