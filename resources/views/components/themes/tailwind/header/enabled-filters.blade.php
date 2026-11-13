@@ -28,7 +28,7 @@
                         wire:click.prevent="{{ $pillClick }}"
                         class="{{ theme('header.enabled_filters.pill') }}"
                     >
-                        {{ $filter['label'] }}
+                        {{ $filter['label'] }}{{ isset($filter['value']) ? ': '.$filter['value'] : '' }}
                         {!! $element['iconHtml'] !!}
                     </span>
                 @endisset

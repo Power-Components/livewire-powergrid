@@ -29,7 +29,7 @@
                         size="sm"
                         variant="outline"
                     >
-                        {{ $filter['label'] }}
+                        {{ $filter['label'] }}{{ isset($filter['value']) ? ': '.$filter['value'] : '' }}
                         <flux:badge.close wire:click.prevent="{{ $pillClick }}" />
                     </flux:badge>
                 @endisset
