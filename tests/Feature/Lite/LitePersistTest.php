@@ -64,3 +64,54 @@ it('ignores lite sort fields outside the allowlist or with bad direction', funct
         ->assertSet('sortField', 'name')
         ->assertSet('sortDirection', 'asc');
 });
+
+it('rejects lite sort state written straight to the properties', function () {
+    Livewire::test(LiteAllowlistSortComponent::class)
+        ->set('sortField', 'password')
+        ->assertSet('sortField', '')
+        ->set('sortField', 'name')
+        ->assertSet('sortField', 'name')
+        ->set('sortDirection', 'desc; drop table users')
+        ->assertSet('sortDirection', 'asc')
+        ->set('sortArray', ['name' => 'sideways', 'password' => 'desc', 'id) desc--' => 'asc'])
+        ->assertSet('sortArray', ['name' => 'asc'])
+        ->set('sortArray.password', 'desc')
+        ->assertSet('sortArray', ['name' => 'asc']);
+});
+
+class LitePersistWithSecretComponent extends LitePersistComponent
+{
+    public array $sortableFields = ['name'];
+
+    public string $tenant = 'mine';
+}
+
+it('restores only the lite state it persists', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    session()->put('pg_lite:LitePersistWithSecretComponent', json_encode([
+        'sortField' => 'password',
+        'sortDirection' => 'desc',
+        'tenant' => 'theirs',
+        'persist' => ['sorting', 'checkbox'],
+    ]));
+
+    Livewire::test(LitePersistWithSecretComponent::class)
+        ->assertSet('tenant', 'mine')
+        ->assertSet('persist', ['sorting'])
+        ->assertSet('sortField', '')
+        ->assertSet('sortDirection', 'desc');
+});
+
+it('still restores a valid lite sort from persisted state', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    session()->put('pg_lite:LitePersistWithSecretComponent', json_encode([
+        'sortField' => 'name',
+        'sortDirection' => 'desc',
+    ]));
+
+    Livewire::test(LitePersistWithSecretComponent::class)
+        ->assertSet('sortField', 'name')
+        ->assertSet('sortDirection', 'desc');
+});

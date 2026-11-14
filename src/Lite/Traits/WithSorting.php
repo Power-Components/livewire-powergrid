@@ -19,9 +19,7 @@ trait WithSorting
 
     public function sortBy(string $field, string $direction = 'asc'): void
     {
-        $allowed = property_exists($this, 'sortableFields') ? (array) $this->sortableFields : null;
-
-        if (preg_match('/^[A-Za-z_][\w.]*$/', $field) !== 1 || ($allowed !== null && ! in_array($field, $allowed, true))) {
+        if (! $this->isSortableField($field)) {
             return;
         }
 
@@ -42,6 +40,45 @@ trait WithSorting
         $this->sortCache = [];
 
         $this->afterSortBy();
+    }
+
+    /**
+     * The sort properties are public, so a client can write them without going
+     * through sortBy(). Hold those writes to the same rules.
+     */
+    public function updatedWithSorting(string $name): void
+    {
+        if (in_array(explode('.', $name)[0], ['sortField', 'sortDirection', 'sortArray'], true)) {
+            $this->normalizeSortState();
+        }
+    }
+
+    private function normalizeSortState(): void
+    {
+        if (! $this->isSortableField($this->sortField)) {
+            $this->sortField = '';
+        }
+
+        $this->sortDirection = Sql::sanitizeSortDirection($this->sortDirection);
+
+        $sortArray = [];
+
+        foreach ($this->sortArray as $field => $direction) {
+            if (is_string($field) && $this->isSortableField($field)) {
+                $sortArray[$field] = Sql::sanitizeSortDirection(is_string($direction) ? $direction : null);
+            }
+        }
+
+        $this->sortArray = $sortArray;
+        $this->sortCache = [];
+    }
+
+    private function isSortableField(string $field): bool
+    {
+        $allowed = property_exists($this, 'sortableFields') ? (array) $this->sortableFields : null;
+
+        return preg_match('/^[A-Za-z_][\w.]*$/', $field) === 1
+            && ($allowed === null || in_array($field, $allowed, true));
     }
 
     public function isSorted(string $field): bool

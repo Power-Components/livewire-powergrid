@@ -90,10 +90,17 @@ trait WithPersist
 
         $state = (array) json_decode(strval($storage), true);
 
+        // Restore only what persistState() writes, never an arbitrary property.
+        $persistable = array_keys($this->gatherPersistableState());
+
         foreach ($state as $property => $value) {
-            if (property_exists($this, $property)) {
+            if (in_array($property, $persistable, true) && property_exists($this, $property)) {
                 $this->{$property} = $value;
             }
+        }
+
+        if (method_exists($this, 'normalizeSortState')) {
+            $this->normalizeSortState();
         }
     }
 
