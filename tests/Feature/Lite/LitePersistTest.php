@@ -2,6 +2,7 @@
 
 use Illuminate\Auth\GenericUser;
 use Illuminate\Support\Facades\{Cache, Cookie};
+use Livewire\Attributes\Locked;
 use Livewire\{Component, Livewire};
 use PowerComponents\LivewirePowerGrid\Lite\Traits\{WithPersist, WithSorting};
 
@@ -51,6 +52,7 @@ class LiteAllowlistSortComponent extends LitePersistComponent
 {
     public array $persist = [];
 
+    #[Locked]
     public array $sortableFields = ['name'];
 }
 
@@ -63,4 +65,76 @@ it('ignores lite sort fields outside the allowlist or with bad direction', funct
         ->call('sortBy', 'name', 'sideways')
         ->assertSet('sortField', 'name')
         ->assertSet('sortDirection', 'asc');
+});
+
+it('rejects lite sort state written straight to the properties', function () {
+    Livewire::test(LiteAllowlistSortComponent::class)
+        ->set('sortField', 'password')
+        ->assertSet('sortField', '')
+        ->set('sortField', 'name')
+        ->assertSet('sortField', 'name')
+        ->set('sortDirection', 'downwards')
+        ->assertSet('sortDirection', 'asc')
+        ->set('sortArray', ['name' => 'sideways', 'password' => 'desc', 'bad field' => 'asc'])
+        ->assertSet('sortArray', ['name' => 'asc'])
+        ->set('sortArray.password', 'desc')
+        ->assertSet('sortArray', ['name' => 'asc']);
+});
+
+class LiteMethodAllowlistSortComponent extends LitePersistComponent
+{
+    public array $persist = [];
+
+    public function sortableFields(): array
+    {
+        return ['name'];
+    }
+}
+
+it('reads the lite sort allowlist from a sortableFields() method', function () {
+    Livewire::test(LiteMethodAllowlistSortComponent::class)
+        ->call('sortBy', 'password')
+        ->assertSet('sortField', '')
+        ->set('sortField', 'password')
+        ->assertSet('sortField', '')
+        ->call('sortBy', 'name')
+        ->assertSet('sortField', 'name');
+});
+
+class LitePersistWithSecretComponent extends LitePersistComponent
+{
+    #[Locked]
+    public array $sortableFields = ['name'];
+
+    public string $tenant = 'mine';
+}
+
+it('restores only the lite state it persists', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    session()->put('pg_lite:LitePersistWithSecretComponent', json_encode([
+        'sortField' => 'password',
+        'sortDirection' => 'desc',
+        'tenant' => 'theirs',
+        'persist' => ['sorting', 'checkbox'],
+    ]));
+
+    Livewire::test(LitePersistWithSecretComponent::class)
+        ->assertSet('tenant', 'mine')
+        ->assertSet('persist', ['sorting'])
+        ->assertSet('sortField', '')
+        ->assertSet('sortDirection', 'desc');
+});
+
+it('still restores a valid lite sort from persisted state', function () {
+    config()->set('livewire-powergrid.persist_driver', 'session');
+
+    session()->put('pg_lite:LitePersistWithSecretComponent', json_encode([
+        'sortField' => 'name',
+        'sortDirection' => 'desc',
+    ]));
+
+    Livewire::test(LitePersistWithSecretComponent::class)
+        ->assertSet('sortField', 'name')
+        ->assertSet('sortDirection', 'desc');
 });
