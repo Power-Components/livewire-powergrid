@@ -2,6 +2,7 @@
 
 use Illuminate\Auth\GenericUser;
 use Illuminate\Support\Facades\{Cache, Cookie};
+use Livewire\Attributes\Locked;
 use Livewire\{Component, Livewire};
 use PowerComponents\LivewirePowerGrid\Lite\Traits\{WithPersist, WithSorting};
 
@@ -51,6 +52,7 @@ class LiteAllowlistSortComponent extends LitePersistComponent
 {
     public array $persist = [];
 
+    #[Locked]
     public array $sortableFields = ['name'];
 }
 
@@ -71,16 +73,37 @@ it('rejects lite sort state written straight to the properties', function () {
         ->assertSet('sortField', '')
         ->set('sortField', 'name')
         ->assertSet('sortField', 'name')
-        ->set('sortDirection', 'desc; drop table users')
+        ->set('sortDirection', 'downwards')
         ->assertSet('sortDirection', 'asc')
-        ->set('sortArray', ['name' => 'sideways', 'password' => 'desc', 'id) desc--' => 'asc'])
+        ->set('sortArray', ['name' => 'sideways', 'password' => 'desc', 'bad field' => 'asc'])
         ->assertSet('sortArray', ['name' => 'asc'])
         ->set('sortArray.password', 'desc')
         ->assertSet('sortArray', ['name' => 'asc']);
 });
 
+class LiteMethodAllowlistSortComponent extends LitePersistComponent
+{
+    public array $persist = [];
+
+    public function sortableFields(): array
+    {
+        return ['name'];
+    }
+}
+
+it('reads the lite sort allowlist from a sortableFields() method', function () {
+    Livewire::test(LiteMethodAllowlistSortComponent::class)
+        ->call('sortBy', 'password')
+        ->assertSet('sortField', '')
+        ->set('sortField', 'password')
+        ->assertSet('sortField', '')
+        ->call('sortBy', 'name')
+        ->assertSet('sortField', 'name');
+});
+
 class LitePersistWithSecretComponent extends LitePersistComponent
 {
+    #[Locked]
     public array $sortableFields = ['name'];
 
     public string $tenant = 'mine';

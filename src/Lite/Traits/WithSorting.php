@@ -73,9 +73,17 @@ trait WithSorting
         $this->sortCache = [];
     }
 
+    /**
+     * Prefer a sortableFields() method: a public property is client-writable
+     * unless marked #[Locked].
+     */
     private function isSortableField(string $field): bool
     {
-        $allowed = property_exists($this, 'sortableFields') ? (array) $this->sortableFields : null;
+        $allowed = match (true) {
+            method_exists($this, 'sortableFields') => (array) $this->sortableFields(),
+            property_exists($this, 'sortableFields') => (array) $this->sortableFields,
+            default => null,
+        };
 
         return preg_match('/^[A-Za-z_][\w.]*$/', $field) === 1
             && ($allowed === null || in_array($field, $allowed, true));
