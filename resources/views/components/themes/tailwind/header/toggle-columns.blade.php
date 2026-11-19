@@ -3,11 +3,20 @@
         $__partial = $__partial ?? $this;
         $tableName = $tableName ?? $__partial->tableName;
         $element = $__partial->headerElement('toggleColumns');
-        $hiddenCount = $__partial->hiddenColumnsCount();
+        $toggleable = fn ($column) => is_string(data_get($column, 'field'))
+            && data_get($column, 'field') !== ''
+            && ! data_get($column, 'isAction')
+            && ! data_get($column, 'forceHidden');
+        $columnState = fn ($columns) => collect($columns)->filter($toggleable)->map(fn ($column) => [
+            'field' => data_get($column, 'field'),
+            'hidden' => (bool) data_get($column, 'hidden'),
+        ])->values()->all();
+        $reorderLabel = trans('livewire-powergrid::datatable.labels.reorder_column');
     @endphp
+    {{-- Keyed by column state: a server-side change re-initialises the client draft. --}}
     <div
-        x-data="{ open: false }"
-        wire:key="pg-toggle-columns-{{ $tableName }}"
+        x-data="pgToggleColumns(@js($columnState($__partial->declaredColumns())))"
+        wire:key="pg-toggle-columns-{{ $tableName }}-{{ md5((string) json_encode($columnState($__partial->columns))) }}"
         class="relative {{ theme('filter.dropdown.wrapper') }}"
     >
         <button
@@ -24,12 +33,13 @@
                     <span class="{{ theme('header.toggle_columns.label') }}">{{ $element['title'] }}</span>
                 @endif
             </div>
-            @if ($hiddenCount)
-                <span
-                    data-cy="toggle-columns-badge"
-                    class="{{ theme('filter.dropdown.badge') }}"
-                >{{ $hiddenCount }}</span>
-            @endif
+            <span
+                x-show="hiddenCount"
+                x-text="hiddenCount"
+                x-cloak
+                data-cy="toggle-columns-badge"
+                class="{{ theme('filter.dropdown.badge') }}"
+            ></span>
         </button>
 
         <div
@@ -52,22 +62,48 @@
                 <span class="{{ theme('filter.dropdown.title') }}">{{ $element['title'] }}</span>
             </div>
 
-            <div class="{{ theme('filter.dropdown.body') }} space-y-3">
+            <div
+                x-ref="list"
+                x-sort
+                wire:ignore
+                class="{{ theme('filter.dropdown.body') }} space-y-3"
+            >
                 @foreach ($__partial->visibleColumns as $column)
                     @php($field = data_get($column, 'field'))
-                    @if (is_string($field) && $field !== '' && ! data_get($column, 'isAction'))
-                        <label
-                            wire:key="toggle-column-{{ $field }}"
-                            class="flex items-center gap-2.5 cursor-pointer"
+                    @if ($toggleable($column))
+                        <div
+                            x-sort:item
+                            data-pg-toggle-item
+                            data-field="{{ $field }}"
+                            data-column="{{ data_get($column, 'dataField') ?: $field }}"
+                            class="flex items-center gap-2.5"
                         >
-                            <input
-                                type="checkbox"
-                                data-cy="toggle-field-{{ $field }}"
-                                wire:model="draftColumns.{{ $field }}"
-                                class="{{ theme('header.toggle_columns.checkbox', theme('table.checkbox.input')) }}"
+                            <button
+                                type="button"
+                                x-sort:handle
+                                x-on:keydown.up.prevent="move($el, -1)"
+                                x-on:keydown.down.prevent="move($el, 1)"
+                                data-cy="toggle-handle-{{ $field }}"
+                                title="{{ $reorderLabel }}"
+                                aria-label="{{ $reorderLabel }}"
+                                class="{{ theme('header.toggle_columns.handle', 'cursor-grab rounded text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200') }}"
                             >
-                            <span class="{{ theme('header.toggle_columns.item_label', 'text-sm text-zinc-700 dark:text-zinc-200') }}">{!! data_get($column, 'title') !!}</span>
-                        </label>
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                                    <circle cx="5.5" cy="3.5" r="1.5" /><circle cx="10.5" cy="3.5" r="1.5" />
+                                    <circle cx="5.5" cy="8" r="1.5" /><circle cx="10.5" cy="8" r="1.5" />
+                                    <circle cx="5.5" cy="12.5" r="1.5" /><circle cx="10.5" cy="12.5" r="1.5" />
+                                </svg>
+                            </button>
+                            <label class="flex flex-1 items-center gap-2.5 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    data-cy="toggle-field-{{ $field }}"
+                                    @checked(! data_get($column, 'hidden'))
+                                    class="{{ theme('header.toggle_columns.checkbox', theme('table.checkbox.input')) }}"
+                                >
+                                <span class="{{ theme('header.toggle_columns.item_label', 'text-sm text-zinc-700 dark:text-zinc-200') }}">{!! data_get($column, 'title') !!}</span>
+                            </label>
+                        </div>
                     @endif
                 @endforeach
             </div>
@@ -76,7 +112,7 @@
                 <button
                     type="button"
                     data-cy="toggle-columns-reset"
-                    wire:click.prevent="resetColumns"
+                    x-on:click="reset()"
                     class="{{ theme('filter.dropdown.reset') }} me-auto"
                 >
                     {{ trans('livewire-powergrid::datatable.buttons.reset_filters') }}
@@ -85,8 +121,7 @@
                 <button
                     type="button"
                     data-cy="toggle-columns-apply"
-                    wire:click.prevent="applyColumns"
-                    x-on:click="open = false"
+                    x-on:click="apply()"
                     class="{{ theme('filter.dropdown.apply') }}"
                 >
                     {{ trans('livewire-powergrid::datatable.buttons.apply_columns') }}

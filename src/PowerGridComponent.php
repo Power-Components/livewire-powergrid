@@ -82,7 +82,8 @@ class PowerGridComponent extends Component implements Context
             primaryKey: $this->primaryKey,
             primaryKeyAlias: $this->primaryKeyAlias,
             ignoreTablePrefix: $this->ignoreTablePrefix,
-            pruneHiddenColumns: $this->pruneHiddenColumns,
+            // Toggle-columns shows hidden columns client-side, so their data must already be selected.
+            pruneHiddenColumns: $this->pruneHiddenColumns && ! data_get($this->setUp, 'header.toggleColumns'),
             paginateRaw: $this->paginateRaw,
             isExporting: $this->isExporting,
             tableName: $this->tableName,
@@ -327,8 +328,6 @@ class PowerGridComponent extends Component implements Context
         $this->applyDefaultFilters();
 
         $this->applyDefaultTab();
-
-        $this->draftColumns = $this->columnVisibilityState();
 
         $this->resolveSummarizeColumn();
     }

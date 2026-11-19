@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'الأعمدة',
+        'apply_columns' => 'تطبيق',
+        'reset_filters' => 'إعادة تعيين',
         'filter' => 'تصفية',
         'clear_all_filters' => 'مسح الكل',
         'close' => 'إغلاق',
@@ -14,6 +17,7 @@ return [
         'all' => 'الكل',
         'selected' => 'محدد',
         'filtered' => 'مصفى',
+        'reorder_column' => 'إعادة ترتيب العمود',
     ],
     'placeholders' => [
         'search' => 'البحث...',

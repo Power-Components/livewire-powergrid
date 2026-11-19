@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Kolommen',
+        'apply_columns' => 'Toepassen',
+        'reset_filters' => 'Resetten',
         'filter' => 'Filter',
         'clear_all_filters' => 'Wis alle filters',
         'close' => 'Sluiten',
@@ -14,6 +17,7 @@ return [
         'all' => 'Alles',
         'selected' => 'Geselecteerd',
         'filtered' => 'Gefilterd',
+        'reorder_column' => 'Kolom verplaatsen',
     ],
     'placeholders' => [
         'search' => 'Zoek...',

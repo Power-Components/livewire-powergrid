@@ -247,3 +247,41 @@ it('does not prune when exporting so all columns remain available', function () 
     // Export must keep the full projection so hidden+searchable data is exportable.
     expect($sql)->toContain('select *');
 });
+
+it('does not prune when toggle columns is enabled, so hidden columns can be shown client-side', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'test-prune-toggle-columns';
+
+        public function setUp(): array
+        {
+            return [PowerGrid::header()->showToggleColumns()];
+        }
+
+        public function datasource()
+        {
+            return Dish::query();
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()
+                ->add('id')
+                ->add('name')
+                ->add('additional');
+        }
+
+        public function columns(): array
+        {
+            return [
+                Column::make('Id', 'id'),
+                Column::make('Name', 'name')->searchable(),
+                Column::make('Additional', 'additional')->searchable()->hidden(),
+            ];
+        }
+    };
+
+    $sql = captureDishesSelect(fn () => Livewire::test($component::class)->assertSee('Pastel de Nata'));
+
+    expect($sql)->toContain('select *');
+});

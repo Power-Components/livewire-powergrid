@@ -54,6 +54,7 @@
                     theme('table.body.td.filters'),
                 ])
                 wire:key="column-filter-{{ data_get($column, 'field') }}"
+                data-column="{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'dataField', data_get($column, 'field')) }}"
                 @style([
                     'display:none' => data_get($column, 'hidden') === true,
                 ])

@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Spalten',
+        'apply_columns' => 'Anwenden',
+        'reset_filters' => 'Zurücksetzen',
         'filter' => 'Aktionen',
         'clear_all_filters' => 'Alle löschen',
         'close' => 'Schließen',
@@ -14,6 +17,7 @@ return [
         'all' => 'Alle',
         'selected' => 'Ausgewählt',
         'filtered' => 'Gefiltert',
+        'reorder_column' => 'Spalte verschieben',
     ],
     'placeholders' => [
         'search' => 'Suche',

@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Стовпці',
+        'apply_columns' => 'Застосувати',
+        'reset_filters' => 'Скинути',
         'filter' => 'Фильтр',
         'clear_all_filters' => 'Очистити все',
         'close' => 'Закрити',
@@ -14,6 +17,7 @@ return [
         'all' => 'Всі',
         'selected' => 'Вибрані',
         'filtered' => 'Відфільтровані',
+        'reorder_column' => 'Змінити порядок стовпця',
     ],
     'placeholders' => [
         'search' => 'Пошук...',
