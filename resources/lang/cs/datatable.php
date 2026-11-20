@@ -22,6 +22,7 @@ return [
         'selected' => 'Vybrané',
         'filtered' => 'Filtrované',
         'active_filters' => 'Aktivní filtry',
+        'reorder_column' => 'Změnit pořadí sloupce',
     ],
     'placeholders' => [
         'search' => 'Hledat...',

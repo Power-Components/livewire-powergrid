@@ -28,7 +28,7 @@
                 x-data="pgSelectAll"
                 class="{{ theme('table.checkbox.input') }}"
                 type="checkbox"
-                x-on:change="$wire.selectCheckboxAll($event.target.checked)"
+                x-on:change="toggle($event.target.checked)"
             >
         </label>
     </div>

@@ -93,7 +93,7 @@ class DaisyUI extends Theme
         );
 
         return array_replace_recursive($header, [
-            'header' => ['toggle_columns' => ['item_label' => 'text-sm text-base-content']],
+            'header' => ['toggle_columns' => ['item_label' => 'text-sm text-base-content', 'handle' => 'cursor-grab rounded text-base-content/50 hover:text-base-content']],
         ]);
     }
 

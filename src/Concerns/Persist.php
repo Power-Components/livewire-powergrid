@@ -72,6 +72,13 @@ trait Persist
             persistFilterBuilder: $persistFilterBuilder
         );
 
+        // Stored only when the user reordered, so a later change to the declared order still applies.
+        if ((in_array('columns', $this->persist) || $tableItem === 'columns') && $this->columnOrder($this->columns) !== $this->columnOrder($this->declaredColumns())) {
+            $state = (array) json_decode($jsonState, true);
+            $state['columnOrder'] = $this->columnOrder($this->columns);
+            $jsonState = strval(json_encode($state));
+        }
+
         $key = $this->getPersistKeyName();
         $persister->save($key, $jsonState, $this->getPersistDriverConfig(), $this->getPersistDriverStoreConfig());
     }
@@ -109,6 +116,10 @@ trait Persist
 
                 return $column;
             })->all());
+
+            if (isset($state['columnOrder']) && is_array($state['columnOrder'])) {
+                $this->reorderColumns($state['columnOrder']);
+            }
         }
 
         if (in_array('filters', $this->persist) && isset($state['filters']) && is_array($state['filters'])) {
@@ -165,6 +176,18 @@ trait Persist
                 $this->multiSort = $multiSort;
             }
         }
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $columns
+     * @return list<string>
+     */
+    private function columnOrder(array $columns): array
+    {
+        return array_values(array_filter(
+            array_map(static fn ($column) => data_get($column, 'field'), $columns),
+            static fn ($field) => is_string($field) && $field !== '',
+        ));
     }
 
     /**

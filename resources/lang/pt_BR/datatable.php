@@ -22,6 +22,7 @@ return [
         'selected' => 'Selecionados',
         'filtered' => 'Filtrados',
         'active_filters' => 'Filtros ativos',
+        'reorder_column' => 'Reordenar coluna',
     ],
     'placeholders' => [
         'search' => 'Buscar ...',

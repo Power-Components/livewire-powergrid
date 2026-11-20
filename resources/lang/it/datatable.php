@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Colonne',
+        'apply_columns' => 'Applica',
+        'reset_filters' => 'Reimposta',
         'filter' => 'Filtra',
         'clear_all_filters' => 'Svuota filtri',
         'close' => 'Chiudi',
@@ -14,6 +17,7 @@ return [
         'all' => 'Tutti',
         'selected' => 'Selezionati',
         'filtered' => 'Filtrati',
+        'reorder_column' => 'Riordina colonna',
     ],
     'placeholders' => [
         'search' => 'Cerca...',

@@ -79,8 +79,7 @@ it('does not un-hide a forceHidden column from the snapshot', function () {
 
 it('keeps a legitimate hidden flag from toggle columns', function () {
     $test = Livewire::test(SnapshotHarness::class)
-        ->set('draftColumns.name', false)
-        ->call('applyColumns');
+        ->call('applyColumns', [['field' => 'name', 'hidden' => true]]);
 
     expect(data_get(columnByField($test->get('columns'), 'name'), 'hidden'))->toBeTrue();
 
