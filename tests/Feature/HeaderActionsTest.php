@@ -1,5 +1,6 @@
 <?php
 
+use Livewire\Attributes\On;
 use Livewire\Livewire;
 use PowerComponents\LivewirePowerGrid\Facades\PowerGrid;
 use PowerComponents\LivewirePowerGrid\{PowerGridComponent, PowerGridFields};
@@ -264,4 +265,66 @@ describe('renderHeaderActions – theme independence', function () {
             ->assertOk()
             ->assertSee('DaisyBulk');
     });
+});
+
+it('re-queries after a header action unless the handler calls skipGridRender', function () {
+    $component = new class() extends PowerGridComponent
+    {
+        public string $tableName = 'header-action-skip-render';
+
+        public static int $queries = 0;
+
+        public function setUp(): array
+        {
+            $this->showCheckBox();
+
+            return [];
+        }
+
+        public function datasource()
+        {
+            self::$queries++;
+
+            return collect([['id' => 1, 'name' => 'Pastel']]);
+        }
+
+        public function fields(): PowerGridFields
+        {
+            return PowerGrid::fields()->add('id')->add('name');
+        }
+
+        public function columns(): array
+        {
+            return [Column::make('Id', 'id'), Column::make('Name', 'name')];
+        }
+
+        public function header(): array
+        {
+            return [
+                Button::add('copy')->slot('Copy')->dispatch('copy', []),
+                Button::add('delete')->slot('Delete')->dispatch('delete', []),
+            ];
+        }
+
+        #[On('copy')]
+        public function copy(): void
+        {
+            $this->skipGridRender();
+        }
+
+        #[On('delete')]
+        public function delete(): void {}
+    };
+
+    $test = Livewire::test($component::class)->set('checkboxValues', ['1']);
+    $before = $component::$queries;
+
+    $test->dispatch('copy');
+
+    expect($component::$queries)->toBe($before)
+        ->and($test->get('checkboxValues'))->toBe(['1']);
+
+    $test->dispatch('delete');
+
+    expect($component::$queries)->toBeGreaterThan($before);
 });

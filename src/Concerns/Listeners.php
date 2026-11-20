@@ -172,12 +172,7 @@ trait Listeners
         $this->arrangeColumns($draft);
         $this->persistState('columns');
 
-        // power-components/partials ignores skipRender(); only a registered fragment suppresses the full render.
-        if (function_exists('partials')) {
-            partials($this)->partial("pg-toggle-columns-{$this->tableName}", '<span></span>');
-        }
-
-        $this->skipRender();
+        $this->skipGridRender();
     }
 
     /**
