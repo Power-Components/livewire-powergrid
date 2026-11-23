@@ -131,26 +131,6 @@ trait Listeners
     }
 
     /**
-     * @return array<string, bool>
-     */
-    public function columnVisibilityState(): array
-    {
-        $state = [];
-
-        foreach ($this->columns as $column) {
-            $field = data_get($column, 'field');
-
-            if (! is_string($field) || $field === '' || data_get($column, 'isAction') || data_get($column, 'forceHidden')) {
-                continue;
-            }
-
-            $state[$field] = ! (bool) data_get($column, 'hidden');
-        }
-
-        return $state;
-    }
-
-    /**
      * Applies the toggle-columns panel draft; the client already updated the DOM, so nothing is rendered or queried.
      *
      * @param  array<array-key, mixed>  $columns  ordered list of ['field' => string, 'hidden' => bool]

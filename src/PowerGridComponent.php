@@ -393,7 +393,7 @@ class PowerGridComponent extends Component implements Context
     }
 
     /** Call from an action that changed no data: the response renders nothing, so the datasource is not queried. */
-    public function skipGridRender(): void
+    protected function skipGridRender(): void
     {
         // power-components/partials ignores skipRender(); only a registered fragment suppresses the full render.
         if (function_exists('partials')) {
