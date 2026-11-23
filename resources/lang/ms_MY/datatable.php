@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Lajur',
+        'apply_columns' => 'Guna',
+        'reset_filters' => 'Tetapkan semula',
         'filter' => 'Carian',
         'clear_all_filters' => 'Clear all',
         'close' => 'Tutup',
@@ -14,6 +17,7 @@ return [
         'all' => 'Semua',
         'selected' => 'Pilihan',
         'filtered' => 'Hasil yang ditapis',
+        'reorder_column' => 'Susun semula lajur',
     ],
     'placeholders' => [
         'search' => 'Cari...',

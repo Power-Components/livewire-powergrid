@@ -71,6 +71,7 @@ trait Base
             $this->declaredColumns(),
         );
         $this->overlayColumnHidden($incomingColumns);
+        $this->reorderColumns(array_map(static fn ($column) => data_get($column, 'field'), $incomingColumns));
 
         unset($this->visibleColumns, $this->columnViewModels, $this->hasColumnFilters);
     }
@@ -233,6 +234,36 @@ trait Base
                 }
             }
         }
+    }
+
+    /**
+     * Permute the listed columns among their own slots; unlisted columns keep their position.
+     *
+     * @param  array<array-key, mixed>  $fields  wanted order, by `field`
+     */
+    protected function reorderColumns(array $fields): void
+    {
+        $slots = [];
+        $byField = [];
+
+        foreach ($this->columns as $index => $column) {
+            $field = data_get($column, 'field');
+
+            if (is_string($field) && $field !== '' && ! isset($byField[$field]) && in_array($field, $fields, true)) {
+                $slots[] = $index;
+                $byField[$field] = $column;
+            }
+        }
+
+        $ordered = array_values(array_unique(array_filter($fields, static fn ($field) => is_string($field) && isset($byField[$field]))));
+
+        $columns = $this->columns;
+
+        foreach ($ordered as $i => $field) {
+            $columns[$slots[$i]] = $byField[$field];
+        }
+
+        $this->columns = array_values($columns);
     }
 
     /** @return list<string> */

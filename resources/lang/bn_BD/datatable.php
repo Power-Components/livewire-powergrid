@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'কলাম',
+        'apply_columns' => 'প্রয়োগ করুন',
+        'reset_filters' => 'রিসেট',
         'filter' => 'ফিল্টার',
         'clear_all_filters' => 'সব ফিল্টার মুছুন',
         'close' => 'বন্ধ করুন',
@@ -14,6 +17,7 @@ return [
         'all' => 'সব',
         'selected' => 'নির্বাচিত',
         'filtered' => 'ফিল্টার করা',
+        'reorder_column' => 'কলাম পুনর্বিন্যাস করুন',
     ],
     'placeholders' => [
         'search' => 'অনুসন্ধান...',

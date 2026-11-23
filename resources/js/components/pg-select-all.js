@@ -25,6 +25,31 @@ window.pgAlpine.data('pgSelectAll', () => ({
         window.removeEventListener('pg-select-all:refresh', this.onFinished)
     },
 
+    // Ticks the page's selectable rows, or clears the whole selection, without a request.
+    toggle(checked) {
+        const tableName = this.$wire.tableName
+        const store = this.$store.pgBulkActions
+
+        if (!checked) {
+            this.$wire.checkboxValues = []
+            store.clear(tableName)
+        } else {
+            const values = [...this.$wire.checkboxValues]
+
+            this.pgTable?.querySelectorAll('tbody input[type="checkbox"][wire\\:model="checkboxValues"]').forEach((checkbox) => {
+                if (checkbox.closest('table') === this.pgTable && !values.includes(checkbox.value)) {
+                    values.push(checkbox.value)
+                }
+            })
+
+            this.$wire.checkboxValues = values
+            values.filter((value) => !store.get(tableName).includes(value)).forEach((value) => store.add(value, tableName))
+        }
+
+        this.$wire.checkboxAll = checked
+        this.$nextTick(() => this.refresh())
+    },
+
     refresh() {
         const table = this.pgTable
 

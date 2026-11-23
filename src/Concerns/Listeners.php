@@ -9,11 +9,6 @@ use ReflectionClass;
 /** @codeCoverageIgnore */
 trait Listeners
 {
-    /**
-     * @var array<string, bool>
-     */
-    public array $draftColumns = [];
-
     /** @var array<string, array{plugin: string, method: string}> */
     private array $pluginListenerMap = [];
 
@@ -136,70 +131,71 @@ trait Listeners
     }
 
     /**
-     * @return array<string, bool>
-     */
-    public function columnVisibilityState(): array
-    {
-        $state = [];
-
-        foreach ($this->columns as $column) {
-            $field = data_get($column, 'field');
-
-            if (! is_string($field) || $field === '' || data_get($column, 'isAction') || data_get($column, 'forceHidden')) {
-                continue;
-            }
-
-            $state[$field] = ! (bool) data_get($column, 'hidden');
-        }
-
-        return $state;
-    }
-
-    /**
+     * Applies the toggle-columns panel draft; the client already updated the DOM, so nothing is rendered or queried.
+     *
+     * @param  array<array-key, mixed>  $columns  ordered list of ['field' => string, 'hidden' => bool]
+     *
      * @throws Exception
      */
-    public function applyColumns(): void
+    public function applyColumns(array $columns): void
     {
-        foreach ($this->columns as &$column) {
+        $draft = [];
+
+        foreach ($columns as $column) {
             $field = data_get($column, 'field');
 
-            if (! is_string($field) || data_get($column, 'forceHidden') || ! array_key_exists($field, $this->draftColumns)) {
-                continue;
+            if (is_string($field) && $field !== '') {
+                $draft[$field] = (bool) data_get($column, 'hidden');
             }
-
-            data_set($column, 'hidden', ! (bool) $this->draftColumns[$field]);
         }
-        unset($column);
 
+        $this->arrangeColumns($draft);
         $this->persistState('columns');
+
+        $this->skipGridRender();
     }
 
     /**
+     * Restores the declared order and visibility.
+     *
      * @throws Exception
      */
     public function resetColumns(): void
     {
-        $defaults = collect($this->declaredColumns())
-            ->mapWithKeys(function ($column) {
-                $field = data_get($column, 'field');
+        $defaults = [];
 
-                return [(is_string($field) ? $field : '') => (bool) data_get($column, 'hidden')];
-            });
-
-        foreach ($this->columns as &$column) {
+        foreach ($this->declaredColumns() as $column) {
             $field = data_get($column, 'field');
 
-            if (! is_string($field) || data_get($column, 'forceHidden') || ! $defaults->has($field)) {
+            if (is_string($field) && $field !== '') {
+                $defaults[$field] = (bool) data_get($column, 'hidden');
+            }
+        }
+
+        $this->arrangeColumns($defaults);
+        $this->persistState('columns');
+    }
+
+    /** @param  array<string, bool>  $draft  field => hidden, in the wanted order */
+    private function arrangeColumns(array $draft): void
+    {
+        $fields = [];
+
+        foreach ($this->columns as $index => $column) {
+            $field = data_get($column, 'field');
+
+            if (! is_string($field) || ! array_key_exists($field, $draft) || data_get($column, 'isAction') || data_get($column, 'forceHidden')) {
                 continue;
             }
 
-            data_set($column, 'hidden', $defaults->get($field));
+            data_set($column, 'hidden', $draft[$field]);
+            $this->columns[$index] = $column;
+            $fields[$field] = true;
         }
-        unset($column);
 
-        $this->draftColumns = $this->columnVisibilityState();
+        $this->reorderColumns(array_keys(array_intersect_key($draft, $fields)));
 
-        $this->persistState('columns');
+        unset($this->visibleColumns, $this->columnViewModels, $this->hasColumnFilters);
     }
 
     public function hiddenColumnsCount(): int

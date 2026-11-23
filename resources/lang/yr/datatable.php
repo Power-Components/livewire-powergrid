@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Àwọn ọwọ̀n',
+        'apply_columns' => 'Lò ó',
+        'reset_filters' => 'Tún tò',
         'filter' => 'àlẹmọ',
         'clear_all_filters' => 'Clear all',
         'close' => 'Tì',
@@ -14,6 +17,7 @@ return [
         'all' => 'Gbogbo e',
         'selected' => 'Oun To Mu',
         'filtered' => 'Filter',
+        'reorder_column' => 'Tún ọwọ̀n tò',
     ],
     'placeholders' => [
         'search' => 'Wa...',

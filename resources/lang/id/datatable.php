@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Kolom',
+        'apply_columns' => 'Terapkan',
+        'reset_filters' => 'Atur ulang',
         'filter' => 'Filter',
         'clear_all_filters' => 'Hapus semua',
         'close' => 'Tutup',
@@ -14,6 +17,7 @@ return [
         'all' => 'Semua',
         'selected' => 'Dipilih',
         'filtered' => 'Tersaring',
+        'reorder_column' => 'Ubah urutan kolom',
     ],
     'placeholders' => [
         'search' => 'Cari...',

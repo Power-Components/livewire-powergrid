@@ -82,7 +82,8 @@ class PowerGridComponent extends Component implements Context
             primaryKey: $this->primaryKey,
             primaryKeyAlias: $this->primaryKeyAlias,
             ignoreTablePrefix: $this->ignoreTablePrefix,
-            pruneHiddenColumns: $this->pruneHiddenColumns,
+            // Toggle-columns shows hidden columns client-side, so their data must already be selected.
+            pruneHiddenColumns: $this->pruneHiddenColumns && ! data_get($this->setUp, 'header.toggleColumns'),
             paginateRaw: $this->paginateRaw,
             isExporting: $this->isExporting,
             tableName: $this->tableName,
@@ -328,8 +329,6 @@ class PowerGridComponent extends Component implements Context
 
         $this->applyDefaultTab();
 
-        $this->draftColumns = $this->columnVisibilityState();
-
         $this->resolveSummarizeColumn();
     }
 
@@ -391,6 +390,17 @@ class PowerGridComponent extends Component implements Context
         $partials
             ->partial("pg-tbody-{$this->tableName}", theme_view('table.tbody'))
             ->partial("pg-pagination-{$this->tableName}", theme_view('footer'));
+    }
+
+    /** Call from an action that changed no data: the response renders nothing, so the datasource is not queried. */
+    protected function skipGridRender(): void
+    {
+        // power-components/partials ignores skipRender(); only a registered fragment suppresses the full render.
+        if (function_exists('partials')) {
+            partials($this)->partial("pg-skip-render-{$this->tableName}", '<span></span>');
+        }
+
+        $this->skipRender();
     }
 
     #[Computed]

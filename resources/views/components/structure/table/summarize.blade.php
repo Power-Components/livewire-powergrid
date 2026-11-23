@@ -31,6 +31,7 @@
                 ->all();
         @endphp
         <td class="{{ theme('table.layout.td') . ' '.data_get($column, 'bodyClass') ?? '' }}"
+            data-column="{{ data_get($column, 'isAction') ? 'actions' : data_get($column, 'dataField', data_get($column, 'field')) }}"
             style="{{ data_get($column, 'hidden') === true ? 'display:none;': '' }} {{ data_get($column, 'bodyStyle') ?? ''  }}">
             @include(theme_view('summarize'), [
                 'sum' => data_get($column, "properties.summarize.sum.$flag") ? data_get($column, 'properties.summarize_values.sum') : null,

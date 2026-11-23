@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'ستون‌ها',
+        'apply_columns' => 'اعمال',
+        'reset_filters' => 'بازنشانی',
         'filter' => 'فیلتر',
         'clear_all_filters' => 'حذف همه',
         'close' => 'بستن',
@@ -14,6 +17,7 @@ return [
         'all' => 'همه',
         'selected' => 'انتخاب شد',
         'filtered' => 'پالوده',
+        'reorder_column' => 'تغییر ترتیب ستون',
     ],
     'placeholders' => [
         'search' => 'جستجو...',

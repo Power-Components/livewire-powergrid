@@ -2,6 +2,9 @@
 
 return [
     'buttons' => [
+        'toggle_columns' => 'Sütunlar',
+        'apply_columns' => 'Uygula',
+        'reset_filters' => 'Sıfırla',
         'filter' => 'Filtre',
         'clear_all_filters' => 'Tümünü Temizle',
         'close' => 'Kapat',
@@ -14,6 +17,7 @@ return [
         'all' => 'Tümü',
         'selected' => 'Seçili',
         'filtered' => 'Filtrelenmiş',
+        'reorder_column' => 'Sütunu yeniden sırala',
     ],
     'placeholders' => [
         'search' => 'Arama yap...',
